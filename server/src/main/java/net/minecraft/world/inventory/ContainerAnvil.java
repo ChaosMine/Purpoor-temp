@@ -1,0 +1,367 @@
+package net.minecraft.world.inventory;
+
+import io.papermc.paper.adventure.PaperAdventure;
+import net.kyori.adventure.text.Component;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutWindowData;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagsBlock;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.PlayerInventory;
+import net.minecraft.world.item.ItemEnchantedBook;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentManager;
+import net.minecraft.world.level.block.BlockAnvil;
+import net.minecraft.world.level.block.state.IBlockData;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
+// Purpur end
+
+public class ContainerAnvil extends ContainerAnvilAbstract {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+    private int h;
+    public String renameText;
+    public final ContainerProperty levelCost;
+    // CraftBukkit start
+    public int maximumRepairCost = 40;
+    private CraftInventoryView bukkitEntity;
+    // CraftBukkit end
+    public boolean bypassCost = false; // Purpur
+    public boolean canDoUnsafeEnchants = false; // Purpur
+
+    public ContainerAnvil(int i, PlayerInventory playerinventory) {
+        this(i, playerinventory, ContainerAccess.a);
+    }
+
+    public ContainerAnvil(int i, PlayerInventory playerinventory, ContainerAccess containeraccess) {
+        super(Containers.ANVIL, i, playerinventory, containeraccess);
+        this.levelCost = ContainerProperty.a();
+        this.a(this.levelCost);
+    }
+
+    @Override
+    protected boolean a(IBlockData iblockdata) {
+        return iblockdata.a((Tag) TagsBlock.ANVIL);
+    }
+
+    @Override
+    protected boolean b(EntityHuman entityhuman, boolean flag) {
+        return (entityhuman.abilities.canInstantlyBuild || entityhuman.expLevel >= this.levelCost.get()) && (bypassCost || this.levelCost.get() > 0); // Purpur
+    }
+
+    @Override
+    protected ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
+        if (net.pl3x.purpur.event.inventory.AnvilTakeResultEvent.getHandlerList().getRegisteredListeners().length > 0) new net.pl3x.purpur.event.inventory.AnvilTakeResultEvent(entityhuman.getBukkitEntity(), getBukkitView(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)).callEvent(); // Purpur
+        if (!entityhuman.abilities.canInstantlyBuild) {
+            if (bypassCost) ((EntityPlayer) entityhuman).lastSentExp = -1; else // Purpur
+            entityhuman.levelDown(-this.levelCost.get());
+        }
+
+        this.repairInventory.setItem(0, ItemStack.b);
+        if (this.h > 0) {
+            ItemStack itemstack1 = this.repairInventory.getItem(1);
+
+            if (!itemstack1.isEmpty() && itemstack1.getCount() > this.h) {
+                itemstack1.subtract(this.h);
+                this.repairInventory.setItem(1, itemstack1);
+            } else {
+                this.repairInventory.setItem(1, ItemStack.b);
+            }
+        } else {
+            this.repairInventory.setItem(1, ItemStack.b);
+        }
+
+        this.levelCost.set(0);
+        this.containerAccess.a((world, blockposition) -> {
+            IBlockData iblockdata = world.getType(blockposition);
+
+            if (!entityhuman.abilities.canInstantlyBuild && iblockdata.a((Tag) TagsBlock.ANVIL) && entityhuman.getRandom().nextFloat() < 0.12F) {
+                IBlockData iblockdata1 = BlockAnvil.c(iblockdata);
+                // Paper start
+                com.destroystokyo.paper.event.block.AnvilDamagedEvent event = new com.destroystokyo.paper.event.block.AnvilDamagedEvent(getBukkitView(), iblockdata1 != null ? org.bukkit.craftbukkit.block.data.CraftBlockData.fromData(iblockdata1) : null);
+                if (!event.callEvent()) {
+                    return;
+                } else if (event.getDamageState() == com.destroystokyo.paper.event.block.AnvilDamagedEvent.DamageState.BROKEN) {
+                    iblockdata1 = null;
+                } else {
+                    iblockdata1 = ((org.bukkit.craftbukkit.block.data.CraftBlockData) event.getDamageState().getMaterial().createBlockData()).getState().set(BlockAnvil.FACING, iblockdata.get(BlockAnvil.FACING));
+                }
+                // Paper end
+                if (iblockdata1 == null) {
+                    world.a(blockposition, false);
+                    world.triggerEffect(1029, blockposition, 0);
+                } else {
+                    world.setTypeAndData(blockposition, iblockdata1, 2);
+                    world.triggerEffect(1030, blockposition, 0);
+                }
+            } else {
+                world.triggerEffect(1030, blockposition, 0);
+            }
+
+        });
+        return itemstack;
+    }
+
+    @Override
+    public void e() {
+        // Purpur start
+        bypassCost = false;
+        canDoUnsafeEnchants = false;
+        if (net.pl3x.purpur.event.inventory.AnvilUpdateResultEvent.getHandlerList().getRegisteredListeners().length > 0) new net.pl3x.purpur.event.inventory.AnvilUpdateResultEvent(getBukkitView()).callEvent();
+        // Purpur end
+
+        ItemStack itemstack = this.repairInventory.getItem(0);
+
+        this.levelCost.set(1);
+        int i = 0;
+        byte b0 = 0;
+        byte b1 = 0;
+
+        if (itemstack.isEmpty()) {
+            org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.b); // CraftBukkit
+            this.levelCost.set(0);
+        } else {
+            ItemStack itemstack1 = itemstack.cloneItemStack();
+            ItemStack itemstack2 = this.repairInventory.getItem(1);
+            Map<Enchantment, Integer> map = EnchantmentManager.a(itemstack1);
+            int j = b0 + itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
+
+            this.h = 0;
+            if (!itemstack2.isEmpty()) {
+                boolean flag = itemstack2.getItem() == Items.ENCHANTED_BOOK && !ItemEnchantedBook.d(itemstack2).isEmpty();
+                int k;
+                int l;
+                int i1;
+
+                if (itemstack1.e() && itemstack1.getItem().a(itemstack, itemstack2)) {
+                    k = Math.min(itemstack1.getDamage(), itemstack1.h() / 4);
+                    if (k <= 0) {
+                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.b); // CraftBukkit
+                        this.levelCost.set(0);
+                        return;
+                    }
+
+                    for (i1 = 0; k > 0 && i1 < itemstack2.getCount(); ++i1) {
+                        l = itemstack1.getDamage() - k;
+                        itemstack1.setDamage(l);
+                        ++i;
+                        k = Math.min(itemstack1.getDamage(), itemstack1.h() / 4);
+                    }
+
+                    this.h = i1;
+                } else {
+                    if (!flag && (itemstack1.getItem() != itemstack2.getItem() || !itemstack1.e())) {
+                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.b); // CraftBukkit
+                        this.levelCost.set(0);
+                        return;
+                    }
+
+                    if (itemstack1.e() && !flag) {
+                        k = itemstack.h() - itemstack.getDamage();
+                        i1 = itemstack2.h() - itemstack2.getDamage();
+                        l = i1 + itemstack1.h() * 12 / 100;
+                        int j1 = k + l;
+                        int k1 = itemstack1.h() - j1;
+
+                        if (k1 < 0) {
+                            k1 = 0;
+                        }
+
+                        if (k1 < itemstack1.getDamage()) {
+                            itemstack1.setDamage(k1);
+                            i += 2;
+                        }
+                    }
+
+                    Map<Enchantment, Integer> map1 = EnchantmentManager.a(itemstack2);
+                    boolean flag1 = false;
+                    boolean flag2 = false;
+                    Iterator iterator = map1.keySet().iterator();
+
+                    while (iterator.hasNext()) {
+                        Enchantment enchantment = (Enchantment) iterator.next();
+
+                        if (enchantment != null) {
+                            int l1 = (Integer) map.getOrDefault(enchantment, 0);
+                            int i2 = (Integer) map1.get(enchantment);
+
+                            i2 = l1 == i2 ? i2 + 1 : Math.max(i2, l1);
+                            boolean flag3 = canDoUnsafeEnchants || enchantment.canEnchant(itemstack); // Purpur
+
+                            if (this.player.abilities.canInstantlyBuild || itemstack.getItem() == Items.ENCHANTED_BOOK) {
+                                flag3 = true;
+                            }
+
+                            Iterator iterator1 = map.keySet().iterator();
+
+                            while (iterator1.hasNext()) {
+                                Enchantment enchantment1 = (Enchantment) iterator1.next();
+
+                                if (enchantment1 != enchantment && !enchantment.isCompatible(enchantment1)) {
+                                    flag3 = canDoUnsafeEnchants; // Purpur
+                                    ++i;
+                                }
+                            }
+
+                            if (!flag3) {
+                                flag2 = true;
+                            } else {
+                                flag1 = true;
+                                if (i2 > enchantment.getMaxLevel()) {
+                                    i2 = enchantment.getMaxLevel();
+                                }
+
+                                map.put(enchantment, i2);
+                                int j2 = 0;
+
+                                switch (enchantment.d()) {
+                                    case COMMON:
+                                        j2 = 1;
+                                        break;
+                                    case UNCOMMON:
+                                        j2 = 2;
+                                        break;
+                                    case RARE:
+                                        j2 = 4;
+                                        break;
+                                    case VERY_RARE:
+                                        j2 = 8;
+                                }
+
+                                if (flag) {
+                                    j2 = Math.max(1, j2 / 2);
+                                }
+
+                                i += j2 * i2;
+                                if (itemstack.getCount() > 1) {
+                                    i = 40;
+                                }
+                            }
+                        }
+                    }
+
+                    if (flag2 && !flag1) {
+                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.b); // CraftBukkit
+                        this.levelCost.set(0);
+                        return;
+                    }
+                }
+            }
+
+            if (StringUtils.isBlank(this.renameText)) {
+                if (itemstack.hasName()) {
+                    b1 = 1;
+                    i += b1;
+                    itemstack1.s();
+                }
+            } else if (!this.renameText.equals(itemstack.getName().getString())) {
+                b1 = 1;
+                i += b1;
+                // Purpur start
+                if (player != null && player.world.purpurConfig.anvilAllowColors && player.getBukkitEntity().hasPermission("purpur.anvil.color")) {
+                    final Component renameTextComponent;
+                    if (renameText.startsWith("&r") && player.getBukkitEntity().hasPermission("purpur.anvil.remove_italics")) {
+                        renameTextComponent = PaperAdventure.LEGACY_AMPERSAND.deserialize(renameText.substring(2)).decoration(ITALIC, false);
+                    } else {
+                        renameTextComponent = PaperAdventure.LEGACY_AMPERSAND.deserialize(renameText);
+                    }
+                    itemstack1.a(PaperAdventure.asVanilla(renameTextComponent));
+                } else
+                // Purpur end
+                itemstack1.a((IChatBaseComponent) (new ChatComponentText(this.renameText)));
+            }
+
+            this.levelCost.set(j + i);
+            if (i <= 0) {
+                itemstack1 = ItemStack.b;
+            }
+
+            if (b1 == i && b1 > 0 && this.levelCost.get() >= maximumRepairCost) { // CraftBukkit
+                this.levelCost.set(maximumRepairCost - 1); // CraftBukkit
+            }
+
+            // Purpur start
+            if (bypassCost && levelCost.get() >= maximumRepairCost) {
+                itemstack.getOrCreateTagAndSet("Purpur.realCost", NBTTagInt.a(levelCost.get()));
+                levelCost.set(maximumRepairCost - 1);
+            }
+            // Purpur end
+
+            if (this.levelCost.get() >= maximumRepairCost && !this.player.abilities.canInstantlyBuild) { // CraftBukkit
+                itemstack1 = ItemStack.b;
+            }
+
+            if (!itemstack1.isEmpty()) {
+                int k2 = itemstack1.getRepairCost();
+
+                if (!itemstack2.isEmpty() && k2 < itemstack2.getRepairCost()) {
+                    k2 = itemstack2.getRepairCost();
+                }
+
+                if (b1 != i || b1 == 0) {
+                    k2 = d(k2);
+                }
+
+                itemstack1.setRepairCost(k2);
+                EnchantmentManager.a(map, itemstack1);
+            }
+
+            org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), itemstack1); // CraftBukkit
+            this.c();
+            // Purpur start
+            if (canDoUnsafeEnchants && itemstack1 != ItemStack.NULL_ITEM) {
+                ((EntityPlayer) player).playerConnection.sendPacket(new PacketPlayOutSetSlot(windowId, 2, itemstack1));
+                ((EntityPlayer) player).playerConnection.sendPacket(new PacketPlayOutWindowData(windowId, 0, levelCost.get()));
+            }
+            // Purpur end
+        }
+    }
+
+    public static int d(int i) {
+        return net.pl3x.purpur.PurpurConfig.anvilCumulativeCost ? i * 2 + 1 : 0;
+    }
+
+    public void a(String s) {
+        this.renameText = s;
+        if (this.getSlot(2).hasItem()) {
+            ItemStack itemstack = this.getSlot(2).getItem();
+
+            if (StringUtils.isBlank(s)) {
+                itemstack.s();
+            } else {
+                itemstack.a((IChatBaseComponent) (new ChatComponentText(this.renameText)));
+            }
+        }
+
+        this.e();
+        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareResultEvent(this, 2); // Paper
+    }
+
+    // CraftBukkit start
+    @Override
+    public CraftInventoryView getBukkitView() {
+        if (bukkitEntity != null) {
+            return bukkitEntity;
+        }
+
+        org.bukkit.craftbukkit.inventory.CraftInventory inventory = new org.bukkit.craftbukkit.inventory.CraftInventoryAnvil(
+                containerAccess.getLocation(), this.repairInventory, this.resultInventory, this);
+        bukkitEntity = new CraftInventoryView(this.player.getBukkitEntity(), inventory, this);
+        return bukkitEntity;
+    }
+    // CraftBukkit end
+}

@@ -1,0 +1,71 @@
+package org.bukkit.craftbukkit.entity;
+
+import net.minecraft.world.entity.EntityLightning;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LightningStrike;
+
+public class CraftLightningStrike extends CraftEntity implements LightningStrike {
+    public CraftLightningStrike(final CraftServer server, final EntityLightning entity) {
+        super(server, entity);
+    }
+
+    @Override
+    public boolean isEffect() {
+        return getHandle().isEffect;
+    }
+
+    @Override
+    public EntityLightning getHandle() {
+        return (EntityLightning) entity;
+    }
+
+    @Override
+    public String toString() {
+        return "CraftLightningStrike";
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.LIGHTNING;
+    }
+
+    // Spigot start
+    private final LightningStrike.Spigot spigot = new LightningStrike.Spigot() {
+
+        @Override
+        public boolean isSilent()
+        {
+            return getHandle().isSilent;
+        }
+    };
+
+    @Override
+    public LightningStrike.Spigot spigot() {
+        return spigot;
+    }
+    // Spigot end
+
+    // Paper start
+    @Override
+    public int getFlashCount() {
+        return getHandle().getFlashCount();
+    }
+
+    @Override
+    public void setFlashCount(int flashes) {
+        com.google.common.base.Preconditions.checkArgument(flashes >= 0, "Flashes has to be a positive number!");
+        getHandle().setFlashCount(flashes);
+    }
+
+    @Override
+    public int getLifeTicks() {
+        return getHandle().getLifeTicks();
+    }
+
+    @Override
+    public void setLifeTicks(int lifeTicks) {
+        getHandle().setLifeTicks(lifeTicks);
+    }
+    // Paper end
+}

@@ -1,0 +1,86 @@
+package net.minecraft.world.level;
+
+import net.minecraft.core.BlockPosition;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import javax.annotation.Nullable;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+public interface ICollisionAccess extends IBlockAccess {
+
+    WorldBorder getWorldBorder();
+
+    @Nullable
+    IBlockAccess c(int i, int j);
+
+    default boolean a(@Nullable Entity entity, VoxelShape voxelshape) {
+        return true;
+    }
+
+    default boolean a(IBlockData iblockdata, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
+        VoxelShape voxelshape = iblockdata.b((IBlockAccess) this, blockposition, voxelshapecollision);
+
+        return voxelshape.isEmpty() || this.a((Entity) null, voxelshape.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ()));
+    }
+
+    default boolean j(Entity entity) {
+        return this.a(entity, VoxelShapes.a(entity.getBoundingBox()));
+    }
+
+    default boolean b(AxisAlignedBB axisalignedbb) {
+        // Tuinity start - allow overriding in WorldServer
+        return this.getCubes(axisalignedbb);
+    }
+    default boolean getCubes(AxisAlignedBB axisalignedbb) {
+        // Tuinity end - allow overriding in WorldServer
+        return this.b((Entity) null, axisalignedbb, (entity) -> {
+            return true;
+        });
+    }
+
+    default boolean getCubes(Entity entity) {
+        return this.b(entity, entity.getBoundingBox(), (entity1) -> {
+            return true;
+        });
+    }
+
+    default boolean getCubes(Entity entity, AxisAlignedBB axisalignedbb) {
+        return this.b(entity, axisalignedbb, (entity1) -> {
+            return true;
+        });
+    }
+
+    default boolean b(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        // Tuinity start - allow overriding in WorldServer
+        return this.getCubes(entity, axisalignedbb, predicate);
+    }
+    default boolean getCubes(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        // Tuinity end - allow overriding in WorldServer
+        try { if (entity != null) entity.collisionLoadChunks = true; // Paper
+        return this.d(entity, axisalignedbb, predicate).allMatch(VoxelShape::isEmpty);
+        } finally { if (entity != null) entity.collisionLoadChunks = false; } // Paper
+    }
+
+    Stream<VoxelShape> c(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate);
+
+    default Stream<VoxelShape> d(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        return Stream.concat(this.b(entity, axisalignedbb), this.c(entity, axisalignedbb, predicate));
+    }
+
+    default Stream<VoxelShape> b(@Nullable Entity entity, AxisAlignedBB axisalignedbb) {
+        return StreamSupport.stream(new VoxelShapeSpliterator(this, entity, axisalignedbb), false);
+    }
+
+    default Stream<VoxelShape> b(@Nullable Entity entity, AxisAlignedBB axisalignedbb, BiPredicate<IBlockData, BlockPosition> bipredicate) {
+        return StreamSupport.stream(new VoxelShapeSpliterator(this, entity, axisalignedbb, bipredicate), false);
+    }
+}

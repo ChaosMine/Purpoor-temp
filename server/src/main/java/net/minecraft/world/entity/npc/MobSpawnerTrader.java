@@ -1,0 +1,190 @@
+package net.minecraft.world.entity.npc;
+
+import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.EntityPositionTypes;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.ai.village.poi.VillagePlace;
+import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
+import net.minecraft.world.entity.animal.horse.EntityLlamaTrader;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.HeightMap;
+import net.minecraft.world.level.storage.IWorldDataServer;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Random;
+
+public class MobSpawnerTrader implements MobSpawner {
+
+    private final Random a = new Random();
+    private final IWorldDataServer b;
+    private int c; public final int getMinuteTimer() { return this.c; } public final void setMinuteTimer(int x) { this.c = x; } // Paper - OBFHELPER
+    private int d; public final int getDayTimer() { return this.d; } public final void setDayTimer(int x) { this.d = x; } // Paper - OBFHELPER
+    private int e; public final int getSpawnChance() { return this.e; } public final void setSpawnChance(int x) { this.e = x; } // Paper - OBFHELPER
+
+    public MobSpawnerTrader(IWorldDataServer iworlddataserver) {
+        this.b = iworlddataserver;
+        // Paper start
+        this.setMinuteTimer(Integer.MIN_VALUE);
+        //this.d = iworlddataserver.v(); // Paper - This value is read from the world file only for the first spawn, after which vanilla uses a hardcoded value
+        //this.e = iworlddataserver.w(); // Paper - This value is read from the world file only for the first spawn, after which vanilla uses a hardcoded value
+        //if (this.d == 0 && this.e == 0) {
+        //    this.d = 24000;
+        //    iworlddataserver.g(this.d);
+        //    this.e = 25;
+        //    iworlddataserver.h(this.e);
+        //}
+        // Paper end
+
+    }
+
+    @Override
+    public int a(WorldServer worldserver, boolean flag, boolean flag1) {
+        // Paper start
+        if (this.getMinuteTimer() == Integer.MIN_VALUE) {
+            this.setMinuteTimer(worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            this.setDayTimer(worldserver.paperConfig.wanderingTraderSpawnDayTicks);
+            this.setSpawnChance(worldserver.paperConfig.wanderingTraderSpawnChanceMin);
+        }
+        if (!worldserver.getGameRules().getBoolean(GameRules.DO_TRADER_SPAWNING)) {
+            return 0;
+        } else if (this.getMinuteTimer() - 1 > 0) {
+            this.setMinuteTimer(this.getMinuteTimer() - 1);
+            return 0;
+        } else {
+            this.setMinuteTimer(worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            this.setDayTimer(getDayTimer() - worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            //this.b.g(this.d); // Paper - We don't need to save this value to disk if it gets set back to a hardcoded value anyways
+            if (this.getDayTimer() > 0) {
+                return 0;
+            } else {
+                this.setDayTimer(worldserver.paperConfig.wanderingTraderSpawnDayTicks);
+                if (!worldserver.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
+                    return 0;
+                } else {
+                    int i = this.getSpawnChance();
+
+                    this.setSpawnChance(MathHelper.clamp(i + worldserver.paperConfig.wanderingTraderSpawnChanceFailureIncrement, worldserver.paperConfig.wanderingTraderSpawnChanceMin, worldserver.paperConfig.wanderingTraderSpawnChanceMax));
+                    //this.b.h(this.e); // Paper - We don't need to save this value to disk if it gets set back to a hardcoded value anyways
+                    if (this.a.nextInt(100) > i) {
+                        return 0;
+                    } else if (this.a(worldserver)) {
+                        this.setSpawnChance(worldserver.paperConfig.wanderingTraderSpawnChanceMin);
+                        // Paper end
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean a(WorldServer worldserver) {
+        EntityPlayer entityplayer = worldserver.q_();
+
+        if (entityplayer == null) {
+            return true;
+        } else if (this.a.nextInt(10) != 0) {
+            return false;
+        } else {
+            BlockPosition blockposition = entityplayer.getChunkCoordinates();
+            boolean flag = true;
+            VillagePlace villageplace = worldserver.y();
+            Optional<BlockPosition> optional = villageplace.c(VillagePlaceType.s.c(), (blockposition1) -> {
+                return true;
+            }, blockposition, 48, VillagePlace.Occupancy.ANY);
+            BlockPosition blockposition1 = (BlockPosition) optional.orElse(blockposition);
+            BlockPosition blockposition2 = this.a((IWorldReader) worldserver, blockposition1, 48);
+
+            if (blockposition2 != null && this.a(worldserver, blockposition2)) {
+                if (worldserver.i(blockposition2).equals(Optional.of(Biomes.THE_VOID))) {
+                    return false;
+                }
+
+                EntityVillagerTrader entityvillagertrader = EntityTypes.WANDERING_TRADER.spawnCreature(worldserver, null, null, null, blockposition2, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL, trader -> trader.setDespawnDelay(48000)); // CraftBukkit // Paper - set despawnTimer before spawn events called
+
+                if (entityvillagertrader != null) {
+                    for (int i = 0; i < 2; ++i) {
+                        this.a(worldserver, entityvillagertrader, 4);
+                    }
+
+                    this.b.a(entityvillagertrader.getUniqueID());
+                    // entityvillagertrader.setDespawnDelay(48000); // CraftBukkit - moved to EntityVillagerTrader constructor. This lets the value be modified by plugins on CreatureSpawnEvent
+                    entityvillagertrader.g(blockposition1);
+                    entityvillagertrader.a(blockposition1, 16);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    private void a(WorldServer worldserver, EntityVillagerTrader entityvillagertrader, int i) {
+        BlockPosition blockposition = this.a((IWorldReader) worldserver, entityvillagertrader.getChunkCoordinates(), i);
+
+        if (blockposition != null) {
+            EntityLlamaTrader entityllamatrader = (EntityLlamaTrader) EntityTypes.TRADER_LLAMA.spawnCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
+
+            if (entityllamatrader != null) {
+                entityllamatrader.setLeashHolder(entityvillagertrader, true);
+            }
+        }
+    }
+
+    @Nullable
+    private BlockPosition a(IWorldReader iworldreader, BlockPosition blockposition, int i) {
+        BlockPosition blockposition1 = null;
+
+        for (int j = 0; j < 10; ++j) {
+            int k = blockposition.getX() + this.a.nextInt(i * 2) - i;
+            int l = blockposition.getZ() + this.a.nextInt(i * 2) - i;
+            int i1 = iworldreader.a(HeightMap.Type.WORLD_SURFACE, k, l);
+            // Purpur start - allow traders to spawn below nether roof
+            BlockPosition.MutableBlockPosition blockposition2 = new BlockPosition.MutableBlockPosition(k, i1, l);
+            if (iworldreader.getDimensionManager().hasCeiling()) {
+                do {
+                    blockposition2.c(EnumDirection.DOWN);
+                } while (!iworldreader.getType(blockposition2).isAir());
+                do {
+                    blockposition2.c(EnumDirection.DOWN);
+                } while (iworldreader.getType(blockposition2).isAir() && blockposition2.getY() > 0);
+            }
+            // Purpur end
+
+            if (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, iworldreader, blockposition2, EntityTypes.WANDERING_TRADER)) {
+                blockposition1 = blockposition2;
+                break;
+            }
+        }
+
+        return blockposition1;
+    }
+
+    private boolean a(IBlockAccess iblockaccess, BlockPosition blockposition) {
+        Iterator iterator = BlockPosition.a(blockposition, blockposition.b(1, 2, 1)).iterator();
+
+        BlockPosition blockposition1;
+
+        do {
+            if (!iterator.hasNext()) {
+                return true;
+            }
+
+            blockposition1 = (BlockPosition) iterator.next();
+        } while (iblockaccess.getType(blockposition1).getCollisionShape(iblockaccess, blockposition1).isEmpty());
+
+        return false;
+    }
+}

@@ -1,0 +1,21 @@
+package io.papermc.paper.adventure;
+
+import net.kyori.adventure.audience.Audience;
+import net.minecraft.server.MinecraftServer;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.util.LazyHashSet;
+import org.bukkit.craftbukkit.util.LazyPlayerSet;
+import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.Set;
+
+final class LazyChatAudienceSet extends LazyHashSet<Audience> {
+    @Override
+    protected Set<Audience> makeReference() {
+        final Set<Player> playerSet = LazyPlayerSet.makePlayerSet(MinecraftServer.SERVER);
+        final HashSet<Audience> audiences = new HashSet<>(playerSet);
+        audiences.add(Bukkit.getConsoleSender());
+        return audiences;
+    }
+}

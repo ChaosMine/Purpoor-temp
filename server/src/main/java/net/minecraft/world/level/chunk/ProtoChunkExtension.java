@@ -1,0 +1,268 @@
+package net.minecraft.world.level.chunk;
+
+import it.unimi.dsi.fastutil.longs.LongSet;
+import net.minecraft.SystemUtils;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TileEntity;
+import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.levelgen.HeightMap;
+import net.minecraft.world.level.levelgen.WorldGenStage;
+import net.minecraft.world.level.levelgen.feature.StructureGenerator;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.lighting.LightEngine;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidType;
+import net.minecraft.world.level.material.FluidTypes;
+
+import javax.annotation.Nullable;
+import java.util.BitSet;
+import java.util.Map;
+import java.util.stream.Stream;
+
+public class ProtoChunkExtension extends ProtoChunk {
+
+    private final Chunk a; public final Chunk getWrappedChunk() { return this.a; } // Tuinity - OBFHELPER
+
+    // Tuinity start - rewrite light engine
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
+        return this.getWrappedChunk().getBlockNibbles();
+    }
+
+    @Override
+    public void setBlockNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.getWrappedChunk().setBlockNibbles(nibbles);
+    }
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getSkyNibbles() {
+        return this.getWrappedChunk().getSkyNibbles();
+    }
+
+    @Override
+    public void setSkyNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.getWrappedChunk().setSkyNibbles(nibbles);
+    }
+
+    @Override
+    public boolean[] getSkyEmptinessMap() {
+        return this.getWrappedChunk().getSkyEmptinessMap();
+    }
+
+    @Override
+    public void setSkyEmptinessMap(final boolean[] emptinessMap) {
+        this.getWrappedChunk().setSkyEmptinessMap(emptinessMap);
+    }
+
+    @Override
+    public boolean[] getBlockEmptinessMap() {
+        return this.getWrappedChunk().getBlockEmptinessMap();
+    }
+
+    @Override
+    public void setBlockEmptinessMap(boolean[] emptinessMap) {
+        this.getWrappedChunk().setBlockEmptinessMap(emptinessMap);
+    }
+
+    // Tuinity end - rewrite light engine
+
+    public ProtoChunkExtension(Chunk chunk) {
+        super(chunk.getPos(), ChunkConverter.a, chunk.world); // Paper - Anti-Xray - Add parameter
+        this.a = chunk;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity getTileEntity(BlockPosition blockposition) {
+        return this.a.getTileEntity(blockposition);
+    }
+
+    @Nullable
+    @Override
+    public IBlockData getType(BlockPosition blockposition) {
+        return this.a.getType(blockposition);
+    }
+    // Paper start
+    public final IBlockData getType(final int x, final int y, final int z) {
+        return this.a.getBlockData(x, y, z);
+    }
+    // Paper end
+
+    @Override
+    public Fluid getFluid(BlockPosition blockposition) {
+        return this.a.getFluid(blockposition);
+    }
+
+    @Override
+    public int K() {
+        return this.a.K();
+    }
+
+    @Nullable
+    @Override
+    public IBlockData setType(BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
+        return null;
+    }
+
+    @Override
+    public void setTileEntity(BlockPosition blockposition, TileEntity tileentity) {}
+
+    @Override
+    public void a(Entity entity) {}
+
+    @Override
+    public void a(ChunkStatus chunkstatus) {}
+
+    @Override
+    public ChunkSection[] getSections() {
+        return this.a.getSections();
+    }
+
+    @Nullable
+    @Override
+    public LightEngine e() {
+        return this.a.e();
+    }
+
+    @Override
+    public void a(HeightMap.Type heightmap_type, long[] along) {}
+
+    private HeightMap.Type c(HeightMap.Type heightmap_type) {
+        return heightmap_type == HeightMap.Type.WORLD_SURFACE_WG ? HeightMap.Type.WORLD_SURFACE : (heightmap_type == HeightMap.Type.OCEAN_FLOOR_WG ? HeightMap.Type.OCEAN_FLOOR : heightmap_type);
+    }
+
+    @Override
+    public int getHighestBlock(HeightMap.Type heightmap_type, int i, int j) {
+        return this.a.getHighestBlock(this.c(heightmap_type), i, j);
+    }
+
+    @Override
+    public ChunkCoordIntPair getPos() {
+        return this.a.getPos();
+    }
+
+    @Override
+    public void setLastSaved(long i) {}
+
+    @Nullable
+    @Override
+    public StructureStart<?> a(StructureGenerator<?> structuregenerator) {
+        return this.a.a(structuregenerator);
+    }
+
+    @Override
+    public void a(StructureGenerator<?> structuregenerator, StructureStart<?> structurestart) {}
+
+    @Override
+    public Map<StructureGenerator<?>, StructureStart<?>> h() {
+        return this.a.h();
+    }
+
+    @Override
+    public void a(Map<StructureGenerator<?>, StructureStart<?>> map) {}
+
+    @Override
+    public LongSet b(StructureGenerator<?> structuregenerator) {
+        return this.a.b(structuregenerator);
+    }
+
+    @Override
+    public void a(StructureGenerator<?> structuregenerator, long i) {}
+
+    @Override
+    public Map<StructureGenerator<?>, LongSet> v() {
+        return this.a.v();
+    }
+
+    @Override
+    public void b(Map<StructureGenerator<?>, LongSet> map) {}
+
+    @Override
+    public BiomeStorage getBiomeIndex() {
+        return this.a.getBiomeIndex();
+    }
+
+    @Override
+    public void setNeedsSaving(boolean flag) {}
+
+    @Override
+    public boolean isNeedsSaving() {
+        return false;
+    }
+
+    @Override
+    public ChunkStatus getChunkStatus() {
+        return this.a.getChunkStatus();
+    }
+
+    @Override
+    public void removeTileEntity(BlockPosition blockposition) {}
+
+    @Override
+    public void e(BlockPosition blockposition) {}
+
+    @Override
+    public void a(NBTTagCompound nbttagcompound) {}
+
+    @Nullable
+    @Override
+    public NBTTagCompound i(BlockPosition blockposition) {
+        return this.a.i(blockposition);
+    }
+
+    @Nullable
+    @Override
+    public NBTTagCompound j(BlockPosition blockposition) {
+        return this.a.j(blockposition);
+    }
+
+    @Override
+    public void a(BiomeStorage biomestorage) {}
+
+    @Override
+    public Stream<BlockPosition> m() {
+        return this.a.m();
+    }
+
+    @Override
+    public ProtoChunkTickList<Block> n() {
+        return new ProtoChunkTickList<>((block) -> {
+            return block.getBlockData().isAir();
+        }, this.getPos());
+    }
+
+    @Override
+    public ProtoChunkTickList<FluidType> o() {
+        return new ProtoChunkTickList<>((fluidtype) -> {
+            return fluidtype == FluidTypes.EMPTY;
+        }, this.getPos());
+    }
+
+    @Override
+    public BitSet a(WorldGenStage.Features worldgenstage_features) {
+        throw (UnsupportedOperationException) SystemUtils.c((Throwable) (new UnsupportedOperationException("Meaningless in this context")));
+    }
+
+    @Override
+    public BitSet b(WorldGenStage.Features worldgenstage_features) {
+        throw (UnsupportedOperationException) SystemUtils.c((Throwable) (new UnsupportedOperationException("Meaningless in this context")));
+    }
+
+    public Chunk u() {
+        return this.a;
+    }
+
+    @Override
+    public boolean r() {
+        return this.a.r();
+    }
+
+    @Override
+    public void b(boolean flag) {
+        this.a.b(flag);
+    }
+}

@@ -1,0 +1,167 @@
+package net.minecraft.server.network;
+
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import net.minecraft.SharedConstants;
+import net.minecraft.SystemUtils;
+import net.minecraft.network.EnumProtocol;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.ChatMessage;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.handshake.PacketHandshakingInListener;
+import net.minecraft.network.protocol.handshake.PacketHandshakingInSetProtocol;
+import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
+import net.minecraft.server.MinecraftServer;
+
+import java.net.InetAddress;
+// CraftBukkit end
+
+public class HandshakeListener implements PacketHandshakingInListener {
+
+    // Spigot start
+    private static final com.google.gson.Gson gson = new com.google.gson.Gson();
+    static final java.util.regex.Pattern HOST_PATTERN = java.util.regex.Pattern.compile("[0-9a-f\\.:]{0,45}");
+    static final java.util.regex.Pattern PROP_PATTERN = java.util.regex.Pattern.compile("\\w{0,16}");
+    // Spigot end
+    // CraftBukkit start - add fields
+    private static final Object2LongMap<InetAddress> throttleTracker = new Object2LongOpenHashMap<>();
+    private static int throttleCounter = 0;
+    // CraftBukkit end
+    private static final IChatBaseComponent a = new ChatComponentText("Ignoring status request");
+    private final MinecraftServer b;
+    private final NetworkManager c; final NetworkManager getNetworkManager() { return this.c; } // Paper - OBFHELPER
+    private static final boolean BYPASS_HOSTCHECK = Boolean.getBoolean("Paper.bypassHostCheck"); // Paper
+
+    public HandshakeListener(MinecraftServer minecraftserver, NetworkManager networkmanager) {
+        this.b = minecraftserver;
+        this.c = networkmanager;
+    }
+
+    @Override
+    public void a(PacketHandshakingInSetProtocol packethandshakinginsetprotocol) {
+        switch (packethandshakinginsetprotocol.b()) {
+            case LOGIN:
+                this.c.setProtocol(EnumProtocol.LOGIN);
+                // CraftBukkit start - Connection throttle
+                try {
+                    if (!(this.c.channel.localAddress() instanceof io.netty.channel.unix.DomainSocketAddress)) { // Paper - the connection throttle is useless when you have a Unix domain socket
+                        var currentTime = SystemUtils.getMonotonicMillis();
+                        var connectionThrottle = this.b.server.getConnectionThrottle();
+                        var address = ((java.net.InetSocketAddress) this.c.getSocketAddress()).getAddress();
+
+                    synchronized (throttleTracker) {
+                        if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.getLong(address) < connectionThrottle) {
+                            throttleTracker.put(address, currentTime);
+                            var chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage, true)[0]; // Paper - Configurable connection throttle kick message // Paper - Fix hex colors not working in some kick messages
+                            this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+                            this.c.close(chatmessage);
+                            return;
+                        }
+
+                        throttleTracker.put(address, currentTime);
+                        throttleCounter++;
+                        if (throttleCounter > 200) {
+                            throttleCounter = 0;
+
+                            // Cleanup stale entries
+                            throttleTracker.object2LongEntrySet().removeIf(entry -> entry.getLongValue() > connectionThrottle);
+                        }
+                    }
+                    } // Paper - add closing bracket for if check above
+                } catch (Throwable t) {
+                    org.apache.logging.log4j.LogManager.getLogger().debug("Failed to check connection throttle", t);
+                }
+                // CraftBukkit end
+                if (packethandshakinginsetprotocol.c() != SharedConstants.getGameVersion().getProtocolVersion()) {
+                    IChatBaseComponent chatmessage; // Paper - Fix hex colors not working in some kick messages
+
+                    if (packethandshakinginsetprotocol.c() < 754) {
+                        chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedClientMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) , true )[0]; // Spigot // Paper - Fix hex colors not working in some kick messages
+                    } else {
+                        chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) , true )[0]; // Spigot // Paper - Fix hex colors not working in some kick messages
+                    }
+
+                    this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+                    this.c.close(chatmessage);
+                } else {
+                    this.c.setPacketListener(new LoginListener(this.b, this.c));
+                // Paper start - handshake event
+                    var proxyLogicEnabled = org.spigotmc.SpigotConfig.bungee;
+                    var handledByEvent = false;
+                // Try and handle the handshake through the event
+                if (com.destroystokyo.paper.event.player.PlayerHandshakeEvent.getHandlerList().getRegisteredListeners().length != 0) { // Hello? Can you hear me?
+                    var socketAddress = this.getNetworkManager().socketAddress;
+                    var hostnameOfRemote = socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getHostString() : InetAddress.getLoopbackAddress().getHostAddress();
+                    var event = new com.destroystokyo.paper.event.player.PlayerHandshakeEvent(packethandshakinginsetprotocol.hostname, hostnameOfRemote, !proxyLogicEnabled);
+                    if (event.callEvent()) {
+                        // If we've failed somehow, let the client know so and go no further.
+                        if (event.isFailed()) {
+                            var chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(event.getFailMessage(), true)[0]; // Paper - Fix hex colors not working in some kick messages
+                            this.getNetworkManager().sendPacket(new PacketLoginOutDisconnect(chatmessage));
+                            this.getNetworkManager().close(chatmessage);
+                            return;
+                        }
+
+                        if (event.getServerHostname() != null) packethandshakinginsetprotocol.hostname = event.getServerHostname();
+                        if (event.getSocketAddressHostname() != null) this.getNetworkManager().socketAddress = new java.net.InetSocketAddress(event.getSocketAddressHostname(), socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getPort() : 0);
+                        this.getNetworkManager().spoofedUUID = event.getUniqueId();
+                        this.getNetworkManager().spoofedProfile = gson.fromJson(event.getPropertiesJson(), com.mojang.authlib.properties.Property[].class);
+                        handledByEvent = true; // Hooray, we did it!
+                    }
+                }
+                // Don't try and handle default logic if it's been handled by the event.
+                if (!handledByEvent && proxyLogicEnabled) {
+                // Paper end
+                    // Spigot Start
+                //if (org.spigotmc.SpigotConfig.bungee) { // Paper - comment out, we check above!
+                    var split = packethandshakinginsetprotocol.hostname.split("\00");
+                        if ( ( split.length == 3 || split.length == 4 ) && ( BYPASS_HOSTCHECK || HOST_PATTERN.matcher( split[1] ).matches() ) ) { // Paper
+                            // Paper start - Unix domain socket support
+                            var socketAddress = c.getSocketAddress();
+                            packethandshakinginsetprotocol.hostname = split[0];
+                            c.socketAddress = new java.net.InetSocketAddress(split[1], socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getPort() : 0);
+                            // Paper end
+                            c.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
+                        } else
+                        {
+                            var chatmessage = new ChatMessage("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
+                            this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+                            this.c.close(chatmessage);
+                            return;
+                        }
+                        if ( split.length == 4 )
+                        {
+                            c.spoofedProfile = gson.fromJson(split[3], com.mojang.authlib.properties.Property[].class);
+                        }
+                    }
+                    // Spigot End
+                    ((LoginListener) this.c.packetListener()).hostname = packethandshakinginsetprotocol.hostname + ":" + packethandshakinginsetprotocol.port; // CraftBukkit - set hostname
+                }
+                break;
+            case STATUS:
+                if (this.b.am()) {
+                    this.c.setProtocol(EnumProtocol.STATUS);
+                    this.c.setPacketListener(new PacketStatusListener(this.b, this.c));
+                } else {
+                    this.c.close(HandshakeListener.a);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Invalid intention " + packethandshakinginsetprotocol.b());
+        }
+
+        // Paper start - NetworkClient implementation
+        this.getNetworkManager().protocolVersion = packethandshakinginsetprotocol.getProtocolVersion();
+        this.getNetworkManager().virtualHost = com.destroystokyo.paper.network.PaperNetworkClient.prepareVirtualHost(packethandshakinginsetprotocol.hostname, packethandshakinginsetprotocol.port);
+        // Paper end
+    }
+
+    @Override
+    public void a(IChatBaseComponent ichatbasecomponent) {}
+
+    @Override
+    public NetworkManager a() {
+        return this.c;
+    }
+}

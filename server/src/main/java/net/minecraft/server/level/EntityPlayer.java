@@ -1,0 +1,2562 @@
+package net.minecraft.server.level;
+
+import com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent;
+import com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent;
+import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.DataResult;
+import io.papermc.paper.adventure.PaperAdventure;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.*;
+import net.minecraft.advancements.CriterionTriggers;
+import net.minecraft.commands.arguments.ArgumentAnchor;
+import net.minecraft.core.*;
+import net.minecraft.nbt.DynamicOpsNBT;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketEncoder;
+import net.minecraft.network.chat.*;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.*;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.AdvancementDataPlayer;
+import net.minecraft.server.MCUtil;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ITextFilter;
+import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.sounds.SoundCategory;
+import net.minecraft.sounds.SoundEffect;
+import net.minecraft.stats.RecipeBookServer;
+import net.minecraft.stats.ServerStatisticManager;
+import net.minecraft.stats.Statistic;
+import net.minecraft.stats.StatisticList;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Unit;
+import net.minecraft.world.EnumHand;
+import net.minecraft.world.IInventory;
+import net.minecraft.world.ITileInventory;
+import net.minecraft.world.damagesource.CombatTracker;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
+import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.monster.EntityMonster;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.EnumChatVisibility;
+import net.minecraft.world.entity.projectile.EntityArrow;
+import net.minecraft.world.food.FoodMetaData;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.ContainerHorse;
+import net.minecraft.world.inventory.ICrafting;
+import net.minecraft.world.inventory.SlotResult;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.enchantment.EnchantmentManager;
+import net.minecraft.world.item.trading.MerchantRecipeList;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.EnumGamemode;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.block.BlockChest;
+import net.minecraft.world.level.block.BlockFacingHorizontal;
+import net.minecraft.world.level.block.BlockPortal;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.TileEntity;
+import net.minecraft.world.level.block.entity.TileEntityCommand;
+import net.minecraft.world.level.block.entity.TileEntitySign;
+import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.dimension.DimensionManager;
+import net.minecraft.world.level.portal.ShapeDetectorShape;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.minecraft.world.phys.Vec3D;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.ScoreboardScore;
+import net.minecraft.world.scores.ScoreboardTeam;
+import net.minecraft.world.scores.ScoreboardTeamBase;
+import net.minecraft.world.scores.criteria.IScoreboardCriteria;
+import net.pl3x.purpur.PurpurConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.WeatherType;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.craftbukkit.event.CraftPortalEvent;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.CraftDimensionUtil;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.MainHand;
+
+import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.util.*;
+// CraftBukkit end
+
+public class EntityPlayer extends EntityHuman implements ICrafting {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+    public long lastSave = MinecraftServer.currentTick; // Paper
+    public PlayerConnection playerConnection;
+    public NetworkManager networkManager; // Paper
+    public final MinecraftServer server;
+    public final PlayerInteractManager playerInteractManager;
+    public final Deque<Integer> removeQueue = new ArrayDeque<>(); // Paper
+    private final AdvancementDataPlayer advancementDataPlayer;
+    private final ServerStatisticManager serverStatisticManager;
+    private float lastHealthScored = Float.MIN_VALUE;
+    private int lastFoodScored = Integer.MIN_VALUE;
+    private int lastAirScored = Integer.MIN_VALUE;
+    private int lastArmorScored = Integer.MIN_VALUE;
+    private int lastExpLevelScored = Integer.MIN_VALUE;
+    private int lastExpTotalScored = Integer.MIN_VALUE;
+    public long lastHighPriorityChecked; // Paper
+    public void forceCheckHighPriority() {
+        lastHighPriorityChecked = -1;
+        getWorldServer().getChunkProvider().playerChunkMap.checkHighPriorityChunks(this);
+    }
+    public boolean isRealPlayer; // Paper
+    private float lastHealthSent = -1.0E8F;
+    private int lastFoodSent = -99999999;
+    private boolean lastSentSaturationZero = true;
+    public int lastSentExp = -99999999;
+    public int invulnerableTicks = 60;
+    private EnumChatVisibility bY;
+    private boolean bZ = true; public boolean hasChatColorsEnabled() { return this.bZ; } // Paper - OBFHELPER
+    private long ca = SystemUtils.getMonotonicMillis();
+    private Entity spectatedEntity;
+    public boolean worldChangeInvuln;
+    private boolean cd; private void setHasSeenCredits(boolean has) { this.cd = has; } // Paper - OBFHELPER
+    private final RecipeBookServer recipeBook = new RecipeBookServer();
+    private Vec3D cf;
+    private int cg;
+    private boolean ch;
+    @Nullable
+    private Vec3D ci;
+    private SectionPosition cj = SectionPosition.a(0, 0, 0);
+    private ResourceKey<World> spawnDimension;
+    @Nullable
+    private BlockPosition spawn;
+    private boolean spawnForced;
+    private float spawnAngle;
+    @Nullable
+    private final ITextFilter co;
+    private int containerCounter;
+    public boolean e;
+    public int ping;
+    public boolean viewingCredits;
+    private int containerUpdateDelay; // Paper
+    public long loginTime; // Paper
+    public int patrolSpawnDelay; // Paper - per player patrol spawns
+    // Paper start - cancellable death event
+    public boolean queueHealthUpdatePacket = false;
+    public net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth queuedHealthUpdatePacket;
+    // Paper end
+    // Paper start - mob spawning rework
+    public static final int ENUMCREATURETYPE_TOTAL_ENUMS = EnumCreatureType.values().length;
+    public final int[] mobCounts = new int[ENUMCREATURETYPE_TOTAL_ENUMS]; // Paper
+    public final com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> cachedSingleMobDistanceMap;
+    // Paper end
+
+    // CraftBukkit start
+    public String displayName;
+    public net.kyori.adventure.text.Component adventure$displayName; // Paper
+    public IChatBaseComponent listName;
+    public org.bukkit.Location compassTarget;
+    public int newExp = 0;
+    public int newLevel = 0;
+    public int newTotalExp = 0;
+    public boolean keepLevel = false;
+    public double maxHealthCache;
+    public boolean joining = true;
+    public boolean sentListPacket = false;
+    public boolean supressTrackerForLogin = false; // Paper
+    public boolean didPlayerJoinEvent = false; // Paper
+    public Integer clientViewDistance;
+    // CraftBukkit end
+    public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
+
+    public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> cachedSingleHashSet; // Paper
+
+    double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
+
+    public boolean needsChunkCenterUpdate; // Paper - no-tick view distance // Tuinity - package-private -> public
+    public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
+
+    public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
+        super(worldserver, worldserver.getSpawn(), worldserver.v(), gameprofile);
+        this.spawnDimension = World.OVERWORLD;
+        playerinteractmanager.player = this;
+        this.playerInteractManager = playerinteractmanager;
+        this.server = minecraftserver;
+        this.serverStatisticManager = minecraftserver.getPlayerList().getStatisticManager(this);
+        this.advancementDataPlayer = minecraftserver.getPlayerList().f(this);
+        this.G = 1.0F;
+        //this.c(worldserver); // Paper - don't move to spawn on login, only first join
+        this.co = minecraftserver.a(this);
+
+        this.cachedSingleHashSet = new com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
+
+        // CraftBukkit start
+        this.displayName = this.getName();
+        this.adventure$displayName = net.kyori.adventure.text.Component.text(this.getName()); // Paper
+        this.canPickUpLoot = true;
+        this.maxHealthCache = this.getMaxHealth();
+        this.cachedSingleMobDistanceMap = new com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
+
+        this.invulnerableTicks = world.purpurConfig.playerSpawnInvulnerableTicks; // Purpur
+    }
+    // Paper start
+    public BlockPosition getPointInFront(double inFront) {
+        var rads = Math.toRadians(MCUtil.normalizeYaw(this.yaw+90)); // MC rotates yaw 90 for some odd reason
+        var x = locX() + inFront * Math.cos(rads);
+        var z = locZ() + inFront * Math.sin(rads);
+        return new BlockPosition(x, locY(), z);
+    }
+
+    public ChunkCoordIntPair getChunkInFront(double inFront) {
+        var rads = Math.toRadians(MCUtil.normalizeYaw(this.yaw+90)); // MC rotates yaw 90 for some odd reason
+        var x = locX() + (inFront * 16) * Math.cos(rads);
+        var z = locZ() + (inFront * 16) * Math.sin(rads);
+        return new ChunkCoordIntPair(MathHelper.floor(x) >> 4, MathHelper.floor(z) >> 4);
+    }
+    // Paper end
+
+    // Yes, this doesn't match Vanilla, but it's the best we can do for now.
+    // If this is an issue, PRs are welcome
+    public final BlockPosition getSpawnPoint(WorldServer worldserver) {
+        var blockposition = worldserver.getSpawn();
+
+        if (worldserver.getDimensionManager().hasSkyLight() && worldserver.worldDataServer.getGameType() != EnumGamemode.ADVENTURE) {
+            var i = Math.max(0, this.server.a(worldserver));
+            var j = MathHelper.floor(worldserver.getWorldBorder().b((double) blockposition.getX(), (double) blockposition.getZ()));
+
+            if (j < i) {
+                i = j;
+            }
+
+            if (j <= 1) {
+                i = 1;
+            }
+
+            var k = (long) (i * 2 + 1);
+            var l = k * k;
+            var i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
+            var j1 = this.u(i1);
+            var k1 = worldserver.random.nextInt(i1);
+
+            for (var l1 = 0; l1 < i1; ++l1) {
+                var i2 = (k1 + j1 * l1) % i1;
+                var j2 = i2 % (i * 2 + 1);
+                var k2 = i2 / (i * 2 + 1);
+                var blockposition1 = WorldProviderNormal.a(worldserver, blockposition.getX() + j2 - i, blockposition.getZ() + k2 - i, false);
+
+                if (blockposition1 != null) {
+                    return blockposition1;
+                }
+            }
+        }
+
+        return blockposition;
+    }
+    // CraftBukkit end
+
+    public final void moveToSpawn(WorldServer worldserver) { c(worldserver); } // Paper - OBFHELPER
+    private void c(WorldServer worldserver) {
+        var blockposition = worldserver.getSpawn();
+
+        if (worldserver.getDimensionManager().hasSkyLight() && worldserver.worldDataServer.getGameType() != EnumGamemode.ADVENTURE) { // CraftBukkit
+            var i = Math.max(0, this.server.a(worldserver));
+            var j = MathHelper.floor(worldserver.getWorldBorder().b((double) blockposition.getX(), (double) blockposition.getZ()));
+
+            if (j < i) {
+                i = j;
+            }
+
+            if (j <= 1) {
+                i = 1;
+            }
+
+            var k = (long) (i * 2 + 1);
+            var l = k * k;
+            var i1 = l > 2147483647L ? Integer.MAX_VALUE : (int) l;
+            var j1 = this.u(i1);
+            var k1 = (new Random()).nextInt(i1);
+
+            for (var l1 = 0; l1 < i1; ++l1) {
+                var i2 = (k1 + j1 * l1) % i1;
+                var j2 = i2 % (i * 2 + 1);
+                var k2 = i2 / (i * 2 + 1);
+                var blockposition1 = WorldProviderNormal.a(worldserver, blockposition.getX() + j2 - i, blockposition.getZ() + k2 - i, false);
+
+                if (blockposition1 != null) {
+                    this.setPositionRotation(blockposition1, 0.0F, 0.0F);
+                    if (!worldserver.collidesWithAnyBlockOrWorldBorder(this, this.getBoundingBox(), true, false)) { // Tuinity - make sure this is loaded
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.setPositionRotation(blockposition, 0.0F, 0.0F);
+
+            while (worldserver.collidesWithAnyBlockOrWorldBorder(this, this.getBoundingBox(), true, false) && this.locY() < 255.0D) { // Tuinity - make sure this is loaded
+                this.setPosition(this.locX(), this.locY() + 1.0D, this.locZ());
+            }
+        }
+
+    }
+
+    private int u(int i) {
+        return i <= 16 ? i - 1 : 17;
+    }
+
+    @Override
+    public void loadData(NBTTagCompound nbttagcompound) {
+        super.loadData(nbttagcompound);
+        if (this.locY() > 300) this.setPositionRaw(locX(), 257, locZ()); // Paper - bring down to a saner Y level if out of world
+        if (nbttagcompound.hasKeyOfType("playerGameType", 99)) {
+            if (this.getMinecraftServer().getForceGamemode()) {
+                // Paper start - call PlayerGameModeChangeEvent on join for players that do not have the correct gamemode
+                if (this.getMinecraftServer().getGamemode() != EnumGamemode.getById(nbttagcompound.getInt("playerGameType"))) {
+                    if (new org.bukkit.event.player.PlayerGameModeChangeEvent(this.getBukkitEntity(), GameMode.getByValue(this.getMinecraftServer().getGamemode().getId()), org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.DEFAULT_GAMEMODE, null).callEvent()) {
+                this.playerInteractManager.a(this.getMinecraftServer().getGamemode(), EnumGamemode.NOT_SET);
+                    } else {
+                        this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET); // copied from below; if cancelled, set gamemode normally
+                    }
+                } else {
+                    this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET); // copied from below; if no change needed, set gamemode normally
+                } // Paper end
+            } else {
+                this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET);
+            }
+        }
+
+        if (nbttagcompound.hasKeyOfType("enteredNetherPosition", 10)) {
+            var nbttagcompound1 = nbttagcompound.getCompound("enteredNetherPosition");
+
+            this.ci = new Vec3D(nbttagcompound1.getDouble("x"), nbttagcompound1.getDouble("y"), nbttagcompound1.getDouble("z"));
+        }
+
+        this.cd = nbttagcompound.getBoolean("seenCredits");
+        if (nbttagcompound.hasKeyOfType("recipeBook", 10)) {
+            this.recipeBook.a(nbttagcompound.getCompound("recipeBook"), this.server.getCraftingManager());
+        }
+        this.getBukkitEntity().readExtraData(nbttagcompound); // CraftBukkit
+
+        if (this.isSleeping()) {
+            this.entityWakeup();
+        }
+
+        // CraftBukkit start
+        var spawnWorld = nbttagcompound.getString("SpawnWorld");
+        var oldWorld = (CraftWorld) Bukkit.getWorld(spawnWorld);
+        if (oldWorld != null) {
+            this.spawnDimension = oldWorld.getHandle().getDimensionKey();
+        }
+        // CraftBukkit end
+
+        if (nbttagcompound.hasKeyOfType("SpawnX", 99) && nbttagcompound.hasKeyOfType("SpawnY", 99) && nbttagcompound.hasKeyOfType("SpawnZ", 99)) {
+            this.spawn = new BlockPosition(nbttagcompound.getInt("SpawnX"), nbttagcompound.getInt("SpawnY"), nbttagcompound.getInt("SpawnZ"));
+            this.spawnForced = nbttagcompound.getBoolean("SpawnForced");
+            this.spawnAngle = nbttagcompound.getFloat("SpawnAngle");
+            if (nbttagcompound.hasKey("SpawnDimension")) {
+                DataResult dataresult = World.f.parse(DynamicOpsNBT.a, nbttagcompound.get("SpawnDimension"));
+                var logger = EntityPlayer.LOGGER;
+
+                logger.getClass();
+                this.spawnDimension = (ResourceKey) dataresult.resultOrPartial(logger::error).orElse(World.OVERWORLD);
+            }
+        }
+
+    }
+
+    @Override
+    public void saveData(NBTTagCompound nbttagcompound) {
+        super.saveData(nbttagcompound);
+        nbttagcompound.setInt("playerGameType", this.playerInteractManager.getGameMode().getId());
+        nbttagcompound.setInt("previousPlayerGameType", this.playerInteractManager.c().getId());
+        nbttagcompound.setBoolean("seenCredits", this.cd);
+        if (this.ci != null) {
+            var nbttagcompound1 = new NBTTagCompound();
+
+            nbttagcompound1.setDouble("x", this.ci.x);
+            nbttagcompound1.setDouble("y", this.ci.y);
+            nbttagcompound1.setDouble("z", this.ci.z);
+            nbttagcompound.set("enteredNetherPosition", nbttagcompound1);
+        }
+
+        var entity = this.getRootVehicle();
+        var entity1 = this.getVehicle();
+
+        // CraftBukkit start - handle non-persistent vehicles
+        var persistVehicle = true;
+        if (entity1 != null) {
+            Entity vehicle;
+            for (vehicle = entity1; vehicle != null; vehicle = vehicle.getVehicle()) {
+                if (!vehicle.persist) {
+                    persistVehicle = false;
+                    break;
+                }
+            }
+        }
+
+        if (persistVehicle && entity1 != null && entity != this && entity.hasSinglePlayerPassenger()) {
+            // CraftBukkit end
+            var nbttagcompound2 = new NBTTagCompound();
+            var nbttagcompound3 = new NBTTagCompound();
+
+            entity.d(nbttagcompound3);
+            nbttagcompound2.a("Attach", entity1.getUniqueID());
+            nbttagcompound2.set("Entity", nbttagcompound3);
+            nbttagcompound.set("RootVehicle", nbttagcompound2);
+        }
+
+        nbttagcompound.set("recipeBook", this.recipeBook.save());
+        nbttagcompound.setString("Dimension", this.world.getDimensionKey().a().toString());
+        if (this.spawn != null) {
+            nbttagcompound.setInt("SpawnX", this.spawn.getX());
+            nbttagcompound.setInt("SpawnY", this.spawn.getY());
+            nbttagcompound.setInt("SpawnZ", this.spawn.getZ());
+            nbttagcompound.setBoolean("SpawnForced", this.spawnForced);
+            nbttagcompound.setFloat("SpawnAngle", this.spawnAngle);
+            var dataresult = MinecraftKey.a.encodeStart(DynamicOpsNBT.a, this.spawnDimension.a()); // CraftBukkit - decompile error
+            var logger = EntityPlayer.LOGGER;
+
+            logger.getClass();
+            dataresult.resultOrPartial(logger::error).ifPresent((nbtbase) -> {
+                nbttagcompound.set("SpawnDimension", nbtbase);
+            });
+        }
+        this.getBukkitEntity().setExtraData(nbttagcompound); // CraftBukkit
+
+    }
+
+    // CraftBukkit start - World fallback code, either respawn location or global spawn
+    public void spawnIn(World world) {
+        super.spawnIn(world);
+        if (world == null) {
+            this.dead = false;
+            Vec3D position = null;
+            if (this.spawnDimension != null) {
+                world = this.getWorldServer().getServer().getHandle().getServer().getWorldServer(this.spawnDimension);
+                if (world != null && this.getSpawn() != null) {
+                    position = EntityHuman.getBed((WorldServer) world, this.getSpawn(), this.getSpawnAngle(), false, false).orElse(null);
+                }
+            }
+            if (world == null || position == null) {
+                world = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
+                position = Vec3D.a(((WorldServer) world).getSpawn());
+            }
+            this.world = world;
+            this.setPositionRaw(position.getX(), position.getY(), position.getZ()); // Paper - don't register to chunks yet
+        }
+        this.playerInteractManager.a((WorldServer) world);
+    }
+    // CraftBukkit end
+
+    public void a(int i) {
+        var f = (float) this.getExpToLevel();
+        var f1 = (f - 1.0F) / f;
+
+        this.exp = MathHelper.a((float) i / f, 0.0F, f1);
+        this.lastSentExp = -1;
+    }
+
+    public void b(int i) {
+        this.expLevel = i;
+        this.lastSentExp = -1;
+    }
+
+    @Override
+    public void levelDown(int i) {
+        super.levelDown(i);
+        this.lastSentExp = -1;
+    }
+
+    @Override
+    public void enchantDone(ItemStack itemstack, int i) {
+        super.enchantDone(itemstack, i);
+        this.lastSentExp = -1;
+    }
+
+    public void syncInventory() {
+        this.activeContainer.addSlotListener(this);
+    }
+
+    @Override
+    public void enterCombat() {
+        super.enterCombat();
+        this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTER_COMBAT));
+    }
+
+    @Override
+    public void exitCombat() {
+        super.exitCombat();
+        this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT));
+    }
+
+    @Override
+    protected void a(IBlockData iblockdata) {
+        if (!PurpurConfig.disableCriterions) {
+            CriterionTriggers.d.a(this, iblockdata);
+        }
+    }
+
+    @Override
+    protected ItemCooldown i() {
+        return new ItemCooldownPlayer(this);
+    }
+
+    @Override
+    public void tick() {
+        // CraftBukkit start
+        if (this.joining) {
+            this.joining = false;
+        }
+        // CraftBukkit end
+        this.playerInteractManager.a();
+        --this.invulnerableTicks;
+        if (this.noDamageTicks > 0) {
+            --this.noDamageTicks;
+        }
+
+        // Paper start - Configurable container update tick rate
+        if (--containerUpdateDelay <= 0) {
+            this.activeContainer.c();
+            containerUpdateDelay = world.paperConfig.containerUpdateTickRate;
+        }
+        // Paper end
+        if (!this.world.isClientSide && this.activeContainer != this.defaultContainer && (isFrozen() || !this.activeContainer.canUse(this))) { // Paper - auto close while frozen
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.CANT_USE); // Paper
+            this.activeContainer = this.defaultContainer;
+        }
+
+        while (!this.removeQueue.isEmpty()) {
+            var i = Math.min(this.removeQueue.size(), Integer.MAX_VALUE);
+            var aint = new int[i];
+            //Iterator<Integer> iterator = this.removeQueue.iterator(); // Paper
+            var j = 0;
+
+            // Paper start
+            /* while (iterator.hasNext() && j < i) {
+                aint[j++] = (Integer) iterator.next();
+                iterator.remove();
+            } */
+
+            Integer integer;
+            while (j < i && (integer = this.removeQueue.poll()) != null) {
+                aint[j++] = integer.intValue();
+            }
+            // Paper end
+
+            this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(aint));
+        }
+
+        var entity = this.getSpecatorTarget();
+
+        if (entity != this) {
+            if (entity.isAlive()) {
+                this.setLocation(entity.locX(), entity.locY(), entity.locZ(), entity.yaw, entity.pitch);
+                this.getWorldServer().getChunkProvider().movePlayer(this);
+                if (this.er()) {
+                    this.setSpectatorTarget(this);
+                }
+            } else {
+                this.setSpectatorTarget(this);
+            }
+        }
+
+        CriterionTriggers.w.a(this);
+        if (this.cf != null) {
+            CriterionTriggers.u.a(this, this.cf, this.ticksLived - this.cg);
+        }
+
+        this.advancementDataPlayer.b(this);
+
+        // Purpur start
+        if (this.world.purpurConfig.useNightVisionWhenRiding && this.getVehicle() != null && this.getVehicle().getPurpurRider() == this && world.getTime() % 100 == 0) { // 5 seconds
+            var nightVision = this.getEffect(MobEffects.NIGHT_VISION);
+            if (nightVision == null || nightVision.getDuration() <= 300) { // 15 seconds
+                this.addEffect(new MobEffect(MobEffects.NIGHT_VISION, 400, 0)); // 20 seconds
+            }
+        }
+        // Purpur end
+    }
+
+    public void playerTick() {
+        try {
+            if (valid && !this.isSpectator() || this.world.isLoaded(this.getChunkCoordinates())) { // Paper - don't tick dead players that are not in the world currently (pending respawn)
+                super.tick();
+            }
+            if (valid && isAlive() && playerConnection != null) ((WorldServer)world).getChunkProvider().playerChunkMap.checkHighPriorityChunks(this); // Paper
+
+            for (var i = 0; i < this.inventory.getSize(); ++i) {
+                var itemstack = this.inventory.getItem(i);
+
+                if (itemstack.getItem().ac_()) {
+                    var packet = ((ItemWorldMapBase) itemstack.getItem()).a(itemstack, this.world, (EntityHuman) this);
+
+                    if (packet != null) {
+                        this.playerConnection.sendPacket(packet);
+                    }
+                }
+            }
+
+            /* // TODO remove debug
+            this.networkManager.disableAutomaticFlush();
+
+            if (MinecraftServer.currentTick % 20 == 0) {
+                int centerX = MathHelper.floor(this.locX()) >> 4;
+                int centerZ = MathHelper.floor(this.locZ()) >> 4;
+                byte[] full = new byte[2048];
+                byte[] empty = new byte[2048];
+                java.util.Arrays.fill(full, (byte)-1);
+                for (int dz = -1; dz <= 1; ++dz) {
+                    for (int dx = -1; dx <= 1; ++dx) {
+                        int cx = centerX + dx;
+                        int cz = centerZ + dz;
+
+                        Chunk chunk = this.getWorldServer().getChunkProvider().getChunkAtIfLoadedImmediately(cx, cz);
+
+                        if (chunk == null) {
+                            continue;
+                        }
+
+                        for (int y = -1; y <= 16; ++y) {
+                            NibbleArray nibble = this.getWorldServer().getChunkProvider().getLightEngine().a(EnumSkyBlock.SKY)
+                                    .a(new SectionPosition(cx, y, cz));
+                            org.bukkit.Color color;
+                            org.bukkit.block.data.BlockData blockColor;
+                            if (nibble == null) {
+                                color = org.bukkit.Color.PURPLE;
+                                blockColor = org.bukkit.Material.PURPLE_WOOL.createBlockData();
+                                continue;
+                            } else {
+                                if (nibble.c()) { // is null
+                                    color = org.bukkit.Color.BLUE;
+                                    blockColor = org.bukkit.Material.BLUE_WOOL.createBlockData();
+                                } else if (java.util.Arrays.equals(nibble.justGiveMeTheFuckingByteArrayNoCleanerBullshitJesusFuckingChrist(), full)) {
+                                    color = org.bukkit.Color.RED;
+                                    blockColor = org.bukkit.Material.RED_WOOL.createBlockData();
+                                } else if (java.util.Arrays.equals(nibble.justGiveMeTheFuckingByteArrayNoCleanerBullshitJesusFuckingChrist(), empty)) {
+                                    color = org.bukkit.Color.BLACK;
+                                    blockColor = org.bukkit.Material.BLACK_WOOL.createBlockData();
+                                } else {
+                                    color = org.bukkit.Color.ORANGE;
+                                    blockColor = org.bukkit.Material.ORANGE_WOOL.createBlockData();
+                                }
+                            }
+                            if (false) {
+                                if (y < 0 || y > 15 || chunk.getSections()[y] == null || chunk.getSections()[y].isFullOfAir()) {
+                                    color = org.bukkit.Color.BLACK;
+                                    blockColor = org.bukkit.Material.BLACK_WOOL.createBlockData();
+                                } else {
+                                    color = org.bukkit.Color.WHITE;
+                                    blockColor = org.bukkit.Material.WHITE_WOOL.createBlockData();
+                                }
+                            }
+
+                            org.bukkit.Particle.DustOptions dustOptions = new org.bukkit.Particle.DustOptions(color, 1.7f);
+
+                            for (int i = 0; i <= 16; ++i) {
+                                // y axis
+
+                                double xVal = i == 0 ? 0.5 : (i == 16 ? 15.5 : i);
+
+                                // left side
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // right side
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+
+                                // x axis
+
+                                // bottom
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 0.5,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 0.5,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // top
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 15.5,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 15.5,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // z axis
+                                // bottom
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + 0.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + 0.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                //top
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + 15.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + 15.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.networkManager.enableAutomaticFlush();
+
+            //System.out.println("Block: " + this.getBukkitEntity().getLocation().getBlock().getLightFromBlocks());
+            //System.out.println("Sky: " + this.getBukkitEntity().getLocation().getBlock().getLightFromSky());
+            */  // TODO remove debug
+
+            if (this.getHealth() != this.lastHealthSent || this.lastFoodSent != this.foodData.getFoodLevel() || this.foodData.getSaturationLevel() == 0.0F != this.lastSentSaturationZero) {
+                this.playerConnection.sendPacket(new PacketPlayOutUpdateHealth(this.getBukkitEntity().getScaledHealth(), this.foodData.getFoodLevel(), this.foodData.getSaturationLevel())); // CraftBukkit
+                this.lastHealthSent = this.getHealth();
+                this.lastFoodSent = this.foodData.getFoodLevel();
+                this.lastSentSaturationZero = this.foodData.getSaturationLevel() == 0.0F;
+            }
+
+            if (this.getHealth() + this.getAbsorptionHearts() != this.lastHealthScored) {
+                this.lastHealthScored = this.getHealth() + this.getAbsorptionHearts();
+                this.a(IScoreboardCriteria.HEALTH, MathHelper.f(this.lastHealthScored));
+            }
+
+            if (this.foodData.getFoodLevel() != this.lastFoodScored) {
+                this.lastFoodScored = this.foodData.getFoodLevel();
+                this.a(IScoreboardCriteria.FOOD, MathHelper.f((float) this.lastFoodScored));
+            }
+
+            if (this.getAirTicks() != this.lastAirScored) {
+                this.lastAirScored = this.getAirTicks();
+                this.a(IScoreboardCriteria.AIR, MathHelper.f((float) this.lastAirScored));
+            }
+
+            if (this.getArmorStrength() != this.lastArmorScored) {
+                this.lastArmorScored = this.getArmorStrength();
+                this.a(IScoreboardCriteria.ARMOR, MathHelper.f((float) this.lastArmorScored));
+            }
+
+            if (this.expTotal != this.lastExpTotalScored) {
+                this.lastExpTotalScored = this.expTotal;
+                this.a(IScoreboardCriteria.XP, MathHelper.f((float) this.lastExpTotalScored));
+            }
+
+            // CraftBukkit start - Force max health updates
+            if (this.maxHealthCache != this.getMaxHealth()) {
+                this.getBukkitEntity().updateScaledHealth();
+            }
+            // CraftBukkit end
+
+            if (this.expLevel != this.lastExpLevelScored) {
+                this.lastExpLevelScored = this.expLevel;
+                this.a(IScoreboardCriteria.LEVEL, MathHelper.f((float) this.lastExpLevelScored));
+            }
+
+            if (this.expTotal != this.lastSentExp) {
+                this.lastSentExp = this.expTotal;
+                this.playerConnection.sendPacket(new PacketPlayOutExperience(this.exp, this.expTotal, this.expLevel));
+            }
+
+            if (this.ticksLived % 20 == 0) {
+                CriterionTriggers.p.a(this);
+            }
+
+            // CraftBukkit start - initialize oldLevel and fire PlayerLevelChangeEvent
+            if (this.oldLevel == -1) {
+                this.oldLevel = this.expLevel;
+            }
+
+            if (this.oldLevel != this.expLevel) {
+                CraftEventFactory.callPlayerLevelChangeEvent(this.world.getServer().getPlayer((EntityPlayer) this), this.oldLevel, this.expLevel);
+                this.oldLevel = this.expLevel;
+            }
+            // CraftBukkit end
+        } catch (Throwable throwable) {
+            var crashreport = CrashReport.a(throwable, "Ticking player");
+            var crashreportsystemdetails = crashreport.a("Player being ticked");
+
+            this.appendEntityCrashDetails(crashreportsystemdetails);
+            throw new ReportedException(crashreport);
+        }
+    }
+
+    private void a(IScoreboardCriteria iscoreboardcriteria, int i) {
+        // CraftBukkit - Use our scores instead
+        this.world.getServer().getScoreboardManager().getScoreboardScores(iscoreboardcriteria, this.getName(), (scoreboardscore) -> {
+            scoreboardscore.setScore(i);
+        });
+    }
+
+    // Paper start - process inventory
+    private static void processKeep(org.bukkit.event.entity.PlayerDeathEvent event, NonNullList<ItemStack> inv) {
+        var itemsToKeep = event.getItemsToKeep();
+        if (inv == null) {
+            // remainder of items left in toKeep - plugin added stuff on death that wasn't in the initial loot?
+            if (!itemsToKeep.isEmpty()) {
+                for (var itemStack : itemsToKeep) {
+                    event.getEntity().getInventory().addItem(itemStack);
+                }
+            }
+
+            return;
+        }
+
+        for (var i = 0; i < inv.size(); ++i) {
+            var item = inv.get(i);
+            if (EnchantmentManager.shouldNotDrop(item) || itemsToKeep.isEmpty() || item.isEmpty()) {
+                inv.set(i, ItemStack.NULL_ITEM);
+                continue;
+            }
+
+            var bukkitStack = item.getBukkitStack();
+            var keep = false;
+            var iterator = itemsToKeep.iterator();
+            while (iterator.hasNext()) {
+                var itemStack = iterator.next();
+                if (bukkitStack.equals(itemStack)) {
+                    iterator.remove();
+                    keep = true;
+                    break;
+                }
+            }
+
+            if (!keep) {
+                inv.set(i, ItemStack.NULL_ITEM);
+            }
+        }
+    }
+    // Paper end
+
+    @Override
+    public void die(DamageSource damagesource) {
+        var flag = this.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
+        // CraftBukkit start - fire PlayerDeathEvent
+        if (this.dead) {
+            return;
+        }
+        java.util.List<org.bukkit.inventory.ItemStack> loot = new ObjectArrayList<>(this.inventory.getSize());
+        var keepInventory = this.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || this.isSpectator();
+
+        if (!keepInventory) {
+            for (var item : this.inventory.getContents()) {
+                if (!item.isEmpty() && !EnchantmentManager.shouldNotDrop(item)) {
+                    loot.add(CraftItemStack.asCraftMirror(item));
+                }
+            }
+        }
+        // SPIGOT-5071: manually add player loot tables (SPIGOT-5195 - ignores keepInventory rule)
+        this.a(damagesource, this.lastDamageByPlayerTime > 0);
+        for (var item : this.drops) {
+            loot.add(item);
+        }
+        this.drops.clear(); // SPIGOT-5188: make sure to clear
+
+        var defaultMessage = this.getCombatTracker().getDeathMessage();
+
+        var event = CraftEventFactory.callPlayerDeathEvent(this, loot, PaperAdventure.asAdventure(defaultMessage), defaultMessage.getString(), keepInventory); // Paper - Adventure
+        // Paper start - cancellable death event
+        if (event.isCancelled()) {
+            // make compatible with plugins that might have already set the health in an event listener
+            if (this.getHealth() <= 0) {
+                this.setHealth((float) event.getReviveHealth());
+            }
+            return;
+        }
+        // Paper end
+
+        // SPIGOT-943 - only call if they have an inventory open
+        if (this.activeContainer != this.defaultContainer) {
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.DEATH); // Paper
+        }
+
+        var deathMessage = event.deathMessage() != null ? event.deathMessage() : net.kyori.adventure.text.Component.empty(); // Paper - Adventure
+
+        if (deathMessage != null && deathMessage != net.kyori.adventure.text.Component.empty() && flag) { // Paper - Adventure // TODO: allow plugins to override?
+            var ichatbasecomponent = PaperAdventure.asVanilla(deathMessage); // Paper - Adventure
+
+            this.playerConnection.a((Packet) (new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTITY_DIED, ichatbasecomponent)), (future) -> {
+                if (!future.isSuccess()) {
+                    var flag1 = true;
+                    var s = ichatbasecomponent.a(256);
+                    var chatmessage = new ChatMessage("death.attack.message_too_long", new Object[]{(new ChatComponentText(s)).a(EnumChatFormat.YELLOW)});
+                    var ichatmutablecomponent = (new ChatMessage("death.attack.even_more_magic", new Object[]{this.getScoreboardDisplayName()})).format((chatmodifier) -> {
+                        return chatmodifier.setChatHoverable(new ChatHoverable(ChatHoverable.EnumHoverAction.SHOW_TEXT, chatmessage));
+                    });
+
+                    this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTITY_DIED, ichatmutablecomponent));
+                }
+
+            });
+            var scoreboardteambase = this.getScoreboardTeam();
+            if (net.pl3x.purpur.PurpurConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendMessage(ichatbasecomponent); else // Purpur
+            if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS) {
+                if (scoreboardteambase.getDeathMessageVisibility() == ScoreboardTeamBase.EnumNameTagVisibility.HIDE_FOR_OTHER_TEAMS) {
+                    this.server.getPlayerList().a((EntityHuman) this, ichatbasecomponent);
+                } else if (scoreboardteambase.getDeathMessageVisibility() == ScoreboardTeamBase.EnumNameTagVisibility.HIDE_FOR_OWN_TEAM) {
+                    this.server.getPlayerList().b(this, ichatbasecomponent);
+                }
+            } else {
+                this.server.getPlayerList().sendMessage(ichatbasecomponent, ChatMessageType.SYSTEM, SystemUtils.b);
+            }
+        } else {
+            this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTITY_DIED));
+        }
+
+        this.releaseShoulderEntities();
+        if (this.world.getGameRules().getBoolean(GameRules.FORGIVE_DEAD_PLAYERS)) {
+            this.eW();
+        }
+        // SPIGOT-5478 must be called manually now
+        if (event.shouldDropExperience()) this.dropExperience(); // Paper - tie to event
+        // we clean the player's inventory after the EntityDeathEvent is called so plugins can get the exact state of the inventory.
+        if (!event.getKeepInventory()) {
+            // Paper start - replace logic
+            for (var inv : this.inventory.getComponents()) {
+                processKeep(event, inv);
+            }
+            processKeep(event, null);
+            // Paper end
+        }
+
+        this.setSpectatorTarget(this); // Remove spectated target
+        // CraftBukkit end
+
+        // CraftBukkit - Get our scores instead
+        this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.DEATH_COUNT, this.getName(), ScoreboardScore::incrementScore);
+        var entityliving = this.getKillingEntity();
+
+        if (entityliving != null) {
+            this.b(StatisticList.ENTITY_KILLED_BY.b(entityliving.getEntityType()));
+            entityliving.a(this, this.aO, damagesource);
+            this.f(entityliving);
+        }
+
+        this.world.broadcastEntityEffect(this, (byte) 3);
+        this.a(StatisticList.DEATHS);
+        this.a(StatisticList.CUSTOM.b(StatisticList.TIME_SINCE_DEATH));
+        this.a(StatisticList.CUSTOM.b(StatisticList.TIME_SINCE_REST));
+        this.extinguish();
+        this.setFlag(0, false);
+        this.getCombatTracker().g();
+    }
+
+    private void eW() {
+        var axisalignedbb = (new AxisAlignedBB(this.getChunkCoordinates())).grow(32.0D, 10.0D, 32.0D);
+
+        this.world.b(EntityInsentient.class, axisalignedbb).stream().filter((entityinsentient) -> {
+            return entityinsentient instanceof IEntityAngerable;
+        }).forEach((entityinsentient) -> {
+            ((IEntityAngerable) entityinsentient).b(this);
+        });
+    }
+
+    @Override
+    public void a(Entity entity, int i, DamageSource damagesource) {
+        if (entity != this) {
+            super.a(entity, i, damagesource);
+            this.addScore(i);
+            var s = this.getName();
+            var s1 = entity.getName();
+
+            // CraftBukkit - Get our scores instead
+            this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.TOTAL_KILL_COUNT, s, ScoreboardScore::incrementScore);
+            if (entity instanceof EntityHuman) {
+                this.a(StatisticList.PLAYER_KILLS);
+                // CraftBukkit - Get our scores instead
+                this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.PLAYER_KILL_COUNT, s, ScoreboardScore::incrementScore);
+            } else {
+                this.a(StatisticList.MOB_KILLS);
+            }
+
+            this.a(s, s1, IScoreboardCriteria.m);
+            this.a(s1, s, IScoreboardCriteria.n);
+            CriterionTriggers.b.a(this, entity, damagesource);
+        }
+    }
+
+    private void a(String s, String s1, IScoreboardCriteria[] aiscoreboardcriteria) {
+        var scoreboardteam = this.getScoreboard().getPlayerTeam(s1);
+
+        if (scoreboardteam != null) {
+            var i = scoreboardteam.getColor().b();
+
+            if (i >= 0 && i < aiscoreboardcriteria.length) {
+                // CraftBukkit - Get our scores instead
+                this.world.getServer().getScoreboardManager().getScoreboardScores(aiscoreboardcriteria[i], s, ScoreboardScore::incrementScore);
+            }
+        }
+
+    }
+
+    // Purpur start
+    public boolean isSpawnInvulnerable() {
+        return invulnerableTicks > 0 || frozen;
+    }
+    // Purpur end
+
+    @Override
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        if (this.isInvulnerable(damagesource)) {
+            return false;
+        } else {
+            // Purpur start
+            if (damagesource == DamageSource.FALL) {
+                if (getRootVehicle() instanceof net.minecraft.world.entity.vehicle.EntityMinecartAbstract && world.purpurConfig.minecartControllable && !world.purpurConfig.minecartControllableFallDamage) {
+                    return false;
+                }
+                if (getRootVehicle() instanceof net.minecraft.world.entity.vehicle.EntityBoat && !world.purpurConfig.boatsDoFallDamage) {
+                    return false;
+                }
+            }
+            // Purpur end
+            var flag = this.server.j() && this.canPvP() && "fall".equals(damagesource.translationIndex);
+
+            if (!flag && isSpawnInvulnerable() && damagesource != DamageSource.OUT_OF_WORLD) { // Purpur
+                return false;
+            } else {
+                if (damagesource instanceof EntityDamageSource) {
+                    var entity = damagesource.getEntity();
+
+                    if (entity instanceof EntityHuman && !this.a((EntityHuman) entity)) {
+                        return false;
+                    }
+
+                    if (entity instanceof EntityArrow) {
+                        var entityarrow = (EntityArrow) entity;
+                        var entity1 = entityarrow.getShooter();
+
+                        if (entity1 instanceof EntityHuman && !this.a((EntityHuman) entity1)) {
+                            return false;
+                        }
+                    }
+                }
+                // Paper start - cancellable death events
+                //return super.damageEntity(damagesource, f);
+                this.queueHealthUpdatePacket = true;
+                var damaged = super.damageEntity(damagesource, f);
+                this.queueHealthUpdatePacket = false;
+                if (this.queuedHealthUpdatePacket != null) {
+                    this.playerConnection.sendPacket(this.queuedHealthUpdatePacket);
+                    this.queuedHealthUpdatePacket = null;
+                }
+                return damaged;
+                // Paper end
+            }
+        }
+    }
+
+    @Override
+    public boolean a(EntityHuman entityhuman) {
+        return !this.canPvP() ? false : super.a(entityhuman);
+    }
+
+    private boolean canPvP() {
+        // CraftBukkit - this.server.getPvP() -> this.world.pvpMode
+        return this.world.pvpMode;
+    }
+
+    @Nullable
+    @Override
+    protected ShapeDetectorShape a(WorldServer worldserver) {
+        var shapedetectorshape = super.a(worldserver);
+        worldserver = (shapedetectorshape == null) ? worldserver : shapedetectorshape.world; // CraftBukkit
+
+        if (shapedetectorshape != null && this.world.getTypeKey() == DimensionManager.OVERWORLD && worldserver != null && worldserver.getTypeKey() == DimensionManager.THE_END) { // CraftBukkit
+            var vec3d = shapedetectorshape.position.add(0.0D, -1.0D, 0.0D);
+
+            return new ShapeDetectorShape(vec3d, Vec3D.ORIGIN, 90.0F, 0.0F, worldserver, shapedetectorshape.portalEventInfo); // CraftBukkit
+        } else {
+            return shapedetectorshape;
+        }
+    }
+
+    @Nullable
+    @Override
+    public Entity b(WorldServer worldserver) {
+        // CraftBukkit start
+        return b(worldserver, TeleportCause.UNKNOWN);
+    }
+
+    @Nullable public final Entity changeDimension(WorldServer worldserver, PlayerTeleportEvent.TeleportCause cause) { return this.b(worldserver, cause); } // Paper - OBFHELPER
+    @Nullable
+    public Entity b(WorldServer worldserver, PlayerTeleportEvent.TeleportCause cause) {
+        // CraftBukkit end
+        if (this.isSleeping()) return this; // CraftBukkit - SPIGOT-3154
+        // this.worldChangeInvuln = true; // CraftBukkit - Moved down and into PlayerList#changeDimension
+        var worldserver1 = this.getWorldServer();
+        var resourcekey = worldserver1.getTypeKey(); // CraftBukkit
+
+        if (resourcekey == DimensionManager.THE_END && worldserver != null && worldserver.getTypeKey() == DimensionManager.OVERWORLD) { // CraftBukkit
+            this.worldChangeInvuln = true; // CraftBukkit - Moved down from above
+            this.decouple();
+            this.getWorldServer().removePlayer(this);
+            if (!this.viewingCredits) {
+                if (world.paperConfig.disableEndCredits) this.setHasSeenCredits(true); // Paper - Toggle to always disable end credits
+                this.viewingCredits = true;
+                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, this.cd ? 0.0F : 1.0F));
+                this.cd = true;
+            }
+
+            return this;
+        } else {
+            var shapedetectorshape = this.a(worldserver);
+
+            if (shapedetectorshape != null) {
+                worldserver = shapedetectorshape.world; // CraftBukkit
+                if (worldserver == null) { } else // CraftBukkit - empty to fall through to null to event
+                if (resourcekey == DimensionManager.OVERWORLD && worldserver.getTypeKey() == DimensionManager.THE_NETHER) { // CraftBukkit
+                    this.ci = this.getPositionVector();
+                } else if (worldserver.getTypeKey() == DimensionManager.THE_END && shapedetectorshape.portalEventInfo != null && shapedetectorshape.portalEventInfo.getCanCreatePortal()) { // CraftBukkit
+                    this.a(worldserver, new BlockPosition(shapedetectorshape.position));
+                }
+                // CraftBukkit start
+            } else {
+                return null;
+            }
+            var enter = this.getBukkitEntity().getLocation();
+            var exit = (worldserver == null) ? null : new Location(worldserver.getWorld(), shapedetectorshape.position.x, shapedetectorshape.position.y, shapedetectorshape.position.z, shapedetectorshape.yaw, shapedetectorshape.pitch);
+            var tpEvent = new PlayerTeleportEvent(this.getBukkitEntity(), enter, exit, cause);
+            Bukkit.getServer().getPluginManager().callEvent(tpEvent);
+            if (tpEvent.isCancelled() || tpEvent.getTo() == null) {
+                return null;
+            }
+            exit = tpEvent.getTo();
+            worldserver = ((CraftWorld) exit.getWorld()).getHandle();
+            // CraftBukkit end
+
+            // CraftBukkit
+            this.worldChangeInvuln = true; // CraftBukkit - Set teleport invulnerability only if player changing worlds
+
+            this.playerConnection.grim$E$noReminderTicks = 0;
+            this.playerConnection.sendPacket(new PacketPlayOutRespawn(worldserver.getDimensionManager(), worldserver.getDimensionKey(), BiomeManager.a(worldserver.getSeed()), this.playerInteractManager.getGameMode(), this.playerInteractManager.c(), worldserver.isDebugWorld(), worldserver.isFlatWorld(), true));
+            this.playerConnection.sendPacket(new PacketPlayOutServerDifficulty(this.world.getDifficulty(), this.world.getWorldData().isDifficultyLocked()));
+            var playerlist = this.server.getPlayerList();
+
+            playerlist.d(this);
+            worldserver1.removePlayer(this);
+            this.dead = false;
+            this.portalPos = MCUtil.toBlockPosition(exit); // Purpur
+
+            // CraftBukkit end
+            this.spawnIn(worldserver);
+            worldserver.addPlayerPortal(this);
+            this.playerConnection.teleport(exit); // CraftBukkit - use internal teleport without event
+            this.playerConnection.syncPosition(); // CraftBukkit - sync position after changing it (from PortalTravelAgent#findAndteleport)
+            this.triggerDimensionAdvancements(worldserver1);
+            this.playerInteractManager.a(worldserver);
+            this.playerConnection.sendPacket(new PacketPlayOutAbilities(this.abilities));
+            playerlist.a(this, worldserver);
+            playerlist.updateClient(this);
+            Iterator iterator = this.getEffects().iterator();
+
+            while (iterator.hasNext()) {
+                var mobeffect = (MobEffect) iterator.next();
+
+                this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
+            }
+
+            this.playerConnection.sendPacket(new PacketPlayOutWorldEvent(1032, BlockPosition.ZERO, 0, false));
+            this.lastSentExp = -1;
+            this.lastHealthSent = -1.0F;
+            this.lastFoodSent = -1;
+
+            setSneaking(false); // Paper - fix MC-10657
+
+            // CraftBukkit start
+            var changeEvent = new PlayerChangedWorldEvent(this.getBukkitEntity(), worldserver1.getWorld());
+            this.world.getServer().getPluginManager().callEvent(changeEvent);
+            // CraftBukkit end
+            // Paper start
+            if (this.isBlocking()) {
+                this.clearActiveItem();
+            }
+            // Paper end
+
+            this.invulnerableTicks = worldserver.purpurConfig.playerSpawnInvulnerableTicks; // Purpur
+            return this;
+        }
+    }
+
+    // CraftBukkit start
+    @Override
+    protected CraftPortalEvent callPortalEvent(Entity entity, WorldServer exitWorldServer, BlockPosition exitPosition, TeleportCause cause, int searchRadius, int creationRadius) {
+        var enter = this.getBukkitEntity().getLocation();
+        var exit = new Location(exitWorldServer.getWorld(), exitPosition.getX(), exitPosition.getY(), exitPosition.getZ(), yaw, pitch);
+        var event = new PlayerPortalEvent(this.getBukkitEntity(), enter, exit, cause, searchRadius, true, creationRadius);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null) {
+            return null;
+        }
+        return new CraftPortalEvent(event);
+    }
+    // CraftBukkit end
+
+    private void a(WorldServer worldserver, BlockPosition blockposition) {
+        var blockposition_mutableblockposition = blockposition.i();
+
+        var blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(worldserver); // Paper
+        for (var i = -2; i <= 2; ++i) {
+            for (var j = -2; j <= 2; ++j) {
+                for (var k = -1; k < 3; ++k) {
+                    var iblockdata = k == -1 ? Blocks.OBSIDIAN.getBlockData() : Blocks.AIR.getBlockData();
+
+                    blockList.setTypeAndData(blockposition_mutableblockposition.setValues(blockposition).withOffset(j, k, i), iblockdata, 3); // Paper
+                }
+            }
+        }
+        // Paper start
+        if (new org.bukkit.event.world.PortalCreateEvent((List< org.bukkit.block.BlockState>) (List) blockList.getList(), worldserver.getWorld(), this.getBukkitEntity(), org.bukkit.event.world.PortalCreateEvent.CreateReason.END_PLATFORM).callEvent()) {
+            blockList.updateList();
+        }
+        // Paper end
+
+    }
+
+    @Override
+    protected Optional<BlockUtil.Rectangle> findOrCreatePortal(WorldServer worldserver, BlockPosition blockposition, boolean flag, int searchRadius, boolean canCreatePortal, int createRadius) { // CraftBukkit
+        var optional = super.findOrCreatePortal(worldserver, blockposition, flag, searchRadius, canCreatePortal, createRadius); // CraftBukkit
+
+        if (optional.isPresent() || !canCreatePortal) { // CraftBukkit
+            return optional;
+        } else {
+            var enumdirection_enumaxis = (EnumDirection.EnumAxis) this.world.getType(this.ac).d(BlockPortal.AXIS).orElse(EnumDirection.EnumAxis.X);
+            var optional1 = worldserver.getTravelAgent().createPortal(blockposition, enumdirection_enumaxis, this, createRadius); // CraftBukkit
+
+            if (!optional1.isPresent()) {
+                // EntityPlayer.LOGGER.error("Unable to create a portal, likely target out of worldborder"); // CraftBukkit
+            }
+
+            return optional1;
+        }
+    }
+
+    public void triggerDimensionAdvancements(WorldServer worldserver) {
+        var resourcekey = worldserver.getDimensionKey();
+        var resourcekey1 = this.world.getDimensionKey();
+        // CraftBukkit start
+        var maindimensionkey = CraftDimensionUtil.getMainDimensionKey(worldserver);
+        var maindimensionkey1 = CraftDimensionUtil.getMainDimensionKey(this.world);
+
+        CriterionTriggers.v.a(this, maindimensionkey, maindimensionkey1);
+        if (maindimensionkey != resourcekey || maindimensionkey1 != resourcekey1) {
+            CriterionTriggers.v.a(this, resourcekey, resourcekey1);
+        }
+
+        if (maindimensionkey == World.THE_NETHER && maindimensionkey1 == World.OVERWORLD && this.ci != null) {
+            // CraftBukkit end
+            CriterionTriggers.C.a(this, this.ci);
+        }
+
+        if (maindimensionkey1 != World.THE_NETHER) { // CraftBukkit
+            this.ci = null;
+        }
+
+    }
+
+    @Override
+    public boolean a(EntityPlayer entityplayer) {
+        return entityplayer.isSpectator() ? this.getSpecatorTarget() == this : (this.isSpectator() ? false : super.a(entityplayer));
+    }
+
+    private void a(TileEntity tileentity) {
+        if (tileentity != null) {
+            var packetplayouttileentitydata = tileentity.getUpdatePacket();
+
+            if (packetplayouttileentitydata != null) {
+                this.playerConnection.sendPacket(packetplayouttileentitydata);
+            }
+        }
+
+    }
+
+    @Override
+    public void receive(Entity entity, int i) {
+        super.receive(entity, i);
+        this.activeContainer.c();
+    }
+
+    // CraftBukkit start - moved bed result checks from below into separate method
+    private Either<EntityHuman.EnumBedResult, Unit> getBedResult(BlockPosition blockposition, EnumDirection enumdirection) {
+        if (!this.isSleeping() && this.isAlive()) {
+            if (!this.world.getDimensionManager().isNatural()) {
+                return Either.left(EntityHuman.EnumBedResult.NOT_POSSIBLE_HERE);
+            } else if (!this.a(blockposition, enumdirection)) {
+                return Either.left(EntityHuman.EnumBedResult.TOO_FAR_AWAY);
+            } else if (this.b(blockposition, enumdirection)) {
+                return Either.left(EntityHuman.EnumBedResult.OBSTRUCTED);
+            } else {
+                this.setRespawnPosition(this.world.getDimensionKey(), blockposition, this.yaw, false, true);
+                if (this.world.isDay()) {
+                    return Either.left(EntityHuman.EnumBedResult.NOT_POSSIBLE_NOW);
+                } else {
+                    if (!this.isCreative()) {
+                        var d0 = 8.0D;
+                        var d1 = 5.0D;
+                        var vec3d = Vec3D.c((BaseBlockPosition) blockposition);
+                        var list = this.world.a(EntityMonster.class, new AxisAlignedBB(vec3d.getX() - 8.0D, vec3d.getY() - 5.0D, vec3d.getZ() - 8.0D, vec3d.getX() + 8.0D, vec3d.getY() + 5.0D, vec3d.getZ() + 8.0D), (entitymonster) -> {
+                            return entitymonster.f((EntityHuman) this);
+                        });
+
+                        if (!this.world.purpurConfig.playerSleepNearMonsters && !list.isEmpty()) { // Purpur
+                            return Either.left(EntityHuman.EnumBedResult.NOT_SAFE);
+                        }
+                    }
+
+                    return Either.right(Unit.INSTANCE);
+                }
+            }
+        } else {
+            return Either.left(EntityHuman.EnumBedResult.OTHER_PROBLEM);
+        }
+    }
+
+    @Override
+    public Either<EntityHuman.EnumBedResult, Unit> sleep(BlockPosition blockposition, boolean force) {
+        var enumdirection = (EnumDirection) this.world.getType(blockposition).get(BlockFacingHorizontal.FACING);
+        var bedResult = this.getBedResult(blockposition, enumdirection);
+
+        if (bedResult.left().orElse(null) == EntityHuman.EnumBedResult.OTHER_PROBLEM) {
+            return bedResult; // return immediately if the result is not bypassable by plugins
+        }
+
+        if (force) {
+            bedResult = Either.right(Unit.INSTANCE);
+        }
+
+        bedResult = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerBedEnterEvent(this, blockposition, bedResult);
+        if (bedResult.left().isPresent()) {
+            return bedResult;
+        }
+
+        {
+            {
+                {
+                    var either = super.sleep(blockposition, force).ifRight((unit) -> {
+                        this.a(StatisticList.SLEEP_IN_BED);
+                        CriterionTriggers.q.a(this);
+                    });
+
+                    ((WorldServer) this.world).everyoneSleeping();
+                    return either;
+                }
+            }
+        }
+        // CraftBukkit end
+    }
+
+    @Override
+    public void entitySleep(BlockPosition blockposition) {
+        this.a(StatisticList.CUSTOM.b(StatisticList.TIME_SINCE_REST));
+        super.entitySleep(blockposition);
+    }
+
+    private boolean a(BlockPosition blockposition, EnumDirection enumdirection) {
+        return this.g(blockposition) || this.g(blockposition.shift(enumdirection.opposite()));
+    }
+
+    private boolean g(BlockPosition blockposition) {
+        var vec3d = Vec3D.c((BaseBlockPosition) blockposition);
+
+        return Math.abs(this.locX() - vec3d.getX()) <= 3.0D && Math.abs(this.locY() - vec3d.getY()) <= 2.0D && Math.abs(this.locZ() - vec3d.getZ()) <= 3.0D;
+    }
+
+    private boolean b(BlockPosition blockposition, EnumDirection enumdirection) {
+        var blockposition1 = blockposition.up();
+
+        return !this.f(blockposition1) || !this.f(blockposition1.shift(enumdirection.opposite()));
+    }
+
+    @Override
+    public void wakeup(boolean flag, boolean flag1) {
+        if (!this.isSleeping()) return; // CraftBukkit - Can't leave bed if not in one!
+        // CraftBukkit start - fire PlayerBedLeaveEvent
+        var player = this.getBukkitEntity();
+        var bedPosition = this.getBedPosition().orElse(null);
+
+        org.bukkit.block.Block bed;
+        if (bedPosition != null) {
+            bed = this.world.getWorld().getBlockAt(bedPosition.getX(), bedPosition.getY(), bedPosition.getZ());
+        } else {
+            bed = this.world.getWorld().getBlockAt(player.getLocation());
+        }
+
+        var event = new PlayerBedLeaveEvent(player, bed, true);
+        this.world.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+        // CraftBukkit end
+        if (this.isSleeping()) {
+            this.getWorldServer().getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAnimation(this, 2));
+        }
+
+        super.wakeup(flag, flag1);
+        if (this.playerConnection != null) {
+            this.playerConnection.a(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
+        }
+
+    }
+
+    @Override
+    public boolean a(Entity entity, boolean flag) {
+        var entity1 = this.getVehicle();
+
+        if (!super.a(entity, flag)) {
+            return false;
+        } else {
+            var entity2 = this.getVehicle();
+
+            if (entity2 != entity1 && this.playerConnection != null) {
+                this.playerConnection.a(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
+            }
+
+            return true;
+        }
+    }
+
+    // Paper start
+    @Override public void stopRiding() { stopRiding(false); }
+    @Override public void stopRiding(boolean suppressCancellation) {
+        // paper end
+        var entity = this.getVehicle();
+
+        super.stopRiding(suppressCancellation); // Paper
+        var entity1 = this.getVehicle();
+
+        if (entity1 != entity && this.playerConnection != null) {
+            this.playerConnection.a(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
+        }
+
+    }
+
+    @Override
+    public boolean isInvulnerable(DamageSource damagesource) {
+        return super.isInvulnerable(damagesource) || this.H() || damagesource == DamageSource.CRAMMING || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER; // Purpur
+    }
+
+    @Override
+    protected void a(double d0, boolean flag, IBlockData iblockdata, BlockPosition blockposition) {}
+
+    @Override
+    protected void c(BlockPosition blockposition) {
+        if (!this.isSpectator()) {
+            super.c(blockposition);
+        }
+
+    }
+
+    public void a(double d0, boolean flag) {
+        var blockposition = this.ap();
+
+        if (this.world.isLoaded(blockposition)) {
+            super.a(d0, flag, this.world.getType(blockposition), blockposition);
+        }
+    }
+
+    @Override
+    public void openSign(TileEntitySign tileentitysign) {
+        if (world.purpurConfig.signAllowColors) this.playerConnection.sendPacket(tileentitysign.getTranslatedUpdatePacket()); // Purpur
+        tileentitysign.a((EntityHuman) this);
+        this.playerConnection.sendPacket(new PacketPlayOutOpenSignEditor(tileentitysign.getPosition()));
+    }
+
+    public int nextContainerCounter() { // CraftBukkit - void -> int
+        this.containerCounter = this.containerCounter % 100 + 1;
+        return containerCounter; // CraftBukkit
+    }
+
+    @Override
+    public OptionalInt openContainer(@Nullable ITileInventory itileinventory) {
+        if (itileinventory == null) {
+            return OptionalInt.empty();
+        } else {
+            if (this.activeContainer != this.defaultContainer) {
+                this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.OPEN_NEW); // Paper
+            }
+
+            this.nextContainerCounter();
+            var container = itileinventory.createMenu(this.containerCounter, this.inventory, this);
+
+            // CraftBukkit start - Inventory open hook
+            if (container != null) {
+                container.setTitle(itileinventory.getScoreboardDisplayName());
+
+                var cancelled = false;
+                container = CraftEventFactory.callInventoryOpenEvent(this, container, cancelled);
+                if (container == null && !cancelled) { // Let pre-cancelled events fall through
+                    // SPIGOT-5263 - close chest if cancelled
+                    if (itileinventory instanceof IInventory) {
+                        ((IInventory) itileinventory).closeContainer(this);
+                    } else if (itileinventory instanceof BlockChest.DoubleInventory) {
+                        // SPIGOT-5355 - double chests too :(
+                        ((BlockChest.DoubleInventory) itileinventory).inventorylargechest.closeContainer(this);
+                    }
+                    return OptionalInt.empty();
+                }
+            }
+            // CraftBukkit end
+            if (container == null) {
+                if (this.isSpectator()) {
+                    this.a((IChatBaseComponent) (new ChatMessage("container.spectatorCantOpen")).a(EnumChatFormat.RED), true);
+                }
+
+                return OptionalInt.empty();
+            } else {
+                // CraftBukkit start
+                this.activeContainer = container;
+                if (!isFrozen()) this.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, container.getType(), container.getTitle())); // Paper
+                // CraftBukkit end
+                container.addSlotListener(this);
+                return OptionalInt.of(this.containerCounter);
+            }
+        }
+    }
+
+    @Override
+    public void openTrade(int i, MerchantRecipeList merchantrecipelist, int j, int k, boolean flag, boolean flag1) {
+        this.playerConnection.sendPacket(new PacketPlayOutOpenWindowMerchant(i, merchantrecipelist, j, k, flag, flag1));
+    }
+
+    @Override
+    public void openHorseInventory(EntityHorseAbstract entityhorseabstract, IInventory iinventory) {
+        // CraftBukkit start - Inventory open hook
+        this.nextContainerCounter();
+        Container container = new ContainerHorse(this.containerCounter, this.inventory, iinventory, entityhorseabstract);
+        container.setTitle(entityhorseabstract.getScoreboardDisplayName());
+        container = CraftEventFactory.callInventoryOpenEvent(this, container);
+
+        if (container == null) {
+            iinventory.closeContainer(this);
+            return;
+        }
+        // CraftBukkit end
+        if (this.activeContainer != this.defaultContainer) {
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.OPEN_NEW); // Paper
+        }
+
+        // this.nextContainerCounter(); // CraftBukkit - moved up
+        this.playerConnection.sendPacket(new PacketPlayOutOpenWindowHorse(this.containerCounter, iinventory.getSize(), entityhorseabstract.getId()));
+        this.activeContainer = container; // CraftBukkit
+        this.activeContainer.addSlotListener(this);
+    }
+
+    @Override
+    public void openBook(ItemStack itemstack, EnumHand enumhand) {
+        var item = itemstack.getItem();
+
+        if (item == Items.WRITTEN_BOOK) {
+            if (ItemWrittenBook.a(itemstack, this.getCommandListener(), (EntityHuman) this)) {
+                this.activeContainer.c();
+            }
+
+            this.playerConnection.sendPacket(new PacketPlayOutOpenBook(enumhand));
+        }
+
+    }
+
+    @Override
+    public void a(TileEntityCommand tileentitycommand) {
+        tileentitycommand.c(true);
+        this.a((TileEntity) tileentitycommand);
+    }
+
+    @Override
+    public void a(Container container, int i, ItemStack itemstack) {
+        if (!(container.getSlot(i) instanceof SlotResult)) {
+            if (container == this.defaultContainer) {
+                CriterionTriggers.e.a(this, this.inventory, itemstack);
+            }
+
+            if (!this.e) {
+                this.playerConnection.sendPacket(new PacketPlayOutSetSlot(container.windowId, i, itemstack));
+            }
+        }
+    }
+
+    public void updateInventory(Container container) {
+        this.a(container, container.b());
+    }
+
+    @Override
+    public void a(Container container, NonNullList<ItemStack> nonnulllist) {
+        this.playerConnection.sendPacket(new PacketPlayOutWindowItems(container.windowId, nonnulllist));
+        this.playerConnection.sendPacket(new PacketPlayOutSetSlot(-1, -1, this.inventory.getCarried()));
+        // CraftBukkit start - Send a Set Slot to update the crafting result slot
+        if (java.util.EnumSet.of(InventoryType.CRAFTING,InventoryType.WORKBENCH).contains(container.getBukkitView().getType())) {
+            this.playerConnection.sendPacket(new PacketPlayOutSetSlot(container.windowId, 0, container.getSlot(0).getItem()));
+        }
+        // CraftBukkit end
+    }
+
+    @Override
+    public void setContainerData(Container container, int i, int j) {
+        this.playerConnection.sendPacket(new PacketPlayOutWindowData(container.windowId, i, j));
+    }
+
+    @Override
+    public void closeInventory() {
+        // Paper start
+        closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNKNOWN);
+    }
+    public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        CraftEventFactory.handleInventoryCloseEvent(this, reason); // CraftBukkit
+        // Paper end
+        this.playerConnection.sendPacket(new PacketPlayOutCloseWindow(this.activeContainer.windowId));
+        this.o();
+    }
+    // Tuinity start - special close for unloaded inventory
+    public void closeUnloadedInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        // copied from above
+        CraftEventFactory.handleInventoryCloseEvent(this, reason); // CraftBukkit
+        // Paper end
+        // copied from below
+        this.playerConnection.sendPacket(new PacketPlayOutCloseWindow(this.activeContainer.windowId));
+        this.activeContainer = this.defaultContainer;
+        // do not run close logic
+    }
+    // Tuinity end - special close for unloaded inventory
+
+    public void broadcastCarriedItem() {
+        if (!this.e) {
+            this.playerConnection.sendPacket(new PacketPlayOutSetSlot(-1, -1, this.inventory.getCarried()));
+        }
+    }
+
+    public void o() {
+        this.activeContainer.b((EntityHuman) this);
+        this.activeContainer = this.defaultContainer;
+    }
+
+    public void a(float f, float f1, boolean flag, boolean flag1) {
+        if (this.isPassenger()) {
+            if (f >= -1.0F && f <= 1.0F) {
+                this.aR = f;
+            }
+
+            if (f1 >= -1.0F && f1 <= 1.0F) {
+                this.aT = f1;
+            }
+
+            this.jumping = flag;
+            this.setSneaking(flag1);
+        }
+
+    }
+
+    @Override
+    public void a(Statistic<?> statistic, int i) {
+        if (PurpurConfig.disableStatistics) return;
+        this.serverStatisticManager.b(this, statistic, i);
+        this.world.getServer().getScoreboardManager().getScoreboardScores(statistic, this.getName(), (scoreboardscore) -> { // CraftBukkit - Get our scores instead
+            scoreboardscore.addScore(i);
+        });
+    }
+
+    @Override
+    public void a(Statistic<?> statistic) {
+        if (PurpurConfig.disableStatistics) return;
+        this.serverStatisticManager.setStatistic(this, statistic, 0);
+        this.world.getServer().getScoreboardManager().getScoreboardScores(statistic, this.getName(), ScoreboardScore::c); // CraftBukkit - Get our scores instead
+    }
+
+    @Override
+    public int discoverRecipes(Collection<IRecipe<?>> collection) {
+        return this.recipeBook.a(collection, this);
+    }
+
+    @Override
+    public void a(MinecraftKey[] aminecraftkey) {
+        List<IRecipe<?>> list = Lists.newArrayList();
+        var i = aminecraftkey.length;
+
+        for (var j = 0; j < i; ++j) {
+            var minecraftkey = aminecraftkey[j];
+
+            this.server.getCraftingManager().getRecipe(minecraftkey).ifPresent(list::add);
+        }
+
+        this.discoverRecipes(list);
+    }
+
+    @Override
+    public int undiscoverRecipes(Collection<IRecipe<?>> collection) {
+        return this.recipeBook.b(collection, this);
+    }
+
+    @Override
+    public void giveExp(int i) {
+        super.giveExp(i);
+        this.lastSentExp = -1;
+    }
+
+    public void p() {
+        this.ch = true;
+        this.ejectPassengers();
+
+        // Paper start - Workaround an issue where the vehicle doesn't track the passenger disconnection dismount.
+        if (this.isPassenger() && this.getVehicle() instanceof EntityPlayer) {
+            this.stopRiding();
+        }
+        // Paper end
+
+        if (this.isSleeping()) {
+            this.wakeup(true, false);
+        }
+
+    }
+
+    public boolean q() {
+        return this.ch;
+    }
+
+    public void triggerHealthUpdate() {
+        this.lastHealthSent = -1.0E8F;
+        this.lastSentExp = -1; // CraftBukkit - Added to reset
+    }
+
+    // CraftBukkit start - Support multi-line messages
+    public void sendMessage(UUID uuid, IChatBaseComponent[] ichatbasecomponent) {
+        for (var component : ichatbasecomponent) {
+            this.sendMessage(component, (uuid == null) ? SystemUtils.b : uuid);
+        }
+    }
+    // CraftBukkit end
+
+    @Override
+    public void a(IChatBaseComponent ichatbasecomponent, boolean flag) {
+        this.playerConnection.sendPacket(new PacketPlayOutChat(ichatbasecomponent, flag ? ChatMessageType.GAME_INFO : ChatMessageType.CHAT, SystemUtils.b));
+    }
+
+    @Override
+    protected void s() {
+        if (!this.activeItem.isEmpty() && this.isHandRaised()) {
+            this.playerConnection.sendPacket(new PacketPlayOutEntityStatus(this, (byte) 9));
+            super.s();
+        }
+
+    }
+
+    @Override
+    public void a(ArgumentAnchor.Anchor argumentanchor_anchor, Vec3D vec3d) {
+        super.a(argumentanchor_anchor, vec3d);
+        this.playerConnection.sendPacket(new PacketPlayOutLookAt(argumentanchor_anchor, vec3d.x, vec3d.y, vec3d.z));
+    }
+
+    public void a(ArgumentAnchor.Anchor argumentanchor_anchor, Entity entity, ArgumentAnchor.Anchor argumentanchor_anchor1) {
+        var vec3d = argumentanchor_anchor1.a(entity);
+
+        super.a(argumentanchor_anchor, vec3d);
+        this.playerConnection.sendPacket(new PacketPlayOutLookAt(argumentanchor_anchor, entity, argumentanchor_anchor1));
+    }
+
+    public void copyFrom(EntityPlayer entityplayer, boolean flag) {
+        if (flag) {
+            this.inventory.a(entityplayer.inventory);
+            this.setHealth(entityplayer.getHealth());
+            this.foodData = entityplayer.foodData;
+            this.expLevel = entityplayer.expLevel;
+            this.expTotal = entityplayer.expTotal;
+            this.exp = entityplayer.exp;
+            this.setScore(entityplayer.getScore());
+            this.ac = entityplayer.ac;
+        } else if (this.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || entityplayer.isSpectator()) {
+            this.inventory.a(entityplayer.inventory);
+            this.expLevel = entityplayer.expLevel;
+            this.expTotal = entityplayer.expTotal;
+            this.exp = entityplayer.exp;
+            this.setScore(entityplayer.getScore());
+        }
+
+        this.bG = entityplayer.bG;
+        this.enderChest = entityplayer.enderChest;
+        this.getDataWatcher().set(EntityPlayer.bi, entityplayer.getDataWatcher().get(EntityPlayer.bi));
+        this.lastSentExp = -1;
+        this.lastHealthSent = -1.0F;
+        this.lastFoodSent = -1;
+        // this.recipeBook.a((RecipeBook) entityplayer.recipeBook); // CraftBukkit
+        // Paper start - Optimize remove queue - vanilla copies player objects, but CB doesn't. This method currently only
+        // Applies to the same player, so we need to not duplicate our removal queue. The rest of this method does "resetting"
+        // type logic so it does need to be called, maybe? This is silly.
+        // this.removeQueue.addAll(entityplayer.removeQueue);
+        if (this.removeQueue != entityplayer.removeQueue) {
+            this.removeQueue.addAll(entityplayer.removeQueue);
+        }
+        // Paper end
+        this.cd = entityplayer.cd;
+        this.ci = entityplayer.ci;
+        this.setShoulderEntityLeft(entityplayer.getShoulderEntityLeft());
+        this.setShoulderEntityRight(entityplayer.getShoulderEntityRight());
+
+    }
+
+    @Override
+    protected void a(MobEffect mobeffect) {
+        super.a(mobeffect);
+        this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
+        if (mobeffect.getMobEffect() == MobEffects.LEVITATION) {
+            this.cg = this.ticksLived;
+            this.cf = this.getPositionVector();
+        }
+        if (!PurpurConfig.disableCriterions) {
+            CriterionTriggers.A.a(this);
+        }
+    }
+
+    @Override
+    protected void a(MobEffect mobeffect, boolean flag) {
+        super.a(mobeffect, flag);
+        this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
+        if (!PurpurConfig.disableCriterions) {
+            CriterionTriggers.A.a(this);
+        }
+    }
+
+    @Override
+    protected void b(MobEffect mobeffect) {
+        super.b(mobeffect);
+        this.playerConnection.sendPacket(new PacketPlayOutRemoveEntityEffect(this.getId(), mobeffect.getMobEffect()));
+        if (mobeffect.getMobEffect() == MobEffects.LEVITATION) {
+            this.cf = null;
+        }
+
+        CriterionTriggers.A.a(this);
+    }
+
+    @Override
+    public void enderTeleportTo(double d0, double d1, double d2) {
+        this.playerConnection.a(d0, d1, d2, this.yaw, this.pitch);
+    }
+
+    @Override
+    public void teleportAndSync(double d0, double d1, double d2) {
+        this.enderTeleportTo(d0, d1, d2);
+        this.playerConnection.syncPosition();
+    }
+
+    @Override
+    public void a(Entity entity) {
+        this.getWorldServer().getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAnimation(entity, 4));
+    }
+
+    @Override
+    public void b(Entity entity) {
+        this.getWorldServer().getChunkProvider().broadcastIncludingSelf(this, new PacketPlayOutAnimation(entity, 5));
+    }
+
+    @Override
+    public void updateAbilities() {
+        if (this.playerConnection != null) {
+            this.playerConnection.sendPacket(new PacketPlayOutAbilities(this.abilities));
+            this.C();
+        }
+    }
+
+    public WorldServer getWorldServer() {
+        return (WorldServer) this.world;
+    }
+
+    @Override
+    public void a(EnumGamemode enumgamemode) {
+        // Paper start - Add cause and nullable message to event
+        setGamemode(enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.UNKNOWN, null);
+    }
+
+    public PlayerGameModeChangeEvent setGamemode(EnumGamemode enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause cause, net.kyori.adventure.text.Component message) {
+        // Paper end
+        // CraftBukkit start
+        if (enumgamemode == this.playerInteractManager.getGameMode()) {
+            return null; // Paper
+        }
+
+        var event = new PlayerGameModeChangeEvent(getBukkitEntity(), GameMode.getByValue(enumgamemode.getId()), cause, message); // Paper
+        world.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return event; // Paper
+        }
+        // CraftBukkit end
+
+        this.playerInteractManager.setGameMode(enumgamemode);
+        this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.d, (float) enumgamemode.getId()));
+        if (enumgamemode == EnumGamemode.SPECTATOR) {
+            this.releaseShoulderEntities();
+            this.stopRiding();
+        } else {
+            this.setSpectatorTarget(this);
+        }
+
+        this.updateAbilities();
+        this.dU();
+        return event; // Paper
+    }
+
+    @Override
+    public boolean isSpectator() {
+        return this.playerInteractManager.getGameMode() == EnumGamemode.SPECTATOR;
+    }
+
+    @Override
+    public boolean isCreative() {
+        return this.playerInteractManager.getGameMode() == EnumGamemode.CREATIVE;
+    }
+
+    @Override
+    public void sendMessage(IChatBaseComponent ichatbasecomponent, UUID uuid) {
+        this.a(ichatbasecomponent, ChatMessageType.SYSTEM, uuid);
+    }
+
+    public void sendMessage(IChatBaseComponent message, ChatMessageType type, UUID sender) { this.a(message, type, sender); } // Paper - OBFHELPER
+    public void a(IChatBaseComponent ichatbasecomponent, ChatMessageType chatmessagetype, UUID uuid) {
+        this.playerConnection.a((Packet) (new PacketPlayOutChat(ichatbasecomponent, chatmessagetype, uuid)), (future) -> {
+            if (!future.isSuccess() && (chatmessagetype == ChatMessageType.GAME_INFO || chatmessagetype == ChatMessageType.SYSTEM)) {
+                var flag = true;
+                var s = ichatbasecomponent.a(256);
+                var ichatmutablecomponent = (new ChatComponentText(s)).a(EnumChatFormat.YELLOW);
+
+                this.playerConnection.sendPacket(new PacketPlayOutChat((new ChatMessage("multiplayer.message_not_delivered", new Object[]{ichatmutablecomponent})).a(EnumChatFormat.RED), ChatMessageType.SYSTEM, uuid));
+            }
+
+        });
+    }
+
+    public String v() {
+        var s = this.playerConnection.networkManager.getSocketAddress().toString();
+
+        s = s.substring(s.indexOf("/") + 1);
+        s = s.substring(0, s.indexOf(":"));
+        return s;
+    }
+
+    public String locale = null; // CraftBukkit - add, lowercase // Paper - default to null
+    public java.util.Locale adventure$locale = java.util.Locale.US; // Paper
+    public void a(PacketPlayInSettings packetplayinsettings) {
+        new PlayerClientOptionsChangeEvent(getBukkitEntity(), packetplayinsettings.locale, packetplayinsettings.viewDistance, com.destroystokyo.paper.ClientOption.ChatVisibility.valueOf(packetplayinsettings.getChatVisibility().name()), packetplayinsettings.hasChatColorsEnabled(), new com.destroystokyo.paper.PaperSkinParts(packetplayinsettings.getSkinParts()), packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT).callEvent(); // Paper - settings event
+        // CraftBukkit start
+        if (getMainHand() != packetplayinsettings.getMainHand()) {
+            var event = new PlayerChangedMainHandEvent(getBukkitEntity(), getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT);
+            this.server.server.getPluginManager().callEvent(event);
+        }
+        if (this.locale == null || !this.locale.equals(packetplayinsettings.locale)) { // Paper - check for null
+            var event = new PlayerLocaleChangeEvent(getBukkitEntity(), packetplayinsettings.locale);
+            this.server.server.getPluginManager().callEvent(event);
+            new com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent(this.getBukkitEntity(), this.locale, packetplayinsettings.locale).callEvent(); // Paper
+        }
+        this.locale = packetplayinsettings.locale;
+        // Paper start
+        this.adventure$locale = net.kyori.adventure.translation.Translator.parseLocale(this.locale);
+        this.playerConnection.networkManager.channel.attr(PaperAdventure.LOCALE_ATTRIBUTE).set(this.adventure$locale);
+        ((PacketEncoder) this.playerConnection.networkManager.channel.pipeline().get("encoder")).setAdventure$locale(this.adventure$locale);
+        // Paper end
+        this.clientViewDistance = packetplayinsettings.viewDistance;
+        // CraftBukkit end
+        this.bY = packetplayinsettings.d();
+        this.bZ = packetplayinsettings.e();
+        this.getDataWatcher().set(EntityPlayer.bi, (byte) packetplayinsettings.f());
+        this.getDataWatcher().set(EntityPlayer.bj, (byte) (packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? 0 : 1));
+    }
+
+    public EnumChatVisibility getChatFlags() {
+        return this.bY;
+    }
+
+    public void setResourcePack(String s, String s1) {
+        this.playerConnection.sendPacket(new PacketPlayOutResourcePackSend(s, s1));
+    }
+
+    @Override
+    protected int y() {
+        return this.server.b(this.getProfile());
+    }
+
+    public void resetIdleTimer() {
+        this.ca = SystemUtils.getMonotonicMillis();
+        setAfk(false); // Purpur
+    }
+
+    // Purpur start
+    private boolean isAfk = false;
+
+    @Override
+    public void setAfk(boolean setAfk) {
+        if (this.isAfk == setAfk) {
+            return;
+        }
+
+        var msg = setAfk ? net.pl3x.purpur.PurpurConfig.afkBroadcastAway : net.pl3x.purpur.PurpurConfig.afkBroadcastBack;
+
+        var event = new net.pl3x.purpur.event.PlayerAFKEvent(getBukkitEntity(), setAfk, world.purpurConfig.idleTimeoutKick, msg, !Bukkit.isPrimaryThread());
+        if (!event.callEvent() || event.shouldKick()) {
+            return;
+        }
+
+        this.isAfk = setAfk;
+
+        if (!setAfk) {
+            resetIdleTimer();
+        }
+
+        msg = event.getBroadcastMsg();
+        if (msg != null && !msg.isEmpty()) {
+            server.getPlayerList().sendMessage(org.bukkit.craftbukkit.util.CraftChatMessage.fromStringOrNull(String.format(msg, getProfile().getName())));
+        }
+
+        if (world.purpurConfig.idleTimeoutUpdateTabList) {
+            if (setAfk) {
+                getBukkitEntity().setPlayerListName(net.pl3x.purpur.PurpurConfig.afkTabListPrefix + getName() + net.pl3x.purpur.PurpurConfig.afkTabListSuffix);
+            } else {
+                getBukkitEntity().setPlayerListName(getName());
+            }
+        }
+
+        ((WorldServer) world).everyoneSleeping();
+    }
+
+    @Override
+    public boolean isAfk() {
+        return isAfk;
+    }
+
+    @Override
+    public boolean isCollidable() {
+        return !isAfk() && super.isCollidable();
+    }
+    // Purpur end
+
+    public ServerStatisticManager getStatisticManager() {
+        return this.serverStatisticManager;
+    }
+
+    public RecipeBookServer getRecipeBook() {
+        return this.recipeBook;
+    }
+
+    public void c(Entity entity) {
+        if (entity instanceof EntityHuman) {
+            this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(new int[]{entity.getId()}));
+        } else {
+            this.removeQueue.add((Integer) entity.getId()); // CraftBukkit - decompile error
+        }
+
+    }
+
+    public void d(Entity entity) {
+        this.removeQueue.remove((Integer) entity.getId()); // CraftBukkit - decompile error
+    }
+
+    @Override
+    protected void C() {
+        if (this.isSpectator()) {
+            this.df();
+            this.setInvisible(true);
+        } else {
+            super.C();
+        }
+
+    }
+
+    public Entity getSpecatorTarget() {
+        return (Entity) (this.spectatedEntity == null ? this : this.spectatedEntity);
+    }
+
+    public void setSpectatorTarget(Entity newSpectatorTarget) {
+        // Paper start - Add PlayerStartSpectatingEntityEvent and PlayerStopSpectatingEntity Event and improve implementation
+        var entity1 = this.getSpecatorTarget();
+
+        if (newSpectatorTarget == null) {
+            newSpectatorTarget = this;
+        }
+
+        if (entity1 == newSpectatorTarget) return; // new spec target is the current spec target
+
+        if (newSpectatorTarget == this) {
+            var playerStopSpectatingEntityEvent = new com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent(this.getBukkitEntity(), entity1.getBukkitEntity());
+
+            if (!playerStopSpectatingEntityEvent.callEvent()) {
+                return;
+            }
+        } else {
+            var playerStartSpectatingEntityEvent = new com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent(this.getBukkitEntity(), entity1.getBukkitEntity(), newSpectatorTarget.getBukkitEntity());
+
+            if (!playerStartSpectatingEntityEvent.callEvent()) {
+                return;
+            }
+        }
+        // Validate
+        if (newSpectatorTarget != this) {
+            if (newSpectatorTarget.dead || newSpectatorTarget.shouldBeRemoved || !newSpectatorTarget.valid || newSpectatorTarget.world == null) {
+                MinecraftServer.LOGGER.info("Blocking player " + this.toString() + " from spectating invalid entity " + newSpectatorTarget.toString());
+                return;
+            }
+            if (this.isFrozen()) {
+                // use debug: clients might maliciously spam this
+                MinecraftServer.LOGGER.debug("Blocking frozen player " + this.toString() + " from spectating entity " + newSpectatorTarget.toString());
+                return;
+            }
+        }
+
+        this.spectatedEntity = newSpectatorTarget; // only set after validating state
+
+        if (newSpectatorTarget != this) {
+            // Make sure we're in the right place
+            this.ejectPassengers(); // teleport can fail if we have passengers...
+            this.getBukkitEntity().teleport(new Location(newSpectatorTarget.getWorld().getWorld(), newSpectatorTarget.locX(), newSpectatorTarget.locY(), newSpectatorTarget.locZ(), this.yaw, this.pitch), TeleportCause.SPECTATE); // Correctly handle cross-world entities from api calls by using CB teleport
+
+            // Make sure we're tracking the entity before sending
+            var tracker = ((WorldServer)newSpectatorTarget.world).getChunkProvider().playerChunkMap.trackedEntities.get(newSpectatorTarget.getId());
+            if (tracker != null) { // dumb plugins...
+                tracker.updatePlayer(this);
+            }
+        } else {
+            this.playerConnection.teleport(this.spectatedEntity.locX(), this.spectatedEntity.locY(), this.spectatedEntity.locZ(), this.yaw, this.pitch, TeleportCause.SPECTATE); // CraftBukkit
+        }
+        this.playerConnection.sendPacket(new PacketPlayOutCamera(newSpectatorTarget));
+        // Paper end
+    }
+
+    @Override
+    protected void E() {
+        if (!this.worldChangeInvuln) {
+            super.E();
+        }
+
+    }
+
+    @Override
+    public void attack(Entity entity) {
+        if (this.playerInteractManager.getGameMode() == EnumGamemode.SPECTATOR) {
+            this.setSpectatorTarget(entity);
+        } else {
+            super.attack(entity);
+        }
+
+    }
+
+    public long F() {
+        return this.ca;
+    }
+
+    @Nullable
+    public IChatBaseComponent getPlayerListName() {
+        return listName; // CraftBukkit
+    }
+
+    @Override
+    public void swingHand(EnumHand enumhand) {
+        super.swingHand(enumhand);
+        this.resetAttackCooldown();
+    }
+
+    public boolean H() {
+        return this.worldChangeInvuln;
+    }
+
+    public void I() {
+        this.worldChangeInvuln = false;
+    }
+
+    public AdvancementDataPlayer getAdvancementData() {
+        return this.advancementDataPlayer;
+    }
+
+    // CraftBukkit start
+    public void a(WorldServer worldserver, double d0, double d1, double d2, float f, float f1) {
+        this.a(worldserver, d0, d1, d2, f, f1, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.UNKNOWN);
+    }
+
+    public void a(WorldServer worldserver, double d0, double d1, double d2, float f, float f1, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause cause) {
+        // CraftBukkit end
+        this.setSpectatorTarget(this);
+        this.stopRiding();
+        /* CraftBukkit start - replace with bukkit handling for multi-world
+        if (worldserver == this.world) {
+            this.playerConnection.a(d0, d1, d2, f, f1);
+        } else {
+            WorldServer worldserver1 = this.getWorldServer();
+            WorldData worlddata = worldserver.getWorldData();
+
+            this.playerConnection.sendPacket(new PacketPlayOutRespawn(worldserver.getDimensionManager(), worldserver.getDimensionKey(), BiomeManager.a(worldserver.getSeed()), this.playerInteractManager.getGameMode(), this.playerInteractManager.c(), worldserver.isDebugWorld(), worldserver.isFlatWorld(), true));
+            this.playerConnection.sendPacket(new PacketPlayOutServerDifficulty(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
+            this.server.getPlayerList().d(this);
+            worldserver1.removePlayer(this);
+            this.dead = false;
+            this.setPositionRotation(d0, d1, d2, f, f1);
+            this.spawnIn(worldserver);
+            worldserver.addPlayerCommand(this);
+            this.triggerDimensionAdvancements(worldserver1);
+            this.playerConnection.a(d0, d1, d2, f, f1);
+            this.playerInteractManager.a(worldserver);
+            this.server.getPlayerList().a(this, worldserver);
+            this.server.getPlayerList().updateClient(this);
+        }
+        */
+        this.getBukkitEntity().teleport(new Location(worldserver.getWorld(), d0, d1, d2, f, f1), cause);
+        // CraftBukkit end
+
+    }
+
+    @Nullable
+    public BlockPosition getSpawn() {
+        return this.spawn;
+    }
+
+    public float getSpawnAngle() {
+        return this.spawnAngle;
+    }
+
+    public ResourceKey<World> getSpawnDimension() {
+        return this.spawnDimension;
+    }
+
+    public boolean isSpawnForced() {
+        return this.spawnForced;
+    }
+
+    public void setRespawnPosition(ResourceKey<World> resourcekey, @Nullable BlockPosition blockposition, float f, boolean flag, boolean flag1) {
+        if (blockposition != null) {
+            var flag2 = blockposition.equals(this.spawn) && resourcekey.equals(this.spawnDimension);
+
+            if (flag1 && !flag2) {
+                this.sendMessage(new ChatMessage("block.minecraft.set_spawn"), SystemUtils.b);
+            }
+
+            this.spawn = blockposition;
+            this.spawnDimension = resourcekey;
+            this.spawnAngle = f;
+            this.spawnForced = flag;
+        } else {
+            this.spawn = null;
+            this.spawnDimension = World.OVERWORLD;
+            this.spawnAngle = 0.0F;
+            this.spawnForced = false;
+        }
+
+    }
+
+    public void a(ChunkCoordIntPair chunkcoordintpair, Packet<?> packet, Packet<?> packet1) {
+        this.playerConnection.sendPacket(packet1);
+        this.playerConnection.sendPacket(packet);
+        // Paper start
+        if(PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0){
+            new PlayerChunkLoadEvent(this.getBukkitEntity().getWorld().getChunkAt(chunkcoordintpair.longKey), this.getBukkitEntity()).callEvent();
+        }
+        // Paper end
+    }
+
+    public void a(ChunkCoordIntPair chunkcoordintpair) {
+        if (this.isAlive()) {
+            this.playerConnection.sendPacket(new PacketPlayOutUnloadChunk(chunkcoordintpair.x, chunkcoordintpair.z));
+            // Paper start
+            if(PlayerChunkUnloadEvent.getHandlerList().getRegisteredListeners().length > 0){
+                new PlayerChunkUnloadEvent(this.getBukkitEntity().getWorld().getChunkAt(chunkcoordintpair.longKey), this.getBukkitEntity()).callEvent();
+            }
+            // Paper end
+        }
+
+    }
+
+    public final SectionPosition getPlayerMapSection() { return this.O(); } // Paper - OBFHELPER
+    public SectionPosition O() {
+        return this.cj;
+    }
+
+    public void a(SectionPosition sectionposition) {
+        this.cj = sectionposition;
+    }
+
+    @Override
+    public void a(SoundEffect soundeffect, SoundCategory soundcategory, float f, float f1) {
+        this.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(soundeffect, soundcategory, this.locX(), this.locY(), this.locZ(), f, f1));
+    }
+
+    @Override
+    public Packet<?> P() {
+        return new PacketPlayOutNamedEntitySpawn(this);
+    }
+
+    @Override
+    public EntityItem a(ItemStack itemstack, boolean flag, boolean flag1) {
+        var entityitem = super.a(itemstack, flag, flag1);
+
+        if (entityitem == null) {
+            return null;
+        } else {
+            this.world.addEntity(entityitem);
+            var itemstack1 = entityitem.getItemStack();
+
+            if (flag1) {
+                if (!itemstack1.isEmpty()) {
+                    if (!PurpurConfig.disableStatistics) {
+                        this.a(StatisticList.ITEM_DROPPED.b(itemstack1.getItem()), itemstack.getCount());
+                    }
+                }
+
+                if (!PurpurConfig.disableStatistics) {
+                    this.a(StatisticList.DROP);
+                }
+            }
+
+            return entityitem;
+        }
+    }
+
+    @Nullable
+    public ITextFilter Q() {
+        return this.co;
+    }
+
+    // CraftBukkit start - Add per-player time and weather.
+    public long timeOffset = 0;
+    public boolean relativeTime = true;
+
+    public long getPlayerTime() {
+        if (this.relativeTime) {
+            // Adds timeOffset to the current server time.
+            return this.world.getDayTime() + this.timeOffset;
+        } else {
+            // Adds timeOffset to the beginning of this day.
+            return this.world.getDayTime() - (this.world.getDayTime() % 24000) + this.timeOffset;
+        }
+    }
+
+    public WeatherType weather = null;
+
+    public WeatherType getPlayerWeather() {
+        return this.weather;
+    }
+
+    public void setPlayerWeather(WeatherType type, boolean plugin) {
+        if (!plugin && this.weather != null) {
+            return;
+        }
+
+        if (plugin) {
+            this.weather = type;
+        }
+
+        if (type == WeatherType.DOWNFALL) {
+            this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.c, 0));
+        } else {
+            this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.b, 0));
+        }
+    }
+
+    private float pluginRainPosition;
+    private float pluginRainPositionPrevious;
+
+    public void updateWeather(float oldRain, float newRain, float oldThunder, float newThunder) {
+        if (this.weather == null) {
+            // Vanilla
+            if (oldRain != newRain) {
+                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.h, newRain));
+            }
+        } else {
+            // Plugin
+            if (pluginRainPositionPrevious != pluginRainPosition) {
+                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.h, pluginRainPosition));
+            }
+        }
+
+        if (oldThunder != newThunder) {
+            if (weather == WeatherType.DOWNFALL || weather == null) {
+                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.i, newThunder));
+            } else {
+                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.i, 0));
+            }
+        }
+    }
+
+    public void tickWeather() {
+        if (this.weather == null) return;
+
+        pluginRainPositionPrevious = pluginRainPosition;
+        if (weather == WeatherType.DOWNFALL) {
+            pluginRainPosition += 0.01;
+        } else {
+            pluginRainPosition -= 0.01;
+        }
+
+        pluginRainPosition = MathHelper.a(pluginRainPosition, 0.0F, 1.0F);
+    }
+
+    public void resetPlayerWeather() {
+        this.weather = null;
+        this.setPlayerWeather(this.world.getWorldData().hasStorm() ? WeatherType.DOWNFALL : WeatherType.CLEAR, false);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "(" + this.getName() + " at " + this.locX() + "," + this.locY() + "," + this.locZ() + ")";
+    }
+
+    // SPIGOT-1903, MC-98153
+    public void forceSetPositionRotation(double x, double y, double z, float yaw, float pitch) {
+        this.setPositionRotation(x, y, z, yaw, pitch);
+        this.playerConnection.syncPosition();
+    }
+
+    @Override
+    public boolean isFrozen() { // Paper - protected > public
+        return super.isFrozen() || frozen || (this.playerConnection != null && this.playerConnection.isDisconnected()); // Paper // Purpur
+    }
+
+    // Purpur start
+    private boolean frozen = false;
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+    // Purpur end
+
+    @Override
+    public Scoreboard getScoreboard() {
+        return getBukkitEntity().getScoreboard().getHandle();
+    }
+
+    public void reset() {
+        float exp = 0;
+        var keepInventory = this.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
+
+        if (this.keepLevel || keepInventory) {
+            exp = this.exp;
+            this.newTotalExp = this.expTotal;
+            this.newLevel = this.expLevel;
+        }
+
+        this.setHealth(this.getMaxHealth());
+        this.setAirTicks(this.getMaxAirTicks()); // Paper
+        this.fireTicks = 0;
+        this.fallDistance = 0;
+        this.foodData = new FoodMetaData(this);
+        this.expLevel = this.newLevel;
+        this.expTotal = this.newTotalExp;
+        this.exp = 0;
+        this.deathTicks = 0;
+        this.setArrowCount(0, true); // CraftBukkit - ArrowBodyCountChangeEvent
+        this.removeAllEffects(org.bukkit.event.entity.EntityPotionEffectEvent.Cause.DEATH);
+        this.updateEffects = true;
+        this.activeContainer = this.defaultContainer;
+        this.killer = null;
+        this.lastDamager = null;
+        this.combatTracker = new CombatTracker(this);
+        this.lastSentExp = -1;
+        if (this.keepLevel || keepInventory) {
+            this.exp = exp;
+        } else {
+            this.giveExp(this.newExp);
+        }
+        this.keepLevel = false;
+    }
+
+    @Override
+    public CraftPlayer getBukkitEntity() {
+        return (CraftPlayer) super.getBukkitEntity();
+    }
+    // CraftBukkit end
+
+    // Purpur start
+    public void teleport(Location to) {
+        this.ejectPassengers();
+        this.stopRiding(true);
+
+        if (this.isSleeping()) {
+            this.wakeup(true, false);
+        }
+
+        if (this.activeContainer != this.defaultContainer) {
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT);
+        }
+
+        var toWorld = ((CraftWorld) to.getWorld()).getHandle();
+        if (this.world == toWorld) {
+            this.playerConnection.teleport(to);
+        } else {
+            this.server.getPlayerList().moveToWorld(this, toWorld, true, to, !toWorld.paperConfig.disableTeleportationSuffocationCheck);
+        }
+    }
+    // Purpur end
+}

@@ -1,0 +1,37 @@
+package net.pl3x.purpur.command;
+
+import net.minecraft.commands.CommandDispatcher;
+import net.minecraft.commands.CommandListenerWrapper;
+import net.minecraft.commands.arguments.ArgumentEntity;
+import net.minecraft.server.level.EntityPlayer;
+import net.pl3x.purpur.PurpurConfig;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
+
+import java.util.Collection;
+import java.util.Collections;
+
+public class PingCommand {
+    public static void register(com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> dispatcher) {
+        dispatcher.register(CommandDispatcher.literal("ping")
+                .requires((listener) -> {
+                    return listener.hasPermission(2);
+                })
+                .executes((context) -> {
+                    return execute(context.getSource(), Collections.singleton(context.getSource().getPlayerOrException()));
+                })
+                .then(CommandDispatcher.argument("targets", ArgumentEntity.players())
+                        .executes((context) -> {
+                            return execute(context.getSource(), ArgumentEntity.getPlayers(context, "targets"));
+                        })
+                )
+        ).setPermission("bukkit.command.ping");
+    }
+
+    private static int execute(CommandListenerWrapper sender, Collection<EntityPlayer> targets) {
+        for (EntityPlayer player : targets) {
+            String output = String.format(PurpurConfig.pingCommandOutput, player.getProfile().getName(), player.ping);
+            sender.sendMessage(CraftChatMessage.fromStringOrNull(output), false);
+        }
+        return targets.size();
+    }
+}

@@ -1,0 +1,609 @@
+package net.minecraft.world.level.border;
+
+import com.google.common.collect.Lists;
+import com.mojang.serialization.DynamicLike;
+import io.papermc.paper.event.world.border.WorldBorderBoundsChangeEvent;
+import io.papermc.paper.event.world.border.WorldBorderBoundsChangeFinishEvent;
+import io.papermc.paper.event.world.border.WorldBorderCenterChangeEvent;
+import net.minecraft.SystemUtils;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.minecraft.world.phys.shapes.OperatorBoolean;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import java.util.Iterator;
+import java.util.List;
+
+public class WorldBorder {
+
+    private final List<IWorldBorderListener> a = Lists.newArrayList();
+    private double b = 0.2D;
+    private double d = 5.0D;
+    private int e = 15;
+    private int f = 5;
+    private double g;
+    private double h;
+    private int i = 29999984;
+    private WorldBorder.a j = new WorldBorder.d(6.0E7D);
+    public static final WorldBorder.c c = new WorldBorder.c(0.0D, 0.0D, 0.2D, 5.0D, 5, 15, 6.0E7D, 0L, 0.0D);
+    public net.minecraft.server.level.WorldServer world; // CraftBukkit
+
+    public WorldBorder() {}
+
+    public final boolean isInBounds(BlockPosition blockposition) { return this.a(blockposition); } // Paper - OBFHELPER
+    public boolean a(BlockPosition blockposition) {
+        return (double) (blockposition.getX() + 1) > this.e() && (double) blockposition.getX() < this.g() && (double) (blockposition.getZ() + 1) > this.f() && (double) blockposition.getZ() < this.h();
+    }
+
+    // Paper start
+    private final BlockPosition.MutableBlockPosition mutPos = new BlockPosition.MutableBlockPosition();
+    public boolean isBlockInBounds(int chunkX, int chunkZ) {
+        this.mutPos.setValues(chunkX, 64, chunkZ);
+        return this.isInBounds(this.mutPos);
+    }
+    public boolean isChunkInBounds(int chunkX, int chunkZ) {
+        this.mutPos.setValues(((chunkX << 4) + 15), 64, (chunkZ << 4) + 15);
+        return this.isInBounds(this.mutPos);
+    }
+    // Paper end
+
+    public boolean isInBounds(ChunkCoordIntPair chunkcoordintpair) {
+        return (double) chunkcoordintpair.f() > this.e() && (double) chunkcoordintpair.d() < this.g() && (double) chunkcoordintpair.g() > this.f() && (double) chunkcoordintpair.e() < this.h();
+    }
+
+    public final boolean isInBounds(AxisAlignedBB aabb) { return this.a(aabb); } // Paper - OBFHELPER
+    public boolean a(AxisAlignedBB axisalignedbb) {
+        return axisalignedbb.maxX > this.e() && axisalignedbb.minX < this.g() && axisalignedbb.maxZ > this.f() && axisalignedbb.minZ < this.h();
+    }
+
+    // Tuinity start - optimise collisions
+    // determines whether we are almost colliding with the world border
+    // for clear collisions, this rets false
+    public final boolean isAlmostCollidingOnBorder(AxisAlignedBB boundingBox) {
+        return this.isAlmostCollidingOnBorder(boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+    }
+
+    public final boolean isAlmostCollidingOnBorder(double boxMinX, double boxMaxX, double boxMinZ, double boxMaxZ) {
+        double borderMinX = this.getMinX();
+        double borderMaxX = this.getMaxX();
+
+        double borderMinZ = this.getMinZ();
+        double borderMaxZ = this.getMaxZ();
+
+        return
+                // Not intersecting if we're smaller
+                !AxisAlignedBB.voxelShapeIntersect(
+                        boxMinX + net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ + net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                                boxMaxX - net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ - net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                        borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+                )
+                &&
+
+                // Are intersecting if we're larger
+                AxisAlignedBB.voxelShapeIntersect(
+                        boxMinX - net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ - net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                                boxMaxX + net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ + net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                        borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+                )
+                ;
+    }
+
+    public final boolean isCollidingWithBorderEdge(AxisAlignedBB boundingBox) {
+        return this.isCollidingWithBorderEdge(boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+    }
+
+    public final boolean isCollidingWithBorderEdge(double boxMinX, double boxMaxX, double boxMinZ, double boxMaxZ) {
+        double borderMinX = this.getMinX() + net.minecraft.server.MCUtil.COLLISION_EPSILON;
+        double borderMaxX = this.getMaxX() - net.minecraft.server.MCUtil.COLLISION_EPSILON;
+
+        double borderMinZ = this.getMinZ() + net.minecraft.server.MCUtil.COLLISION_EPSILON;
+        double borderMaxZ = this.getMaxZ() - net.minecraft.server.MCUtil.COLLISION_EPSILON;
+
+        return boxMinX < borderMinX || boxMaxX > borderMaxX || boxMinZ < borderMinZ || boxMaxZ > borderMaxZ;
+    }
+    // Tuinity end - optimise collisions
+
+    public double a(Entity entity) {
+        return this.b(entity.locX(), entity.locZ());
+    }
+
+    public final VoxelShape asVoxelShape(){ return c();} // Paper - OBFHELPER
+    public final VoxelShape getCollisionShape() { return this.c(); } // Tuinity - OBFHELPER
+    public VoxelShape c() {
+        return this.j.m();
+    }
+
+    public double b(double d0, double d1) {
+        double d2 = d1 - this.f();
+        double d3 = this.h() - d1;
+        double d4 = d0 - this.e();
+        double d5 = this.g() - d0;
+        double d6 = Math.min(d4, d5);
+
+        d6 = Math.min(d6, d2);
+        return Math.min(d6, d3);
+    }
+
+    public final double getMinX() { return this.e(); } // Tuinity - OBFHELPER
+    public double e() {
+        return this.j.a();
+    }
+
+    public final double getMinZ() { return this.f(); } // Tuinity - OBFHELPER
+    public double f() {
+        return this.j.c();
+    }
+
+    public final double getMaxX() { return this.g(); } // Tuinity - OBFHELPER
+    public double g() {
+        return this.j.b();
+    }
+
+    public final double getMaxZ() { return this.h(); } // Tuinity - OBFHELPER
+    public double h() {
+        return this.j.d();
+    }
+
+    public double getCenterX() {
+        return this.g;
+    }
+
+    public double getCenterZ() {
+        return this.h;
+    }
+
+    public void setCenter(double d0, double d1) {
+        // Paper start
+        WorldBorderCenterChangeEvent event = new WorldBorderCenterChangeEvent(world.getWorld(), world.getWorld().getWorldBorder(), new org.bukkit.Location(world.getWorld(), this.getCenterX(), 0, this.getCenterZ()), new org.bukkit.Location(world.getWorld(), d0, 0, d1));
+        if (!event.callEvent()) return;
+        this.g = event.getNewCenter().getX();
+        this.h = event.getNewCenter().getZ();
+        // Paper end
+        this.j.k();
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.a(this, event.getNewCenter().getX(), event.getNewCenter().getZ()); // Paper
+        }
+
+    }
+
+    public double getSize() {
+        return this.j.e();
+    }
+
+    public long j() {
+        return this.j.g();
+    }
+
+    public double k() {
+        return this.j.h();
+    }
+
+    public void setSize(double d0) {
+        // Paper start
+        WorldBorderBoundsChangeEvent event = new WorldBorderBoundsChangeEvent(world.getWorld(), world.getWorld().getWorldBorder(), WorldBorderBoundsChangeEvent.Type.INSTANT_MOVE, getSize(), d0, 0);
+        if (!event.callEvent()) return;
+        if (event.getType() == WorldBorderBoundsChangeEvent.Type.STARTED_MOVE && event.getDuration() > 0) { // If changed to a timed transition
+            transitionSizeBetween(event.getOldSize(), event.getNewSize(), event.getDuration());
+            return;
+        }
+        this.j = new WorldBorder.d(event.getNewSize());
+        // Paper end
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.a(this, event.getNewSize()); // Paper
+        }
+
+    }
+
+    public void transitionSizeBetween(double d0, double d1, long i) {
+        // Paper start
+        WorldBorderBoundsChangeEvent.Type type;
+        if (d0 == d1) { // new size = old size
+            type = WorldBorderBoundsChangeEvent.Type.INSTANT_MOVE; // Use INSTANT_MOVE because below it creates a Static border if they are equal.
+        } else {
+            type = WorldBorderBoundsChangeEvent.Type.STARTED_MOVE;
+        }
+        WorldBorderBoundsChangeEvent event = new WorldBorderBoundsChangeEvent(world.getWorld(), world.getWorld().getWorldBorder(), type, d0, d1, i);
+        if (!event.callEvent()) return;
+        this.j = (WorldBorder.a) (d0 == event.getNewSize() ? new WorldBorder.d(event.getNewSize()) : new WorldBorder.b(d0, event.getNewSize(), event.getDuration()));
+        // Paper end
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.a(this, d0, event.getNewSize(), event.getDuration()); // Paper
+        }
+
+    }
+
+    protected List<IWorldBorderListener> l() {
+        return Lists.newArrayList(this.a);
+    }
+
+    public void a(IWorldBorderListener iworldborderlistener) {
+        if (a.contains(iworldborderlistener)) return; // CraftBukkit
+        this.a.add(iworldborderlistener);
+    }
+
+    public void a(int i) {
+        this.i = i;
+        this.j.j();
+    }
+
+    public int m() {
+        return this.i;
+    }
+
+    public double getDamageBuffer() {
+        return this.d;
+    }
+
+    public void setDamageBuffer(double d0) {
+        this.d = d0;
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.c(this, d0);
+        }
+
+    }
+
+    public double getDamageAmount() {
+        return this.b;
+    }
+
+    public void setDamageAmount(double d0) {
+        this.b = d0;
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.b(this, d0);
+        }
+
+    }
+
+    public int getWarningTime() {
+        return this.e;
+    }
+
+    public void setWarningTime(int i) {
+        this.e = i;
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.a(this, i);
+        }
+
+    }
+
+    public int getWarningDistance() {
+        return this.f;
+    }
+
+    public void setWarningDistance(int i) {
+        this.f = i;
+        Iterator iterator = this.l().iterator();
+
+        while (iterator.hasNext()) {
+            IWorldBorderListener iworldborderlistener = (IWorldBorderListener) iterator.next();
+
+            iworldborderlistener.b(this, i);
+        }
+
+    }
+
+    public void s() {
+        this.j = this.j.l();
+    }
+
+    public WorldBorder.c t() {
+        return new WorldBorder.c(this);
+    }
+
+    public void a(WorldBorder.c worldborder_c) {
+        this.setCenter(worldborder_c.a(), worldborder_c.b());
+        this.setDamageAmount(worldborder_c.c());
+        this.setDamageBuffer(worldborder_c.d());
+        this.setWarningDistance(worldborder_c.e());
+        this.setWarningTime(worldborder_c.f());
+        if (worldborder_c.h() > 0L) {
+            this.transitionSizeBetween(worldborder_c.g(), worldborder_c.i(), worldborder_c.h());
+        } else {
+            this.setSize(worldborder_c.g());
+        }
+
+    }
+
+    public static class c {
+
+        private final double a;
+        private final double b;
+        private final double c;
+        private final double d;
+        private final int e;
+        private final int f;
+        private final double g;
+        private final long h;
+        private final double i;
+
+        private c(double d0, double d1, double d2, double d3, int i, int j, double d4, long k, double d5) {
+            this.a = d0;
+            this.b = d1;
+            this.c = d2;
+            this.d = d3;
+            this.e = i;
+            this.f = j;
+            this.g = d4;
+            this.h = k;
+            this.i = d5;
+        }
+
+        private c(WorldBorder worldborder) {
+            this.a = worldborder.getCenterX();
+            this.b = worldborder.getCenterZ();
+            this.c = worldborder.getDamageAmount();
+            this.d = worldborder.getDamageBuffer();
+            this.e = worldborder.getWarningDistance();
+            this.f = worldborder.getWarningTime();
+            this.g = worldborder.getSize();
+            this.h = worldborder.j();
+            this.i = worldborder.k();
+        }
+
+        public double a() {
+            return this.a;
+        }
+
+        public double b() {
+            return this.b;
+        }
+
+        public double c() {
+            return this.c;
+        }
+
+        public double d() {
+            return this.d;
+        }
+
+        public int e() {
+            return this.e;
+        }
+
+        public int f() {
+            return this.f;
+        }
+
+        public double g() {
+            return this.g;
+        }
+
+        public long h() {
+            return this.h;
+        }
+
+        public double i() {
+            return this.i;
+        }
+
+        public static WorldBorder.c a(DynamicLike<?> dynamiclike, WorldBorder.c worldborder_c) {
+            double d0 = dynamiclike.get("BorderCenterX").asDouble(worldborder_c.a);
+            double d1 = dynamiclike.get("BorderCenterZ").asDouble(worldborder_c.b);
+            double d2 = dynamiclike.get("BorderSize").asDouble(worldborder_c.g);
+            long i = dynamiclike.get("BorderSizeLerpTime").asLong(worldborder_c.h);
+            double d3 = dynamiclike.get("BorderSizeLerpTarget").asDouble(worldborder_c.i);
+            double d4 = dynamiclike.get("BorderSafeZone").asDouble(worldborder_c.d);
+            double d5 = dynamiclike.get("BorderDamagePerBlock").asDouble(worldborder_c.c);
+            int j = dynamiclike.get("BorderWarningBlocks").asInt(worldborder_c.e);
+            int k = dynamiclike.get("BorderWarningTime").asInt(worldborder_c.f);
+
+            return new WorldBorder.c(d0, d1, d5, d4, j, k, d2, i, d3);
+        }
+
+        public void a(NBTTagCompound nbttagcompound) {
+            nbttagcompound.setDouble("BorderCenterX", this.a);
+            nbttagcompound.setDouble("BorderCenterZ", this.b);
+            nbttagcompound.setDouble("BorderSize", this.g);
+            nbttagcompound.setLong("BorderSizeLerpTime", this.h);
+            nbttagcompound.setDouble("BorderSafeZone", this.d);
+            nbttagcompound.setDouble("BorderDamagePerBlock", this.c);
+            nbttagcompound.setDouble("BorderSizeLerpTarget", this.i);
+            nbttagcompound.setDouble("BorderWarningBlocks", (double) this.e);
+            nbttagcompound.setDouble("BorderWarningTime", (double) this.f);
+        }
+    }
+
+    class d implements WorldBorder.a {
+
+        private final double b;
+        private double c;
+        private double d;
+        private double e;
+        private double f;
+        private VoxelShape g;
+
+        public d(double d0) {
+            this.b = d0;
+            this.n();
+        }
+
+        @Override
+        public double a() {
+            return this.c;
+        }
+
+        @Override
+        public double b() {
+            return this.e;
+        }
+
+        @Override
+        public double c() {
+            return this.d;
+        }
+
+        @Override
+        public double d() {
+            return this.f;
+        }
+
+        @Override
+        public double e() {
+            return this.b;
+        }
+
+        @Override
+        public long g() {
+            return 0L;
+        }
+
+        @Override
+        public double h() {
+            return this.b;
+        }
+
+        private void n() {
+            this.c = Math.max(WorldBorder.this.getCenterX() - this.b / 2.0D, (double) (-WorldBorder.this.i));
+            this.d = Math.max(WorldBorder.this.getCenterZ() - this.b / 2.0D, (double) (-WorldBorder.this.i));
+            this.e = Math.min(WorldBorder.this.getCenterX() + this.b / 2.0D, (double) WorldBorder.this.i);
+            this.f = Math.min(WorldBorder.this.getCenterZ() + this.b / 2.0D, (double) WorldBorder.this.i);
+            this.g = VoxelShapes.a(VoxelShapes.a, VoxelShapes.create(Math.floor(this.a()), Double.NEGATIVE_INFINITY, Math.floor(this.c()), Math.ceil(this.b()), Double.POSITIVE_INFINITY, Math.ceil(this.d())), OperatorBoolean.ONLY_FIRST);
+        }
+
+        @Override
+        public void j() {
+            this.n();
+        }
+
+        @Override
+        public void k() {
+            this.n();
+        }
+
+        @Override
+        public WorldBorder.a l() {
+            return this;
+        }
+
+        @Override
+        public VoxelShape m() {
+            return this.g;
+        }
+    }
+
+    class b implements WorldBorder.a {
+
+        private final double b; public final double getOldSize() { return this.b; } // Paper - OBFHELPER
+        private final double c; public final double getNewSize() { return this.c; } // Paper - OBFHELPER
+        private final long d;
+        private final long e;
+        private final double f; public final double getDuration() { return this.f; } // Paper - OBFHELPER
+
+        private b(double d0, double d1, long i) {
+            this.b = d0;
+            this.c = d1;
+            this.f = (double) i;
+            this.e = SystemUtils.getMonotonicMillis();
+            this.d = this.e + i;
+        }
+
+        @Override
+        public double a() {
+            return Math.max(WorldBorder.this.getCenterX() - this.e() / 2.0D, (double) (-WorldBorder.this.i));
+        }
+
+        @Override
+        public double c() {
+            return Math.max(WorldBorder.this.getCenterZ() - this.e() / 2.0D, (double) (-WorldBorder.this.i));
+        }
+
+        @Override
+        public double b() {
+            return Math.min(WorldBorder.this.getCenterX() + this.e() / 2.0D, (double) WorldBorder.this.i);
+        }
+
+        @Override
+        public double d() {
+            return Math.min(WorldBorder.this.getCenterZ() + this.e() / 2.0D, (double) WorldBorder.this.i);
+        }
+
+        @Override
+        public double e() {
+            double d0 = (double) (SystemUtils.getMonotonicMillis() - this.e) / this.f;
+
+            return d0 < 1.0D ? MathHelper.d(d0, this.b, this.c) : this.c;
+        }
+
+        @Override
+        public long g() {
+            return this.d - SystemUtils.getMonotonicMillis();
+        }
+
+        @Override
+        public double h() {
+            return this.c;
+        }
+
+        @Override
+        public void k() {}
+
+        @Override
+        public void j() {}
+
+        @Override
+        public WorldBorder.a l() {
+            if (this.getLerpTimeRemaining() <= 0L) new WorldBorderBoundsChangeFinishEvent(world.getWorld(), world.getWorld().getWorldBorder(), getOldSize(), getNewSize(), getDuration()).callEvent(); // Paper
+            return (WorldBorder.a) (this.g() <= 0L ? WorldBorder.this.new d(this.c) : this);
+        }
+
+        @Override
+        public VoxelShape m() {
+            return VoxelShapes.a(VoxelShapes.a, VoxelShapes.create(Math.floor(this.a()), Double.NEGATIVE_INFINITY, Math.floor(this.c()), Math.ceil(this.b()), Double.POSITIVE_INFINITY, Math.ceil(this.d())), OperatorBoolean.ONLY_FIRST);
+        }
+    }
+
+    interface a {
+
+        double a();
+
+        double b();
+
+        double c();
+
+        double d();
+
+        double e();
+
+        default long getLerpTimeRemaining() { return g(); } // Paper - OBFHELPER
+        long g();
+
+        double h();
+
+        void j();
+
+        void k();
+
+        WorldBorder.a l();
+
+        VoxelShape m();
+    }
+}

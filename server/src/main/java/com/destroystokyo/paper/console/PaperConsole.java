@@ -1,0 +1,47 @@
+package com.destroystokyo.paper.console;
+
+import com.destroystokyo.paper.PaperConfig;
+import io.papermc.paper.console.BrigadierCommandHighlighter;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecrell.terminalconsole.SimpleTerminalConsole;
+import org.bukkit.craftbukkit.command.ConsoleCommandCompleter;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+
+public final class PaperConsole extends SimpleTerminalConsole {
+
+    private final DedicatedServer server;
+
+    public PaperConsole(DedicatedServer server) {
+        this.server = server;
+    }
+
+    @Override
+    protected LineReader buildReader(LineReaderBuilder builder) {
+        builder
+                .appName("Purpoor") // Purpur
+                .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                .completer(new ConsoleCommandCompleter(this.server))
+                .option(LineReader.Option.COMPLETE_IN_WORD, true);
+        if (PaperConfig.enableBrigadierConsoleHighlighting) {
+            builder.highlighter(new BrigadierCommandHighlighter(this.server, this.server.getServerCommandListener()));
+        }
+        return super.buildReader(builder);
+    }
+
+    @Override
+    protected boolean isRunning() {
+        return !this.server.isStopped() && this.server.isRunning();
+    }
+
+    @Override
+    protected void runCommand(String command) {
+        this.server.issueCommand(command, this.server.getServerCommandListener());
+    }
+
+    @Override
+    protected void shutdown() {
+        this.server.safeShutdown(false);
+    }
+
+}

@@ -1,0 +1,137 @@
+package net.minecraft.util.thread;
+
+import it.unimi.dsi.fastutil.ints.Int2BooleanFunction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class ThreadedMailbox<T> implements Mailbox<T>, AutoCloseable, Runnable {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private final AtomicInteger c = new AtomicInteger(0);
+	public final PairedQueue<? super T, ? extends Runnable> a;
+	private final Executor d;
+	private final String e;
+
+	public static ThreadedMailbox<Runnable> a(Executor executor, String s) {
+		return new ThreadedMailbox<>(
+			new PairedQueue.c<>(new ConcurrentLinkedQueue<>()),
+			executor,
+			s
+		);
+	}
+
+	public ThreadedMailbox(PairedQueue<? super T, ? extends Runnable> pairedqueue, Executor executor, String s) {
+		this.d = executor;
+		this.a = pairedqueue;
+		this.e = s;
+	}
+
+	private boolean a() {
+		int i;
+
+		do {
+			i = this.c.get();
+			if ((i & 3) != 0) {
+				return false;
+			}
+		} while (!this.c.compareAndSet(i, i | 2));
+
+		return true;
+	}
+
+	private void b() {
+		int i;
+
+		do {
+			i = this.c.get();
+		} while (!this.c.compareAndSet(i, i & -3));
+	}
+
+	private boolean c() {
+		return (this.c.get() & 1) == 0 && !this.a.b();
+	}
+
+	@Override
+	public void close() {
+		int i;
+
+		do {
+			i = this.c.get();
+		} while (!this.c.compareAndSet(i, i | 1));
+
+	}
+
+	private boolean d() {
+		return (this.c.get() & 2) != 0;
+	}
+
+	private boolean e() {
+		if (!this.d()) {
+			return false;
+		} else {
+			Runnable runnable = this.a.a();
+
+			if (runnable == null) {
+				return false;
+			} else {
+				runnable.run();
+				return true;
+			}
+		}
+	}
+
+	public void run() {
+		try {
+			this.a((int i) -> { // Paper - decompile fix
+				return i == 0;
+			});
+		} finally {
+			this.b();
+			this.f();
+		}
+	}
+
+
+	public final void queue(T t0) {
+		a(t0);
+	}
+
+	@Override // Paper - OBFHELPER
+	public void a(T t0) {
+		this.a.a(t0);
+		this.f();
+	}
+
+	private void f() {
+		if (this.c() && this.a()) {
+			try {
+				this.d.execute(this);
+			} catch (RejectedExecutionException rejectedexecutionexception) {
+				try {
+					this.d.execute(this);
+				} catch (RejectedExecutionException rejectedexecutionexception1) {
+					ThreadedMailbox.LOGGER.error("Cound not schedule mailbox", rejectedexecutionexception1);
+				}
+			}
+		}
+
+	}
+
+	@SuppressWarnings("StatementWithEmptyBody")
+	private void a(Int2BooleanFunction fn) {
+		for (var i = 0; fn.get(i) && this.e(); ++i) ;
+	}
+
+	public String toString() {
+		return this.e + " " + this.c.get() + " " + this.a.b();
+	}
+
+	@Override
+	public String bj() {
+		return this.e;
+	}
+}

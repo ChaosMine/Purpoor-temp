@@ -1,0 +1,274 @@
+package net.minecraft.world.inventory;
+
+import com.google.common.collect.Lists;
+import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
+import net.minecraft.sounds.SoundCategory;
+import net.minecraft.sounds.SoundEffects;
+import net.minecraft.world.IInventory;
+import net.minecraft.world.InventorySubcontainer;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.PlayerInventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.RecipeStonecutting;
+import net.minecraft.world.item.crafting.Recipes;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.Blocks;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.inventory.CraftInventoryStonecutter;
+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+
+public class ContainerStonecutter extends Container {
+
+    private final ContainerAccess containerAccess;
+    private final ContainerProperty containerProperty;
+    private final World world;
+    private List<RecipeStonecutting> i; public final List<RecipeStonecutting> getRecipes() { return this.i; } // Paper - OBFHELPER
+    private ItemStack j;
+    private long k;
+    final Slot c;
+    final Slot d;
+    private Runnable l;
+    public final IInventory inventory;
+    private final InventoryCraftResult resultInventory;
+    // CraftBukkit start
+    private CraftInventoryView bukkitEntity = null;
+    private Player player;
+
+    @Override
+    public CraftInventoryView getBukkitView() {
+        if (bukkitEntity != null) {
+            return bukkitEntity;
+        }
+
+        CraftInventoryStonecutter inventory = new CraftInventoryStonecutter(this.inventory, this.resultInventory);
+        bukkitEntity = new CraftInventoryView(this.player, inventory, this);
+        return bukkitEntity;
+    }
+    // CraftBukkit end
+
+    public ContainerStonecutter(int i, PlayerInventory playerinventory) {
+        this(i, playerinventory, ContainerAccess.a);
+    }
+
+    public ContainerStonecutter(int i, PlayerInventory playerinventory, final ContainerAccess containeraccess) {
+        super(Containers.STONECUTTER, i);
+        this.containerProperty = addDataSlot(ContainerProperty.shared(new int[1], 0)); // Paper - allow replication
+        this.i = Lists.newArrayList();
+        this.j = ItemStack.b;
+        this.l = () -> {
+        };
+        this.inventory = new InventorySubcontainer(1) {
+            @Override
+            public void update() {
+                super.update();
+                ContainerStonecutter.this.a((IInventory) this);
+                ContainerStonecutter.this.l.run();
+            }
+
+            // CraftBukkit start
+            @Override
+            public Location getLocation() {
+                return containeraccess.getLocation();
+            }
+            // CraftBukkit end
+        };
+        this.resultInventory = new InventoryCraftResult();
+        this.containerAccess = containeraccess;
+        this.world = playerinventory.player.world;
+        this.c = this.a(new Slot(this.inventory, 0, 20, 33));
+        this.d = this.a(new Slot(this.resultInventory, 1, 143, 33) {
+            @Override
+            public boolean isAllowed(ItemStack itemstack) {
+                return false;
+            }
+
+            @Override
+            public ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
+                itemstack.a(entityhuman.world, entityhuman, itemstack.getCount());
+                ContainerStonecutter.this.resultInventory.b(entityhuman);
+                ItemStack itemstack1 = ContainerStonecutter.this.c.a(1);
+
+                if (!itemstack1.isEmpty()) {
+                    ContainerStonecutter.this.i();
+                }
+
+                containeraccess.a((world, blockposition) -> {
+                    long j = world.getTime();
+
+                    if (ContainerStonecutter.this.k != j) {
+                        world.playSound((EntityHuman) null, blockposition, SoundEffects.UI_STONECUTTER_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        ContainerStonecutter.this.k = j;
+                    }
+
+                });
+                return super.a(entityhuman, itemstack);
+            }
+        });
+
+        int j;
+
+        for (j = 0; j < 3; ++j) {
+            for (int k = 0; k < 9; ++k) {
+                this.a(new Slot(playerinventory, k + j * 9 + 9, 8 + k * 18, 84 + j * 18));
+            }
+        }
+
+        for (j = 0; j < 9; ++j) {
+            this.a(new Slot(playerinventory, j, 8 + j * 18, 142));
+        }
+
+        this.a(this.containerProperty);
+        player = (Player) playerinventory.player.getBukkitEntity(); // CraftBukkit
+    }
+
+    @Override
+    public boolean canUse(EntityHuman entityhuman) {
+        if (!this.checkReachable) return true; // CraftBukkit
+        return a(this.containerAccess, entityhuman, Blocks.STONECUTTER);
+    }
+
+    @Override
+    public boolean a(EntityHuman entityhuman, int i) {
+        if (this.d(i)) {
+            // Paper start
+            int recipeIndex = i;
+            this.containerProperty.set(recipeIndex);
+            this.containerProperty.checkAndClearUpdateFlag(); // mark as changed
+            if (this.isValidRecipeIndex(i)) {
+                PlayerStonecutterRecipeSelectEvent event = new PlayerStonecutterRecipeSelectEvent((Player) entityhuman.getBukkitEntity(), (org.bukkit.inventory.StonecutterInventory) getBukkitView().getTopInventory(), (org.bukkit.inventory.StonecuttingRecipe) this.getRecipes().get(i).toBukkitRecipe());
+                if (!event.callEvent()) {
+                    ((Player) entityhuman.getBukkitEntity()).updateInventory();
+                    return false;
+                }
+                int newRecipeIndex;
+                if (!this.getRecipes().get(recipeIndex).getKey().equals(org.bukkit.craftbukkit.util.CraftNamespacedKey.toMinecraft(event.getStonecuttingRecipe().getKey()))) { // If the recipe did NOT stay the same
+                    for (newRecipeIndex = 0; newRecipeIndex < this.getRecipes().size(); newRecipeIndex++) {
+                        if (this.getRecipes().get(newRecipeIndex).getKey().equals(org.bukkit.craftbukkit.util.CraftNamespacedKey.toMinecraft(event.getStonecuttingRecipe().getKey()))) {
+                            recipeIndex = newRecipeIndex;
+                            break;
+                        }
+                    }
+                }
+            }
+            ((Player) entityhuman.getBukkitEntity()).updateInventory();
+            this.containerProperty.set(recipeIndex); // set new index, so that listeners can read it
+            // Paper end
+            this.i();
+        }
+
+        return true;
+    }
+
+    private boolean isValidRecipeIndex(int index) { return this.d(index); } // Paper - OBFHELPER
+    private boolean d(int i) {
+        return i >= 0 && i < this.i.size();
+    }
+
+    @Override
+    public void a(IInventory iinventory) {
+        ItemStack itemstack = this.c.getItem();
+
+        if (itemstack.getItem() != this.j.getItem()) {
+            this.j = itemstack.cloneItemStack();
+            this.a(iinventory, itemstack);
+        }
+
+        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareResultEvent(this, 1); // Paper
+    }
+
+    private void a(IInventory iinventory, ItemStack itemstack) {
+        this.i.clear();
+        this.containerProperty.set(-1);
+        this.d.set(ItemStack.b);
+        if (!itemstack.isEmpty()) {
+            this.i = this.world.getCraftingManager().b(Recipes.STONECUTTING, iinventory, this.world);
+        }
+
+    }
+
+    private void i() {
+        if (!this.i.isEmpty() && this.d(this.containerProperty.get())) {
+            RecipeStonecutting recipestonecutting = (RecipeStonecutting) this.i.get(this.containerProperty.get());
+
+            this.resultInventory.a((IRecipe) recipestonecutting);
+            this.d.set(recipestonecutting.a(this.inventory));
+        } else {
+            this.d.set(ItemStack.b);
+        }
+
+        this.c();
+    }
+
+    @Override
+    public Containers<?> getType() {
+        return Containers.STONECUTTER;
+    }
+
+    @Override
+    public boolean a(ItemStack itemstack, Slot slot) {
+        return slot.inventory != this.resultInventory && super.a(itemstack, slot);
+    }
+
+    @Override
+    public ItemStack shiftClick(EntityHuman entityhuman, int i) {
+        ItemStack itemstack = ItemStack.b;
+        Slot slot = (Slot) this.slots.get(i);
+
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            Item item = itemstack1.getItem();
+
+            itemstack = itemstack1.cloneItemStack();
+            if (i == 1) {
+                item.b(itemstack1, entityhuman.world, entityhuman);
+                if (!this.a(itemstack1, 2, 38, true)) {
+                    return ItemStack.b;
+                }
+
+                slot.a(itemstack1, itemstack);
+            } else if (i == 0) {
+                if (!this.a(itemstack1, 2, 38, false)) {
+                    return ItemStack.b;
+                }
+            } else if (this.world.getCraftingManager().craft(Recipes.STONECUTTING, new InventorySubcontainer(new ItemStack[]{itemstack1}), this.world).isPresent()) {
+                if (!this.a(itemstack1, 0, 1, false)) {
+                    return ItemStack.b;
+                }
+            } else if (i >= 2 && i < 29) {
+                if (!this.a(itemstack1, 29, 38, false)) {
+                    return ItemStack.b;
+                }
+            } else if (i >= 29 && i < 38 && !this.a(itemstack1, 2, 29, false)) {
+                return ItemStack.b;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.b);
+            }
+
+            slot.d();
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.b;
+            }
+
+            slot.a(entityhuman, itemstack1);
+            this.c();
+        }
+
+        return itemstack;
+    }
+
+    @Override
+    public void b(EntityHuman entityhuman) {
+        super.b(entityhuman);
+        this.resultInventory.splitWithoutUpdate(1);
+        this.containerAccess.a((world, blockposition) -> {
+            this.a(entityhuman, entityhuman.world, this.inventory);
+        });
+    }
+}
