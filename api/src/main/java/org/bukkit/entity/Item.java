@@ -1,0 +1,181 @@
+package org.bukkit.entity;
+
+import java.util.UUID;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Represents a dropped item.
+ */
+public interface Item extends Entity {
+
+    /**
+     * Gets the item stack associated with this item drop.
+     *
+     * @return An item stack.
+     */
+    @NotNull
+    public ItemStack getItemStack();
+
+    /**
+     * Sets the item stack associated with this item drop.
+     *
+     * @param stack An item stack.
+     */
+    public void setItemStack(@NotNull ItemStack stack);
+
+    /**
+     * Gets the delay before this Item is available to be picked up by players
+     *
+     * @return Remaining delay
+     */
+    public int getPickupDelay();
+
+    /**
+     * Sets the delay before this Item is available to be picked up by players
+     *
+     * @param delay New delay
+     */
+    public void setPickupDelay(int delay);
+
+    /**
+     * Sets the owner of this item.
+     *
+     * Other entities will not be able to pickup this item when an owner is set.
+     *
+     * @param owner UUID of new owner
+     */
+    public void setOwner(@Nullable UUID owner);
+
+    /**
+     * Get the owner of this item.
+     *
+     * @return UUID of owner
+     */
+    @Nullable
+    public UUID getOwner();
+
+    /**
+     * Set the thrower of this item.
+     *
+     * The thrower is the entity which dropped the item. This affects the
+     * trigger criteria for item pickups, for things such as advancements.
+     *
+     * @param uuid UUID of thrower
+     */
+    public void setThrower(@Nullable UUID uuid);
+
+    /**
+     * Get the thrower of this item.
+     *
+     * The thrower is the entity which dropped the item.
+     *
+     * @return UUID of thrower
+     */
+    @Nullable
+    public UUID getThrower();
+
+    // Paper Start
+    /**
+     * Gets if non-player entities can pick this Item up
+     *
+     * @return True if non-player entities can pickup
+     */
+     public boolean canMobPickup();
+
+    /**
+     * Sets if non-player entities can pick this Item up
+     *
+     * @param canMobPickup True to allow non-player entity pickup
+     */
+    public void setCanMobPickup(boolean canMobPickup);
+
+    /**
+     * Gets whether the player can pickup the item or not
+     *
+     * @return True if a player can pickup the item
+     */
+    public boolean canPlayerPickup();
+
+    /**
+     * Sets whether the item can be picked up or not. Modifies the pickup delay value to do so.
+     *
+     * @param canPlayerPickup True if the player can pickup the item
+     */
+    public void setCanPlayerPickup(boolean canPlayerPickup);
+
+    /**
+     * Gets whether the item will age and despawn from being on the ground too long
+     *
+     * @return True if the item will age
+     */
+    public boolean willAge();
+
+    /**
+     * Sets whether the item will age or not. If the item is not ageing, it will not despawn
+     * by being on the ground for too long.
+     *
+     * @param willAge True if the item should age
+     */
+    public void setWillAge(boolean willAge);
+    // Paper end
+
+    // Purpur start
+    /**
+     * Set whether or not this item is immune to cactus
+     *
+     * @param immuneToCactus True to make immune to cactus
+     */
+    void setImmuneToCactus(boolean immuneToCactus);
+
+    /**
+     * Check if item is immune to cactus
+     *
+     * @return True if immune to cactus
+     */
+    boolean isImmuneToCactus();
+
+    /**
+     * Set whether or not this item is immune to explosions
+     *
+     * @param immuneToExplosion True to make immune to explosions
+     */
+    void setImmuneToExplosion(boolean immuneToExplosion);
+
+    /**
+     * Check if item is immune to explosions
+     *
+     * @return True if immune to explosions
+     */
+    boolean isImmuneToExplosion();
+
+    /**
+     * Set whether or not this item is immune to fire
+     *
+     * @param immuneToFire True to make immune to fire
+     */
+    void setImmuneToFire(boolean immuneToFire);
+
+    /**
+     * Check if item is immune to fire
+     *
+     * @return True if immune to fire
+     */
+    boolean isImmuneToFire();
+
+    /**
+     * Set whether or not this item is immune to lightning
+     *
+     * @param immuneToLightning True to make immune to lightning
+     */
+    void setImmuneToLightning(boolean immuneToLightning);
+
+    /**
+     * Check if item is immune to lightning
+     *
+     * @return True if immune to lightning
+     */
+    boolean isImmuneToLightning();
+    // Purpur end
+}
