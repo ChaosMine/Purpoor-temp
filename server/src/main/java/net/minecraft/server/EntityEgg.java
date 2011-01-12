@@ -2,11 +2,19 @@ package net.minecraft.server;
 
 import java.util.List;
 import java.util.Random;
+
+// CraftBukkit start
 import org.bukkit.entity.MobType;
+import org.bukkit.craftbukkit.entity.CraftEgg;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+// CraftBukkit end
 
 public class EntityEgg extends Entity {
 
@@ -165,7 +173,30 @@ public class EntityEgg extends Entity {
         }
         if (movingobjectposition != null) {
             if (movingobjectposition.g != null) {
-                if (!movingobjectposition.g.a(((Entity) (ak)), 0)) {
+                // CraftBukkit start
+                boolean bounce;
+                if (movingobjectposition.g instanceof EntityLiving) {
+                    CraftServer server = ((WorldServer) this.l).getServer();
+                    CraftEntity damagee = new CraftLivingEntity(server, (EntityLiving) movingobjectposition.g);
+                    CraftEntity damager = new CraftLivingEntity(server, ak);
+                    CraftEntity projectile = new CraftEgg(server, (EntityEgg) this);
+
+                    //TODO @see EntityArrow#162
+                    EntityDamageByProjectileEvent edbpe = new EntityDamageByProjectileEvent( damager, damagee, projectile, EntityDamageEvent.DamageCause.ENTITY_ATTACK, 0);
+
+                    server.getPluginManager().callEvent(edbpe);
+                    if(!edbpe.isCancelled()) {
+                        // this function returns if the egg should stick or not, i.e. !bounce
+                        bounce = !movingobjectposition.g.a(((Entity) (ak)), edbpe.getDamage());
+                    } else {
+                        // event was cancelled, get if the egg should bounce or not
+                        bounce = edbpe.getBounce();
+                    }
+                } else {
+                    bounce = !movingobjectposition.g.a(((Entity) (ak)), 0);
+                }
+                if (!bounce) {
+                    // CraftBukkit end
                     ;
                 }
             }
@@ -230,7 +261,7 @@ public class EntityEgg extends Entity {
                     this.l.a(entity);
                 }
             }
-            // Craftbukkit stop
+            // CraftBukkit end
 
             for (int j = 0; j < 8; j++) {
                 this.l.a("snowballpoof", p, q, r, 0.0D, 0.0D, 0.0D);
