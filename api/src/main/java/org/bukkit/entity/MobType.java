@@ -3,7 +3,10 @@ package org.bukkit.entity;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * @deprecated Should be using CreatureType
+ *
+ */
 public enum MobType {
     CHICKEN("Chicken"),
     COW("Cow"),
