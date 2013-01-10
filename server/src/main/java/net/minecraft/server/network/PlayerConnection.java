@@ -292,6 +292,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     // CraftBukkit end
 
     public void tick() {
+        org.bukkit.craftbukkit.SpigotTimings.playerConnectionTimer.startTiming(); // Spigot
         this.syncPosition();
         this.player.lastX = this.player.locX();
         this.player.lastY = this.player.locY();
@@ -367,6 +368,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
             this.disconnect(new ChatMessage("multiplayer.disconnect.idling"));
         }
+        org.bukkit.craftbukkit.SpigotTimings.playerConnectionTimer.stopTiming(); // Spigot
 
     }
 
@@ -1870,6 +1872,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     // CraftBukkit end
 
     private void handleCommand(String s) {
+        org.bukkit.craftbukkit.SpigotTimings.playerCommandTimer.startTiming(); // Spigot
         // CraftBukkit start - whole method
         this.LOGGER.info(this.player.getName() + " issued server command: " + s);
 
@@ -1879,6 +1882,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         this.server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
+            org.bukkit.craftbukkit.SpigotTimings.playerCommandTimer.stopTiming(); // Spigot
             return;
         }
 
@@ -1890,6 +1894,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
             player.sendMessage(org.bukkit.ChatColor.RED + "An internal error occurred while attempting to perform this command");
             java.util.logging.Logger.getLogger(PlayerConnection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             return;
+        } finally {
+            org.bukkit.craftbukkit.SpigotTimings.playerCommandTimer.stopTiming(); // Spigot
         }
         // this.minecraftServer.getCommandDispatcher().a(this.player.getCommandListener(), s);
         // CraftBukkit end

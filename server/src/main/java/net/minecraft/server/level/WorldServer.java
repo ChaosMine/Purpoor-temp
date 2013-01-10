@@ -152,6 +152,7 @@ import net.minecraft.world.level.block.ITileEntity;
 import net.minecraft.world.level.storage.WorldDataServer;
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
+import org.bukkit.craftbukkit.SpigotTimings; // Spigot
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.WorldUUID;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -442,15 +443,19 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         gameprofilerfiller.exitEnter("chunkSource");
         this.getChunkProvider().tick(booleansupplier);
         gameprofilerfiller.exitEnter("tickPending");
+        timings.doTickPending.startTiming(); // Spigot
         if (!this.isDebugWorld()) {
             this.nextTickListBlock.b();
             this.nextTickListFluid.b();
         }
+        timings.doTickPending.stopTiming(); // Spigot
 
         gameprofilerfiller.exitEnter("raid");
         this.persistentRaid.a();
         gameprofilerfiller.exitEnter("blockEvents");
+        timings.doSounds.startTiming(); // Spigot
         this.ak();
+        timings.doSounds.stopTiming(); // Spigot
         this.ticking = false;
         gameprofilerfiller.exitEnter("entities");
         boolean flag3 = true || !this.players.isEmpty() || !this.getForceLoadedChunks().isEmpty(); // CraftBukkit - this prevents entity cleanup, other issues on servers with no players
@@ -460,6 +465,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
 
         if (flag3 || this.emptyTime++ < 300) {
+            timings.tickEntities.startTiming(); // Spigot
             if (this.dragonBattle != null) {
                 this.dragonBattle.b();
             }
@@ -467,6 +473,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             this.tickingEntities = true;
             ObjectIterator objectiterator = this.entitiesById.int2ObjectEntrySet().iterator();
 
+            timings.entityTick.startTiming(); // Spigot
             while (objectiterator.hasNext()) {
                 Entry<Entity> entry = (Entry) objectiterator.next();
                 Entity entity = (Entity) entry.getValue();
@@ -511,6 +518,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
                 gameprofilerfiller.exit();
             }
+            timings.entityTick.stopTiming(); // Spigot
 
             this.tickingEntities = false;
 
@@ -520,6 +528,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 this.registerEntity(entity2);
             }
 
+            timings.tickEntities.stopTiming(); // Spigot
             this.tickBlockEntities();
         }
 
@@ -742,6 +751,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         if (!(entity instanceof EntityHuman) && !this.getChunkProvider().a(entity)) {
             this.chunkCheck(entity);
         } else {
+            entity.tickTimer.startTiming(); // Spigot
             entity.g(entity.locX(), entity.locY(), entity.locZ());
             entity.lastYaw = entity.yaw;
             entity.lastPitch = entity.pitch;
@@ -768,6 +778,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     this.a(entity, entity1);
                 }
             }
+            entity.tickTimer.stopTiming(); // Spigot
 
         }
     }

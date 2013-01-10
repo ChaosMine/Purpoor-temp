@@ -65,6 +65,7 @@ import net.minecraft.world.level.DataPackConfiguration;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.io.IoBuilder;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.SpigotTimings; // Spigot
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.server.RemoteServerCommandEvent;
 // CraftBukkit end
@@ -404,6 +405,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     }
 
     public void handleCommandQueue() {
+        SpigotTimings.serverCommandTimer.startTiming(); // Spigot
         while (!this.serverCommandQueue.isEmpty()) {
             ServerCommand servercommand = (ServerCommand) this.serverCommandQueue.remove(0);
 
@@ -418,6 +420,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             // CraftBukkit end
         }
 
+        SpigotTimings.serverCommandTimer.stopTiming(); // Spigot
     }
 
     @Override
