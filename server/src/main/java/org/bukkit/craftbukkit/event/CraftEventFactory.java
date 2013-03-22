@@ -591,6 +591,23 @@ public class CraftEventFactory {
         } else if (entity.getBukkitEntity() instanceof org.bukkit.entity.LightningStrike) {
             LightningStrikeEvent.Cause cause = (spawnReason == SpawnReason.COMMAND ? LightningStrikeEvent.Cause.COMMAND : LightningStrikeEvent.Cause.UNKNOWN);
             event = CraftEventFactory.callLightningStrikeEvent((LightningStrike) entity.getBukkitEntity(), cause);
+        // Spigot start
+        } else if (entity instanceof EntityExperienceOrb) {
+            EntityExperienceOrb xp = (EntityExperienceOrb) entity;
+            double radius = world.spigotConfig.expMerge;
+            if (radius > 0) {
+                List<Entity> entities = world.getEntities(entity, entity.getBoundingBox().grow(radius, radius, radius));
+                for (Entity e : entities) {
+                    if (e instanceof EntityExperienceOrb) {
+                        EntityExperienceOrb loopItem = (EntityExperienceOrb) e;
+                        if (!loopItem.dead) {
+                            xp.value += loopItem.value;
+                            loopItem.die();
+                        }
+                    }
+                }
+            }
+        // Spigot end
         } else if (!(entity instanceof EntityPlayer)) {
             event = CraftEventFactory.callEntitySpawnEvent(entity);
         }
