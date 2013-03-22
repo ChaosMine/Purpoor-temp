@@ -2354,6 +2354,13 @@ public class CraftWorld implements World {
     }
 
     // Spigot start
+    @Override
+    public int getViewDistance() {
+        return world.spigotConfig.viewDistance;
+    }
+    // Spigot end
+
+    // Spigot start
     private final org.bukkit.World.Spigot spigot = new org.bukkit.World.Spigot()
     {
     };
