@@ -2346,4 +2346,15 @@ public class CraftWorld implements World {
     public DragonBattle getEnderDragonBattle() {
         return (getHandle().getDragonBattle() == null) ? null : new CraftDragonBattle(getHandle().getDragonBattle());
     }
+
+    // Spigot start
+    private final org.bukkit.World.Spigot spigot = new org.bukkit.World.Spigot()
+    {
+    };
+
+    public org.bukkit.World.Spigot spigot()
+    {
+        return spigot;
+    }
+    // Spigot end
 }
