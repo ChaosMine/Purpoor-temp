@@ -299,7 +299,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         this.minecraftSessionService = minecraftsessionservice;
         this.gameProfileRepository = gameprofilerepository;
         this.userCache = usercache;
-        this.serverConnection = new ServerConnection(this);
+        // this.serverConnection = new ServerConnection(this); // Spigot
         this.worldLoadListenerFactory = worldloadlistenerfactory;
         this.convertable = convertable_conversionsession;
         this.worldNBTStorage = convertable_conversionsession.b();
@@ -1521,7 +1521,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
     @Nullable
     public ServerConnection getServerConnection() {
-        return this.serverConnection;
+        return this.serverConnection == null ? this.serverConnection = new ServerConnection(this) : this.serverConnection; // Spigot
     }
 
     public boolean ah() {
