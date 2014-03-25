@@ -367,6 +367,7 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public void a(Entity entity) {
+        org.spigotmc.AsyncCatcher.catchOp("Chunk add entity"); // Spigot
         this.q = true;
         int i = MathHelper.floor(entity.locX() / 16.0D);
         int j = MathHelper.floor(entity.locZ() / 16.0D);
@@ -403,6 +404,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public void a(Entity entity, int i) {
+        org.spigotmc.AsyncCatcher.catchOp("Chunk remove entity"); // Spigot
         if (i < 0) {
             i = 0;
         }
@@ -591,6 +593,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public void a(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list, @Nullable Predicate<? super Entity> predicate) {
+        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
         int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
 
@@ -629,6 +632,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public <T extends Entity> void a(@Nullable EntityTypes<?> entitytypes, AxisAlignedBB axisalignedbb, List<? super T> list, Predicate<? super T> predicate) {
+        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
         int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
 
@@ -650,6 +654,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public <T extends Entity> void a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, List<T> list, @Nullable Predicate<? super T> predicate) {
+        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
         int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
 
