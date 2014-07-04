@@ -32,7 +32,7 @@ public class StructureSettings {
 
     public StructureSettings(Optional<StructureSettingsStronghold> optional, Map<StructureGenerator<?>, StructureSettingsFeature> map) {
         this.e = (StructureSettingsStronghold) optional.orElse(null); // CraftBukkit - decompile error
-        this.d = map;
+        this.d = Maps.newHashMap(map); // Spigot
     }
 
     public StructureSettings(boolean flag) {
