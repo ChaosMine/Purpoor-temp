@@ -5,7 +5,7 @@ import net.minecraft.util.MathHelper;
 public class AttributeRanged extends AttributeBase {
 
     private final double a;
-    public final double maximum;
+    public double maximum; // Spigot
 
     public AttributeRanged(String s, double d0, double d1, double d2) {
         super(s, d0);
