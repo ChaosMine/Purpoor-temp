@@ -97,7 +97,7 @@ public class FoodMetaData {
             if (this.foodTickTimer >= this.unsaturatedRegenRate) { // CraftBukkit - add regen rate manipulation
                 entityhuman.heal(1.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED); // CraftBukkit - added RegainReason
                 // this.a(6.0F); CraftBukkit - EntityExhaustionEvent
-                entityhuman.applyExhaustion(6.0f, org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.REGEN); // CraftBukkit - EntityExhaustionEvent
+                entityhuman.applyExhaustion(entityhuman.world.spigotConfig.regenExhaustion, org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.REGEN); // CraftBukkit - EntityExhaustionEvent // Spigot - Change to use configurable value
                 this.foodTickTimer = 0;
             }
         } else if (this.foodLevel <= 0) {
