@@ -718,35 +718,36 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
     // CraftBukkit start
     public void loadSpawn(WorldLoadListener worldloadlistener, WorldServer worldserver) {
-        if (!worldserver.getWorld().getKeepSpawnInMemory()) {
-            return;
-        }
+        ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider(); // Paper
 
         // WorldServer worldserver = this.E();
         this.forceTicks = true;
         // CraftBukkit end
+        if (worldserver.getWorld().getKeepSpawnInMemory()) { // Paper
 
         MinecraftServer.LOGGER.info("Preparing start region for dimension {}", worldserver.getDimensionKey().a());
         BlockPosition blockposition = worldserver.getSpawn();
 
         worldloadlistener.a(new ChunkCoordIntPair(blockposition));
-        ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider();
+        //ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider(); // Paper - move up
 
         chunkproviderserver.getLightEngine().a(500);
         this.nextTick = SystemUtils.getMonotonicMillis();
-        chunkproviderserver.addTicket(TicketType.START, new ChunkCoordIntPair(blockposition), 11, Unit.INSTANCE);
+        // Paper start - configurable spawn reason
+        int radiusBlocks = worldserver.paperConfig.keepLoadedRange;
+        int radiusChunks = radiusBlocks / 16 + ((radiusBlocks & 15) != 0 ? 1 : 0);
+        int totalChunks = ((radiusChunks) * 2 + 1);
+        totalChunks *= totalChunks;
+        worldloadlistener.setChunkRadius(radiusBlocks / 16);
 
-        while (chunkproviderserver.b() != 441) {
-            // CraftBukkit start
-            // this.nextTick = SystemUtils.getMonotonicMillis() + 10L;
-            this.executeModerately();
-            // CraftBukkit end
-        }
-
+        worldserver.addTicketsForSpawn(radiusBlocks, blockposition);
+        //LOGGER.info("Loaded " + chunkproviderserver.b() + " spawn chunks for world " + worldserver.getWorld().getName()); // Paper
+        // Paper end
         // CraftBukkit start
         // this.nextTick = SystemUtils.getMonotonicMillis() + 10L;
         this.executeModerately();
         // Iterator iterator = this.worldServer.values().iterator();
+        }
 
         if (true) {
             WorldServer worldserver1 = worldserver;
@@ -769,7 +770,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         // this.nextTick = SystemUtils.getMonotonicMillis() + 10L;
         this.executeModerately();
         // CraftBukkit end
-        worldloadlistener.b();
+        if (worldserver.getWorld().getKeepSpawnInMemory()) worldloadlistener.b(); // Paper
         chunkproviderserver.getLightEngine().a(5);
         // CraftBukkit start
         // this.updateSpawnFlags();
