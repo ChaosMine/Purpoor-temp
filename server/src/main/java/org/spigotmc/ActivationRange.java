@@ -156,7 +156,7 @@ public class ActivationRange
      */
     private static void activateChunkEntities(Chunk chunk)
     {
-        for ( net.minecraft.util.EntitySlice slice : chunk.entitySlices )
+        for ( java.util.List<Entity> slice : chunk.entitySlices )
         {
             for ( Entity entity : (Collection<Entity>) slice )
             {
