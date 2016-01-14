@@ -47,6 +47,7 @@ public class CommandGive {
                 boolean flag = entityplayer.inventory.pickup(itemstack);
                 EntityItem entityitem;
 
+                if (net.pl3x.purpur.PurpurConfig.disableGiveCommandDrops) continue; // Purpur - add config option for toggling give command dropping
                 if (flag && itemstack.isEmpty()) {
                     itemstack.setCount(1);
                     entityitem = entityplayer.drop(itemstack, false, false, true); // Paper - Fix duplicating /give items on item drop cancel
