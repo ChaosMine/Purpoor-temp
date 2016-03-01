@@ -124,7 +124,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
             if (random.nextInt(Math.max(1, (int) (100.0F / worldserver.spigotConfig.bambooModifier) * 3)) == 0 && worldserver.isEmpty(blockposition.up()) && worldserver.getLightLevel(blockposition.up(), 0) >= 9) { // Spigot
                 int i = this.b(worldserver, blockposition) + 1;
 
-                if (i < 16) {
+                if (i < worldserver.paperConfig.bambooMaxHeight) { // Paper
                     this.a(iblockdata, (World) worldserver, blockposition, random, i);
                 }
             }
@@ -155,7 +155,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
         int i = this.a(iblockaccess, blockposition);
         int j = this.b(iblockaccess, blockposition);
 
-        return i + j + 1 < 16 && (Integer) iblockaccess.getType(blockposition.up(i)).get(BlockBamboo.f) != 1;
+        return i + j + 1 < ((World) iblockaccess).paperConfig.bambooMaxHeight && (Integer) iblockaccess.getType(blockposition.up(i)).get(BlockBamboo.f) != 1; // Paper
     }
 
     @Override
@@ -174,7 +174,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
             BlockPosition blockposition1 = blockposition.up(i);
             IBlockData iblockdata1 = worldserver.getType(blockposition1);
 
-            if (k >= 16 || !iblockdata1.a(Blocks.BAMBOO) || (Integer) iblockdata1.get(BlockBamboo.f) == 1 || !worldserver.isEmpty(blockposition1.up())) { // CraftBukkit - If the BlockSpreadEvent was cancelled, we have no bamboo here
+            if (k >= worldserver.paperConfig.bambooMaxHeight || !iblockdata1.a(Blocks.BAMBOO) || (Integer) iblockdata1.get(BlockBamboo.f) == 1 || !worldserver.isEmpty(blockposition1.up())) { // CraftBukkit - If the BlockSpreadEvent was cancelled, we have no bamboo here // Paper - Configurable cactus bamboo and reed growth heights
                 return;
             }
 
@@ -215,7 +215,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
         }
 
         int j = (Integer) iblockdata.get(BlockBamboo.d) != 1 && !iblockdata2.a(Blocks.BAMBOO) ? 0 : 1;
-        int k = (i < 11 || random.nextFloat() >= 0.25F) && i != 15 ? 0 : 1;
+        int k = (i < world.paperConfig.bambooMinHeight || random.nextFloat() >= 0.25F) && i != (world.paperConfig.bambooMaxHeight - 1) ? 0 : 1; // Paper
 
         // CraftBukkit start
         if (org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(world, blockposition, blockposition.up(), (IBlockData) ((IBlockData) ((IBlockData) this.getBlockData().set(BlockBamboo.d, j)).set(BlockBamboo.e, blockpropertybamboosize)).set(BlockBamboo.f, k), 3)) {
@@ -230,7 +230,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
     protected int a(IBlockAccess iblockaccess, BlockPosition blockposition) {
         int i;
 
-        for (i = 0; i < 16 && iblockaccess.getType(blockposition.up(i + 1)).a(Blocks.BAMBOO); ++i) {
+        for (i = 0; i < ((World) iblockaccess).paperConfig.bambooMaxHeight && iblockaccess.getType(blockposition.up(i + 1)).a(Blocks.BAMBOO); ++i) { // Paper
             ;
         }
 
@@ -240,7 +240,7 @@ public class BlockBamboo extends Block implements IBlockFragilePlantElement {
     protected int b(IBlockAccess iblockaccess, BlockPosition blockposition) {
         int i;
 
-        for (i = 0; i < 16 && iblockaccess.getType(blockposition.down(i + 1)).a(Blocks.BAMBOO); ++i) {
+        for (i = 0; i < ((World) iblockaccess).paperConfig.bambooMaxHeight && iblockaccess.getType(blockposition.down(i + 1)).a(Blocks.BAMBOO); ++i) { // Paper
             ;
         }
 
