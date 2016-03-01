@@ -47,6 +47,12 @@ public class EntityMinecartTNT extends EntityMinecartAbstract {
     public void tick() {
         super.tick();
         if (this.b > 0) {
+            // Paper start - Configurable TNT entity height nerf
+            if (this.world.paperConfig.entityTNTHeightNerf != 0 && this.locY() > this.world.paperConfig.entityTNTHeightNerf) {
+                this.die();
+                return;
+            }
+            // Paper end
             --this.b;
             this.world.addParticle(Particles.SMOKE, this.locX(), this.locY() + 0.5D, this.locZ(), 0.0D, 0.0D, 0.0D);
         } else if (this.b == 0) {
