@@ -85,6 +85,10 @@ public class EntityFishingHook extends IProjectile {
         entityhuman.hookedFish = this;
         this.an = Math.max(0, i);
         this.lureLevel = Math.max(0, j);
+        // Paper start
+        minWaitTime = world.paperConfig.fishingMinTicks;
+        maxWaitTime = world.paperConfig.fishingMaxTicks;
+        // paper end
     }
 
     public EntityFishingHook(EntityHuman entityhuman, World world, int i, int j) {
