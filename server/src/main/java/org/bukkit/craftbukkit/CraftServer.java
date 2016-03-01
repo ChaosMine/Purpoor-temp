@@ -807,6 +807,7 @@ public final class CraftServer implements Server {
         }
 
         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+        com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
         for (WorldServer world : console.getWorlds()) {
             world.worldDataServer.setDifficulty(config.difficulty);
             world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
@@ -840,6 +841,7 @@ public final class CraftServer implements Server {
                 world.ticksPerAmbientSpawns = this.getTicksPerAmbientSpawns();
             }
             world.spigotConfig.init(); // Spigot
+            world.paperConfig.init(); // Paper
         }
 
         pluginManager.clearPlugins();
@@ -847,6 +849,7 @@ public final class CraftServer implements Server {
         resetRecipes();
         reloadData();
         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+        com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
         ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
 
@@ -2102,4 +2105,35 @@ public final class CraftServer implements Server {
         return spigot;
     }
     // Spigot end
+
+    // Paper start
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static java.nio.file.Path dumpHeap(java.nio.file.Path dir, String name) {
+        try {
+            java.nio.file.Files.createDirectories(dir);
+
+            javax.management.MBeanServer server = java.lang.management.ManagementFactory.getPlatformMBeanServer();
+            java.nio.file.Path file;
+
+            try {
+                Class clazz = Class.forName("openj9.lang.management.OpenJ9DiagnosticsMXBean");
+                Object openj9Mbean = java.lang.management.ManagementFactory.newPlatformMXBeanProxy(server, "openj9.lang.management:type=OpenJ9Diagnostics", clazz);
+                java.lang.reflect.Method m = clazz.getMethod("triggerDumpToFile", String.class, String.class);
+                file = dir.resolve(name + ".phd");
+                m.invoke(openj9Mbean, "heap", file.toString());
+            } catch (ClassNotFoundException e) {
+                Class clazz = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");
+                Object hotspotMBean = java.lang.management.ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", clazz);
+                java.lang.reflect.Method m = clazz.getMethod("dumpHeap", String.class, boolean.class);
+                file = dir.resolve(name + ".hprof");
+                m.invoke(hotspotMBean, file.toString(), true);
+            }
+
+            return file;
+        } catch (Throwable t) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not write heap", t);
+            return null;
+        }
+    }
+    // Paper end
 }
