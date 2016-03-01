@@ -1354,6 +1354,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return MathHelper.c(f * f + f1 * f1 + f2 * f2);
     }
 
+    public double getDistanceSquared(double x, double y, double z) { return h(x, y, z); } // Paper - OBFHELPER
     public double h(double d0, double d1, double d2) {
         double d3 = this.locX() - d0;
         double d4 = this.locY() - d1;
