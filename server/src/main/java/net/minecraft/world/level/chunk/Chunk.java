@@ -40,9 +40,11 @@ import net.minecraft.world.level.TickListChunk;
 import net.minecraft.world.level.TickListEmpty;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BlockMobSpawner;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ITileEntity;
 import net.minecraft.world.level.block.entity.TileEntity;
+import net.minecraft.world.level.block.entity.TileEntityMobSpawner;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.ChunkProviderDebug;
 import net.minecraft.world.level.levelgen.HeightMap;
@@ -648,6 +650,10 @@ public class Chunk implements IChunkAccess {
             }
 
             // CraftBukkit start
+            // Paper start - Remove invalid mob spawner tile entities
+        } else if (tileentity instanceof TileEntityMobSpawner && !(getBlockData(blockposition.getX(), blockposition.getY(), blockposition.getZ()).getBlock() instanceof BlockMobSpawner)) {
+            this.tileEntities.remove(blockposition);
+            // Paper end
         } else {
             System.out.println("Attempted to place a tile entity (" + tileentity + ") at " + tileentity.getPosition().getX() + "," + tileentity.getPosition().getY() + "," + tileentity.getPosition().getZ()
                 + " (" + getType(blockposition) + ") where there was no entity tile!");
