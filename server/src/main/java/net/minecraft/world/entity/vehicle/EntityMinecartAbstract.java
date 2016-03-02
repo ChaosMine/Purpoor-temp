@@ -330,9 +330,15 @@ public abstract class EntityMinecartAbstract extends Entity {
             this.setDamage(this.getDamage() - 1.0F);
         }
 
+        // Paper start - Configurable nether ceiling damage
+        // Extracted to own function
+        /*
         if (this.locY() < -64.0D) {
             this.an();
         }
+        */
+        this.performVoidDamage();
+        // Paper end
 
         // this.doPortalTick(); // CraftBukkit - handled in postTick
         if (this.world.isClientSide) {
