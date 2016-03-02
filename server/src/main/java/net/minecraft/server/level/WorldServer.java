@@ -1246,6 +1246,11 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 this.navigators.add(((EntityInsentient) entity).getNavigation());
             }
             entity.valid = true; // CraftBukkit
+            // Paper start - Set origin location when the entity is being added to the world
+            if (entity.origin == null) {
+                entity.origin = entity.getBukkitEntity().getLocation();
+            }
+            // Paper end
         }
 
     }

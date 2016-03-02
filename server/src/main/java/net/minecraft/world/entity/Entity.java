@@ -247,6 +247,8 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public org.bukkit.projectiles.ProjectileSource projectileSource; // For projectiles only
     public boolean forceExplosionKnockback; // SPIGOT-949
     public boolean persistentInvisibility = false;
+    public org.bukkit.Location origin; // Paper
+    private @Nullable UUID originWorldId; // Paper
     // Spigot start
     public final org.spigotmc.ActivationRange.ActivationType activationType = org.spigotmc.ActivationRange.initializeEntityActivationType(this);
     public final boolean defaultActivationState;
@@ -1625,6 +1627,15 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 this.bukkitEntity.storeBukkitValues(nbttagcompound);
             }
             // CraftBukkit end
+            // Paper start - Save the entity's origin location
+            if (this.origin != null) {
+                if (this.originWorldId != null) {
+                    // Technically it is legal to no longer know the origin world... so that's fun.
+                    nbttagcompound.setUUID("Paper.OriginWorld", this.originWorldId);
+                }
+                nbttagcompound.set("Paper.Origin", this.createList(origin.getX(), origin.getY(), origin.getZ()));
+            }
+            // Paper end
             return nbttagcompound;
         } catch (Throwable throwable) {
             CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
@@ -1747,6 +1758,18 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             }
             // CraftBukkit end
 
+            // Paper start - Restore the entity's origin location
+            NBTTagList originTag = nbttagcompound.getList("Paper.Origin", 6);
+            if (!originTag.isEmpty()) {
+                org.bukkit.World originWorld = world.getWorld();
+                if (nbttagcompound.hasKey("Paper.OriginWorld")) {
+                    originWorld = Bukkit.getWorld(nbttagcompound.getUUID("Paper.OriginWorld"));
+                }
+                this.originWorldId = originWorld == null ? null : originWorld.getUID();
+                origin = new org.bukkit.Location(originWorld, originTag.getDoubleAt(0), originTag.getDoubleAt(1), originTag.getDoubleAt(2));
+            }
+            // Paper end
+
         } catch (Throwable throwable) {
             CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
             CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being loaded");
@@ -1808,6 +1831,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     protected abstract void saveData(NBTTagCompound nbttagcompound);
 
+    protected final NBTTagList createList(double... adouble) { return a(adouble); } // Paper - OBFHELPER
     protected NBTTagList a(double... adouble) {
         NBTTagList nbttaglist = new NBTTagList();
         double[] adouble1 = adouble;
