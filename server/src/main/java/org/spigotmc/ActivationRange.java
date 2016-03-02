@@ -91,6 +91,7 @@ public class ActivationRange
                 || entity instanceof EntityFireball
                 || entity instanceof EntityLightning
                 || entity instanceof EntityTNTPrimed
+                || entity instanceof EntityFallingBlock // Paper - Always tick falling blocks
                 || entity instanceof EntityEnderCrystal
                 || entity instanceof EntityFireworks
                 || entity instanceof EntityThrownTrident )
