@@ -171,6 +171,11 @@ public class PacketDataSerializer extends ByteBuf {
     public PacketDataSerializer writeComponent(final net.kyori.adventure.text.Component component) {
         return this.writeUtf(PaperAdventure.asJsonString(component, this.adventure$locale), 262144);
     }
+
+    @Deprecated
+    public PacketDataSerializer writeComponent(final net.md_5.bungee.api.chat.BaseComponent[] component) {
+        return this.writeUtf(net.md_5.bungee.chat.ComponentSerializer.toString(component), 262144);
+    }
     // Paper end
 
     public PacketDataSerializer a(IChatBaseComponent ichatbasecomponent) {

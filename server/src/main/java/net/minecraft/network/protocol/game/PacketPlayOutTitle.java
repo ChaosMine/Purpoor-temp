@@ -47,6 +47,17 @@ public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
         }
 
     }
+    // Paper start
+    public net.md_5.bungee.api.chat.BaseComponent[] components;
+
+    public PacketPlayOutTitle(EnumTitleAction action, net.md_5.bungee.api.chat.BaseComponent[] components, int fadeIn, int stay, int fadeOut) {
+        this.a = action;
+        this.components = components;
+        this.c = fadeIn;
+        this.d = stay;
+        this.e = fadeOut;
+    }
+    // Paper end
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
@@ -55,6 +66,8 @@ public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
             // Paper start
             if (this.adventure$text != null) {
                 packetdataserializer.writeComponent(this.adventure$text);
+            } else if (this.components != null) {
+                packetdataserializer.writeComponent(this.components);
             } else
             // Paper end
             packetdataserializer.a(this.b);
