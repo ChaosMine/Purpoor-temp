@@ -23,7 +23,7 @@ import net.minecraft.world.phys.AxisAlignedBB;
 
 public class ChunkEmpty extends Chunk {
 
-    private static final BiomeBase[] b = (BiomeBase[]) SystemUtils.a((Object) (new BiomeBase[BiomeStorage.a]), (abiomebase) -> {
+    private static final BiomeBase[] b = SystemUtils.a((new BiomeBase[BiomeStorage.a]), (abiomebase) -> { // Paper - decompile error
         Arrays.fill(abiomebase, BiomeRegistry.a);
     });
 
@@ -31,6 +31,11 @@ public class ChunkEmpty extends Chunk {
         super(world, chunkcoordintpair, new BiomeStorage(world.r().b(IRegistry.ay), ChunkEmpty.b));
     }
 
+    // Paper start
+    @Override public IBlockData getType(int x, int y, int z) {
+        return Blocks.VOID_AIR.getBlockData();
+    }
+    // Paper end
     @Override
     public IBlockData getType(BlockPosition blockposition) {
         return Blocks.VOID_AIR.getBlockData();

@@ -133,7 +133,7 @@ public class DataPaletteBlock<T> implements DataPaletteExpandable<T> {
     }
 
     public T a(int i, int j, int k) {
-        return this.a(b(i, j, k));
+        return this.a(j << 8 | k << 4 | i); // Paper - inline
     }
 
     protected T a(int i) {
