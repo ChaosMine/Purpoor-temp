@@ -213,7 +213,7 @@ public abstract class PlayerList {
 
         // Spigot start - spawn location event
         Player bukkitPlayer = entityplayer.getBukkitEntity();
-        org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new org.spigotmc.event.player.PlayerSpawnLocationEvent(bukkitPlayer, bukkitPlayer.getLocation());
+        org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent(bukkitPlayer, bukkitPlayer.getLocation()); // Paper use our duplicate event
         cserver.getPluginManager().callEvent(ev);
 
         Location loc = ev.getSpawnLocation();
@@ -221,7 +221,10 @@ public abstract class PlayerList {
 
         entityplayer.spawnIn(worldserver1);
         entityplayer.playerInteractManager.a((WorldServer) entityplayer.world);
-        entityplayer.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+        // Paper start - set raw so we aren't fully joined to the world (not added to chunk or world)
+        entityplayer.setPositionRaw(loc.getX(), loc.getY(), loc.getZ());
+        entityplayer.setYawPitch(loc.getYaw(), loc.getPitch());
+        // Paper end
         // Spigot end
 
         // CraftBukkit - Moved message to after join

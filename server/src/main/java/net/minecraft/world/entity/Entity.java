@@ -399,7 +399,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return d1 * d1 + d2 * d2 + d3 * d3 < d0 * d0;
     }
 
-    protected void setYawPitch(float f, float f1) {
+    public void setYawPitch(float f, float f1) { // Paper - protected -> public
         // CraftBukkit start - yaw was sometimes set to NaN, so we need to set it back to 0
         if (Float.isNaN(f)) {
             f = 0;
