@@ -301,6 +301,7 @@ public final class SpawnerCreature {
             }
         } catch (Exception exception) {
             SpawnerCreature.LOGGER.warn("Failed to create mob", exception);
+            com.destroystokyo.paper.exception.ServerInternalException.reportInternalException(exception); // Paper
             return null;
         }
     }
@@ -407,6 +408,7 @@ public final class SpawnerCreature {
                                 entity = biomesettingsmobs_c.c.a((World) worldaccess.getMinecraftWorld());
                             } catch (Exception exception) {
                                 SpawnerCreature.LOGGER.warn("Failed to create mob", exception);
+                                com.destroystokyo.paper.exception.ServerInternalException.reportInternalException(exception); // Paper
                                 continue;
                             }
 
