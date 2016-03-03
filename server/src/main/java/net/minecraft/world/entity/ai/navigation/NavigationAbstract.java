@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.network.protocol.game.PacketDebug;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
@@ -32,7 +33,7 @@ public abstract class NavigationAbstract {
     protected final EntityInsentient a; public Entity getEntity() { return a; } // Paper - OBFHELPER
     protected final World b;
     @Nullable
-    protected PathEntity c;
+    protected PathEntity c; protected final PathEntity getCurrentPath() { return this.c; } // Paper - OBFHELPER
     protected double d;
     protected int e;
     protected int f;
@@ -184,10 +185,30 @@ public abstract class NavigationAbstract {
         return this.a(this.a(d0, d1, d2, 1), d3);
     }
 
+    // Paper start - optimise pathfinding
+    private int lastFailure = 0;
+    private int pathfindFailures = 0;
+    // Paper end
+
     public boolean a(Entity entity, double d0) {
+        // Paper start - Pathfinding optimizations
+        if (this.pathfindFailures > 10 && this.getCurrentPath() == null && MinecraftServer.currentTick < this.lastFailure + 40) {
+            return false;
+        }
+        // Paper end
         PathEntity pathentity = this.a(entity, 1);
 
-        return pathentity != null && this.a(pathentity, d0);
+        // Paper start - Pathfinding optimizations
+        if (pathentity != null && this.a(pathentity, d0)) {
+            this.lastFailure = 0;
+            this.pathfindFailures = 0;
+            return true;
+        } else {
+            this.pathfindFailures++;
+            this.lastFailure = MinecraftServer.currentTick;
+            return false;
+        }
+        // Paper end
     }
 
     public boolean setDestination(@Nullable PathEntity pathentity, double speed) { return a(pathentity, speed); } // Paper - OBFHELPER
