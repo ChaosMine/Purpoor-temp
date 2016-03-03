@@ -2623,7 +2623,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 double d4 = DimensionManager.a(this.world.getDimensionManager(), worldserver.getDimensionManager());
                 BlockPosition blockposition = new BlockPosition(MathHelper.a(this.locX() * d4, d0, d2), this.locY(), MathHelper.a(this.locZ() * d4, d1, d3));
                 // CraftBukkit start
-                CraftPortalEvent event = callPortalEvent(this, worldserver, blockposition, PlayerTeleportEvent.TeleportCause.NETHER_PORTAL, flag2 ? 16 : 128, 16);
+                // Paper start
+                int portalSearchRadius = worldserver.paperConfig.portalSearchRadius;
+                if (world.paperConfig.portalSearchVanillaDimensionScaling && flag2) { // == THE_NETHER
+                    portalSearchRadius = (int) (portalSearchRadius / worldserver.getDimensionManager().getCoordinateScale());
+                }
+                // Paper end
+                CraftPortalEvent event = callPortalEvent(this, worldserver, blockposition, PlayerTeleportEvent.TeleportCause.NETHER_PORTAL, portalSearchRadius, worldserver.paperConfig.portalCreateRadius); // Paper start - configurable portal radius
                 if (event == null) {
                     return null;
                 }

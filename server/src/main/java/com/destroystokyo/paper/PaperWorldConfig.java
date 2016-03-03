@@ -196,4 +196,13 @@ public class PaperWorldConfig {
     private void allChunksAreSlimeChunks() {
         allChunksAreSlimeChunks = getBoolean("all-chunks-are-slime-chunks", false);
     }
+
+    public int portalSearchRadius;
+    public int portalCreateRadius;
+    public boolean portalSearchVanillaDimensionScaling;
+    private void portalSearchRadius() {
+        portalSearchRadius = getInt("portal-search-radius", 128);
+        portalCreateRadius = getInt("portal-create-radius", 16);
+        portalSearchVanillaDimensionScaling = getBoolean("portal-search-vanilla-dimension-scaling", true);
+    }
 }
