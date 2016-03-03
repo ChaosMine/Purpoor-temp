@@ -1,7 +1,9 @@
 package net.minecraft.server.level;
 
+import co.aikar.timings.Timing; // Paper
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.ComparisonChain; // Paper
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
@@ -554,11 +556,14 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     private CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> f(ChunkCoordIntPair chunkcoordintpair) {
         return CompletableFuture.supplyAsync(() -> {
-            try {
+            try (Timing ignored = this.world.timings.chunkLoad.startTimingIfSync()) { // Paper
                 this.world.getMethodProfiler().c("chunkLoad");
-                NBTTagCompound nbttagcompound = this.readChunkData(chunkcoordintpair);
+                NBTTagCompound nbttagcompound; // Paper
+                try (Timing ignored2 = this.world.timings.chunkIO.startTimingIfSync()) { // Paper start - timings
+                    nbttagcompound = this.readChunkData(chunkcoordintpair);
+                } // Paper end
 
-                if (nbttagcompound != null) {
+                if (nbttagcompound != null) {try (Timing ignored2 = this.world.timings.chunkLoadLevelTimer.startTimingIfSync()) { // Paper start - timings
                     boolean flag = nbttagcompound.hasKeyOfType("Level", 10) && nbttagcompound.getCompound("Level").hasKeyOfType("Status", 8);
 
                     if (flag) {
@@ -570,7 +575,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     }
 
                     PlayerChunkMap.LOGGER.error("Chunk file at {} is missing level data, skipping", chunkcoordintpair);
-                }
+                }} // Paper
             } catch (ReportedException reportedexception) {
                 Throwable throwable = reportedexception.getCause();
 
@@ -607,7 +612,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             return "chunkGenerate " + chunkstatus.d();
         });
         return completablefuture.thenComposeAsync((either) -> {
-            return (CompletableFuture) either.map((list) -> {
+            return either.map((list) -> { // Paper - Shut up.
                 try {
                     CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture1 = chunkstatus.a(this.world, this.chunkGenerator, this.definedStructureManager, this.lightEngine, (ichunkaccess) -> {
                         return this.c(playerchunk);
@@ -660,6 +665,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             ChunkStatus chunkstatus = PlayerChunk.getChunkStatus(playerchunk.getTicketLevel());
 
             return !chunkstatus.b(ChunkStatus.FULL) ? PlayerChunk.UNLOADED_CHUNK_ACCESS : either.mapLeft((ichunkaccess) -> {
+            try (Timing ignored = world.timings.chunkPostLoad.startTimingIfSync()) { // Paper
                 ChunkCoordIntPair chunkcoordintpair = playerchunk.i();
                 Chunk chunk;
 
@@ -719,6 +725,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 }
 
                 return chunk;
+                } // Paper
             });
         }, (runnable) -> {
             Mailbox mailbox = this.mailboxMain;
@@ -1177,6 +1184,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         PlayerChunkMap.EntityTracker playerchunkmap_entitytracker;
         ObjectIterator objectiterator;
+        world.timings.tracker1.startTiming(); // Paper
 
         for (objectiterator = this.trackedEntities.values().iterator(); objectiterator.hasNext(); playerchunkmap_entitytracker.trackerEntry.a()) {
             playerchunkmap_entitytracker = (PlayerChunkMap.EntityTracker) objectiterator.next();
@@ -1194,15 +1202,19 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 playerchunkmap_entitytracker.e = sectionposition1;
             }
         }
+        world.timings.tracker1.stopTiming(); // Paper
 
         if (!list.isEmpty()) {
             objectiterator = this.trackedEntities.values().iterator();
 
+            world.timings.tracker2.startTiming(); // Paper
             while (objectiterator.hasNext()) {
                 playerchunkmap_entitytracker = (PlayerChunkMap.EntityTracker) objectiterator.next();
                 playerchunkmap_entitytracker.track(list);
             }
+            world.timings.tracker2.stopTiming(); // Paper
         }
+
 
     }
 

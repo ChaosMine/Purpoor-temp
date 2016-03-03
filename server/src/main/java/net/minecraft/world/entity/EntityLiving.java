@@ -135,7 +135,7 @@ import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 // CraftBukkit end
 
-import org.bukkit.craftbukkit.SpigotTimings; // Spigot
+import co.aikar.timings.MinecraftTimings; // Paper
 
 public abstract class EntityLiving extends Entity {
 
@@ -2458,7 +2458,6 @@ public abstract class EntityLiving extends Entity {
 
     @Override
     public void tick() {
-        SpigotTimings.timerEntityBaseTick.startTiming(); // Spigot
         super.tick();
         this.t();
         this.v();
@@ -2507,9 +2506,7 @@ public abstract class EntityLiving extends Entity {
             }
         }
 
-        SpigotTimings.timerEntityBaseTick.stopTiming(); // Spigot
         this.movementTick();
-        SpigotTimings.timerEntityTickRest.startTiming(); // Spigot
         double d0 = this.locX() - this.lastX;
         double d1 = this.locZ() - this.lastZ;
         float f = (float) (d0 * d0 + d1 * d1);
@@ -2589,8 +2586,6 @@ public abstract class EntityLiving extends Entity {
         if (this.isSleeping()) {
             this.pitch = 0.0F;
         }
-
-        SpigotTimings.timerEntityTickRest.stopTiming(); // Spigot
     }
 
     public void updateEquipment() {
@@ -2772,7 +2767,6 @@ public abstract class EntityLiving extends Entity {
 
         this.setMot(d4, d5, d6);
         this.world.getMethodProfiler().enter("ai");
-        SpigotTimings.timerEntityAI.startTiming(); // Spigot
         if (this.isFrozen()) {
             this.jumping = false;
             this.aR = 0.0F;
@@ -2782,7 +2776,6 @@ public abstract class EntityLiving extends Entity {
             this.doTick();
             this.world.getMethodProfiler().exit();
         }
-        SpigotTimings.timerEntityAI.stopTiming(); // Spigot
 
         this.world.getMethodProfiler().exit();
         this.world.getMethodProfiler().enter("jump");
@@ -2817,9 +2810,9 @@ public abstract class EntityLiving extends Entity {
         this.r();
         AxisAlignedBB axisalignedbb = this.getBoundingBox();
 
-        SpigotTimings.timerEntityAIMove.startTiming(); // Spigot
+        // SpigotTimings.timerEntityAIMove.startTiming(); // Spigot // Paper
         this.g(new Vec3D((double) this.aR, (double) this.aS, (double) this.aT));
-        SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot
+        // SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot // Paper
         this.world.getMethodProfiler().exit();
         this.world.getMethodProfiler().enter("push");
         if (this.bf > 0) {
@@ -2827,9 +2820,7 @@ public abstract class EntityLiving extends Entity {
             this.a(axisalignedbb, this.getBoundingBox());
         }
 
-        SpigotTimings.timerEntityAICollision.startTiming(); // Spigot
         this.collideNearby();
-        SpigotTimings.timerEntityAICollision.stopTiming(); // Spigot
         this.world.getMethodProfiler().exit();
         if (!this.world.isClientSide && this.dO() && this.aG()) {
             this.damageEntity(DamageSource.DROWN, 1.0F);
