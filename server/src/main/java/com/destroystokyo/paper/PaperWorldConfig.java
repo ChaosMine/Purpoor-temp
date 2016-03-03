@@ -205,4 +205,9 @@ public class PaperWorldConfig {
         portalCreateRadius = getInt("portal-create-radius", 16);
         portalSearchVanillaDimensionScaling = getBoolean("portal-search-vanilla-dimension-scaling", true);
     }
+
+    public boolean disableTeleportationSuffocationCheck;
+    private void disableTeleportationSuffocationCheck() {
+        disableTeleportationSuffocationCheck = getBoolean("disable-teleportation-suffocation-check", false);
+    }
 }
