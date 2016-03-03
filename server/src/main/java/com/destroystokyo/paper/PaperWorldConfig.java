@@ -191,4 +191,9 @@ public class PaperWorldConfig {
     private void disableChestCatDetection() {
         disableChestCatDetection = getBoolean("game-mechanics.disable-chest-cat-detection", false);
     }
+
+    public boolean allChunksAreSlimeChunks;
+    private void allChunksAreSlimeChunks() {
+        allChunksAreSlimeChunks = getBoolean("all-chunks-are-slime-chunks", false);
+    }
 }
