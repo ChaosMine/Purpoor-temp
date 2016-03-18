@@ -222,4 +222,9 @@ public class PaperConfig {
     private static void useDisplayNameInQuit() {
         useDisplayNameInQuit = getBoolean("use-display-name-in-quit-message", useDisplayNameInQuit);
     }
+
+    public static boolean loadPermsBeforePlugins = true;
+    private static void loadPermsBeforePlugins() {
+        loadPermsBeforePlugins = getBoolean("settings.load-permissions-yml-before-plugins", true);
+    }
 }
