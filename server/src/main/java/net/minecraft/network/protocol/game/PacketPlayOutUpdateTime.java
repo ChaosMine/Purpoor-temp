@@ -6,7 +6,7 @@ import net.minecraft.network.protocol.Packet;
 
 public class PacketPlayOutUpdateTime implements Packet<PacketListenerPlayOut> {
 
-    private long a;
+    private long a; private final void setWorldAge(final long age) { this.a = age; } private final long getWorldAge() { return this.a; } // Paper - OBFHELPER
     private long b;
 
     public PacketPlayOutUpdateTime() {}
@@ -21,6 +21,9 @@ public class PacketPlayOutUpdateTime implements Packet<PacketListenerPlayOut> {
             }
         }
 
+        // Paper start
+        this.setWorldAge(this.getWorldAge() % 192000);
+        // Paper end
     }
 
     @Override
