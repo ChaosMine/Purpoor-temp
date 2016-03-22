@@ -143,6 +143,21 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return tag.hasKey("Bukkit.updateLevel") && tag.getInt("Bukkit.updateLevel") >= level;
     }
 
+    // Paper start
+    public static Random SHARED_RANDOM = new Random() {
+        private boolean locked = false;
+        @Override
+        public synchronized void setSeed(long seed) {
+            if (locked) {
+                LogManager.getLogger().error("Ignoring setSeed on Entity.SHARED_RANDOM", new Throwable());
+            } else {
+                super.setSeed(seed);
+                locked = true;
+            }
+        }
+    };
+    // Paper end
+
     private CraftEntity bukkitEntity;
 
     public CraftEntity getBukkitEntity() {
@@ -273,7 +288,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.x = Vec3D.ORIGIN;
         this.am = 1.0F;
         this.an = 1.0F;
-        this.random = new Random();
+        this.random = SHARED_RANDOM; // Paper
         this.fireTicks = -this.getMaxFireTicks();
         this.M = new Object2DoubleArrayMap(2);
         this.justCreated = true;
