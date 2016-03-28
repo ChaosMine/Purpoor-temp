@@ -3,6 +3,7 @@ package net.minecraft.world.level.block;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
@@ -83,7 +84,7 @@ public class BlockTallPlant extends BlockPlant {
 
     protected static void b(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
         // CraftBukkit start
-        if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(world, blockposition).isCancelled()) {
+        if (((WorldServer)world).hasPhysicsEvent && org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(world, blockposition).isCancelled()) { // Paper
             return;
         }
         // CraftBukkit end

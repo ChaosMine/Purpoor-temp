@@ -2,6 +2,7 @@ package net.minecraft.world.level.block;
 
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.IWorldReader;
@@ -23,7 +24,7 @@ public class BlockPlant extends Block {
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
         // CraftBukkit start
         if (!iblockdata.canPlace(generatoraccess, blockposition)) {
-            if (!org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(generatoraccess, blockposition).isCancelled()) {
+            if (!(generatoraccess instanceof WorldServer && ((WorldServer) generatoraccess).hasPhysicsEvent) || !org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPhysicsEvent(generatoraccess, blockposition).isCancelled()) { // Paper
                 return Blocks.AIR.getBlockData();
             }
         }

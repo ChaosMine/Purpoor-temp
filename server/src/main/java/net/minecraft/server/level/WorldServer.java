@@ -196,6 +196,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private int tickPosition;
     public final Convertable.ConversionSession convertable;
     public final UUID uuid;
+    public boolean hasPhysicsEvent = true; // Paper
 
     @Override public Chunk getChunkIfLoaded(int x, int z) { // Paper - this was added in world too but keeping here for NMS ABI
         return this.chunkProvider.getChunkAt(x, z, false);
