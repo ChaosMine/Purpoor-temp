@@ -37,7 +37,7 @@ public class NavigationFlying extends NavigationAbstract {
 
     @Override
     public PathEntity a(Entity entity, int i) {
-        return this.a(entity.getChunkCoordinates(), i);
+        return this.a(entity.getChunkCoordinates(), entity, i); // Paper - Forward target entity
     }
 
     @Override
