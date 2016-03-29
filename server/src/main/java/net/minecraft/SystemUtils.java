@@ -78,7 +78,7 @@ public class SystemUtils {
     }
 
     public static long getMonotonicNanos() {
-        return SystemUtils.a.getAsLong();
+        return System.nanoTime(); // Paper
     }
 
     public static long getTimeMillis() {

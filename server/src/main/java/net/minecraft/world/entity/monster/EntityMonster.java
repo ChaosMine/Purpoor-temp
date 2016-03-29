@@ -27,6 +27,7 @@ import net.minecraft.world.level.WorldAccess;
 
 public abstract class EntityMonster extends EntityCreature implements IMonster {
 
+    public org.bukkit.craftbukkit.entity.CraftMonster getBukkitMonster() { return (org.bukkit.craftbukkit.entity.CraftMonster) super.getBukkitEntity(); } // Paper
     protected EntityMonster(EntityTypes<? extends EntityMonster> entitytypes, World world) {
         super(entitytypes, world);
         this.f = 5;

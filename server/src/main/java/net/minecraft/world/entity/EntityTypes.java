@@ -3,6 +3,7 @@ package net.minecraft.world.entity;
 import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import java.util.Set; // Paper
+import java.util.Map; // Paper
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -441,8 +442,8 @@ public class EntityTypes<T extends Entity> {
         return this.br.height;
     }
 
-    @Nullable
-    public T a(World world) {
+    public T create(World world) { return this.a(world); } // Paper - OBFHELPER
+    @Nullable public T a(World world) { // Paper - OBFHELPER
         return this.bf.create(this, world);
     }
 

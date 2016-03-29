@@ -105,6 +105,7 @@ public class BlockPosition extends BaseBlockPosition {
         return d0 == 0.0D && d1 == 0.0D && d2 == 0.0D ? this : new BlockPosition((double) this.getX() + d0, (double) this.getY() + d1, (double) this.getZ() + d2);
     }
 
+    public final BlockPosition add(int i, int j, int k) {return b(i, j, k);} // Paper - OBFHELPER
     public BlockPosition b(int i, int j, int k) {
         return i == 0 && j == 0 && k == 0 ? this : new BlockPosition(this.getX() + i, this.getY() + j, this.getZ() + k);
     }
@@ -436,6 +437,7 @@ public class BlockPosition extends BaseBlockPosition {
             return super.a(enumblockrotation).immutableCopy();
         }
 
+        public final BlockPosition.MutableBlockPosition setValues(int i, int j, int k) { return d(i, j, k);} // Paper - OBFHELPER
         public BlockPosition.MutableBlockPosition d(int i, int j, int k) {
             this.o(i);
             this.p(j);
@@ -443,6 +445,7 @@ public class BlockPosition extends BaseBlockPosition {
             return this;
         }
 
+        public final BlockPosition.MutableBlockPosition setValues(double d0, double d1, double d2) { return c(d0, d1, d2);} // Paper - OBFHELPER
         public BlockPosition.MutableBlockPosition c(double d0, double d1, double d2) {
             return this.d(MathHelper.floor(d0), MathHelper.floor(d1), MathHelper.floor(d2));
         }
@@ -496,6 +499,7 @@ public class BlockPosition extends BaseBlockPosition {
             }
         }
 
+        /* // Paper start - comment out useless overrides @Override
         @Override
         public void o(int i) {
             super.o(i);
@@ -506,10 +510,10 @@ public class BlockPosition extends BaseBlockPosition {
             super.p(i);
         }
 
-        @Override
         public void q(int i) {
             super.q(i);
         }
+        */ // Paper end
 
         @Override
         public BlockPosition immutableCopy() {

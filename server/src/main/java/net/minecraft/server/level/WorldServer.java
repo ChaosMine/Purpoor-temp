@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.longs.LongSets;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import java.io.BufferedWriter;
@@ -169,7 +170,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private final Map<UUID, Entity> entitiesByUUID = Maps.newHashMap();
     private final Queue<Entity> entitiesToAdd = Queues.newArrayDeque();
     private final List<EntityPlayer> players = Lists.newArrayList();
-    private final ChunkProviderServer chunkProvider;
+    public final ChunkProviderServer chunkProvider; // Paper - public
     boolean tickingEntities;
     private final MinecraftServer server;
     public final WorldDataServer worldDataServer; // CraftBukkit - type
@@ -1688,7 +1689,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 ObjectIterator objectiterator = spawnercreature_d.b().object2IntEntrySet().iterator();
 
                 while (objectiterator.hasNext()) {
-                    it.unimi.dsi.fastutil.objects.Object2IntMap.Entry<EnumCreatureType> it_unimi_dsi_fastutil_objects_object2intmap_entry = (it.unimi.dsi.fastutil.objects.Object2IntMap.Entry) objectiterator.next();
+                    Object2IntMap.Entry<EnumCreatureType> it_unimi_dsi_fastutil_objects_object2intmap_entry = (Object2IntMap.Entry) objectiterator.next(); // Paper - decompile fix
 
                     bufferedwriter.write(String.format("spawn_count.%s: %d\n", ((EnumCreatureType) it_unimi_dsi_fastutil_objects_object2intmap_entry.getKey()).b(), it_unimi_dsi_fastutil_objects_object2intmap_entry.getIntValue()));
                 }

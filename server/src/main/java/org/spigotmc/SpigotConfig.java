@@ -118,7 +118,11 @@ public class SpigotConfig
                 }
             }
         }
-
+        // Paper start
+        SpigotConfig.save();
+    }
+    public static void save() {
+        // Paper end
         try
         {
             config.save( CONFIG_FILE );

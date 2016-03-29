@@ -168,6 +168,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
     }
 
+    private void dispatchPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) { this.b(packet, genericFutureListener); } // Paper - OBFHELPER
     private void b(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericfuturelistener) {
         EnumProtocol enumprotocol = EnumProtocol.a(packet);
         EnumProtocol enumprotocol1 = (EnumProtocol) this.channel.attr(NetworkManager.c).get();
@@ -208,6 +209,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
     }
 
+    private void sendPacketQueue() { this.p(); } // Paper - OBFHELPER
     private void p() {
         if (this.channel != null && this.channel.isOpen()) {
             Queue queue = this.packetQueue;
@@ -344,9 +346,9 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
     static class QueuedPacket {
 
-        private final Packet<?> a;
+        private final Packet<?> a; private final Packet<?> getPacket() { return this.a; } // Paper - OBFHELPER
         @Nullable
-        private final GenericFutureListener<? extends Future<? super Void>> b;
+        private final GenericFutureListener<? extends Future<? super Void>> b; private final GenericFutureListener<? extends Future<? super Void>> getGenericFutureListener() { return this.b; } // Paper - OBFHELPER
 
         public QueuedPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericfuturelistener) {
             this.a = packet;

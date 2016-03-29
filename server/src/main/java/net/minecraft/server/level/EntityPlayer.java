@@ -224,6 +224,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public Integer clientViewDistance;
     // CraftBukkit end
 
+    public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> cachedSingleHashSet; // Paper
+
     public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
         super(worldserver, worldserver.getSpawn(), worldserver.v(), gameprofile);
         this.spawnDimension = World.OVERWORLD;
@@ -235,6 +237,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.G = 1.0F;
         this.c(worldserver);
         this.co = minecraftserver.a(this);
+
+        this.cachedSingleHashSet = new com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
 
         // CraftBukkit start
         this.displayName = this.getName();

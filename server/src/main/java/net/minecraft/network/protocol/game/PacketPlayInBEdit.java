@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class PacketPlayInBEdit implements Packet<PacketListenerPlayIn> {
 
-    private ItemStack a;
+    private ItemStack a; public ItemStack getBook() { return a; } // Paper - OBFHELPER
     private boolean b;
     private int c;
 

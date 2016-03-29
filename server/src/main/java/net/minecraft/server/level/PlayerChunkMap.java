@@ -54,6 +54,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutLightUpdate;
 import net.minecraft.network.protocol.game.PacketPlayOutMapChunk;
 import net.minecraft.network.protocol.game.PacketPlayOutMount;
 import net.minecraft.network.protocol.game.PacketPlayOutViewCentre;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.progress.WorldLoadListener;
 import net.minecraft.util.CSVWriter;
 import net.minecraft.util.EntitySlice;
@@ -146,6 +147,26 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     };
     // CraftBukkit end
 
+    // Paper start - distance maps
+    private final com.destroystokyo.paper.util.misc.PooledLinkedHashSets<EntityPlayer> pooledLinkedPlayerHashSets = new com.destroystokyo.paper.util.misc.PooledLinkedHashSets<>();
+
+    void addPlayerToDistanceMaps(EntityPlayer player) {
+        int chunkX = MCUtil.getChunkCoordinate(player.locX());
+        int chunkZ = MCUtil.getChunkCoordinate(player.locZ());
+        // Note: players need to be explicitly added to distance maps before they can be updated
+    }
+
+    void removePlayerFromDistanceMaps(EntityPlayer player) {
+
+    }
+
+    void updateMaps(EntityPlayer player) {
+        int chunkX = MCUtil.getChunkCoordinate(player.locX());
+        int chunkZ = MCUtil.getChunkCoordinate(player.locZ());
+        // Note: players need to be explicitly added to distance maps before they can be updated
+    }
+    // Paper end
+
     public PlayerChunkMap(WorldServer worldserver, Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, DefinedStructureManager definedstructuremanager, Executor executor, IAsyncTaskHandler<Runnable> iasynctaskhandler, ILightAccess ilightaccess, ChunkGenerator chunkgenerator, WorldLoadListener worldloadlistener, Supplier<WorldPersistentData> supplier, int i, boolean flag) {
         super(new File(convertable_conversionsession.a(worldserver.getDimensionKey()), "region"), datafixer, flag);
         this.visibleChunks = this.updatingChunks.clone();
@@ -234,6 +255,14 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             return playerchunk == null ? ChunkTaskQueue.a - 1 : Math.min(playerchunk.k(), ChunkTaskQueue.a - 1);
         };
     }
+
+    // Paper start
+    public final int getEffectiveViewDistance() {
+        // TODO this needs to be checked on update
+        // Mojang currently sets it to +1 of the configured view distance. So subtract one to get the one we really want.
+        return this.viewDistance - 1;
+    }
+    // Paper end
 
     private CompletableFuture<Either<List<IChunkAccess>, PlayerChunk.Failure>> a(ChunkCoordIntPair chunkcoordintpair, int i, IntFunction<ChunkStatus> intfunction) {
         List<CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>>> list = Lists.newArrayList();
@@ -953,6 +982,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             if (!flag1) {
                 this.chunkDistanceManager.a(SectionPosition.a((Entity) entityplayer), entityplayer);
             }
+            this.addPlayerToDistanceMaps(entityplayer); // Paper - distance maps
         } else {
             SectionPosition sectionposition = entityplayer.O();
 
@@ -960,6 +990,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             if (!flag2) {
                 this.chunkDistanceManager.b(sectionposition, entityplayer);
             }
+            this.removePlayerFromDistanceMaps(entityplayer); // Paper - distance maps
         }
 
         for (int k = i - this.viewDistance; k <= i + this.viewDistance; ++k) {
@@ -1069,6 +1100,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 }
             }
         }
+
+        this.updateMaps(entityplayer); // Paper - distance maps
 
     }
 
