@@ -1919,7 +1919,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
 
             // CraftBukkit - decompile error
-            return (String) object2intopenhashmap.object2IntEntrySet().stream().sorted(Comparator.comparing(it.unimi.dsi.fastutil.objects.Object2IntMap.Entry<MinecraftKey>::getIntValue).reversed()).limit(5L).map((it_unimi_dsi_fastutil_objects_object2intmap_entry) -> {
+            return (String) object2intopenhashmap.object2IntEntrySet().stream().sorted(Comparator.comparing(Object2IntMap.Entry<MinecraftKey>::getIntValue).reversed()).limit(5L).map((it_unimi_dsi_fastutil_objects_object2intmap_entry) -> { // Paper - decompile fix
                 return it_unimi_dsi_fastutil_objects_object2intmap_entry.getKey() + ":" + it_unimi_dsi_fastutil_objects_object2intmap_entry.getIntValue();
             }).collect(Collectors.joining(","));
         } catch (Exception exception) {
