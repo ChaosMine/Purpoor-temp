@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public class PacketPlayInUseEntity implements Packet<PacketListenerPlayIn> {
 
-    private int a;
+    private int a; public int getEntityId() { return this.a; } // Paper - add accessor
     private PacketPlayInUseEntity.EnumEntityUseAction action;
     private Vec3D c;
     private EnumHand d;
