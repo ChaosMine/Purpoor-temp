@@ -3,6 +3,7 @@ package net.minecraft.world.level.block;
 import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
@@ -41,6 +42,7 @@ public abstract class BlockDirtSnowSpreadable extends BlockDirtSnow {
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
+        if (this instanceof BlockGrass && worldserver.paperConfig.grassUpdateRate != 1 && (worldserver.paperConfig.grassUpdateRate < 1 || (MinecraftServer.currentTick + blockposition.hashCode()) % worldserver.paperConfig.grassUpdateRate != 0)) { return; } // Paper
         if (!b(iblockdata, (IWorldReader) worldserver, blockposition)) {
             // CraftBukkit start
             if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, Blocks.DIRT.getBlockData()).isCancelled()) {
