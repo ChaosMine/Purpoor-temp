@@ -17,7 +17,11 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.scores.ScoreboardTeam;
+import net.minecraft.world.scores.ScoreboardTeamBase;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.util.LazyPlayerSet;
 import org.bukkit.craftbukkit.util.Waitable;
@@ -179,10 +183,22 @@ public final class ChatProcessor {
     }
 
     private static String legacyDisplayName(final CraftPlayer player) {
+        if (((CraftWorld) player.getWorld()).getHandle().paperConfig.useVanillaScoreboardColoring) {
+            final EntityPlayer ep = player.getHandle();
+            IChatBaseComponent name = ep.getDisplayName();
+            final ScoreboardTeamBase team = ep.getScoreboardTeam();
+            if (team != null) {
+                name = team.getFormattedName(name);
+            }
+            return PaperAdventure.LEGACY_SECTION_UXRC.serialize(PaperAdventure.asAdventure(name)) + ChatColor.RESET;
+        }
         return player.getDisplayName();
     }
 
     private static Component displayName(final CraftPlayer player) {
+        if (((CraftWorld) player.getWorld()).getHandle().paperConfig.useVanillaScoreboardColoring) {
+            return PaperAdventure.asAdventure(ScoreboardTeam.a(player.getHandle().getScoreboardTeam(), player.getHandle().getDisplayName()));
+        }
         return player.displayName();
     }
 
