@@ -33,7 +33,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.EntityHuman;
 // Spigot end
 
-public class TileEntitySkull extends TileEntity implements ITickable {
+public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Paper - remove tickable
 
     @Nullable
     private static UserCache userCache;
@@ -136,7 +136,7 @@ public class TileEntitySkull extends TileEntity implements ITickable {
 
     }
 
-    @Override
+    // Paper - remove override
     public void tick() {
         IBlockData iblockdata = this.getBlock();
 
