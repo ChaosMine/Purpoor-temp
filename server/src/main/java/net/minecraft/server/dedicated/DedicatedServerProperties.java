@@ -67,6 +67,8 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
     public final PropertyManager<DedicatedServerProperties>.EditableProperty<Boolean> whiteList;
     public final GeneratorSettings generatorSettings;
 
+    public final String rconIp; // Paper - Add rcon ip
+
     // CraftBukkit start
     public DedicatedServerProperties(Properties properties, IRegistryCustom iregistrycustom, OptionSet optionset) {
         super(properties, optionset);
@@ -118,6 +120,10 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
         this.textFilteringConfig = this.getString("text-filtering-config", "");
         this.playerIdleTimeout = this.b("player-idle-timeout", 0);
         this.whiteList = this.b("white-list", false);
+        // Paper start - Configurable rcon ip
+        final String rconIp = this.getSettingIfExists("rcon.ip");
+        this.rconIp = rconIp == null ? this.serverIp : rconIp;
+        // Paper end
         this.generatorSettings = GeneratorSettings.a(iregistrycustom, properties);
     }
 

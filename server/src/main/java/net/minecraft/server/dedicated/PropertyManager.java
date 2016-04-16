@@ -129,8 +129,8 @@ public abstract class PropertyManager<T extends PropertyManager<T>> {
         };
     }
 
-    @Nullable
-    private String c(String s) {
+    @Nullable String getSettingIfExists(final String path) { return this.c(path); } // Paper - OBFHELPER
+    @Nullable private String c(String s) { // Paper - OBFHELPER
         return (String) getOverride(s, this.properties.getProperty(s)); // CraftBukkit
     }
 
