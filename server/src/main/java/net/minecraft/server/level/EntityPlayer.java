@@ -1695,7 +1695,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         return s;
     }
 
-    public String locale = "en_us"; // CraftBukkit - add, lowercase
+    public String locale = null; // CraftBukkit - add, lowercase // Paper - default to null
     public java.util.Locale adventure$locale = java.util.Locale.US; // Paper
     public void a(PacketPlayInSettings packetplayinsettings) {
         // CraftBukkit start
@@ -1703,9 +1703,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             PlayerChangedMainHandEvent event = new PlayerChangedMainHandEvent(getBukkitEntity(), getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT);
             this.server.server.getPluginManager().callEvent(event);
         }
-        if (!this.locale.equals(packetplayinsettings.locale)) {
+        if (this.locale == null || !this.locale.equals(packetplayinsettings.locale)) { // Paper - check for null
             PlayerLocaleChangeEvent event = new PlayerLocaleChangeEvent(getBukkitEntity(), packetplayinsettings.locale);
             this.server.server.getPluginManager().callEvent(event);
+            new com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent(this.getBukkitEntity(), this.locale, packetplayinsettings.locale).callEvent(); // Paper
         }
         this.locale = packetplayinsettings.locale;
         // Paper start
