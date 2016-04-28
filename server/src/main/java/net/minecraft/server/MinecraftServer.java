@@ -129,6 +129,7 @@ import net.minecraft.world.level.WorldSettings;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.WorldChunkManager;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TileEntityHopper;
 import net.minecraft.world.level.border.IWorldBorderListener;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -1362,6 +1363,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         while (iterator.hasNext()) {
             WorldServer worldserver = (WorldServer) iterator.next();
             worldserver.hasPhysicsEvent =  org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper
+            TileEntityHopper.skipHopperEvents = worldserver.paperConfig.disableHopperMoveEvents || org.bukkit.event.inventory.InventoryMoveItemEvent.getHandlerList().getRegisteredListeners().length == 0; // Paper
 
             this.methodProfiler.a(() -> {
                 return worldserver + " " + worldserver.getDimensionKey().a();
