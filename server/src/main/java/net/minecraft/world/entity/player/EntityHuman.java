@@ -86,6 +86,7 @@ import net.minecraft.world.item.ItemElytra;
 import net.minecraft.world.item.ItemProjectileWeapon;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemSword;
+import net.minecraft.world.item.ItemWorldMap;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
@@ -104,6 +105,7 @@ import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.block.entity.TileEntityStructure;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.pattern.ShapeDetectorBlock;
+import net.minecraft.world.level.saveddata.maps.WorldMap;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.scores.Scoreboard;
@@ -689,6 +691,12 @@ public abstract class EntityHuman extends EntityLiving {
                 return null;
             }
             // CraftBukkit end
+            // Paper start - remove player from map on drop
+            if (itemstack.getItem() == Items.FILLED_MAP) {
+                WorldMap worldmap = ItemWorldMap.getSavedMap(itemstack, this.world);
+                worldmap.updateSeenPlayers(this, itemstack);
+            }
+            // Paper end
 
             return entityitem;
         }

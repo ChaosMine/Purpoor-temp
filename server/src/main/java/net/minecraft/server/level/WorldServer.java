@@ -1170,6 +1170,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                         {
                             if ( iter.next().trackee == entity )
                             {
+                                map.decorations.remove(entity.getDisplayName().getString()); // Paper
                                 iter.remove();
                             }
                         }
