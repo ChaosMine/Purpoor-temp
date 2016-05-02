@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.Lootable;
 
-public abstract class CraftLootable<T extends TileEntityLootable> extends CraftContainer<T> implements Nameable, Lootable {
+public abstract class CraftLootable<T extends TileEntityLootable> extends CraftContainer<T> implements Nameable, Lootable, com.destroystokyo.paper.loottable.PaperLootableBlockInventory { // Paper
 
     public CraftLootable(Block block, Class<T> tileEntityClass) {
         super(block, tileEntityClass);
@@ -54,7 +54,7 @@ public abstract class CraftLootable<T extends TileEntityLootable> extends CraftC
         setLootTable(getLootTable(), seed);
     }
 
-    private void setLootTable(LootTable table, long seed) {
+    public void setLootTable(LootTable table, long seed) { // Paper - public
         MinecraftKey key = (table == null) ? null : CraftNamespacedKey.toMinecraft(table.getKey());
         getSnapshot().setLootTable(key, seed);
     }
