@@ -352,5 +352,18 @@ public final class CraftItemFactory implements ItemFactory {
     public ItemStack ensureServerConversions(ItemStack item) {
         return CraftItemStack.asCraftMirror(CraftItemStack.asNMSCopy(item));
     }
+
+    @Override
+    public String getI18NDisplayName(ItemStack item) {
+        net.minecraft.world.item.ItemStack nms = null;
+        if (item instanceof CraftItemStack) {
+            nms = ((CraftItemStack) item).handle;
+        }
+        if (nms == null) {
+            nms = CraftItemStack.asNMSCopy(item);
+        }
+
+        return nms != null ? net.minecraft.locale.LocaleLanguage.getInstance().translateKey(nms.getItem().getName()) : null;
+    }
     // Paper end
 }
