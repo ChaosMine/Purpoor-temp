@@ -346,5 +346,11 @@ public final class CraftItemFactory implements ItemFactory {
     public net.kyori.adventure.text.@org.jetbrains.annotations.NotNull Component displayName(@org.jetbrains.annotations.NotNull ItemStack itemStack) {
         return io.papermc.paper.adventure.PaperAdventure.asAdventure(CraftItemStack.asNMSCopy(itemStack).displayName());
     }
+
+    // Paper start
+    @Override
+    public ItemStack ensureServerConversions(ItemStack item) {
+        return CraftItemStack.asCraftMirror(CraftItemStack.asNMSCopy(item));
+    }
     // Paper end
 }
