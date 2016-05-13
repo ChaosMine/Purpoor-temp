@@ -142,6 +142,12 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public long ticksPerWaterSpawns;
     public long ticksPerWaterAmbientSpawns;
     public long ticksPerAmbientSpawns;
+    // Paper start
+    public int wakeupInactiveRemainingAnimals;
+    public int wakeupInactiveRemainingFlying;
+    public int wakeupInactiveRemainingMonsters;
+    public int wakeupInactiveRemainingVillagers;
+    // Paper end
     public boolean populating;
     public final org.spigotmc.SpigotWorldConfig spigotConfig; // Spigot
 
