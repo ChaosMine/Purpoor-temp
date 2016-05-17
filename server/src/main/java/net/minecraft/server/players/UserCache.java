@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import net.minecraft.server.MCUtil;
 import net.minecraft.world.entity.player.EntityHuman;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -108,7 +109,7 @@ public class UserCache {
         return UserCache.b;
     }
 
-    public void a(GameProfile gameprofile) {
+    public synchronized void a(GameProfile gameprofile) { // Paper - synchronize
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(new Date());
@@ -117,7 +118,7 @@ public class UserCache {
         UserCache.UserCacheEntry usercache_usercacheentry = new UserCache.UserCacheEntry(gameprofile, date);
 
         this.a(usercache_usercacheentry);
-        if( !org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly ) this.b(); // Spigot - skip saving if disabled
+        if( !org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly ) this.b(true); // Spigot - skip saving if disabled // Paper - async
     }
 
     private long d() {
@@ -125,7 +126,7 @@ public class UserCache {
     }
 
     @Nullable
-    public GameProfile getProfile(String s) {
+    public synchronized GameProfile getProfile(String s) { // Paper - synchronize
         String s1 = s.toLowerCase(Locale.ROOT);
         UserCache.UserCacheEntry usercache_usercacheentry = (UserCache.UserCacheEntry) this.c.get(s1);
         boolean flag = false;
@@ -151,7 +152,7 @@ public class UserCache {
         }
 
         if (flag && !org.spigotmc.SpigotConfig.saveUserCacheOnStopOnly) { // Spigot - skip saving if disabled
-            this.b();
+            this.b(true); // Paper
         }
 
         return gameprofile;
@@ -233,7 +234,7 @@ public class UserCache {
         return arraylist;
     }
 
-    public void b() {
+    public void b(boolean asyncSave) { // Paper
         JsonArray jsonarray = new JsonArray();
         DateFormat dateformat = e();
 
@@ -241,6 +242,7 @@ public class UserCache {
             jsonarray.add(a(usercache_usercacheentry, dateformat));
         });
         String s = this.f.toJson(jsonarray);
+        Runnable save = () -> { // Paper
 
         try {
             BufferedWriter bufferedwriter = Files.newWriter(this.g, StandardCharsets.UTF_8);
@@ -268,6 +270,14 @@ public class UserCache {
         } catch (IOException ioexception) {
             ;
         }
+        // Paper start
+        };
+        if (asyncSave) {
+            MCUtil.scheduleAsyncTask(save);
+        } else {
+            save.run();
+        }
+        // Paper end
 
     }
 
