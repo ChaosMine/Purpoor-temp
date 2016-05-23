@@ -44,6 +44,7 @@ import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockFireAbstract;
+import net.minecraft.world.level.block.BlockRedstoneTorch;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ITickable;
 import net.minecraft.world.level.block.entity.TileEntity;
@@ -142,6 +143,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     private org.spigotmc.TickLimiter tileLimiter;
     private int tileTickPosition;
     public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
+    public java.util.ArrayDeque<BlockRedstoneTorch.RedstoneUpdateInfo> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
 
     public CraftWorld getWorld() {
         return this.world;
