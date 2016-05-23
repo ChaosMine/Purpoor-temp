@@ -4,10 +4,14 @@ import javax.annotation.Nullable;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.level.PlayerChunkMap;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityPose;
@@ -96,7 +100,27 @@ public class EntityTNTPrimed extends Entity {
                 this.world.addParticle(Particles.SMOKE, this.locX(), this.locY() + 0.5D, this.locZ(), 0.0D, 0.0D, 0.0D);
             }
         }
+        // Paper start - Optional prevent TNT from moving in water
+        if (!this.dead && this.inWater && this.world.paperConfig.preventTntFromMovingInWater) {
+            /*
+             * Author: Jedediah Smith <jedediah@silencegreys.com>
+             */
+            // Send position and velocity updates to nearby players on every tick while the TNT is in water.
+            // This does pretty well at keeping their clients in sync with the server.
+            PlayerChunkMap.EntityTracker ete = ((WorldServer)this.world).getChunkProvider().playerChunkMap.trackedEntities.get(this.getId());
+            if (ete != null) {
+                PacketPlayOutEntityVelocity velocityPacket = new PacketPlayOutEntityVelocity(this);
+                PacketPlayOutEntityTeleport positionPacket = new PacketPlayOutEntityTeleport(this);
 
+                ete.trackedPlayers.stream()
+                    .filter(viewer -> (viewer.locX() - this.locX()) * (viewer.locY() - this.locY()) * (viewer.locZ() - this.locZ()) < 16 * 16)
+                    .forEach(viewer -> {
+                        viewer.playerConnection.sendPacket(velocityPacket);
+                        viewer.playerConnection.sendPacket(positionPacket);
+                    });
+            }
+        }
+        // Paper end
     }
 
     private void explode() {
@@ -165,4 +189,11 @@ public class EntityTNTPrimed extends Entity {
     public Packet<?> P() {
         return new PacketPlayOutSpawnEntity(this);
     }
+
+    // Paper start - Optional prevent TNT from moving in water
+    @Override
+    public boolean pushedByWater() {
+        return !world.paperConfig.preventTntFromMovingInWater && super.pushedByWater();
+    }
+    // Paper end
 }

@@ -2776,6 +2776,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean bV() {
+        // Paper start
+        return this.pushedByWater();
+    }
+    public boolean pushedByWater() {
+        // Paper end
         return true;
     }
 
