@@ -445,6 +445,7 @@ public class EnderDragonBattle {
         entityenderdragon.setPositionRotation(0.0D, 128.0D, 0.0D, this.world.random.nextFloat() * 360.0F, 0.0F);
         this.world.addEntity(entityenderdragon);
         this.dragonUUID = entityenderdragon.getUniqueID();
+        this.resetCrystals(); // Paper
         return entityenderdragon;
     }
 
