@@ -119,4 +119,14 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
     public HookState getState() {
         return HookState.values()[getHandle().hookState.ordinal()];
     }
+
+    // Paper start
+    @Override
+    public void remove() {
+        super.remove();
+        if (getHandle().getOwner() != null) {
+            getHandle().getOwner().hookedFish = null;
+        }
+    }
+    // Paper end
 }
