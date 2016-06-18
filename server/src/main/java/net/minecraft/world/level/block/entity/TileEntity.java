@@ -34,6 +34,7 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /
     public CraftPersistentDataContainer persistentDataContainer;
     // CraftBukkit end
     private static final Logger LOGGER = LogManager.getLogger();
+    public boolean isLoadingStructure = false; // Paper
     private final TileEntityTypes<?> tileType; public TileEntityTypes getTileEntityType() { return tileType; } // Paper - OBFHELPER
     @Nullable
     protected World world;
