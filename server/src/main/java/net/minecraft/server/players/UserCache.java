@@ -89,6 +89,7 @@ public class UserCache {
             }
         };
 
+        if (com.destroystokyo.paper.PaperConfig.isProxyOnlineMode()) // Paper - only run in online mode - 100 COL
         gameprofilerepository.findProfilesByNames(new String[]{s}, Agent.MINECRAFT, profilelookupcallback);
         GameProfile gameprofile = (GameProfile) atomicreference.get();
 
@@ -106,7 +107,7 @@ public class UserCache {
     }
 
     private static boolean c() {
-        return UserCache.b;
+        return com.destroystokyo.paper.PaperConfig.isProxyOnlineMode(); // Paper
     }
 
     public synchronized void a(GameProfile gameprofile) { // Paper - synchronize
