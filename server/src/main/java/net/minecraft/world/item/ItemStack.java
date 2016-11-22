@@ -114,7 +114,7 @@ public final class ItemStack {
     private int g;
     @Deprecated
     private Item item;
-    private NBTTagCompound tag;
+    public NBTTagCompound tag; // Paper private -> public
     private boolean j;
     private Entity k;
     private ShapeDetectorBlock l;

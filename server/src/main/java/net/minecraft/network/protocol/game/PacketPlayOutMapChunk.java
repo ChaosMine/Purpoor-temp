@@ -15,6 +15,7 @@ import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.block.entity.TileEntity;
+import net.minecraft.world.level.block.entity.TileEntitySkull;
 import net.minecraft.world.level.chunk.BiomeStorage;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.chunk.ChunkSection;
@@ -69,6 +70,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
 
             if (this.f() || (i & 1 << j) != 0) {
                 NBTTagCompound nbttagcompound = tileentity.b();
+                if (tileentity instanceof TileEntitySkull) { TileEntitySkull.sanitizeTileEntityUUID(nbttagcompound); } // Paper
 
                 this.g.add(nbttagcompound);
             }
