@@ -1551,4 +1551,6 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     // Spigot end
 
     void reloadPermissions(); // Paper
+
+    boolean reloadCommandAliases(); // Paper
 }
