@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.TileEntityEndGateway;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
 
 public abstract class EntityProjectile extends IProjectile {
@@ -57,7 +58,17 @@ public abstract class EntityProjectile extends IProjectile {
         }
 
         if (movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.MISS && !flag) {
+            // Paper start - Call ProjectileCollideEvent
+            if (movingobjectposition instanceof MovingObjectPositionEntity) {
+                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileCollideEvent(this, (MovingObjectPositionEntity)movingobjectposition);
+                if (event.isCancelled()) {
+                    movingobjectposition = null;
+                }
+            }
+            if (movingobjectposition != null) {
+            // Paper end
             this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
+            } // Paper
         }
 
         this.checkBlockCollisions();

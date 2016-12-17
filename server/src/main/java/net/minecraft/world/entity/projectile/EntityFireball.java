@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
+import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
 
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
@@ -72,7 +73,16 @@ public abstract class EntityFireball extends IProjectile {
 
             MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
 
-            if (movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.MISS) {
+            // Paper start - Call ProjectileCollideEvent
+            if (movingobjectposition instanceof MovingObjectPositionEntity) {
+                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = CraftEventFactory.callProjectileCollideEvent(this, (MovingObjectPositionEntity)movingobjectposition);
+                if (event.isCancelled()) {
+                    movingobjectposition = null;
+                }
+            }
+            // Paper end
+
+            if (movingobjectposition != null && movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.MISS) { // Paper - add null check in case cancelled
                 this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
 
                 // CraftBukkit start - Fire ProjectileHitEvent
