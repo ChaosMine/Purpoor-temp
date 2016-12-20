@@ -64,7 +64,16 @@ public class LootItemFunctionExplorationMap extends LootItemFunctionConditional 
 
             if (vec3d != null) {
                 WorldServer worldserver = loottableinfo.getWorld();
-                BlockPosition blockposition = worldserver.a(this.e, new BlockPosition(vec3d), this.h, this.i);
+                // Paper start
+                if (!worldserver.paperConfig.enableTreasureMaps) {
+                    /*
+                     * NOTE: I fear users will just get a plain map as their "treasure"
+                     * This is preferable to disrespecting the config.
+                     */
+                    return itemstack;
+                }
+                // Paper end
+                BlockPosition blockposition = worldserver.a(this.e, new BlockPosition(vec3d), this.h, !worldserver.paperConfig.treasureMapsAlreadyDiscovered && this.i); // Paper
 
                 if (blockposition != null) {
                     ItemStack itemstack1 = ItemWorldMap.createFilledMapView(worldserver, blockposition.getX(), blockposition.getZ(), this.g, true, true);
