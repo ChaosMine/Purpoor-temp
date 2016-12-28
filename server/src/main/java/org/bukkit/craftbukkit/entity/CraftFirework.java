@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import java.util.Random;
+import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.projectile.EntityFireworks;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -78,4 +79,17 @@ public class CraftFirework extends CraftProjectile implements Firework {
     public void setShotAtAngle(boolean shotAtAngle) {
         getHandle().getDataWatcher().set(EntityFireworks.SHOT_AT_ANGLE, shotAtAngle);
     }
+
+    // Paper start
+    @Override
+    public java.util.UUID getSpawningEntity() {
+        return getHandle().spawningEntity;
+    }
+
+    @Override
+    public org.bukkit.entity.LivingEntity getBoostedEntity() {
+        EntityLiving boostedEntity = getHandle().ridingEntity;
+        return boostedEntity != null ? (org.bukkit.entity.LivingEntity) boostedEntity.getBukkitEntity() : null;
+    }
+    // Paper end
 }
