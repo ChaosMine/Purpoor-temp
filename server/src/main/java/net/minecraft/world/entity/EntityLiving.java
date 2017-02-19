@@ -338,6 +338,7 @@ public abstract class EntityLiving extends Entity {
         super.a(d0, flag, iblockdata, blockposition);
     }
 
+    public boolean canBreatheUnderwater() { return this.cM(); } // Paper - OBFHELPER
     public boolean cM() {
         return this.getMonsterType() == EnumMonsterType.UNDEAD;
     }
@@ -381,7 +382,7 @@ public abstract class EntityLiving extends Entity {
 
         if (this.isAlive()) {
             if (this.a((Tag) TagsFluid.WATER) && !this.world.getType(new BlockPosition(this.locX(), this.getHeadY(), this.locZ())).a(Blocks.BUBBLE_COLUMN)) {
-                if (!this.cM() && !MobEffectUtil.c(this) && !flag1) {
+                if (!this.canBreatheUnderwater() && !MobEffectUtil.c(this) && !flag1) {  // Paper - use OBFHELPER so it can be overridden
                     this.setAirTicks(this.l(this.getAirTicks()));
                     if (this.getAirTicks() == -20) {
                         this.setAirTicks(0);
