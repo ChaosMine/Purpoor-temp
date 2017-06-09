@@ -46,7 +46,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import jline.console.ConsoleReader;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.commands.CommandDispatcher;
 import net.minecraft.commands.CommandListenerWrapper;
@@ -59,6 +58,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.RegistryReadOps;
 import net.minecraft.resources.ResourceKey;
+//import jline.console.ConsoleReader; // Paper
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerCommand;
 import net.minecraft.server.bossevents.BossBattleCustom;
@@ -1205,9 +1205,13 @@ public final class CraftServer implements Server {
         return logger;
     }
 
+    // Paper start - JLine update
+    /*
     public ConsoleReader getReader() {
         return console.reader;
     }
+    */
+    // Paper end
 
     @Override
     public PluginCommand getPluginCommand(String name) {

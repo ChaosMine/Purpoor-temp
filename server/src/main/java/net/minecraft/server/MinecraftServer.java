@@ -12,6 +12,7 @@ import com.mojang.datafixers.DataFixer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -160,7 +161,7 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Lifecycle;
 import com.google.common.collect.ImmutableSet;
-import jline.console.ConsoleReader;
+// import jline.console.ConsoleReader; // Paper
 import joptsimple.OptionSet;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.NBTBase;
@@ -255,7 +256,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public OptionSet options;
     public org.bukkit.command.ConsoleCommandSender console;
     public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
-    public ConsoleReader reader;
+    //public ConsoleReader reader; // Paper
     public static int currentTick = 0; // Paper - Further improve tick loop
     public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
     public int autosavePeriod;
@@ -324,7 +325,9 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         this.options = options;
         this.datapackconfiguration = datapackconfiguration;
         this.vanillaCommandDispatcher = datapackresources.commandDispatcher; // CraftBukkit
+        // Paper start - Handled by TerminalConsoleAppender
         // Try to see if we're actually running in a terminal, disable jline if not
+        /*
         if (System.console() == null && System.getProperty("jline.terminal") == null) {
             System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
             Main.useJline = false;
@@ -345,6 +348,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 LOGGER.warn((String) null, ex);
             }
         }
+        */
+        // Paper end
         Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
     }
     // CraftBukkit end
@@ -1098,7 +1103,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 org.spigotmc.WatchdogThread.doStop(); // Spigot
                 // CraftBukkit start - Restore terminal to original settings
                 try {
-                    reader.getTerminal().restore();
+                    net.minecrell.terminalconsole.TerminalConsoleAppender.close(); // Paper - Use TerminalConsoleAppender
                 } catch (Exception ignored) {
                 }
                 // CraftBukkit end
@@ -1469,7 +1474,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
     @Override
     public void sendMessage(IChatBaseComponent ichatbasecomponent, UUID uuid) {
-        MinecraftServer.LOGGER.info(ichatbasecomponent.getString());
+        MinecraftServer.LOGGER.info(PaperAdventure.LEGACY_SECTION_UXRC.serialize(PaperAdventure.asAdventure(ichatbasecomponent))); // Paper - Log message with colors
     }
 
     public KeyPair getKeyPair() {
