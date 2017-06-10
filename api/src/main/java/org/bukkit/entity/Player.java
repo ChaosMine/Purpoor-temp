@@ -634,7 +634,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      *
      * Use supplied alternative character to the section symbol to represent legacy color codes.
      *
-     * @param alternateChar Alternate symbol such as '&'
+     * @param alternateChar Alternate symbol such as '&amp;'
      * @param message The message to send
      * @deprecated use {@link #sendActionBar(Component)}
      */

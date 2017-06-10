@@ -106,7 +106,7 @@ public interface PlayerInventory extends Inventory {
      *
      * @return the ItemStack in the given slot
      */
-    @NotNull
+    @Nullable
     public ItemStack getItem(@NotNull EquipmentSlot slot);
 
     /**
