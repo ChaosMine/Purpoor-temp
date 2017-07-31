@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -343,6 +344,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public Player getKiller() {
         return getHandle().killer == null ? null : (Player) getHandle().killer.getBukkitEntity();
     }
+
+    // Paper start
+    @Override
+    public void setKiller(Player killer) {
+        EntityPlayer entityPlayer = killer == null ? null : ((CraftPlayer) killer).getHandle();
+        getHandle().killer = entityPlayer;
+        getHandle().lastDamager = entityPlayer;
+        getHandle().lastDamageByPlayerTime = entityPlayer == null ? 0 : 100; // 100 value taken from EntityLiving#damageEntity
+    }
+    // Paper end
 
     @Override
     public boolean addPotionEffect(PotionEffect effect) {
