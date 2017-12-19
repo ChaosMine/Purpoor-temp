@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.TileEntityFurnace;
 
 public class SlotFurnaceResult extends Slot {
 
-    private final EntityHuman a;
+    private final EntityHuman a; public final EntityHuman getPlayer() { return this.a; } // Paper OBFHELPER
     private int b;
 
     public SlotFurnaceResult(EntityHuman entityhuman, IInventory iinventory, int i, int j, int k) {
