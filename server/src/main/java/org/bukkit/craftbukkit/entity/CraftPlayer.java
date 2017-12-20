@@ -58,13 +58,17 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.server.players.WhiteListEntry;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.AttributeMapBase;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.item.EnumColor;
+import net.minecraft.world.item.enchantment.EnchantmentManager;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.saveddata.maps.MapIcon;
@@ -1178,8 +1182,37 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return GameMode.getByValue(getHandle().playerInteractManager.getGameMode().getId());
     }
 
+    // Paper start
     @Override
-    public void giveExp(int exp) {
+    public int applyMending(int amount) {
+        EntityPlayer handle = getHandle();
+        // Logic copied from EntityExperienceOrb and remapped to unobfuscated methods/properties
+        net.minecraft.world.item.ItemStack itemstack = EnchantmentManager.getRandomEquippedItemWithEnchant(Enchantments.MENDING, handle);
+        if (!itemstack.isEmpty() && itemstack.getItem().usesDurability()) {
+
+            EntityExperienceOrb orb = EntityTypes.EXPERIENCE_ORB.create(handle.world);
+            orb.value = amount;
+            orb.spawnReason = org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM;
+            orb.setPositionRaw(handle.locX(), handle.locY(), handle.locZ());
+
+            int i = Math.min(orb.xpToDur(amount), itemstack.getDamage());
+            org.bukkit.event.player.PlayerItemMendEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerItemMendEvent(handle, orb, itemstack, i);
+            i = event.getRepairAmount();
+            orb.dead = true;
+            if (!event.isCancelled()) {
+                amount -= orb.durToXp(i);
+                itemstack.setDamage(itemstack.getDamage() - i);
+            }
+        }
+        return amount;
+    }
+
+    @Override
+    public void giveExp(int exp, boolean applyMending) {
+        if (applyMending) {
+            exp = this.applyMending(exp);
+        }
+        // Paper end
         getHandle().giveExp(exp);
     }
 
