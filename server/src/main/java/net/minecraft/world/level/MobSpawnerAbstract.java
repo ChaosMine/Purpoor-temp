@@ -12,6 +12,7 @@ import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.UtilColor;
 import net.minecraft.util.WeightedRandom;
@@ -125,6 +126,27 @@ public abstract class MobSpawnerAbstract {
                         WorldServer worldserver = (WorldServer) world;
 
                         if (EntityPositionTypes.a((EntityTypes) optional.get(), worldserver, EnumMobSpawn.SPAWNER, new BlockPosition(d3, d4, d5), world.getRandom())) {
+                            // Paper start
+                            EntityTypes<?> entityType = optional.get();
+                            String key = EntityTypes.getName(entityType).getKey();
+
+                            org.bukkit.entity.EntityType type = org.bukkit.entity.EntityType.fromName(key);
+                            if (type != null) {
+                                com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent event;
+                                event = new com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent(
+                                    MCUtil.toLocation(world, d3, d4, d5),
+                                    type,
+                                    org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.SPAWNER
+                                );
+                                if (!event.callEvent()) {
+                                    flag = true;
+                                    if (event.shouldAbortSpawn()) {
+                                        break;
+                                    }
+                                    continue;
+                                }
+                            }
+                            // Paper end
                             Entity entity = EntityTypes.a(nbttagcompound, world, (entity1) -> {
                                 entity1.setPositionRotation(d3, d4, d5, entity1.yaw, entity1.pitch);
                                 return entity1;

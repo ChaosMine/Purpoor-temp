@@ -33,7 +33,7 @@ public class SensorGolemLastSeen extends Sensor<EntityLiving> {
         Optional<List<EntityLiving>> optional = entityliving.getBehaviorController().getMemory(MemoryModuleType.MOBS);
 
         if (optional.isPresent()) {
-            boolean flag = ((List) optional.get()).stream().anyMatch((entityliving1) -> {
+            boolean flag = optional.get().stream().anyMatch((entityliving1) -> { // Paper - decompile fixes
                 return entityliving1.getEntityType().equals(EntityTypes.IRON_GOLEM);
             });
 
@@ -44,6 +44,7 @@ public class SensorGolemLastSeen extends Sensor<EntityLiving> {
         }
     }
 
+    public static void setDetectedRecently(EntityLiving entityLiving) { b(entityLiving); } // Paper - OBFHELPER
     public static void b(EntityLiving entityliving) {
         entityliving.getBehaviorController().a(MemoryModuleType.GOLEM_DETECTED_RECENTLY, true, 600L);
     }

@@ -30,6 +30,7 @@ import net.minecraft.network.protocol.game.PacketDebug;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
@@ -943,6 +944,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
             BlockPosition blockposition1 = this.a(blockposition, d0, d1);
 
             if (blockposition1 != null) {
+                // Paper start - Call PreCreatureSpawnEvent
+                com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent event;
+                event = new com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent(
+                    MCUtil.toLocation(world, blockposition1),
+                    org.bukkit.entity.EntityType.IRON_GOLEM,
+                    org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.VILLAGE_DEFENSE
+                );
+                if (!event.callEvent()) {
+                    if (event.shouldAbortSpawn()) {
+                        SensorGolemLastSeen.b(this); // Set Golem Last Seen to stop it from spawning another one
+                        return null;
+                    }
+                    break;
+                }
+                // Paper end
                 EntityIronGolem entityirongolem = (EntityIronGolem) EntityTypes.IRON_GOLEM.createCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition1, EnumMobSpawn.MOB_SUMMONED, false, false);
 
                 if (entityirongolem != null) {
