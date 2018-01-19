@@ -8,6 +8,8 @@ import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.level.block.entity.TileEntitySkull;
+import com.destroystokyo.paper.profile.CraftPlayerProfile;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -18,6 +20,7 @@ import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import javax.annotation.Nullable;
 @DelegateDeserialization(SerializableMeta.class)
 class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
 
@@ -149,6 +152,19 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
         return hasOwner() ? profile.getName() : null;
     }
 
+    // Paper start
+    @Override
+    public void setPlayerProfile(@Nullable PlayerProfile profile) {
+        setProfile((profile == null) ? null : CraftPlayerProfile.asAuthlibCopy(profile));
+    }
+
+    @Nullable
+    @Override
+    public PlayerProfile getPlayerProfile() {
+        return profile != null ? CraftPlayerProfile.asBukkitCopy(profile) : null;
+    }
+    // Paper end
+
     @Override
     public OfflinePlayer getOwningPlayer() {
         if (hasOwner()) {
@@ -175,7 +191,7 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
         } else {
             // Paper start - Use Online Players Skull
             GameProfile newProfile = null;
-            net.minecraft.server.EntityPlayer player = net.minecraft.server.MinecraftServer.getServer().getPlayerList().getPlayer(name);
+            net.minecraft.server.level.EntityPlayer player = net.minecraft.server.MinecraftServer.getServer().getPlayerList().getPlayer(name);
             if (player != null) newProfile = player.getProfile();
             if (newProfile == null) newProfile = new GameProfile(null, name);
             setProfile(newProfile);
