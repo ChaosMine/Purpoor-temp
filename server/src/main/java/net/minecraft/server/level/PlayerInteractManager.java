@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockBreak;
+import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
 import net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockCommand;
+import net.minecraft.world.level.block.BlockFlowerPot;
 import net.minecraft.world.level.block.BlockJigsaw;
 import net.minecraft.world.level.block.BlockStructure;
 import net.minecraft.world.level.block.entity.TileEntity;
@@ -180,6 +182,11 @@ public class PlayerInteractManager {
                 PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, blockposition, enumdirection, this.player.inventory.getItemInHand(), EnumHand.MAIN_HAND);
                 if (event.isCancelled()) {
                     // Let the client know the block still exists
+                    // Paper start - brute force neighbor blocks for any attached blocks
+                    for (EnumDirection dir : EnumDirection.values()) {
+                        this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(world, blockposition.shift(dir)));
+                    }
+                    // Paper end
                     this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(this.world, blockposition));
                     // Update any tile entity data for this block
                     TileEntity tileentity = this.world.getTileEntity(blockposition);
@@ -484,6 +491,7 @@ public class PlayerInteractManager {
         interactItemStack = itemstack.cloneItemStack();
 
         if (event.useInteractedBlock() == Event.Result.DENY) {
+
             // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
             if (iblockdata.getBlock() instanceof BlockDoor) {
                 boolean bottom = iblockdata.get(BlockDoor.HALF) == BlockPropertyDoubleBlockHalf.LOWER;
@@ -496,7 +504,13 @@ public class PlayerInteractManager {
 
                 // send a correcting update to the client for the block above as well, this because of replaceable blocks (such as grass, sea grass etc)
                 entityplayer.playerConnection.sendPacket(new PacketPlayOutBlockChange(world, blockposition.up()));
+            // Paper start  - extend Player Interact cancellation // TODO: consider merging this into the extracted method
+            } else if (iblockdata.getBlock() instanceof BlockStructure) {
+                entityplayer.playerConnection.sendPacket(new PacketPlayOutCloseWindow());
+            } else if (iblockdata.getBlock() instanceof BlockCommand) {
+                entityplayer.playerConnection.sendPacket(new PacketPlayOutCloseWindow());
             }
+            // Paper end - extend Player Interact cancellation
             entityplayer.getBukkitEntity().updateInventory(); // SPIGOT-2867
             enuminteractionresult = (event.useItemInHand() != Event.Result.ALLOW) ? EnumInteractionResult.SUCCESS : EnumInteractionResult.PASS;
         } else if (this.gamemode == EnumGamemode.SPECTATOR) {
