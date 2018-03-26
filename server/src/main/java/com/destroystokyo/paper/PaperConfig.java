@@ -279,4 +279,13 @@ public class PaperConfig {
     private static void authenticationServersDownKickMessage() {
         authenticationServersDownKickMessage = Strings.emptyToNull(getString("messages.kick.authentication-servers-down", authenticationServersDownKickMessage));
     }
+
+    private static void savePlayerData() {
+        Object val = config.get("settings.save-player-data");
+        if (val instanceof Boolean) {
+            SpigotConfig.disablePlayerDataSaving = !(Boolean) val;
+            SpigotConfig.config.set("players.disable-saving", SpigotConfig.disableAdvancementSaving);
+            SpigotConfig.save();
+        }
+    }
 }
