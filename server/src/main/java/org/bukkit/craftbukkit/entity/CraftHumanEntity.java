@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.BlockEnchantmentTable;
 import net.minecraft.world.level.block.BlockWorkbench;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.TileEntity;
+import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.block.state.IBlockData;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -605,6 +606,17 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
     }
 
+    // Paper start - Add method to open already placed sign
+    @Override
+    public void openSign(org.bukkit.block.Sign sign) {
+        org.apache.commons.lang.Validate.isTrue(sign.getWorld().equals(this.getWorld()), "Sign must be in the same world as player is in");
+        org.bukkit.craftbukkit.block.CraftSign craftSign = (org.bukkit.craftbukkit.block.CraftSign) sign;
+        TileEntitySign teSign = craftSign.getTileEntity();
+        // Make sign editable temporarily, will be set back to false in PlayerConnection later
+        teSign.isEditable = true;
+        getHandle().openSign(teSign);
+    }
+    // Paper end
     @Override
     public boolean dropItem(boolean dropAll) {
         return getHandle().dropItem(dropAll);
