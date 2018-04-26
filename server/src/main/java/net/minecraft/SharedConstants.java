@@ -20,6 +20,7 @@ public class SharedConstants {
         return c0 != 167 && c0 >= ' ' && c0 != 127;
     }
 
+    public static String filterAllowedChatCharacters(String input) { return a(input); } // Paper - OBFHELPER
     public static String a(String s) {
         StringBuilder stringbuilder = new StringBuilder();
         char[] achar = s.toCharArray();

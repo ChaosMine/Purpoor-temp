@@ -2788,7 +2788,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             List<net.kyori.adventure.text.Component> lines = new java.util.ArrayList<>();
 
             for (int i = 0; i < list.size(); ++i) {
-                lines.add(net.kyori.adventure.text.Component.text(list.get(i)));
+                lines.add(net.kyori.adventure.text.Component.text(SharedConstants.filterAllowedChatCharacters(list.get(i)))); // Paper - Replaced with anvil color stripping method to stop exploits that allow colored signs to be created.
             }
             SignChangeEvent event = new SignChangeEvent(org.bukkit.craftbukkit.block.CraftBlock.at(worldserver, blockposition), this.getPlayer(), lines);
             this.server.getPluginManager().callEvent(event);
