@@ -288,4 +288,12 @@ public class PaperConfig {
             SpigotConfig.save();
         }
     }
+
+    public static boolean useAlternativeLuckFormula = false;
+    private static void useAlternativeLuckFormula() {
+        useAlternativeLuckFormula = getBoolean("settings.use-alternative-luck-formula", false);
+        if (useAlternativeLuckFormula) {
+            Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
+        }
+    }
 }
