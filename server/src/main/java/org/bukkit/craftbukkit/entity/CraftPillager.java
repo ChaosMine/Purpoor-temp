@@ -7,7 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pillager;
 import org.bukkit.inventory.Inventory;
 
-public class CraftPillager extends CraftIllager implements Pillager {
+public class CraftPillager extends CraftIllager implements Pillager, com.destroystokyo.paper.entity.CraftRangedEntity<EntityPillager> { // Paper
 
     public CraftPillager(CraftServer server, EntityPillager entity) {
         super(server, entity);

@@ -5,7 +5,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Witch;
 
-public class CraftWitch extends CraftRaider implements Witch {
+public class CraftWitch extends CraftRaider implements Witch, com.destroystokyo.paper.entity.CraftRangedEntity<EntityWitch> { // Paper
     public CraftWitch(CraftServer server, EntityWitch entity) {
         super(server, entity);
     }

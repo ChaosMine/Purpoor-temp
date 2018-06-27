@@ -7,7 +7,7 @@ import org.bukkit.craftbukkit.boss.CraftBossBar;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wither;
 
-public class CraftWither extends CraftMonster implements Wither {
+public class CraftWither extends CraftMonster implements Wither, com.destroystokyo.paper.entity.CraftRangedEntity<EntityWither> { // Paper
 
     private BossBar bossBar;
 

@@ -14,7 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Piglin;
 import org.bukkit.inventory.Inventory;
 
-public class CraftPiglin extends CraftPiglinAbstract implements Piglin {
+public class CraftPiglin extends CraftPiglinAbstract implements Piglin, com.destroystokyo.paper.entity.CraftRangedEntity<EntityPiglin> { // Paper
 
     public CraftPiglin(CraftServer server, EntityPiglin entity) {
         super(server, entity);

@@ -6,7 +6,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
-public class CraftSkeleton extends CraftMonster implements Skeleton {
+public class CraftSkeleton extends CraftMonster implements Skeleton, com.destroystokyo.paper.entity.CraftRangedEntity<EntitySkeletonAbstract> { // Paper
 
     public CraftSkeleton(CraftServer server, EntitySkeletonAbstract entity) {
         super(server, entity);
