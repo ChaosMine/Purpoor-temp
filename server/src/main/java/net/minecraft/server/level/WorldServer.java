@@ -1125,7 +1125,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         for (TileEntity tileentity : chunk.getTileEntities().values()) {
             if (tileentity instanceof net.minecraft.world.IInventory) {
                 for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((net.minecraft.world.IInventory) tileentity).getViewers())) {
-                    h.closeInventory();
+                    h.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED); // Paper
                 }
             }
         }
@@ -1183,7 +1183,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         // Spigot Start
         if (entity.getBukkitEntity() instanceof org.bukkit.inventory.InventoryHolder) {
             for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((org.bukkit.inventory.InventoryHolder) entity.getBukkitEntity()).getInventory().getViewers())) {
-                h.closeInventory();
+                h.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED); // Paper
             }
         }
         // Spigot End

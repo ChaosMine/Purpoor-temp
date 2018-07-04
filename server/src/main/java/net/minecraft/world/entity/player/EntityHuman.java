@@ -252,7 +252,7 @@ public abstract class EntityHuman extends EntityLiving {
         this.et();
         super.tick();
         if (!this.world.isClientSide && this.activeContainer != null && !this.activeContainer.canUse(this)) {
-            this.closeInventory();
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.CANT_USE); // Paper
             this.activeContainer = this.defaultContainer;
         }
 
@@ -446,6 +446,13 @@ public abstract class EntityHuman extends EntityLiving {
     public int getMaxFireTicks() {
         return 20;
     }
+
+    // Paper start - unused code, but to keep signatures aligned
+    public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        closeInventory();
+        this.activeContainer = this.defaultContainer;
+    }
+    // Paper end
 
     public void closeInventory() {
         this.activeContainer = this.defaultContainer;
