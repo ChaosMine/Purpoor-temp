@@ -16,6 +16,13 @@ public class CraftVex extends CraftMonster implements Vex {
         return (EntityVex) super.getHandle();
     }
 
+    // Paper start
+    public org.bukkit.entity.Mob getSummoner() {
+        net.minecraft.world.entity.EntityInsentient owner = getHandle().getOwner();
+        return owner != null ? (org.bukkit.entity.Mob) owner.getBukkitEntity() : null;
+    }
+    // Paper end
+
     @Override
     public String toString() {
         return "CraftVex";
