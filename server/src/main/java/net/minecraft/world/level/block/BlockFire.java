@@ -3,6 +3,7 @@ package net.minecraft.world.level.block;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import com.destroystokyo.paper.event.block.TNTPrimeEvent; // Paper - TNTPrimeEvent
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -11,6 +12,7 @@ import net.minecraft.SystemUtils;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.level.GameRules;
@@ -289,7 +291,7 @@ public class BlockFire extends BlockFireAbstract {
 
                 world.setTypeAndData(blockposition, this.a(world, blockposition, l), 3);
             } else {
-                world.a(blockposition, false);
+                if(iblockdata.getBlock() != Blocks.TNT) world.a(blockposition, false); // Paper - TNTPrimeEvent - We might be cancelling it below, move the setAir down
             }
 
             Block block = iblockdata.getBlock();
@@ -297,6 +299,13 @@ public class BlockFire extends BlockFireAbstract {
             if (block instanceof BlockTNT) {
                 BlockTNT blocktnt = (BlockTNT) block;
 
+                // Paper start - TNTPrimeEvent
+                org.bukkit.block.Block tntBlock = MCUtil.toBukkitBlock(world, blockposition);
+                if (!new TNTPrimeEvent(tntBlock, TNTPrimeEvent.PrimeReason.FIRE, null).callEvent()) {
+                    return;
+                }
+                world.setAir(blockposition, false);
+                // Paper end
                 BlockTNT.a(world, blockposition);
             }
         }
