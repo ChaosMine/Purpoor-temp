@@ -1077,7 +1077,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         if (entity1 == null) {
             return false;
         } else {
-            // WorldServer.LOGGER.warn("Trying to add entity with duplicated UUID {}. Existing {}#{}, new: {}#{}", uuid, EntityTypes.getName(entity1.getEntityType()), entity1.getId(), EntityTypes.getName(entity.getEntityType()), entity.getId()); // CraftBukkit
+            WorldServer.LOGGER.warn("Trying to add entity with duplicated UUID {}. Existing {}#{}, new: {}#{}", uuid, EntityTypes.getName(entity1.getEntityType()), entity1.getId(), EntityTypes.getName(entity.getEntityType()), entity.getId()); // CraftBukkit // Paper
             return true;
         }
     }
