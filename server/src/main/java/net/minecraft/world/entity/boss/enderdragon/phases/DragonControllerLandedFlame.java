@@ -80,7 +80,11 @@ public class DragonControllerLandedFlame extends AbstractDragonControllerLanded 
             this.d.setDuration(200);
             this.d.setParticle(Particles.DRAGON_BREATH);
             this.d.addEffect(new MobEffect(MobEffects.HARM));
+            if (new com.destroystokyo.paper.event.entity.EnderDragonFlameEvent((org.bukkit.entity.EnderDragon) this.a.getBukkitEntity(), (org.bukkit.entity.AreaEffectCloud) this.d.getBukkitEntity()).callEvent()) { // Paper
             this.a.world.addEntity(this.d);
+            } else {
+                this.removeAreaEffect();
+            }
         }
 
     }
@@ -91,8 +95,8 @@ public class DragonControllerLandedFlame extends AbstractDragonControllerLanded 
         ++this.c;
     }
 
-    @Override
-    public void e() {
+    public final void removeAreaEffect() { this.e(); } // Paper - OBFHELPER
+    @Override public void e() {
         if (this.d != null) {
             this.d.die();
             this.d = null;
