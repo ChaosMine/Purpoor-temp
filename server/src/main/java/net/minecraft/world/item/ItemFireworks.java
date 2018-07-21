@@ -3,6 +3,7 @@ package net.minecraft.world.item;
 import java.util.Arrays;
 import java.util.Comparator;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.InteractionResultWrapper;
@@ -29,8 +30,12 @@ public class ItemFireworks extends Item {
             EntityFireworks entityfireworks = new EntityFireworks(world, itemactioncontext.getEntity(), vec3d.x + (double) enumdirection.getAdjacentX() * 0.15D, vec3d.y + (double) enumdirection.getAdjacentY() * 0.15D, vec3d.z + (double) enumdirection.getAdjacentZ() * 0.15D, itemstack);
             entityfireworks.spawningEntity = itemactioncontext.getEntity().getUniqueID(); // Paper
 
-            world.addEntity(entityfireworks);
-            itemstack.subtract(1);
+            // Paper start - PlayerLaunchProjectileEvent
+            com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) itemactioncontext.getEntity().getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (org.bukkit.entity.Firework) entityfireworks.getBukkitEntity());
+            if (!event.callEvent() || !world.addEntity(entityfireworks)) return EnumInteractionResult.PASS;
+            if (event.shouldConsume() && !itemactioncontext.getEntity().abilities.canInstantlyBuild) itemstack.subtract(1);
+            else if (itemactioncontext.getEntity() instanceof EntityPlayer) ((EntityPlayer) itemactioncontext.getEntity()).getBukkitEntity().updateInventory();
+            // Paper end
         }
 
         return EnumInteractionResult.a(world.isClientSide);
