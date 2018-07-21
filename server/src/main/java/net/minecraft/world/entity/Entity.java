@@ -2809,6 +2809,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         });
     }
 
+    public final void setUUID(UUID uuid) { a_(uuid); } // Paper - OBFHELPER
     public void a_(UUID uuid) {
         this.uniqueID = uuid;
         this.ae = this.uniqueID.toString();
