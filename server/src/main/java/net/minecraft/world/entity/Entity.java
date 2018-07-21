@@ -48,6 +48,7 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
@@ -161,6 +162,8 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public com.destroystokyo.paper.loottable.PaperLootableInventoryData lootableData; // Paper
     private CraftEntity bukkitEntity;
 
+    PlayerChunkMap.EntityTracker tracker; // Paper
+    public Throwable addedToWorldStack; // Paper - entity debug
     public CraftEntity getBukkitEntity() {
         if (bukkitEntity == null) {
             bukkitEntity = CraftEntity.getEntity(world.getServer(), this);
