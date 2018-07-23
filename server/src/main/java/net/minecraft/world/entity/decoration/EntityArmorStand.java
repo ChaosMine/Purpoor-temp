@@ -356,6 +356,7 @@ public class EntityArmorStand extends EntityLiving {
 
     @Override
     protected void collideNearby() {
+        if (!world.paperConfig.armorStandEntityLookups) return; // Paper
         List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), EntityArmorStand.br);
 
         for (int i = 0; i < list.size(); ++i) {
