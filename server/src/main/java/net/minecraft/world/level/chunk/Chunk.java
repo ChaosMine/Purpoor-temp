@@ -26,6 +26,8 @@ import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.PlayerChunk;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.EntitySlice;
@@ -551,6 +553,25 @@ public class Chunk implements IChunkAccess {
         if (k >= this.entitySlices.length) {
             k = this.entitySlices.length - 1;
         }
+        // Paper - remove from any old list if its in one
+        List<Entity> nextSlice = this.entitySlices[k]; // the next list to be added to
+        List<Entity> currentSlice = entity.entitySlice;
+        if (nextSlice == currentSlice) {
+            if (World.DEBUG_ENTITIES) MinecraftServer.LOGGER.warn("Entity was already in this chunk!" + entity, new Throwable());
+            return; // ??? silly plugins
+        }
+        if (currentSlice != null && currentSlice.contains(entity)) {
+            // Still in an old chunk...
+            if (World.DEBUG_ENTITIES) MinecraftServer.LOGGER.warn("Entity is still in another chunk!" + entity, new Throwable());
+            Chunk chunk = entity.getCurrentChunk();
+            if (chunk != null) {
+                chunk.removeEntity(entity);
+            } else {
+                removeEntity(entity);
+            }
+            currentSlice.remove(entity); // Just incase the above did not remove from the previous slice
+        }
+        // Paper end
 
         if (!entity.inChunk || entity.getCurrentChunk() != this) entityCounts.increment(entity.getMinecraftKeyString()); // Paper
         entity.inChunk = true;
@@ -560,6 +581,7 @@ public class Chunk implements IChunkAccess {
         entity.chunkZ = this.loc.z;
         this.entities.add(entity); // Paper - per chunk entity list
         this.entitySlices[k].add(entity);
+        entity.entitySlice = this.entitySlices[k]; // Paper
         this.markDirty(); // Paper
     }
 
@@ -585,6 +607,10 @@ public class Chunk implements IChunkAccess {
 
         // Paper start
         if (entity.currentChunk != null && entity.currentChunk.get() == this) entity.setCurrentChunk(null);
+        if (entitySlices[i] == entity.entitySlice) {
+            entity.entitySlice = null;
+            entity.inChunk = false;
+        }
         if (!this.entitySlices[i].remove(entity)) {
             return;
         }
