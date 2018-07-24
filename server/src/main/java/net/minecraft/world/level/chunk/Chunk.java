@@ -560,6 +560,7 @@ public class Chunk implements IChunkAccess {
         entity.chunkZ = this.loc.z;
         this.entities.add(entity); // Paper - per chunk entity list
         this.entitySlices[k].add(entity);
+        this.markDirty(); // Paper
     }
 
     @Override
@@ -588,6 +589,7 @@ public class Chunk implements IChunkAccess {
             return;
         }
         entityCounts.decrement(entity.getMinecraftKeyString());
+        this.markDirty(); // Paper
         // Paper end
         this.entities.remove(entity); // Paper
     }
