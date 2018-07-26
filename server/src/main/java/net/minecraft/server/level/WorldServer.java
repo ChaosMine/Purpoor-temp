@@ -1157,6 +1157,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         List[] aentityslice = chunk.getEntitySlices(); // Spigot
         int i = aentityslice.length;
 
+        java.util.List<Entity> toMoveChunks = new java.util.ArrayList<>(); // Paper
         for (int j = 0; j < i; ++j) {
             List<Entity> entityslice = aentityslice[j]; // Spigot
             Iterator iterator = entityslice.iterator();
@@ -1169,11 +1170,25 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                         throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("Removing entity while ticking!")));
                     }
 
+                    // Paper start - move out entities that shouldn't be in this chunk before it unloads
+                    if (!entity.dead && (int) Math.floor(entity.locX()) >> 4 != chunk.getPos().x || (int) Math.floor(entity.locZ()) >> 4 != chunk.getPos().z) {
+                        toMoveChunks.add(entity);
+                        continue;
+                    }
+                    // Paper end
+
                     this.entitiesById.remove(entity.getId());
                     this.unregisterEntity(entity);
+
+                    if (entity.dead) iterator.remove(); // Paper - don't save dead entities during unload
                 }
             }
         }
+        // Paper start - move out entities that shouldn't be in this chunk before it unloads
+        for (Entity entity : toMoveChunks) {
+            this.chunkCheck(entity);
+        }
+        // Paper end
 
     }
 
