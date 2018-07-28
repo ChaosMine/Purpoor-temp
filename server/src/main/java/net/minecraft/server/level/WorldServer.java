@@ -1309,6 +1309,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 entity.origin = entity.getBukkitEntity().getLocation();
             }
             // Paper end
+            entity.shouldBeRemoved = false; // Paper - shouldn't be removed after being re-added
             new com.destroystokyo.paper.event.entity.EntityAddToWorldEvent(entity.getBukkitEntity()).callEvent(); // Paper - fire while valid
         }
 
@@ -1321,6 +1322,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             this.removeEntityFromChunk(entity);
             this.entitiesById.remove(entity.getId());
             this.unregisterEntity(entity);
+            entity.shouldBeRemoved = true; // Paper
         }
     }
 
