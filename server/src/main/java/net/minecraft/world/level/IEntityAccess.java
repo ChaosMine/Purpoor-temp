@@ -1,6 +1,9 @@
 package net.minecraft.world.level;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.bukkit.entity.HumanEntity;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -114,6 +117,28 @@ public interface IEntityAccess {
 
         return entityhuman;
     }
+
+    // Paper start
+    default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, boolean notSpectator) {
+        return findNearbyBukkitPlayers(x, y, z, radius, notSpectator ? IEntitySelector.notSpectator() : IEntitySelector.canAITarget());
+    }
+
+    default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, @Nullable Predicate<Entity> predicate) {
+        ImmutableList.Builder<HumanEntity> builder = ImmutableList.builder();
+
+        for (EntityHuman human : this.getPlayers()) {
+            if (predicate == null || predicate.test(human)) {
+                double distanceSquared = human.getDistanceSquared(x, y, z);
+
+                if (radius < 0.0D || distanceSquared < radius * radius) {
+                    builder.add(human.getBukkitEntity());
+                }
+            }
+        }
+
+        return builder.build();
+    }
+    // Paper end
 
     @Nullable
     default EntityHuman findNearbyPlayer(Entity entity, double d0) {

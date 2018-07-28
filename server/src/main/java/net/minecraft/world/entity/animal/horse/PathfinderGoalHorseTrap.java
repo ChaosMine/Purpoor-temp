@@ -15,9 +15,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.World;
 
+import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
+
 public class PathfinderGoalHorseTrap extends PathfinderGoal {
 
     private final EntityHorseSkeleton a;
+    private List<HumanEntity> eligiblePlayers; // Paper
 
     public PathfinderGoalHorseTrap(EntityHorseSkeleton entityhorseskeleton) {
         this.a = entityhorseskeleton;
@@ -25,12 +30,13 @@ public class PathfinderGoalHorseTrap extends PathfinderGoal {
 
     @Override
     public boolean a() {
-        return this.a.world.isPlayerNearby(this.a.locX(), this.a.locY(), this.a.locZ(), 10.0D);
+        return !(eligiblePlayers = this.a.world.findNearbyBukkitPlayers(this.a.locX(), this.a.locY(), this.a.locZ(), 10.0D, false)).isEmpty(); // Paper
     }
 
     @Override
     public void e() {
         WorldServer worldserver = (WorldServer) this.a.world;
+        if (!new com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent((org.bukkit.entity.SkeletonHorse) this.a.getBukkitEntity(), eligiblePlayers).callEvent()) return; // Paper
         DifficultyDamageScaler difficultydamagescaler = worldserver.getDamageScaler(this.a.getChunkCoordinates());
 
         this.a.t(false);
