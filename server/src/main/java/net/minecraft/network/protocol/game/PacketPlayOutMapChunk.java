@@ -1,5 +1,6 @@
 package net.minecraft.network.protocol.game;
 
+import com.destroystokyo.paper.antixray.ChunkPacketInfo; // Paper - Anti-Xray - Add chunk packet info
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,6 +17,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntitySkull;
+import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.BiomeStorage;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.chunk.ChunkSection;
@@ -33,7 +35,13 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
     private List<NBTTagCompound> g;
     private boolean h;
 
-    public PacketPlayOutMapChunk() {}
+    // Paper start - Async-Anti-Xray - Set the ready flag to true
+    private volatile boolean ready; // Paper - Async-Anti-Xray - Ready flag for the network manager
+    public PacketPlayOutMapChunk() {
+        this.ready = true;
+    }
+    // Paper end
+
     // Paper start
     private final java.util.List<Packet> extraPackets = new java.util.ArrayList<>();
     private static final int TE_LIMIT = Integer.getInteger("Paper.excessiveTELimit", 750);
@@ -43,7 +51,11 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
         return extraPackets;
     }
     // Paper end
-    public PacketPlayOutMapChunk(Chunk chunk, int i) {
+    // Paper start - Anti-Xray - Add chunk packet info
+    @Deprecated public PacketPlayOutMapChunk(Chunk chunk, int i) { this(chunk, i, true); } // Notice for updates: Please make sure this constructor isn't used anywhere
+    public PacketPlayOutMapChunk(Chunk chunk, int i, boolean modifyBlocks) {
+        ChunkPacketInfo<IBlockData> chunkPacketInfo = modifyBlocks ? chunk.world.chunkPacketBlockController.getChunkPacketInfo(this, chunk, i) : null;
+        // Paper end
         ChunkCoordIntPair chunkcoordintpair = chunk.getPos();
 
         this.a = chunkcoordintpair.x;
@@ -66,7 +78,12 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
         }
 
         this.f = new byte[this.a(chunk, i)];
-        this.c = this.a(new PacketDataSerializer(this.j()), chunk, i);
+        // Paper start - Anti-Xray - Add chunk packet info
+        if (chunkPacketInfo != null) {
+            chunkPacketInfo.setData(this.getData());
+        }
+        this.c = this.writeChunk(new PacketDataSerializer(this.j()), chunk, i, chunkPacketInfo);
+        // Paper end
         this.g = Lists.newArrayList();
         iterator = chunk.getTileEntities().entrySet().iterator();
         int totalTileEntities = 0; // Paper
@@ -93,8 +110,19 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
                 this.g.add(nbttagcompound);
             }
         }
-
+        chunk.world.chunkPacketBlockController.modifyBlocks(this, chunkPacketInfo); // Paper - Anti-Xray - Modify blocks
     }
+
+    // Paper start - Async-Anti-Xray - Getter and Setter for the ready flag
+    @Override
+    public boolean isReady() {
+        return this.ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+    // Paper end
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
@@ -160,8 +188,12 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
         return bytebuf;
     }
 
-    public int writeChunk(PacketDataSerializer packetDataSerializer, Chunk chunk, int chunkSectionSelector) { return this.a(packetDataSerializer, chunk, chunkSectionSelector); } // Paper - OBFHELPER
-    public int a(PacketDataSerializer packetdataserializer, Chunk chunk, int i) {
+    // Paper start - Anti-Xray - Add chunk packet info
+    @Deprecated public int writeChunk(PacketDataSerializer packetDataSerializer, Chunk chunk, int chunkSectionSelector) { return this.a(packetDataSerializer, chunk, chunkSectionSelector); } // OBFHELPER // Notice for updates: Please make sure this method isn't used anywhere
+    @Deprecated public int a(PacketDataSerializer packetdataserializer, Chunk chunk, int i) { return this.writeChunk(packetdataserializer, chunk, i, null); } // Notice for updates: Please make sure this method isn't used anywhere
+    public int writeChunk(PacketDataSerializer packetDataSerializer, Chunk chunk, int chunkSectionSelector, ChunkPacketInfo<IBlockData> chunkPacketInfo) { return this.a(packetDataSerializer, chunk, chunkSectionSelector, chunkPacketInfo); } // OBFHELPER
+    public int a(PacketDataSerializer packetdataserializer, Chunk chunk, int i, ChunkPacketInfo<IBlockData> chunkPacketInfo) {
+        // Paper end
         int j = 0;
         ChunkSection[] achunksection = chunk.getSections();
         int k = 0;
@@ -171,7 +203,7 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
 
             if (chunksection != Chunk.a && (!this.f() || !chunksection.c()) && (i & 1 << k) != 0) {
                 j |= 1 << k;
-                chunksection.b(packetdataserializer);
+                chunksection.writeChunkSection(packetdataserializer, chunkPacketInfo); // Paper - Anti-Xray - Add chunk packet info
             }
         }
 

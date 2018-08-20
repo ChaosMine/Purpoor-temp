@@ -656,7 +656,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             }
 
             this.g(chunkcoordintpair);
-            return Either.left(new ProtoChunk(chunkcoordintpair, ChunkConverter.a));
+            return Either.left(new ProtoChunk(chunkcoordintpair, ChunkConverter.a, this.world)); // Paper - Anti-Xray - Add parameter
         }, this.executor);
     }
 
@@ -1404,9 +1404,10 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     }
 
+    private final void sendChunk(EntityPlayer entityplayer, Packet<?>[] apacket, Chunk chunk) { this.a(entityplayer, apacket, chunk); } // Paper - OBFHELPER
     private void a(EntityPlayer entityplayer, Packet<?>[] apacket, Chunk chunk) {
         if (apacket[0] == null) {
-            apacket[0] = new PacketPlayOutMapChunk(chunk, 65535);
+            apacket[0] = new PacketPlayOutMapChunk(chunk, 65535, chunk.world.chunkPacketBlockController.shouldModify(entityplayer, chunk, 65535)); // Paper - Anti-Xray - Bypass
             apacket[1] = new PacketPlayOutLightUpdate(chunk.getPos(), this.lightEngine, true);
         }
 

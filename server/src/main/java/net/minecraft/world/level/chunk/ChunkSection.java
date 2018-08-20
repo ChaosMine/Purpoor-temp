@@ -1,9 +1,11 @@
 package net.minecraft.world.level.chunk;
 
 import java.util.function.Predicate;
+import com.destroystokyo.paper.antixray.ChunkPacketInfo; // Paper - Anti-Xray - Add chunk packet info
 import javax.annotation.Nullable;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.network.PacketDataSerializer;
+import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -18,16 +20,22 @@ public class ChunkSection {
     private short e;
     final DataPaletteBlock<IBlockData> blockIds; // Paper - package-private
 
-    public ChunkSection(int i) {
-        this(i, (short) 0, (short) 0, (short) 0);
+    // Paper start - Anti-Xray - Add parameters
+    @Deprecated public ChunkSection(int i) { this(i, null, null, true); } // Notice for updates: Please make sure this constructor isn't used anywhere
+    public ChunkSection(int i, IChunkAccess chunk, World world, boolean initializeBlocks) {
+        this(i, (short) 0, (short) 0, (short) 0, chunk, world, initializeBlocks);
+        // Paper end
     }
 
-    public ChunkSection(int i, short short0, short short1, short short2) {
+    // Paper start - Anti-Xray - Add parameters
+    @Deprecated public ChunkSection(int i, short short0, short short1, short short2) { this(i, short0, short1, short2, null, null, true); } // Notice for updates: Please make sure this constructor isn't used anywhere
+    public ChunkSection(int i, short short0, short short1, short short2, IChunkAccess chunk, World world, boolean initializeBlocks) {
+        // Paper end
         this.yPos = i;
         this.nonEmptyBlockCount = short0;
         this.tickingBlockCount = short1;
         this.e = short2;
-        this.blockIds = new DataPaletteBlock<>(ChunkSection.GLOBAL_PALETTE, Block.REGISTRY_ID, GameProfileSerializer::c, GameProfileSerializer::a, Blocks.AIR.getBlockData());
+        this.blockIds = new DataPaletteBlock<>(ChunkSection.GLOBAL_PALETTE, Block.REGISTRY_ID, GameProfileSerializer::c, GameProfileSerializer::a, Blocks.AIR.getBlockData(), world == null ? null : world.chunkPacketBlockController.getPredefinedBlockData(world, chunk, this, initializeBlocks), initializeBlocks); // Paper - Anti-Xray - Add predefined block data
     }
 
     public final IBlockData getType(int i, int j, int k) { // Paper
@@ -139,10 +147,14 @@ public class ChunkSection {
         return this.blockIds;
     }
 
-    public void writeChunkSection(PacketDataSerializer packetDataSerializer) { this.b(packetDataSerializer); } // Paper - OBFHELPER
-    public void b(PacketDataSerializer packetdataserializer) {
+    // Paper start - Anti-Xray - Add chunk packet info
+    @Deprecated public final void writeChunkSection(PacketDataSerializer packetDataSerializer) { this.b(packetDataSerializer); } // OBFHELPER // Notice for updates: Please make sure this method isn't used anywhere
+    @Deprecated public final void b(PacketDataSerializer packetdataserializer) { this.writeChunkSection(packetdataserializer, null); } // Notice for updates: Please make sure this method isn't used anywhere
+    public final void writeChunkSection(PacketDataSerializer packetDataSerializer, ChunkPacketInfo<IBlockData> chunkPacketInfo) { this.b(packetDataSerializer, chunkPacketInfo); } // OBFHELPER
+    public void b(PacketDataSerializer packetdataserializer, ChunkPacketInfo<IBlockData> chunkPacketInfo) {
+        // Paper end
         packetdataserializer.writeShort(this.nonEmptyBlockCount);
-        this.blockIds.b(packetdataserializer);
+        this.blockIds.writeDataPaletteBlock(packetdataserializer, chunkPacketInfo, this.yPos >> 4); // Paper - Anti-Xray - Add chunk packet info
     }
 
     public int j() {

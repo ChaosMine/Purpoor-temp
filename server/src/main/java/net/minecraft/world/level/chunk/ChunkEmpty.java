@@ -8,6 +8,7 @@ import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.data.worldgen.biome.BiomeRegistry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.PlayerChunk;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkCoordIntPair;
@@ -28,7 +29,7 @@ public class ChunkEmpty extends Chunk {
     });
 
     public ChunkEmpty(World world, ChunkCoordIntPair chunkcoordintpair) {
-        super(world, chunkcoordintpair, new BiomeStorage(world.r().b(IRegistry.ay), ChunkEmpty.b));
+        super(world, chunkcoordintpair, new BiomeStorage(MinecraftServer.getServer().getCustomRegistry().b(IRegistry.ay), ChunkEmpty.b)); // Paper - world isnt ready yet for anti xray use here, use server singleton for registry
     }
 
     // Paper start
