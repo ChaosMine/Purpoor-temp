@@ -1539,6 +1539,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
     // CraftBukkit end
 
+    public final void runKillTrigger(Entity entity, int kills, DamageSource damageSource) { this.a(entity, kills, damageSource); } // Paper - OBFHELPER
     public void a(Entity entity, int i, DamageSource damagesource) {
         if (entity instanceof EntityPlayer) {
             CriterionTriggers.c.a((EntityPlayer) entity, this, damagesource);
@@ -2447,6 +2448,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.fallDistance = 0.0F;
     }
 
+    public final void onKill(WorldServer worldserver, EntityLiving entityLiving) { this.a(worldserver, entityLiving); } // Paper - OBFHELPER
     public void a(WorldServer worldserver, EntityLiving entityliving) {}
 
     protected void l(double d0, double d1, double d2) {
