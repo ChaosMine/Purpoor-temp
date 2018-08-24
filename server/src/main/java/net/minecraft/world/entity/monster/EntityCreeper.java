@@ -290,7 +290,18 @@ public class EntityCreeper extends EntityMonster {
     }
 
     public void ignite() {
-        this.datawatcher.set(EntityCreeper.d, true);
+        // Paper start
+        setIgnited(true);
+    }
+
+    public void setIgnited(boolean ignited) {
+        if (isIgnited() != ignited) {
+            com.destroystokyo.paper.event.entity.CreeperIgniteEvent event = new com.destroystokyo.paper.event.entity.CreeperIgniteEvent((org.bukkit.entity.Creeper) getBukkitEntity(), ignited);
+            if (event.callEvent()) {
+                this.datawatcher.set(EntityCreeper.d, event.isIgnited());
+            }
+        }
+        // Paper end
     }
 
     public boolean canCauseHeadDrop() {
