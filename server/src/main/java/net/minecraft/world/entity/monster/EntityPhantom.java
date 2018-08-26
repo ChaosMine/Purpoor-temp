@@ -161,6 +161,11 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         }
 
         this.setSize(nbttagcompound.getInt("Size"));
+        // Paper start
+        if (nbttagcompound.hasUUID("Paper.SpawningEntity")) {
+            this.spawningEntity = nbttagcompound.getUUID("Paper.SpawningEntity");
+        }
+        // Paper end
     }
 
     @Override
@@ -170,6 +175,11 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         nbttagcompound.setInt("AY", this.d.getY());
         nbttagcompound.setInt("AZ", this.d.getZ());
         nbttagcompound.setInt("Size", this.getSize());
+        // Paper start
+        if (this.spawningEntity != null) {
+            nbttagcompound.setUUID("Paper.SpawningEntity", this.spawningEntity);
+        }
+        // Paper end
     }
 
     @Override
@@ -215,6 +225,15 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
         return entitysize.a(f);
     }
+
+    // Paper start
+    java.util.UUID spawningEntity;
+
+    public java.util.UUID getSpawningEntity() {
+        return spawningEntity;
+    }
+    public void setSpawningEntity(java.util.UUID entity) { this.spawningEntity = entity; }
+    // Paper end
 
     class b extends PathfinderGoal {
 
