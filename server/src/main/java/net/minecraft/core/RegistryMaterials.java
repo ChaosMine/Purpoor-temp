@@ -30,6 +30,7 @@ import net.minecraft.SystemUtils;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.RegistryDataPackCodec;
 import net.minecraft.resources.ResourceKey;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap; // Paper
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +39,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
 
     protected static final Logger LOGGER = LogManager.getLogger();
     private final ObjectList<T> bf = new ObjectArrayList(256);
-    private final Object2IntMap<T> bg = new Object2IntOpenCustomHashMap(SystemUtils.k());
+    private final Reference2IntOpenHashMap<T> bg = new Reference2IntOpenHashMap<T>(2048);// Paper - use bigger expected size to reduce collisions and direct intent for FastUtil to be identity map
     private final BiMap<MinecraftKey, T> bh;
     private final BiMap<ResourceKey<T>, T> bi;
     private final Map<T, Lifecycle> bj;
@@ -49,9 +50,9 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
     public RegistryMaterials(ResourceKey<? extends IRegistry<T>> resourcekey, Lifecycle lifecycle) {
         super(resourcekey, lifecycle);
         this.bg.defaultReturnValue(-1);
-        this.bh = HashBiMap.create();
-        this.bi = HashBiMap.create();
-        this.bj = Maps.newIdentityHashMap();
+        this.bh = HashBiMap.create(2048); // Paper - use bigger expected size to reduce collisions
+        this.bi = HashBiMap.create(2048); // Paper - use bigger expected size to reduce collisions
+        this.bj = new java.util.IdentityHashMap<>(2048); // Paper - use bigger expected size to reduce collisions
         this.bk = lifecycle;
     }
 
@@ -195,7 +196,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
             this.b = collection.toArray(new Object[collection.size()]);
         }
 
-        return SystemUtils.a(this.b, random);
+        return (T) SystemUtils.a(this.b, random);  // Paper - Decompile fix
     }
 
     public static <T> Codec<RegistryMaterials<T>> a(ResourceKey<? extends IRegistry<T>> resourcekey, Lifecycle lifecycle, Codec<T> codec) {
@@ -215,7 +216,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
             Iterator iterator = registrymaterials.iterator();
 
             while (iterator.hasNext()) {
-                T t0 = iterator.next();
+                T t0 = (T) iterator.next(); // Paper - Decompile fix
 
                 builder.add(new RegistryMaterials.a<>((ResourceKey) registrymaterials.c(t0).get(), registrymaterials.a(t0), t0));
             }
