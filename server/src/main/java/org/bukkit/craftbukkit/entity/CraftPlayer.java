@@ -2190,6 +2190,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         connection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutOpenBook(net.minecraft.world.EnumHand.MAIN_HAND));
         connection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutSetSlot(0, slot, inventory.getItemInHand()));
     }
+
+    public float getCooldownPeriod() {
+        return getHandle().getCooldownPeriod();
+    }
+
+    public float getCooledAttackStrength(float adjustTicks) {
+        return getHandle().getAttackCooldown(adjustTicks);
+    }
+
+    public void resetCooldown() {
+        getHandle().resetAttackCooldown();
+    }
     // Paper end
 
     // Spigot start
