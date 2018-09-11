@@ -13,6 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.ai.navigation.NavigationAbstract;
 import net.minecraft.world.level.IBlockAccess;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfinderNormal;
 import net.minecraft.world.phys.Vec3D;
@@ -128,6 +129,7 @@ public class RandomPositionGenerator {
                 }
 
                 blockposition2 = new BlockPosition((double) k1 + entitycreature.locX(), (double) l1 + entitycreature.locY(), (double) i2 + entitycreature.locZ());
+                if (!entitycreature.world.isLoaded(blockposition2)) continue; // Paper
                 if (blockposition2.getY() >= 0 && blockposition2.getY() <= entitycreature.world.getBuildHeight() && (!flag3 || entitycreature.a(blockposition2)) && (!flag2 || navigationabstract.a(blockposition2))) {
                     if (flag1) {
                         blockposition2 = a(blockposition2, random.nextInt(l + 1) + i1, entitycreature.world.getBuildHeight(), (blockposition3) -> {
@@ -135,7 +137,8 @@ public class RandomPositionGenerator {
                         });
                     }
 
-                    if (flag || !entitycreature.world.getFluid(blockposition2).a((Tag) TagsFluid.WATER)) {
+                    Fluid fluid = entitycreature.world.getFluidIfLoaded(blockposition2); // Paper
+                    if (flag || (fluid != null && !fluid.a((Tag) TagsFluid.WATER))) { // Paper
                         PathType pathtype = PathfinderNormal.a((IBlockAccess) entitycreature.world, blockposition2.i());
 
                         if (entitycreature.a(pathtype) == 0.0F) {
