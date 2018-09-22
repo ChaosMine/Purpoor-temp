@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
+import com.destroystokyo.paper.entity.TargetEntityInfo;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
@@ -42,8 +43,11 @@ import net.minecraft.world.entity.projectile.EntityThrownExpBottle;
 import net.minecraft.world.entity.projectile.EntityThrownTrident;
 import net.minecraft.world.entity.projectile.EntityTippedArrow;
 import net.minecraft.world.entity.projectile.EntityWitherSkull;
+import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+import net.minecraft.world.phys.MovingObjectPositionEntity;
+import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.lang.Validate;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -226,6 +230,33 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return !(rayTrace instanceof MovingObjectPositionBlock) ? null :
             new TargetBlockInfo(CraftBlock.at(getHandle().world, ((MovingObjectPositionBlock)rayTrace).getBlockPosition()),
                 MCUtil.toBukkitBlockFace(((MovingObjectPositionBlock)rayTrace).getDirection()));
+    }
+
+    public Entity getTargetEntity(int maxDistance, boolean ignoreBlocks) {
+        MovingObjectPositionEntity rayTrace = rayTraceEntity(maxDistance, ignoreBlocks);
+        return rayTrace == null ? null : rayTrace.getEntity().getBukkitEntity();
+    }
+
+    public TargetEntityInfo getTargetEntityInfo(int maxDistance, boolean ignoreBlocks) {
+        MovingObjectPositionEntity rayTrace = rayTraceEntity(maxDistance, ignoreBlocks);
+        return rayTrace == null ? null : new TargetEntityInfo(rayTrace.getEntity().getBukkitEntity(), new org.bukkit.util.Vector(rayTrace.getPos().x, rayTrace.getPos().y, rayTrace.getPos().z));
+    }
+
+    public MovingObjectPositionEntity rayTraceEntity(int maxDistance, boolean ignoreBlocks) {
+        MovingObjectPositionEntity rayTrace = getHandle().getTargetEntity(maxDistance);
+        if (rayTrace == null) {
+            return null;
+        }
+        if (!ignoreBlocks) {
+            MovingObjectPosition rayTraceBlocks = getHandle().getRayTrace(maxDistance, RayTrace.FluidCollisionOption.NONE);
+            if (rayTraceBlocks != null) {
+                Vec3D eye = getHandle().getEyePosition(1.0F);
+                if (eye.distanceSquared(rayTraceBlocks.getPos()) <= eye.distanceSquared(rayTrace.getPos())) {
+                    return null;
+                }
+            }
+        }
+        return rayTrace;
     }
     // Paper end
 

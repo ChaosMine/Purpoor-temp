@@ -1505,6 +1505,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.c(f - 90.0F, f1);
     }
 
+    public final Vec3D getEyePosition(float partialTicks) { return j(partialTicks); } // Paper - OBFHELPER
     public final Vec3D j(float f) {
         if (f == 1.0F) {
             return new Vec3D(this.locX(), this.getHeadY(), this.locZ());
@@ -2159,6 +2160,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.getPassengers().size() < 1;
     }
 
+    public final float getCollisionBorderSize() { return bg(); } // Paper - OBFHELPER
     public float bg() {
         return 0.0F;
     }
