@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
+import net.minecraft.server.MCUtil;
 import net.minecraft.world.INamableTileEntity;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemStack;
@@ -70,7 +71,7 @@ public class TileEntityBanner extends TileEntity implements INamableTileEntity {
     public void load(IBlockData iblockdata, NBTTagCompound nbttagcompound) {
         super.load(iblockdata, nbttagcompound);
         if (nbttagcompound.hasKeyOfType("CustomName", 8)) {
-            this.a = IChatBaseComponent.ChatSerializer.a(nbttagcompound.getString("CustomName"));
+            this.a = MCUtil.getBaseComponentFromNbt("CustomName", nbttagcompound); // Paper - Catch ParseException
         }
 
         if (this.hasWorld()) {

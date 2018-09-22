@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkCoordIntPair;
@@ -513,5 +515,20 @@ public final class MCUtil {
             default:
                 return null;
         }
+    }
+
+    @Nullable
+    public static IChatBaseComponent getBaseComponentFromNbt(String key, NBTTagCompound compound) {
+        if (!compound.hasKey(key)) {
+            return null;
+        }
+        String string = compound.getString(key);
+        try {
+            return IChatBaseComponent.ChatSerializer.jsonToComponent(string);
+        } catch (com.google.gson.JsonParseException e) {
+            org.bukkit.Bukkit.getLogger().warning("Unable to parse " + key + " from " + compound +": " + e.getMessage());
+        }
+
+        return null;
     }
 }

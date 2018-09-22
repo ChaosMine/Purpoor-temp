@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.server.MCUtil;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.ChestLock;
@@ -30,7 +31,7 @@ public abstract class TileEntityContainer extends TileEntity implements IInvento
         super.load(iblockdata, nbttagcompound);
         this.chestLock = ChestLock.b(nbttagcompound);
         if (nbttagcompound.hasKeyOfType("CustomName", 8)) {
-            this.customName = IChatBaseComponent.ChatSerializer.a(nbttagcompound.getString("CustomName"));
+            this.customName = MCUtil.getBaseComponentFromNbt("CustomName", nbttagcompound); // Paper - Catch ParseException
         }
 
     }

@@ -12,6 +12,7 @@ import net.minecraft.commands.ICommandListener;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.UtilColor;
@@ -72,7 +73,7 @@ public abstract class CommandBlockListenerAbstract implements ICommandListener {
         this.command = nbttagcompound.getString("Command");
         this.successCount = nbttagcompound.getInt("SuccessCount");
         if (nbttagcompound.hasKeyOfType("CustomName", 8)) {
-            this.setName(IChatBaseComponent.ChatSerializer.a(nbttagcompound.getString("CustomName")));
+            this.setName(MCUtil.getBaseComponentFromNbt("CustomName", nbttagcompound)); // Paper - Catch ParseException
         }
 
         if (nbttagcompound.hasKeyOfType("TrackOutput", 1)) {
