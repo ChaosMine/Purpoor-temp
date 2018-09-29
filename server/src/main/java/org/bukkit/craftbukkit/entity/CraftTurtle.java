@@ -25,4 +25,36 @@ public class CraftTurtle extends CraftAnimals implements Turtle {
     public EntityType getType() {
         return EntityType.TURTLE;
     }
+
+    // Paper start
+    @Override
+    public org.bukkit.Location getHome() {
+        return net.minecraft.server.MCUtil.toLocation(getHandle().world, getHandle().getHomePos());
+    }
+
+    @Override
+    public void setHome(org.bukkit.Location location) {
+        getHandle().setHomePos(net.minecraft.server.MCUtil.toBlockPosition(location));
+    }
+
+    @Override
+    public boolean isGoingHome() {
+        return getHandle().isGoingHome();
+    }
+
+    @Override
+    public boolean isDigging() {
+        return getHandle().isDigging();
+    }
+
+    @Override
+    public boolean hasEgg() {
+        return getHandle().hasEgg();
+    }
+
+    @Override
+    public void setHasEgg(boolean hasEgg) {
+        getHandle().setHasEgg(hasEgg);
+    }
+    // Paper end
 }
