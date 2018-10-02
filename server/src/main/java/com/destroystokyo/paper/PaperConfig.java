@@ -281,6 +281,11 @@ public class PaperConfig {
         authenticationServersDownKickMessage = Strings.emptyToNull(getString("messages.kick.authentication-servers-down", authenticationServersDownKickMessage));
     }
 
+    public static String connectionThrottleKickMessage = "Connection throttled! Please wait before reconnecting.";
+    private static void connectionThrottleKickMessage() {
+        connectionThrottleKickMessage = getString("messages.kick.connection-throttle", connectionThrottleKickMessage);
+    }
+
     private static void savePlayerData() {
         Object val = config.get("settings.save-player-data");
         if (val instanceof Boolean) {

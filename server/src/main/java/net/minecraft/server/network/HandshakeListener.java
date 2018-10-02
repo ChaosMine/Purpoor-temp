@@ -50,7 +50,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                     synchronized (throttleTracker) {
                         if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.get(address) < connectionThrottle) {
                             throttleTracker.put(address, currentTime);
-                            ChatMessage chatmessage = new ChatMessage("Connection throttled! Please wait before reconnecting.");
+                            ChatMessage chatmessage = new ChatMessage(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage); // Paper - Configurable connection throttle kick message
                             this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.c.close(chatmessage);
                             return;
