@@ -21,6 +21,10 @@ public class CraftVex extends CraftMonster implements Vex {
         net.minecraft.world.entity.EntityInsentient owner = getHandle().getOwner();
         return owner != null ? (org.bukkit.entity.Mob) owner.getBukkitEntity() : null;
     }
+
+    public void setSummoner(org.bukkit.entity.Mob summoner) {
+        getHandle().setOwner(summoner == null ? null : ((CraftMob) summoner).getHandle());
+    }
     // Paper end
 
     @Override
