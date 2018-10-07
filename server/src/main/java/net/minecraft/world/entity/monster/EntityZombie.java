@@ -94,6 +94,7 @@ public class EntityZombie extends EntityMonster {
     private int bt;
     public int drownedConversionTime;
     private int lastTick = MinecraftServer.currentTick; // CraftBukkit - add field
+    private boolean shouldBurnInDay = true; // Paper
 
     public EntityZombie(EntityTypes<? extends EntityZombie> entitytypes, World world) {
         super(entitytypes, world);
@@ -262,6 +263,12 @@ public class EntityZombie extends EntityMonster {
         super.movementTick();
     }
 
+    // Paper start
+    public void stopDrowning() {
+        this.drownedConversionTime = -1;
+        this.getDataWatcher().set(EntityZombie.DROWN_CONVERTING, false);
+    }
+    // Paper end
     public void startDrownedConversion(int i) {
         this.lastTick = MinecraftServer.currentTick; // CraftBukkit
         this.drownedConversionTime = i;
@@ -290,9 +297,16 @@ public class EntityZombie extends EntityMonster {
 
     }
 
+    public boolean shouldBurnInDay() { return T_(); } // Paper - OBFHELPER
     protected boolean T_() {
-        return true;
+        return this.shouldBurnInDay; // Paper - use api value instead
     }
+
+    // Paper start
+    public void setShouldBurnInDay(boolean shouldBurnInDay) {
+        this.shouldBurnInDay = shouldBurnInDay;
+    }
+    // Paper end
 
     @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
@@ -413,6 +427,7 @@ public class EntityZombie extends EntityMonster {
         nbttagcompound.setBoolean("CanBreakDoors", this.eU());
         nbttagcompound.setInt("InWaterTime", this.isInWater() ? this.bt : -1);
         nbttagcompound.setInt("DrownedConversionTime", this.isDrownConverting() ? this.drownedConversionTime : -1);
+        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay); // Paper
     }
 
     @Override
@@ -424,7 +439,11 @@ public class EntityZombie extends EntityMonster {
         if (nbttagcompound.hasKeyOfType("DrownedConversionTime", 99) && nbttagcompound.getInt("DrownedConversionTime") > -1) {
             this.startDrownedConversion(nbttagcompound.getInt("DrownedConversionTime"));
         }
-
+        // Paper start
+        if (nbttagcompound.hasKey("Paper.ShouldBurnInDay")) {
+            shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay");
+        }
+        // Paper end
     }
 
     @Override
