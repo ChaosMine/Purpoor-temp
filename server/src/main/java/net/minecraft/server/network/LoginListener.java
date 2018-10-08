@@ -18,12 +18,14 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.login.PacketLoginInCustomPayload;
 import net.minecraft.network.protocol.login.PacketLoginInEncryptionBegin;
 import net.minecraft.network.protocol.login.PacketLoginInListener;
 import net.minecraft.network.protocol.login.PacketLoginInStart;
+import net.minecraft.network.protocol.login.PacketLoginOutCustomPayload;
 import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
 import net.minecraft.network.protocol.login.PacketLoginOutEncryptionBegin;
 import net.minecraft.network.protocol.login.PacketLoginOutSetCompression;
@@ -45,6 +47,7 @@ import org.bukkit.craftbukkit.util.Waitable;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 // CraftBukkit end
+import io.netty.buffer.Unpooled; // Paper
 
 public class LoginListener implements PacketLoginInListener {
 
@@ -61,6 +64,7 @@ public class LoginListener implements PacketLoginInListener {
     private SecretKey loginKey;
     private EntityPlayer l;
     public String hostname = ""; // CraftBukkit - add field
+    private int velocityLoginMessageId = -1; // Paper - Velocity support
 
     public LoginListener(MinecraftServer minecraftserver, NetworkManager networkmanager) {
         this.g = LoginListener.EnumProtocolState.HELLO;
@@ -213,6 +217,14 @@ public class LoginListener implements PacketLoginInListener {
             this.g = LoginListener.EnumProtocolState.KEY;
             this.networkManager.sendPacket(new PacketLoginOutEncryptionBegin("", this.server.getKeyPair().getPublic().getEncoded(), this.e));
         } else {
+            // Paper start - Velocity support
+            if (com.destroystokyo.paper.PaperConfig.velocitySupport) {
+                this.velocityLoginMessageId = java.util.concurrent.ThreadLocalRandom.current().nextInt();
+                PacketLoginOutCustomPayload packet = new PacketLoginOutCustomPayload(this.velocityLoginMessageId, com.destroystokyo.paper.proxy.VelocityProxy.PLAYER_INFO_CHANNEL, new PacketDataSerializer(Unpooled.EMPTY_BUFFER));
+                this.networkManager.sendPacket(packet);
+                return;
+            }
+            // Paper end
             // Spigot start
             // Paper start - Cache authenticator threads
             authenticatorPool.execute(new Runnable() {
@@ -314,6 +326,12 @@ public class LoginListener implements PacketLoginInListener {
     public class LoginHandler {
 
         public void fireEvents() throws Exception {
+                        // Paper start - Velocity support
+                        if (LoginListener.this.velocityLoginMessageId == -1 && com.destroystokyo.paper.PaperConfig.velocitySupport) {
+                            disconnect("This server requires you to connect with Velocity.");
+                            return;
+                        }
+                        // Paper end
                         String playerName = i.getName();
                         java.net.InetAddress address = ((java.net.InetSocketAddress) networkManager.getSocketAddress()).getAddress();
                         java.util.UUID uniqueId = i.getId();
@@ -361,6 +379,40 @@ public class LoginListener implements PacketLoginInListener {
     // Spigot end
 
     public void a(PacketLoginInCustomPayload packetloginincustompayload) {
+        // Paper start - Velocity support
+        if (com.destroystokyo.paper.PaperConfig.velocitySupport && packetloginincustompayload.getId() == this.velocityLoginMessageId) {
+            PacketDataSerializer buf = packetloginincustompayload.getBuf();
+            if (buf == null) {
+                this.disconnect("This server requires you to connect with Velocity.");
+                return;
+            }
+
+            if (!com.destroystokyo.paper.proxy.VelocityProxy.checkIntegrity(buf)) {
+                this.disconnect("Unable to verify player details");
+                return;
+            }
+
+            java.net.SocketAddress listening = this.networkManager.getSocketAddress();
+            int port = 0;
+            if (listening instanceof java.net.InetSocketAddress) {
+                port = ((java.net.InetSocketAddress) listening).getPort();
+            }
+            this.networkManager.socketAddress = new java.net.InetSocketAddress(com.destroystokyo.paper.proxy.VelocityProxy.readAddress(buf), port);
+
+            this.setGameProfile(com.destroystokyo.paper.proxy.VelocityProxy.createProfile(buf));
+
+            // Proceed with login
+            authenticatorPool.execute(() -> {
+                try {
+                    new LoginHandler().fireEvents();
+                } catch (Exception ex) {
+                    disconnect("Failed to verify username!");
+                    server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + i.getName(), ex);
+                }
+            });
+            return;
+        }
+        // Paper end
         this.disconnect(new ChatMessage("multiplayer.disconnect.unexpected_query_response"));
     }
 
