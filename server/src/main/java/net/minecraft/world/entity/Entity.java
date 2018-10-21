@@ -2360,6 +2360,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     }
 
+    public final int getMaxAirTicks() { return bH(); } // Paper - OBFHELPER
     public int bH() {
         return 300;
     }
