@@ -1001,6 +1001,52 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
     @Override
     public void a(PacketPlayInBEdit packetplayinbedit) {
+        // Paper start
+        ItemStack testStack = packetplayinbedit.getBook();
+        if (!server.isPrimaryThread() && !testStack.isEmpty() && testStack.getTag() != null) {
+            NBTTagList pageList = testStack.getTag().getList("pages", 8);
+            if (pageList.size() > 100) {
+                PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with too many pages");
+                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                return;
+            }
+            long byteTotal = 0;
+            int maxBookPageSize = com.destroystokyo.paper.PaperConfig.maxBookPageSize;
+            double multiplier = Math.max(0.3D, Math.min(1D, com.destroystokyo.paper.PaperConfig.maxBookTotalSizeMultiplier));
+            long byteAllowed = maxBookPageSize;
+            for (int i = 0; i < pageList.size(); ++i) {
+                String testString = pageList.getString(i);
+                int byteLength = testString.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+                if (byteLength > 256 * 4) {
+                    PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with with a page too large!");
+                    minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                    return;
+                }
+                byteTotal += byteLength;
+                int length = testString.length();
+                int multibytes = 0;
+                if (byteLength != length) {
+                    for (char c : testString.toCharArray()) {
+                        if (c > 127) {
+                            multibytes++;
+                        }
+                    }
+                }
+                byteAllowed += (maxBookPageSize * Math.min(1, Math.max(0.1D, (double) length / 255D))) * multiplier;
+
+                if (multibytes > 1) {
+                    // penalize MB
+                    byteAllowed -= multibytes;
+                }
+            }
+
+            if (byteTotal > byteAllowed) {
+                PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send too large of a book. Book Size: " + byteTotal + " - Allowed:  "+ byteAllowed + " - Pages: " + pageList.size());
+                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                return;
+            }
+        }
+        // Paper end
         // CraftBukkit start
         if (this.lastBookTick + 20 > MinecraftServer.currentTick) {
             this.disconnect("Book edited too quickly!");
