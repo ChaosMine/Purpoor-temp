@@ -1576,6 +1576,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     boolean suggestPlayerNamesWhenNullTabCompletions();
 
     /**
+     *
+     * @return the default no permission message used on the server
+     */
+    @NotNull
+    String getPermissionMessage();
+
+    /**
      * Creates a PlayerProfile for the specified uuid, with name as null
      * @param uuid UUID to create profile for
      * @return A PlayerProfile object
