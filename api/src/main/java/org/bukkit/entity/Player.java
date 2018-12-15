@@ -1791,23 +1791,63 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * Gets the view distance for this player
      *
      * @return the player's view distance
-     * @deprecated This is unimplemented and <i>will</i> throw an exception at runtime. The {@link org.bukkit.World World}-based methods still work.
+     * // Tuinity - implemented
      * @see org.bukkit.World#getViewDistance()
      * @see org.bukkit.World#getNoTickViewDistance()
      */
-    @Deprecated
+    //@Deprecated // Tuinity - implemented
     public int getViewDistance();
 
     /**
      * Sets the view distance for this player
      *
      * @param viewDistance the player's view distance
-     * @deprecated This is unimplemented and <i>will</i> throw an exception at runtime. The {@link org.bukkit.World World}-based methods still work.
+     * // Tuinity - implemented
      * @see org.bukkit.World#setViewDistance(int)
      * @see org.bukkit.World#setNoTickViewDistance(int)
      */
-    @Deprecated
+    //@Deprecated // Tuinity - implemented
     public void setViewDistance(int viewDistance);
+
+    // Tuinity start - add view distances api
+    /**
+     * Gets the no-ticking view distance for this player.
+     * <p>
+     * No-tick view distance is the view distance where chunks will load, however the chunks and their entities will not
+     * be set to tick.
+     * </p>
+     * @return The no-tick view distance for this player.
+     */
+    public int getNoTickViewDistance();
+
+    /**
+     * Sets the no-ticking view distance for this player.
+     * <p>
+     * No-tick view distance is the view distance where chunks will load, however the chunks and their entities will not
+     * be set to tick.
+     * </p>
+     * @param viewDistance view distance in [2, 32] or -1
+     */
+    public void setNoTickViewDistance(int viewDistance);
+
+    /**
+     * Gets the sending view distance for this player.
+     * <p>
+     * Sending view distance is the view distance where chunks will load in for players.
+     * </p>
+     * @return The sending view distance for this player.
+     */
+    public int getSendViewDistance();
+
+    /**
+     * Sets the sending view distance for this player.
+     * <p>
+     * Sending view distance is the view distance where chunks will load in for players.
+     * </p>
+     * @param viewDistance view distance in [2, 32] or -1
+     */
+    public void setSendViewDistance(int viewDistance);
+    // Tuinity end - add view distances api
     // Paper end
 
     /**

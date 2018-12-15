@@ -3639,6 +3639,26 @@ public interface World extends PluginMessageRecipient, Metadatable, net.kyori.ad
      * @param viewDistance view distance in [2, 32]
      */
     void setNoTickViewDistance(int viewDistance);
+
+    // Tuinity start - add view distances
+    /**
+     * Gets the sending view distance for this world.
+     * <p>
+     * Sending view distance is the view distance where chunks will load in for players in this world.
+     * </p>
+     * @return The sending view distance for this world.
+     */
+    public int getSendViewDistance();
+
+    /**
+     * Sets the sending view distance for this world.
+     * <p>
+     * Sending view distance is the view distance where chunks will load in for players in this world.
+     * </p>
+     * @param viewDistance view distance in [2, 32] or -1
+     */
+    public void setSendViewDistance(int viewDistance);
+    // Tuinity end - add view distances
     // Paper end - view distance api
 
     // Spigot start

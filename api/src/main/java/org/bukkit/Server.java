@@ -1606,6 +1606,14 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
         }
         // Paper end
 
+        // Tuinity start - add config to timings report
+        @NotNull
+        public org.bukkit.configuration.file.YamlConfiguration getTuinityConfig()
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        // Tuinity end - add config to timings report
+
         /**
          * Sends the component to the player
          *
