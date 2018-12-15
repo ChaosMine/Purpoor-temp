@@ -47,6 +47,12 @@ import net.minecraft.world.level.storage.WorldData;
 import net.minecraft.world.level.storage.WorldPersistentData;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap; // Paper
 
+// Tuinity start
+import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectBidirectionalIterator;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+// Tuinity end
+
 public class ChunkProviderServer extends IChunkProvider {
 
     private static final List<ChunkStatus> b = ChunkStatus.a(); public static final List<ChunkStatus> getPossibleChunkStatuses() { return ChunkProviderServer.b; } // Paper - OBFHELPER
@@ -137,7 +143,7 @@ public class ChunkProviderServer extends IChunkProvider {
         return (Chunk)this.getChunkAt(x, z, ChunkStatus.FULL, true);
     }
 
-    private long chunkFutureAwaitCounter;
+    long chunkFutureAwaitCounter; // Tuinity - private -> package private
 
     public void getEntityTickingChunkAsync(int x, int z, java.util.function.Consumer<Chunk> onLoad) {
         if (Thread.currentThread() != this.serverThread) {
@@ -199,9 +205,9 @@ public class ChunkProviderServer extends IChunkProvider {
 
                 try {
                     if (onLoad != null) {
-                        playerChunkMap.callbackExecutor.execute(() -> {
+                        // Tuinity - revert incorrect use of callback executor
                             onLoad.accept(either == null ? null : either.left().orElse(null)); // indicate failure to the callback.
-                        });
+                        // Tuinity - revert incorrect use of callback executor
                     }
                 } catch (Throwable thr) {
                     if (thr instanceof ThreadDeath) {
@@ -225,6 +231,165 @@ public class ChunkProviderServer extends IChunkProvider {
         return chunk != null && chunk.isTickingReady();
     }
     // Paper end - rewrite ticklistserver
+
+    // Tuinity start
+    // this will try to avoid chunk neighbours for lighting
+    public final IChunkAccess getFullStatusChunkAt(int chunkX, int chunkZ) {
+        Chunk ifLoaded = this.getChunkAtIfLoadedImmediately(chunkX, chunkZ);
+        if (ifLoaded != null) {
+            return ifLoaded;
+        }
+
+        IChunkAccess empty = this.getChunkAt(chunkX, chunkZ, ChunkStatus.EMPTY, true);
+        if (empty != null && empty.getChunkStatus() == ChunkStatus.FULL) {
+            return empty;
+        }
+        return this.getChunkAt(chunkX, chunkZ, ChunkStatus.FULL, true);
+    }
+
+    public final IChunkAccess getFullStatusChunkAtIfLoaded(int chunkX, int chunkZ) {
+        Chunk ifLoaded = this.getChunkAtIfLoadedImmediately(chunkX, chunkZ);
+        if (ifLoaded != null) {
+            return ifLoaded;
+        }
+
+        IChunkAccess ret = this.getChunkAtImmediately(chunkX, chunkZ);
+        if (ret != null && ret.getChunkStatus() == ChunkStatus.FULL) {
+            return ret;
+        } else {
+            return null;
+        }
+    }
+
+    void getChunkAtAsynchronously(int chunkX, int chunkZ, int ticketLevel,
+                                  java.util.function.Consumer<IChunkAccess> consumer) {
+        this.getChunkAtAsynchronously(chunkX, chunkZ, ticketLevel, (PlayerChunk playerChunk) -> {
+            if (ticketLevel <= 33) {
+                return (CompletableFuture)playerChunk.getFullChunkFuture();
+            } else {
+                return playerChunk.getOrCreateFuture(PlayerChunk.getChunkStatus(ticketLevel), ChunkProviderServer.this.playerChunkMap);
+            }
+        }, consumer);
+    }
+
+    void getChunkAtAsynchronously(int chunkX, int chunkZ, int ticketLevel,
+                                  java.util.function.Function<PlayerChunk, CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>>> function,
+                                  java.util.function.Consumer<IChunkAccess> consumer) {
+        if (Thread.currentThread() != this.serverThread) {
+            throw new IllegalStateException();
+        }
+        ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
+        Long identifier = Long.valueOf(this.chunkFutureAwaitCounter++);
+        this.addTicketAtLevel(TicketType.FUTURE_AWAIT, chunkPos, ticketLevel, identifier);
+        this.tickDistanceManager();
+
+        PlayerChunk chunk = this.playerChunkMap.getUpdatingChunk(chunkPos.pair());
+
+        if (chunk == null) {
+            throw new IllegalStateException("Expected playerchunk " + chunkPos + " in world '" + this.world.getWorld().getName() + "'");
+        }
+
+        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> future = function.apply(chunk);
+
+        future.whenCompleteAsync((either, throwable) -> {
+            try {
+                if (throwable != null) {
+                    if (throwable instanceof ThreadDeath) {
+                        throw (ThreadDeath)throwable;
+                    }
+                    MinecraftServer.LOGGER.fatal("Failed to complete future await for chunk " + chunkPos.toString() + " in world '" + ChunkProviderServer.this.world.getWorld().getName() + "'", throwable);
+                } else if (either.right().isPresent()) {
+                    MinecraftServer.LOGGER.fatal("Failed to complete future await for chunk " + chunkPos.toString() + " in world '" + ChunkProviderServer.this.world.getWorld().getName() + "': " + either.right().get().toString());
+                }
+
+                try {
+                    if (consumer != null) {
+                        consumer.accept(either == null ? null : either.left().orElse(null)); // indicate failure to the callback.
+                    }
+                } catch (Throwable thr) {
+                    if (thr instanceof ThreadDeath) {
+                        throw (ThreadDeath)thr;
+                    }
+                    MinecraftServer.LOGGER.fatal("Load callback for future await failed " + chunkPos.toString() + " in world '" + ChunkProviderServer.this.world.getWorld().getName() + "'", thr);
+                    return;
+                }
+            } finally {
+                // due to odd behaviour with CB unload implementation we need to have these AFTER the load callback.
+                ChunkProviderServer.this.addTicketAtLevel(TicketType.UNKNOWN, chunkPos, ticketLevel, chunkPos);
+                ChunkProviderServer.this.removeTicketAtLevel(TicketType.FUTURE_AWAIT, chunkPos, ticketLevel, identifier);
+            }
+        }, this.serverThreadQueue);
+    }
+
+    void chunkLoadAccept(int chunkX, int chunkZ, IChunkAccess chunk, java.util.function.Consumer<IChunkAccess> consumer) {
+        try {
+            consumer.accept(chunk);
+        } catch (Throwable throwable) {
+            if (throwable instanceof ThreadDeath) {
+                throw (ThreadDeath)throwable;
+            }
+            MinecraftServer.LOGGER.error("Load callback for chunk " + chunkX + "," + chunkZ + " in world '" + this.world.getWorld().getName() + "' threw an exception", throwable);
+        }
+    }
+
+    public final void getChunkAtAsynchronously(int chunkX, int chunkZ, ChunkStatus status, boolean gen, boolean allowSubTicketLevel, java.util.function.Consumer<IChunkAccess> onLoad) {
+        // try to fire sync
+        int chunkStatusTicketLevel = 33 + ChunkStatus.getTicketLevelOffset(status);
+        PlayerChunk playerChunk = this.playerChunkMap.getUpdatingChunk(MCUtil.getCoordinateKey(chunkX, chunkZ));
+        if (playerChunk != null) {
+            ChunkStatus holderStatus = playerChunk.getChunkHolderStatus();
+            IChunkAccess immediate = playerChunk.getAvailableChunkNow();
+            if (immediate != null) {
+                if (allowSubTicketLevel ? immediate.getChunkStatus().isAtLeastStatus(status) : (playerChunk.getTicketLevel() <= chunkStatusTicketLevel && holderStatus != null && holderStatus.isAtLeastStatus(status))) {
+                    this.chunkLoadAccept(chunkX, chunkZ, immediate, onLoad);
+                    return;
+                } else {
+                    if (gen || (!allowSubTicketLevel && immediate.getChunkStatus().isAtLeastStatus(status))) {
+                        this.getChunkAtAsynchronously(chunkX, chunkZ, chunkStatusTicketLevel, onLoad);
+                        return;
+                    } else {
+                        this.chunkLoadAccept(chunkX, chunkZ, null, onLoad);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // need to fire async
+
+        if (gen && !allowSubTicketLevel) {
+            this.getChunkAtAsynchronously(chunkX, chunkZ, chunkStatusTicketLevel, onLoad);
+            return;
+        }
+
+        this.getChunkAtAsynchronously(chunkX, chunkZ, MCUtil.getTicketLevelFor(ChunkStatus.EMPTY), (IChunkAccess chunk) -> {
+            if (chunk == null) {
+                throw new IllegalStateException("Chunk cannot be null");
+            }
+
+            if (!chunk.getChunkStatus().isAtLeastStatus(status)) {
+                if (gen) {
+                    this.getChunkAtAsynchronously(chunkX, chunkZ, chunkStatusTicketLevel, onLoad);
+                    return;
+                } else {
+                    ChunkProviderServer.this.chunkLoadAccept(chunkX, chunkZ, null, onLoad);
+                    return;
+                }
+            } else {
+                if (allowSubTicketLevel) {
+                    ChunkProviderServer.this.chunkLoadAccept(chunkX, chunkZ, chunk, onLoad);
+                    return;
+                } else {
+                    this.getChunkAtAsynchronously(chunkX, chunkZ, chunkStatusTicketLevel, onLoad);
+                    return;
+                }
+            }
+        });
+    }
+
+    final com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<Chunk> tickingChunks = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>(4096, 0.75f, 4096, 0.15, true);
+    final com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<Chunk> entityTickingChunks = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>(4096, 0.75f, 4096, 0.15, true);
+    // Tuinity end
 
     public ChunkProviderServer(WorldServer worldserver, Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, DefinedStructureManager definedstructuremanager, Executor executor, ChunkGenerator chunkgenerator, int i, boolean flag, WorldLoadListener worldloadlistener, Supplier<WorldPersistentData> supplier) {
         this.world = worldserver;
@@ -569,6 +734,8 @@ public class ChunkProviderServer extends IChunkProvider {
         Arrays.fill(this.cacheChunk, (Object) null);
     }
 
+    private long syncLoadCounter; // Tuinity - prevent plugin unloads from removing our ticket
+
     private CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> getChunkFutureMainThread(int i, int j, ChunkStatus chunkstatus, boolean flag) {
         // Paper start - add isUrgent - old sig left in place for dirty nms plugins
         return getChunkFutureMainThread(i, j, chunkstatus, flag, false);
@@ -587,9 +754,12 @@ public class ChunkProviderServer extends IChunkProvider {
             PlayerChunk.State currentChunkState = PlayerChunk.getChunkState(playerchunk.getTicketLevel());
             currentlyUnloading = (oldChunkState.isAtLeast(PlayerChunk.State.BORDER) && !currentChunkState.isAtLeast(PlayerChunk.State.BORDER));
         }
+        final Long identifier; // Tuinity - prevent plugin unloads from removing our ticket
         if (flag && !currentlyUnloading) {
             // CraftBukkit end
             this.chunkMapDistance.a(TicketType.UNKNOWN, chunkcoordintpair, l, chunkcoordintpair);
+            identifier = Long.valueOf(this.syncLoadCounter++); // Tuinity - prevent plugin unloads from removing our ticket
+            this.chunkMapDistance.addTicketAtLevel(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Tuinity - prevent plugin unloads from removing our ticket
             if (isUrgent) this.chunkMapDistance.markUrgent(chunkcoordintpair); // Paper
             if (this.a(playerchunk, l)) {
                 GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
@@ -600,12 +770,20 @@ public class ChunkProviderServer extends IChunkProvider {
                 playerchunk = this.getChunk(k);
                 gameprofilerfiller.exit();
                 if (this.a(playerchunk, l)) {
+                    this.chunkMapDistance.removeTicketAtLevel(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Tuinity
                     throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("No chunk holder after ticket has been added")));
                 }
             }
-        }
+        } else { identifier = null; } // Tuinity - prevent plugin unloads from removing our ticket
         // Paper start
         CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> future = this.a(playerchunk, l) ? PlayerChunk.UNLOADED_CHUNK_ACCESS_FUTURE : playerchunk.a(chunkstatus, this.playerChunkMap);
+        // Tuinity start - prevent plugin unloads from removing our ticket
+        if (flag && !currentlyUnloading) {
+            future.thenAcceptAsync((either) -> {
+                ChunkProviderServer.this.chunkMapDistance.removeTicketAtLevel(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier);
+            }, ChunkProviderServer.this.serverThreadQueue);
+        }
+        // Tuinity end - prevent plugin unloads from removing our ticket
         if (isUrgent) {
             future.thenAccept(either -> this.chunkMapDistance.clearUrgent(chunkcoordintpair));
         }
@@ -624,8 +802,8 @@ public class ChunkProviderServer extends IChunkProvider {
         return !this.a(playerchunk, k);
     }
 
-    @Override
-    public IBlockAccess c(int i, int j) {
+    public final IBlockAccess getFeaturesReadyChunk(int x, int z) { return this.c(x, z); } // Tuinity - OBFHELPER
+    @Override public IBlockAccess c(int i, int j) { // Tuinity - OBFHELPER
         long k = ChunkCoordIntPair.pair(i, j);
         PlayerChunk playerchunk = this.getChunk(k);
 
@@ -662,6 +840,8 @@ public class ChunkProviderServer extends IChunkProvider {
 
     public boolean tickDistanceManager() { // Paper - private -> public
         if (chunkMapDistance.delayDistanceManagerTick) return false; // Paper
+        if (this.playerChunkMap.unloadingPlayerChunk) { MinecraftServer.LOGGER.fatal("Cannot tick distance manager while unloading playerchunks", new Throwable()); throw new IllegalStateException("Cannot tick distance manager while unloading playerchunks"); } // Tuinity
+        co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Tuinity - add timings for distance manager
         boolean flag = this.chunkMapDistance.a(this.playerChunkMap);
         boolean flag1 = this.playerChunkMap.b();
 
@@ -671,6 +851,7 @@ public class ChunkProviderServer extends IChunkProvider {
             this.clearCache();
             return true;
         }
+        } finally { co.aikar.timings.MinecraftTimings.distanceManagerTick.stopTiming(); } // Tuinity - add timings for distance manager
     }
 
     public final boolean isInEntityTickingChunk(Entity entity) { return this.a(entity); } // Paper - OBFHELPER
@@ -745,6 +926,7 @@ public class ChunkProviderServer extends IChunkProvider {
 
     // CraftBukkit start - modelled on below
     public void purgeUnload() {
+        if (true) return; // Tuinity - tickets will be removed later, this behavior isn't really well accounted for by the chunk system
         this.world.getMethodProfiler().enter("purge");
         this.chunkMapDistance.purgeTickets();
         this.tickDistanceManager();
@@ -759,17 +941,18 @@ public class ChunkProviderServer extends IChunkProvider {
         this.world.getMethodProfiler().enter("purge");
         this.world.timings.doChunkMap.startTiming(); // Spigot
         this.chunkMapDistance.purgeTickets();
-        this.world.getMinecraftServer().midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         this.tickDistanceManager();
         this.world.timings.doChunkMap.stopTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("chunks");
         this.world.timings.chunks.startTiming(); // Paper - timings
+        this.playerChunkMap.playerChunkManager.tick(); // Tuinity - this is mostly is to account for view distance changes
         this.tickChunks();
         this.world.timings.chunks.stopTiming(); // Paper - timings
         this.world.timings.doChunkUnload.startTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("unload");
         this.playerChunkMap.unloadChunks(booleansupplier);
-        this.world.getMinecraftServer().midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         this.world.timings.doChunkUnload.stopTiming(); // Spigot
         this.world.getMethodProfiler().exit();
         this.clearCache();
@@ -834,12 +1017,14 @@ public class ChunkProviderServer extends IChunkProvider {
                 for (EntityPlayer player : this.world.players) {
                     Arrays.fill(player.mobCounts, 0);
                 }
-                spawnercreature_d = SpawnerCreature.countMobs(l, this.world.A(), this::a, true);
+                spawnercreature_d = SpawnerCreature.countMobs(l, this.world.A(), this::a, true, this); // Tuinity
             } else {
-                spawnercreature_d = SpawnerCreature.countMobs(l, this.world.A(), this::a, false);
+                spawnercreature_d = SpawnerCreature.countMobs(l, this.world.A(), this::a, false, this); // Tuinity
             }
             // Paper end
             this.world.timings.countNaturalMobs.stopTiming(); // Paper - timings
+
+            int ticked = 0; // Tuinity - exec chunk tasks during world tick
 
             this.p = spawnercreature_d;
             this.world.getMethodProfiler().exit();
@@ -847,19 +1032,23 @@ public class ChunkProviderServer extends IChunkProvider {
             //Collections.shuffle(list); // Paper
             // Paper - moved up
             this.world.timings.chunkTicks.startTiming(); // Paper
-            final int[] chunksTicked = {0}; this.playerChunkMap.forEachVisibleChunk((playerchunk) -> { // Paper - safe iterator incase chunk loads, also no wrapping
-                Optional<Chunk> optional = ((Either) playerchunk.a().getNow(PlayerChunk.UNLOADED_CHUNK)).left();
-
-                if (optional.isPresent()) {
+            // Tuinity start - optimise chunk tick iteration
+            com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.Iterator<Chunk> iterator = this.entityTickingChunks.iterator();
+            try {
+            while (iterator.hasNext()) {
+                Chunk chunk = iterator.next();
+                PlayerChunk playerchunk = chunk.playerChunk;
+                if (playerchunk != null) { // make sure load event has been called along with the load logic we put there
+                    // Tuinity end - optimise chunk tick iteration
                     this.world.getMethodProfiler().enter("broadcast");
                     this.world.timings.broadcastChunkUpdates.startTiming(); // Paper - timings
-                    playerchunk.a((Chunk) optional.get());
+                    playerchunk.a(chunk); // Tuinity
                     this.world.timings.broadcastChunkUpdates.stopTiming(); // Paper - timings
                     this.world.getMethodProfiler().exit();
-                    Optional<Chunk> optional1 = ((Either) playerchunk.b().getNow(PlayerChunk.UNLOADED_CHUNK)).left();
+                    // Tuinity
 
-                    if (optional1.isPresent()) {
-                        Chunk chunk = (Chunk) optional1.get();
+                    if (true) { // Tuinity
+                        // Tuinity
                         ChunkCoordIntPair chunkcoordintpair = playerchunk.i();
 
                         if (!this.playerChunkMap.isOutsideOfRange(playerchunk, chunkcoordintpair, false)) { // Paper - optimise isOutsideOfRange
@@ -871,11 +1060,15 @@ public class ChunkProviderServer extends IChunkProvider {
                             //this.world.timings.chunkTicks.startTiming(); // Spigot // Paper
                             this.world.a(chunk, k);
                             //this.world.timings.chunkTicks.stopTiming(); // Spigot // Paper
-                            if (chunksTicked[0]++ % 10 == 0) this.world.getMinecraftServer().midTickLoadChunks(); // Paper
+                            if ((++ticked & 1) == 0) MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
                         }
                     }
                 }
-            });
+            } // Tuinity start - optimise chunk tick iteration
+            } finally {
+                iterator.finishedIterating();
+            }
+            // Tuinity end - optimise chunk tick iteration
             this.world.timings.chunkTicks.stopTiming(); // Paper
             this.world.getMethodProfiler().enter("customSpawners");
             if (flag1) {
@@ -888,7 +1081,25 @@ public class ChunkProviderServer extends IChunkProvider {
             this.world.getMethodProfiler().exit();
         }
 
+        // Tuinity start - controlled flush for entity tracker packets
+        List<net.minecraft.network.NetworkManager> disabledFlushes = new java.util.ArrayList<>(this.world.getPlayers().size());
+        for (EntityPlayer player : this.world.getPlayers()) {
+            net.minecraft.server.network.PlayerConnection connection = player.playerConnection;
+            if (connection != null) {
+                connection.networkManager.disableAutomaticFlush();
+                disabledFlushes.add(connection.networkManager);
+            }
+        }
+        try {
+            // Tuinity end - controlled flush for entity tracker packets
         this.playerChunkMap.g();
+            // Tuinity start - controlled flush for entity tracker packets
+        } finally {
+            for (net.minecraft.network.NetworkManager networkManager : disabledFlushes) {
+                networkManager.enableAutomaticFlush();
+            }
+        }
+        // Tuinity end - controlled flush for entity tracker packets
     }
 
     private void a(long i, Consumer<Chunk> consumer) {
@@ -1028,44 +1239,12 @@ public class ChunkProviderServer extends IChunkProvider {
             ChunkProviderServer.this.world.getMethodProfiler().c("runTask");
             super.executeTask(runnable);
         }
-
-        // Paper start
-        private long lastMidTickChunkTask = 0;
-        public boolean pollChunkLoadTasks() {
-            if (com.destroystokyo.paper.io.chunk.ChunkTaskManager.pollChunkWaitQueue() || ChunkProviderServer.this.world.asyncChunkTaskManager.pollNextChunkTask()) {
-                try {
-                    ChunkProviderServer.this.tickDistanceManager();
-                } finally {
-                    // from below: process pending Chunk loadCallback() and unloadCallback() after each run task
-                    playerChunkMap.callbackExecutor.run();
-                }
-                return true;
-            }
-            return false;
-        }
-        public void midTickLoadChunks() {
-            MinecraftServer server = ChunkProviderServer.this.world.getMinecraftServer();
-            // always try to load chunks, restrain generation/other updates only. don't count these towards tick count
-            //noinspection StatementWithEmptyBody
-            while (pollChunkLoadTasks()) {}
-
-            if (System.nanoTime() - lastMidTickChunkTask < 200000) {
-                return;
-            }
-
-            for (;server.midTickChunksTasksRan < com.destroystokyo.paper.PaperConfig.midTickChunkTasks && server.canSleepForTick();) {
-                if (this.executeNext()) {
-                    server.midTickChunksTasksRan++;
-                    lastMidTickChunkTask = System.nanoTime();
-                } else {
-                    break;
-                }
-            }
-        }
-        // Paper end
+        // Tuinity - replace logic
 
         @Override
         protected boolean executeNext() {
+            com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot execute chunk tasks off-main thread");// Tuinity
+            ChunkProviderServer.this.playerChunkMap.playerChunkManager.tickMidTick(); // Tuinity
         // CraftBukkit start - process pending Chunk loadCallback() and unloadCallback() after each run task
         try {
             boolean execChunkTask = com.destroystokyo.paper.io.chunk.ChunkTaskManager.pollChunkWaitQueue() || ChunkProviderServer.this.world.asyncChunkTaskManager.pollNextChunkTask(); // Paper

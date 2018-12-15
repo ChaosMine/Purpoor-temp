@@ -109,6 +109,7 @@ public class HeightMap {
         }
     }
 
+    public final int get(int x, int z) { return this.a(x, z); } // Tuinity - OBFHELPER
     public int a(int i, int j) {
         return this.a(c(i, j));
     }
@@ -145,7 +146,7 @@ public class HeightMap {
         private final String h;
         private final HeightMap.Use i;
         private final Predicate<IBlockData> j;
-        private static final Map<String, HeightMap.Type> k = (Map) SystemUtils.a((Object) Maps.newHashMap(), (hashmap) -> {
+        private static final Map<String, HeightMap.Type> k = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // Tuinity - decompile fix
             HeightMap.Type[] aheightmap_type = values();
             int i = aheightmap_type.length;
 
@@ -157,7 +158,7 @@ public class HeightMap {
 
         });
 
-        private Type(String s, HeightMap.Use heightmap_use, Predicate predicate) {
+        private Type(String s, HeightMap.Use heightmap_use, Predicate<IBlockData> predicate) { // Tuinity - decompile fix
             this.h = s;
             this.i = heightmap_use;
             this.j = predicate;

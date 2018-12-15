@@ -298,7 +298,7 @@ public class CraftWorld implements World {
     public int getTileEntityCount() {
         return net.minecraft.server.MCUtil.ensureMain(() -> {
         // We don't use the full world tile entity list, so we must iterate chunks
-        Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks = world.getChunkProvider().playerChunkMap.visibleChunks;
+        Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks = world.getChunkProvider().playerChunkMap.updatingChunks.getVisibleMap(); // Tuinity - change updating chunks map
         int size = 0;
         for (PlayerChunk playerchunk : chunks.values()) {
             net.minecraft.world.level.chunk.Chunk chunk = playerchunk.getChunk();
@@ -317,7 +317,7 @@ public class CraftWorld implements World {
         return net.minecraft.server.MCUtil.ensureMain(() -> {
         int ret = 0;
 
-        for (PlayerChunk chunkHolder : world.getChunkProvider().playerChunkMap.visibleChunks.values()) {
+        for (PlayerChunk chunkHolder : world.getChunkProvider().playerChunkMap.updatingChunks.getVisibleMap().values()) { // Tuinity - change updating chunks map
             if (chunkHolder.getChunk() != null) {
                 ++ret;
             }
@@ -433,14 +433,7 @@ public class CraftWorld implements World {
 
     @Override
     public Chunk getChunkAt(int x, int z) {
-        // Paper start - add ticket to hold chunk for a little while longer if plugin accesses it
-        net.minecraft.world.level.chunk.Chunk chunk = world.getChunkProvider().getChunkAtIfLoadedImmediately(x, z);
-        if (chunk == null) {
-            addTicket(x, z);
-            chunk = this.world.getChunkProvider().getChunkAt(x, z, true);
-        }
-        return chunk.bukkitChunk;
-        // Paper end
+        return this.world.getChunkProvider().getChunkAt(x, z, true).bukkitChunk; // Tuinity - revert paper diff
     }
 
     // Paper start
@@ -488,13 +481,16 @@ public class CraftWorld implements World {
     public Chunk[] getLoadedChunks() {
         // Paper start
         if (Thread.currentThread() != world.getMinecraftWorld().serverThread) {
-            synchronized (world.getChunkProvider().playerChunkMap.visibleChunks) {
-                Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks = world.getChunkProvider().playerChunkMap.visibleChunks;
-                return chunks.values().stream().map(PlayerChunk::getFullChunk).filter(Objects::nonNull).map(net.minecraft.world.level.chunk.Chunk::getBukkitChunk).toArray(Chunk[]::new);
+            // Tuinity start - change updating chunks map
+            Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks;
+            synchronized (world.getChunkProvider().playerChunkMap.updatingChunks) {
+                chunks = world.getChunkProvider().playerChunkMap.updatingChunks.getVisibleMap().clone();
             }
+            return chunks.values().stream().map(PlayerChunk::getFullChunk).filter(Objects::nonNull).map(net.minecraft.world.level.chunk.Chunk::getBukkitChunk).toArray(Chunk[]::new);
+            // Tuinity end - change updating chunks map
         }
         // Paper end
-        Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks = world.getChunkProvider().playerChunkMap.visibleChunks;
+        Long2ObjectLinkedOpenHashMap<PlayerChunk> chunks = world.getChunkProvider().playerChunkMap.updatingChunks.getVisibleMap(); // Tuinity - change updating chunks map
         return chunks.values().stream().map(PlayerChunk::getFullChunk).filter(Objects::nonNull).map(net.minecraft.world.level.chunk.Chunk::getBukkitChunk).toArray(Chunk[]::new);
     }
 
@@ -523,6 +519,7 @@ public class CraftWorld implements World {
         org.spigotmc.AsyncCatcher.catchOp("chunk unload"); // Spigot
         if (isChunkLoaded(x, z)) {
             world.getChunkProvider().removeTicket(TicketType.PLUGIN, new ChunkCoordIntPair(x, z), 0, Unit.INSTANCE); // Paper
+            ((ChunkMapDistance)world.getChunkProvider().playerChunkMap.chunkDistanceManager).removeTickets(ChunkCoordIntPair.pair(x, z), TicketType.DELAYED_UNLOAD); // Tuinity - delay chunk unloads - let plugins override
         }
 
         return true;
@@ -735,6 +732,30 @@ public class CraftWorld implements World {
 
         return ret.entrySet().stream().collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, (entry) -> entry.getValue().build()));
     }
+
+    // Tuinity start - don't load chunks for crash reports
+    public Map<Plugin, Collection<ChunkCoordIntPair>> getPluginChunkTicketsCoordinates() {
+        // Copied from above
+        Map<Plugin, ImmutableList.Builder<ChunkCoordIntPair>> ret = new HashMap<>();
+        ChunkMapDistance chunkDistanceManager = this.world.getChunkProvider().playerChunkMap.chunkDistanceManager;
+
+        for (Long2ObjectMap.Entry<ArraySetSorted<Ticket<?>>> chunkTickets : chunkDistanceManager.tickets.long2ObjectEntrySet()) {
+            long chunkKey = chunkTickets.getLongKey();
+            ArraySetSorted<Ticket<?>> tickets = chunkTickets.getValue();
+
+            ChunkCoordIntPair chunk = new ChunkCoordIntPair(chunkKey);
+            for (Ticket<?> ticket : tickets) {
+                if (ticket.getTicketType() != TicketType.PLUGIN_TICKET) {
+                    continue;
+                }
+
+                ret.computeIfAbsent((Plugin) ticket.identifier, (key) -> ImmutableList.builder()).add(chunk);
+            }
+        }
+
+        return ret.entrySet().stream().collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, (entry) -> entry.getValue().build()));
+    }
+    // Tuinity end - don't load chunks for crash reports
 
     @Override
     public boolean isChunkForceLoaded(int x, int z) {
@@ -2668,7 +2689,7 @@ public class CraftWorld implements World {
         }
         return this.world.getChunkProvider().getChunkAtAsynchronously(x, z, gen, urgent).thenComposeAsync((either) -> {
             net.minecraft.world.level.chunk.Chunk chunk = (net.minecraft.world.level.chunk.Chunk) either.left().orElse(null);
-            if (chunk != null) addTicket(x, z); // Paper
+            if (false && chunk != null) addTicket(x, z); // Paper // Tuinity - revert
             return CompletableFuture.completedFuture(chunk == null ? null : chunk.getBukkitChunk());
         }, net.minecraft.server.MinecraftServer.getServer());
     }
@@ -2693,14 +2714,14 @@ public class CraftWorld implements World {
             throw new IllegalArgumentException("View distance " + viewDistance + " is out of range of [2, 32]");
         }
         PlayerChunkMap chunkMap = getHandle().getChunkProvider().playerChunkMap;
-        if (viewDistance != chunkMap.getEffectiveViewDistance()) {
+        if (true) { // Tuinity - replace old player chunk management
             chunkMap.setViewDistance(viewDistance);
         }
     }
 
     @Override
     public int getNoTickViewDistance() {
-        return getHandle().getChunkProvider().playerChunkMap.getEffectiveNoTickViewDistance();
+        return getHandle().getChunkProvider().playerChunkMap.playerChunkManager.getTargetNoTickViewDistance(); // Tuinity - replace old player chunk management
     }
 
     @Override
@@ -2709,11 +2730,22 @@ public class CraftWorld implements World {
             throw new IllegalArgumentException("View distance " + viewDistance + " is out of range of [2, 32]");
         }
         PlayerChunkMap chunkMap = getHandle().getChunkProvider().playerChunkMap;
-        if (viewDistance != chunkMap.getRawNoTickViewDistance()) {
+        if (true) { // Tuinity - replace old player chunk management
             chunkMap.setNoTickViewDistance(viewDistance);
         }
     }
     // Paper end - per player view distance
+    // Tuinity start - add view distances
+    @Override
+    public int getSendViewDistance() {
+        return getHandle().getChunkProvider().playerChunkMap.playerChunkManager.getTargetSendDistance();
+    }
+
+    @Override
+    public void setSendViewDistance(int viewDistance) {
+        getHandle().getChunkProvider().playerChunkMap.playerChunkManager.setTargetSendDistance(viewDistance);
+    }
+    // Tuinity end - add view distances
 
     // Spigot start
     private final org.bukkit.World.Spigot spigot = new org.bukkit.World.Spigot()

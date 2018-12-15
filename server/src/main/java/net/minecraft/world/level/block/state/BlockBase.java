@@ -348,21 +348,23 @@ public abstract class BlockBase {
 
     public abstract static class BlockData extends IBlockDataHolder<Block, IBlockData> {
 
-        private final int b;
-        private final boolean e;
+        private final int b; public final int getEmittedLight() { return this.b; } // Tuinity - OBFHELPER
+        private final boolean e; public final boolean isTransparentOnSomeFaces() { return this.e; } // Tuinity - OBFHELPER
         private final boolean f;
         private final Material g;
         private final MaterialMapColor h;
         public final float strength;
         private final boolean j;
-        private final boolean k;
+        private final boolean k; public final boolean isOpaque() { return this.k; } // Tuinity - OBFHELPER
         private final BlockBase.e l;
         private final BlockBase.e m;
         private final BlockBase.e n;
         private final BlockBase.e o;
         private final BlockBase.e p;
         @Nullable
-        protected BlockBase.BlockData.Cache a;
+        protected BlockBase.BlockData.Cache a; public final BlockBase.BlockData.Cache getShapeCache() { return this.a; } // Tuinity - OBFHELPER
+        public net.minecraft.world.level.pathfinder.PathType staticPathType; // Tuinity - cache static path types
+        public net.minecraft.world.level.pathfinder.PathType neighbourOverridePathType; // Tuinity - cache static path types
 
         protected BlockData(Block block, ImmutableMap<IBlockState<?>, Comparable<?>> immutablemap, MapCodec<IBlockData> mapcodec) {
             super(block, immutablemap, mapcodec);
@@ -381,6 +383,7 @@ public abstract class BlockBase {
             this.n = blockbase_info.s;
             this.o = blockbase_info.t;
             this.p = blockbase_info.u;
+            this.conditionallyFullOpaque = this.isOpaque() & this.isTransparentOnSomeFaces(); // Tuinity
         }
         // Paper start - impl cached craft block data, lazy load to fix issue with loading at the wrong time
         private org.bukkit.craftbukkit.block.data.CraftBlockData cachedCraftBlockData;
@@ -396,12 +399,63 @@ public abstract class BlockBase {
         protected Fluid fluid;
         // Paper end
 
+        // Tuinity start - micro the hell out of this call
+        protected boolean shapeExceedsCube = true;
+        public final boolean shapeExceedsCube() {
+            return this.shapeExceedsCube;
+        }
+        // Tuinity end
+
+        // Tuinity start
+        protected int opacityIfCached = -1;
+        // ret -1 if opacity is dynamic, or -1 if the block is conditionally full opaque, else return opacity in [0, 15]
+        public final int getOpacityIfCached() {
+            return this.opacityIfCached;
+        }
+
+        protected final boolean conditionallyFullOpaque;
+        public final boolean isConditionallyFullOpaque() {
+            return this.conditionallyFullOpaque;
+        }
+        // Tuinity end
+
         public void a() {
             this.fluid = this.getBlock().d(this.p()); // Paper - moved from getFluid()
             this.isTicking = this.getBlock().isTicking(this.p()); // Paper - moved from isTicking()
             if (!this.getBlock().o()) {
                 this.a = new BlockBase.BlockData.Cache(this.p());
             }
+            this.shapeExceedsCube = this.a == null || this.a.c; // Tuinity - moved from actual method to here
+            this.staticPathType = null; // Tuinity - cache static path type
+            this.neighbourOverridePathType = null; // Tuinity - cache static path types
+            this.opacityIfCached = this.a == null || this.isConditionallyFullOpaque() ? -1 : this.a.getOpacity(); // Tuinity - cache opacity for light
+            // Tuinity start - optimise culling shape cache for light
+            if (this.a != null && this.a.getCullingShapeCache() != null) {
+                for (int i = 0, len = this.a.getCullingShapeCache().length; i < len; ++i) {
+                    VoxelShape face = this.a.getCullingShapeCache()[i].simplify();
+                    if (face.isEmpty()) {
+                        this.a.getCullingShapeCache()[i] = VoxelShapes.getEmptyShape();
+                        continue;
+                    }
+                    List<net.minecraft.world.phys.AxisAlignedBB> boxes = face.getBoundingBoxesRepresentation();
+
+                    if (boxes.size() == 1) {
+                        net.minecraft.world.phys.AxisAlignedBB boundingBox = boxes.get(0);
+                        if (boundingBox.equals(VoxelShapes.optimisedFullCube.aabb)) {
+                            this.a.getCullingShapeCache()[i] = VoxelShapes.fullCube();
+                        } else {
+                            this.a.getCullingShapeCache()[i] = VoxelShapes.of(boundingBox);
+                            if (!(this.a.getCullingShapeCache()[i] instanceof com.tuinity.tuinity.voxel.AABBVoxelShape) &&
+                                this.a.getCullingShapeCache()[i].getBoundingBoxesRepresentation().size() == 1) {
+                                this.a.getCullingShapeCache()[i] = new com.tuinity.tuinity.voxel.AABBVoxelShape(boundingBox);
+                            }
+                        }
+                        continue;
+                    }
+                    this.a.getCullingShapeCache()[i] = face;
+                }
+            }
+            // Tuinity end - optimise culling shape cache for light
 
         }
 
@@ -425,10 +479,12 @@ public abstract class BlockBase {
             return this.a != null ? this.a.g : this.getBlock().b(this.p(), iblockaccess, blockposition);
         }
 
+        public final int getOpacity(IBlockAccess iblockaccess, BlockPosition blockposition) { return this.b(iblockaccess, blockposition); } // Tuinity - OBFHELPER
         public int b(IBlockAccess iblockaccess, BlockPosition blockposition) {
             return this.a != null ? this.a.h : this.getBlock().f(this.p(), iblockaccess, blockposition);
         }
 
+        public final VoxelShape getCullingFace(IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) { return this.a(iblockaccess, blockposition, enumdirection); } // Tuinity - OBFHELPER
         public VoxelShape a(IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
             return this.a != null && this.a.i != null ? this.a.i[enumdirection.ordinal()] : VoxelShapes.a(this.c(iblockaccess, blockposition), enumdirection);
         }
@@ -438,7 +494,7 @@ public abstract class BlockBase {
         }
 
         public final boolean d() { // Paper
-            return this.a == null || this.a.c;
+            return this.shapeExceedsCube; // Tuinity - moved into shape cache init
         }
 
         public final boolean e() { // Paper
@@ -729,9 +785,9 @@ public abstract class BlockBase {
             private static final int f = EnumBlockSupport.values().length;
             protected final boolean a;
             private final boolean g;
-            private final int h;
+            private final int h; private final int getOpacity() { return this.h; } // Tuinity - OBFHELPER
             @Nullable
-            private final VoxelShape[] i;
+            private final VoxelShape[] i; private final VoxelShape[] getCullingShapeCache () { return this.i; } // Tuinity - OBFHELPER
             protected final VoxelShape b;
             protected final boolean c;
             private final boolean[] j;

@@ -30,7 +30,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public abstract class NavigationAbstract {
 
-    protected final EntityInsentient a; public Entity getEntity() { return a; } // Paper - OBFHELPER
+    protected final EntityInsentient a; public final EntityInsentient getEntity() { return a; } // Paper - OBFHELPER // Tuinity - match types
     protected final World b;
     @Nullable
     protected PathEntity c; protected final PathEntity getCurrentPath() { return this.c; } // Paper - OBFHELPER
@@ -43,7 +43,7 @@ public abstract class NavigationAbstract {
     protected long j;
     protected double k;
     protected float l;
-    protected boolean m;
+    protected boolean m; protected final boolean needsPathRecalculation() { return this.m; } // Tuinity - OBFHELPER
     protected long n;
     protected PathfinderAbstract o;
     private BlockPosition p;
@@ -51,6 +51,13 @@ public abstract class NavigationAbstract {
     private float r;
     private final Pathfinder s; public Pathfinder getPathfinder() { return this.s; } // Paper - OBFHELPER
     private boolean t;
+
+    // Tuinity start
+    public boolean isViableForPathRecalculationChecking() {
+        return !this.needsPathRecalculation() &&
+                (this.c != null && !this.c.c() && this.c.e() != 0);
+    }
+    // Tuinity end
 
     public NavigationAbstract(EntityInsentient entityinsentient, World world) {
         this.g = Vec3D.ORIGIN;
@@ -415,7 +422,7 @@ public abstract class NavigationAbstract {
     }
 
     public void b(BlockPosition blockposition) {
-        if (this.c != null && !this.c.c() && this.c.e() != 0) {
+        if (this.c != null && !this.c.c() && this.c.e() != 0) { // Tuinity - diff on change - needed for isViableForPathRecalculationChecking()
             PathPoint pathpoint = this.c.d();
             Vec3D vec3d = new Vec3D(((double) pathpoint.a + this.a.locX()) / 2.0D, ((double) pathpoint.b + this.a.locY()) / 2.0D, ((double) pathpoint.c + this.a.locZ()) / 2.0D);
 

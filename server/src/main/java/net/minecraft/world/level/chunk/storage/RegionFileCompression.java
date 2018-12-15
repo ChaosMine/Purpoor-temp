@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class RegionFileCompression {
 
-    private static final Int2ObjectMap<RegionFileCompression> d = new Int2ObjectOpenHashMap();
+    private static final Int2ObjectMap<RegionFileCompression> d = new Int2ObjectOpenHashMap(); static final Int2ObjectMap<RegionFileCompression> getCompressionTypes() { return RegionFileCompression.d; } // Tuinity - OBFHELPER
     public static final RegionFileCompression a = a(new RegionFileCompression(1, GZIPInputStream::new, GZIPOutputStream::new));
     public static final RegionFileCompression b = a(new RegionFileCompression(2, InflaterInputStream::new, DeflaterOutputStream::new));
     public static final RegionFileCompression c = a(new RegionFileCompression(3, (inputstream) -> {
@@ -36,8 +36,8 @@ public class RegionFileCompression {
         return regionfilecompression;
     }
 
-    @Nullable
-    public static RegionFileCompression a(int i) {
+    @Nullable public static RegionFileCompression getByType(int type) { return RegionFileCompression.a(type); } // Tuinity - OBFHELPER
+    @Nullable public static RegionFileCompression a(int i) { // Tuinity - OBFHELPER
         return (RegionFileCompression) RegionFileCompression.d.get(i);
     }
 
@@ -45,6 +45,7 @@ public class RegionFileCompression {
         return RegionFileCompression.d.containsKey(i);
     }
 
+    public final int compressionTypeId() { return this.a(); } // Tuinity - OBFHELPER
     public int a() {
         return this.e;
     }
@@ -53,6 +54,7 @@ public class RegionFileCompression {
         return (OutputStream) this.g.wrap(outputstream);
     }
 
+    public final InputStream wrap(InputStream inputstream) throws IOException { return this.a(inputstream); } // Tuinity - OBFHELPER
     public InputStream a(InputStream inputstream) throws IOException {
         return (InputStream) this.f.wrap(inputstream);
     }

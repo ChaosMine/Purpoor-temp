@@ -8,7 +8,7 @@ import net.minecraft.core.IRegistry;
 
 public class VillagePlaceRecord {
 
-    private final BlockPosition a;
+    private final BlockPosition a; public final BlockPosition getPosition() { return this.a; } // Tuinity - OBFHELPER
     private final VillagePlaceType b;
     private int c;
     private final Runnable d;

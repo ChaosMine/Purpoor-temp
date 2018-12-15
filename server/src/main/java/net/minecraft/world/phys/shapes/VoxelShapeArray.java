@@ -12,11 +12,25 @@ public final class VoxelShapeArray extends VoxelShape {
     private final DoubleList c;
     private final DoubleList d;
 
+    // Tuinity start - optimise multi-aabb shapes
+    static final net.minecraft.world.phys.AxisAlignedBB[] EMPTY = new net.minecraft.world.phys.AxisAlignedBB[0];
+    final net.minecraft.world.phys.AxisAlignedBB[] boundingBoxesRepresentation;
+
+    final double offsetX;
+    final double offsetY;
+    final double offsetZ;
+    // Tuinity end - optimise multi-aabb shapes
+
     protected VoxelShapeArray(VoxelShapeDiscrete voxelshapediscrete, double[] adouble, double[] adouble1, double[] adouble2) {
         this(voxelshapediscrete, (DoubleList) DoubleArrayList.wrap(Arrays.copyOf(adouble, voxelshapediscrete.b() + 1)), (DoubleList) DoubleArrayList.wrap(Arrays.copyOf(adouble1, voxelshapediscrete.c() + 1)), (DoubleList) DoubleArrayList.wrap(Arrays.copyOf(adouble2, voxelshapediscrete.d() + 1)));
     }
 
     VoxelShapeArray(VoxelShapeDiscrete voxelshapediscrete, DoubleList doublelist, DoubleList doublelist1, DoubleList doublelist2) {
+        // Tuinity start - optimise multi-aabb shapes
+        this(voxelshapediscrete, doublelist, doublelist1, doublelist2, null, null, 0.0, 0.0, 0.0);
+    }
+    VoxelShapeArray(VoxelShapeDiscrete voxelshapediscrete, DoubleList doublelist, DoubleList doublelist1, DoubleList doublelist2, VoxelShapeArray original, net.minecraft.world.phys.AxisAlignedBB[] boundingBoxesRepresentation, double offsetX, double offsetY, double offsetZ) {
+        // Tuinity end - optimise multi-aabb shapes
         super(voxelshapediscrete);
         int i = voxelshapediscrete.b() + 1;
         int j = voxelshapediscrete.c() + 1;
@@ -29,6 +43,18 @@ public final class VoxelShapeArray extends VoxelShape {
         } else {
             throw (IllegalArgumentException) SystemUtils.c((Throwable) (new IllegalArgumentException("Lengths of point arrays must be consistent with the size of the VoxelShape.")));
         }
+        // Tuinity start - optimise multi-aabb shapes
+        this.boundingBoxesRepresentation = boundingBoxesRepresentation == null ? this.getBoundingBoxesRepresentation().toArray(EMPTY) : boundingBoxesRepresentation; // Tuinity - optimise multi-aabb shapes
+        if (original == null) {
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+            this.offsetZ = offsetZ;
+        } else {
+            this.offsetX = offsetX + original.offsetX;
+            this.offsetY = offsetY + original.offsetY;
+            this.offsetZ = offsetZ + original.offsetZ;
+        }
+        // Tuinity end - optimise multi-aabb shapes
     }
 
     @Override
@@ -44,4 +70,63 @@ public final class VoxelShapeArray extends VoxelShape {
                 throw new IllegalArgumentException();
         }
     }
+
+    // Tuinity start - optimise multi-aabb shapes
+    @Override
+    public VoxelShape a(double d0, double d1, double d2) {
+        if (this == VoxelShapes.getEmptyShape() || this.boundingBoxesRepresentation.length == 0) {
+            return this;
+        }
+        return new VoxelShapeArray(this.a, new DoubleListOffset(this.a(EnumDirection.EnumAxis.X), d0), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Y), d1), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Z), d2), this, this.boundingBoxesRepresentation, d0, d1, d2);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.phys.AxisAlignedBB> d() { // getBoundingBoxesRepresentation
+        if (this.boundingBoxesRepresentation == null) {
+            return super.d();
+        }
+        java.util.List<net.minecraft.world.phys.AxisAlignedBB> ret = new java.util.ArrayList<>(this.boundingBoxesRepresentation.length);
+
+        double offX = this.offsetX;
+        double offY = this.offsetY;
+        double offZ = this.offsetZ;
+        for (net.minecraft.world.phys.AxisAlignedBB boundingBox : this.boundingBoxesRepresentation) {
+            ret.add(boundingBox.offset(offX, offY, offZ));
+        }
+
+        return ret;
+    }
+
+    public final net.minecraft.world.phys.AxisAlignedBB[] getBoundingBoxesRepresentationRaw() {
+        return this.boundingBoxesRepresentation;
+    }
+
+    public final double getOffsetX() {
+        return this.offsetX;
+    }
+
+    public final double getOffsetY() {
+        return this.offsetY;
+    }
+
+    public final double getOffsetZ() {
+        return this.offsetZ;
+    }
+
+    public final boolean intersects(net.minecraft.world.phys.AxisAlignedBB axisalingedbb) {
+        // this can be optimised by checking an "overall shape" first, but not needed
+        double offX = this.offsetX;
+        double offY = this.offsetY;
+        double offZ = this.offsetZ;
+
+        for (net.minecraft.world.phys.AxisAlignedBB boundingBox : this.boundingBoxesRepresentation) {
+            if (axisalingedbb.voxelShapeIntersect(boundingBox.minX + offX, boundingBox.minY + offY, boundingBox.minZ + offZ,
+                    boundingBox.maxX + offX, boundingBox.maxY + offY, boundingBox.maxZ + offZ)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    // Tuinity end - optimise multi-aabb shapes
 }

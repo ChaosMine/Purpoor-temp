@@ -2973,7 +2973,11 @@ public abstract class EntityLiving extends Entity {
             return;
         }
         // Paper - end don't run getEntities if we're not going to use its result
-        List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.pushable(this, world.paperConfig.fixClimbingBypassingCrammingRule)); // Paper - fix climbing bypassing cramming rule
+        // Tuinity start - reduce memory allocation from collideNearby
+        List<Entity> list = com.tuinity.tuinity.util.CachedLists.getTempGetEntitiesList();
+        this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.pushable(this, world.paperConfig.fixClimbingBypassingCrammingRule), list); // Paper - fix climbing bypassing cramming rule
+        try {
+        // Tuinity end - reduce memory allocation from collideNearby
 
         if (!list.isEmpty()) {
             // Paper - move up
@@ -3002,6 +3006,9 @@ public abstract class EntityLiving extends Entity {
                 this.C(entity);
             }
         }
+        } finally { // Tuinity start - reduce memory allocation from collideNearby
+            com.tuinity.tuinity.util.CachedLists.returnTempGetEntitiesList(list);
+        } // Tuinity end - reduce memory allocation from collideNearby
 
     }
 

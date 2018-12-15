@@ -228,7 +228,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public double D;
     public double E;
     public double F;
-    public float G;
+    public float G; public final float getStepHeight() { return this.G; } // Tuinity - OBFHELPER
     public boolean noclip;
     public float I;
     protected final Random random;
@@ -300,6 +300,14 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
     // CraftBukkit end
 
+    // Tuinity start
+    public final AxisAlignedBB getBoundingBoxAt(double x, double y, double z) {
+        double widthHalf = (double)this.size.width / 2.0;
+        double height = (double)this.size.height;
+        return new AxisAlignedBB(x - widthHalf, y, z - widthHalf, x + widthHalf, y + height, z + widthHalf);
+    }
+    // Tuinity end
+
     // Paper start - optimise entity tracking
     final org.spigotmc.TrackingRange.TrackingRangeType trackingRangeType = org.spigotmc.TrackingRange.getTrackingRangeType(this);
 
@@ -310,8 +318,21 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> getPlayersInTrackRange() {
-        return ((WorldServer)this.world).getChunkProvider().playerChunkMap.playerEntityTrackerTrackMaps[this.trackingRangeType.ordinal()]
-            .getObjectsInRange(MCUtil.getCoordinateKey(this));
+        Collection<Entity> passengers = this.getAllPassengers();
+        net.minecraft.server.level.PlayerChunkMap chunkMap = ((WorldServer)this.world).getChunkProvider().playerChunkMap;
+        org.spigotmc.TrackingRange.TrackingRangeType type = this.trackingRangeType;
+        int range = chunkMap.getEntityTrackerRange(type.ordinal());
+
+        for (Entity passenger : passengers) {
+            org.spigotmc.TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType;
+            int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
+            if (passengerRange > range) {
+                type = passengerType;
+                range = passengerRange;
+            }
+        }
+
+        return chunkMap.playerEntityTrackerTrackMaps[type.ordinal()].getObjectsInRange(MCUtil.getCoordinateKey(this));
     }
     // Paper end - optimise entity tracking
 
@@ -345,6 +366,41 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.teleportTo(worldserver, null);
     }
     // Paper end - make end portalling safe
+
+    // Tuinity start
+    /**
+     * Overriding this field will cause memory leaks.
+     */
+    private final boolean hardCollides;
+
+    private static final java.util.Map<Class<? extends Entity>, Boolean> cachedOverrides = java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+    {
+        Boolean hardCollides = cachedOverrides.get(this.getClass());
+        if (hardCollides == null) {
+            try {
+                java.lang.reflect.Method getHardCollisionBoxEntityMethod = Entity.class.getMethod("j", Entity.class);
+                java.lang.reflect.Method hasHardCollisionBoxMethod = Entity.class.getMethod("aZ");
+                if (!this.getClass().getMethod(hasHardCollisionBoxMethod.getName(), hasHardCollisionBoxMethod.getParameterTypes()).equals(hasHardCollisionBoxMethod)
+                        || !this.getClass().getMethod(getHardCollisionBoxEntityMethod.getName(), getHardCollisionBoxEntityMethod.getParameterTypes()).equals(getHardCollisionBoxEntityMethod)) {
+                    hardCollides = Boolean.TRUE;
+                } else {
+                    hardCollides = Boolean.FALSE;
+                }
+                cachedOverrides.put(this.getClass(), hardCollides);
+            }
+            catch (ThreadDeath thr) { throw thr; }
+            catch (Throwable thr) {
+                // shouldn't happen, just explode
+                throw new RuntimeException(thr);
+            }
+        }
+        this.hardCollides = hardCollides.booleanValue();
+    }
+
+    public final boolean hardCollides() {
+        return this.hardCollides;
+    }
+    // Tuinity end
 
     public Entity(EntityTypes<?> entitytypes, World world) {
         this.id = Entity.entityCount.incrementAndGet();
@@ -715,7 +771,39 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.onGround;
     }
 
+    // Tuinity start - detailed watchdog information
+    private Vec3D moveVector;
+    private double moveStartX;
+    private double moveStartY;
+    private double moveStartZ;
+
+    public final Vec3D getMoveVector() {
+        return this.moveVector;
+    }
+
+    public final double getMoveStartX() {
+        return this.moveStartX;
+    }
+
+    public final double getMoveStartY() {
+        return this.moveStartY;
+    }
+
+    public final double getMoveStartZ() {
+        return this.moveStartZ;
+    }
+    // Tuinity end - detailed watchdog information
     public void move(EnumMoveType enummovetype, Vec3D vec3d) {
+        // Tuinity start - detailed watchdog information
+        com.tuinity.tuinity.util.TickThread.ensureTickThread("Cannot move an entity off-main");
+        synchronized (this.posLock) {
+            this.moveStartX = this.locX();
+            this.moveStartY = this.locY();
+            this.moveStartZ = this.locZ();
+            this.moveVector = vec3d;
+        }
+        try {
+        // Tuinity end - detailed watchdog information
         if (this.noclip) {
             this.a(this.getBoundingBox().c(vec3d));
             this.recalcPosition();
@@ -743,7 +831,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             // Paper end
 
             vec3d = this.a(vec3d, enummovetype);
-            Vec3D vec3d1 = this.g(vec3d);
+            Vec3D vec3d1 = this.performCollision(vec3d); // Tuinity - optimise collisions
 
             if (vec3d1.g() > 1.0E-7D) {
                 this.a(this.getBoundingBox().c(vec3d1));
@@ -834,7 +922,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             }
 
             try {
-                this.checkBlockCollisions();
+                this.checkBlockCollisions(this.fireTicks <= 0); // Tuinity - move fire checking into method here
             } catch (Throwable throwable) {
                 CrashReport crashreport = CrashReport.a(throwable, "Checking entity block collision");
                 CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being checked for collision");
@@ -846,11 +934,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             float f2 = this.getBlockSpeedFactor();
 
             this.setMot(this.getMot().d((double) f2, 1.0D, (double) f2));
-            if (this.world.c(this.getBoundingBox().shrink(0.001D)).noneMatch((iblockdata1) -> {
-                return iblockdata1.a((Tag) TagsBlock.FIRE) || iblockdata1.a(Blocks.LAVA);
-            }) && this.fireTicks <= 0) {
-                this.setFireTicks(-this.getMaxFireTicks());
-            }
+            // Tuinity - move into checkBlockCollisions
 
             if (this.aG() && this.isBurning()) {
                 this.playSound(SoundEffects.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.7F, 1.6F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
@@ -859,6 +943,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
             this.world.getMethodProfiler().exit();
         }
+        // Tuinity start - detailed watchdog information
+        } finally {
+            synchronized (this.posLock) { // Tuinity
+                this.moveVector = null;
+            } // Tuinity
+        }
+        // Tuinity end - detailed watchdog information
     }
 
     protected BlockPosition ap() {
@@ -939,6 +1030,137 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return d0;
     }
 
+    // Tuinity start - optimise entity movement
+    private static double performCollisionsX(AxisAlignedBB currentBoundingBox, double value, List<AxisAlignedBB> potentialCollisions) {
+        for (int i = 0, len = potentialCollisions.size(); i < len; ++i) {
+            AxisAlignedBB target = potentialCollisions.get(i);
+            value = AxisAlignedBB.collideX(target, currentBoundingBox, value);
+        }
+
+        return value;
+    }
+
+    private static double performCollisionsY(AxisAlignedBB currentBoundingBox, double value, List<AxisAlignedBB> potentialCollisions) {
+        for (int i = 0, len = potentialCollisions.size(); i < len; ++i) {
+            AxisAlignedBB target = potentialCollisions.get(i);
+            value = AxisAlignedBB.collideY(target, currentBoundingBox, value);
+        }
+
+        return value;
+    }
+
+    private static double performCollisionsZ(AxisAlignedBB currentBoundingBox, double value, List<AxisAlignedBB> potentialCollisions) {
+        for (int i = 0, len = potentialCollisions.size(); i < len; ++i) {
+            AxisAlignedBB target = potentialCollisions.get(i);
+            value = AxisAlignedBB.collideZ(target, currentBoundingBox, value);
+        }
+
+        return value;
+    }
+
+    private static Vec3D performCollisions(Vec3D moveVector, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> potentialCollisions) {
+        double x = moveVector.x;
+        double y = moveVector.y;
+        double z = moveVector.z;
+
+        if (y != 0.0) {
+            y = Entity.performCollisionsY(axisalignedbb, y, potentialCollisions);
+            if (y != 0.0) {
+                axisalignedbb = axisalignedbb.offsetY(y);
+            }
+        }
+
+        boolean xSmaller = Math.abs(x) < Math.abs(z);
+
+        if (xSmaller && z != 0.0) {
+            z = Entity.performCollisionsZ(axisalignedbb, z, potentialCollisions);
+            if (z != 0.0) {
+                axisalignedbb = axisalignedbb.offsetZ(z);
+            }
+        }
+
+        if (x != 0.0) {
+            x = Entity.performCollisionsX(axisalignedbb, x, potentialCollisions);
+            if (!xSmaller && x != 0.0) {
+                axisalignedbb = axisalignedbb.offsetX(x);
+            }
+        }
+
+        if (!xSmaller && z != 0.0) {
+            z = Entity.performCollisionsZ(axisalignedbb, z, potentialCollisions);
+        }
+
+        return new Vec3D(x, y, z);
+    }
+
+    Vec3D performCollision(Vec3D moveVector) {
+        if (moveVector.getX() == 0.0 && moveVector.getY() == 0.0 && moveVector.getZ() == 0.0) {
+            return moveVector;
+        }
+
+        WorldServer world = ((WorldServer)this.world);
+        AxisAlignedBB currBoundingBox = this.getBoundingBox();
+
+        List<AxisAlignedBB> potentialCollisions = com.tuinity.tuinity.util.CachedLists.getTempCollisionList();
+        try {
+            AxisAlignedBB collisionBox;
+            double stepHeight = (double)this.getStepHeight();
+
+            if (moveVector.x == 0.0 && moveVector.z == 0.0 && moveVector.y != 0.0) {
+                // a lot of entities just stand still. optimise the search AABB
+                if (moveVector.y > 0.0) {
+                    collisionBox = currBoundingBox.cutUpwards(moveVector.y);
+                } else {
+                    collisionBox = currBoundingBox.cutDownwards(moveVector.y);
+                }
+            } else {
+                if (stepHeight > 0.0 && (this.onGround || (moveVector.y < 0.0)) && (moveVector.x != 0.0 || moveVector.z != 0.0)) {
+                    // don't bother getting the collisions if we don't need them.
+                    if (moveVector.y <= 0.0) {
+                        collisionBox = currBoundingBox.expand(moveVector.x, moveVector.y, moveVector.z).expandUpwards(stepHeight);
+                    } else {
+                        collisionBox = currBoundingBox.expand(moveVector.x, Math.max(stepHeight, moveVector.y), moveVector.z);
+                    }
+                } else {
+                    collisionBox = currBoundingBox.expand(moveVector.x, moveVector.y, moveVector.z);
+                }
+            }
+
+            world.getCollisions(this, collisionBox, potentialCollisions, this instanceof EntityPlayer && !this.world.paperConfig.preventMovingIntoUnloadedChunks);
+            if (world.getWorldBorder().isCollidingWithBorderEdge(collisionBox)) {
+                VoxelShapes.addBoxesToIfIntersects(world.getWorldBorder().getCollisionShape(), collisionBox, potentialCollisions);
+            }
+
+            Vec3D limitedMoveVector = Entity.performCollisions(moveVector, currBoundingBox, potentialCollisions);
+
+            if (stepHeight > 0.0
+                    && (this.onGround || (limitedMoveVector.y != moveVector.y && moveVector.y < 0.0))
+                    && (limitedMoveVector.x != moveVector.x || limitedMoveVector.z != moveVector.z)) {
+                Vec3D vec3d2 = Entity.performCollisions(new Vec3D(moveVector.x, stepHeight, moveVector.z), currBoundingBox, potentialCollisions);
+                Vec3D vec3d3 = Entity.performCollisions(new Vec3D(0.0, stepHeight, 0.0), currBoundingBox.expand(moveVector.x, 0.0, moveVector.z), potentialCollisions);
+
+                if (vec3d3.y < stepHeight) {
+                    Vec3D vec3d4 = Entity.performCollisions(new Vec3D(moveVector.x, 0.0D, moveVector.z), currBoundingBox.offset(vec3d3), potentialCollisions).add(vec3d3);
+
+                    if (Entity.getXZSquared(vec3d4) > Entity.getXZSquared(vec3d2)) {
+                        vec3d2 = vec3d4;
+                    }
+                }
+
+                if (Entity.getXZSquared(vec3d2) > Entity.getXZSquared(limitedMoveVector)) {
+                    return vec3d2.add(Entity.performCollisions(new Vec3D(0.0D, -vec3d2.y + moveVector.y, 0.0D), currBoundingBox.offset(vec3d2), potentialCollisions));
+                }
+
+                return limitedMoveVector;
+            } else {
+                return limitedMoveVector;
+            }
+        } finally {
+            com.tuinity.tuinity.util.CachedLists.returnTempCollisionList(potentialCollisions);
+        }
+    }
+    // Tuinity end - optimise entity movement
+
     private Vec3D g(Vec3D vec3d) {
         AxisAlignedBB axisalignedbb = this.getBoundingBox();
         VoxelShapeCollision voxelshapecollision = VoxelShapeCollision.a(this);
@@ -974,6 +1196,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return vec3d1;
     }
 
+    public static double getXZSquared(Vec3D vec3d) { return Entity.c(vec3d); } // Tuinity - OBFHELPER
     public static double c(Vec3D vec3d) {
         return vec3d.x * vec3d.x + vec3d.z * vec3d.z;
     }
@@ -1086,17 +1309,33 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     protected void checkBlockCollisions() {
+        // Tuinity start
+        this.checkBlockCollisions(false);
+    }
+    protected void checkBlockCollisions(boolean checkFire) {
+        boolean inFire = false;
+        // Tuinity end
         AxisAlignedBB axisalignedbb = this.getBoundingBox();
         BlockPosition blockposition = new BlockPosition(axisalignedbb.minX + 0.001D, axisalignedbb.minY + 0.001D, axisalignedbb.minZ + 0.001D);
         BlockPosition blockposition1 = new BlockPosition(axisalignedbb.maxX - 0.001D, axisalignedbb.maxY - 0.001D, axisalignedbb.maxZ - 0.001D);
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
 
         if (this.world.areChunksLoadedBetween(blockposition, blockposition1)) {
-            for (int i = blockposition.getX(); i <= blockposition1.getX(); ++i) {
-                for (int j = blockposition.getY(); j <= blockposition1.getY(); ++j) {
-                    for (int k = blockposition.getZ(); k <= blockposition1.getZ(); ++k) {
+            // Tuinity start - reorder iteration to more cache aware
+            for (int j = blockposition.getY(); j <= blockposition1.getY(); ++j) {
+                for (int k = blockposition.getZ(); k <= blockposition1.getZ(); ++k) {
+                    for (int i = blockposition.getX(); i <= blockposition1.getX(); ++i) {
+                        // Tuinity end - reorder iteration to more cache aware
                         blockposition_mutableblockposition.d(i, j, k);
                         IBlockData iblockdata = this.world.getType(blockposition_mutableblockposition);
+
+                        // Tuinity start - move fire checking in here - reuse getType from this method
+                        if (checkFire) {
+                            if (!inFire && (iblockdata.a(TagsBlock.FIRE) || iblockdata.a(Blocks.LAVA))) {
+                                inFire = true;
+                            }
+                        }
+                        // Tuinity end - move fire checking in here - reuse getType from this method
 
                         try {
                             iblockdata.a(this.world, blockposition_mutableblockposition, this);
@@ -1111,6 +1350,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                     }
                 }
             }
+            // Tuinity start - move fire checking in here - reuse getType from this method
+            if (checkFire & !inFire) {
+                this.setFireTicks(-this.getMaxFireTicks());
+            }
+            // Tuinity end - move fire checking in here - reuse getType from this method
         }
 
     }
@@ -1482,6 +1726,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return d3 * d3 + d4 * d4 + d5 * d5;
     }
 
+    public final double getDistanceSquared(Entity other) { return this.h(other); } // Tuinity - OBFHELPER
     public double h(Entity entity) {
         return this.e(entity.getPositionVector());
     }
@@ -2078,9 +2323,9 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             float f1 = this.size.width * 0.8F;
             AxisAlignedBB axisalignedbb = AxisAlignedBB.g((double) f1, 0.10000000149011612D, (double) f1).d(this.locX(), this.getHeadY(), this.locZ());
 
-            return this.world.b(this, axisalignedbb, (iblockdata, blockposition) -> {
+            return ((WorldServer)this.world).collidesWithAnyBlockOrWorldBorder(this, axisalignedbb, false, false, (iblockdata, blockposition) -> { // Tuinity - use optimised method
                 return iblockdata.o(this.world, blockposition);
-            }).findAny().isPresent();
+            }); // Tuinity - use optimised method
         }
     }
 
@@ -2088,11 +2333,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return EnumInteractionResult.PASS;
     }
 
-    public boolean j(Entity entity) {
+    public final boolean hardCollidesWith(Entity other) { return this.j(other); } // Tuinity - OBFHELPER
+    public boolean j(Entity entity) { // Tuinity - diff on change, hard colliding entities override this
         return entity.aZ() && !this.isSameVehicle(entity);
     }
 
-    public boolean aZ() {
+    public final boolean collisionBoxIsHard() { return this.aZ(); } // Tuinity - OBFHELPER
+    public boolean aZ() {// Tuinity - diff on change, hard colliding entities override this
         return false;
     }
 
@@ -2984,7 +3231,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             this.recursiveStream().forEach((entity) -> {
                 worldserver.chunkCheck(entity);
                 entity.az = true;
-                Iterator iterator = entity.passengers.iterator();
+                Iterator iterator = new java.util.ArrayList<>(entity.passengers).iterator(); // Tuinity - copy list to guard against CME
 
                 while (iterator.hasNext()) {
                     Entity entity1 = (Entity) iterator.next();
@@ -3442,12 +3689,16 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.locBlock;
     }
 
+    public final Object posLock = new Object(); // Tuinity - log detailed entity tick information
+
     public Vec3D getMot() {
         return this.mot;
     }
 
     public void setMot(Vec3D vec3d) {
+        synchronized (this.posLock) { // Tuinity
         this.mot = vec3d;
+        } // Tuinity
     }
 
     public void setMot(double d0, double d1, double d2) {
@@ -3502,7 +3753,9 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         }
         // Paper end
         if (this.loc.x != d0 || this.loc.y != d1 || this.loc.z != d2) {
+            synchronized (this.posLock) { // Tuinity
             this.loc = new Vec3D(d0, d1, d2);
+            } // Tuinity
             int i = MathHelper.floor(d0);
             int j = MathHelper.floor(d1);
             int k = MathHelper.floor(d2);

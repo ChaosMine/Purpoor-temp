@@ -9,10 +9,16 @@ import net.minecraft.util.MathHelper;
 
 public class Vec3D implements IPosition {
 
-    public static final Vec3D ORIGIN = new Vec3D(0.0D, 0.0D, 0.0D);
+    public static final Vec3D ORIGIN = new Vec3D(0.0D, 0.0D, 0.0D); public static Vec3D getZeroVector() { return Vec3D.ORIGIN; } // Tuinity - OBFHELPER
     public final double x;
     public final double y;
     public final double z;
+
+    // Tuinity start
+    public final double magnitudeXZSquared() {
+        return (this.x * this.x) + (this.z * this.z);
+    }
+    // Tuinity end
 
     public static Vec3D a(BaseBlockPosition baseblockposition) {
         return new Vec3D((double) baseblockposition.getX() + 0.5D, (double) baseblockposition.getY() + 0.5D, (double) baseblockposition.getZ() + 0.5D);
@@ -66,6 +72,7 @@ public class Vec3D implements IPosition {
         return this.add(-d0, -d1, -d2);
     }
 
+    public final Vec3D add(Vec3D vec3d) { return this.e(vec3d); } // Tuinity - OBFHELPER
     public Vec3D e(Vec3D vec3d) {
         return this.add(vec3d.x, vec3d.y, vec3d.z);
     }
@@ -114,10 +121,12 @@ public class Vec3D implements IPosition {
         return new Vec3D(this.x * d0, this.y * d1, this.z * d2);
     }
 
+    public final double magnitude() { return this.f(); } // Tuinity - OBFHELPER
     public double f() {
         return (double) MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
+    public final double magnitudeSquared() { return this.g(); } // Tuinity - OBFHELPER
     public double g() {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     }

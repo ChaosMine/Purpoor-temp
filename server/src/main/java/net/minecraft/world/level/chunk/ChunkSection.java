@@ -18,7 +18,7 @@ public class ChunkSection {
     short nonEmptyBlockCount; // Paper - package-private
     short tickingBlockCount; // Paper - private -> package-private
     private short e;
-    final DataPaletteBlock<IBlockData> blockIds; // Paper - package-private
+    public final DataPaletteBlock<IBlockData> blockIds; // Paper - package-private // Tuinity - public
 
     public final com.destroystokyo.paper.util.maplist.IBlockDataList tickingList = new com.destroystokyo.paper.util.maplist.IBlockDataList(); // Paper
 
@@ -103,6 +103,7 @@ public class ChunkSection {
         return iblockdata1;
     }
 
+    public final boolean isFullOfAir() { return this.c(); } // Tuinity - OBFHELPER
     public boolean c() {
         return this.nonEmptyBlockCount == 0;
     }

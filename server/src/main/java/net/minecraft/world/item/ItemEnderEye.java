@@ -60,9 +60,10 @@ public class ItemEnderEye extends Item {
 
                     // CraftBukkit start - Use relative location for far away sounds
                     // world.b(1038, blockposition1.b(1, 0, 1), 0);
-                    int viewDistance = world.getServer().getViewDistance() * 16;
+                    //int viewDistance = world.getServer().getViewDistance() * 16; // Tuinity - apply view distance patch
                     BlockPosition soundPos = blockposition1.b(1, 0, 1);
                     for (EntityPlayer player : world.getServer().getServer().getPlayerList().players) {
+                        final int viewDistance = player.getBukkitEntity().getViewDistance(); // Tuinity - apply view distance patch
                         double deltaX = soundPos.getX() - player.locX();
                         double deltaZ = soundPos.getZ() - player.locZ();
                         double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;

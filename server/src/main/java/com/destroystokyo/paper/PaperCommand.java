@@ -219,6 +219,44 @@ public class PaperCommand extends Command {
         }
     }
 
+    private void starlightFixLight(EntityPlayer sender, WorldServer world, LightEngineThreaded lightengine, int radius) {
+        long start = System.nanoTime();
+        java.util.LinkedHashSet<ChunkCoordIntPair> chunks = new java.util.LinkedHashSet<>(MCUtil.getSpiralOutChunks(sender.getChunkCoordinates(), radius)); // getChunkCoordinates is actually just bad mappings, this function rets position as blockpos
+
+        int[] pending = new int[1];
+        for (java.util.Iterator<ChunkCoordIntPair> iterator = chunks.iterator(); iterator.hasNext();) {
+            final ChunkCoordIntPair chunkPos = iterator.next();
+
+            final net.minecraft.world.level.chunk.IChunkAccess chunk = world.getChunkProvider().getChunkAtImmediately(chunkPos.x, chunkPos.z);
+            if (chunk == null || !chunk.isLit() || !chunk.getChunkStatus().isAtLeastStatus(net.minecraft.world.level.chunk.ChunkStatus.LIGHT)) {
+                // cannot relight this chunk
+                iterator.remove();
+                continue;
+            }
+
+            ++pending[0];
+        }
+
+        int[] relitChunks = new int[1];
+        lightengine.relight(chunks,
+                (ChunkCoordIntPair chunkPos) -> {
+                    ++relitChunks[0];
+                    sender.getBukkitEntity().sendMessage(
+                            ChatColor.BLUE + "Relit chunk " + ChatColor.DARK_AQUA + chunkPos + ChatColor.BLUE +
+                                    ", progress: " + ChatColor.DARK_AQUA + (int)(Math.round(100.0 * (double)(relitChunks[0])/(double)pending[0])) + "%"
+                    );
+                },
+                (int totalRelit) -> {
+                    final long end = System.nanoTime();
+                    final long diff = Math.round(1.0e-6*(end - start));
+                    sender.getBukkitEntity().sendMessage(
+                            ChatColor.BLUE + "Relit " + ChatColor.DARK_AQUA + totalRelit + ChatColor.BLUE + " chunks. Took " +
+                                    ChatColor.DARK_AQUA + diff + "ms"
+                    );
+                });
+        sender.getBukkitEntity().sendMessage(ChatColor.BLUE + "Relighting " + ChatColor.DARK_AQUA + pending[0] + ChatColor.BLUE + " chunks");
+    }
+
     private void doFixLight(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("Only players can use this command");
@@ -227,7 +265,7 @@ public class PaperCommand extends Command {
         int radius = 2;
         if (args.length > 1) {
             try {
-                radius = Math.min(5, Integer.parseInt(args[1]));
+                radius = Math.min(32, Integer.parseInt(args[1])); // Tuinity - MOOOOOORE
             } catch (Exception e) {
                 sender.sendMessage("Not a number");
                 return;
@@ -239,6 +277,13 @@ public class PaperCommand extends Command {
         EntityPlayer handle = player.getHandle();
         WorldServer world = (WorldServer) handle.world;
         LightEngineThreaded lightengine = world.getChunkProvider().getLightEngine();
+
+        // Tuinity start - rewrite light engine
+        if (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) {
+            this.starlightFixLight(handle, world, lightengine, radius);
+            return;
+        }
+        // Tuinity end - rewrite light engine
 
         BlockPosition center = MCUtil.toBlockPosition(player.getLocation());
         Deque<ChunkCoordIntPair> queue = new ArrayDeque<>(MCUtil.getSpiralOutChunks(center, radius));
@@ -362,7 +407,7 @@ public class PaperCommand extends Command {
             int ticking = 0;
             int entityTicking = 0;
 
-            for (PlayerChunk chunk : world.getChunkProvider().playerChunkMap.updatingChunks.values()) {
+            for (PlayerChunk chunk : world.getChunkProvider().playerChunkMap.updatingChunks.getUpdatingMap().values()) { // Tuinity - change updating chunks map
                 if (chunk.getFullChunkIfCached() == null) {
                     continue;
                 }

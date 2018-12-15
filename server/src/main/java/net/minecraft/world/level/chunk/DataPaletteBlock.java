@@ -172,6 +172,7 @@ public class DataPaletteBlock<T> implements DataPaletteExpandable<T> {
         return this.a(j << 8 | k << 4 | i); // Paper - inline
     }
 
+    public final T rawGet(int index) { return this.a(index); } // Tuinity - OBFHELPER
     protected T a(int i) {
         T t0 = this.h.a(this.a.a(i));
 

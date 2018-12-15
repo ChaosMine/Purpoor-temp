@@ -355,7 +355,7 @@ public class EntityCat extends EntityTameableAnimal {
 
         WorldServer worldserver = worldaccess.getMinecraftWorld();
 
-        if (worldserver instanceof WorldServer && ((WorldServer) worldserver).getStructureManager().a(this.getChunkCoordinates(), true, StructureGenerator.SWAMP_HUT).e()) {
+        if (worldserver instanceof WorldServer && ((WorldServer) worldserver).getStructureManager().getStructureStarts(this.getChunkCoordinates(), true, StructureGenerator.SWAMP_HUT, worldaccess).e()) { // Tuinity - fix deadlock on chunk gen
             this.setCatType(10);
             this.setPersistent();
         }

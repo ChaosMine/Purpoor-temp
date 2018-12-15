@@ -37,7 +37,7 @@ public class CraftCrashReport implements CrashReportCallable<Object> {
             value.append("\n   Force Loaded Chunks: {");
             for (World world : Bukkit.getWorlds()) {
                 value.append(' ').append(world.getName()).append(": {");
-                for (Map.Entry<Plugin, Collection<Chunk>> entry : world.getPluginChunkTickets().entrySet()) {
+                for (Map.Entry<Plugin, Collection<net.minecraft.world.level.ChunkCoordIntPair>> entry : ((CraftWorld)world).getPluginChunkTicketsCoordinates().entrySet()) { // Tuinity - do not load chunks in crash reports
                     value.append(' ').append(entry.getKey().getDescription().getFullName()).append(": ").append(Integer.toString(entry.getValue().size())).append(',');
                 }
                 value.append("},");

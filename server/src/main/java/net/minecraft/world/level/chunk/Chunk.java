@@ -137,6 +137,158 @@ public class Chunk implements IChunkAccess {
     private final int[] inventoryEntityCounts = new int[16];
     // Paper end
 
+    // Tuinity start - optimise hard collision handling
+    // Tuinity - optimised entity slices
+
+    public final void getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<Entity> into, Predicate<Entity> predicate) {
+        this.entitySlicesManager.getHardCollidingEntities(entity, axisalignedbb, into, predicate); // Tuinity
+    }
+    // Tuinity end - optimise hard collision handling
+    // Tuinity start - rewrite light engine
+    protected volatile com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] blockNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight();
+    protected volatile com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] skyNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight();
+    protected volatile boolean[] skyEmptinessMap;
+    protected volatile boolean[] blockEmptinessMap;
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
+        return this.blockNibbles;
+    }
+
+    @Override
+    public void setBlockNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.blockNibbles = nibbles;
+    }
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getSkyNibbles() {
+        return this.skyNibbles;
+    }
+
+    @Override
+    public void setSkyNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.skyNibbles = nibbles;
+    }
+
+    @Override
+    public boolean[] getSkyEmptinessMap() {
+        return this.skyEmptinessMap;
+    }
+
+    @Override
+    public void setSkyEmptinessMap(boolean[] emptinessMap) {
+        this.skyEmptinessMap = emptinessMap;
+    }
+
+    @Override
+    public boolean[] getBlockEmptinessMap() {
+        return this.blockEmptinessMap;
+    }
+
+    @Override
+    public void setBlockEmptinessMap(boolean[] emptinessMap) {
+        this.blockEmptinessMap = emptinessMap;
+    }
+    // Tuinity end - rewrite light engine
+
+    // Tuinity start - optimised entity slices
+    protected final com.tuinity.tuinity.world.ChunkEntitySlices entitySlicesManager;
+
+    public final boolean hasEntitiesMaybe(Class<?> clazz) { // Tuinity start
+        return true; // Tuinity end
+    }
+
+    public final void getEntitiesClass(Class<?> clazz, Entity entity, AxisAlignedBB boundingBox, Predicate<Entity> predicate, List<Entity> into) {
+        this.entitySlicesManager.getEntities((Class)clazz, entity, boundingBox, (List)into, (Predicate)predicate); // Tuinity
+    }
+    // Tuinity end - optimised entity slices
+
+    // Tuinity start - optimise checkDespawn
+    private boolean playerGeneralAreaCacheSet;
+    private com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> playerGeneralAreaCache;
+
+    public com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> getPlayerGeneralAreaCache() {
+        if (!this.playerGeneralAreaCacheSet) {
+            this.updateGeneralAreaCache();
+        }
+        return this.playerGeneralAreaCache;
+    }
+
+    public void updateGeneralAreaCache() {
+        this.updateGeneralAreaCache(((WorldServer)this.world).getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(this.coordinateKey));
+    }
+
+    public void updateGeneralAreaCache(com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> value) {
+        this.playerGeneralAreaCacheSet = true;
+        this.playerGeneralAreaCache = value;
+    }
+
+    public EntityPlayer findNearestPlayer(double sourceX, double sourceY, double sourceZ, double maxRange, Predicate<Entity> predicate) {
+        if (!this.playerGeneralAreaCacheSet) {
+            this.updateGeneralAreaCache();
+        }
+
+        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby = this.playerGeneralAreaCache;
+
+        if (nearby == null) {
+            return null;
+        }
+
+        Object[] backingSet = nearby.getBackingSet();
+        double closestDistance = maxRange < 0.0 ? Double.MAX_VALUE : maxRange * maxRange;
+        EntityPlayer closest = null;
+        for (int i = 0, len = backingSet.length; i < len; ++i) {
+            Object _player = backingSet[i];
+            if (!(_player instanceof EntityPlayer)) {
+                continue;
+            }
+            EntityPlayer player = (EntityPlayer)_player;
+
+            double distance = player.getDistanceSquared(sourceX, sourceY, sourceZ);
+            if (distance < closestDistance && predicate.test(player)) {
+                closest = player;
+                closestDistance = distance;
+            }
+        }
+
+        return closest;
+    }
+
+    public void getNearestPlayers(double sourceX, double sourceY, double sourceZ, Predicate<Entity> predicate, double range, List<EntityPlayer> ret) {
+        if (!this.playerGeneralAreaCacheSet) {
+            this.updateGeneralAreaCache();
+        }
+
+        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby = this.playerGeneralAreaCache;
+
+        if (nearby == null) {
+            return;
+        }
+
+        double rangeSquared = range * range;
+
+        Object[] backingSet = nearby.getBackingSet();
+        for (int i = 0, len = backingSet.length; i < len; ++i) {
+            Object _player = backingSet[i];
+            if (!(_player instanceof EntityPlayer)) {
+                continue;
+            }
+            EntityPlayer player = (EntityPlayer)_player;
+
+            if (range >= 0.0) {
+                double distanceSquared = player.getDistanceSquared(sourceX, sourceY, sourceZ);
+                if (distanceSquared > rangeSquared) {
+                    continue;
+                }
+            }
+
+            if (predicate == null || predicate.test(player)) {
+                ret.add(player);
+            }
+        }
+    }
+    // Tuinity end - optimise checkDespawn
+
     public Chunk(World world, ChunkCoordIntPair chunkcoordintpair, BiomeStorage biomestorage, ChunkConverter chunkconverter, TickList<Block> ticklist, TickList<FluidType> ticklist1, long i, @Nullable ChunkSection[] achunksection, @Nullable Consumer<Chunk> consumer) {
         this.sections = new ChunkSection[16];
         this.e = Maps.newHashMap();
@@ -180,6 +332,7 @@ public class Chunk implements IChunkAccess {
 
         // CraftBukkit start
         this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
+        this.entitySlicesManager = new com.tuinity.tuinity.world.ChunkEntitySlices(this.world, this.loc.x, this.loc.z, 0, 15); // TODO update for 1.17 // Tuinity
     }
 
     public org.bukkit.Chunk bukkitChunk;
@@ -253,12 +406,12 @@ public class Chunk implements IChunkAccess {
         PlayerChunkMap chunkMap = chunkProviderServer.playerChunkMap;
         // this code handles the addition of ticking tickets - the distance map handles the removal
         if (!areNeighboursLoaded(bitsetBefore, 2) && areNeighboursLoaded(bitsetAfter, 2)) {
-            if (chunkMap.playerViewDistanceTickMap.getObjectsInRange(this.coordinateKey) != null) {
+            if (chunkMap.playerChunkManager.tickMap.getObjectsInRange(this.coordinateKey) != null) { // Tuinity - replace old player chunk loading system
                 // now we're ready for entity ticking
                 chunkProviderServer.serverThreadQueue.execute(() -> {
                     // double check that this condition still holds.
-                    if (Chunk.this.areNeighboursLoaded(2) && chunkMap.playerViewDistanceTickMap.getObjectsInRange(Chunk.this.coordinateKey) != null) {
-                        chunkProviderServer.addTicketAtLevel(TicketType.PLAYER, Chunk.this.loc, 31, Chunk.this.loc); // 31 -> entity ticking, TODO check on update
+                    if (Chunk.this.areNeighboursLoaded(2) && chunkMap.playerChunkManager.tickMap.getObjectsInRange(Chunk.this.coordinateKey) != null) { // Tuinity - replace old player chunk loading system
+                        chunkMap.playerChunkManager.onChunkPlayerTickReady(this.loc.x, this.loc.z); // Tuinity - replace old player chunk loading system
                     }
                 });
             }
@@ -266,31 +419,18 @@ public class Chunk implements IChunkAccess {
 
         // this code handles the chunk sending
         if (!areNeighboursLoaded(bitsetBefore, 1) && areNeighboursLoaded(bitsetAfter, 1)) {
-            if (chunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(this.coordinateKey) != null) {
-                // now we're ready to send
-                chunkMap.mailboxMain.a(ChunkTaskQueueSorter.a(chunkMap.getUpdatingChunk(this.coordinateKey), (() -> { // Copied frm PlayerChunkMap
-                    // double check that this condition still holds.
-                    if (!Chunk.this.areNeighboursLoaded(1)) {
-                        return;
-                    }
-                    com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> inRange = chunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(Chunk.this.coordinateKey);
-                    if (inRange == null) {
-                        return;
-                    }
-
-                    // broadcast
-                    Object[] backingSet = inRange.getBackingSet();
-                    Packet[] chunkPackets = new Packet[10];
-                    for (int index = 0, len = backingSet.length; index < len; ++index) {
-                        Object temp = backingSet[index];
-                        if (!(temp instanceof EntityPlayer)) {
-                            continue;
-                        }
-                        EntityPlayer player = (EntityPlayer)temp;
-                        chunkMap.sendChunk(player, chunkPackets, Chunk.this);
-                    }
-                })));
-            }
+            // Tuinity start - replace old player chunk loading system
+            chunkProviderServer.serverThreadQueue.execute(() -> {
+                if (!Chunk.this.areNeighboursLoaded(1)) {
+                    return;
+                }
+                Chunk.this.A();
+                if (!Chunk.this.areNeighboursLoaded(1)) {
+                    return;
+                }
+                chunkMap.playerChunkManager.onChunkSendReady(this.loc.x, this.loc.z);
+            });
+            // Tuinity end - replace old player chunk loading system
         }
         // Paper end - no-tick view distance
     }
@@ -344,6 +484,12 @@ public class Chunk implements IChunkAccess {
 
     public Chunk(World world, ProtoChunk protochunk) {
         this(world, protochunk.getPos(), protochunk.getBiomeIndex(), protochunk.p(), protochunk.n(), protochunk.o(), protochunk.getInhabitedTime(), protochunk.getSections(), (Consumer) null);
+        // Tuinity start - copy over protochunk light
+        this.setBlockNibbles(protochunk.getBlockNibbles());
+        this.setSkyNibbles(protochunk.getSkyNibbles());
+        this.setSkyEmptinessMap(protochunk.getSkyEmptinessMap());
+        this.setBlockEmptinessMap(protochunk.getBlockEmptinessMap());
+        // Tuinity end - copy over protochunk light
         Iterator iterator = protochunk.y().iterator();
 
         while (iterator.hasNext()) {
@@ -640,8 +786,9 @@ public class Chunk implements IChunkAccess {
         entity.chunkX = this.loc.x;
         entity.chunkY = k;
         entity.chunkZ = this.loc.z;
-        this.entities.add(entity); // Paper - per chunk entity list
-        this.entitySlices[k].add(entity);
+        this.entities.add(entity); // Tuinity
+        this.entitySlices[k].add(entity);  // Tuinity
+        this.entitySlicesManager.addEntity(entity, k); // Tuinity
         // Paper start
         if (entity instanceof EntityItem) {
             itemCounts[k]++;
@@ -679,7 +826,8 @@ public class Chunk implements IChunkAccess {
             entity.entitySlice = null;
             entity.inChunk = false;
         }
-        if (!this.entitySlices[i].remove(entity)) {
+        this.entitySlicesManager.removeEntity(entity, i); // Tuinity
+        if (!this.entitySlices[i].remove(entity)) { // Tuinity - optimise hard colliding entities // Tuinity - entities by class // Tuinity
             return;
         }
         if (entity instanceof EntityItem) {
@@ -866,6 +1014,7 @@ public class Chunk implements IChunkAccess {
         // Paper end - neighbour cache
         org.bukkit.Server server = this.world.getServer();
         ((WorldServer)this.world).getChunkProvider().addLoadedChunk(this); // Paper
+        ((WorldServer)this.world).getChunkProvider().playerChunkMap.playerChunkManager.onChunkLoad(this.loc.x, this.loc.z); // Tuinity - rewrite player chunk management
         if (server != null) {
             /*
              * If it's a new world, the first few chunks are generated inside
@@ -930,116 +1079,18 @@ public class Chunk implements IChunkAccess {
     }
 
     public void a(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<Entity> list, @Nullable Predicate<? super Entity> predicate) {
-        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
-        int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
-        int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
-
-        i = MathHelper.clamp(i, 0, this.entitySlices.length - 1);
-        j = MathHelper.clamp(j, 0, this.entitySlices.length - 1);
-
-        for (int k = i; k <= j; ++k) {
-            List<Entity> entityslice = this.entitySlices[k]; // Spigot
-            List<Entity> list1 = entityslice; // Spigot
-            int l = list1.size();
-
-            for (int i1 = 0; i1 < l; ++i1) {
-                Entity entity1 = (Entity) list1.get(i1);
-                if (entity1.shouldBeRemoved) continue; // Paper
-
-                if (entity1.getBoundingBox().c(axisalignedbb) && entity1 != entity) {
-                    if (predicate == null || predicate.test(entity1)) {
-                        list.add(entity1);
-                    }
-
-                    if (entity1 instanceof EntityEnderDragon) {
-                        EntityComplexPart[] aentitycomplexpart = ((EntityEnderDragon) entity1).eJ();
-                        int j1 = aentitycomplexpart.length;
-
-                        for (int k1 = 0; k1 < j1; ++k1) {
-                            EntityComplexPart entitycomplexpart = aentitycomplexpart[k1];
-
-                            if (entitycomplexpart != entity && entitycomplexpart.getBoundingBox().c(axisalignedbb) && (predicate == null || predicate.test(entitycomplexpart))) {
-                                list.add(entitycomplexpart);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        this.entitySlicesManager.getEntities(entity, axisalignedbb, list, predicate); // Tuinity - optimised entity slices
 
     }
 
     public <T extends Entity> void a(@Nullable EntityTypes<?> entitytypes, AxisAlignedBB axisalignedbb, List<? super T> list, Predicate<? super T> predicate) {
-        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
-        int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
-        int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
-
-        i = MathHelper.clamp(i, 0, this.entitySlices.length - 1);
-        j = MathHelper.clamp(j, 0, this.entitySlices.length - 1);
-
-        for (int k = i; k <= j; ++k) {
-            Iterator iterator = this.entitySlices[k].iterator(); // Spigot
-
-            // Paper start - Don't search for inventories if we have none, and that is all we want
-            /*
-             * We check if they want inventories by seeing if it is the static `IEntitySelector.d`
-             *
-             * Make sure the inventory selector stays in sync.
-             * It should be the one that checks `var1 instanceof IInventory && var1.isAlive()`
-             */
-            if (predicate == IEntitySelector.isInventory() && inventoryEntityCounts[k] <= 0) continue;
-            while (iterator.hasNext()) {
-                T entity = (T) iterator.next(); // CraftBukkit - decompile error
-                if (entity.shouldBeRemoved) continue; // Paper
-
-                if ((entitytypes == null || entity.getEntityType() == entitytypes) && entity.getBoundingBox().c(axisalignedbb) && predicate.test(entity)) {
-                    list.add(entity);
-                }
-            }
-        }
+        this.entitySlicesManager.getEntities(entitytypes, axisalignedbb, (List)list, (Predicate)predicate); // Tuinity - optimised entity slices
 
     }
 
+    public final <T extends Entity> void getEntities(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, List<T> list, @Nullable Predicate<? super T> predicate) { this.a(oclass, axisalignedbb, list, predicate); } // Tuinity - OBFHELPER
     public <T extends Entity> void a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, List<T> list, @Nullable Predicate<? super T> predicate) {
-        org.spigotmc.AsyncCatcher.catchOp("Chunk getEntities call"); // Spigot
-        int i = MathHelper.floor((axisalignedbb.minY - 2.0D) / 16.0D);
-        int j = MathHelper.floor((axisalignedbb.maxY + 2.0D) / 16.0D);
-
-        i = MathHelper.clamp(i, 0, this.entitySlices.length - 1);
-        j = MathHelper.clamp(j, 0, this.entitySlices.length - 1);
-
-        // Paper start
-        int[] counts;
-        if (EntityItem.class.isAssignableFrom(oclass)) {
-            counts = itemCounts;
-        } else if (IInventory.class.isAssignableFrom(oclass)) {
-            counts = inventoryEntityCounts;
-        } else {
-            counts = null;
-        }
-        // Paper end
-        for (int k = i; k <= j; ++k) {
-            if (counts != null && counts[k] <= 0) continue; // Paper - Don't check a chunk if it doesn't have the type we are looking for
-            Iterator iterator = this.entitySlices[k].iterator(); // Spigot
-
-            // Paper start - Don't search for inventories if we have none, and that is all we want
-            /*
-             * We check if they want inventories by seeing if it is the static `IEntitySelector.d`
-             *
-             * Make sure the inventory selector stays in sync.
-             * It should be the one that checks `var1 instanceof IInventory && var1.isAlive()`
-             */
-            if (predicate == IEntitySelector.isInventory() && inventoryEntityCounts[k] <= 0) continue;
-            // Paper end
-            while (iterator.hasNext()) {
-                T t0 = (T) iterator.next(); // CraftBukkit - decompile error
-                if (t0.shouldBeRemoved) continue; // Paper
-
-                if (oclass.isInstance(t0) && t0.getBoundingBox().c(axisalignedbb) && (predicate == null || predicate.test(t0))) { // Spigot - instance check
-                    list.add(t0);
-                }
-            }
-        }
+        this.entitySlicesManager.getEntities(oclass, null, axisalignedbb, list, predicate); // Tuinity - optimised entity slices
 
     }
 

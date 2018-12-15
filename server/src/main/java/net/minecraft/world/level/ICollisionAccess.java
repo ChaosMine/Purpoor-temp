@@ -36,6 +36,11 @@ public interface ICollisionAccess extends IBlockAccess {
     }
 
     default boolean b(AxisAlignedBB axisalignedbb) {
+        // Tuinity start - allow overriding in WorldServer
+        return this.getCubes(axisalignedbb);
+    }
+    default boolean getCubes(AxisAlignedBB axisalignedbb) {
+        // Tuinity end - allow overriding in WorldServer
         return this.b((Entity) null, axisalignedbb, (entity) -> {
             return true;
         });
@@ -54,6 +59,11 @@ public interface ICollisionAccess extends IBlockAccess {
     }
 
     default boolean b(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        // Tuinity start - allow overriding in WorldServer
+        return this.getCubes(entity, axisalignedbb, predicate);
+    }
+    default boolean getCubes(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        // Tuinity end - allow overriding in WorldServer
         try { if (entity != null) entity.collisionLoadChunks = true; // Paper
         return this.d(entity, axisalignedbb, predicate).allMatch(VoxelShape::isEmpty);
         } finally { if (entity != null) entity.collisionLoadChunks = false; } // Paper

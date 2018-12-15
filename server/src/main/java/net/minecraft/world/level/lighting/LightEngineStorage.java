@@ -30,7 +30,8 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
     protected final M f; protected final M updating; // Paper - diff on change, should be "updating"
     protected final LongSet g = new LongOpenHashSet();
     protected final LongSet h = new LongOpenHashSet(); LongSet dirty = h; // Paper - OBFHELPER
-    protected final Long2ObjectMap<NibbleArray> i = Long2ObjectMaps.synchronize(new Long2ObjectOpenHashMap());
+    protected final Long2ObjectOpenHashMap<NibbleArray> i_synchronized_map_real = new Long2ObjectOpenHashMap<>(); // Tuinity - store wrapped map, we need fastIterator
+    protected final Long2ObjectMap<NibbleArray> i = Long2ObjectMaps.synchronize(this.i_synchronized_map_real); // Tuinity - store wrapped map, we need fastIterator
     private final LongSet n = new LongOpenHashSet();
     private final LongSet o = new LongOpenHashSet();
     private final LongSet p = new LongOpenHashSet();
@@ -254,7 +255,7 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
 
             this.p.clear();
             this.j = false;
-            ObjectIterator objectiterator = this.i.long2ObjectEntrySet().iterator();
+            ObjectIterator objectiterator = this.i_synchronized_map_real.long2ObjectEntrySet().fastIterator(); // Tuinity - use fast iterator to reduce entry creation
 
             Entry entry;
             long j;
@@ -291,7 +292,7 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
             }
 
             this.n.clear();
-            objectiterator = this.i.long2ObjectEntrySet().iterator();
+            objectiterator = this.i_synchronized_map_real.long2ObjectEntrySet().fastIterator(); // Tuinity - use fast iterator to reduce entry creation;
 
             while (objectiterator.hasNext()) {
                 entry = (Entry) objectiterator.next();

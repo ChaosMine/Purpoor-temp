@@ -81,8 +81,9 @@ public class EntityLightning extends Entity {
             // CraftBukkit start - Use relative location for far away sounds
             // this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.random.nextFloat() * 0.2F);
             float pitch = 0.8F + this.random.nextFloat() * 0.2F;
-            int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16;
+            //int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Tuinity - apply view distance patch
             for (EntityPlayer player : (List<EntityPlayer>) (List) this.world.getPlayers()) {
+                final int viewDistance = player.getBukkitEntity().getViewDistance(); // Tuinity - apply view distance patch
                 double deltaX = this.locX() - player.locX();
                 double deltaZ = this.locZ() - player.locZ();
                 double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;

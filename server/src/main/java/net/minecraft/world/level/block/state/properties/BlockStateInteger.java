@@ -13,6 +13,16 @@ public class BlockStateInteger extends IBlockState<Integer> {
     public final int min;
     public final int max;
 
+    // Tuinity start - optimise iblockdata state lookup
+    @Override
+    public final int getIdFor(final Integer value) {
+        final int val = value.intValue();
+        final int ret = val - this.min;
+
+        return ret | ((this.max - ret) >> 31);
+    }
+    // Tuinity end - optimise iblockdata state lookup
+
     protected BlockStateInteger(String s, int i, int j) {
         super(s, Integer.class);
         this.min = i;

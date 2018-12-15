@@ -374,7 +374,13 @@ public class DefinedStructure {
                         if (pair1.getSecond() != null) {
                             tileentity = worldaccess.getTileEntity(blockposition3);
                             if (tileentity != null) {
+                                // Tuinity start - do not update TE's in generating chunks, it might cause a deadlock
+                                if (!(worldaccess instanceof World)) {
+                                    tileentity.invalidateBlockCache();
+                                } else {
+                                // Tuinity end - do not update TE's in generating chunks, it might cause a deadlock
                                 tileentity.update();
+                                } // Tuinity - do not update TE's in generating chunks, it might cause a deadlock
                             }
                         }
                     }

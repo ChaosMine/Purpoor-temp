@@ -39,13 +39,14 @@ public class IChunkLoader implements AutoCloseable {
     public final RegionFileCache regionFileCache;
 
     public IChunkLoader(File file, DataFixer datafixer, boolean flag) {
-        this.regionFileCache = new RegionFileCache(file, flag); // Paper - nuke IOWorker
+        this.regionFileCache = new RegionFileCache(file, flag, true); // Paper - nuke IOWorker // Tuinity
         this.b = datafixer;
         // Paper - nuke IOWorker
     }
 
     // CraftBukkit start
     private boolean check(ChunkProviderServer cps, int x, int z) throws IOException {
+        if (true) return true; // Tuinity - this isn't even needed anymore, light is purged updating to 1.14+, why are we holding up the conversion process reading chunk data off disk - return true, we need to set light populated to true so the converter recognizes the chunk as being "full"
         ChunkCoordIntPair pos = new ChunkCoordIntPair(x, z);
         if (cps != null) {
             //com.google.common.base.Preconditions.checkState(org.bukkit.Bukkit.isPrimaryThread(), "primary thread"); // Paper - this function is now MT-Safe

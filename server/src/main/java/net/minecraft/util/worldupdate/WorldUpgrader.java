@@ -235,7 +235,7 @@ public class WorldUpgrader {
                     int l = Integer.parseInt(matcher.group(2)) << 5;
 
                     try {
-                        RegionFile regionfile = new RegionFile(file2, file1, true);
+                        RegionFile regionfile = new RegionFile(file2, file1, true, true); // Tuinity - allow for chunk regionfiles to regen header
                         Throwable throwable = null;
 
                         try {

@@ -256,7 +256,7 @@ public class LoginListener implements PacketLoginInListener {
 
             s = (new BigInteger(MinecraftEncryption.a("", this.server.getKeyPair().getPublic(), this.loginKey))).toString(16);
             this.g = LoginListener.EnumProtocolState.AUTHENTICATING;
-            this.networkManager.a(cipher, cipher1);
+            this.networkManager.a(this.loginKey); // Tuinity
         } catch (CryptographyException cryptographyexception) {
             throw new IllegalStateException("Protocol error", cryptographyexception);
         }

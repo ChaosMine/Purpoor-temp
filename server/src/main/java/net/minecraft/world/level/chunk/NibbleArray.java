@@ -59,6 +59,7 @@ public class NibbleArray {
     boolean poolSafe = false;
     public java.lang.Runnable cleaner;
     private void registerCleaner() {
+        if (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) return; // Tuinity - purge cleaner usage
         if (!poolSafe) {
             cleaner = MCUtil.registerCleaner(this, this.a, NibbleArray::releaseBytes);
         } else {
@@ -66,7 +67,7 @@ public class NibbleArray {
         }
     }
     // Paper end
-    @Nullable protected byte[] a;
+    @Nullable protected byte[] a; public final byte[] justGiveMeTheFuckingByteArrayNoCleanerBullshitJesusFuckingChrist() { return this.a; }
 
 
     public NibbleArray() {}
@@ -77,7 +78,7 @@ public class NibbleArray {
     }
     public NibbleArray(byte[] abyte, boolean isSafe) {
         this.a = abyte;
-        if (!isSafe) this.a = getCloneIfSet(); // Paper - clone for safety
+        if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && !isSafe) this.a = getCloneIfSet(); // Paper - clone for safety // Tuinity - no need to clone
         registerCleaner();
         // Paper end
         if (abyte.length != 2048) {
@@ -165,7 +166,7 @@ public class NibbleArray {
 
     public NibbleArray copy() { return this.b(); } // Paper - OBFHELPER
     public NibbleArray b() {
-        return this.a == null ? new NibbleArray() : new NibbleArray(this.a); // Paper - clone in ctor
+        return this.a == null ? new NibbleArray() : new NibbleArray(com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? this.a.clone() : this.a); // Paper - clone in ctor // Tuinity - no longer clone in constructor
     }
 
     public String toString() {

@@ -179,6 +179,7 @@ public abstract class PlayerList {
     abstract public void loadAndSaveFiles(); // Paper - moved from DedicatedPlayerList constructor
 
     public void a(NetworkManager networkmanager, EntityPlayer entityplayer) {
+        entityplayer.isRealPlayer = true; // Paper // Tuinity - this is a better place to write this that works and isn't overriden by plugins
         EntityPlayer prev = pendingPlayers.put(entityplayer.getUniqueID(), entityplayer);// Paper
         if (prev != null) {
             disconnectPendingPlayer(prev);
@@ -269,7 +270,7 @@ public abstract class PlayerList {
         boolean flag1 = gamerules.getBoolean(GameRules.REDUCED_DEBUG_INFO);
 
         // Spigot - view distance
-        playerconnection.sendPacket(new PacketPlayOutLogin(entityplayer.getId(), entityplayer.playerInteractManager.getGameMode(), entityplayer.playerInteractManager.c(), BiomeManager.a(worldserver1.getSeed()), worlddata.isHardcore(), this.server.F(), this.s, worldserver1.getDimensionManager(), worldserver1.getDimensionKey(), this.getMaxPlayers(), worldserver1.getChunkProvider().playerChunkMap.getLoadViewDistance(), flag1, !flag, worldserver1.isDebugWorld(), worldserver1.isFlatWorld())); // Paper - no-tick view distance
+        playerconnection.sendPacket(new PacketPlayOutLogin(entityplayer.getId(), entityplayer.playerInteractManager.getGameMode(), entityplayer.playerInteractManager.c(), BiomeManager.a(worldserver1.getSeed()), worlddata.isHardcore(), this.server.F(), this.s, worldserver1.getDimensionManager(), worldserver1.getDimensionKey(), this.getMaxPlayers(), worldserver1.getChunkProvider().playerChunkMap.playerChunkManager.getLoadDistance(), flag1, !flag, worldserver1.isDebugWorld(), worldserver1.isFlatWorld())); // Paper - no-tick view distance // Tuinity - replace old player chunk management
         entityplayer.getBukkitEntity().sendSupportedChannels(); // CraftBukkit
         playerconnection.sendPacket(new PacketPlayOutCustomPayload(PacketPlayOutCustomPayload.a, (new PacketDataSerializer(Unpooled.buffer())).a(this.getServer().getServerModName())));
         playerconnection.sendPacket(new PacketPlayOutServerDifficulty(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
@@ -729,7 +730,7 @@ public abstract class PlayerList {
         SocketAddress socketaddress = loginlistener.networkManager.getSocketAddress();
 
         EntityPlayer entity = new EntityPlayer(this.server, this.server.getWorldServer(World.OVERWORLD), gameprofile, new PlayerInteractManager(this.server.getWorldServer(World.OVERWORLD)));
-        entity.isRealPlayer = true; // Paper
+        // Tuinity - some plugins (namely protocolsupport) bypass this logic completely! So this needs to be moved.
         Player player = entity.getBukkitEntity();
         PlayerLoginEvent event = new PlayerLoginEvent(player, hostname, ((java.net.InetSocketAddress) socketaddress).getAddress(), ((java.net.InetSocketAddress) loginlistener.networkManager.getRawAddress()).getAddress());
 
@@ -951,13 +952,13 @@ public abstract class PlayerList {
 
         worldserver1.getChunkProvider().addTicket(TicketType.POST_TELEPORT, new ChunkCoordIntPair(location.getBlockX() >> 4, location.getBlockZ() >> 4), 1, entityplayer.getId()); // Paper
         entityplayer1.forceCheckHighPriority(); // Player
-        while (avoidSuffocation && !worldserver1.getCubes(entityplayer1) && entityplayer1.locY() < 256.0D) {
+        while (avoidSuffocation && worldserver1.collidesWithAnyBlockOrWorldBorder(entityplayer1, entityplayer1.getBoundingBox(), true, false) && entityplayer1.locY() < 256.0D) { // Tuinity - make sure this is loaded
             entityplayer1.setPosition(entityplayer1.locX(), entityplayer1.locY() + 1.0D, entityplayer1.locZ());
         }
         // CraftBukkit start
         WorldData worlddata = worldserver1.getWorldData();
         entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(worldserver1.getDimensionManager(), worldserver1.getDimensionKey(), BiomeManager.a(worldserver1.getSeed()), entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(), worldserver1.isDebugWorld(), worldserver1.isFlatWorld(), flag));
-        entityplayer1.playerConnection.sendPacket(new PacketPlayOutViewDistance(worldserver1.getChunkProvider().playerChunkMap.getLoadViewDistance())); // Spigot // Paper - no-tick view distance
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutViewDistance(worldserver1.getChunkProvider().playerChunkMap.playerChunkManager.getLoadDistance())); // Spigot // Paper - no-tick view distance // Tuinity - replace old player chunk management
         entityplayer1.spawnIn(worldserver1);
         entityplayer1.dead = false;
         entityplayer1.playerConnection.teleport(new Location(worldserver1.getWorld(), entityplayer1.locX(), entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.yaw, entityplayer1.pitch));
@@ -1226,7 +1227,7 @@ public abstract class PlayerList {
             // Really shouldn't happen...
             backingSet = world != null ? world.players.toArray() : players.toArray();
         } else {
-            com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearbyPlayers = chunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(MCUtil.fastFloor(d0) >> 4, MCUtil.fastFloor(d2) >> 4);
+            com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearbyPlayers = chunkMap.playerChunkManager.broadcastMap.getObjectsInRange(MCUtil.fastFloor(d0) >> 4, MCUtil.fastFloor(d2) >> 4); // Tuinity - replace old player chunk management
             if (nearbyPlayers == null) {
                 return;
             }

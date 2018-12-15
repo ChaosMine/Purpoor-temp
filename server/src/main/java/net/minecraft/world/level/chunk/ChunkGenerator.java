@@ -171,7 +171,7 @@ public abstract class ChunkGenerator {
         // Get origin location (re)defined by event call.
         blockposition = new BlockPosition(event.getOrigin().getBlockX(), event.getOrigin().getBlockY(), event.getOrigin().getBlockZ());
         // Get world (re)defined by event call.
-        worldserver = ((org.bukkit.craftbukkit.CraftWorld) event.getOrigin().getWorld()).getHandle();
+        //worldserver = ((org.bukkit.craftbukkit.CraftWorld) event.getOrigin().getWorld()).getHandle(); // Tuinity - callers and this function don't expect this to change
         // Get radius and whether to find unexplored structures (re)defined by event call.
         i = event.getRadius();
         flag = event.shouldFindUnexplored();

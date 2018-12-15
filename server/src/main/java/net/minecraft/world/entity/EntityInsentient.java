@@ -779,7 +779,13 @@ public abstract class EntityInsentient extends EntityLiving {
         if (this.world.getDifficulty() == EnumDifficulty.PEACEFUL && this.L()) {
             this.die();
         } else if (!this.isPersistent() && !this.isSpecialPersistence()) {
-            EntityHuman entityhuman = this.world.findNearbyPlayer(this, -1.0D, IEntitySelector.affectsSpawning); // Paper
+            // Tuinity start - optimise checkDespawn
+            net.minecraft.world.level.chunk.Chunk chunk = this.getCurrentChunk();
+            EntityHuman entityhuman = chunk == null || this.world.paperConfig.hardDespawnDistance >= (net.minecraft.server.level.PlayerChunkMap.GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE_SQUARED) ? this.world.findNearbyPlayer(this, -1.0D, IEntitySelector.affectsSpawning) : chunk.findNearestPlayer(this.locX(), this.locY(), this.locZ(), -1.0, IEntitySelector.affectsSpawning); // Paper
+            if (entityhuman == null) {
+                entityhuman = ((WorldServer)this.world).playersAffectingSpawning.isEmpty() ? null : ((WorldServer)this.world).playersAffectingSpawning.get(0);
+            }
+            // Tuinity end - optimise checkDespawn
 
             if (entityhuman != null) {
                 double d0 = entityhuman.h((Entity) this); // CraftBukkit - decompile error

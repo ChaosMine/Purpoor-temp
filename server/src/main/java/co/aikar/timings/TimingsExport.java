@@ -154,7 +154,7 @@ public class TimingsExport extends Thread {
                     return pair(rule, world.getWorld().getGameRuleValue(rule));
                 })),
                 pair("ticking-distance", world.getChunkProvider().playerChunkMap.getEffectiveViewDistance()),
-                pair("notick-viewdistance", world.getChunkProvider().playerChunkMap.getEffectiveNoTickViewDistance())
+                pair("notick-viewdistance", world.getChunkProvider().playerChunkMap.playerChunkManager.getTargetNoTickViewDistance()) // Tuinity - replace old player chunk management
             ));
         }));
 
@@ -229,7 +229,8 @@ public class TimingsExport extends Thread {
         parent.put("config", createObject(
             pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
             pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
-            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
+            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Tuinity - add config to timings report
+            pair("tuinity", mapAsJSON(Bukkit.spigot().getTuinityConfig(), null)) // Tuinity - add config to timings report
         ));
 
         new TimingsExport(listeners, parent, history).start();

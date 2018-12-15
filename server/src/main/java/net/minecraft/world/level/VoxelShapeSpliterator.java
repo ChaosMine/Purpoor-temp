@@ -106,7 +106,7 @@ public class VoxelShapeSpliterator extends AbstractSpliterator<VoxelShape> {
                 VoxelShape voxelshape = iblockdata.b((IBlockAccess) this.g, this.e, this.c);
 
                 if (voxelshape == VoxelShapes.b()) {
-                    if (!this.b.a((double) i, (double) j, (double) k, (double) i + 1.0D, (double) j + 1.0D, (double) k + 1.0D)) {
+                    if (!this.b.voxelShapeIntersect((double) i, (double) j, (double) k, (double) i + 1.0D, (double) j + 1.0D, (double) k + 1.0D)) { // Tuinity - keep vanilla behavior for voxelshape intersection - See comment in AxisAlignedBB
                         continue;
                     }
 

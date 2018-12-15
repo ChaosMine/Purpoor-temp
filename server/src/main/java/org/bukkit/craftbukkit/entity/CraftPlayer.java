@@ -2266,15 +2266,70 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     }
 
+    // Tuinity start - implement view distances
+    @Override
+    public int getSendViewDistance() {
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            return chunkMap.playerChunkManager.getTargetSendDistance();
+        }
+        return data.getTargetSendViewDistance();
+    }
+
+    @Override
+    public void setSendViewDistance(int viewDistance) {
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            throw new IllegalStateException("Player is not attached to world");
+        }
+
+        data.setTargetSendViewDistance(viewDistance);
+    }
+
+    @Override
+    public int getNoTickViewDistance() {
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            return chunkMap.playerChunkManager.getTargetNoTickViewDistance();
+        }
+        return data.getTargetNoTickViewDistance();
+    }
+
+    @Override
+    public void setNoTickViewDistance(int viewDistance) {
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            throw new IllegalStateException("Player is not attached to world");
+        }
+
+        data.setTargetNoTickViewDistance(viewDistance);
+    }
+
     @Override
     public int getViewDistance() {
-        throw new NotImplementedException("Per-Player View Distance APIs need further understanding to properly implement (There are per world view distances though!)"); // TODO
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            return chunkMap.playerChunkManager.getTargetViewDistance();
+        }
+        return data.getTargetTickViewDistance();
     }
 
     @Override
     public void setViewDistance(int viewDistance) {
-        throw new NotImplementedException("Per-Player View Distance APIs need further understanding to properly implement (There are per world view distances though!)"); // TODO
+        net.minecraft.server.level.PlayerChunkMap chunkMap = this.getHandle().getWorldServer().getChunkProvider().playerChunkMap;
+        com.tuinity.tuinity.chunk.PlayerChunkLoader.PlayerLoaderData data = chunkMap.playerChunkManager.getData(this.getHandle());
+        if (data == null) {
+            throw new IllegalStateException("Player is not attached to world");
+        }
+
+        data.setTargetTickViewDistance(viewDistance);
     }
+    // Tuinity end - implement view distances
 
     @Override
     public <T> T getClientOption(ClientOption<T> type) {

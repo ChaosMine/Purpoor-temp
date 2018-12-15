@@ -40,11 +40,13 @@ public abstract class IBlockDataHolder<O, S> {
     private final ImmutableMap<IBlockState<?>, Comparable<?>> b;
     private Table<IBlockState<?>, Comparable<?>, S> e;
     protected final MapCodec<S> d;
+    protected com.tuinity.tuinity.util.table.ZeroCollidingReferenceStateTable optimisedTable; // Tuinity - optimise state lookup
 
     protected IBlockDataHolder(O o0, ImmutableMap<IBlockState<?>, Comparable<?>> immutablemap, MapCodec<S> mapcodec) {
         this.c = o0;
         this.b = immutablemap;
         this.d = mapcodec;
+        this.optimisedTable = new com.tuinity.tuinity.util.table.ZeroCollidingReferenceStateTable(this, immutablemap); // Tuinity - optimise state lookup
     }
 
     public <T extends Comparable<T>> S a(IBlockState<T> iblockstate) {
@@ -86,11 +88,11 @@ public abstract class IBlockDataHolder<O, S> {
 
     public <T extends Comparable<T>> boolean contains(IBlockState<T> iblockstate) { return this.b(iblockstate); } // Paper - OBFHELPER
     public <T extends Comparable<T>> boolean b(IBlockState<T> iblockstate) {
-        return this.b.containsKey(iblockstate);
+        return this.optimisedTable.get(iblockstate) != null; // Tuinity - optimise state lookup
     }
 
     public <T extends Comparable<T>> T get(IBlockState<T> iblockstate) {
-        Comparable<?> comparable = (Comparable) this.b.get(iblockstate);
+        final Comparable<?> comparable = this.optimisedTable.get(iblockstate); // Tuinity - optimise state lookup
 
         if (comparable == null) {
             throw new IllegalArgumentException("Cannot get property " + iblockstate + " as it does not exist in " + this.c);
@@ -100,27 +102,21 @@ public abstract class IBlockDataHolder<O, S> {
     }
 
     public <T extends Comparable<T>> Optional<T> d(IBlockState<T> iblockstate) {
-        Comparable<?> comparable = (Comparable) this.b.get(iblockstate);
+        final Comparable<?> comparable = this.optimisedTable.get(iblockstate); // Tuinity - optimise state lookup
 
         return comparable == null ? Optional.empty() : Optional.of(iblockstate.getType().cast(comparable));
     }
 
     public <T extends Comparable<T>, V extends T> S set(IBlockState<T> iblockstate, V v0) {
-        Comparable<?> comparable = (Comparable) this.b.get(iblockstate);
+        // Tuinity start - optimise state lookup
+        final S ret = (S)this.optimisedTable.get(iblockstate, v0);
 
-        if (comparable == null) {
-            throw new IllegalArgumentException("Cannot set property " + iblockstate + " as it does not exist in " + this.c);
-        } else if (comparable == v0) {
-            return (S) this; // Paper - decompile error
-        } else {
-            S s0 = this.e.get(iblockstate, v0);
-
-            if (s0 == null) {
-                throw new IllegalArgumentException("Cannot set property " + iblockstate + " to " + v0 + " on " + this.c + ", it is not an allowed value");
-            } else {
-                return s0;
-            }
+        if (ret == null) {
+            throw new IllegalArgumentException("Cannot set property " + iblockstate + " to " + v0 + " on " + this.c + ", it is not an allowed value");
         }
+
+        return ret;
+        // Tuinity end - optimise state lookup
     }
 
     public void a(Map<Map<IBlockState<?>, Comparable<?>>, S> map) {
@@ -144,7 +140,8 @@ public abstract class IBlockDataHolder<O, S> {
                 }
             }
 
-            this.e = (Table) (table.isEmpty() ? table : ArrayTable.create(table));
+            this.e = (Table) (table.isEmpty() ? table : ArrayTable.create(table)); this.optimisedTable.loadInTable((Table)this.e, this.b); // Tuinity - optimise state lookup
+
         }
     }
 

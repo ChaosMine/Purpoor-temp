@@ -10,7 +10,7 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 
 public class SectionPosition extends BaseBlockPosition {
 
-    private SectionPosition(int i, int j, int k) {
+    public SectionPosition(int i, int j, int k) { // Tuinity - private -> public
         super(i, j, k);
     }
 

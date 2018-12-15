@@ -30,8 +30,22 @@ public class TicketType<T> {
     public static final TicketType<Long> ASYNC_LOAD = a("async_load", Long::compareTo); // Paper
     public static final TicketType<ChunkCoordIntPair> PRIORITY = a("priority", Comparator.comparingLong(ChunkCoordIntPair::pair), 300); // Paper
     public static final TicketType<ChunkCoordIntPair> URGENT = a("urgent", Comparator.comparingLong(ChunkCoordIntPair::pair), 300); // Paper
-    public static final TicketType<Long> DELAY_UNLOAD = a("delay_unload", Long::compareTo, 300); // Paper
+    public static final TicketType<Long> DELAYED_UNLOAD = a("delayed_unload", Long::compareTo); // Tuinity - delay chunk unloads
+    public static final TicketType<Long> REQUIRED_LOAD = a("required_load", Long::compareTo); // Tuinity - make sure getChunkAt does not fail
+    public static final TicketType<ChunkCoordIntPair> LIGHT_UPDATE = a("light_update", Comparator.comparingLong(ChunkCoordIntPair::pair)); // Tuinity - ensure chunks stay loaded for lighting
+    public static final TicketType<Long> CHUNK_RELIGHT = a("chunk_relight", Long::compareTo); // Tuinity - ensure chunk stays loaded for relighting
 
+    // Tuinity start - delay chunk unloads
+    boolean delayUnloadViable = true;
+    static {
+        TicketType.LIGHT.delayUnloadViable = false;
+        TicketType.PLUGIN.delayUnloadViable = false;
+        TicketType.PRIORITY.delayUnloadViable = false;
+        TicketType.URGENT.delayUnloadViable = false;
+        TicketType.DELAYED_UNLOAD.delayUnloadViable = false;
+        TicketType.LIGHT_UPDATE.delayUnloadViable = false; // Tuinity - ensure chunks stay loaded for lighting
+    }
+    // Tuinity end - delay chunk unloads
     public static <T> TicketType<T> a(String s, Comparator<T> comparator) {
         return new TicketType<>(s, comparator, 0L);
     }

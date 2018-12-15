@@ -27,12 +27,12 @@ public class VillagePlaceSection {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final Short2ObjectMap<VillagePlaceRecord> b;
-    private final Map<VillagePlaceType, Set<VillagePlaceRecord>> c;
+    private final Map<VillagePlaceType, Set<VillagePlaceRecord>> c; public final Map<VillagePlaceType, Set<VillagePlaceRecord>> getData() { return this.c; } // Tuinity - OBFHELPER
     private final Runnable d;
     private boolean e;
 
     public static Codec<VillagePlaceSection> a(Runnable runnable) {
-        Codec codec = RecordCodecBuilder.create((instance) -> {
+        Codec<VillagePlaceSection> codec = RecordCodecBuilder.create((instance) -> { // Tuinity - decompile fix
             return instance.group(RecordCodecBuilder.point(runnable), Codec.BOOL.optionalFieldOf("Valid", false).forGetter((villageplacesection) -> {
                 return villageplacesection.e;
             }), VillagePlaceRecord.a(runnable).listOf().fieldOf("Records").forGetter((villageplacesection) -> {

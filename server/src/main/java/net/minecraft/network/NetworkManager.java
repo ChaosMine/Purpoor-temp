@@ -45,6 +45,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import io.netty.util.concurrent.AbstractEventExecutor; // Tuinity
+
 public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -88,6 +90,61 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
     public boolean queueImmunity = false;
     public EnumProtocol protocol;
     // Paper end
+
+    // Tuinity start - allow controlled flushing
+    volatile boolean canFlush = true;
+    private final java.util.concurrent.atomic.AtomicInteger packetWrites = new java.util.concurrent.atomic.AtomicInteger();
+    private int flushPacketsStart;
+    private final Object flushLock = new Object();
+
+    public void disableAutomaticFlush() {
+        synchronized (this.flushLock) {
+            this.flushPacketsStart = this.packetWrites.get(); // must be volatile and before canFlush = false
+            this.canFlush = false;
+        }
+    }
+
+    public void enableAutomaticFlush() {
+        synchronized (this.flushLock) {
+            this.canFlush = true;
+            if (this.packetWrites.get() != this.flushPacketsStart) { // must be after canFlush = true
+                this.flush(); // only make the flush call if we need to
+            }
+        }
+    }
+
+    private final void flush() {
+        if (this.channel.eventLoop().inEventLoop()) {
+            this.channel.flush();
+        } else {
+            this.channel.eventLoop().execute(() -> {
+                this.channel.flush();
+            });
+        }
+    }
+    // Tuinity end - allow controlled flushing
+    // Tuinity start - add pending task queue
+    private final Queue<Runnable> pendingTasks = new java.util.concurrent.ConcurrentLinkedQueue<>();
+    public void execute(final Runnable run) {
+        if (this.channel == null || !this.channel.isRegistered()) {
+            run.run();
+            return;
+        }
+        final boolean queue = !this.packetQueue.isEmpty();
+        if (!queue) {
+            this.channel.eventLoop().execute(run);
+        } else {
+            this.pendingTasks.add(run);
+            if (this.packetQueue.isEmpty()) {
+                // something flushed async, dump tasks now
+                Runnable r;
+                while ((r = this.pendingTasks.poll()) != null) {
+                    this.channel.eventLoop().execute(r);
+                }
+            }
+        }
+    }
+    // Tuinity end - add pending task queue
 
     public NetworkManager(EnumProtocolDirection enumprotocoldirection) {
         this.h = enumprotocoldirection;
@@ -163,8 +220,64 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
         if (net.minecraft.server.MinecraftServer.getServer().isDebugging()) throwable.printStackTrace(); // Spigot
     }
 
+    // Tuinity start - packet limiter
+    protected final Object PACKET_LIMIT_LOCK = new Object();
+    protected final com.tuinity.tuinity.util.IntervalledCounter allPacketCounts = com.tuinity.tuinity.config.TuinityConfig.allPacketsLimit != null ? new com.tuinity.tuinity.util.IntervalledCounter(
+            (long)(com.tuinity.tuinity.config.TuinityConfig.allPacketsLimit.packetLimitInterval * 1.0e9)
+    ) : null;
+    protected final java.util.Map<Class<? extends net.minecraft.network.protocol.Packet<?>>, com.tuinity.tuinity.util.IntervalledCounter> packetSpecificLimits = new java.util.HashMap<>();
+
+    private boolean stopReadingPackets;
+    private void killForPacketSpam() {
+        this.sendPacket(new PacketPlayOutKickDisconnect(org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.tuinity.tuinity.config.TuinityConfig.kickMessage, true)[0]), (future) -> {
+            this.close(org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.tuinity.tuinity.config.TuinityConfig.kickMessage, true)[0]);
+        });
+        this.stopReading();
+        this.stopReadingPackets = true;
+    }
+    // Tuinity end - packet limiter
+
     protected void channelRead0(ChannelHandlerContext channelhandlercontext, Packet<?> packet) throws Exception {
         if (this.channel.isOpen()) {
+            // Tuinity start - packet limiter
+            if (this.stopReadingPackets) {
+                return;
+            }
+            if (this.allPacketCounts != null ||
+                    com.tuinity.tuinity.config.TuinityConfig.packetSpecificLimits.containsKey(packet.getClass())) {
+                long time = System.nanoTime();
+                synchronized (PACKET_LIMIT_LOCK) {
+                    if (this.allPacketCounts != null) {
+                        this.allPacketCounts.updateAndAdd(1, time);
+                        if (this.allPacketCounts.getRate() >= com.tuinity.tuinity.config.TuinityConfig.allPacketsLimit.maxPacketRate) {
+                            this.killForPacketSpam();
+                            return;
+                        }
+                    }
+
+                    for (Class<?> check = packet.getClass(); check != Object.class; check = check.getSuperclass()) {
+                        com.tuinity.tuinity.config.TuinityConfig.PacketLimit packetSpecificLimit =
+                                com.tuinity.tuinity.config.TuinityConfig.packetSpecificLimits.get(check);
+                        if (packetSpecificLimit == null) {
+                            continue;
+                        }
+                        com.tuinity.tuinity.util.IntervalledCounter counter = this.packetSpecificLimits.computeIfAbsent((Class)check, (clazz) -> {
+                            return new com.tuinity.tuinity.util.IntervalledCounter((long)(packetSpecificLimit.packetLimitInterval * 1.0e9));
+                        });
+                        counter.updateAndAdd(1, time);
+                        if (counter.getRate() >= packetSpecificLimit.maxPacketRate) {
+                            switch (packetSpecificLimit.violateAction) {
+                                case DROP:
+                                    return;
+                                case KICK:
+                                    this.killForPacketSpam();
+                                    return;
+                            }
+                        }
+                    }
+                }
+            }
+            // Tuinity end - packet limiter
             try {
                 a(packet, this.packetListener);
             } catch (CancelledPacketHandleException cancelledpackethandleexception) {
@@ -240,7 +353,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
             MCUtil.isMainThread() && packet.isReady() && this.packetQueue.isEmpty() &&
             (packet.getExtraPackets() == null || packet.getExtraPackets().isEmpty())
         ))) {
-            this.dispatchPacket(packet, genericfuturelistener);
+            this.writePacket(packet, genericfuturelistener, null); // Tuinity
             return;
         }
         // write the packets to the queue, then flush - antixray hooks there already
@@ -266,6 +379,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
     private void dispatchPacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericFutureListener) { this.b(packet, genericFutureListener); } // Paper - OBFHELPER
     private void b(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericfuturelistener) {
+        // Tuinity start - add flush parameter
+        this.writePacket(packet, genericfuturelistener, Boolean.TRUE);
+    }
+    private void writePacket(Packet<?> packet, @Nullable GenericFutureListener<? extends Future<? super Void>> genericfuturelistener, Boolean flushConditional) {
+        this.packetWrites.getAndIncrement(); // must be befeore using canFlush
+        boolean effectiveFlush = flushConditional == null ? this.canFlush : flushConditional.booleanValue();
+        final boolean flush = effectiveFlush || packet instanceof PacketPlayOutKeepAlive || packet instanceof PacketPlayOutKickDisconnect; // no delay for certain packets
+        // Tuinity end - add flush parameter
         EnumProtocol enumprotocol = EnumProtocol.a(packet);
         EnumProtocol enumprotocol1 = (EnumProtocol) this.channel.attr(NetworkManager.c).get();
 
@@ -288,7 +409,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
             try {
                 // Paper end
 
-            ChannelFuture channelfuture = this.channel.writeAndFlush(packet);
+            ChannelFuture channelfuture = (flush) ? this.channel.writeAndFlush(packet) : this.channel.write(packet); // Tuinity - add flush parameter
 
             if (genericfuturelistener != null) {
                 channelfuture.addListener(genericfuturelistener);
@@ -308,39 +429,83 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
             }
             // Paper end
         } else {
-            this.channel.eventLoop().execute(() -> {
-                if (enumprotocol != enumprotocol1) {
-                    this.setProtocol(enumprotocol);
-                }
+            // Tuinity start - optimise packets that are not flushed
+            Runnable choice1 = null;
+            AbstractEventExecutor.LazyRunnable choice2 = null;
+            // note: since the type is not dynamic here, we need to actually copy the old executor code
+            // into two branches. On conflict, just re-copy - no changes were made inside the executor code.
+            if (flush) {
+                choice1 = () -> {
+                    if (enumprotocol != enumprotocol1) {
+                        this.setProtocol(enumprotocol);
+                    }
 
-                // Paper start
-                if (!isConnected()) {
-                    packet.onPacketDispatchFinish(player, null);
-                    return;
-                }
-                try {
+                    // Paper start
+                    if (!isConnected()) {
+                        packet.onPacketDispatchFinish(player, null);
+                        return;
+                    }
+                    try {
+                        // Paper end
+                        ChannelFuture channelfuture1 = (flush) ? this.channel.writeAndFlush(packet) : this.channel.write(packet); // Tuinity - add flush parameter
+
+
+                        if (genericfuturelistener != null) {
+                            channelfuture1.addListener(genericfuturelistener);
+                        }
+                        // Paper start
+                        if (packet.hasFinishListener()) {
+                            channelfuture1.addListener((ChannelFutureListener) channelFuture -> packet.onPacketDispatchFinish(player, channelFuture));
+                        }
+                        // Paper end
+
+                        channelfuture1.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                        // Paper start
+                    } catch (Exception e) {
+                        LOGGER.error("NetworkException: " + player, e);
+                        close(new ChatMessage("disconnect.genericReason", "Internal Exception: " + e.getMessage()));;
+                        packet.onPacketDispatchFinish(player, null);
+                    }
                     // Paper end
-                ChannelFuture channelfuture1 = this.channel.writeAndFlush(packet);
+                };
+            } else {
+                // explicitly declare a variable to make the lambda use the type
+                choice2 = () -> {
+                    if (enumprotocol != enumprotocol1) {
+                        this.setProtocol(enumprotocol);
+                    }
+
+                    // Paper start
+                    if (!isConnected()) {
+                        packet.onPacketDispatchFinish(player, null);
+                        return;
+                    }
+                    try {
+                        // Paper end
+                        ChannelFuture channelfuture1 = (flush) ? this.channel.writeAndFlush(packet) : this.channel.write(packet); // Tuinity - add flush parameter
 
 
-                if (genericfuturelistener != null) {
-                    channelfuture1.addListener(genericfuturelistener);
-                }
-                // Paper start
-                if (packet.hasFinishListener()) {
-                    channelfuture1.addListener((ChannelFutureListener) channelFuture -> packet.onPacketDispatchFinish(player, channelFuture));
-                }
-                // Paper end
+                        if (genericfuturelistener != null) {
+                            channelfuture1.addListener(genericfuturelistener);
+                        }
+                        // Paper start
+                        if (packet.hasFinishListener()) {
+                            channelfuture1.addListener((ChannelFutureListener) channelFuture -> packet.onPacketDispatchFinish(player, channelFuture));
+                        }
+                        // Paper end
 
-                channelfuture1.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-                // Paper start
-                } catch (Exception e) {
-                    LOGGER.error("NetworkException: " + player, e);
-                    close(new ChatMessage("disconnect.genericReason", "Internal Exception: " + e.getMessage()));;
-                    packet.onPacketDispatchFinish(player, null);
-                }
-                // Paper end
-            });
+                        channelfuture1.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                        // Paper start
+                    } catch (Exception e) {
+                        LOGGER.error("NetworkException: " + player, e);
+                        close(new ChatMessage("disconnect.genericReason", "Internal Exception: " + e.getMessage()));;
+                        packet.onPacketDispatchFinish(player, null);
+                    }
+                    // Paper end
+                };
+            }
+            this.channel.eventLoop().execute(choice1 != null ? choice1 : choice2);
+            // Tuinity end - optimise packets that are not flushed
         }
 
     }
@@ -362,7 +527,10 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
         return false;
     }
     private boolean processQueue() {
+        try { // Tuinity - add pending task queue
         if (this.packetQueue.isEmpty()) return true;
+        final boolean needsFlush = this.canFlush; // Tuinity - make only one flush call per sendPacketQueue() call
+        boolean hasWrotePacket = false;
         // If we are on main, we are safe here in that nothing else should be processing queue off main anymore
         // But if we are not on main due to login/status, the parent is synchronized on packetQueue
         java.util.Iterator<QueuedPacket> iterator = this.packetQueue.iterator();
@@ -370,19 +538,31 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
             NetworkManager.QueuedPacket queued = iterator.next(); // poll -> peek
 
             // Fix NPE (Spigot bug caused by handleDisconnection())
-            if (queued == null) {
+            if (false && queued == null) { // Tuinity - diff on change, this logic is redundant: iterator guarantees ret of an element - on change, hook the flush logic here
                 return true;
             }
 
             Packet<?> packet = queued.getPacket();
             if (!packet.isReady()) {
+                // Tuinity start - make only one flush call per sendPacketQueue() call
+                if (hasWrotePacket && (needsFlush || this.canFlush)) {
+                    this.flush();
+                }
+                // Tuinity end - make only one flush call per sendPacketQueue() call
                 return false;
             } else {
                 iterator.remove();
-                this.dispatchPacket(packet, queued.getGenericFutureListener());
+                this.writePacket(packet, queued.getGenericFutureListener(), (!iterator.hasNext() && (needsFlush || this.canFlush)) ? Boolean.TRUE : Boolean.FALSE); // Tuinity - make only one flush call per sendPacketQueue() call
+                hasWrotePacket = true; // Tuinity - make only one flush call per sendPacketQueue() call
             }
         }
         return true;
+        } finally { // Tuinity start - add pending task queue
+            Runnable r;
+            while ((r = this.pendingTasks.poll()) != null) {
+                this.channel.eventLoop().execute(r);
+            }
+        } // Tuinity end - add pending task queue
     }
     // Paper end
 
@@ -405,7 +585,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
         }
 
         if (this.packetListener instanceof PlayerConnection) {
+            // Tuinity start - detailed watchdog information
+            net.minecraft.network.protocol.PlayerConnectionUtils.packetProcessing.push(this.packetListener);
+            try {
+            // Tuinity end - detailed watchdog information
             ((PlayerConnection) this.packetListener).tick();
+            } finally { // Tuinity start - detailed watchdog information
+                net.minecraft.network.protocol.PlayerConnectionUtils.packetProcessing.pop();
+            } // Tuinity start - detailed watchdog information
         }
 
         if (this.channel != null) {
@@ -456,10 +643,16 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
         return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
     }
 
-    public void a(Cipher cipher, Cipher cipher1) {
+    public void a(javax.crypto.SecretKey secretkey) { // Tuinity
         this.n = true;
-        this.channel.pipeline().addBefore("splitter", "decrypt", new PacketDecrypter(cipher));
-        this.channel.pipeline().addBefore("prepender", "encrypt", new PacketEncrypter(cipher1));
+        // Tuinity start
+        try {
+        this.channel.pipeline().addBefore("splitter", "decrypt", new PacketDecrypter(/*MinecraftEncryption.a(2, secretkey)*/ secretkey));
+        this.channel.pipeline().addBefore("prepender", "encrypt", new PacketEncrypter(/*MinecraftEncryption.a(1, secretkey)*/ secretkey));
+        } catch (java.security.GeneralSecurityException e) {
+            throw new RuntimeException("Couldn't enable encryption", e);
+        }
+        // Tuinity end
     }
 
     public boolean isConnected() {

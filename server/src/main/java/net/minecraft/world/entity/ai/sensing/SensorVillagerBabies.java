@@ -21,11 +21,23 @@ public class SensorVillagerBabies extends Sensor<EntityLiving> {
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving) {
-        entityliving.getBehaviorController().setMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES, (Object) this.a(entityliving));
+        entityliving.getBehaviorController().setMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES, this.a(entityliving)); // Tuinity - decompile fix
     }
 
     private List<EntityLiving> a(EntityLiving entityliving) {
-        return (List) this.c(entityliving).stream().filter(this::b).collect(Collectors.toList());
+        // Tuinity start - remove streams
+        List<EntityLiving> nearby = this.c(entityliving); // copied from removed code, make sure to update
+        List<EntityLiving> ret = new java.util.ArrayList<>();
+
+        for (int index = 0, len = nearby.size(); index < len; ++index) {
+            EntityLiving entity = nearby.get(index);
+            if (this.b(entity)) { // copied from removed code, make sure to update
+                ret.add(entity);
+            }
+        }
+
+        return ret;
+        // Tuinity end - remove streams
     }
 
     private boolean b(EntityLiving entityliving) {

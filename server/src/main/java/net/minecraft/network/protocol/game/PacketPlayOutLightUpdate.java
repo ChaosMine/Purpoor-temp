@@ -35,12 +35,12 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
 
     @Override
     public void onPacketDispatch(EntityPlayer player) {
-        remainingSends.incrementAndGet();
+        if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) remainingSends.incrementAndGet();
     }
 
     @Override
     public void onPacketDispatchFinish(EntityPlayer player, ChannelFuture future) {
-        if (remainingSends.decrementAndGet() <= 0) {
+        if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && remainingSends.decrementAndGet() <= 0) {
             // incase of any race conditions, schedule this delayed
             MCUtil.scheduleTask(5, () -> {
                 if (remainingSends.get() == 0) {
@@ -53,7 +53,7 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
 
     @Override
     public boolean hasFinishListener() {
-        return true;
+        return !com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine; // Tuinity - replace light impl
     }
 
     // Paper end
@@ -63,8 +63,8 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
         this.a = chunkcoordintpair.x;
         this.b = chunkcoordintpair.z;
         this.i = flag;
-        this.g = Lists.newArrayList();cleaner1 = MCUtil.registerListCleaner(this, this.g, NibbleArray::releaseBytes); // Paper
-        this.h = Lists.newArrayList();cleaner2 = MCUtil.registerListCleaner(this, this.h, NibbleArray::releaseBytes); // Paper
+        this.g = Lists.newArrayList();if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) cleaner1 = MCUtil.registerListCleaner(this, this.g, NibbleArray::releaseBytes); // Paper // Tuinity - purge cleaner usage
+        this.h = Lists.newArrayList();if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) cleaner2 = MCUtil.registerListCleaner(this, this.h, NibbleArray::releaseBytes); // Paper // Tuinity - purge cleaner usage
 
         for (int i = 0; i < 18; ++i) {
             NibbleArray nibblearray = lightengine.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkcoordintpair, -1 + i));
@@ -75,7 +75,7 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
                     this.e |= 1 << i;
                 } else {
                     this.c |= 1 << i;
-                    this.g.add(nibblearray.getCloneIfSet()); // Paper
+                    this.g.add(com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray.asBytes() : nibblearray.getCloneIfSet()); // Paper // Tuinity - don't clone again
                 }
             }
 
@@ -84,7 +84,7 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
                     this.f |= 1 << i;
                 } else {
                     this.d |= 1 << i;
-                    this.h.add(nibblearray1.getCloneIfSet()); // Paper
+                    this.h.add(com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray1.asBytes() : nibblearray1.getCloneIfSet()); // Paper // Tuinity - don't clone again
                 }
             }
         }
@@ -97,8 +97,8 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
         this.i = flag;
         this.c = i;
         this.d = j;
-        this.g = Lists.newArrayList();cleaner1 = MCUtil.registerListCleaner(this, this.g, NibbleArray::releaseBytes); // Paper
-        this.h = Lists.newArrayList();cleaner2 = MCUtil.registerListCleaner(this, this.h, NibbleArray::releaseBytes); // Paper
+        this.g = Lists.newArrayList();if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) cleaner1 = MCUtil.registerListCleaner(this, this.g, NibbleArray::releaseBytes); // Paper // Tuinity - purge cleaner usage
+        this.h = Lists.newArrayList();if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) cleaner2 = MCUtil.registerListCleaner(this, this.h, NibbleArray::releaseBytes); // Paper // Tuinity - purge cleaner usage
 
         for (int k = 0; k < 18; ++k) {
             NibbleArray nibblearray;
@@ -106,7 +106,7 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
             if ((this.c & 1 << k) != 0) {
                 nibblearray = lightengine.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkcoordintpair, -1 + k));
                 if (nibblearray != null && !nibblearray.c()) {
-                    this.g.add(nibblearray.getCloneIfSet()); // Paper
+                    this.g.add(com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray.asBytes() : nibblearray.getCloneIfSet()); // Paper // Tuinity - don't clone again
                 } else {
                     this.c &= ~(1 << k);
                     if (nibblearray != null) {
@@ -118,7 +118,7 @@ public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
             if ((this.d & 1 << k) != 0) {
                 nibblearray = lightengine.a(EnumSkyBlock.BLOCK).a(SectionPosition.a(chunkcoordintpair, -1 + k));
                 if (nibblearray != null && !nibblearray.c()) {
-                    this.h.add(nibblearray.getCloneIfSet()); // Paper
+                    this.h.add(com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray.asBytes() : nibblearray.getCloneIfSet()); // Paper // Tuinity - don't clone again
                 } else {
                     this.d &= ~(1 << k);
                     if (nibblearray != null) {

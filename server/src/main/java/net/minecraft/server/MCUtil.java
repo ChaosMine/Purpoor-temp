@@ -55,6 +55,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class MCUtil {
+    public static final double COLLISION_EPSILON = 1.0E-7; // Tuinity - Just in case mojang changes this...
     public static final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
         0, 2, 60L, TimeUnit.SECONDS,
         new LinkedBlockingQueue<Runnable>(),
@@ -237,6 +238,63 @@ public final class MCUtil {
     public static long getBlockKey(final Entity entity) {
         return getBlockKey(getBlockCoordinate(entity.locX()), getBlockCoordinate(entity.locY()), getBlockCoordinate(entity.locZ()));
     }
+
+    // Tuinity start
+
+    static final int SECTION_X_BITS = 22;
+    static final long SECTION_X_MASK = (1L << SECTION_X_BITS) - 1;
+    static final int SECTION_Y_BITS = 20;
+    static final long SECTION_Y_MASK = (1L << SECTION_Y_BITS) - 1;
+    static final int SECTION_Z_BITS = 22;
+    static final long SECTION_Z_MASK = (1L << SECTION_Z_BITS) - 1;
+    // format is y,z,x (in order of LSB to MSB)
+    static final int SECTION_Y_SHIFT = 0;
+    static final int SECTION_Z_SHIFT = SECTION_Y_SHIFT + SECTION_Y_BITS;
+    static final int SECTION_X_SHIFT = SECTION_Z_SHIFT + SECTION_X_BITS;
+    static final int SECTION_TO_BLOCK_SHIFT = 4;
+
+    public static long getSectionKey(final int x, final int y, final int z) {
+        return ((x & SECTION_X_MASK) << SECTION_X_SHIFT)
+                | ((y & SECTION_Y_MASK) << SECTION_Y_SHIFT)
+                | ((z & SECTION_Z_MASK) << SECTION_Z_SHIFT);
+    }
+
+    public static long getSectionKey(final net.minecraft.core.SectionPosition pos) {
+        return ((pos.getX() & SECTION_X_MASK) << SECTION_X_SHIFT)
+                | ((pos.getY() & SECTION_Y_MASK) << SECTION_Y_SHIFT)
+                | ((pos.getZ() & SECTION_Z_MASK) << SECTION_Z_SHIFT);
+    }
+
+    public static long getSectionKey(final ChunkCoordIntPair pos, final int y) {
+        return ((pos.x & SECTION_X_MASK) << SECTION_X_SHIFT)
+                | ((y & SECTION_Y_MASK) << SECTION_Y_SHIFT)
+                | ((pos.z & SECTION_Z_MASK) << SECTION_Z_SHIFT);
+    }
+
+    public static long getSectionKey(final BlockPosition pos) {
+        return (((long)pos.getX() << (SECTION_X_SHIFT - SECTION_TO_BLOCK_SHIFT)) & (SECTION_X_MASK << SECTION_X_SHIFT)) |
+                ((pos.getY() >> SECTION_TO_BLOCK_SHIFT) & (SECTION_Y_MASK << SECTION_Y_SHIFT)) |
+                (((long)pos.getZ() << (SECTION_Z_SHIFT - SECTION_TO_BLOCK_SHIFT)) & (SECTION_Z_MASK << SECTION_Z_SHIFT));
+    }
+
+    public static long getSectionKey(final Entity entity) {
+        return ((MCUtil.fastFloor(entity.locX()) & SECTION_X_MASK) << SECTION_X_SHIFT)
+                | ((MCUtil.fastFloor(entity.locY()) & SECTION_Y_MASK) << SECTION_Y_SHIFT)
+                | ((MCUtil.fastFloor(entity.locZ()) & SECTION_Z_MASK) << SECTION_Z_SHIFT);
+    }
+
+    public static int getSectionX(final long key) {
+        return (int)(key << (Long.SIZE - (SECTION_X_SHIFT + SECTION_X_BITS)) >> (Long.SIZE - SECTION_X_BITS));
+    }
+
+    public static int getSectionY(final long key) {
+        return (int)(key << (Long.SIZE - (SECTION_Y_SHIFT + SECTION_Y_BITS)) >> (Long.SIZE - SECTION_Y_BITS));
+    }
+
+    public static int getSectionZ(final long key) {
+        return (int)(key << (Long.SIZE - (SECTION_Z_SHIFT + SECTION_Z_BITS)) >> (Long.SIZE - SECTION_Z_BITS));
+    }
+    // Tuinity end
 
     // assumes the sets have the same comparator, and if this comparator is null then assume T is Comparable
     public static <T> void mergeSortedSets(final java.util.function.Consumer<T> consumer, final java.util.Comparator<? super T> comparator, final java.util.SortedSet<T>...sets) {
@@ -639,7 +697,7 @@ public final class MCUtil {
 
             worldData.addProperty("name", world.getWorld().getName());
             worldData.addProperty("view-distance", world.getChunkProvider().playerChunkMap.getEffectiveViewDistance());
-            worldData.addProperty("no-view-distance", world.getChunkProvider().playerChunkMap.getRawNoTickViewDistance());
+            worldData.addProperty("no-view-distance", world.getChunkProvider().playerChunkMap.playerChunkManager.getTargetNoTickViewDistance()); // Tuinity - replace old player chunk management
             worldData.addProperty("keep-spawn-loaded", world.keepSpawnInMemory);
             worldData.addProperty("keep-spawn-loaded-range", world.paperConfig.keepLoadedRange);
             worldData.addProperty("visible-chunk-count", visibleChunks.size());

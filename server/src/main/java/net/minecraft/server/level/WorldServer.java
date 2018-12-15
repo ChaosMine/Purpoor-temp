@@ -168,12 +168,13 @@ import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.TimeSkipEvent;
 // CraftBukkit end
+import it.unimi.dsi.fastutil.ints.IntArrayList; // Tuinity
 
 public class WorldServer extends World implements GeneratorAccessSeed {
 
     public static final BlockPosition a = new BlockPosition(100, 50, 0);
     private static final Logger LOGGER = LogManager.getLogger();
-    public final Int2ObjectMap<Entity> entitiesById = new Int2ObjectLinkedOpenHashMap();
+    public final Int2ObjectMap<Entity> entitiesById = new Int2ObjectLinkedOpenHashMap(); final com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<Entity> entitiesForIteration = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>(2048, 0.5f, 2048, 0.2, true); // Tuinity - make removing entities while ticking safe
     private final Map<UUID, Entity> entitiesByUUID = Maps.newHashMap();
     private final Queue<Entity> entitiesToAdd = Queues.newArrayDeque();
     public final List<EntityPlayer> players = Lists.newArrayList(); // Paper - private -> public
@@ -197,7 +198,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private final PortalTravelAgent portalTravelAgent;
     private final TickListServer<Block> nextTickListBlock;
     private final TickListServer<FluidType> nextTickListFluid;
-    private final Set<NavigationAbstract> navigators;
+    private final Set<NavigationAbstract> navigators; final com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<NavigationAbstract> navigatorsForIteration = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>(2048, 0.5f, 2048, 0.2, true); // Tuinity - make removing entities while ticking safe
     protected final PersistentRaid persistentRaid;
     private final ObjectLinkedOpenHashSet<BlockActionData> L;
     private boolean ticking;
@@ -319,6 +320,208 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     }
     // Paper end - rewrite ticklistserver
 
+    // Tuinity start
+    public final boolean areChunksLoadedForMove(AxisAlignedBB axisalignedbb) {
+        // copied code from collision methods, so that we can guarantee that they wont load chunks (we don't override
+        // ICollisionAccess methods for VoxelShapes)
+        // be more strict too, add a block (dumb plugins in move events?)
+        int minBlockX = MathHelper.floor(axisalignedbb.minX - 1.0E-7D) - 3;
+        int maxBlockX = MathHelper.floor(axisalignedbb.maxX + 1.0E-7D) + 3;
+
+        int minBlockZ = MathHelper.floor(axisalignedbb.minZ - 1.0E-7D) - 3;
+        int maxBlockZ = MathHelper.floor(axisalignedbb.maxZ + 1.0E-7D) + 3;
+
+        int minChunkX = minBlockX >> 4;
+        int maxChunkX = maxBlockX >> 4;
+
+        int minChunkZ = minBlockZ >> 4;
+        int maxChunkZ = maxBlockZ >> 4;
+
+        ChunkProviderServer chunkProvider = this.getChunkProvider();
+
+        for (int cx = minChunkX; cx <= maxChunkX; ++cx) {
+            for (int cz = minChunkZ; cz <= maxChunkZ; ++cz) {
+                if (chunkProvider.getChunkAtIfLoadedImmediately(cx, cz) == null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public final void loadChunksForMoveAsync(AxisAlignedBB axisalignedbb, double toX, double toZ,
+                                             java.util.function.Consumer<List<IChunkAccess>> onLoad) {
+        if (Thread.currentThread() != this.serverThread) {
+            this.getChunkProvider().serverThreadQueue.execute(() -> {
+                this.loadChunksForMoveAsync(axisalignedbb, toX, toZ, onLoad);
+            });
+            return;
+        }
+        List<IChunkAccess> ret = new java.util.ArrayList<>();
+        IntArrayList ticketLevels = new IntArrayList();
+
+        int minBlockX = MathHelper.floor(axisalignedbb.minX - 1.0E-7D) - 3;
+        int maxBlockX = MathHelper.floor(axisalignedbb.maxX + 1.0E-7D) + 3;
+
+        int minBlockZ = MathHelper.floor(axisalignedbb.minZ - 1.0E-7D) - 3;
+        int maxBlockZ = MathHelper.floor(axisalignedbb.maxZ + 1.0E-7D) + 3;
+
+        int minChunkX = minBlockX >> 4;
+        int maxChunkX = maxBlockX >> 4;
+
+        int minChunkZ = minBlockZ >> 4;
+        int maxChunkZ = maxBlockZ >> 4;
+
+        ChunkProviderServer chunkProvider = this.getChunkProvider();
+
+        int requiredChunks = (maxChunkX - minChunkX + 1) * (maxChunkZ - minChunkZ + 1);
+        int[] loadedChunks = new int[1];
+
+        Long holderIdentifier = Long.valueOf(chunkProvider.chunkFutureAwaitCounter++);
+
+        java.util.function.Consumer<IChunkAccess> consumer = (IChunkAccess chunk) -> {
+            if (chunk != null) {
+                int ticketLevel = Math.max(33, chunkProvider.playerChunkMap.getUpdatingChunk(chunk.getPos().pair()).getTicketLevel());
+                ret.add(chunk);
+                ticketLevels.add(ticketLevel);
+                chunkProvider.addTicketAtLevel(TicketType.FUTURE_AWAIT, chunk.getPos(), ticketLevel, holderIdentifier);
+            }
+            if (++loadedChunks[0] == requiredChunks) {
+                try {
+                    onLoad.accept(java.util.Collections.unmodifiableList(ret));
+                } finally {
+                    for (int i = 0, len = ret.size(); i < len; ++i) {
+                        ChunkCoordIntPair chunkPos = ret.get(i).getPos();
+                        int ticketLevel = ticketLevels.getInt(i);
+
+                        chunkProvider.addTicketAtLevel(TicketType.UNKNOWN, chunkPos, ticketLevel, chunkPos);
+                        chunkProvider.removeTicketAtLevel(TicketType.FUTURE_AWAIT, chunkPos, ticketLevel, holderIdentifier);
+                    }
+                }
+            }
+        };
+
+        for (int cx = minChunkX; cx <= maxChunkX; ++cx) {
+            for (int cz = minChunkZ; cz <= maxChunkZ; ++cz) {
+                chunkProvider.getChunkAtAsynchronously(cx, cz, ChunkStatus.FULL, true, false, consumer);
+            }
+        }
+    }
+    // Tuinity end
+
+    // Tuinity start - execute chunk tasks mid tick
+    public long lastMidTickExecuteFailure;
+    // Tuinity end - execute chunk tasks mid tick
+
+    // Tuinity start - optimise checkDespawn
+    public final List<EntityPlayer> playersAffectingSpawning = new java.util.ArrayList<>();
+    // Tuinity end - optimise checkDespawn
+    // Tuinity start - optimise get nearest players for entity AI
+    public final EntityPlayer getNearestPlayer(net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition condition, @Nullable EntityLiving source,
+                                               double centerX, double centerY, double centerZ) {
+        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby;
+        if (source != null) {
+            Chunk chunk = source.getCurrentChunk();
+            if (chunk != null && (MathHelper.floor(centerX) >> 4) == chunk.locX &&
+                    (MathHelper.floor(centerZ) >> 4) == chunk.locZ) {
+                nearby = chunk.getPlayerGeneralAreaCache();
+            } else {
+                nearby = this.getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(MathHelper.floor(centerX) >> 4, MathHelper.floor(centerZ) >> 4);
+            }
+        } else {
+            nearby = this.getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(MathHelper.floor(centerX) >> 4, MathHelper.floor(centerZ) >> 4);
+        }
+
+        if (nearby == null) {
+            return null;
+        }
+
+        Object[] backingSet = nearby.getBackingSet();
+
+        double closestDistanceSquared = Double.MAX_VALUE;
+        EntityPlayer closest = null;
+
+        for (int i = 0, len = backingSet.length; i < len; ++i) {
+            Object _player = backingSet[i];
+            if (!(_player instanceof EntityPlayer)) {
+                continue;
+            }
+            EntityPlayer player = (EntityPlayer)_player;
+
+            double distanceSquared = player.getDistanceSquared(centerX, centerY, centerZ);
+            if (distanceSquared < closestDistanceSquared && condition.test(source, player)) {
+                closest = player;
+                closestDistanceSquared = distanceSquared;
+            }
+        }
+
+        return closest;
+    }
+
+    @Override
+    public EntityHuman a(net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
+        return this.getNearestPlayer(pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
+    }
+
+    @Override
+    public EntityHuman a(net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2) {
+        return this.getNearestPlayer(pathfindertargetcondition, entityliving, d0, d1, d2);
+    }
+
+    @Override
+    public EntityHuman a(net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition pathfindertargetcondition, double d0, double d1, double d2) {
+        return this.getNearestPlayer(pathfindertargetcondition, null, d0, d1, d2);
+    }
+
+    @Override
+    public List<EntityHuman> a(net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition condition, EntityLiving source, AxisAlignedBB axisalignedbb) {
+        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby;
+        double centerX = (axisalignedbb.maxX + axisalignedbb.minX) * 0.5;
+        double centerZ = (axisalignedbb.maxZ + axisalignedbb.minZ) * 0.5;
+        if (source != null) {
+            Chunk chunk = source.getCurrentChunk();
+            if (chunk != null && (MathHelper.floor(centerX) >> 4) == chunk.locX &&
+                    (MathHelper.floor(centerZ) >> 4) == chunk.locZ) {
+                nearby = chunk.getPlayerGeneralAreaCache();
+            } else {
+                nearby = this.getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(MathHelper.floor(centerX) >> 4, MathHelper.floor(centerZ) >> 4);
+            }
+        } else {
+            nearby = this.getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(MathHelper.floor(centerX) >> 4, MathHelper.floor(centerZ) >> 4);
+        }
+
+        List<EntityHuman> ret = new java.util.ArrayList<>();
+
+        if (nearby == null) {
+            return ret;
+        }
+
+        Object[] backingSet = nearby.getBackingSet();
+
+        for (int i = 0, len = backingSet.length; i < len; ++i) {
+            Object _player = backingSet[i];
+            if (!(_player instanceof EntityPlayer)) {
+                continue;
+            }
+            EntityPlayer player = (EntityPlayer)_player;
+
+            if (axisalignedbb.contains(player.locX(), player.locY(), player.locZ()) && condition.test(source, player)) {
+                ret.add(player);
+            }
+        }
+
+        return ret;
+    }
+    // Tuinity end - optimise get nearest players for entity AI
+
+    // Tuinity start - rewrite light engine
+    /**
+     * Cannot be modified during light updates.
+     */
+    public com.tuinity.tuinity.chunk.light.VariableBlockLightHandler customBlockLightHandlers;
+    // Tuinity end - rewrite light engine
+
     // Add env and gen to constructor, WorldData -> WorldDataServer
     public WorldServer(MinecraftServer minecraftserver, Executor executor, Convertable.ConversionSession convertable_conversionsession, IWorldDataServer iworlddataserver, ResourceKey<World> resourcekey, DimensionManager dimensionmanager, WorldLoadListener worldloadlistener, ChunkGenerator chunkgenerator, boolean flag, long i, List<MobSpawner> list, boolean flag1, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen) {
         super(iworlddataserver, resourcekey, dimensionmanager, minecraftserver::getMethodProfiler, false, flag, i, gen, env, executor); // Paper pass executor
@@ -379,6 +582,251 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.asyncChunkTaskManager = new com.destroystokyo.paper.io.chunk.ChunkTaskManager(this); // Paper
     }
 
+    // Tuinity start - optimise collision
+    public boolean collidesWithAnyBlockOrWorldBorder(@Nullable Entity entity, AxisAlignedBB axisalignedbb, boolean loadChunks,
+                                                     boolean collidesWithUnloaded) {
+        return this.getCollisionsForBlocksOrWorldBorder(entity, axisalignedbb, null, loadChunks, collidesWithUnloaded, true, null);
+    }
+
+    public boolean collidesWithAnyBlockOrWorldBorder(@Nullable Entity entity, AxisAlignedBB axisalignedbb,
+                                                     boolean loadChunks, boolean collidesWithUnloaded,
+                                                     java.util.function.BiPredicate<IBlockData, BlockPosition> predicate) {
+        return this.getCollisionsForBlocksOrWorldBorder(entity, axisalignedbb, null, loadChunks, collidesWithUnloaded, true, predicate);
+    }
+
+    public final boolean hardCollidesWithAnyEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<Entity> predicate) {
+        if (axisalignedbb.isEmpty()) {
+            return false;
+        }
+
+        // to comply with vanilla intersection rules, expand by -epsilon so we only get stuff we definitely collide with.
+        // Vanilla for hard collisions has this backwards, and they expand by +epsilon but this causes terrible problems
+        // specifically with boat collisions.
+        axisalignedbb = axisalignedbb.grow(-MCUtil.COLLISION_EPSILON, -MCUtil.COLLISION_EPSILON, -MCUtil.COLLISION_EPSILON);
+        List<Entity> entities = com.tuinity.tuinity.util.CachedLists.getTempGetEntitiesList();
+        try {
+            if (entity != null && entity.hardCollides()) {
+                this.getEntities(entity, axisalignedbb, predicate, entities);
+            } else {
+                this.getHardCollidingEntities(entity, axisalignedbb, predicate, entities);
+            }
+
+            for (int i = 0, len = entities.size(); i < len; ++i) {
+                Entity otherEntity = entities.get(i);
+
+                if ((entity == null || otherEntity.collisionBoxIsHard()) || entity.hardCollidesWith(otherEntity)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } finally {
+            com.tuinity.tuinity.util.CachedLists.returnTempGetEntitiesList(entities);
+        }
+    }
+
+    public final boolean hasAnyCollisions(@Nullable Entity entity, AxisAlignedBB axisalignedbb) {
+        return this.hasAnyCollisions(entity, axisalignedbb, true);
+    }
+
+    public final boolean hasAnyCollisions(@Nullable Entity entity, AxisAlignedBB axisalignedbb, boolean loadChunks) {
+        return this.collidesWithAnyBlockOrWorldBorder(entity, axisalignedbb, loadChunks, true)
+                || this.hardCollidesWithAnyEntities(entity, axisalignedbb, null);
+    }
+
+    // returns whether any collisions were detected
+    public boolean getCollisionsForBlocksOrWorldBorder(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list,
+                                                    boolean loadChunks, boolean collidesWithUnloaded, boolean checkOnly,
+                                                    java.util.function.BiPredicate<IBlockData, BlockPosition> predicate) {
+        boolean ret = false;
+
+        if (entity != null) {
+            if (this.getWorldBorder().isAlmostCollidingOnBorder(axisalignedbb)) {
+                if (checkOnly) {
+                    return true;
+                } else {
+                    VoxelShapes.addBoxesTo(this.getWorldBorder().getCollisionShape(), list);
+                    ret = true;
+                }
+            }
+        }
+
+        int minBlockX = MathHelper.floor(axisalignedbb.minX - MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockX = MathHelper.floor(axisalignedbb.maxX + MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockY = MathHelper.floor(axisalignedbb.minY - MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockY = MathHelper.floor(axisalignedbb.maxY + MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockZ = MathHelper.floor(axisalignedbb.minZ - MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockZ = MathHelper.floor(axisalignedbb.maxZ + MCUtil.COLLISION_EPSILON) + 1;
+
+
+        BlockPosition.MutableBlockPosition mutablePos = new BlockPosition.MutableBlockPosition();
+        net.minecraft.world.phys.shapes.VoxelShapeCollision collisionShape = null;
+
+        // special cases:
+        if (minBlockY > 255 || maxBlockY < 0) {
+            // no point in checking
+            return ret;
+        }
+
+        int minYIterate = Math.max(0, minBlockY);
+        int maxYIterate = Math.min(255, maxBlockY);
+
+        int minChunkX = minBlockX >> 4;
+        int maxChunkX = maxBlockX >> 4;
+
+        int minChunkZ = minBlockZ >> 4;
+        int maxChunkZ = maxBlockZ >> 4;
+
+        ChunkProviderServer chunkProvider = (ChunkProviderServer)this.chunkProvider;
+        // TODO special case single chunk?
+
+        for (int currChunkZ = minChunkZ; currChunkZ <= maxChunkZ; ++currChunkZ) {
+            int minZ = currChunkZ == minChunkZ ? minBlockZ & 15 : 0; // coordinate in chunk
+            int maxZ = currChunkZ == maxChunkZ ? maxBlockZ & 15 : 15; // coordinate in chunk
+
+            for (int currChunkX = minChunkX; currChunkX <= maxChunkX; ++currChunkX) {
+                int minX = currChunkX == minChunkX ? minBlockX & 15 : 0; // coordinate in chunk
+                int maxX = currChunkX == maxChunkX ? maxBlockX & 15 : 15; // coordinate in chunk
+
+                int chunkXGlobalPos = currChunkX << 4;
+                int chunkZGlobalPos = currChunkZ << 4;
+                Chunk chunk = loadChunks ? chunkProvider.getChunkAt(currChunkX, currChunkZ, true) : chunkProvider.getChunkAtIfLoadedImmediately(currChunkX, currChunkZ);
+
+                if (chunk == null) {
+                    if (collidesWithUnloaded) {
+                        if (checkOnly) {
+                            return true;
+                        } else {
+                            list.add(AxisAlignedBB.getBoxForChunk(currChunkX, currChunkZ));
+                            ret = true;
+                        }
+                    }
+                    continue;
+                }
+
+                ChunkSection[] sections = chunk.getSections();
+
+                // bound y
+
+                for (int currY = minYIterate; currY <= maxYIterate; ++currY) {
+                    ChunkSection section = sections[currY >>> 4];
+                    if (section == null || section.isFullOfAir()) {
+                        // empty
+                        // skip to next section
+                        currY = (currY & ~(15)) + 15; // increment by 15: iterator loop increments by the extra one
+                        continue;
+                    }
+
+                    net.minecraft.world.level.chunk.DataPaletteBlock<IBlockData> blocks = section.blockIds;
+
+                    for (int currZ = minZ; currZ <= maxZ; ++currZ) {
+                        for (int currX = minX; currX <= maxX; ++currX) {
+                            int localBlockIndex = (currX) | (currZ << 4) | ((currY & 15) << 8);
+                            int blockX = currX | chunkXGlobalPos;
+                            int blockY = currY;
+                            int blockZ = currZ | chunkZGlobalPos;
+
+                            int edgeCount = ((blockX == minBlockX || blockX == maxBlockX) ? 1 : 0) +
+                                    ((blockY == minBlockY || blockY == maxBlockY) ? 1 : 0) +
+                                    ((blockZ == minBlockZ || blockZ == maxBlockZ) ? 1 : 0);
+                            if (edgeCount == 3) {
+                                continue;
+                            }
+
+                            IBlockData blockData = blocks.rawGet(localBlockIndex);
+
+                            if ((edgeCount != 1 || blockData.shapeExceedsCube()) && (edgeCount != 2 || blockData.getBlock() == Blocks.MOVING_PISTON)) {
+                                mutablePos.setValues(blockX, blockY, blockZ);
+                                if (collisionShape == null) {
+                                    collisionShape = entity == null ? net.minecraft.world.phys.shapes.VoxelShapeCollision.a() : net.minecraft.world.phys.shapes.VoxelShapeCollision.a(entity);
+                                }
+                                VoxelShape voxelshape2 = blockData.getCollisionShape(this, mutablePos, collisionShape);
+                                if (voxelshape2 != VoxelShapes.getEmptyShape()) {
+                                    VoxelShape voxelshape3 = voxelshape2.offset((double)blockX, (double)blockY, (double)blockZ);
+
+                                    if (predicate != null && !predicate.test(blockData, mutablePos)) {
+                                        continue;
+                                    }
+
+                                    if (checkOnly) {
+                                        if (voxelshape3.intersects(axisalignedbb)) {
+                                            return true;
+                                        }
+                                    } else {
+                                        ret |= VoxelShapes.addBoxesToIfIntersects(voxelshape3, axisalignedbb, list);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public final void getEntityHardCollisions(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<Entity> predicate, List<AxisAlignedBB> list) {
+        if (axisalignedbb.isEmpty()) {
+            return;
+        }
+
+        // to comply with vanilla intersection rules, expand by -epsilon so we only get stuff we definitely collide with.
+        // Vanilla for hard collisions has this backwards, and they expand by +epsilon but this causes terrible problems
+        // specifically with boat collisions.
+        axisalignedbb = axisalignedbb.grow(-MCUtil.COLLISION_EPSILON, -MCUtil.COLLISION_EPSILON, -MCUtil.COLLISION_EPSILON);
+        List<Entity> entities = com.tuinity.tuinity.util.CachedLists.getTempGetEntitiesList();
+        try {
+            if (entity != null && entity.hardCollides()) {
+                this.getEntities(entity, axisalignedbb, predicate, entities);
+            } else {
+                this.getHardCollidingEntities(entity, axisalignedbb, predicate, entities);
+            }
+
+            for (int i = 0, len = entities.size(); i < len; ++i) {
+                Entity otherEntity = entities.get(i);
+
+                if ((entity == null || otherEntity.collisionBoxIsHard()) || entity.hardCollidesWith(otherEntity)) {
+                    if (!otherEntity.getBoundingBox().isEmpty()) {
+                        list.add(otherEntity.getBoundingBox());
+                    }
+                }
+            }
+        } finally {
+            com.tuinity.tuinity.util.CachedLists.returnTempGetEntitiesList(entities);
+        }
+    }
+
+    public final void getCollisions(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list, boolean loadChunks) {
+        this.getCollisionsForBlocksOrWorldBorder(entity, axisalignedbb, list, loadChunks, true, false, null);
+        this.getEntityHardCollisions(entity, axisalignedbb, null, list);
+    }
+
+    @Override
+    public boolean getCubes(AxisAlignedBB axisalignedbb) {
+        return !this.hasAnyCollisions(null, axisalignedbb);
+    }
+
+    @Override
+    public boolean getCubes(Entity entity) {
+        return !this.hasAnyCollisions(entity, entity.getBoundingBox());
+    }
+
+    @Override
+    public boolean getCubes(@Nullable Entity entity, AxisAlignedBB axisalignedbb) {
+        if (entity instanceof net.minecraft.world.entity.decoration.EntityArmorStand && !entity.world.paperConfig.armorStandEntityLookups) return false;
+        return !this.hasAnyCollisions(entity, axisalignedbb);
+    }
+
+    @Override
+    public boolean getCubes(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        if (entity instanceof net.minecraft.world.entity.decoration.EntityArmorStand && !entity.world.paperConfig.armorStandEntityLookups) return false;
+        return !this.collidesWithAnyBlockOrWorldBorder(entity, axisalignedbb, false, false) && !this.hardCollidesWithAnyEntities(entity, axisalignedbb, predicate);
+    }
+    // Tuinity end - optimise collision
+
     // CraftBukkit start
     @Override
     public TileEntity getTileEntity(BlockPosition pos, boolean validate) {
@@ -434,6 +882,14 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     public void doTick(BooleanSupplier booleansupplier) {
         GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
+        // Tuinity start - optimise checkDespawn
+        this.playersAffectingSpawning.clear();
+        for (EntityPlayer player : this.getPlayers()) {
+            if (net.minecraft.world.entity.IEntitySelector.affectsSpawning.test(player)) {
+                this.playersAffectingSpawning.add(player);
+            }
+        }
+        // Tuinity end - optimise checkDespawn
 
         this.ticking = true;
         gameprofilerfiller.enter("world border");
@@ -583,7 +1039,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
         timings.scheduledBlocks.stopTiming(); // Paper
 
-        this.getMinecraftServer().midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         gameprofilerfiller.exitEnter("raid");
         this.timings.raids.startTiming(); // Paper - timings
         this.persistentRaid.a();
@@ -592,7 +1048,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         timings.doSounds.startTiming(); // Spigot
         this.ak();
         timings.doSounds.stopTiming(); // Spigot
-        this.getMinecraftServer().midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         this.ticking = false;
         gameprofilerfiller.exitEnter("entities");
         boolean flag3 = true || !this.players.isEmpty() || !this.getForceLoadedChunks().isEmpty(); // CraftBukkit - this prevents entity cleanup, other issues on servers with no players
@@ -608,13 +1064,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
 
             this.tickingEntities = true;
-            ObjectIterator objectiterator = this.entitiesById.int2ObjectEntrySet().iterator();
+            com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.Iterator<Entity> objectiterator = this.entitiesForIteration.iterator(); // Tuinity
 
             org.spigotmc.ActivationRange.activateEntities(this); // Spigot
             timings.entityTick.startTiming(); // Spigot
             while (objectiterator.hasNext()) {
-                Entry<Entity> entry = (Entry) objectiterator.next();
-                Entity entity = (Entity) entry.getValue();
+                Entity entity = (Entity) objectiterator.next(); // Tuinity
                 Entity entity1 = entity.getVehicle();
 
                 /* CraftBukkit start - We prevent spawning in general, so this butchering is not needed
@@ -630,6 +1085,15 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 gameprofilerfiller.enter("checkDespawn");
                 if (!entity.dead) {
                     entity.checkDespawn();
+                    // Tuinity start - optimise notify()
+                    if (entity.inChunk && entity.valid) {
+                        if (this.getChunkProvider().isInEntityTickingChunk(entity)) {
+                            this.updateNavigatorsInRegion(entity);
+                        }
+                    } else {
+                        this.removeNavigatorsFromData(entity);
+                    }
+                    // Tuinity end - optimise notify()
                 }
 
                 gameprofilerfiller.exit();
@@ -650,14 +1114,22 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 gameprofilerfiller.enter("remove");
                 if (entity.dead) {
                     this.removeEntityFromChunk(entity);
-                    objectiterator.remove();
+                    this.entitiesById.remove(entity.getId()); // Tuinity
                     this.unregisterEntity(entity);
+                } else if (entity.inChunk && entity.valid) { // Tuinity start - optimise notify()
+                    if (this.getChunkProvider().isInEntityTickingChunk(entity)) {
+                        this.updateNavigatorsInRegion(entity);
+                    }
+                } else {
+                    this.removeNavigatorsFromData(entity);
                 }
+                // Tuinity end - optimise notify()
 
                 gameprofilerfiller.exit();
             }
             timings.entityTick.stopTiming(); // Spigot
 
+            objectiterator.finishedIterating(); // Tuinity
             this.tickingEntities = false;
             // Paper start
             for (java.lang.Runnable run : this.afterEntityTickingTasks) {
@@ -669,7 +1141,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
             this.afterEntityTickingTasks.clear();
             // Paper end
-            this.getMinecraftServer().midTickLoadChunks(); // Paper
+            // Tuinity - replace logic
 
             Entity entity2;
 
@@ -679,7 +1151,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
 
             timings.tickEntities.stopTiming(); // Spigot
-            this.getMinecraftServer().midTickLoadChunks(); // Paper
+            // Tuinity - replace logic
             this.tickBlockEntities();
         }
 
@@ -726,6 +1198,9 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private final BlockPosition.MutableBlockPosition chunkTickMutablePosition = new BlockPosition.MutableBlockPosition();
     private final com.destroystokyo.paper.util.math.ThreadUnsafeRandom randomTickRandom = new com.destroystokyo.paper.util.math.ThreadUnsafeRandom();
     // Paper end
+    // Tuinity start - optimise chunk ice snow ticking
+    private final BiomeBase[] biomeBaseCache = new BiomeBase[1];
+    // Tuinity end - optimise chunk ice snow ticking
 
     public void a(Chunk chunk, int i) { final int randomTickSpeed = i; // Paper
         ChunkCoordIntPair chunkcoordintpair = chunk.getPos();
@@ -763,28 +1238,32 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         gameprofilerfiller.exitEnter("iceandsnow");
         if (!this.paperConfig.disableIceAndSnow && this.randomTickRandom.nextInt(16) == 0) { // Paper - Disable ice and snow // Paper - optimise random ticking
             // Paper start - optimise chunk ticking
+            // Tuinity start - optimise chunk ice snow ticking
+            BiomeBase[] biomeCache = this.biomeBaseCache;
+            biomeCache[0] = null;
+            // Tuinity start - optimise chunk ice snow ticking
             this.getRandomBlockPosition(j, 0, k, 15, blockposition);
             int normalY = chunk.getHighestBlockY(HeightMap.Type.MOTION_BLOCKING, blockposition.getX() & 15, blockposition.getZ() & 15);
             int downY = normalY - 1;
             blockposition.setY(normalY);
             // Paper end
-            BiomeBase biomebase = this.getBiome(blockposition);
+            //BiomeBase biomebase = this.getBiome(blockposition); // Tuinity - lazily-get biome
 
             // Paper start - optimise chunk ticking
             blockposition.setY(downY);
-            if (biomebase.a(this, blockposition)) {
+            if (BiomeBase.canTurnWaterIntoIce(this, blockposition, true, chunk, biomeCache)) { // Tuinity - add chunk parameter, avoid biome lookup
                 org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(this, blockposition, Blocks.ICE.getBlockData(), null); // CraftBukkit
                 // Paper end
             }
 
             blockposition.setY(normalY); // Paper
-            if (flag && biomebase.b(this, blockposition)) {
+            if (flag && BiomeBase.canTurnAirIntoSnow(this, blockposition, chunk, biomeCache)) {
                 org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(this, blockposition, Blocks.SNOW.getBlockData(), null); // CraftBukkit
             }
 
             // Paper start - optimise chunk ticking
             blockposition.setY(downY);
-            if (flag && this.getBiome(blockposition).c() == BiomeBase.Precipitation.RAIN) {
+            if (flag && chunk.getType(blockposition).getBlock() instanceof net.minecraft.world.level.block.BlockCauldron && this.getBiome(blockposition).c() == BiomeBase.Precipitation.RAIN) { // Tuinity - only cauldron uses that method, and it's not likely to hit. So, avoid the expensive biome lookup and replace it with a block lookup TODO check on update for overrides
                 chunk.getType(blockposition).getBlock().c((World) this, blockposition);
                 // Paper end
             }
@@ -924,7 +1403,26 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     }
 
+    // Tuinity start - log detailed entity tick information
+    // TODO replace with varhandle
+    static final java.util.concurrent.atomic.AtomicReference<Entity> currentlyTickingEntity = new java.util.concurrent.atomic.AtomicReference<>();
+
+    public static List<Entity> getCurrentlyTickingEntities() {
+        Entity ticking = currentlyTickingEntity.get();
+        List<Entity> ret = java.util.Arrays.asList(ticking == null ? new Entity[0] : new Entity[] { ticking });
+
+        return ret;
+    }
+    // Tuinity end - log detailed entity tick information
+
     public void entityJoinedWorld(Entity entity) {
+        // Tuinity start - log detailed entity tick information
+        com.tuinity.tuinity.util.TickThread.ensureTickThread("Cannot tick an entity off-main");
+        try {
+            if (currentlyTickingEntity.get() == null) {
+                currentlyTickingEntity.lazySet(entity);
+            }
+            // Tuinity end - log detailed entity tick information
         if (!(entity instanceof EntityHuman) && !this.getChunkProvider().a(entity)) {
             this.chunkCheck(entity);
         } else {
@@ -977,6 +1475,13 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             //} finally { timer.stopTiming(); } // Paper - timings - move up
 
         }
+        // Tuinity start - log detailed entity tick information
+        } finally {
+            if (currentlyTickingEntity.get() == entity) {
+                currentlyTickingEntity.lazySet(null);
+            }
+        }
+        // Tuinity end - log detailed entity tick information
     }
 
     public void a(Entity entity, Entity entity1) {
@@ -1035,6 +1540,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             int i = MathHelper.floor(entity.locX() / 16.0D);
             int j =  Math.min(15, Math.max(0, MathHelper.floor(entity.locY() / 16.0D))); // Paper - stay consistent with chunk add/remove behavior
             int k = MathHelper.floor(entity.locZ() / 16.0D);
+            // Tuinity start
+            int oldRegionX = entity.chunkX >> this.getChunkProvider().playerChunkMap.dataRegionManager.regionChunkShift;
+            int oldRegionZ = entity.chunkZ >> this.getChunkProvider().playerChunkMap.dataRegionManager.regionChunkShift;
+            int newRegionX = i >> this.getChunkProvider().playerChunkMap.dataRegionManager.regionChunkShift;
+            int newRegionZ = k >> this.getChunkProvider().playerChunkMap.dataRegionManager.regionChunkShift;
+            // Tuinity end
 
             if (!entity.inChunk || entity.chunkX != i || entity.chunkY != j || entity.chunkZ != k) {
                 // Paper start - remove entity if its in a chunk more correctly.
@@ -1043,6 +1554,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     currentChunk.removeEntity(entity);
                 }
                 // Paper end
+
+                // Tuinity start
+                if (oldRegionX != newRegionX || oldRegionZ != newRegionZ) {
+                    this.removeNavigatorsFromData(entity);
+                }
+                // Tuinity end
 
                 if (entity.inChunk && this.isChunkLoaded(entity.chunkX, entity.chunkZ)) {
                     this.getChunkAt(entity.chunkX, entity.chunkZ).a(entity, entity.chunkY);
@@ -1055,8 +1572,41 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
                     entity.inChunk = false;
                 } else {
-                    this.getChunkAt(i, k).a(entity);
+                    // Tuinity start - gotta be careful here, sync load can teleport entity.
+                    Chunk chunk = this.getChunkIfLoaded(i, k);
+                    if (chunk == null) {
+                        // might teleport the entity, so be prepared.
+                        // at this point, we are NOT in a chunk. so CLEARLY mark that for a recursive call to see.
+                        entity.inChunk = false;
+                        // now load
+                        chunk = this.getChunkAt(i, k);
+                        // are we in a chunk now?
+                        if (entity.inChunk) {
+                            // yup we teleported and were added to another chunk. do not add to the current one!
+                            return;
+                        }
+                        // did we teleport but did not add to a chunk?
+                        // copied from start
+                        int in = MathHelper.floor(entity.locX() / 16.0D);
+                        int jn =  Math.min(15, Math.max(0, MathHelper.floor(entity.locY() / 16.0D))); // Paper - stay consistent with chunk add/remove behavior
+                        int kn = MathHelper.floor(entity.locZ() / 16.0D);
+                        if (in != i || jn != j || kn != k) {
+                            // teleported but were not added to a chunk. try now, let the new call try to add again
+                            this.chunkCheck(entity);
+                            return;
+                        }
+
+                        // only now at this point have we verified the new load did not screw up our position, so
+                        // now we can add to the chunk
+                    }
+                    chunk.a(entity);
+                    // Tuinity end - gotta be careful here, sync load can teleport entity.
                 }
+                // Tuinity start
+                if (entity.inChunk && (oldRegionX != newRegionX || oldRegionZ != newRegionZ)) {
+                    this.addNavigatorsIfPathingToRegion(entity);
+                }
+                // Tuinity end
             }
 
             this.getMethodProfiler().exit();
@@ -1393,10 +1943,14 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         // Spigot Start
         for (TileEntity tileentity : chunk.getTileEntities().values()) {
             if (tileentity instanceof net.minecraft.world.IInventory) {
+                // Tuinity start - this area looks like it can load chunks, change the behavior
+                // chests for example can apply physics to the world
+                // so instead we just change the active container and call the event
                 for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((net.minecraft.world.IInventory) tileentity).getViewers())) {
-                    h.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED); // Paper
+                    ((org.bukkit.craftbukkit.entity.CraftHumanEntity) h).getHandle().closeUnloadedInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.UNLOADED); // Paper
                 }
             }
+            // Tuiniy end
         }
         // Spigot End
         this.tileEntityListUnload.addAll(chunk.getTileEntities().values());
@@ -1412,7 +1966,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 Entity entity = (Entity) iterator.next();
 
                 if (!(entity instanceof EntityPlayer)) {
-                    if (this.tickingEntities) {
+                    if (false && this.tickingEntities) { // Tuinity
                         throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("Removing entity while ticking!")));
                     }
 
@@ -1440,6 +1994,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     public void unregisterEntity(Entity entity) {
         org.spigotmc.AsyncCatcher.catchOp("entity unregister"); // Spigot
+        this.entitiesForIteration.remove(entity); // Tuinity
         // Paper start - fix entity registration issues
         if (entity instanceof EntityComplexPart) {
             // Usually this is a no-op for complex parts, and ID's should be removed, but go ahead and remove it anyways
@@ -1506,16 +2061,75 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.getScoreboard().a(entity);
         // CraftBukkit start - SPIGOT-5278
         if (entity instanceof EntityDrowned) {
-            this.navigators.remove(((EntityDrowned) entity).navigationWater);
-            this.navigators.remove(((EntityDrowned) entity).navigationLand);
+            // Tuinity start
+            this.navigators.remove(((EntityDrowned) entity).navigationWater); this.navigatorsForIteration.remove(((EntityDrowned) entity).navigationWater);
+            this.navigators.remove(((EntityDrowned) entity).navigationLand); this.navigatorsForIteration.remove(((EntityDrowned) entity).navigationLand);
+            // Tuinity end
         } else
         // CraftBukkit end
         if (entity instanceof EntityInsentient) {
-            this.navigators.remove(((EntityInsentient) entity).getNavigation());
+            // Tuinity start
+            this.navigators.remove(((EntityInsentient) entity).getNavigation()); this.navigatorsForIteration.remove(((EntityInsentient) entity).getNavigation());
+            // Tuinity end
         }
         new com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent(entity.getBukkitEntity()).callEvent(); // Paper - fire while valid
+        this.removeNavigatorsFromData(entity); // Tuinity - optimise notify()
         entity.valid = false; // CraftBukkit
     }
+
+    // Tuinity start - optimise notify()
+    void removeNavigatorsIfNotPathingFromRegion(Entity entity) {
+        com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section =
+                this.getChunkProvider().playerChunkMap.dataRegionManager.getRegionSection(entity.chunkX, entity.chunkZ);
+        if (section != null) {
+            PlayerChunkMap.DataRegionSectionData sectionData = (PlayerChunkMap.DataRegionSectionData)section.sectionData;
+            if (entity instanceof EntityInsentient) {
+                if (!((EntityInsentient)entity).getNavigation().isViableForPathRecalculationChecking()) {
+                    sectionData.removeFromNavigators(section, (EntityInsentient)entity);
+                }
+            }
+        }
+    }
+
+    void removeNavigatorsFromData(Entity entity) {
+        com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section =
+                this.getChunkProvider().playerChunkMap.dataRegionManager.getRegionSection(entity.chunkX, entity.chunkZ);
+        if (section != null) {
+            PlayerChunkMap.DataRegionSectionData sectionData = (PlayerChunkMap.DataRegionSectionData)section.sectionData;
+            if (entity instanceof EntityInsentient) {
+                sectionData.removeFromNavigators(section, ((EntityInsentient)entity));
+            }
+        }
+    }
+
+    void addNavigatorsIfPathingToRegion(Entity entity) {
+        com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section =
+                this.getChunkProvider().playerChunkMap.dataRegionManager.getRegionSection(entity.chunkX, entity.chunkZ);
+        if (section != null) {
+            PlayerChunkMap.DataRegionSectionData sectionData = (PlayerChunkMap.DataRegionSectionData)section.sectionData;
+            if (entity instanceof EntityInsentient) {
+                if (((EntityInsentient)entity).getNavigation().isViableForPathRecalculationChecking()) {
+                    sectionData.addToNavigators(section, ((EntityInsentient)entity));
+                }
+            }
+        }
+    }
+
+    void updateNavigatorsInRegion(Entity entity) {
+        com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section =
+                this.getChunkProvider().playerChunkMap.dataRegionManager.getRegionSection(entity.chunkX, entity.chunkZ);
+        if (section != null) {
+            PlayerChunkMap.DataRegionSectionData sectionData = (PlayerChunkMap.DataRegionSectionData)section.sectionData;
+            if (entity instanceof EntityInsentient) {
+                if (((EntityInsentient)entity).getNavigation().isViableForPathRecalculationChecking()) {
+                    sectionData.addToNavigators(section, ((EntityInsentient)entity));
+                } else {
+                    sectionData.removeFromNavigators(section, ((EntityInsentient)entity));
+                }
+            }
+        }
+    }
+    // Tuinity end - optimise notify()
 
     private void registerEntity(Entity entity) {
         org.spigotmc.AsyncCatcher.catchOp("entity register"); // Spigot
@@ -1527,7 +2141,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             return;
         }
         // Paper end
-        if (this.tickingEntities) {
+        if (false && this.tickingEntities) { // Tuinity
             if (!entity.isQueuedForRegister) { // Paper
                 this.entitiesToAdd.add(entity);
                 entity.isQueuedForRegister = true; // Paper
@@ -1535,6 +2149,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         } else {
             entity.isQueuedForRegister = false; // Paper
             this.entitiesById.put(entity.getId(), entity);
+            this.entitiesForIteration.add(entity); // Tuinity
             if (entity instanceof EntityEnderDragon) {
                 EntityComplexPart[] aentitycomplexpart = ((EntityEnderDragon) entity).eJ();
                 int i = aentitycomplexpart.length;
@@ -1543,6 +2158,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     EntityComplexPart entitycomplexpart = aentitycomplexpart[j];
 
                     this.entitiesById.put(entitycomplexpart.getId(), entitycomplexpart);
+                    this.entitiesForIteration.add(entitycomplexpart); // Tuinity
                 }
             }
 
@@ -1567,12 +2183,16 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             // this.getChunkProvider().addEntity(entity); // Paper - moved down below valid=true
             // CraftBukkit start - SPIGOT-5278
             if (entity instanceof EntityDrowned) {
-                this.navigators.add(((EntityDrowned) entity).navigationWater);
-                this.navigators.add(((EntityDrowned) entity).navigationLand);
+                // Tuinity start
+                this.navigators.add(((EntityDrowned) entity).navigationWater); this.navigatorsForIteration.add(((EntityDrowned) entity).navigationWater);
+                this.navigators.add(((EntityDrowned) entity).navigationLand); this.navigatorsForIteration.add(((EntityDrowned) entity).navigationLand);
+                // Tuinity end
             } else
             // CraftBukkit end
             if (entity instanceof EntityInsentient) {
-                this.navigators.add(((EntityInsentient) entity).getNavigation());
+                // Tuinity start
+                this.navigators.add(((EntityInsentient) entity).getNavigation()); this.navigatorsForIteration.add(((EntityInsentient) entity).getNavigation());
+                // Tuinity end
             }
             entity.valid = true; // CraftBukkit
             this.getChunkProvider().addEntity(entity); // Paper - from above to be below valid=true
@@ -1588,7 +2208,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     }
 
     public void removeEntity(Entity entity) {
-        if (this.tickingEntities) {
+        if (false && this.tickingEntities) {  // Tuinity
             throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("Removing entity while ticking!")));
         } else {
             this.removeEntityFromChunk(entity);
@@ -1683,20 +2303,33 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     @Override
     public void notify(BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, int i) {
+        org.spigotmc.AsyncCatcher.catchOp("notify call"); // Tuinity
         this.getChunkProvider().flagDirty(blockposition);
         if(this.paperConfig.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
         VoxelShape voxelshape = iblockdata.getCollisionShape(this, blockposition);
         VoxelShape voxelshape1 = iblockdata1.getCollisionShape(this, blockposition);
 
         if (VoxelShapes.c(voxelshape, voxelshape1, OperatorBoolean.NOT_SAME)) {
+            // Tuinity start - optimise notify()
+            com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.Region region = this.getChunkProvider().playerChunkMap.dataRegionManager.getRegion(blockposition.getX() >> 4, blockposition.getZ() >> 4);
+            if (region == null) {
+                return;
+            }
+            com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<EntityInsentient> navigatorsFromRegion = ((PlayerChunkMap.DataRegionData)region.regionData).getNavigators();
+            if (navigatorsFromRegion == null) {
+                return;
+            }
             boolean wasTicking = this.tickingEntities; this.tickingEntities = true; // Paper
-            Iterator iterator = this.navigators.iterator();
+            // Tuinity start
+            com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.Iterator<EntityInsentient> iterator = navigatorsFromRegion.iterator();
+            // Tuinity end - optimise notify()
+            try { // Tuinity end
 
             while (iterator.hasNext()) {
                 // CraftBukkit start - fix SPIGOT-6362
                 NavigationAbstract navigationabstract;
                 try {
-                    navigationabstract = (NavigationAbstract) iterator.next();
+                    navigationabstract = (NavigationAbstract) iterator.next().getNavigation(); // Tuinity - optimise notify
                 } catch (java.util.ConcurrentModificationException ex) {
                     // This can happen because the pathfinder update below may trigger a chunk load, which in turn may cause more navigators to register
                     // In this case we just run the update again across all the iterators as the chunk will then be loaded
@@ -1710,6 +2343,9 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     navigationabstract.b(blockposition);
                 }
             }
+            } finally { // Tuinity start
+                iterator.finishedIterating();
+            } // Tuinity end
 
             this.tickingEntities = wasTicking; // Paper
         }

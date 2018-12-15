@@ -120,7 +120,7 @@ public class ChunkStatus {
     private final ChunkStatus.c w;
     private final int x;
     private final ChunkStatus.Type y;
-    private final EnumSet<HeightMap.Type> z;
+    private final EnumSet<HeightMap.Type> z; public final HeightMap.Type[] heightMaps; // Tuinity
 
     private static CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> a(ChunkStatus chunkstatus, LightEngineThreaded lightenginethreaded, IChunkAccess ichunkaccess) {
         boolean flag = a(chunkstatus, ichunkaccess);
@@ -182,7 +182,7 @@ public class ChunkStatus {
         this.w = chunkstatus_c;
         this.x = i;
         this.y = chunkstatus_type;
-        this.z = enumset;
+        this.z = enumset; this.heightMaps = new java.util.ArrayList<>(this.z).toArray(new HeightMap.Type[0]); // Tuinity
         this.t = chunkstatus == null ? 0 : chunkstatus.c() + 1;
     }
 

@@ -67,7 +67,8 @@ public interface IBlockAccess {
                 return MovingObjectPositionBlock.a(raytrace1.a(), EnumDirection.a(vec3d.x, vec3d.y, vec3d.z), new BlockPosition(raytrace1.a()));
             }
             // Paper end
-            Fluid fluid = this.getFluid(blockposition);
+            if (iblockdata.isAir()) return null; // Tuinity - optimise air cases
+            Fluid fluid = iblockdata.getFluid(); // Tuinity - don't need to go to world state again
             Vec3D vec3d = raytrace1.b();
             Vec3D vec3d1 = raytrace1.a();
             VoxelShape voxelshape = raytrace1.a(iblockdata, this, blockposition);

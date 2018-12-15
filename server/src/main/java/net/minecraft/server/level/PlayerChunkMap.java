@@ -103,6 +103,7 @@ import net.minecraft.world.level.storage.WorldDataServer;
 import net.minecraft.world.level.storage.WorldPersistentData;
 import net.minecraft.world.phys.Vec3D;
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet; // Paper
+import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap; // Tuinity
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -115,8 +116,9 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final int GOLDEN_TICKET = 33 + ChunkStatus.b();
     // Paper start - faster copying
-    public final Long2ObjectLinkedOpenHashMap<PlayerChunk> updatingChunks = new com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<>(); // Paper - faster copying
-    public final Long2ObjectLinkedOpenHashMap<PlayerChunk> visibleChunks = new ProtectedVisibleChunksMap(); // Paper - faster copying
+    // Tuinity start - Don't copy
+    public final com.destroystokyo.paper.util.map.QueuedChangesMapLong2Object<PlayerChunk> updatingChunks = new com.destroystokyo.paper.util.map.QueuedChangesMapLong2Object<>();
+    // Tuinity end - Don't copy
 
     private class ProtectedVisibleChunksMap extends com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk> {
         @Override
@@ -139,8 +141,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         }
     }
     // Paper end
-    public final com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk> pendingVisibleChunks = new com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk>(); // Paper - this is used if the visible chunks is updated while iterating only
-    public transient com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk> visibleChunksClone; // Paper - used for async access of visible chunks, clone and cache only when needed
+    // Tuinity - Don't copy
     private final Long2ObjectLinkedOpenHashMap<PlayerChunk> pendingUnload;
     public final LongSet loadedChunks; // Paper - private -> public
     public final WorldServer world;
@@ -176,31 +177,28 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     // CraftBukkit start - recursion-safe executor for Chunk loadCallback() and unloadCallback()
     public final CallbackExecutor callbackExecutor = new CallbackExecutor();
     public static final class CallbackExecutor implements java.util.concurrent.Executor, Runnable {
-
-        // Paper start - replace impl with recursive safe multi entry queue
-        // it's possible to schedule multiple tasks currently, so it's vital we change this impl
-        // If we recurse into the executor again, we will append to another queue, ensuring task order consistency
-        private java.util.ArrayDeque<Runnable> queued = new java.util.ArrayDeque<>();
+        // Tuinity start - revert paper's change
+        private Runnable queued;
 
         @Override
         public void execute(Runnable runnable) {
             AsyncCatcher.catchOp("Callback Executor execute");
-            if (queued == null) {
-                queued = new java.util.ArrayDeque<>();
+            if (queued != null) {
+                MinecraftServer.LOGGER.fatal("Failed to schedule runnable", new IllegalStateException("Already queued")); // Paper - make sure this is printed
+                throw new IllegalStateException("Already queued");
             }
-            queued.add(runnable);
+            queued = runnable;
         }
+        // Tuinity end - revert paper's change
 
         @Override
         public void run() {
             AsyncCatcher.catchOp("Callback Executor run");
-            if (queued == null) {
-                return;
-            }
-            java.util.ArrayDeque<Runnable> queue = queued;
+            // Tuinity start - revert paper's change
+            Runnable task = queued;
             queued = null;
-            Runnable task;
-            while ((task = queue.pollFirst()) != null) {
+            if (task != null) {
+                // Tuinity end - revert paper's change
                 task.run();
             }
         }
@@ -220,7 +218,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     // inlined EnumMap, TrackingRange.TrackingRangeType
     static final org.spigotmc.TrackingRange.TrackingRangeType[] TRACKING_RANGE_TYPES = org.spigotmc.TrackingRange.TrackingRangeType.values();
     public final com.destroystokyo.paper.util.misc.PlayerAreaMap[] playerEntityTrackerTrackMaps;
-    final int[] entityTrackerTrackRanges;
+    final int[] entityTrackerTrackRanges; public int getEntityTrackerRange(final int ordinal) { return this.entityTrackerTrackRanges[ordinal]; } // Tuinity - public read
 
     private int convertSpigotRangeToVanilla(final int vanilla) {
         return MinecraftServer.getServer().applyTrackingRangeScale(vanilla);
@@ -238,23 +236,17 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     public final com.destroystokyo.paper.util.misc.PlayerAreaMap playerChunkTickRangeMap;
     // Paper end - optimise PlayerChunkMap#isOutsideRange
     // Paper start - no-tick view distance
-    int noTickViewDistance;
-    public final int getRawNoTickViewDistance() {
-        return this.noTickViewDistance;
-    }
-    public final int getEffectiveNoTickViewDistance() {
-        return this.noTickViewDistance == -1 ? this.getEffectiveViewDistance() : this.noTickViewDistance;
-    }
-    public final int getLoadViewDistance() {
-        return Math.max(this.getEffectiveViewDistance(), this.getEffectiveNoTickViewDistance());
-    }
-
-    public final com.destroystokyo.paper.util.misc.PlayerAreaMap playerViewDistanceBroadcastMap;
-    public final com.destroystokyo.paper.util.misc.PlayerAreaMap playerViewDistanceTickMap;
-    public final com.destroystokyo.paper.util.misc.PlayerAreaMap playerViewDistanceNoTickMap;
+    public final com.tuinity.tuinity.chunk.PlayerChunkLoader playerChunkManager = new com.tuinity.tuinity.chunk.PlayerChunkLoader(this, this.pooledLinkedPlayerHashSets); // Tuinity - replace chunk loader
     // Paper end - no-tick view distance
+    // Tuinity start - optimise checkDespawn
+    public static final int GENERAL_AREA_MAP_SQUARE_RADIUS = 40;
+    public static final double GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE = 16.0 * (GENERAL_AREA_MAP_SQUARE_RADIUS - 1);
+    public static final double GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE_SQUARED = GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE * GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE;
+    public final com.destroystokyo.paper.util.misc.PlayerAreaMap playerGeneralAreaMap;
+    // Tuinity end - optimise checkDespawn
 
     void addPlayerToDistanceMaps(EntityPlayer player) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update distance maps off of the main thread"); // Tuinity
         int chunkX = MCUtil.getChunkCoordinate(player.locX());
         int chunkZ = MCUtil.getChunkCoordinate(player.locZ());
         // Note: players need to be explicitly added to distance maps before they can be updated
@@ -263,28 +255,22 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             com.destroystokyo.paper.util.misc.PlayerAreaMap trackMap = this.playerEntityTrackerTrackMaps[i];
             int trackRange = this.entityTrackerTrackRanges[i];
 
-            trackMap.add(player, chunkX, chunkZ, Math.min(trackRange, this.getEffectiveViewDistance()));
+            trackMap.add(player, chunkX, chunkZ, Math.min(trackRange, player.getBukkitEntity().getViewDistance())); // Tuinity - per player view distances
         }
         // Paper end - use distance map to optimise entity tracker
         // Paper start - optimise PlayerChunkMap#isOutsideRange
         this.playerChunkTickRangeMap.add(player, chunkX, chunkZ, ChunkMapDistance.MOB_SPAWN_RANGE);
         // Paper end - optimise PlayerChunkMap#isOutsideRange
         // Paper start - no-tick view distance
-        int effectiveTickViewDistance = this.getEffectiveViewDistance();
-        int effectiveNoTickViewDistance = Math.max(this.getEffectiveNoTickViewDistance(), effectiveTickViewDistance);
-
-        if (!this.cannotLoadChunks(player)) {
-            this.playerViewDistanceTickMap.add(player, chunkX, chunkZ, effectiveTickViewDistance);
-            this.playerViewDistanceNoTickMap.add(player, chunkX, chunkZ, effectiveNoTickViewDistance + 2); // clients need chunk 1 neighbour, and we need another 1 for sending those extra neighbours (as we require neighbours to send)
-        }
-
-        player.needsChunkCenterUpdate = true;
-        this.playerViewDistanceBroadcastMap.add(player, chunkX, chunkZ, effectiveNoTickViewDistance + 1); // clients need an extra neighbour to render the full view distance configured
-        player.needsChunkCenterUpdate = false;
+        this.playerChunkManager.addPlayer(player); // Tuinity - replace chunk loader
         // Paper end - no-tick view distance
+        // Tuinity start - optimise checkDespawn
+        this.playerGeneralAreaMap.add(player, chunkX, chunkZ, GENERAL_AREA_MAP_SQUARE_RADIUS);
+        // Tuinity end - optimise checkDespawn
     }
 
     void removePlayerFromDistanceMaps(EntityPlayer player) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update distance maps off of the main thread"); // Tuinity
         // Paper start - use distance map to optimise tracker
         for (int i = 0, len = TRACKING_RANGE_TYPES.length; i < len; ++i) {
             this.playerEntityTrackerTrackMaps[i].remove(player);
@@ -295,13 +281,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         this.playerChunkTickRangeMap.remove(player);
         // Paper end - optimise PlayerChunkMap#isOutsideRange
         // Paper start - no-tick view distance
-        this.playerViewDistanceBroadcastMap.remove(player);
-        this.playerViewDistanceTickMap.remove(player);
-        this.playerViewDistanceNoTickMap.remove(player);
+        this.playerChunkManager.removePlayer(player); // Tuinity - replace chunk loader
         // Paper end - no-tick view distance
+        // Tuinity start - optimise checkDespawn
+        this.playerGeneralAreaMap.remove(player);
+        // Tuinity end - optimise checkDespawn
     }
 
     void updateMaps(EntityPlayer player) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update distance maps off of the main thread"); // Tuinity
         int chunkX = MCUtil.getChunkCoordinate(player.locX());
         int chunkZ = MCUtil.getChunkCoordinate(player.locZ());
         // Note: players need to be explicitly added to distance maps before they can be updated
@@ -310,27 +298,124 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             com.destroystokyo.paper.util.misc.PlayerAreaMap trackMap = this.playerEntityTrackerTrackMaps[i];
             int trackRange = this.entityTrackerTrackRanges[i];
 
-            trackMap.update(player, chunkX, chunkZ, Math.min(trackRange, this.getEffectiveViewDistance()));
+            trackMap.update(player, chunkX, chunkZ, Math.min(trackRange, player.getBukkitEntity().getViewDistance())); // Tuinity - per player view distances
         }
         // Paper end - use distance map to optimise entity tracker
         // Paper start - optimise PlayerChunkMap#isOutsideRange
         this.playerChunkTickRangeMap.update(player, chunkX, chunkZ, ChunkMapDistance.MOB_SPAWN_RANGE);
         // Paper end - optimise PlayerChunkMap#isOutsideRange
         // Paper start - no-tick view distance
-        int effectiveTickViewDistance = this.getEffectiveViewDistance();
-        int effectiveNoTickViewDistance = Math.max(this.getEffectiveNoTickViewDistance(), effectiveTickViewDistance);
-
-        if (!this.cannotLoadChunks(player)) {
-            this.playerViewDistanceTickMap.update(player, chunkX, chunkZ, effectiveTickViewDistance);
-            this.playerViewDistanceNoTickMap.update(player, chunkX, chunkZ, effectiveNoTickViewDistance + 2); // clients need chunk 1 neighbour, and we need another 1 for sending those extra neighbours (as we require neighbours to send)
-        }
-
-        player.needsChunkCenterUpdate = true;
-        this.playerViewDistanceBroadcastMap.update(player, chunkX, chunkZ, effectiveNoTickViewDistance + 1); // clients need an extra neighbour to render the full view distance configured
-        player.needsChunkCenterUpdate = false;
+        this.playerChunkManager.updatePlayer(player); // Tuinity - replace chunk loader
         // Paper end - no-tick view distance
+        // Tuinity start - optimise checkDespawn
+        this.playerGeneralAreaMap.update(player, chunkX, chunkZ, GENERAL_AREA_MAP_SQUARE_RADIUS);
+        // Tuinity end - optimise checkDespawn
     }
     // Paper end
+
+    // Tuinity start
+    public final List<com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager> regionManagers = new java.util.ArrayList<>();
+    public final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager dataRegionManager;
+
+    public static final class DataRegionData implements com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionData {
+
+        // Tuinity start - optimise notify()
+        private com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<EntityInsentient> navigators;
+
+        public com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<EntityInsentient> getNavigators() {
+            return this.navigators;
+        }
+
+        public boolean addToNavigators(final EntityInsentient navigator) {
+            if (this.navigators == null) {
+                this.navigators = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>();
+            }
+            return this.navigators.add(navigator);
+        }
+
+        public boolean removeFromNavigators(final EntityInsentient navigator) {
+            if (this.navigators == null) {
+                return false;
+            }
+            return this.navigators.remove(navigator);
+        }
+        // Tuinity end - optimise notify()
+
+    }
+
+    public static final class DataRegionSectionData implements com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSectionData {
+
+        // Tuinity start - optimise notify()
+        private com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<EntityInsentient> navigators;
+
+        public com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<EntityInsentient> getNavigators() {
+            return this.navigators;
+        }
+
+        public boolean addToNavigators(final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section, final EntityInsentient navigator) {
+            if (this.navigators == null) {
+                this.navigators = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>();
+            }
+            final boolean ret = this.navigators.add(navigator);
+            if (ret) {
+                final DataRegionData data = (DataRegionData)section.getRegion().regionData;
+                if (!data.addToNavigators(navigator)) {
+                    throw new IllegalStateException();
+                }
+            }
+            return ret;
+        }
+
+        public boolean removeFromNavigators(final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section, final EntityInsentient navigator) {
+            if (this.navigators == null) {
+                return false;
+            }
+            final boolean ret = this.navigators.remove(navigator);
+            if (ret) {
+                final DataRegionData data = (DataRegionData)section.getRegion().regionData;
+                if (!data.removeFromNavigators(navigator)) {
+                    throw new IllegalStateException();
+                }
+            }
+            return ret;
+        }
+        // Tuinity end - optimise notify()
+
+        @Override
+        public void removeFromRegion(final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section,
+                                     final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.Region from) {
+            final DataRegionSectionData sectionData = (DataRegionSectionData)section.sectionData;
+            final DataRegionData fromData = (DataRegionData)from.regionData;
+            // Tuinity start - optimise notify()
+            if (sectionData.navigators != null) {
+                for (final Iterator<EntityInsentient> iterator = sectionData.navigators.unsafeIterator(com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.ITERATOR_FLAG_SEE_ADDITIONS); iterator.hasNext();) {
+                    if (!fromData.removeFromNavigators(iterator.next())) {
+                        throw new IllegalStateException();
+                    }
+                }
+            }
+            // Tuinity end - optimise notify()
+        }
+
+        @Override
+        public void addToRegion(final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.RegionSection section,
+                                final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.Region oldRegion,
+                                final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager.Region newRegion) {
+            final DataRegionSectionData sectionData = (DataRegionSectionData)section.sectionData;
+            final DataRegionData oldRegionData = oldRegion == null ? null : (DataRegionData)oldRegion.regionData;
+            final DataRegionData newRegionData = (DataRegionData)newRegion.regionData;
+            // Tuinity start - optimise notify()
+            if (sectionData.navigators != null) {
+                for (final Iterator<EntityInsentient> iterator = sectionData.navigators.unsafeIterator(com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.ITERATOR_FLAG_SEE_ADDITIONS); iterator.hasNext();) {
+                    if (!newRegionData.addToNavigators(iterator.next())) {
+                        throw new IllegalStateException();
+                    }
+                }
+            }
+            // Tuinity end - optimise notify()
+        }
+    }
+    // Tuiniy end
 
     private final java.util.concurrent.ExecutorService lightThread;
     public PlayerChunkMap(WorldServer worldserver, Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, DefinedStructureManager definedstructuremanager, Executor executor, IAsyncTaskHandler<Runnable> iasynctaskhandler, ILightAccess ilightaccess, ChunkGenerator chunkgenerator, WorldLoadListener worldloadlistener, Supplier<WorldPersistentData> supplier, int i, boolean flag) {
@@ -365,9 +450,10 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         this.worldLoadListener = worldloadlistener;
         // Paper start - use light thread
+        String threadName = ((WorldDataServer)this.world.getWorldData()).getName() + " - Light"; // Tuinity - make sure playerchunkmap instance is not retained by the thread factory
         ThreadedMailbox<Runnable> lightthreaded; ThreadedMailbox<Runnable> threadedmailbox1 = lightthreaded = ThreadedMailbox.a(lightThread = java.util.concurrent.Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r);
-            thread.setName(((WorldDataServer)world.getWorldData()).getName() + " - Light");
+            thread.setName(threadName); // Tuinity - make sure playerchunkmap instance is not retained by the thread factory
             thread.setDaemon(true);
             thread.setPriority(Thread.NORM_PRIORITY+1);
             return thread;
@@ -457,48 +543,29 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         // Paper end - optimise PlayerChunkMap#isOutsideRange
         // Paper start - no-tick view distance
         this.setNoTickViewDistance(this.world.paperConfig.noTickViewDistance);
-        this.playerViewDistanceTickMap = new com.destroystokyo.paper.util.misc.PlayerAreaMap(this.pooledLinkedPlayerHashSets,
-            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
-             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
-                checkHighPriorityChunks(player);
-                if (newState.size() != 1) {
-                    return;
-                }
-                Chunk chunk = PlayerChunkMap.this.world.getChunkProvider().getChunkAtIfLoadedMainThreadNoCache(rangeX, rangeZ);
-                if (chunk == null || !chunk.areNeighboursLoaded(2)) {
-                    return;
-                }
-
-                ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(rangeX, rangeZ);
-                PlayerChunkMap.this.world.getChunkProvider().addTicketAtLevel(TicketType.PLAYER, chunkPos, 31, chunkPos); // entity ticking level, TODO check on update
-            },
-            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
-             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
-                if (newState != null) {
-                    return;
-                }
-                ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(rangeX, rangeZ);
-                PlayerChunkMap.this.world.getChunkProvider().removeTicketAtLevel(TicketType.PLAYER, chunkPos, 31, chunkPos); // entity ticking level, TODO check on update
-                PlayerChunkMap.this.world.getChunkProvider().clearPriorityTickets(chunkPos);
-            }, (player, prevPos, newPos) -> {
-            player.lastHighPriorityChecked = -1; // reset and recheck
-            checkHighPriorityChunks(player);
-        });
-        this.playerViewDistanceNoTickMap = new com.destroystokyo.paper.util.misc.PlayerAreaMap(this.pooledLinkedPlayerHashSets);
-        this.playerViewDistanceBroadcastMap = new com.destroystokyo.paper.util.misc.PlayerAreaMap(this.pooledLinkedPlayerHashSets,
-            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
-             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
-                if (player.needsChunkCenterUpdate) {
-                    player.needsChunkCenterUpdate = false;
-                    player.playerConnection.sendPacket(new PacketPlayOutViewCentre(currPosX, currPosZ));
-                }
-                PlayerChunkMap.this.sendChunk(player, new ChunkCoordIntPair(rangeX, rangeZ), new Packet[2], false, true); // unloaded, loaded
-            },
-            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
-             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
-                PlayerChunkMap.this.sendChunk(player, new ChunkCoordIntPair(rangeX, rangeZ), null, true, false); // unloaded, loaded
-            });
+        // Tuinity - replace chunk loading system
         // Paper end - no-tick view distance
+        // Tuinity start
+        this.dataRegionManager = new com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager(this.world, 2, (1.0 / 3.0), 1, 6, "Data", DataRegionData::new, DataRegionSectionData::new);
+        this.regionManagers.add(this.dataRegionManager);
+        // Tuinity end
+        // Tuinity start - optimise checkDespawn
+        this.playerGeneralAreaMap = new com.destroystokyo.paper.util.misc.PlayerAreaMap(this.pooledLinkedPlayerHashSets,
+            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
+             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
+                Chunk chunk = PlayerChunkMap.this.world.getChunkProvider().getChunkAtIfCachedImmediately(rangeX, rangeZ);
+                if (chunk != null) {
+                    chunk.updateGeneralAreaCache(newState);
+                }
+            },
+            (EntityPlayer player, int rangeX, int rangeZ, int currPosX, int currPosZ, int prevPosX, int prevPosZ,
+             com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> newState) -> {
+                Chunk chunk = PlayerChunkMap.this.world.getChunkProvider().getChunkAtIfCachedImmediately(rangeX, rangeZ);
+                if (chunk != null) {
+                    chunk.updateGeneralAreaCache(newState);
+                }
+            });
+        // Tuinity end - optimise checkDespawn
     }
     // Paper start - Chunk Prioritization
     public void queueHolderUpdate(PlayerChunk playerchunk) {
@@ -531,6 +598,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     public void checkHighPriorityChunks(EntityPlayer player) {
+        if (true) return; // Tuinity - replace player chunk loader
         int currentTick = MinecraftServer.currentTick;
         if (currentTick - player.lastHighPriorityChecked < 20 || !player.isRealPlayer) { // weed out fake players
             return;
@@ -538,7 +606,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         player.lastHighPriorityChecked = currentTick;
         Long2IntOpenHashMap priorities = new Long2IntOpenHashMap();
 
-        int viewDistance = getEffectiveNoTickViewDistance();
+        int viewDistance = 10;//int viewDistance = getEffectiveNoTickViewDistance(); // Tuinity - replace player chunk loader
         BlockPosition.MutableBlockPosition pos = new BlockPosition.MutableBlockPosition();
 
         // Prioritize circular near
@@ -604,7 +672,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     private boolean shouldSkipPrioritization(ChunkCoordIntPair coord) {
-        if (playerViewDistanceNoTickMap.getObjectsInRange(coord.pair()) == null) return true;
+        if (true) return true; // Tuinity - replace player chunk loader - unused outside paper player loader logic
         PlayerChunk chunk = getUpdatingChunk(coord.pair());
         return chunk != null && (chunk.isFullChunkReady());
     }
@@ -667,7 +735,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     @Nullable
     public PlayerChunk getUpdatingChunk(long i) { // Paper
-        return (PlayerChunk) this.updatingChunks.get(i);
+        return this.updatingChunks.getUpdating(i); // Tuinity - Don't copy
     }
 
     // Paper start - remove cloning of visible chunks unless accessed as a collection async
@@ -675,47 +743,25 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     private boolean isIterating = false;
     private boolean hasPendingVisibleUpdate = false;
     public void forEachVisibleChunk(java.util.function.Consumer<PlayerChunk> consumer) {
-        org.spigotmc.AsyncCatcher.catchOp("forEachVisibleChunk");
-        boolean prev = isIterating;
-        isIterating = true;
-        try {
-            for (PlayerChunk value : this.visibleChunks.values()) {
-                consumer.accept(value);
-            }
-        } finally {
-            this.isIterating = prev;
-            if (!this.isIterating && this.hasPendingVisibleUpdate) {
-                ((ProtectedVisibleChunksMap)this.visibleChunks).copyFrom(this.pendingVisibleChunks);
-                this.pendingVisibleChunks.clear();
-                this.hasPendingVisibleUpdate = false;
-            }
-        }
+        throw new UnsupportedOperationException(); // Tuinity - Don't copy
     }
     public Long2ObjectLinkedOpenHashMap<PlayerChunk> getVisibleChunks() {
-        if (Thread.currentThread() == this.world.serverThread) {
-            return this.visibleChunks;
-        } else {
-            synchronized (this.visibleChunks) {
-                if (DEBUG_ASYNC_VISIBLE_CHUNKS) new Throwable("Async getVisibleChunks").printStackTrace();
-                if (this.visibleChunksClone == null) {
-                    this.visibleChunksClone = this.hasPendingVisibleUpdate ? this.pendingVisibleChunks.clone() : ((ProtectedVisibleChunksMap)this.visibleChunks).clone();
-                }
-                return this.visibleChunksClone;
-            }
+        // Tuinity start - Don't copy (except in rare cases)
+        synchronized (this.updatingChunks) {
+            return this.updatingChunks.getVisibleMap().clone();
         }
+        // Tuinity end - Don't copy (except in rare cases)
     }
     // Paper end
 
     @Nullable
     public PlayerChunk getVisibleChunk(long i) { // Paper - protected -> public
-        // Paper start - mt safe get
-        if (Thread.currentThread() != this.world.serverThread) {
-            synchronized (this.visibleChunks) {
-                return (PlayerChunk) (this.hasPendingVisibleUpdate ? this.pendingVisibleChunks.get(i) : ((ProtectedVisibleChunksMap)this.visibleChunks).safeGet(i));
-            }
+        // Tuinity start - Don't copy
+        if (Thread.currentThread() == this.world.serverThread) {
+            return this.updatingChunks.getVisible(i);
         }
-        return (PlayerChunk) (this.hasPendingVisibleUpdate ? this.pendingVisibleChunks.get(i) : ((ProtectedVisibleChunksMap)this.visibleChunks).safeGet(i));
-        // Paper end
+        return this.updatingChunks.getVisibleAsync(i);
+        // Tuinity end - Don't copy
     }
 
     protected final IntSupplier getPrioritySupplier(long i) { return c(i); } // Paper - OBFHELPER
@@ -811,6 +857,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     @Nullable
     private PlayerChunk a(long i, int j, @Nullable PlayerChunk playerchunk, int k) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Chunk holder update"); // Tuinity
+        if (this.unloadingPlayerChunk) { MinecraftServer.LOGGER.fatal("Cannot tick distance manager while unloading playerchunks", new Throwable()); throw new IllegalStateException("Cannot tick distance manager while unloading playerchunks"); } // Tuinity
         if (k > PlayerChunkMap.GOLDEN_TICKET && j > PlayerChunkMap.GOLDEN_TICKET) {
             return playerchunk;
         } else {
@@ -833,9 +881,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     playerchunk.a(j);
                 } else {
                     playerchunk = new PlayerChunk(new ChunkCoordIntPair(i), j, this.lightEngine, this.p, this);
+                    // Tuinity start
+                    for (int index = 0, len = this.regionManagers.size(); index < len; ++index) {
+                        this.regionManagers.get(index).addChunk(playerchunk.location.x, playerchunk.location.z);
+                    }
+                    // Tuinity end
                 }
+                this.getVillagePlace().dequeueUnload(playerchunk.location.pair()); // Tuinity - unload POI data
 
-                this.updatingChunks.put(i, playerchunk);
+                this.updatingChunks.queueUpdate(i, playerchunk); // Tuinity - Don't copy
                 this.updatingChunksModified = true;
             }
 
@@ -959,7 +1013,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     }
 
-    private static final double UNLOAD_QUEUE_RESIZE_FACTOR = 0.90; // Spigot // Paper - unload more
+    public static final double UNLOAD_QUEUE_RESIZE_FACTOR = 0.90; // Spigot // Paper - unload more // Tuinity - private -> public
 
     protected void unloadChunks(BooleanSupplier booleansupplier) {
         GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
@@ -988,7 +1042,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         while (longiterator.hasNext()) { // Spigot
             long j = longiterator.nextLong();
             longiterator.remove(); // Spigot
-            PlayerChunk playerchunk = (PlayerChunk) this.updatingChunks.remove(j);
+            PlayerChunk playerchunk = this.updatingChunks.queueRemove(j); // Tuinity - Don't copy
 
             if (playerchunk != null) {
                 this.pendingUnload.put(j, playerchunk);
@@ -1025,7 +1079,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         }
 
         com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(this.world, chunkPos.x, chunkPos.z,
-            poiData, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.LOW_PRIORITY);
+            poiData, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - use normal priority
 
         if (!chunk.isNeedsSaving()) {
             return;
@@ -1059,13 +1113,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             asyncSaveData = ChunkRegionLoader.getAsyncSaveData(this.world, chunk);
         }
 
-        this.world.asyncChunkTaskManager.scheduleChunkSave(chunkPos.x, chunkPos.z, com.destroystokyo.paper.io.PrioritizedTaskQueue.LOW_PRIORITY,
+        this.world.asyncChunkTaskManager.scheduleChunkSave(chunkPos.x, chunkPos.z, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY, // Tuinity - use normal priority
             asyncSaveData, chunk);
 
         chunk.setLastSaved(this.world.getTime());
         chunk.setNeedsSaving(false);
     }
     // Paper end
+
+    boolean unloadingPlayerChunk = false; // Tuinity - do not allow ticket level changes while unloading chunks
 
     private void a(long i, PlayerChunk playerchunk) {
         CompletableFuture<IChunkAccess> completablefuture = playerchunk.getChunkSave();
@@ -1075,7 +1131,21 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             if (completablefuture1 != completablefuture) {
                 this.a(i, playerchunk);
             } else {
-                if (this.pendingUnload.remove(i, playerchunk) && ichunkaccess != null) {
+                // Tuinity start - do not allow ticket level changes while unloading chunks
+                org.spigotmc.AsyncCatcher.catchOp("playerchunk unload");
+                boolean unloadingBefore = this.unloadingPlayerChunk;
+                this.unloadingPlayerChunk = true;
+                try {
+                // Tuinity end - do not allow ticket level changes while unloading chunks
+                // Tuinity start
+                boolean removed;
+                if ((removed = this.pendingUnload.remove(i, playerchunk)) && ichunkaccess != null) { // Tuinity end
+                    // Tuinity start
+                    for (int index = 0, len = this.regionManagers.size(); index < len; ++index) {
+                        this.regionManagers.get(index).removeChunk(playerchunk.location.x, playerchunk.location.z);
+                    }
+                    // Tuinity end
+                    this.getVillagePlace().queueUnload(playerchunk.location.pair(), MinecraftServer.currentTickLong + 1); // Tuinity - unload POI data
                     if (ichunkaccess instanceof Chunk) {
                         ((Chunk) ichunkaccess).setLoaded(false);
                     }
@@ -1098,7 +1168,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     this.lightEngine.a(ichunkaccess.getPos());
                     this.lightEngine.queueUpdate();
                     this.worldLoadListener.a(ichunkaccess.getPos(), (ChunkStatus) null);
-                }
+                } else if (removed) { // Tuinity start
+                    // Tuinity start
+                    for (int index = 0, len = this.regionManagers.size(); index < len; ++index) {
+                        this.regionManagers.get(index).removeChunk(playerchunk.location.x, playerchunk.location.z);
+                    }
+                    // Tuinity end
+                    this.getVillagePlace().queueUnload(playerchunk.location.pair(), MinecraftServer.currentTickLong + 1); // Tuinity - unload POI data
+                } // Tuinity end
+                } finally { this.unloadingPlayerChunk = unloadingBefore; } // Tuinity - do not allow ticket level changes while unloading chunks
 
             }
         };
@@ -1114,22 +1192,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     protected boolean b() {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update visibleChunks off of the main thread"); // Tuinity
         if (!this.updatingChunksModified) {
             return false;
         } else {
-            // Paper start - stop cloning visibleChunks
-            synchronized (this.visibleChunks) {
-                if (isIterating) {
-                    hasPendingVisibleUpdate = true;
-                    this.pendingVisibleChunks.copyFrom((com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk>)this.updatingChunks);
-                } else {
-                    hasPendingVisibleUpdate = false;
-                    this.pendingVisibleChunks.clear();
-                    ((ProtectedVisibleChunksMap)this.visibleChunks).copyFrom((com.destroystokyo.paper.util.map.Long2ObjectLinkedOpenHashMapFastCopy<PlayerChunk>)this.updatingChunks);
-                    this.visibleChunksClone = null;
-                }
+            // Tuinity start - Don't copy
+            synchronized (this.updatingChunks) {
+                this.updatingChunks.performUpdates();
             }
-            // Paper end
+            // Tuinity end - Don't copy
 
             this.updatingChunksModified = false;
             return true;
@@ -1159,7 +1230,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     if (ichunkaccess.getChunkStatus().b(chunkstatus)) {
                         CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture1; // Paper
 
-                        if (chunkstatus == ChunkStatus.LIGHT) {
+                        if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && chunkstatus == ChunkStatus.LIGHT) { // Tuinity - we use edge checks, so loading 1 radius neighbours isn't necessary
                             completablefuture1 = this.b(playerchunk, chunkstatus);
                         } else {
                             completablefuture1 = chunkstatus.a(this.world, this.definedStructureManager, this.lightEngine, (ichunkaccess1) -> {
@@ -1189,6 +1260,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
                 this.getVillagePlace().loadInData(chunkcoordintpair, chunkHolder.poiData);
                 chunkHolder.tasks.forEach(Runnable::run);
+                this.getVillagePlace().dequeueUnload(chunkcoordintpair.pair()); // Tuinity
                 // Paper end
 
                 if (chunkHolder.protoChunk != null) {try (Timing ignored2 = this.world.timings.chunkLoadLevelTimer.startTimingIfSync()) { // Paper start - timings // Paper - chunk is created async
@@ -1301,9 +1373,13 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             }
             // Paper end
             this.mailboxWorldGen.a(ChunkTaskQueueSorter.a(playerchunk, runnable));
-        });
+        }).thenComposeAsync((either) -> { // Tuinity start - force competion on the main thread
+            return CompletableFuture.completedFuture(either);
+        }, this.mainInvokingExecutor);
+        // Tuinity end - force competion on the main thread
     }
 
+    protected final void removeLightTicket(ChunkCoordIntPair chunkcoordintpair) { this.c(chunkcoordintpair); } // Tuinity - OBFHELPER
     protected void c(ChunkCoordIntPair chunkcoordintpair) {
         this.executor.a(SystemUtils.a(() -> {
             this.chunkDistanceManager.b(TicketType.LIGHT, chunkcoordintpair, 33 + ChunkStatus.a(ChunkStatus.FEATURES), chunkcoordintpair);
@@ -1478,9 +1554,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 chunk.B();
                 return chunk;
             });
-        }, (runnable) -> {
-            this.mailboxMain.a(ChunkTaskQueueSorter.a(playerchunk, runnable));
-        });
+        }, this.executor); // Tuinity - queue to execute immediately so this doesn't delay chunk unloading
     }
 
     public int c() {
@@ -1561,39 +1635,27 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     public void setViewDistance(int i) { // Paper - public
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update view distance off of the main thread"); // Tuinity
         int j = MathHelper.clamp(i + 1, 3, 33); // Paper - diff on change, these make the lower view distance limit 2 and the upper 32
 
         if (j != this.viewDistance) {
             int k = this.viewDistance;
 
             this.viewDistance = j;
-            this.setNoTickViewDistance(this.getRawNoTickViewDistance()); //Paper - no-tick view distance - propagate changes to no-tick, which does the actual chunk loading/sending
+            this.playerChunkManager.setTickDistance(MathHelper.clamp(i, 2, 32)); // Tuinity - replace player loader system
         }
 
     }
 
     // Paper start - no-tick view distance
     public final void setNoTickViewDistance(int viewDistance) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot update view distance off of the main thread"); // Tuinity
         viewDistance = viewDistance == -1 ? -1 : MathHelper.clamp(viewDistance, 2, 32);
-
-        this.noTickViewDistance = viewDistance;
-        int loadViewDistance = this.getLoadViewDistance();
-        this.chunkDistanceManager.setNoTickViewDistance(loadViewDistance + 2 + 2); // add 2 to account for the change to 31 -> 33 tickets // see notes in the distance map updating for the other + 2
-
-        if (this.world != null && this.world.players != null) { // this can be called from constructor, where these aren't set
-            for (EntityPlayer player : this.world.players) {
-                PlayerConnection connection = player.playerConnection;
-                if (connection != null) {
-                    // moved in from PlayerList
-                    connection.sendPacket(new PacketPlayOutViewDistance(loadViewDistance));
-                }
-                this.updateMaps(player);
-            }
-        }
+        this.playerChunkManager.setLoadDistance(viewDistance == -1 ? -1 : viewDistance + 1); // Tuinity - replace player loader system - add 1 here, we need an extra one to send to clients for chunks in this viewDistance to render
     }
     // Paper end - no-tick view distance
 
-    protected void sendChunk(EntityPlayer entityplayer, ChunkCoordIntPair chunkcoordintpair, Packet<?>[] apacket, boolean flag, boolean flag1) {
+    public void sendChunk(EntityPlayer entityplayer, ChunkCoordIntPair chunkcoordintpair, Packet<?>[] apacket, boolean flag, boolean flag1) { // Tuinity - protected -> public
         if (entityplayer.world == this.world) {
             if (flag1 && !flag) {
                 PlayerChunk playerchunk = this.getVisibleChunk(chunkcoordintpair.pair());
@@ -1617,7 +1679,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     public int d() {
-        return this.visibleChunks.size();
+        return this.updatingChunks.getVisibleMap().size(); // Tuinity - Don't copy
     }
 
     protected PlayerChunkMap.a e() {
@@ -1689,7 +1751,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         if (Thread.currentThread() != com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE) {
             com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(
                 this.world, chunkcoordintpair.x, chunkcoordintpair.z, null, nbttagcompound,
-                com.destroystokyo.paper.io.IOUtil.getPriorityForCurrentThread());
+                com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - writes are async, no need for priority
             return;
         }
         super.write(chunkcoordintpair, nbttagcompound);
@@ -1773,6 +1835,11 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         return chunkHolder == null ? null : chunkHolder.getAvailableChunkNow();
     }
     // Paper end
+    // Tuinity start
+    public PlayerChunk getUnloadingPlayerChunk(int chunkX, int chunkZ) {
+        return this.pendingUnload.get(ChunkCoordIntPair.pair(chunkX, chunkZ));
+    }
+    // Tuinity end
 
 
     // Paper start - async io
@@ -1982,6 +2049,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         }*/ // Paper end - replaced by distance map
 
         this.updateMaps(entityplayer); // Paper - distance maps
+        this.playerChunkManager.updatePlayer(entityplayer); // Tuinity - respond to movement immediately
 
     }
 
@@ -1990,7 +2058,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         // Paper start - per player view distance
         // there can be potential desync with player's last mapped section and the view distance map, so use the
         // view distance map here.
-        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> inRange = this.playerViewDistanceBroadcastMap.getObjectsInRange(chunkcoordintpair);
+        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> inRange = this.playerChunkManager.broadcastMap.getObjectsInRange(chunkcoordintpair); // Tuinity - replace player chunk loader system
 
         if (inRange == null) {
             return Stream.empty();
@@ -2006,8 +2074,9 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     continue;
                 }
                 EntityPlayer player = (EntityPlayer)temp;
-                int viewDistance = this.playerViewDistanceBroadcastMap.getLastViewDistance(player);
-                long lastPosition = this.playerViewDistanceBroadcastMap.getLastCoordinate(player);
+                if (!this.playerChunkManager.isChunkSent(player, chunkcoordintpair.x, chunkcoordintpair.z)) continue; // Tuinity - replace player chunk management
+                int viewDistance = this.playerChunkManager.broadcastMap.getLastViewDistance(player); // Tuinity - replace player chunk loader system
+                long lastPosition = this.playerChunkManager.broadcastMap.getLastCoordinate(player); // Tuinity - replace player chunk loader system
 
                 int distX = Math.abs(MCUtil.getCoordinateX(lastPosition) - chunkcoordintpair.x);
                 int distZ = Math.abs(MCUtil.getCoordinateZ(lastPosition) - chunkcoordintpair.z);
@@ -2022,6 +2091,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     continue;
                 }
                 EntityPlayer player = (EntityPlayer)temp;
+                if (!this.playerChunkManager.isChunkSent(player, chunkcoordintpair.x, chunkcoordintpair.z)) continue; // Tuinity - replace player chunk management
                 players.add(player);
             }
         }
@@ -2237,6 +2307,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
             apacket[1] = new PacketPlayOutLightUpdate(chunk.getPos(), this.lightEngine, true);
 
             // Paper start - Fix MC-162253
+            if (com.tuinity.tuinity.config.TuinityConfig.enableMC162253Workaround) { // Tuinity - hide behind config option, this logic has undesirable network effects
             final int lightMask = getLightMask(chunk);
             int i = 1;
             for (int x = -1; x <= 1; x++) {
@@ -2261,10 +2332,12 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                     apacket[i] = new PacketPlayOutLightUpdate(new ChunkCoordIntPair(chunk.getPos().x + x, chunk.getPos().z + z), lightEngine, updateLightMask, 0, true);
                 }
             }
+        } // Tuinity - hide behind config option, this logic has undesirable network effects
         }
 
-        final int viewDistance = playerViewDistanceBroadcastMap.getLastViewDistance(entityplayer);
-        final long lastPosition = playerViewDistanceBroadcastMap.getLastCoordinate(entityplayer);
+        if (com.tuinity.tuinity.config.TuinityConfig.enableMC162253Workaround) { // Tuinity - hide behind config option, this logic has undesirable network effects
+        final int viewDistance = this.playerChunkManager.broadcastMap.getLastViewDistance(entityplayer); // Tuinity - replace player chunk loader
+        final long lastPosition = this.playerChunkManager.broadcastMap.getLastCoordinate(entityplayer); // Tuinity - replace player chunk loader
 
         int j = 1;
         for (int x = -1; x <= 1; x++) {
@@ -2289,6 +2362,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                 entityplayer.playerConnection.sendPacket(packet);
             }
         }
+        } // Tuinity - hide behind config option, this logic has undesirable network effects
         // Paper end - Fix MC-162253
 
         entityplayer.a(chunk.getPos(), apacket[0], apacket[1]);
@@ -2364,7 +2438,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
         // Paper start
         // Replace trackedPlayers Set with a Map. The value is true until the player receives
         // their first update (which is forced to have absolute coordinates), false afterward.
-        public java.util.Map<EntityPlayer, Boolean> trackedPlayerMap = new java.util.HashMap<>();
+        public java.util.Map<EntityPlayer, Boolean> trackedPlayerMap = new Reference2BooleanOpenHashMap<>(); // Tuinity - optimise map impl
         public Set<EntityPlayer> trackedPlayers = trackedPlayerMap.keySet();
 
         public EntityTracker(Entity entity, int i, int j, boolean flag) {
@@ -2465,7 +2539,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                 double vec3d_dy = entityplayer.locY() - this.tracker.locY();
                 double vec3d_dz = entityplayer.locZ() - this.tracker.locZ();
                 // Paper end - remove allocation of Vec3D here
-                int i = Math.min(this.b(), (PlayerChunkMap.this.viewDistance - 1) * 16);
+                int i = Math.min(this.b(), (entityplayer.getBukkitEntity().getViewDistance()) * 16); // Tuinity - per player view distance
                 boolean flag = vec3d_dx >= (double) (-i) && vec3d_dx <= (double) i && vec3d_dz >= (double) (-i) && vec3d_dz <= (double) i && this.tracker.a(entityplayer); // Paper - remove allocation of Vec3D here
 
                 if (flag) {
@@ -2475,7 +2549,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(this.tracker.chunkX, this.tracker.chunkZ);
                         PlayerChunk playerchunk = PlayerChunkMap.this.getVisibleChunk(chunkcoordintpair.pair());
 
-                        if (playerchunk != null && playerchunk.getSendingChunk() != null) { // Paper - no-tick view distance
+                        if (playerchunk != null && playerchunk.getSendingChunk() != null && PlayerChunkMap.this.playerChunkManager.isChunkSent(entityplayer, MathHelper.floor(this.tracker.locX()) >> 4, MathHelper.floor(this.tracker.locZ()) >> 4)) { // Paper - no-tick view distance // Tuinity - don't broadcast in chunks the player hasn't received
                             flag1 = PlayerChunkMap.b(chunkcoordintpair, entityplayer, false) <= PlayerChunkMap.this.viewDistance;
                         }
                     }
@@ -2515,7 +2589,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                 int j = entity.getEntityType().getChunkRange() * 16;
                 j = org.spigotmc.TrackingRange.getEntityTrackingRange(entity, j); // Paper
 
-                if (j < i) { // Paper - we need the lowest range thanks to the fact that our tracker doesn't account for passenger logic
+                if (j > i) { // Paper - we need the lowest range thanks to the fact that our tracker doesn't account for passenger logic // Tuinity - not anymore!
                     i = j;
                 }
             }

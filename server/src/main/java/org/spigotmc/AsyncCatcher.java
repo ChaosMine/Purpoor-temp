@@ -10,8 +10,9 @@ public class AsyncCatcher
 
     public static void catchOp(String reason)
     {
-        if ( enabled && Thread.currentThread() != MinecraftServer.getServer().serverThread )
+        if ( ( enabled || com.tuinity.tuinity.util.TickThread.STRICT_THREAD_CHECKS ) && !org.bukkit.Bukkit.isPrimaryThread() ) // Tuinity
         {
+            MinecraftServer.LOGGER.fatal("Thread " + Thread.currentThread().getName() + " failed thread check for reason: Asynchronous " + reason, new Throwable()); // Tuinity - not all exceptions are printed
             throw new IllegalStateException( "Asynchronous " + reason + "!" );
         }
     }

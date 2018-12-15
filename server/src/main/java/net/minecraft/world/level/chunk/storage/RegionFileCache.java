@@ -22,8 +22,15 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
     public final Long2ObjectLinkedOpenHashMap<RegionFile> cache = new Long2ObjectLinkedOpenHashMap();
     private final File b;
     private final boolean c;
+    private final boolean isChunkData; // Tuinity
 
     RegionFileCache(File file, boolean flag) {
+        // Tuinity start - add isChunkData param
+        this(file, flag, false);
+    }
+    RegionFileCache(File file, boolean flag, boolean isChunkData) {
+        this.isChunkData = isChunkData;
+        // Tuinity end - add isChunkData param
         this.b = file;
         this.c = flag;
     }
@@ -83,9 +90,9 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
                 this.b.mkdirs();
             }
 
-            File file = new File(this.b, "r." + chunkcoordintpair.getRegionX() + "." + chunkcoordintpair.getRegionZ() + ".mca");
+            File file = new File(this.b, "r." + chunkcoordintpair.getRegionX() + "." + chunkcoordintpair.getRegionZ() + ".mca"); // Tuinity - diff on change
             if (existingOnly && !file.exists()) return null; // CraftBukkit
-            RegionFile regionfile1 = new RegionFile(file, this.b, this.c);
+            RegionFile regionfile1 = new RegionFile(file, this.b, this.c, this.isChunkData); // Tuinity - allow for chunk regionfiles to regen header
 
             this.cache.putAndMoveToFirst(i, regionfile1);
             // Paper start
@@ -174,6 +181,13 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
             return null;
         }
         // CraftBukkit end
+        // Tuinity start - Add regionfile parameter
+        return this.readFromRegionFile(regionfile, chunkcoordintpair);
+    }
+    private NBTTagCompound readFromRegionFile(RegionFile regionfile, ChunkCoordIntPair chunkcoordintpair) throws IOException {
+        // We add the regionfile parameter to avoid the potential deadlock (on fileLock) if we went back to obtain a regionfile
+        // if we decide to re-read
+        // Tuinity end
         try { // Paper
         DataInputStream datainputstream = regionfile.a(chunkcoordintpair);
         // Paper start
@@ -189,6 +203,17 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
         try {
             if (datainputstream != null) {
                 nbttagcompound = NBTCompressedStreamTools.a((DataInput) datainputstream);
+                // Tuinity start - recover from corrupt regionfile header
+                if (this.isChunkData) {
+                    ChunkCoordIntPair chunkPos = ChunkRegionLoader.getChunkCoordinate(nbttagcompound);
+                    if (!chunkPos.equals(chunkcoordintpair)) {
+                        MinecraftServer.LOGGER.error("Attempting to read chunk data at " + chunkcoordintpair.toString() + " but got chunk data for " + chunkPos.toString() + " instead! Attempting regionfile recalculation for regionfile " + regionfile.file.getAbsolutePath());
+                        regionfile.recalculateHeader();
+                        regionfile.fileLock.lock(); // otherwise we will unlock twice and only lock once.
+                        return this.readFromRegionFile(regionfile, chunkcoordintpair);
+                    }
+                }
+                // Tuinity end - recover from corrupt regionfile header
                 return nbttagcompound;
             }
 

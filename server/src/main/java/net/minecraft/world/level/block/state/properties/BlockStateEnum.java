@@ -18,6 +18,15 @@ public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T>
     private final ImmutableSet<T> a;
     private final Map<String, T> b = Maps.newHashMap();
 
+    // Tuinity start - optimise iblockdata state lookup
+    private int[] idLookupTable;
+
+    @Override
+    public final int getIdFor(final T value) {
+        return this.idLookupTable[value.ordinal()];
+    }
+    // Tuinity end - optimise iblockdata state lookup
+
     protected BlockStateEnum(String s, Class<T> oclass, Collection<T> collection) {
         super(s, oclass);
         this.a = ImmutableSet.copyOf(collection);
@@ -33,6 +42,14 @@ public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T>
 
             this.b.put(s1, t0);
         }
+        // Tuinity start - optimise iblockdata state lookup
+        int id = 0;
+        this.idLookupTable = new int[oclass.getEnumConstants().length];
+        java.util.Arrays.fill(this.idLookupTable, -1);
+        for (final T value : this.getValues()) {
+            this.idLookupTable[value.ordinal()] = id++;
+        }
+        // Tuinity end - optimise iblockdata state lookup
 
     }
 

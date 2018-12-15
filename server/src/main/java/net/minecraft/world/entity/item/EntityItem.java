@@ -561,7 +561,7 @@ public class EntityItem extends Entity {
 
     // Paper start - fix MC-4
     public void setPositionRaw(double x, double y, double z) {
-        if (com.destroystokyo.paper.PaperConfig.fixEntityPositionDesync) {
+        if (false && com.destroystokyo.paper.PaperConfig.fixEntityPositionDesync) { // Tuinity - revert
             // encode/decode from PacketPlayOutEntity
             x = MathHelper.floorLong(x * 4096.0D) * (1 / 4096.0D);
             y = MathHelper.floorLong(y * 4096.0D) * (1 / 4096.0D);

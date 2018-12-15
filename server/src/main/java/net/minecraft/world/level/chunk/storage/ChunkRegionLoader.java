@@ -68,6 +68,14 @@ public class ChunkRegionLoader {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    // Tuinity start
+    // TODO: Check on update
+    public static long getLastWorldSaveTime(NBTTagCompound chunkData) {
+        NBTTagCompound levelData = chunkData.getCompound("Level");
+        return levelData.getLong("LastUpdate");
+    }
+    // Tuinity end
+
     // Paper start - guard against serializing mismatching coordinates
     // TODO Note: This needs to be re-checked each update
     public static ChunkCoordIntPair getChunkCoordinate(NBTTagCompound chunkData) {
@@ -100,6 +108,13 @@ public class ChunkRegionLoader {
     private static final boolean JUST_CORRUPT_IT = Boolean.getBoolean("Paper.ignoreWorldDataVersion");
     // Paper end
 
+    // Tuinity start - rewrite light engine
+    private static final int STARLIGHT_LIGHT_VERSION = 4;
+
+    private static final String UNINITIALISED_SKYLIGHT_TAG = "starlight.skylight_uninit";
+    private static final String STARLIGHT_VERSION_TAG = "starlight.light_version";
+    // Tuinity end - rewrite light engine
+
     public static InProgressChunkHolder loadChunk(WorldServer worldserver, DefinedStructureManager definedstructuremanager, VillagePlace villageplace, ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound, boolean distinguish) {
         ArrayDeque<Runnable> tasksToExecuteOnMain = new ArrayDeque<>();
         // Paper end
@@ -129,13 +144,17 @@ public class ChunkRegionLoader {
         ProtoChunkTickList<FluidType> protochunkticklist1 = new ProtoChunkTickList<>((fluidtype) -> {
             return fluidtype == null || fluidtype == FluidTypes.EMPTY;
         }, chunkcoordintpair, nbttagcompound1.getList("LiquidsToBeTicked", 9));
-        boolean flag = nbttagcompound1.getBoolean("isLightOn");
+        boolean flag = (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nbttagcompound1.getInt(STARLIGHT_VERSION_TAG) == STARLIGHT_LIGHT_VERSION : nbttagcompound1.getBoolean("isLightOn")); boolean canUseSkyLight = flag && getStatus(nbttagcompound).isAtLeastStatus(ChunkStatus.LIGHT); boolean canUseBlockLight = canUseSkyLight; // Tuinity
         NBTTagList nbttaglist = nbttagcompound1.getList("Sections", 10);
         boolean flag1 = true;
         ChunkSection[] achunksection = new ChunkSection[16];
         boolean flag2 = worldserver.getDimensionManager().hasSkyLight();
         ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider();
         LightEngine lightengine = chunkproviderserver.getLightEngine();
+        com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] blockNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight(worldserver); // Tuinity - replace light impl
+        com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] skyNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight(worldserver); // Tuinity - replace light impl
+        final int minSection = com.tuinity.tuinity.util.WorldUtil.getMinLightSection(worldserver);
+        final int maxSection = com.tuinity.tuinity.util.WorldUtil.getMaxLightSection(worldserver);
 
         if (flag) {
             tasksToExecuteOnMain.add(() -> { // Paper - delay this task since we're executing off-main
@@ -163,6 +182,7 @@ public class ChunkRegionLoader {
 
             if (flag) {
                 if (nbttagcompound2.hasKeyOfType("BlockLight", 7)) {
+                    if (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && canUseBlockLight) blockNibbles[b0 - minSection] = new com.tuinity.tuinity.chunk.light.SWMRNibbleArray(nbttagcompound2.getByteArray("BlockLight").clone()); // Tuinity - replace light impl
                     // Paper start - delay this task since we're executing off-main
                     NibbleArray blockLight = new NibbleArray(nbttagcompound2.getByteArray("BlockLight"));
                     tasksToExecuteOnMain.add(() -> {
@@ -172,13 +192,14 @@ public class ChunkRegionLoader {
                 }
 
                 if (flag2 && nbttagcompound2.hasKeyOfType("SkyLight", 7)) {
+                    if (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && canUseSkyLight) skyNibbles[b0 - minSection] = new com.tuinity.tuinity.chunk.light.SWMRNibbleArray(nbttagcompound2.getByteArray("SkyLight").clone()); // Tuinity - replace light impl
                     // Paper start - delay this task since we're executing off-main
                     NibbleArray skyLight = new NibbleArray(nbttagcompound2.getByteArray("SkyLight"));
                     tasksToExecuteOnMain.add(() -> {
                         lightengine.a(EnumSkyBlock.SKY, SectionPosition.a(chunkcoordintpair, b0), skyLight, true);
                     });
                     // Paper end - delay this task since we're executing off-main
-                }
+                } else if (flag2 && nbttagcompound2.getBoolean(UNINITIALISED_SKYLIGHT_TAG)) skyNibbles[b0 - minSection] = new com.tuinity.tuinity.chunk.light.SWMRNibbleArray(); // Tuinity - replace light impl
             }
         }
 
@@ -217,8 +238,12 @@ public class ChunkRegionLoader {
             object = new Chunk(worldserver.getMinecraftWorld(), chunkcoordintpair, biomestorage, chunkconverter, (TickList) object1, (TickList) object2, j, achunksection, // Paper start - fix massive nbt memory leak due to lambda. move lambda into a container method to not leak scope. Only clone needed NBT keys.
                 createLoadEntitiesConsumer(new SafeNBTCopy(nbttagcompound1, "TileEntities", "Entities", "ChunkBukkitValues")) // Paper - move CB Chunk PDC into here
             );// Paper end
+            ((Chunk)object).setBlockNibbles(blockNibbles); // Tuinity - replace light impl
+            ((Chunk)object).setSkyNibbles(skyNibbles); // Tuinity - replace light impl
         } else {
             ProtoChunk protochunk = new ProtoChunk(chunkcoordintpair, chunkconverter, achunksection, protochunkticklist, protochunkticklist1, worldserver); // Paper - Anti-Xray - Add parameter
+            protochunk.setBlockNibbles(blockNibbles); // Tuinity - replace light impl
+            protochunk.setSkyNibbles(skyNibbles); // Tuinity - replace light impl
 
             protochunk.a(biomestorage);
             object = protochunk;
@@ -397,15 +422,20 @@ public class ChunkRegionLoader {
         NibbleArray[] blockLight = new NibbleArray[17 - (-1)];
         NibbleArray[] skyLight = new NibbleArray[17 - (-1)];
 
+        // Tuinity start - rewrite light impl
+        final int minSection = com.tuinity.tuinity.util.WorldUtil.getMinLightSection(world);
+        final int maxSection = com.tuinity.tuinity.util.WorldUtil.getMaxLightSection(world);
+        // Tuinity end - rewrite light impl
+
         for (int i = -1; i < 17; ++i) {
-            NibbleArray blockArray = lightenginethreaded.a(EnumSkyBlock.BLOCK).a(SectionPosition.a(chunkPos, i));
-            NibbleArray skyArray = lightenginethreaded.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkPos, i));
+            NibbleArray blockArray = com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (!lightenginethreaded.hasBlockLight ? null : (chunk.getBlockNibbles()[i - minSection].isAllZero() ? new NibbleArray() : chunk.getBlockNibbles()[i - minSection].toVanillaNibble())) : lightenginethreaded.a(EnumSkyBlock.BLOCK).a(SectionPosition.a(chunkPos, i)); // Tuinity - chunk might not be loaded
+            NibbleArray skyArray = com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (!lightenginethreaded.hasSkyLight ? null : (chunk.getSkyNibbles()[i - minSection].isAllZero() ? new NibbleArray() : chunk.getSkyNibbles()[i - minSection].toVanillaNibble())) : lightenginethreaded.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkPos, i)); // Tuinity - chunk might not be loaded
 
             // copy data for safety
-            if (blockArray != null) {
+            if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && blockArray != null) { // Tuinity - data already copied
                 blockArray = blockArray.copy();
             }
-            if (skyArray != null) {
+            if (!com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine && skyArray != null) { // Tuinity - data already copied
                 skyArray = skyArray.copy();
             }
 
@@ -440,15 +470,19 @@ public class ChunkRegionLoader {
     }
     public static NBTTagCompound saveChunk(WorldServer worldserver, IChunkAccess ichunkaccess, AsyncSaveData asyncsavedata) {
         // Paper end
+        // Tuinity start - rewrite light impl
+        final int minSection = com.tuinity.tuinity.util.WorldUtil.getMinLightSection(worldserver);
+        final int maxSection = com.tuinity.tuinity.util.WorldUtil.getMaxLightSection(worldserver);
+        // Tuinity end - rewrite light impl
         ChunkCoordIntPair chunkcoordintpair = ichunkaccess.getPos();
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 
         nbttagcompound.setInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
-        nbttagcompound.set("Level", nbttagcompound1);
+        nbttagcompound.set("Level", nbttagcompound1); // Tuinity - diff on change
         nbttagcompound1.setInt("xPos", chunkcoordintpair.x);
         nbttagcompound1.setInt("zPos", chunkcoordintpair.z);
-        nbttagcompound1.setLong("LastUpdate", asyncsavedata != null ? asyncsavedata.worldTime : worldserver.getTime()); // Paper - async chunk unloading
+        nbttagcompound1.setLong("LastUpdate", asyncsavedata != null ? asyncsavedata.worldTime : worldserver.getTime()); // Paper - async chunk unloading // Tuinity - diff on change
         nbttagcompound1.setLong("InhabitedTime", ichunkaccess.getInhabitedTime());
         nbttagcompound1.setString("Status", ichunkaccess.getChunkStatus().d());
         ChunkConverter chunkconverter = ichunkaccess.p();
@@ -473,8 +507,8 @@ public class ChunkRegionLoader {
             NibbleArray nibblearray; // block light
             NibbleArray nibblearray1; // sky light
             if (asyncsavedata == null) {
-                nibblearray = lightenginethreaded.a(EnumSkyBlock.BLOCK).a(SectionPosition.a(chunkcoordintpair, i)); /// Paper - diff on method change (see getAsyncSaveData)
-                nibblearray1 = lightenginethreaded.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkcoordintpair, i)); // Paper - diff on method change (see getAsyncSaveData)
+                nibblearray = com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (!lightenginethreaded.hasBlockLight ? null : (ichunkaccess.getBlockNibbles()[i - minSection].isAllZero() ? new NibbleArray() : ichunkaccess.getBlockNibbles()[i - minSection].toVanillaNibble())) : lightenginethreaded.a(EnumSkyBlock.BLOCK).a(SectionPosition.a(chunkcoordintpair, i)); // Tuinity - chunk might not be loaded
+                nibblearray1 = com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (!lightenginethreaded.hasSkyLight ? null : (ichunkaccess.getSkyNibbles()[i - minSection].isAllZero() ? new NibbleArray() : ichunkaccess.getSkyNibbles()[i - minSection].toVanillaNibble())) : lightenginethreaded.a(EnumSkyBlock.SKY).a(SectionPosition.a(chunkcoordintpair, i)); // Tuinity - chunk might not be loaded
             } else {
                 nibblearray = asyncsavedata.blockLight[i + 1]; // +1 to offset the -1 starting index
                 nibblearray1 = asyncsavedata.skyLight[i + 1]; // +1 to offset the -1 starting index
@@ -488,12 +522,12 @@ public class ChunkRegionLoader {
                 }
 
                 if (nibblearray != null && !nibblearray.c()) {
-                    nbttagcompound2.setByteArray("BlockLight", nibblearray.asBytesPoolSafe().clone()); // Paper
+                    nbttagcompound2.setByteArray("BlockLight", com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray.asBytes() : nibblearray.asBytesPoolSafe().clone()); // Paper // Tuinity - data is already cloned
                 }
 
                 if (nibblearray1 != null && !nibblearray1.c()) {
-                    nbttagcompound2.setByteArray("SkyLight", nibblearray1.asBytesPoolSafe().clone()); // Paper
-                }
+                    nbttagcompound2.setByteArray("SkyLight", com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? nibblearray1.asBytes() : nibblearray1.asBytesPoolSafe().clone()); // Paper // Tuinity - data is already cloned
+                } else if (nibblearray1 != null && com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) nbttagcompound2.setBoolean(UNINITIALISED_SKYLIGHT_TAG, true); // Tuinity - store uninitialised tags
 
                 nbttaglist.add(nbttagcompound2);
             }
@@ -501,7 +535,7 @@ public class ChunkRegionLoader {
 
         nbttagcompound1.set("Sections", nbttaglist);
         if (flag) {
-            nbttagcompound1.setBoolean("isLightOn", true);
+            nbttagcompound1.setBoolean("isLightOn", com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? false : true); if (com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine) nbttagcompound1.setInt(STARLIGHT_VERSION_TAG, STARLIGHT_LIGHT_VERSION); // Tuinity
         }
 
         BiomeStorage biomestorage = ichunkaccess.getBiomeIndex();

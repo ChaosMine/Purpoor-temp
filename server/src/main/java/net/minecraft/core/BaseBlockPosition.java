@@ -18,9 +18,9 @@ public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
         return IntStream.of(new int[]{baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ()});
     });
     public static final BaseBlockPosition ZERO = new BaseBlockPosition(0, 0, 0);
-    private int a;public final void setX(final int x) { this.a = x; } // Paper - OBFHELPER
-    private int b;public final void setY(final int y) { this.b = y; } // Paper - OBFHELPER
-    private int e;public final void setZ(final int z) { this.e = z; } // Paper - OBFHELPER
+    protected int a; // Paper - OBFHELPER // Tuinity - private->protected - diff on change, this is the x coordinate - Also revert the decision to expose set on an immutable type
+    protected int b; // Paper - OBFHELPER // Tuinity - private->protected - diff on change, this is the y coordinate - Also revert the decision to expose set on an immutable type
+    protected int e; // Paper - OBFHELPER // Tuinity - private->protected - diff on change, this is the z coordinate - Also revert the decision to expose set on an immutable type
 
     // Paper start
     public boolean isValidLocation() {
@@ -73,15 +73,15 @@ public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
         return this.e;
     }
 
-    public void o(int i) { // Paper - protected -> public
+    protected void o_unused(int i) { // Paper - protected -> public // Tuinity - not needed here - Also revert the decision to expose set on an immutable type
         this.a = i;
     }
 
-    public void p(int i) { // Paper - protected -> public
+    protected void p_unused(int i) { // Paper - protected -> public // Tuinity - not needed here - Also revert the decision to expose set on an immutable type
         this.b = i;
     }
 
-    public void q(int i) { // Paper - protected -> public
+    protected void q_unused(int i) { // Paper - protected -> public // Tuinity - not needed here - Also revert the decision to expose set on an immutable type
         this.e = i;
     }
 

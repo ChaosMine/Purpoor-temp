@@ -4,6 +4,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap; // Tuinity
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import java.io.File;
@@ -35,8 +36,24 @@ import net.minecraft.world.level.chunk.storage.RegionFileSection;
 
 public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
-    private final VillagePlace.a a = new VillagePlace.a();
-    private final LongSet b = new LongOpenHashSet();
+    // Tuinity start - unload poi data
+    // the vanilla tracker needs to be replaced because it does not support level removes
+    private final com.tuinity.tuinity.util.misc.Delayed26WayDistancePropagator3D villageDistanceTracker = new com.tuinity.tuinity.util.misc.Delayed26WayDistancePropagator3D();
+    static final int POI_DATA_SOURCE = 7;
+    public static int convertBetweenLevels(final int level) {
+        return POI_DATA_SOURCE - level;
+    }
+
+    protected void updateDistanceTracking(long section) {
+        if (this.isSectionDistanceTrackerSource(section)) {
+            this.villageDistanceTracker.setSource(section, POI_DATA_SOURCE);
+        } else {
+            this.villageDistanceTracker.removeSource(section);
+        }
+    }
+    // Tuinity end - unload poi data
+
+    private final LongSet b = new LongOpenHashSet(); private final LongSet getLoadedChunks() { return this.b; } // Tuinity - OBFHELPER
 
     private final WorldServer world; // Paper
 
@@ -47,8 +64,123 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     public VillagePlace(File file, DataFixer datafixer, boolean flag, WorldServer world) {
         super(file, VillagePlaceSection::a, VillagePlaceSection::new, datafixer, DataFixTypes.POI_CHUNK, flag);
         this.world = world;
+        if (world == null) { throw new IllegalStateException("world must be non-null"); }// Tuinity - require non-null
         // Paper end - add world parameter
     }
+
+    // Tuinity start - actually unload POI data
+    private final java.util.TreeSet<QueuedUnload> queuedUnloads = new java.util.TreeSet<>();
+    private final Long2ObjectOpenHashMap<QueuedUnload> queuedUnloadsByCoordinate = new Long2ObjectOpenHashMap<>();
+
+    static final class QueuedUnload implements Comparable<QueuedUnload> {
+
+        private final long unloadTick;
+        private final long coordinate;
+
+        public QueuedUnload(long unloadTick, long coordinate) {
+            this.unloadTick = unloadTick;
+            this.coordinate = coordinate;
+        }
+
+        @Override
+        public int compareTo(QueuedUnload other) {
+            if (other.unloadTick == this.unloadTick) {
+                return Long.compare(this.coordinate, other.coordinate);
+            } else {
+                return Long.compare(this.unloadTick, other.unloadTick);
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            hash = hash * 31 + Long.hashCode(this.unloadTick);
+            hash = hash * 31 + Long.hashCode(this.coordinate);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null || obj.getClass() != QueuedUnload.class) {
+                return false;
+            }
+            QueuedUnload other = (QueuedUnload)obj;
+            return other.unloadTick == this.unloadTick && other.coordinate == this.coordinate;
+        }
+    }
+
+    long determineDelay(long coordinate) {
+        if (this.isEmpty(coordinate)) {
+            return 5 * 60 * 20;
+        } else {
+            return 60 * 20;
+        }
+    }
+
+    public void queueUnload(long coordinate, long minTarget) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload queue");
+        QueuedUnload unload = new QueuedUnload(minTarget + this.determineDelay(coordinate), coordinate);
+        QueuedUnload existing = this.queuedUnloadsByCoordinate.put(coordinate, unload);
+        if (existing != null) {
+            this.queuedUnloads.remove(existing);
+        }
+        this.queuedUnloads.add(unload);
+    }
+
+    public void dequeueUnload(long coordinate) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload dequeue");
+        QueuedUnload unload = this.queuedUnloadsByCoordinate.remove(coordinate);
+        if (unload != null) {
+            this.queuedUnloads.remove(unload);
+        }
+    }
+
+    public void pollUnloads(BooleanSupplier canSleepForTick) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload");
+        long currentTick = net.minecraft.server.MinecraftServer.currentTickLong;
+        net.minecraft.server.level.ChunkProviderServer chunkProvider = this.world.getChunkProvider();
+        net.minecraft.server.level.PlayerChunkMap playerChunkMap = chunkProvider.playerChunkMap;
+        // copied target determination from PlayerChunkMap
+        int target = Math.min(this.queuedUnloads.size() - 100,  (int) (this.queuedUnloads.size() * net.minecraft.server.level.PlayerChunkMap.UNLOAD_QUEUE_RESIZE_FACTOR)); // Paper - Make more aggressive
+        for (java.util.Iterator<QueuedUnload> iterator = this.queuedUnloads.iterator();
+             iterator.hasNext() && (this.queuedUnloads.size() > target || canSleepForTick.getAsBoolean());) {
+            QueuedUnload unload = iterator.next();
+            if (unload.unloadTick > currentTick) {
+                break;
+            }
+
+            long coordinate = unload.coordinate;
+
+            iterator.remove();
+            this.queuedUnloadsByCoordinate.remove(coordinate);
+
+            if (playerChunkMap.getUnloadingPlayerChunk(net.minecraft.server.MCUtil.getCoordinateX(coordinate), net.minecraft.server.MCUtil.getCoordinateZ(coordinate)) != null
+                || playerChunkMap.getUpdatingChunk(coordinate) != null) {
+                continue;
+            }
+
+            this.unloadData(coordinate);
+        }
+    }
+
+    @Override
+    public void unloadData(long coordinate) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async unloading poi data");
+        super.unloadData(coordinate);
+    }
+
+    @Override
+    protected void onUnload(long coordinate) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload callback");
+        this.getLoadedChunks().remove(coordinate);
+        int chunkX = net.minecraft.server.MCUtil.getCoordinateX(coordinate);
+        int chunkZ = net.minecraft.server.MCUtil.getCoordinateZ(coordinate);
+        for (int section = 0; section < 16; ++section) {
+            long sectionPos = SectionPosition.asLong(chunkX, section, chunkZ);
+            this.updateDistanceTracking(sectionPos);
+        }
+    }
+    // Tuinity end - actually unload POI data
 
     public void a(BlockPosition blockposition, VillagePlaceType villageplacetype) {
         ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition, villageplacetype);
@@ -108,31 +240,47 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public Optional<BlockPosition> c(Predicate<VillagePlaceType> predicate, Predicate<BlockPosition> predicate1, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) {
-        return this.a(predicate, predicate1, blockposition, i, villageplace_occupancy).findFirst();
+        // Tuinity start - re-route to faster logic
+        BlockPosition ret = com.tuinity.tuinity.util.PoiAccess.findAnyPoiPosition(this, predicate, predicate1, blockposition, i, villageplace_occupancy, false);
+        return Optional.ofNullable(ret);
+        // Tuinity end - re-route to faster logic
     }
 
     public Optional<BlockPosition> d(Predicate<VillagePlaceType> predicate, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) {
-        return this.c(predicate, blockposition, i, villageplace_occupancy).map(VillagePlaceRecord::f).min(Comparator.comparingDouble((blockposition1) -> {
-            return blockposition1.j(blockposition);
-        }));
+        // Tuinity start - re-route to faster logic
+        BlockPosition ret = com.tuinity.tuinity.util.PoiAccess.findClosestPoiDataPosition(this, predicate, null, blockposition, i, i*i, villageplace_occupancy, false);
+        return Optional.ofNullable(ret);
+        // Tuinity end - re-route to faster logic
     }
 
     public Optional<BlockPosition> a(Predicate<VillagePlaceType> predicate, Predicate<BlockPosition> predicate1, BlockPosition blockposition, int i) {
-        return this.c(predicate, blockposition, i, VillagePlace.Occupancy.HAS_SPACE).filter((villageplacerecord) -> {
-            return predicate1.test(villageplacerecord.f());
-        }).findFirst().map((villageplacerecord) -> {
-            villageplacerecord.b();
-            return villageplacerecord.f();
-        });
+        // Tuinity start - re-route to faster logic
+        VillagePlaceRecord ret = com.tuinity.tuinity.util.PoiAccess.findAnyPoiRecord(this, predicate, predicate1, blockposition, i,
+                VillagePlace.Occupancy.HAS_SPACE, false);
+        if (ret == null) {
+            return Optional.empty();
+        }
+        // copy from the map() from the old code
+        ret.b();
+        return Optional.ofNullable(ret.f());
+        // Tuinity end - re-route to faster logic
     }
 
     public Optional<BlockPosition> a(Predicate<VillagePlaceType> predicate, Predicate<BlockPosition> predicate1, VillagePlace.Occupancy villageplace_occupancy, BlockPosition blockposition, int i, Random random) {
-        List<VillagePlaceRecord> list = (List) this.c(predicate, blockposition, i, villageplace_occupancy).collect(Collectors.toList());
+        // Tuinity start - re-route to faster logic
+        List<VillagePlaceRecord> list = new java.util.ArrayList<>();
+        com.tuinity.tuinity.util.PoiAccess.findAnyPoiRecords(this, predicate, predicate1, blockposition, i, villageplace_occupancy, false, Integer.MAX_VALUE, list);
+        // Tuinity end - re-route to faster logic
 
-        Collections.shuffle(list, random);
-        return list.stream().filter((villageplacerecord) -> {
-            return predicate1.test(villageplacerecord.f());
-        }).findFirst().map(VillagePlaceRecord::f);
+        // Tuinity start - rewrite this to use improved logic
+        // the old method shuffled the list and then tried to find the first element in it that
+        // matched predicate1, however we moved predicate1 into the poi search. This means we can avoid a shuffle
+        // entirely, and just pick a random element from list
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(list.get(random.nextInt(list.size())).f());
+        // Tuinity end - rewrite this to use improved logic
     }
 
     public boolean b(BlockPosition blockposition) {
@@ -153,10 +301,11 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public int a(SectionPosition sectionposition) {
-        this.a.a();
-        return this.a.c(sectionposition.s());
+        this.villageDistanceTracker.propagateUpdates(); // Tuinity - replace distance tracking util
+        return convertBetweenLevels(this.villageDistanceTracker.getLevel(net.minecraft.server.MCUtil.getSectionKey(sectionposition))); // Tuinity - replace distance tracking util
     }
 
+    private boolean isSectionDistanceTrackerSource(long section) { return this.f(section); } // Tuinity - OBFHELPER
     private boolean f(long i) {
         Optional<VillagePlaceSection> optional = this.c(i);
 
@@ -172,7 +321,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
             super.a(booleansupplier);
         } else {
             //super.a(booleansupplier); // re-implement below
-            while (!((RegionFileSection)this).d.isEmpty() && booleansupplier.getAsBoolean()) {
+            while (!((RegionFileSection)this).d.isEmpty() && booleansupplier.getAsBoolean() && !this.world.isSavingDisabled()) { // Tuinity - unload POI data - don't write to disk if saving is disabled
                 ChunkCoordIntPair chunkcoordintpair = SectionPosition.a(((RegionFileSection)this).d.firstLong()).r();
 
                 NBTTagCompound data;
@@ -180,22 +329,27 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
                     data = this.getData(chunkcoordintpair);
                 }
                 com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(this.world,
-                    chunkcoordintpair.x, chunkcoordintpair.z, data, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.LOW_PRIORITY);
+                    chunkcoordintpair.x, chunkcoordintpair.z, data, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - use normal priority
             }
         }
+        // Tuinity start - unload POI data
+        if (!this.world.isSavingDisabled()) { // don't write to disk if saving is disabled
+            this.pollUnloads(booleansupplier);
+        }
+        // Tuinity end - unload POI data
         // Paper end
-        this.a.a();
+        this.villageDistanceTracker.propagateUpdates(); // Tuinity - replace distance tracking until
     }
 
     @Override
     protected void a(long i) {
         super.a(i);
-        this.a.b(i, this.a.b(i), false);
+        this.updateDistanceTracking(i); // Tuinity - move to new distance tracking util
     }
 
     @Override
     protected void b(long i) {
-        this.a.b(i, this.a.b(i), false);
+        this.updateDistanceTracking(i); // Tuinity - move to new distance tracking util
     }
 
     public void a(ChunkCoordIntPair chunkcoordintpair, ChunkSection chunksection) {
@@ -260,7 +414,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
         @Override
         protected int b(long i) {
-            return VillagePlace.this.f(i) ? 0 : 7;
+            return VillagePlace.this.f(i) ? 0 : 7; // Tuinity - unload poi data - diff on change, this specifies the source level to use for distance tracking
         }
 
         @Override
@@ -305,7 +459,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
         if (this.world != null && Thread.currentThread() != com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE) {
             com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(
                 this.world, chunkcoordintpair.x, chunkcoordintpair.z, nbttagcompound, null,
-                com.destroystokyo.paper.io.IOUtil.getPriorityForCurrentThread());
+                com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - writes are async, no need for priority
             return;
         }
         super.write(chunkcoordintpair, nbttagcompound);
@@ -324,6 +478,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
             this.d = predicate;
         }
 
+        public final Predicate<? super VillagePlaceRecord> getPredicate() { return this.a(); } // Tuinity - OBFHELPER
         public Predicate<? super VillagePlaceRecord> a() {
             return this.d;
         }

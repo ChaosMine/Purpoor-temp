@@ -24,19 +24,24 @@ public class SensorNearestItems extends Sensor<EntityInsentient> {
 
     protected void a(WorldServer worldserver, EntityInsentient entityinsentient) {
         BehaviorController<?> behaviorcontroller = entityinsentient.getBehaviorController();
-        List<EntityItem> list = worldserver.a(EntityItem.class, entityinsentient.getBoundingBox().grow(8.0D, 4.0D, 8.0D), (entityitem) -> {
-            return true;
+        // Tuinity start - remove streams
+        List<EntityItem> list = worldserver.a(EntityItem.class, entityinsentient.getBoundingBox().grow(8.0D, 4.0D, 8.0D), (EntityItem item) -> {
+            return entityinsentient.i(item.getItemStack()) && item.a((Entity)entityinsentient, 9.0D); // copied from removed code, make sure to update - move here so we sort less
         });
-        // Paper start - remove streams in favour of lists
-        list.sort(Comparator.comparingDouble(entityinsentient::h));
+
+        list.sort(Comparator.comparingDouble(entityinsentient::h)); // better to take the sort perf hit than using line of sight more than we need to.
         EntityItem nearest = null;
-        for (EntityItem entityItem : list) {
-            if (entityinsentient.i(entityItem.getItemStack()) && entityItem.a(entityinsentient, 9.0D) && entityinsentient.hasLineOfSight(entityItem)) {
-                nearest = entityItem;
+        for (int index = 0, len = list.size(); index < len; ++index) {
+            EntityItem item = list.get(index);
+            if (entityinsentient.hasLineOfSight(item)) {
+                nearest = item;
                 break;
             }
         }
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, Optional.ofNullable(nearest));
-        // Paper end
+
+        Optional<EntityItem> optional = Optional.ofNullable(nearest);
+        // Tuinity end - remove streams
+
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, optional);
     }
 }

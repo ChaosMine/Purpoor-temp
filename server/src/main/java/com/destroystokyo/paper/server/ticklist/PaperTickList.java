@@ -186,6 +186,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
     }
 
     public void onChunkSetTicking(final int chunkX, final int chunkZ) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list chunk ticking update"); // Tuinity - soft async catcher
         final ArrayList<NextTickListEntry<T>> pending = this.pendingChunkTickLoad.remove(MCUtil.getCoordinateKey(chunkX, chunkZ));
         if (pending == null) {
             return;
@@ -268,6 +269,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public void nextTick() {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list tick"); // Tuinity - soft async catcher
         ++this.currentTick;
         if (this.currentTick != this.world.getTime()) {
             if (!this.warnedAboutDesync) {
@@ -280,6 +282,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public void tick() {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list tick"); // Tuinity - soft async catcher
         final ChunkProviderServer chunkProvider = this.world.getChunkProvider();
 
         this.world.getMethodProfiler().enter("cleaning");
@@ -307,6 +310,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
                     if (toTick.tickState == STATE_TICKING) {
                         toTick.tickState = STATE_TICKED;
                     } // else it's STATE_CANCELLED_TICK
+                    MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
                 } else {
                     // re-schedule eventually
                     toTick.tickState = STATE_SCHEDULED;
@@ -424,6 +428,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
     }
 
     public void schedule(final BlockPosition pos, final T data, final long targetTick, final TickListPriority priority) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list schedule"); // Tuinity - soft async catcher
         final NextTickListEntry<T> entry = new NextTickListEntry<>(pos, data, targetTick, priority);
         if (this.excludeFromScheduling.test(entry.getData())) {
             return;
@@ -479,6 +484,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public List<NextTickListEntry<T>> getEntriesInBoundingBox(final StructureBoundingBox structureboundingbox, final boolean removeReturned, final boolean excludeTicked) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list get in bounding box"); // Tuinity - soft async catcher
         if (structureboundingbox.getMinX() == structureboundingbox.getMaxX() || structureboundingbox.getMinZ() == structureboundingbox.getMaxZ()) {
             return Collections.emptyList(); // vanilla behaviour, check isBlockInSortof above
         }
@@ -535,6 +541,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public void copy(StructureBoundingBox structureboundingbox, BlockPosition blockposition) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list copy"); // Tuinity - soft async catcher
         // start copy from TickListServer // TODO check on update
         List<NextTickListEntry<T>> list = this.getEntriesInBoundingBox(structureboundingbox, false, false);
         Iterator<NextTickListEntry<T>> iterator = list.iterator();
@@ -554,6 +561,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public List<NextTickListEntry<T>> getEntriesInChunk(ChunkCoordIntPair chunkPos, boolean removeReturned, boolean excludeTicked) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list get"); // Tuinity - soft async catcher
         // Vanilla DOES get the entries 2 blocks out of the chunk too, but that doesn't matter since we ignore chunks
         // not at ticking status, and ticking status requires neighbours loaded
         // so with this method we will reduce scheduler churning
@@ -585,6 +593,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public NBTTagList serialize(ChunkCoordIntPair chunkcoordintpair) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list serialize"); // Tuinity - soft async catcher
         // start copy from TickListServer  // TODO check on update
         List<NextTickListEntry<T>> list = this.getEntriesInChunk(chunkcoordintpair, false, true);
 
@@ -594,6 +603,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
 
     @Override
     public int getTotalScheduledEntries() {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list get size"); // Tuinity - soft async catcher
         // good thing this is only used in debug reports // TODO check on update
         int ret = 0;
 

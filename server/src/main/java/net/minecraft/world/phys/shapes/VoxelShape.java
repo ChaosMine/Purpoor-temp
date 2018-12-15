@@ -16,11 +16,11 @@ import net.minecraft.world.phys.Vec3D;
 
 public abstract class VoxelShape {
 
-    protected final VoxelShapeDiscrete a;
+    protected final VoxelShapeDiscrete a; public final VoxelShapeDiscrete getShape() { return this.a; } // Tuinity - OBFHELPER
     @Nullable
     private VoxelShape[] b;
 
-    VoxelShape(VoxelShapeDiscrete voxelshapediscrete) {
+    protected VoxelShape(VoxelShapeDiscrete voxelshapediscrete) { // Tuinity
         this.a = voxelshapediscrete;
     }
 
@@ -56,9 +56,16 @@ public abstract class VoxelShape {
 
     public final VoxelShape offset(double x, double y, double z) { return this.a(x, y, z); } // Paper - OBFHELPER
     public VoxelShape a(double d0, double d1, double d2) {
-        return (VoxelShape) (this.isEmpty() ? VoxelShapes.a() : new VoxelShapeArray(this.a, new DoubleListOffset(this.a(EnumDirection.EnumAxis.X), d0), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Y), d1), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Z), d2)));
+        return (VoxelShape) (this.isEmpty() ? VoxelShapes.a() : new VoxelShapeArray(this.a, new DoubleListOffset(this.a(EnumDirection.EnumAxis.X), d0), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Y), d1), new DoubleListOffset(this.a(EnumDirection.EnumAxis.Z), d2))); // Tuinity - diff on change, copied into VoxelShapeArray override
     }
 
+    // Tuinity start - optimise multi-aabb shapes
+    public boolean intersects(final AxisAlignedBB axisalingedbb) {
+        return VoxelShapes.applyOperation(this, new com.tuinity.tuinity.voxel.AABBVoxelShape(axisalingedbb), OperatorBoolean.AND);
+    }
+    // Tuinity end - optimise multi-aabb shapes
+
+    public final VoxelShape simplify() { return this.c(); } // Tuinity - OBFHELPER
     public VoxelShape c() {
         VoxelShape[] avoxelshape = new VoxelShape[]{VoxelShapes.a()};
 
@@ -78,6 +85,7 @@ public abstract class VoxelShape {
         }, true);
     }
 
+    public final List<AxisAlignedBB> getBoundingBoxesRepresentation() { return this.d(); } // Tuinity - OBFHELPER
     public List<AxisAlignedBB> d() {
         List<AxisAlignedBB> list = Lists.newArrayList();
 

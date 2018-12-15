@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 public abstract class Behavior<E extends EntityLiving> {
 
     protected final Map<MemoryModuleType<?>, MemoryStatus> a;
-    private Behavior.Status b;
+    private Behavior.Status b; public final Behavior.Status getStatus() { return this.b; } // Tuinity - OBFHELPER
     private long c;
     private final int d;
     private final int e;

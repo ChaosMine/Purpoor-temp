@@ -24,7 +24,50 @@ import net.minecraft.world.level.material.FluidTypes;
 
 public class ProtoChunkExtension extends ProtoChunk {
 
-    private final Chunk a;
+    private final Chunk a; public final Chunk getWrappedChunk() { return this.a; } // Tuinity - OBFHELPER
+
+    // Tuinity start - rewrite light engine
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
+        return this.getWrappedChunk().getBlockNibbles();
+    }
+
+    @Override
+    public void setBlockNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.getWrappedChunk().setBlockNibbles(nibbles);
+    }
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getSkyNibbles() {
+        return this.getWrappedChunk().getSkyNibbles();
+    }
+
+    @Override
+    public void setSkyNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.getWrappedChunk().setSkyNibbles(nibbles);
+    }
+
+    @Override
+    public boolean[] getSkyEmptinessMap() {
+        return this.getWrappedChunk().getSkyEmptinessMap();
+    }
+
+    @Override
+    public void setSkyEmptinessMap(final boolean[] emptinessMap) {
+        this.getWrappedChunk().setSkyEmptinessMap(emptinessMap);
+    }
+
+    @Override
+    public boolean[] getBlockEmptinessMap() {
+        return this.getWrappedChunk().getBlockEmptinessMap();
+    }
+
+    @Override
+    public void setBlockEmptinessMap(boolean[] emptinessMap) {
+        this.getWrappedChunk().setBlockEmptinessMap(emptinessMap);
+    }
+
+    // Tuinity end - rewrite light engine
 
     public ProtoChunkExtension(Chunk chunk) {
         super(chunk.getPos(), ChunkConverter.a, chunk.world); // Paper - Anti-Xray - Add parameter

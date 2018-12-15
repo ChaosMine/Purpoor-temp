@@ -64,9 +64,9 @@ public final class SpawnerCreature {
 
     public static SpawnerCreature.d a(int i, Iterable<Entity> iterable, SpawnerCreature.b spawnercreature_b) {
         // Paper start - add countMobs parameter
-        return countMobs(i, iterable, spawnercreature_b, false);
+        return countMobs(i, iterable, spawnercreature_b, false, null); // Tuinity - it'll still be broken no matter what
     }
-    public static SpawnerCreature.d countMobs(int i, Iterable<Entity> iterable, SpawnerCreature.b spawnercreature_b, boolean countMobs) {
+    public static SpawnerCreature.d countMobs(int i, Iterable<Entity> iterable, SpawnerCreature.b spawnercreature_b, boolean countMobs, net.minecraft.server.level.ChunkProviderServer chunkProvider) { // Tuinity - add CPS param
         // Paper end - add countMobs parameter
         SpawnerCreatureProbabilities spawnercreatureprobabilities = new SpawnerCreatureProbabilities();
         Object2IntOpenHashMap<EnumCreatureType> object2intopenhashmap = new Object2IntOpenHashMap();
@@ -97,7 +97,16 @@ public final class SpawnerCreature {
                 BlockPosition blockposition = entity.getChunkCoordinates();
                 long j = ChunkCoordIntPair.pair(blockposition.getX() >> 4, blockposition.getZ() >> 4);
 
-                spawnercreature_b.query(j, (chunk) -> {
+                // Tuinity start - remove chunk lookup and lambda
+                Chunk chunk = entity.getCurrentChunk();
+                if (chunk == null || j != chunk.coordinateKey) { // no chunk or coordinate doesn't match
+                    chunk = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(blockposition.getX() >> 4, blockposition.getZ() >> 4);
+                    if (chunk == null) {
+                        // unloaded chunk! no longer FULL.
+                        continue;
+                    }
+                }
+                // Tuinity end - remove chunk lookup and lambda
                     BiomeSettingsMobs.b biomesettingsmobs_b = b(blockposition, chunk).b().a(entity.getEntityType());
 
                     if (biomesettingsmobs_b != null) {
@@ -107,10 +116,10 @@ public final class SpawnerCreature {
                     object2intopenhashmap.addTo(enumcreaturetype, 1);
                     // Paper start
                     if (countMobs) {
-                        ((WorldServer)chunk.world).getChunkProvider().playerChunkMap.updatePlayerMobTypeMap(entity);
+                        chunkProvider.playerChunkMap.updatePlayerMobTypeMap(entity); // Tuinity - directly use chunk provider
                     }
                     // Paper end
-                });
+                // Tuinity - remove chunk lookup and lambda
             }
         }
 
@@ -250,7 +259,7 @@ public final class SpawnerCreature {
                             blockposition_mutableblockposition.d(l, i, i1);
                             double d0 = (double) l + 0.5D;
                             double d1 = (double) i1 + 0.5D;
-                            EntityHuman entityhuman = worldserver.a(d0, (double) i, d1, -1.0D, false);
+                            EntityHuman entityhuman = (!(ichunkaccess instanceof Chunk)) ? worldserver.a(d0, (double) i, d1, -1.0D, false) : ((Chunk)ichunkaccess).findNearestPlayer(d0, i, d1, 576.0D, net.minecraft.world.entity.IEntitySelector.notSpectator());  // Tuinity - use chunk's player cache to optimize search in range
 
                             if (entityhuman != null) {
                                 double d2 = entityhuman.h(d0, (double) i, d1);
@@ -322,7 +331,7 @@ public final class SpawnerCreature {
     }
 
     private static boolean a(WorldServer worldserver, IChunkAccess ichunkaccess, BlockPosition.MutableBlockPosition blockposition_mutableblockposition, double d0) {
-        if (d0 <= 576.0D) {
+        if (d0 <= 576.0D) { // Tuinity - diff on change, copy into caller
             return false;
         } else if (worldserver.getSpawn().a((IPosition) (new Vec3D((double) blockposition_mutableblockposition.getX() + 0.5D, (double) blockposition_mutableblockposition.getY(), (double) blockposition_mutableblockposition.getZ() + 0.5D)), 24.0D)) {
             return false;

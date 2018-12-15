@@ -7,9 +7,10 @@ import net.minecraft.world.level.IBlockAccess;
 
 public interface ILightAccess {
 
-    @Nullable
-    IBlockAccess c(int i, int j);
+    default @Nullable IBlockAccess getFeaturesReadyChunk(int i, int j) { return this.c(i, j); } // Tuinity - OBFHELPER
+    @Nullable IBlockAccess c(int i, int j);
 
+    default void markLightSectionDirty(EnumSkyBlock enumskyblock, SectionPosition sectionposition) { this.a(enumskyblock, sectionposition); } // Tuinity - OBFHELPER
     default void a(EnumSkyBlock enumskyblock, SectionPosition sectionposition) {}
 
     IBlockAccess getWorld();

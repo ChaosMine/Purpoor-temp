@@ -139,19 +139,28 @@ public class BlockSoil extends Block {
     }
 
     private static boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
-        Iterator iterator = BlockPosition.a(blockposition.b(-4, 0, -4), blockposition.b(4, 1, 4)).iterator();
+        // Tuinity start - remove abstract block iteration
+        int xOff = blockposition.getX();
+        int yOff = blockposition.getY();
+        int zOff = blockposition.getZ();
 
-        BlockPosition blockposition1;
-
-        do {
-            if (!iterator.hasNext()) {
-                return false;
+        for (int dz = -4; dz <= 4; ++dz) {
+            int z = dz + zOff;
+            for (int dx = -4; dx <= 4; ++dx) {
+                int x = xOff + dx;
+                for (int dy = 0; dy <= 1; ++dy) {
+                    int y = dy + yOff;
+                    net.minecraft.world.level.chunk.Chunk chunk = (net.minecraft.world.level.chunk.Chunk)iworldreader.getChunkAt(x >> 4, z >> 4);
+                    net.minecraft.world.level.material.Fluid fluid = chunk.getBlockData(x, y, z).getFluid();
+                    if (fluid.isTagged(TagsFluid.WATER)) {
+                        return true;
+                    }
+                }
             }
+        }
 
-            blockposition1 = (BlockPosition) iterator.next();
-        } while (!iworldreader.getFluid(blockposition1).a((Tag) TagsFluid.WATER));
-
-        return true;
+        return false;
+        // Tuinity end - remove abstract block iteration
     }
 
     @Override

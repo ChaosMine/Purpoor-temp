@@ -26,26 +26,31 @@ public class SensorNearestPlayers extends Sensor<EntityLiving> {
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving) {
-        // Paper start - remove streams in favour of lists
-        List<EntityHuman> players = new java.util.ArrayList<>(worldserver.getPlayers());
-        players.removeIf(player -> !IEntitySelector.notSpectator().test(player) || !entityliving.a(player, 16.0D)); // Paper - removeIf only re-allocates once compared to iterator
-        players.sort(Comparator.comparingDouble(entityliving::h));
-
+        // Tuinity start - remove streams
+        List<EntityHuman> nearby = (List)worldserver.getNearbyPlayers(entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ(),
+                16.0, IEntitySelector.g);
+        nearby.sort((e1, e2) -> Double.compare(entityliving.getDistanceSquared(e1), entityliving.getDistanceSquared(e2)));
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_PLAYERS, players);
 
-        EntityHuman nearest = null, nearestTargetable = null;
-        for (EntityHuman player : players) {
-            if (Sensor.a(entityliving, player)) {
-                if (nearest == null) nearest = player;
-                if (IEntitySelector.canAITarget().test(player)) {
-                    nearestTargetable = player;
-                    break; // Both variables are assigned, no reason to loop further
-                }
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_PLAYERS, nearby);
+        EntityHuman first = null;
+        EntityHuman firstNonSpectator = null;
+        for (int index = 0, len = nearby.size(); index < len; ++index) {
+            EntityHuman entity = nearby.get(index);
+            if (!Sensor.a(entityliving, (EntityLiving)entity)) { // copied from removed code, make sure to update
+                continue;
+            }
+            if (first == null) {
+                first = entity;
+            }
+            if (IEntitySelector.f.test(entity)) { // copied from removed code, make sure to update
+                firstNonSpectator = entity;
+                break;
             }
         }
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, nearest);
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestTargetable);
-        // Paper end
+
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, first);
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, Optional.ofNullable(firstNonSpectator));
+        // Tuinity end - remove streams
     }
 }

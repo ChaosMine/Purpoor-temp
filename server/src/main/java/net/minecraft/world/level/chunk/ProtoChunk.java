@@ -54,7 +54,7 @@ public class ProtoChunk implements IChunkAccess {
     private final Map<BlockPosition, NBTTagCompound> i;
     private final ChunkSection[] j;
     private final List<NBTTagCompound> k;
-    private final List<BlockPosition> l;
+    private final List<BlockPosition> l; private final java.util.concurrent.atomic.AtomicBoolean lightSourcesLocked = new java.util.concurrent.atomic.AtomicBoolean(); // Tuinity - warn when light sources are accessed while locked
     private final ShortList[] m;
     private final Map<StructureGenerator<?>, StructureStart<?>> n;
     private final Map<StructureGenerator<?>, LongSet> o;
@@ -65,6 +65,53 @@ public class ProtoChunk implements IChunkAccess {
     private final Map<WorldGenStage.Features, BitSet> t;
     private volatile boolean u;
     final World world; // Paper - Anti-Xray - Add world // Paper - private -> default
+
+    // Tuinity start - rewrite light engine
+    protected volatile com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] blockNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight();
+    protected volatile com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] skyNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight();
+    protected volatile boolean[] skyEmptinessMap;
+    protected volatile boolean[] blockEmptinessMap;
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
+        return this.blockNibbles;
+    }
+
+    @Override
+    public void setBlockNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.blockNibbles = nibbles;
+    }
+
+    @Override
+    public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getSkyNibbles() {
+        return this.skyNibbles;
+    }
+
+    @Override
+    public void setSkyNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        this.skyNibbles = nibbles;
+    }
+
+    @Override
+    public boolean[] getSkyEmptinessMap() {
+        return this.skyEmptinessMap;
+    }
+
+    @Override
+    public void setSkyEmptinessMap(boolean[] emptinessMap) {
+        this.skyEmptinessMap = emptinessMap;
+    }
+
+    @Override
+    public boolean[] getBlockEmptinessMap() {
+        return this.blockEmptinessMap;
+    }
+
+    @Override
+    public void setBlockEmptinessMap(boolean[] emptinessMap) {
+        this.blockEmptinessMap = emptinessMap;
+    }
+    // Tuinity end - rewrite light engine
 
     // Paper start - Anti-Xray - Add world
     @Deprecated public ProtoChunk(ChunkCoordIntPair chunkcoordintpair, ChunkConverter chunkconverter) { this(chunkcoordintpair, chunkconverter, null); } // Notice for updates: Please make sure this constructor isn't used anywhere
@@ -191,20 +238,17 @@ public class ProtoChunk implements IChunkAccess {
                 ChunkSection chunksection = this.a(j >> 4);
                 IBlockData iblockdata1 = chunksection.setType(i & 15, j & 15, k & 15, iblockdata);
 
-                if (this.g.b(ChunkStatus.FEATURES) && iblockdata != iblockdata1 && (iblockdata.b((IBlockAccess) this, blockposition) != iblockdata1.b((IBlockAccess) this, blockposition) || iblockdata.f() != iblockdata1.f() || iblockdata.e() || iblockdata1.e())) {
+                if ((com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (this.g.b(ChunkStatus.LIGHT)) : (this.g.b(ChunkStatus.FEATURES))) && iblockdata != iblockdata1 && (iblockdata.b((IBlockAccess) this, blockposition) != iblockdata1.b((IBlockAccess) this, blockposition) || iblockdata.f() != iblockdata1.f() || iblockdata.e() || iblockdata1.e())) { // Tuinity - move block updates to only happen after lighting occurs (or during, thanks chunk system)
                     LightEngine lightengine = this.e();
 
                     lightengine.a(blockposition);
                 }
 
-                EnumSet<HeightMap.Type> enumset = this.getChunkStatus().h();
+                HeightMap.Type[] enumset = this.getChunkStatus().heightMaps; // Tuinity - reduce iterator creation
                 EnumSet<HeightMap.Type> enumset1 = null;
-                Iterator iterator = enumset.iterator();
+                // Tuinity - reduce iterator creation
 
-                HeightMap.Type heightmap_type;
-
-                while (iterator.hasNext()) {
-                    heightmap_type = (HeightMap.Type) iterator.next();
+                for (HeightMap.Type heightmap_type : enumset) { // Tuinity - reduce iterator creation
                     HeightMap heightmap = (HeightMap) this.f.get(heightmap_type);
 
                     if (heightmap == null) {
@@ -220,10 +264,9 @@ public class ProtoChunk implements IChunkAccess {
                     HeightMap.a(this, enumset1);
                 }
 
-                iterator = enumset.iterator();
-
-                while (iterator.hasNext()) {
-                    heightmap_type = (HeightMap.Type) iterator.next();
+                // Tuinity start - reduce iterator creation
+                for (HeightMap.Type heightmap_type : enumset) {
+                    // Tuinity end - reduce iterator creation
                     ((HeightMap) this.f.get(heightmap_type)).a(i & 15, j, k & 15, iblockdata);
                 }
 

@@ -17,6 +17,157 @@ public class AxisAlignedBB {
     public final double maxY;
     public final double maxZ;
 
+    // Tuinity start
+    public final boolean isEmpty() {
+        return (this.maxX - this.minX) < net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxY - this.minY) < net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxZ - this.minZ) < net.minecraft.server.MCUtil.COLLISION_EPSILON;
+    }
+
+    public static AxisAlignedBB getBoxForChunk(int chunkX, int chunkZ) {
+        double x = (double)(chunkX << 4);
+        double z = (double)(chunkZ << 4);
+        // use a bounding box bigger than the chunk to prevent entities from entering it on move
+        return new AxisAlignedBB(x - 3*net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, z - 3*net.minecraft.server.MCUtil.COLLISION_EPSILON, x + (16.0 + 3*net.minecraft.server.MCUtil.COLLISION_EPSILON), Double.POSITIVE_INFINITY, z + (16.0 + 3*net.minecraft.server.MCUtil.COLLISION_EPSILON), false);
+    }
+
+    /*
+      A couple of rules for VoxelShape collisions:
+      Two shapes only intersect if they are actually more than EPSILON units into each other. This also applies to movement
+      checks.
+      If the two shapes strictly collide, then the return value of a collide call will return a value in the opposite
+      direction of the source move. However, this value will not be greater in magnitude than EPSILON. Collision code
+      will automatically round it to 0.
+     */
+
+    public final boolean voxelShapeIntersect(AxisAlignedBB other) {
+        return (this.minX - other.maxX) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxX - other.minX) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+               (this.minY - other.maxY) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxY - other.minY) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+               (this.minZ - other.maxZ) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxZ - other.minZ) > net.minecraft.server.MCUtil.COLLISION_EPSILON;
+    }
+
+    public final boolean voxelShapeIntersect(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        return (this.minX - maxX) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxX - minX) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+               (this.minY - maxY) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxY - minY) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+               (this.minZ - maxZ) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (this.maxZ - minZ) > net.minecraft.server.MCUtil.COLLISION_EPSILON;
+    }
+
+    public static boolean voxelShapeIntersect(double minX1, double minY1, double minZ1, double maxX1, double maxY1, double maxZ1,
+                                              double minX2, double minY2, double minZ2, double maxX2, double maxY2, double maxZ2) {
+        return (minX1 - maxX2) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (maxX1 - minX2) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+                (minY1 - maxY2) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (maxY1 - minY2) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+                (minZ1 - maxZ2) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (maxZ1 - minZ2) > net.minecraft.server.MCUtil.COLLISION_EPSILON;
+    }
+
+    public static double collideX(AxisAlignedBB target, AxisAlignedBB source, double source_move) {
+        if (source_move == 0.0) {
+            return 0.0;
+        }
+
+        if ((source.minY - target.maxY) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxY - target.minY) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+                (source.minZ - target.maxZ) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxZ - target.minZ) > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+
+            if (source_move >= 0.0) {
+                double max_move = target.minX - source.maxX; // < 0.0 if no strict collision
+                if (max_move < -net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.min(max_move, source_move);
+            } else {
+                double max_move = target.maxX - source.minX; // > 0.0 if no strict collision
+                if (max_move > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.max(max_move, source_move);
+            }
+        }
+        return source_move;
+    }
+
+    public static double collideY(AxisAlignedBB target, AxisAlignedBB source, double source_move) {
+        if (source_move == 0.0) {
+            return 0.0;
+        }
+
+        if ((source.minX - target.maxX) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxX - target.minX) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+                (source.minZ - target.maxZ) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxZ - target.minZ) > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+            if (source_move >= 0.0) {
+                double max_move = target.minY - source.maxY; // < 0.0 if no strict collision
+                if (max_move < -net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.min(max_move, source_move);
+            } else {
+                double max_move = target.maxY - source.minY; // > 0.0 if no strict collision
+                if (max_move > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.max(max_move, source_move);
+            }
+        }
+        return source_move;
+    }
+
+    public static double collideZ(AxisAlignedBB target, AxisAlignedBB source, double source_move) {
+        if (source_move == 0.0) {
+            return 0.0;
+        }
+
+        if ((source.minX - target.maxX) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxX - target.minX) > net.minecraft.server.MCUtil.COLLISION_EPSILON &&
+                (source.minY - target.maxY) < -net.minecraft.server.MCUtil.COLLISION_EPSILON && (source.maxY - target.minY) > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+            if (source_move >= 0.0) {
+                double max_move = target.minZ - source.maxZ; // < 0.0 if no strict collision
+                if (max_move < -net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.min(max_move, source_move);
+            } else {
+                double max_move = target.maxZ - source.minZ; // > 0.0 if no strict collision
+                if (max_move > net.minecraft.server.MCUtil.COLLISION_EPSILON) {
+                    return source_move;
+                }
+                return Math.max(max_move, source_move);
+            }
+        }
+        return source_move;
+    }
+
+    public final AxisAlignedBB offsetX(double dx) {
+        return new AxisAlignedBB(this.minX + dx, this.minY, this.minZ, this.maxX + dx, this.maxY, this.maxZ, false);
+    }
+
+    public final AxisAlignedBB offsetY(double dy) {
+        return new AxisAlignedBB(this.minX, this.minY + dy, this.minZ, this.maxX, this.maxY + dy, this.maxZ, false);
+    }
+
+    public final AxisAlignedBB offsetZ(double dz) {
+        return new AxisAlignedBB(this.minX, this.minY, this.minZ + dz, this.maxX, this.maxY, this.maxZ + dz, false);
+    }
+
+    public AxisAlignedBB(double d0, double d1, double d2, double d3, double d4, double d5, boolean dummy) {
+        this.minX = d0;
+        this.minY = d1;
+        this.minZ = d2;
+        this.maxX = d3;
+        this.maxY = d4;
+        this.maxZ = d5;
+    }
+
+    public final AxisAlignedBB expandUpwards(double dy) {
+        return new AxisAlignedBB(this.minX, this.minY, this.minZ, this.maxX, this.maxY + dy, this.maxZ, false);
+    }
+
+    public final  AxisAlignedBB cutUpwards(final double dy) { // dy > 0.0
+        return new AxisAlignedBB(this.minX, this.maxY, this.minZ, this.maxX, this.maxY + dy, this.maxZ, false);
+    }
+
+    public final AxisAlignedBB cutDownwards(final double dy) { // dy < 0.0
+        return new AxisAlignedBB(this.minX, this.minY + dy, this.minZ, this.maxX, this.minY, this.maxZ, false);
+    }
+
+    public final AxisAlignedBB expandUpwardsAndCutBelow(double dy) {
+        return new AxisAlignedBB(this.minX, this.maxY, this.minZ, this.maxX, this.maxY + dy, this.maxZ, false);
+    }
+    // Tuinity end
+
     public AxisAlignedBB(double d0, double d1, double d2, double d3, double d4, double d5) {
         this.minX = Math.min(d0, d3);
         this.minY = Math.min(d1, d4);
@@ -189,6 +340,7 @@ public class AxisAlignedBB {
         return new AxisAlignedBB(d0, d1, d2, d3, d4, d5);
     }
 
+    public final AxisAlignedBB offset(double d0, double d1, double d2) { return this.d(d0, d1, d2); } // Tuinity - OBFHELPER
     public AxisAlignedBB d(double d0, double d1, double d2) {
         return new AxisAlignedBB(this.minX + d0, this.minY + d1, this.minZ + d2, this.maxX + d0, this.maxY + d1, this.maxZ + d2);
     }
@@ -197,6 +349,7 @@ public class AxisAlignedBB {
         return new AxisAlignedBB(this.minX + (double) blockposition.getX(), this.minY + (double) blockposition.getY(), this.minZ + (double) blockposition.getZ(), this.maxX + (double) blockposition.getX(), this.maxY + (double) blockposition.getY(), this.maxZ + (double) blockposition.getZ());
     }
 
+    public final AxisAlignedBB offset(Vec3D vec3d) { return this.b(vec3d); } // Tuinity - OBFHELPER
     public AxisAlignedBB c(Vec3D vec3d) {
         return this.d(vec3d.x, vec3d.y, vec3d.z);
     }
@@ -216,6 +369,7 @@ public class AxisAlignedBB {
         return this.e(vec3d.x, vec3d.y, vec3d.z);
     }
 
+    public final boolean contains(double d0, double d1, double d2) { return this.e(d0, d1, d2); } // Tuinity - OBFHELPER
     public boolean e(double d0, double d1, double d2) {
         return d0 >= this.minX && d0 < this.maxX && d1 >= this.minY && d1 < this.maxY && d2 >= this.minZ && d2 < this.maxZ;
     }

@@ -47,15 +47,19 @@ public class SensorNearestBed extends Sensor<EntityInsentient> {
                     return true;
                 }
             };
-            Stream<BlockPosition> stream = villageplace.a(VillagePlaceType.r.c(), predicate, entityinsentient.getChunkCoordinates(), 48, VillagePlace.Occupancy.ANY);
-            PathEntity pathentity = entityinsentient.getNavigation().a(stream, VillagePlaceType.r.d());
+            // Tuinity start - optimise POI access
+            java.util.List<BlockPosition> poiposes = new java.util.ArrayList<>();
+            // don't ask me why it's unbounded. ask mojang.
+            com.tuinity.tuinity.util.PoiAccess.findAnyPoiPositions(villageplace, VillagePlaceType.r.c(), predicate, entityinsentient.getChunkCoordinates(), 48, VillagePlace.Occupancy.ANY, false, Integer.MAX_VALUE, poiposes);
+            PathEntity pathentity = entityinsentient.getNavigation().a(new java.util.HashSet<>(poiposes), VillagePlaceType.r.d());
+            // Tuinity end - optimise POI access
 
             if (pathentity != null && pathentity.j()) {
                 BlockPosition blockposition = pathentity.m();
                 Optional<VillagePlaceType> optional = villageplace.c(blockposition);
 
                 if (optional.isPresent()) {
-                    entityinsentient.getBehaviorController().setMemory(MemoryModuleType.NEAREST_BED, (Object) blockposition);
+                    entityinsentient.getBehaviorController().setMemory(MemoryModuleType.NEAREST_BED, blockposition); // Tuinity - decompile fix
                 }
             } else if (this.b < 5) {
                 this.a.long2LongEntrySet().removeIf((entry) -> {

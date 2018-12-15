@@ -39,16 +39,34 @@ public class PortalTravelAgent {
         // int i = flag ? 16 : 128;
         // CraftBukkit end
 
-        villageplace.a(this.world, blockposition, i);
-        Optional<VillagePlaceRecord> optional = villageplace.b((villageplacetype) -> {
-            return villageplacetype == VillagePlaceType.v;
-        }, blockposition, i, VillagePlace.Occupancy.ANY).sorted(Comparator.comparingDouble((VillagePlaceRecord villageplacerecord) -> { // CraftBukkit - decompile error
-            return villageplacerecord.f().j(blockposition);
-        }).thenComparingInt((villageplacerecord) -> {
-            return villageplacerecord.f().getY();
-        })).filter((villageplacerecord) -> {
-            return this.world.getType(villageplacerecord.f()).b(BlockProperties.E);
-        }).findFirst();
+        // Tuinity start - optimise portals
+        //villageplace.a(this.world, blockposition, i);
+        Optional<VillagePlaceRecord> optional;
+        java.util.List<VillagePlaceRecord> records = new java.util.ArrayList<>();
+        com.tuinity.tuinity.util.PoiAccess.findClosestPoiDataRecords(villageplace,
+                (VillagePlaceType villageplacetype) -> {
+                    return villageplacetype == VillagePlaceType.v; // this should break this entire diff on update if it changes, so TODO check that on diff break
+                },
+                (BlockPosition pos) -> {
+                    net.minecraft.world.level.chunk.IChunkAccess lowest = this.world.getChunkAt(pos.getX() >> 4, pos.getZ() >> 4, net.minecraft.world.level.chunk.ChunkStatus.EMPTY);
+                    if (!lowest.getChunkStatus().isAtLeastStatus(net.minecraft.world.level.chunk.ChunkStatus.FULL)) {
+                        // why would we generate the chunk?
+                        return false;
+                    }
+                    return lowest.getType(pos).contains(BlockProperties.E); // this should break this entire diff on update if it changes, so TODO check that on diff break
+                }, blockposition, i, Double.MAX_VALUE, VillagePlace.Occupancy.ANY, true, records);
+        // this gets us most of the way there, but we bias towards lower y values.
+        VillagePlaceRecord lowestYRecord = null;
+        for (VillagePlaceRecord record : records) {
+            if (lowestYRecord == null) {
+                lowestYRecord = record;
+            } else if (lowestYRecord.getPosition().getY() > record.getPosition().getY()) {
+                lowestYRecord = record;
+            }
+        }
+        // now we're done
+        optional = Optional.ofNullable(lowestYRecord);
+        // Tuinity end - optimise portals
 
         return optional.map((villageplacerecord) -> {
             BlockPosition blockposition1 = villageplacerecord.f();

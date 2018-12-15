@@ -545,7 +545,8 @@ public abstract class EntityArrow extends IProjectile {
                 }
                 itemstack = item.getItemStack();
             }
-            boolean flag = this.fromPlayer == EntityArrow.PickupStatus.ALLOWED || this.fromPlayer == EntityArrow.PickupStatus.CREATIVE_ONLY && entityhuman.abilities.canInstantlyBuild || this.t() && this.getShooter().getUniqueID() == entityhuman.getUniqueID();
+            Entity shooter; // Tuinity - fix NPE here
+            boolean flag = this.fromPlayer == EntityArrow.PickupStatus.ALLOWED || this.fromPlayer == EntityArrow.PickupStatus.CREATIVE_ONLY && entityhuman.abilities.canInstantlyBuild || this.t() && ((shooter = this.getShooter()) != null && shooter.getUniqueID() == entityhuman.getUniqueID()); // Tuinity - fix NPE here
 
             if (this.fromPlayer == EntityArrow.PickupStatus.ALLOWED && !entityhuman.inventory.pickup(itemstack)) {
                 // CraftBukkit end

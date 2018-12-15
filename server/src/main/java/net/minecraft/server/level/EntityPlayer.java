@@ -262,7 +262,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
 
-    boolean needsChunkCenterUpdate; // Paper - no-tick view distance
+    public boolean needsChunkCenterUpdate; // Paper - no-tick view distance // Tuinity - package-private -> public
     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 
     public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
@@ -371,7 +371,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
                 if (blockposition1 != null) {
                     this.setPositionRotation(blockposition1, 0.0F, 0.0F);
-                    if (worldserver.getCubes(this)) {
+                    if (!worldserver.collidesWithAnyBlockOrWorldBorder(this, this.getBoundingBox(), true, false)) { // Tuinity - make sure this is loaded
                         break;
                     }
                 }
@@ -379,7 +379,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         } else {
             this.setPositionRotation(blockposition, 0.0F, 0.0F);
 
-            while (!worldserver.getCubes(this) && this.locY() < 255.0D) {
+            while (worldserver.collidesWithAnyBlockOrWorldBorder(this, this.getBoundingBox(), true, false) && this.locY() < 255.0D) { // Tuinity - make sure this is loaded
                 this.setPosition(this.locX(), this.locY() + 1.0D, this.locZ());
             }
         }
@@ -670,6 +670,185 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                     }
                 }
             }
+
+            /* // TODO remove debug
+            this.networkManager.disableAutomaticFlush();
+
+            if (MinecraftServer.currentTick % 20 == 0) {
+                int centerX = MathHelper.floor(this.locX()) >> 4;
+                int centerZ = MathHelper.floor(this.locZ()) >> 4;
+                byte[] full = new byte[2048];
+                byte[] empty = new byte[2048];
+                java.util.Arrays.fill(full, (byte)-1);
+                for (int dz = -1; dz <= 1; ++dz) {
+                    for (int dx = -1; dx <= 1; ++dx) {
+                        int cx = centerX + dx;
+                        int cz = centerZ + dz;
+
+                        Chunk chunk = this.getWorldServer().getChunkProvider().getChunkAtIfLoadedImmediately(cx, cz);
+
+                        if (chunk == null) {
+                            continue;
+                        }
+
+                        for (int y = -1; y <= 16; ++y) {
+                            NibbleArray nibble = this.getWorldServer().getChunkProvider().getLightEngine().a(EnumSkyBlock.SKY)
+                                    .a(new SectionPosition(cx, y, cz));
+                            org.bukkit.Color color;
+                            org.bukkit.block.data.BlockData blockColor;
+                            if (nibble == null) {
+                                color = org.bukkit.Color.PURPLE;
+                                blockColor = org.bukkit.Material.PURPLE_WOOL.createBlockData();
+                                continue;
+                            } else {
+                                if (nibble.c()) { // is null
+                                    color = org.bukkit.Color.BLUE;
+                                    blockColor = org.bukkit.Material.BLUE_WOOL.createBlockData();
+                                } else if (java.util.Arrays.equals(nibble.justGiveMeTheFuckingByteArrayNoCleanerBullshitJesusFuckingChrist(), full)) {
+                                    color = org.bukkit.Color.RED;
+                                    blockColor = org.bukkit.Material.RED_WOOL.createBlockData();
+                                } else if (java.util.Arrays.equals(nibble.justGiveMeTheFuckingByteArrayNoCleanerBullshitJesusFuckingChrist(), empty)) {
+                                    color = org.bukkit.Color.BLACK;
+                                    blockColor = org.bukkit.Material.BLACK_WOOL.createBlockData();
+                                } else {
+                                    color = org.bukkit.Color.ORANGE;
+                                    blockColor = org.bukkit.Material.ORANGE_WOOL.createBlockData();
+                                }
+                            }
+                            if (false) {
+                                if (y < 0 || y > 15 || chunk.getSections()[y] == null || chunk.getSections()[y].isFullOfAir()) {
+                                    color = org.bukkit.Color.BLACK;
+                                    blockColor = org.bukkit.Material.BLACK_WOOL.createBlockData();
+                                } else {
+                                    color = org.bukkit.Color.WHITE;
+                                    blockColor = org.bukkit.Material.WHITE_WOOL.createBlockData();
+                                }
+                            }
+
+                            org.bukkit.Particle.DustOptions dustOptions = new org.bukkit.Particle.DustOptions(color, 1.7f);
+
+                            for (int i = 0; i <= 16; ++i) {
+                                // y axis
+
+                                double xVal = i == 0 ? 0.5 : (i == 16 ? 15.5 : i);
+
+                                // left side
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // right side
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + xVal,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+
+                                // x axis
+
+                                // bottom
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 0.5,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 0.5,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // top
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 15.5,
+                                        cz * 16 + 0.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + xVal,
+                                        y*16 + 15.5,
+                                        cz * 16 + 15.5,
+                                        1,
+                                        dustOptions
+                                );
+
+                                // z axis
+                                // bottom
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + 0.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + 0.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                //top
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 0.5,
+                                        y*16 + 15.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+
+                                this.getBukkitEntity().spawnParticle(org.bukkit.Particle.REDSTONE,
+                                        cx * 16 + 15.5,
+                                        y*16 + 15.5,
+                                        cz * 16 + xVal,
+                                        1,
+                                        dustOptions
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.networkManager.enableAutomaticFlush();
+
+            //System.out.println("Block: " + this.getBukkitEntity().getLocation().getBlock().getLightFromBlocks());
+            //System.out.println("Sky: " + this.getBukkitEntity().getLocation().getBlock().getLightFromSky());
+            */  // TODO remove debug
 
             if (this.getHealth() != this.lastHealthSent || this.lastFoodSent != this.foodData.getFoodLevel() || this.foodData.getSaturationLevel() == 0.0F != this.lastSentSaturationZero) {
                 this.playerConnection.sendPacket(new PacketPlayOutUpdateHealth(this.getBukkitEntity().getScaledHealth(), this.foodData.getFoodLevel(), this.foodData.getSaturationLevel())); // CraftBukkit
@@ -1564,6 +1743,17 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.playerConnection.sendPacket(new PacketPlayOutCloseWindow(this.activeContainer.windowId));
         this.o();
     }
+    // Tuinity start - special close for unloaded inventory
+    public void closeUnloadedInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        // copied from above
+        CraftEventFactory.handleInventoryCloseEvent(this, reason); // CraftBukkit
+        // Paper end
+        // copied from below
+        this.playerConnection.sendPacket(new PacketPlayOutCloseWindow(this.activeContainer.windowId));
+        this.activeContainer = this.defaultContainer;
+        // do not run close logic
+    }
+    // Tuinity end - special close for unloaded inventory
 
     public void broadcastCarriedItem() {
         if (!this.e) {

@@ -84,7 +84,11 @@ public class BehaviorFindPosition extends Behavior<EntityCreature> {
                 return true;
             }
         };
-        Set<BlockPosition> set = (Set) villageplace.b(this.b.c(), predicate, entitycreature.getChunkCoordinates(), 48, VillagePlace.Occupancy.HAS_SPACE).limit(5L).collect(Collectors.toSet());
+        // Tuinity start - optimise POI access
+        java.util.List<BlockPosition> poiposes = new java.util.ArrayList<>();
+        com.tuinity.tuinity.util.PoiAccess.findNearestPoiPositions(villageplace, this.b.c(), predicate, entitycreature.getChunkCoordinates(), 48, 48*48, VillagePlace.Occupancy.HAS_SPACE, false, 5, poiposes);
+        Set<BlockPosition> set = new java.util.HashSet<>(poiposes);
+        // Tuinity end - optimise POI access
         PathEntity pathentity = entitycreature.getNavigation().a(set, this.b.d());
 
         if (pathentity != null && pathentity.j()) {
@@ -94,7 +98,7 @@ public class BehaviorFindPosition extends Behavior<EntityCreature> {
                 villageplace.a(this.b.c(), (blockposition1) -> {
                     return blockposition1.equals(blockposition);
                 }, blockposition, 1);
-                entitycreature.getBehaviorController().setMemory(this.c, (Object) GlobalPos.create(worldserver.getDimensionKey(), blockposition));
+                entitycreature.getBehaviorController().setMemory(this.c, GlobalPos.create(worldserver.getDimensionKey(), blockposition)); // Tuinity - decompile fix
                 this.e.ifPresent((obyte) -> {
                     worldserver.broadcastEntityEffect(entitycreature, obyte);
                 });

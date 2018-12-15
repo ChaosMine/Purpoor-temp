@@ -34,8 +34,8 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
 
     private static final Logger LOGGER = LogManager.getLogger();
     // Paper - nuke IOWorker
-    private final Long2ObjectMap<Optional<R>> c = new Long2ObjectOpenHashMap();
-    public final LongLinkedOpenHashSet d = new LongLinkedOpenHashSet(); // Paper - private -> public
+    private final Long2ObjectMap<Optional<R>> c = new Long2ObjectOpenHashMap(); protected final Long2ObjectMap<Optional<R>> getDataBySection() { return this.c; } // Tuinity - OBFHELPER
+    public final LongLinkedOpenHashSet d = new LongLinkedOpenHashSet();  protected final LongLinkedOpenHashSet getDirtySections() { return this.d; } // Paper - private -> public // Tuinity - OBFHELPER
     private final Function<Runnable, Codec<R>> e;
     private final Function<Runnable, R> f;
     private final DataFixer g;
@@ -59,11 +59,46 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
 
     }
 
-    @Nullable
-    protected Optional<R> c(long i) {
+    // Tuinity start - actually unload POI data
+    public void unloadData(long coordinate) {
+        ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(coordinate);
+        this.writeDirtyData(chunkPos);
+
+        Long2ObjectMap<Optional<R>> data = this.getDataBySection();
+        int before = data.size();
+
+        for (int section = 0; section < 16; ++section) {
+            data.remove(SectionPosition.asLong(chunkPos.x, section, chunkPos.z));
+        }
+
+        if (before != data.size()) {
+            this.onUnload(coordinate);
+        }
+    }
+
+    protected void onUnload(long coordinate) {}
+
+    public boolean isEmpty(long coordinate) {
+        Long2ObjectMap<Optional<R>> data = this.getDataBySection();
+        int x = net.minecraft.server.MCUtil.getCoordinateX(coordinate);
+        int z = net.minecraft.server.MCUtil.getCoordinateZ(coordinate);
+        for (int section = 0; section < 16; ++section) {
+            Optional<R> optional = data.get(SectionPosition.asLong(x, section, z));
+            if (optional != null && optional.orElse(null) != null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    // Tuinity end - actually unload POI data
+
+    @Nullable public final Optional<R> getIfLoaded(long value) { return this.c(value); } // Tuinity - OBFHELPER // Tuinity - OBFHELPER
+    @Nullable protected Optional<R> c(long i) { // Tuinity - OBFHELPER
         return (Optional) this.c.get(i);
     }
 
+    public final Optional<R> getOrLoad(long coordinate) { return this.d(coordinate); } // Tuinity - OBFHELPER
     protected Optional<R> d(long i) {
         SectionPosition sectionposition = SectionPosition.a(i);
 
@@ -159,6 +194,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
                 });
             }
         }
+        if (this instanceof net.minecraft.world.entity.ai.village.poi.VillagePlace) { ((net.minecraft.world.entity.ai.village.poi.VillagePlace)this).queueUnload(chunkcoordintpair.pair(), net.minecraft.server.MinecraftServer.currentTickLong + 1); } // Tuinity - unload POI data
 
     }
 
@@ -230,6 +266,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
         return dynamic.get("DataVersion").asInt(1945);
     }
 
+    public final void writeDirtyData(ChunkCoordIntPair chunkcoordintpair) { this.a(chunkcoordintpair); } // Tuinity - OBFHELPER
     public void a(ChunkCoordIntPair chunkcoordintpair) {
         if (!this.d.isEmpty()) {
             for (int i = 0; i < 16; ++i) {

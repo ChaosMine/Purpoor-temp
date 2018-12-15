@@ -444,6 +444,12 @@ public class PathfinderNormal extends PathfinderAbstract {
         if (pathtype == PathType.OPEN && j >= 1) {
             PathType pathtype1 = b(iblockaccess, blockposition_mutableblockposition.d(i, j - 1, k));
 
+            // Tuinity start - reduce pathfinder branches
+            if (pathtype1.belowOverride != null) {
+                pathtype = pathtype1.belowOverride;
+            } else {
+                PathType original1 = pathtype1;
+                // Tuinity end - reduce pathfinder branches
             pathtype = pathtype1 != PathType.WALKABLE && pathtype1 != PathType.OPEN && pathtype1 != PathType.WATER && pathtype1 != PathType.LAVA ? PathType.WALKABLE : PathType.OPEN;
             if (pathtype1 == PathType.DAMAGE_FIRE) {
                 pathtype = PathType.DAMAGE_FIRE;
@@ -460,6 +466,7 @@ public class PathfinderNormal extends PathfinderAbstract {
             if (pathtype1 == PathType.STICKY_HONEY) {
                 pathtype = PathType.STICKY_HONEY;
             }
+            original1.belowOverride = pathtype; }  // Tuinity - reduce pathfinder branches
         }
 
         if (pathtype == PathType.WALKABLE) {
@@ -485,22 +492,29 @@ public class PathfinderNormal extends PathfinderAbstract {
                             pathtype = PathType.BLOCKED;
                         } else {
                         // Paper end
-
+                            // Tuinity start - reduce pathfinder branching
+                            if (iblockdata.neighbourOverridePathType == PathType.OPEN) {
+                                continue;
+                            } else if (iblockdata.neighbourOverridePathType != null) {
+                                return iblockdata.neighbourOverridePathType;
+                            }
+                            // Tuinity end - reduce pathfinder branching
                         if (iblockdata.a(Blocks.CACTUS)) {
-                            return PathType.DANGER_CACTUS;
+                            return iblockdata.neighbourOverridePathType = PathType.DANGER_CACTUS; // Tuinity - reduce pathfinder branching
                         }
 
                         if (iblockdata.a(Blocks.SWEET_BERRY_BUSH)) {
-                            return PathType.DANGER_OTHER;
+                            return iblockdata.neighbourOverridePathType = PathType.DANGER_OTHER; // Tuinity - reduce pathfinder branching
                         }
 
                         if (a(iblockdata)) {
-                            return PathType.DANGER_FIRE;
+                            return iblockdata.neighbourOverridePathType = PathType.DANGER_FIRE; // Tuinity - reduce pathfinder branching
                         }
 
                         if (iblockdata.getFluid().a((Tag) TagsFluid.WATER)) { // Paper - remove another getType call
-                            return PathType.WATER_BORDER;
+                            return iblockdata.neighbourOverridePathType = PathType.WATER_BORDER; // Tuinity - reduce pathfinder branching
                         }
+                        iblockdata.neighbourOverridePathType = PathType.OPEN; // Tuinity - reduce pathfinder branching
                         } // Paper
                     }
                 }
@@ -513,6 +527,20 @@ public class PathfinderNormal extends PathfinderAbstract {
     protected static PathType b(IBlockAccess iblockaccess, BlockPosition blockposition) {
         IBlockData iblockdata = iblockaccess.getTypeIfLoaded(blockposition); // Paper
         if (iblockdata == null) return PathType.BLOCKED; // Paper
+        // Tuinity start - reduce pathfinder branches
+        if (iblockdata.staticPathType != null) {
+            return iblockdata.staticPathType;
+        }
+        if (iblockdata.getShapeCache() == null) {
+            // while it might be called static, it might vary on shape! However, only a few blocks have variable shape.
+            // So we rarely enter here.
+            return getStaticTypeSlow(iblockaccess, blockposition, iblockdata);
+        } else {
+            return iblockdata.staticPathType = getStaticTypeSlow(iblockaccess, blockposition, iblockdata);
+        }
+    }
+    protected static PathType getStaticTypeSlow(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata) {
+        // Tuinity end - reduce pathfinder branches
         Block block = iblockdata.getBlock();
         Material material = iblockdata.getMaterial();
 

@@ -27,11 +27,16 @@ public class SensorNearestLivingEntities extends Sensor<EntityLiving> {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
 
         behaviorcontroller.setMemory(MemoryModuleType.MOBS, list); // Paper - decompile error
-        // Paper start - remove streams in favour of lists
-        List<EntityLiving> visibleMobs = new java.util.ArrayList<>(list);
-        visibleMobs.removeIf(otherEntityLiving -> !Sensor.a(entityliving, otherEntityLiving));
-        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_MOBS, visibleMobs);
-        // Paper end
+        // Tuinity start - remove streams
+        List<EntityLiving> visible = new java.util.ArrayList<>(list.size());
+        for (int index = 0, len = list.size(); index < len; ++index) {
+            EntityLiving nearby = list.get(index);
+            if (Sensor.a(entityliving, nearby)) { // copied from removed code, make sure to update
+                visible.add(nearby);
+            }
+        }
+        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_MOBS, visible);
+        // Tuinity end - remove streams
     }
 
     @Override

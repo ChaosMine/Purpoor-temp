@@ -175,14 +175,33 @@ public final class BiomeBase {
     }
 
     public boolean a(IWorldReader iworldreader, BlockPosition blockposition, boolean flag) {
-        if (this.getAdjustedTemperature(blockposition) >= 0.15F) {
+        // Tuinity start - add chunk parameter and lazily get biome
+        return canTurnWaterIntoIce(iworldreader, blockposition, flag, null, new BiomeBase[] { this });
+    }
+    public static boolean canTurnWaterIntoIce(IWorldReader iworldreader, BlockPosition blockposition, boolean flag, IChunkAccess chunk, BiomeBase[] biomeAbove) {
+        // Tuinity end - add chunk parameter and lazily get biome
+        if (false && biomeAbove[0].getAdjustedTemperature(blockposition) >= 0.15F) { // Tuinity - move this down, this check is expensive
             return false;
         } else {
             if (blockposition.getY() >= 0 && blockposition.getY() < 256 && iworldreader.getBrightness(EnumSkyBlock.BLOCK, blockposition) < 10) {
-                IBlockData iblockdata = iworldreader.getType(blockposition);
-                Fluid fluid = iworldreader.getFluid(blockposition);
+                // Tuinity start - add chunk parameter
+                if (chunk == null) {
+                    chunk = iworldreader.getChunkAt(blockposition.getX() >> 4, blockposition.getZ() >> 4);
+                }
+                // Tuinity end - add chunk parameter
+                IBlockData iblockdata = chunk.getType(blockposition); // Tuinity - skip chunk lookup, we got the chunk
+                Fluid fluid = iblockdata.getFluid(); // Tuinity - skip another block lookup, we have the blockdata
 
                 if (fluid.getType() == FluidTypes.WATER && iblockdata.getBlock() instanceof BlockFluids) {
+                    // Tuinity start - moved down from top, only run when we actually encounter water
+                    if (biomeAbove[0] == null) {
+                        // lazily-get biome
+                        biomeAbove[0] = iworldreader.getBiome(blockposition.up()); // TODO - avoid blockpos alloc
+                    }
+                    if (biomeAbove[0].getAdjustedTemperature(blockposition) >= 0.15F) {
+                        return false;
+                    }
+                    // Tuinity end - moved down from top, only run when we actually encounter water
                     if (!flag) {
                         return true;
                     }
@@ -200,13 +219,32 @@ public final class BiomeBase {
     }
 
     public boolean b(IWorldReader iworldreader, BlockPosition blockposition) {
-        if (this.getAdjustedTemperature(blockposition) >= 0.15F) {
+        // Tuinity start - add chunk parameter and lazily get biome
+        return canTurnAirIntoSnow(iworldreader, blockposition, null, new BiomeBase[]{ this });
+    }
+    public static boolean canTurnAirIntoSnow(IWorldReader iworldreader, BlockPosition blockposition, IChunkAccess chunk, BiomeBase[] biomeAbove) {
+        // Tuinity end - add chunk parameter and lazily get biome
+        if (false && biomeAbove[0].getAdjustedTemperature(blockposition) >= 0.15F) { // Tuinity - move this down, this check is expensive
             return false;
         } else {
             if (blockposition.getY() >= 0 && blockposition.getY() < 256 && iworldreader.getBrightness(EnumSkyBlock.BLOCK, blockposition) < 10) {
-                IBlockData iblockdata = iworldreader.getType(blockposition);
+                // Tuinity start - add chunk parameter
+                if (chunk == null) {
+                    chunk = iworldreader.getChunkAt(blockposition.getX() >> 4, blockposition.getZ() >> 4);
+                }
+                // Tuinity end - add chunk parameter
+                IBlockData iblockdata = chunk.getType(blockposition); // Tuinity - skip chunk lookup, we got the chunk
 
                 if (iblockdata.isAir() && Blocks.SNOW.getBlockData().canPlace(iworldreader, blockposition)) {
+                    // Tuinity start - moved down from top, only run when we actually encounter water
+                    if (biomeAbove[0] == null) {
+                        // lazily-get biome
+                        biomeAbove[0] = iworldreader.getBiome(blockposition.up()); // TODO - avoid blockpos alloc
+                    }
+                    if (biomeAbove[0].getAdjustedTemperature(blockposition) >= 0.15F) {
+                        return false;
+                    }
+                    // Tuinity end - moved down from top, only run when we actually encounter water
                     return true;
                 }
             }

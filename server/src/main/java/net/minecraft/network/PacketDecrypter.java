@@ -8,13 +8,24 @@ import javax.crypto.Cipher;
 
 public class PacketDecrypter extends MessageToMessageDecoder<ByteBuf> {
 
-    private final PacketEncryptionHandler a;
+    // Tuinity start
+    private final com.velocitypowered.natives.encryption.VelocityCipher cipher;
+    //private final PacketEncryptionHandler a;
 
-    public PacketDecrypter(Cipher cipher) {
-        this.a = new PacketEncryptionHandler(cipher);
+    public PacketDecrypter(javax.crypto.SecretKey key /* Cipher cipher */) throws java.security.GeneralSecurityException {
+        //this.a = new PacketEncryptionHandler(cipher);
+        this.cipher = com.velocitypowered.natives.util.Natives.cipher.get().forDecryption(key);
     }
 
     protected void decode(ChannelHandlerContext channelhandlercontext, ByteBuf bytebuf, List<Object> list) throws Exception {
-        list.add(this.a.a(channelhandlercontext, bytebuf));
+        ByteBuf compatible = com.velocitypowered.natives.util.MoreByteBufUtils.ensureCompatible(channelhandlercontext.alloc(), cipher, bytebuf).slice();
+        try {
+            cipher.process(compatible);
+            list.add(compatible);
+        } catch (Exception e) {
+            compatible.release(); // compatible will never be used if we throw an exception
+            throw e;
+        }
     }
+    // Tuinity end
 }

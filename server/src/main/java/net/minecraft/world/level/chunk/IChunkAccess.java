@@ -37,6 +37,36 @@ public interface IChunkAccess extends IBlockAccess, IStructureAccess {
     }
     // Paper end
 
+    // Tuinity start
+    default com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+    default void setBlockNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+
+    default com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getSkyNibbles() {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+    default void setSkyNibbles(com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] nibbles) {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+    public default boolean[] getSkyEmptinessMap() {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+    public default void setSkyEmptinessMap(final boolean[] emptinessMap) {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+
+    public default boolean[] getBlockEmptinessMap() {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+
+    public default void setBlockEmptinessMap(final boolean[] emptinessMap) {
+        throw new UnsupportedOperationException(this.getClass().getName());
+    }
+    // Tuinity end
+
     IBlockData getType(final int x, final int y, final int z); // Paper
     @Nullable
     IBlockData setType(BlockPosition blockposition, IBlockData iblockdata, boolean flag);
@@ -135,6 +165,7 @@ public interface IChunkAccess extends IBlockAccess, IStructureAccess {
     @Nullable
     NBTTagCompound j(BlockPosition blockposition);
 
+    default Stream<BlockPosition> getLightSources() { return this.m(); } // Tuinity - OBFHELPER
     Stream<BlockPosition> m();
 
     TickList<Block> n();
@@ -155,7 +186,9 @@ public interface IChunkAccess extends IBlockAccess, IStructureAccess {
         return ashortlist[i];
     }
 
+    default boolean isLit() { return this.r(); } // Tuinity - OBFHELPER
     boolean r();
 
+    default void setLit(boolean lit) { this.b(lit); } // Tuinity - OBFHELPER
     void b(boolean flag);
 }

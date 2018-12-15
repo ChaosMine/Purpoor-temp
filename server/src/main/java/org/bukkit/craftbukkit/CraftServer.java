@@ -230,7 +230,7 @@ import javax.annotation.Nullable; // Paper
 import javax.annotation.Nonnull; // Paper
 
 public final class CraftServer implements Server {
-    private final String serverName = "Paper"; // Paper
+    private final String serverName = "Tuinity"; // Paper // Tuinity
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
@@ -880,6 +880,7 @@ public final class CraftServer implements Server {
 
         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
         com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
+        com.tuinity.tuinity.config.TuinityConfig.init((File) console.options.valueOf("tuinity-settings")); // Tuinity - Server Config
         for (WorldServer world : console.getWorlds()) {
             world.worldDataServer.setDifficulty(config.difficulty);
             world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
@@ -914,6 +915,7 @@ public final class CraftServer implements Server {
             }
             world.spigotConfig.init(); // Spigot
             world.paperConfig.init(); // Paper
+            world.tuinityConfig.init(); // Tuinity - Server Config
         }
 
         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
@@ -1938,7 +1940,10 @@ public final class CraftServer implements Server {
 
     @Override
     public boolean isPrimaryThread() {
-        return Thread.currentThread().equals(console.serverThread) || Thread.currentThread().equals(net.minecraft.server.MinecraftServer.getServer().shutdownThread); // Paper - Fix issues with detecting main thread properly, the only time Watchdog will be used is during a crash shutdown which is a "try our best" scenario
+        // Tuinity start
+        final Thread currThread = Thread.currentThread();
+        return currThread == console.serverThread || currThread instanceof com.tuinity.tuinity.util.TickThread || currThread.equals(net.minecraft.server.MinecraftServer.getServer().shutdownThread); // Paper - Fix issues with detecting main thread properly, the only time Watchdog will be used is during a crash shutdown which is a "try our best" scenario
+        // Tuinity End
     }
 
     // Paper start
@@ -2371,6 +2376,14 @@ public final class CraftServer implements Server {
         {
             return com.destroystokyo.paper.PaperConfig.config;
         }
+
+        // Tuinity start - add config to timings report
+        @Override
+        public YamlConfiguration getTuinityConfig()
+        {
+            return com.tuinity.tuinity.config.TuinityConfig.config;
+        }
+        // Tuinity end - add config to timings report
 
         @Override
         public void restart() {

@@ -46,6 +46,9 @@ public final class MinecraftTimings {
     public static final Timing antiXrayUpdateTimer = Timings.ofSafe("anti-xray - update");
     public static final Timing antiXrayObfuscateTimer = Timings.ofSafe("anti-xray - obfuscate");
 
+    public static final Timing scoreboardScoreSearch = Timings.ofSafe("Scoreboard score search"); // Tuinity - add timings for scoreboard search
+    public static final Timing distanceManagerTick = Timings.ofSafe("Distance Manager Tick"); // Tuinity - add timings for distance manager
+
     private static final Map<Class<?>, String> taskNameCache = new MapMaker().weakKeys().makeMap();
 
     private MinecraftTimings() {}

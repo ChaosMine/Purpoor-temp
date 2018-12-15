@@ -29,8 +29,8 @@ public class PaperVersionFetcher implements VersionFetcher {
     @Nonnull
     @Override
     public Component getVersionMessage(@Nonnull String serverVersion) {
-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
-        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
+        String[] parts = serverVersion.substring("git-Tuinity-".length()).split("[-\\s]"); // Tuinity
+        final Component updateMessage = getUpdateStatusMessage("Spottedleaf/Tuinity", GITHUB_BRANCH_NAME, parts[0]); // Tuinity
         final Component history = getHistory();
 
         return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
@@ -54,13 +54,10 @@ public class PaperVersionFetcher implements VersionFetcher {
 
     private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
         int distance;
-        try {
-            int jenkinsBuild = Integer.parseInt(versionInfo);
-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
-        } catch (NumberFormatException ignored) {
+        // Tuinity - we don't have jenkins setup
             versionInfo = versionInfo.replace("\"", "");
             distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
-        }
+        // Tuinity - we don't have jenkins setup
 
         switch (distance) {
             case -1:

@@ -77,8 +77,10 @@ public abstract class LightEngineGraphSection extends LightEngineGraph {
         return i == Long.MAX_VALUE ? this.b(j) : k + 1;
     }
 
+    public final int getSource(long coordinate) { return this.b(coordinate); } // Tuinity - OBFHELPER
     protected abstract int b(long i);
 
+    public final void update(long coordinate, int level, boolean flag) { this.b(coordinate, level, flag); } // Tuinity - OBFHELPER
     public void b(long i, int j, boolean flag) {
         this.a(Long.MAX_VALUE, i, j, flag);
     }

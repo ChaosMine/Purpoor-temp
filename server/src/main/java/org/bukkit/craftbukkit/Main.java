@@ -146,6 +146,13 @@ public class Main {
                         .defaultsTo(new File("paper.yml"))
                         .describedAs("Yml file");
                 // Paper end
+                // Tuinity Start - Server Config
+                acceptsAll(asList("tuinity", "tuinity-settings"), "File for tuinity settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("tuinity.yml"))
+                        .describedAs("Yml file");
+                /* Conctete End - Server Config */
 
                 // Paper start
                 acceptsAll(asList("server-name"), "Name of the server")
@@ -265,7 +272,7 @@ public class Main {
                     if (buildDate.before(deadline.getTime())) {
                         // Paper start - This is some stupid bullshit
                         System.err.println("*** Warning, you've not updated in a while! ***");
-                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
+                        System.err.println("*** Please download a new build ***"); // Paper // Tuinity
                         //System.err.println("*** Server will start in 20 seconds ***");
                         //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
                         // Paper End

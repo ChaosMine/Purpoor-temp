@@ -25,6 +25,10 @@ class CraftAsyncTask extends CraftTask {
     @Override
     public void run() {
         final Thread thread = Thread.currentThread();
+        // Tuinity start - name threads according to running plugin
+        final String nameBefore = thread.getName();
+        thread.setName(nameBefore + " - " + this.getOwner().getName()); try {
+        // Tuinity end - name threads according to running plugin
         synchronized (workers) {
             if (getPeriod() == CraftTask.CANCEL) {
                 // Never continue running after cancelled.
@@ -92,6 +96,7 @@ class CraftAsyncTask extends CraftTask {
                 }
             }
         }
+        } finally { thread.setName(nameBefore); } // Tuinity - name worker thread according
     }
 
     LinkedList<BukkitWorker> getWorkers() {

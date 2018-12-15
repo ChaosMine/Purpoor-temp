@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class WeightedList<U> {
 
-    protected final List<WeightedList.a<U>> list; // Paper - decompile conflict
+    protected final List<WeightedList.a<U>> list; public final List<WeightedList.a<U>> getList() { return this.list; } // Paper - decompile conflict // Tuinity - OBFHELPER
     private final Random b;
     private final boolean isUnsafe; // Paper
 
@@ -74,7 +74,7 @@ public class WeightedList<U> {
 
     public static class a<T> {
 
-        private final T a;
+        private final T a; public final T getValue() { return this.a; } // Tuinity - OBFHELPER
         private final int b;
         private double c;
 

@@ -458,6 +458,12 @@ public abstract class EntityHuman extends EntityLiving {
         this.activeContainer = this.defaultContainer;
     }
     // Paper end
+    // Tuinity start - special close for unloaded inventory
+    public void closeUnloadedInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
+        closeInventory();
+        this.activeContainer = this.defaultContainer;
+    }
+    // Tuinity end - special close for unloaded inventory
 
     public void closeInventory() {
         this.activeContainer = this.defaultContainer;

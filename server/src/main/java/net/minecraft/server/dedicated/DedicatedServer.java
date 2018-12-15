@@ -215,6 +215,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
         // Paper end
+        com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 
         this.setPVP(dedicatedserverproperties.pvp);
         this.setAllowFlight(dedicatedserverproperties.allowFlight);
@@ -416,7 +417,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         }
 
         if (this.q != null) {
-            this.q.b();
+            //this.q.b(); // Tuinity - do not wait for AWT, causes deadlock with sigint handler (AWT shutdown will properly clear our resources anyways)
         }
 
         if (this.remoteControlListener != null) {

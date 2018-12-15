@@ -174,8 +174,8 @@ public enum EnumDirection implements INamable {
         return EnumDirection.q[MathHelper.a(i % EnumDirection.q.length)];
     }
 
-    @Nullable
-    public static EnumDirection a(int i, int j, int k) {
+    @Nullable public static EnumDirection from(int i, int j, int k) { return a(i, j, k); } // Tuinity - OBFHELPER
+    @Nullable public static EnumDirection a(int i, int j, int k) {
         return (EnumDirection) EnumDirection.r.get(BlockPosition.a(i, j, k));
     }
 

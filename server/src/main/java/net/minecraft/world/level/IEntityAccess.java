@@ -64,16 +64,26 @@ public interface IEntityAccess {
         return this.b(oclass, axisalignedbb, IEntitySelector.g);
     }
 
+    // Tuinity start - optimise hard collision
+    /**
+     * Not guaranteed to only return hard colliding entities
+     */
+    default List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        return this.getEntities(entity, axisalignedbb, predicate);
+    }
+    // Tuinity end - optimise hard collision
+
     default Stream<VoxelShape> c(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
         if (axisalignedbb.a() < 1.0E-7D) {
             return Stream.empty();
         } else {
-            AxisAlignedBB axisalignedbb1 = axisalignedbb.g(1.0E-7D);
+            AxisAlignedBB axisalignedbb1 = axisalignedbb.g(-1.0E-7D); // Tuinity - to comply with vanilla intersection rules, expand by -epsilon so we only get stuff we definitely collide with. expanding by +epsilon gives us stuff we don't collide with, which will screw over callers in some cases.
 
-            return this.getEntities(entity, axisalignedbb1, predicate.and((entity1) -> {
+            if (predicate == null) predicate = (e) -> true; // Tuinity - allow nullable
+            predicate = predicate.and((entity1) -> { // Tuinity - optimise entity hard collisions // Tuinity - allow nullable
                 boolean flag;
 
-                if (entity1.getBoundingBox().c(axisalignedbb1)) {
+                if (true || entity1.getBoundingBox().c(axisalignedbb1)) { // Tuinity - always true, wtf did they think this.getEntities(entity, axisalignedbb1) does?
                     label25:
                     {
                         if (entity == null) {
@@ -91,13 +101,13 @@ public interface IEntityAccess {
 
                 flag = false;
                 return flag;
-            })).stream().map(Entity::getBoundingBox).map(VoxelShapes::a);
+            }); return ((entity != null && entity.hardCollides()) ? this.getEntities(entity, axisalignedbb1, predicate) : this.getHardCollidingEntities(entity, axisalignedbb1, predicate)).stream().map(Entity::getBoundingBox).map(VoxelShapes::a); // Tuinity - optimise entity hard collisions
         }
     }
 
     default EntityHuman findNearbyPlayer(Entity entity, double d0, @Nullable Predicate<Entity> predicate) { return this.findNearbyPlayer(entity.locX(), entity.locY(), entity.locZ(), d0, predicate); } // Paper
     @Nullable default EntityHuman findNearbyPlayer(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { return a(d0, d1, d2, d3, predicate); } // Paper - OBFHELPER
-    @Nullable default EntityHuman a(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { // Paper
+    @Nullable default EntityHuman a(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { // Paper // Tuinity - diff on change, override in World - this should be "get closest player that matches predicate"
         double d4 = -1.0D;
         EntityHuman entityhuman = null;
         Iterator iterator = this.getPlayers().iterator();
@@ -198,27 +208,27 @@ public interface IEntityAccess {
     }
 
     @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
+    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
         return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
     }
 
     @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, double d0, double d1, double d2) {
+    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
         return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, d0, d1, d2);
     }
 
     @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, double d0, double d1, double d2) {
+    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
         return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, (EntityLiving) null, d0, d1, d2);
     }
 
     @Nullable
-    default <T extends EntityLiving> T a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) {
+    default <T extends EntityLiving> T a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
         return this.a(this.a(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
     }
 
     @Nullable
-    default <T extends EntityLiving> T b(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) {
+    default <T extends EntityLiving> T b(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
         return this.a(this.b(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
     }
 
@@ -244,7 +254,7 @@ public interface IEntityAccess {
         return t0;
     }
 
-    default List<EntityHuman> a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) {
+    default List<EntityHuman> a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get players that matches path finder target condition"
         List<EntityHuman> list = Lists.newArrayList();
         Iterator iterator = this.getPlayers().iterator();
 

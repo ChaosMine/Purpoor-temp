@@ -16,6 +16,17 @@ public abstract class IBlockState<T extends Comparable<T>> {
     private final Codec<T> d;
     private final Codec<IBlockState.a<T>> e;
 
+    // Tuinity start - optimise iblockdata state lookup
+    private static final java.util.concurrent.atomic.AtomicInteger ID_GENERATOR = new java.util.concurrent.atomic.AtomicInteger();
+    private final int id = ID_GENERATOR.getAndIncrement();
+
+    public final int getId() {
+        return this.id;
+    }
+
+    public abstract int getIdFor(final T value);
+    // Tuinity end - optimise state lookup
+
     protected IBlockState(String s, Class<T> oclass) {
         this.d = Codec.STRING.comapFlatMap((s1) -> this.b(s1).map(DataResult::success).orElseGet(() -> { // Paper - decompile error
             return DataResult.error("Unable to read property: " + this + " with value: " + s1);

@@ -268,6 +268,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
     //public ConsoleReader reader; // Paper
     public static int currentTick = 0; // Paper - Further improve tick loop
+    public static long currentTickLong = 0L; // Tuinity
     public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
     public int autosavePeriod;
     public boolean serverAutoSave = false; // Paper
@@ -886,10 +887,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         org.spigotmc.WatchdogThread.doStop(); // Paper
         if (!isMainThread()) {
             MinecraftServer.LOGGER.info("Stopping main thread (Ignore any thread death message you see! - DO NOT REPORT THREAD DEATH TO PAPER)");
+            long start = System.nanoTime(); // Tuinity - really try hard to kill the main thread
             while (this.getThread().isAlive()) {
                 this.getThread().stop();
                 try {
-                    Thread.sleep(1);
+                    if ((System.nanoTime() - start) <= (15L * 1000L * 1000L * 1000L)) Thread.sleep(1); // Tuinity - really try hard to kill the main thread - if we're past 15s we're probably in a terrible loop, spam it to really kill it
                 } catch (InterruptedException e) {}
             }
             // We've just obliterated the main thread, this will prevent stop from dying when removing players
@@ -1090,6 +1092,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 // Paper end
 
                 PaperJvmChecker.checkJvm(); // Paper jvm version nag
+                com.tuinity.tuinity.config.TuinityConfig.createWorldSections = false; // Tuinity - don't let plugin created worlds fill our config
                 org.spigotmc.WatchdogThread.tick(); // Paper
                 org.spigotmc.WatchdogThread.hasStarted = true; // Paper
                 Arrays.fill( recentTps, 20 );
@@ -1107,6 +1110,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                         this.lastOverloadTime = this.nextTick;
                     }
 
+                    ++MinecraftServer.currentTickLong; // Tuinity
                     if ( ++MinecraftServer.currentTick % SAMPLE_INTERVAL == 0 )
                     {
                         final long diff = curTime - tickSection;
@@ -1121,7 +1125,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                         // Paper end
                         tickSection = curTime;
                     }
-                    midTickChunksTasksRan = 0; // Paper
+                    // Tuinity - replace logic
                     // Spigot end
 
                     //MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit // Paper - don't overwrite current tick time
@@ -1214,6 +1218,76 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
     // Paper end
 
+    // Tuinity start - execute chunk tasks mid tick
+    static final long CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME = 25L * 1000L; // 25us
+    static final long MAX_CHUNK_EXEC_TIME = 1000L; // 1us
+
+    static final long TASK_EXECUTION_FAILURE_BACKOFF = 5L * 1000L; // 5us
+
+    private static long lastMidTickExecute;
+    private static long lastMidTickExecuteFailure;
+
+    private boolean tickMidTickTasks() {
+        // give all worlds a fair chance at by targetting them all.
+        // if we execute too many tasks, that's fine - we have logic to correctly handle overuse of allocated time.
+        boolean executed = false;
+        for (WorldServer world : this.getWorlds()) {
+            long currTime = System.nanoTime();
+            if (currTime - world.lastMidTickExecuteFailure <= TASK_EXECUTION_FAILURE_BACKOFF) {
+                continue;
+            }
+            if (!world.getChunkProvider().runTasks()) {
+                // we need to back off if this fails
+                world.lastMidTickExecuteFailure = currTime;
+            } else {
+                executed = true;
+            }
+        }
+
+        return executed;
+    }
+
+    public final void executeMidTickTasks() {
+        org.spigotmc.AsyncCatcher.catchOp("mid tick chunk task execution");
+        long startTime = System.nanoTime();
+        if ((startTime - lastMidTickExecute) <= CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME || (startTime - lastMidTickExecuteFailure) <= TASK_EXECUTION_FAILURE_BACKOFF) {
+            // it's shown to be bad to constantly hit the queue (chunk loads slow to a crawl), even if no tasks are executed.
+            // so, backoff to prevent this
+            return;
+        }
+
+        co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
+        try {
+            for (;;) {
+                boolean moreTasks = this.tickMidTickTasks();
+                long currTime = System.nanoTime();
+                long diff = currTime - startTime;
+
+                if (!moreTasks || diff >= MAX_CHUNK_EXEC_TIME) {
+                    if (!moreTasks) {
+                        lastMidTickExecuteFailure = currTime;
+                    }
+
+                    // note: negative values reduce the time
+                    long overuse = diff - MAX_CHUNK_EXEC_TIME;
+                    if (overuse >= (10L * 1000L * 1000L)) { // 10ms
+                        // make sure something like a GC or dumb plugin doesn't screw us over...
+                        overuse = 10L * 1000L * 1000L; // 10ms
+                    }
+
+                    double overuseCount = (double)overuse/(double)MAX_CHUNK_EXEC_TIME;
+                    long extraSleep = (long)Math.round(overuseCount*CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME);
+
+                    lastMidTickExecute = currTime + extraSleep;
+                    return;
+                }
+            }
+        } finally {
+            co.aikar.timings.MinecraftTimings.midTickChunkTasks.stopTiming();
+        }
+    }
+    // Tuinity end - execute chunk tasks mid tick
+
     private void executeModerately() {
         this.executeAll();
         java.util.concurrent.locks.LockSupport.parkNanos("executing tasks", 1000L);
@@ -1227,22 +1301,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         });
     }
 
-    // Paper start
-    public int midTickChunksTasksRan = 0;
-    private long midTickLastRan = 0;
-    public void midTickLoadChunks() {
-        if (!isMainThread() || System.nanoTime() - midTickLastRan < 1000000) {
-            // only check once per 0.25ms incase this code is called in a hot method
-            return;
-        }
-        try (co.aikar.timings.Timing ignored = co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming()) {
-            for (WorldServer value : this.getWorlds()) {
-                value.getChunkProvider().serverThreadQueue.midTickLoadChunks();
-            }
-            midTickLastRan = System.nanoTime();
-        }
-    }
-    // Paper end
+    // Tuinity - replace logic
 
     @Override
     public TickTask postToMainThread(Runnable runnable) {
@@ -1269,6 +1328,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
     private boolean bb() {
         if (super.executeNext()) {
+            this.executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
             return true;
         } else {
             if (this.canSleepForTick()) {
@@ -1336,7 +1396,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         // Paper start - move oversleep into full server tick
         isOversleep = true;MinecraftTimings.serverOversleep.startTiming();
         this.awaitTasks(() -> {
-            midTickLoadChunks(); // will only do loads since we are still considered !canSleepForTick
+            // Tuinity - replace logic
             return !this.canOversleep();
         });
         isOversleep = false;MinecraftTimings.serverOversleep.stopTiming();
@@ -1401,6 +1461,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         }
         // Paper end
 
+        com.tuinity.tuinity.util.CachedLists.reset(); // Tuinity
+
         // Paper start
         long endTime = System.nanoTime();
         long remaining = (TICK_TIME - (endTime - lastTick)) - catchupTime;
@@ -1427,16 +1489,16 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
 
     protected void b(BooleanSupplier booleansupplier) {
-        midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         MinecraftTimings.bukkitSchedulerTimer.startTiming(); // Spigot // Paper
         this.server.getScheduler().mainThreadHeartbeat(this.ticks); // CraftBukkit
         MinecraftTimings.bukkitSchedulerTimer.stopTiming(); // Spigot // Paper
-        midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         this.methodProfiler.enter("commandFunctions");
         MinecraftTimings.commandFunctionsTimer.startTiming(); // Spigot // Paper
         this.getFunctionData().tick();
         MinecraftTimings.commandFunctionsTimer.stopTiming(); // Spigot // Paper
-        midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         this.methodProfiler.exitEnter("levels");
         Iterator iterator = this.getWorlds().iterator();
 
@@ -1447,7 +1509,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             processQueue.remove().run();
         }
         MinecraftTimings.processQueueTimer.stopTiming(); // Spigot
-        midTickLoadChunks(); // Paper
+        // Tuinity - replace logic
         MinecraftTimings.timeUpdateTimer.startTiming(); // Spigot // Paper
         // Send time updates to everyone, it will get the right time from the world the player is in.
         // Paper start - optimize time updates
@@ -1490,11 +1552,16 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             this.methodProfiler.enter("tick");
 
             try {
-                midTickLoadChunks(); // Paper
+                // Tuinity - replace logic
                 worldserver.timings.doTick.startTiming(); // Spigot
                 worldserver.doTick(booleansupplier);
+                // Tuinity start
+                for (final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager regionManager : worldserver.getChunkProvider().playerChunkMap.regionManagers) {
+                    regionManager.recalculateRegions();
+                }
+                // Tuinity end
                 worldserver.timings.doTick.stopTiming(); // Spigot
-                midTickLoadChunks(); // Paper
+                // Tuinity - replace logic
             } catch (Throwable throwable) {
                 // Spigot Start
                 CrashReport crashreport;
@@ -1588,7 +1655,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
 
     public String getServerModName() {
-        return "Paper"; //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+        return "Tuinity"; // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
     }
 
     public CrashReport b(CrashReport crashreport) {

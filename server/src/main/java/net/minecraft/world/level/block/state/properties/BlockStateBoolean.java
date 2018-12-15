@@ -12,6 +12,13 @@ public class BlockStateBoolean extends IBlockState<Boolean> {
         super(s, Boolean.class);
     }
 
+    // Tuinity start - optimise iblockdata state lookup
+    @Override
+    public final int getIdFor(final Boolean value) {
+        return value.booleanValue() ? 1 : 0;
+    }
+    // Tuinity end - optimise iblockdata state lookup
+
     @Override
     public Collection<Boolean> getValues() {
         return this.a;

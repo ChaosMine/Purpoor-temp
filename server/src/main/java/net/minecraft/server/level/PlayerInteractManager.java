@@ -56,13 +56,28 @@ public class PlayerInteractManager {
     private EnumGamemode gamemode;
     private EnumGamemode e;
     private boolean f;
-    private int lastDigTick;
+    private int lastDigTick; private long lastDigTime; // Tuinity - lag compensate block breaking
     private BlockPosition h;
     private int currentTick;
-    private boolean j;
+    private boolean j; private final boolean hasDestroyedTooFast() { return this.j; } // Tuinity - OBFHELPER
     private BlockPosition k;
-    private int l;
+    private int l; private final int getHasDestroyedTooFastStartTick() { return this.l; } // Tuinity - OBFHELPER
+    private long hasDestroyedTooFastStartTime; // Tuinity - lag compensate block breaking
     private int m;
+
+    // Tuinity start - lag compensate block breaking
+    private int getTimeDiggingLagCompensate() {
+        int lagCompensated = (int)((System.nanoTime() - this.lastDigTime) / (50L * 1000L * 1000L));
+        int tickDiff = this.currentTick - this.lastDigTick;
+        return (com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking && lagCompensated > (tickDiff + 1)) ? lagCompensated : tickDiff; // add one to ensure we don't lag compensate unless we need to
+    }
+
+    private int getTimeDiggingTooFastLagCompensate() {
+        int lagCompensated = (int)((System.nanoTime() - this.hasDestroyedTooFastStartTime) / (50L * 1000L * 1000L));
+        int tickDiff = this.currentTick - this.getHasDestroyedTooFastStartTick();
+        return (com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking && lagCompensated > (tickDiff + 1)) ? lagCompensated : tickDiff; // add one to ensure we don't lag compensate unless we need to
+    }
+    // Tuinity end
 
     public PlayerInteractManager(WorldServer worldserver) {
         this.gamemode = EnumGamemode.NOT_SET;
@@ -119,7 +134,7 @@ public class PlayerInteractManager {
             if (iblockdata == null || iblockdata.isAir()) { // Paper
                 this.j = false;
             } else {
-                float f = this.a(iblockdata, this.k, this.l);
+                float f = this.updateBlockBreakAnimation(iblockdata, this.k, this.getTimeDiggingTooFastLagCompensate()); // Tuinity - lag compensate destroying blocks
 
                 if (f >= 1.0F) {
                     this.j = false;
@@ -139,7 +154,7 @@ public class PlayerInteractManager {
                 this.m = -1;
                 this.f = false;
             } else {
-                this.a(iblockdata, this.h, this.lastDigTick);
+                this.updateBlockBreakAnimation(iblockdata, this.h, this.getTimeDiggingLagCompensate()); // Tuinity - lag compensate destroying blocks
             }
         }
 
@@ -147,6 +162,12 @@ public class PlayerInteractManager {
 
     private float a(IBlockData iblockdata, BlockPosition blockposition, int i) {
         int j = this.currentTick - i;
+        // Tuinity start - change i (startTime) to totalTime
+        return this.updateBlockBreakAnimation(iblockdata, blockposition, j);
+    }
+    private float updateBlockBreakAnimation(IBlockData iblockdata, BlockPosition blockposition, int totalTime) {
+        int j = totalTime;
+        // Tuinity end
         float f = iblockdata.getDamage(this.player, this.player.world, blockposition) * (float) (j + 1);
         int k = (int) (f * 10.0F);
 
@@ -214,7 +235,7 @@ public class PlayerInteractManager {
                     return;
                 }
 
-                this.lastDigTick = this.currentTick;
+                this.lastDigTick = this.currentTick; this.lastDigTime = System.nanoTime(); // Tuinity - lag compensate block breaking
                 float f = 1.0F;
 
                 iblockdata = this.world.getType(blockposition);
@@ -267,12 +288,12 @@ public class PlayerInteractManager {
                     int j = (int) (f * 10.0F);
 
                     this.world.a(this.player.getId(), blockposition, j);
-                    this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, "actual start of destroying"));
+                    if (!com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking) this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, "actual start of destroying")); // Tuinity - on lagging servers this can cause the client to think it's only just started to destroy a block when it already has/will
                     this.m = j;
                 }
             } else if (packetplayinblockdig_enumplayerdigtype == PacketPlayInBlockDig.EnumPlayerDigType.STOP_DESTROY_BLOCK) {
                 if (blockposition.equals(this.h)) {
-                    int k = this.currentTick - this.lastDigTick;
+                    int k = this.getTimeDiggingLagCompensate(); // Tuinity - lag compensate block breaking
 
                     iblockdata = this.world.getType(blockposition);
                     if (!iblockdata.isAir()) {
@@ -289,12 +310,18 @@ public class PlayerInteractManager {
                             this.f = false;
                             this.j = true;
                             this.k = blockposition;
-                            this.l = this.lastDigTick;
+                            this.l = this.lastDigTick; this.hasDestroyedTooFastStartTime = this.lastDigTime; // Tuinity - lag compensate block breaking
                         }
                     }
                 }
 
+                // Tuinity start - this can cause clients on a lagging server to think they're not currently destroying a block
+                if (com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking) {
+                    this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(this.world, blockposition));
+                } else {
                 this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, "stopped destroying"));
+                }
+                // Tuinity end - this can cause clients on a lagging server to think they're not currently destroying a block
             } else if (packetplayinblockdig_enumplayerdigtype == PacketPlayInBlockDig.EnumPlayerDigType.ABORT_DESTROY_BLOCK) {
                 this.f = false;
                 if (!Objects.equals(this.h, blockposition) && !BlockPosition.ZERO.equals(this.h)) {
@@ -306,7 +333,7 @@ public class PlayerInteractManager {
                 }
 
                 this.world.a(this.player.getId(), blockposition, -1);
-                this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, "aborted destroying"));
+                if (!com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking) this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, "aborted destroying")); // Tuinity - this can cause clients on a lagging server to think they stopped destroying a block they're currently destroying
             }
 
         }
@@ -316,7 +343,13 @@ public class PlayerInteractManager {
 
     public void a(BlockPosition blockposition, PacketPlayInBlockDig.EnumPlayerDigType packetplayinblockdig_enumplayerdigtype, String s) {
         if (this.breakBlock(blockposition)) {
+            // Tuinity start - this can cause clients on a lagging server to think they're not currently destroying a block
+            if (com.tuinity.tuinity.config.TuinityConfig.lagCompensateBlockBreaking) {
+                this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(this.world, blockposition));
+            } else {
             this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, true, s));
+            }
+            // Tuinity end - this can cause clients on a lagging server to think they're not currently destroying a block
         } else {
             this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(this.world, blockposition)); // CraftBukkit - SPIGOT-5196
         }

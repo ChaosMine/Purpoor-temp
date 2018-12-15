@@ -96,6 +96,11 @@ public class ServerConnection {
                 ServerConnection.LOGGER.info("Using default channel type");
             }
 
+            // Tuinity start - indicate Velocity natives in use
+            ServerConnection.LOGGER.info("Tuinity: Using " + com.velocitypowered.natives.util.Natives.compress.getLoadedVariant() + " compression from Velocity.");
+            ServerConnection.LOGGER.info("Tuinity: Using " + com.velocitypowered.natives.util.Natives.cipher.getLoadedVariant() + " cipher from Velocity.");
+            // Tuinity end
+
             this.listeningChannels.add(((ServerBootstrap) ((ServerBootstrap) (new ServerBootstrap()).channel(oclass)).childHandler(new ChannelInitializer<Channel>() {
                 protected void initChannel(Channel channel) throws Exception {
                     try {

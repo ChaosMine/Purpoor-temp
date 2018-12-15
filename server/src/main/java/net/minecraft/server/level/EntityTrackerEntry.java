@@ -103,6 +103,7 @@ public class EntityTrackerEntry {
 
     public final void tick() { this.a(); } // Paper - OBFHELPER
     public void a() {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Tracker update"); // Tuinity
         List<Entity> list = this.tracker.passengers; // Paper - do not copy list
 
         if (!list.equals(this.p)) {
@@ -184,7 +185,7 @@ public class EntityTrackerEntry {
                     // Paper end - remove allocation of Vec3D here
                     boolean flag4 = k < -32768L || k > 32767L || l < -32768L || l > 32767L || i1 < -32768L || i1 > 32767L;
 
-                    if (!flag4 && this.o <= 400 && !this.q && this.r == this.tracker.isOnGround()) {
+                    if (!flag4 && this.o <= 400 && !this.q && this.r == this.tracker.isOnGround() && !(com.tuinity.tuinity.config.TuinityConfig.sendFullPosForHardCollidingEntities && this.tracker.hardCollides())) { // Tuinity - send full pos for hard colliding entities to prevent collision problems due to desync
                         if ((!flag2 || !flag3) && !(this.tracker instanceof EntityArrow)) {
                             if (flag2) {
                                 packet1 = new PacketPlayOutEntity.PacketPlayOutRelEntityMove(this.tracker.getId(), (short) ((int) k), (short) ((int) l), (short) ((int) i1), this.tracker.isOnGround());

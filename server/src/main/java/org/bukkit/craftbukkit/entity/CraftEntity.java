@@ -512,27 +512,36 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         entity.setHeadRotation(yaw);
     }
 
-    @Override// Paper start
-    public java.util.concurrent.CompletableFuture<Boolean> teleportAsync(Location loc, @javax.annotation.Nonnull org.bukkit.event.player.PlayerTeleportEvent.TeleportCause cause) {
-        PlayerChunkMap playerChunkMap = ((CraftWorld) loc.getWorld()).getHandle().getChunkProvider().playerChunkMap;
-        java.util.concurrent.CompletableFuture<Boolean> future = new java.util.concurrent.CompletableFuture<>();
+    // Tuinity start - implement teleportAsync better
+    @Override
+    public java.util.concurrent.CompletableFuture<Boolean> teleportAsync(Location location, TeleportCause cause) {
+        Preconditions.checkArgument(location != null, "location");
+        location.checkFinite();
+        Location locationClone = location.clone(); // clone so we don't need to worry about mutations after this call.
 
-        loc.getWorld().getChunkAtAsyncUrgently(loc).thenCompose(chunk -> {
-            ChunkCoordIntPair pair = new ChunkCoordIntPair(chunk.getX(), chunk.getZ());
-            ((CraftWorld) loc.getWorld()).getHandle().getChunkProvider().addTicketAtLevel(TicketType.POST_TELEPORT, pair, 31, 0);
-            PlayerChunk updatingChunk = playerChunkMap.getUpdatingChunk(pair.pair());
-            if (updatingChunk != null) {
-                return updatingChunk.getEntityTickingFuture();
-            } else {
-                return java.util.concurrent.CompletableFuture.completedFuture(com.mojang.datafixers.util.Either.left(((org.bukkit.craftbukkit.CraftChunk)chunk).getHandle()));
+        net.minecraft.server.level.WorldServer world = ((CraftWorld)locationClone.getWorld()).getHandle();
+        java.util.concurrent.CompletableFuture<Boolean> ret = new java.util.concurrent.CompletableFuture<>();
+
+        world.loadChunksForMoveAsync(getHandle().getBoundingBoxAt(locationClone.getX(), locationClone.getY(), locationClone.getZ()), location.getX(), location.getZ(), (list) -> {
+            net.minecraft.server.level.ChunkProviderServer chunkProviderServer = world.getChunkProvider();
+            for (net.minecraft.world.level.chunk.IChunkAccess chunk : list) {
+                chunkProviderServer.addTicketAtLevel(net.minecraft.server.level.TicketType.POST_TELEPORT, chunk.getPos(), 33, CraftEntity.this.getEntityId());
             }
-        }).thenAccept((chunk) -> future.complete(teleport(loc, cause))).exceptionally(ex -> {
-            future.completeExceptionally(ex);
-            return null;
+            net.minecraft.server.MinecraftServer.getServer().scheduleOnMain(() -> {
+                try {
+                    ret.complete(CraftEntity.this.teleport(locationClone, cause) ? Boolean.TRUE : Boolean.FALSE);
+                } catch (Throwable throwable) {
+                    if (throwable instanceof ThreadDeath) {
+                        throw (ThreadDeath)throwable;
+                    }
+                    ret.completeExceptionally(throwable);
+                }
+            });
         });
-        return future;
+
+        return ret;
     }
-    // Paper end
+    // Tuinity end - implement teleportAsync better
 
     @Override
     public boolean teleport(Location location) {

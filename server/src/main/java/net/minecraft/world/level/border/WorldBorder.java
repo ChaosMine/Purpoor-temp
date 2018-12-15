@@ -60,11 +60,59 @@ public class WorldBorder {
         return axisalignedbb.maxX > this.e() && axisalignedbb.minX < this.g() && axisalignedbb.maxZ > this.f() && axisalignedbb.minZ < this.h();
     }
 
+    // Tuinity start - optimise collisions
+    // determines whether we are almost colliding with the world border
+    // for clear collisions, this rets false
+    public final boolean isAlmostCollidingOnBorder(AxisAlignedBB boundingBox) {
+        return this.isAlmostCollidingOnBorder(boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+    }
+
+    public final boolean isAlmostCollidingOnBorder(double boxMinX, double boxMaxX, double boxMinZ, double boxMaxZ) {
+        double borderMinX = this.getMinX();
+        double borderMaxX = this.getMaxX();
+
+        double borderMinZ = this.getMinZ();
+        double borderMaxZ = this.getMaxZ();
+
+        return
+                // Not intersecting if we're smaller
+                !AxisAlignedBB.voxelShapeIntersect(
+                        boxMinX + net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ + net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                                boxMaxX - net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ - net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                        borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+                )
+                &&
+
+                // Are intersecting if we're larger
+                AxisAlignedBB.voxelShapeIntersect(
+                        boxMinX - net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ - net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                                boxMaxX + net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ + net.minecraft.server.MCUtil.COLLISION_EPSILON,
+                        borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+                )
+                ;
+    }
+
+    public final boolean isCollidingWithBorderEdge(AxisAlignedBB boundingBox) {
+        return this.isCollidingWithBorderEdge(boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+    }
+
+    public final boolean isCollidingWithBorderEdge(double boxMinX, double boxMaxX, double boxMinZ, double boxMaxZ) {
+        double borderMinX = this.getMinX() + net.minecraft.server.MCUtil.COLLISION_EPSILON;
+        double borderMaxX = this.getMaxX() - net.minecraft.server.MCUtil.COLLISION_EPSILON;
+
+        double borderMinZ = this.getMinZ() + net.minecraft.server.MCUtil.COLLISION_EPSILON;
+        double borderMaxZ = this.getMaxZ() - net.minecraft.server.MCUtil.COLLISION_EPSILON;
+
+        return boxMinX < borderMinX || boxMaxX > borderMaxX || boxMinZ < borderMinZ || boxMaxZ > borderMaxZ;
+    }
+    // Tuinity end - optimise collisions
+
     public double a(Entity entity) {
         return this.b(entity.locX(), entity.locZ());
     }
 
     public final VoxelShape asVoxelShape(){ return c();} // Paper - OBFHELPER
+    public final VoxelShape getCollisionShape() { return this.c(); } // Tuinity - OBFHELPER
     public VoxelShape c() {
         return this.j.m();
     }
@@ -80,18 +128,22 @@ public class WorldBorder {
         return Math.min(d6, d3);
     }
 
+    public final double getMinX() { return this.e(); } // Tuinity - OBFHELPER
     public double e() {
         return this.j.a();
     }
 
+    public final double getMinZ() { return this.f(); } // Tuinity - OBFHELPER
     public double f() {
         return this.j.c();
     }
 
+    public final double getMaxX() { return this.g(); } // Tuinity - OBFHELPER
     public double g() {
         return this.j.b();
     }
 
+    public final double getMaxZ() { return this.h(); } // Tuinity - OBFHELPER
     public double h() {
         return this.j.d();
     }

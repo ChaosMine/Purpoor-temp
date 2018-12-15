@@ -625,9 +625,9 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
             if (this.deathAnimationTicks == 1 && !this.isSilent()) {
                 // CraftBukkit start - Use relative location for far away sounds
                 // this.world.b(1028, this.getChunkCoordinates(), 0);
-                int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
+                //int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API // Tuinity - apply view distance patch
                 for (net.minecraft.server.level.EntityPlayer player : (List<net.minecraft.server.level.EntityPlayer>) ((WorldServer)world).getPlayers()) {
-                    // final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
+                    final int viewDistance = player.getBukkitEntity().getViewDistance(); // Tuinity - apply view distance patch
                     // Paper end
                     double deltaX = this.locX() - player.locX();
                     double deltaZ = this.locZ() - player.locZ();

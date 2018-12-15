@@ -17,7 +17,7 @@ public class BehaviorGate<E extends EntityLiving> extends Behavior<E> {
     private final Set<MemoryModuleType<?>> b;
     private final BehaviorGate.Order c;
     private final BehaviorGate.Execution d;
-    private final WeightedList<Behavior<? super E>> e = new WeightedList<>(false); // Paper - don't use a clone
+    private final WeightedList<Behavior<? super E>> e = new WeightedList<>(false); protected final WeightedList<Behavior<? super E>> getList() { return this.e; } // Paper - don't use a clone // Tuinity - OBFHELPER
 
     public BehaviorGate(Map<MemoryModuleType<?>, MemoryStatus> map, Set<MemoryModuleType<?>> set, BehaviorGate.Order behaviorgate_order, BehaviorGate.Execution behaviorgate_execution, List<Pair<Behavior<? super E>, Integer>> list) {
         super(map);
@@ -31,11 +31,17 @@ public class BehaviorGate<E extends EntityLiving> extends Behavior<E> {
 
     @Override
     protected boolean b(WorldServer worldserver, E e0, long i) {
-        return this.e.c().filter((behavior) -> {
-            return behavior.a() == Behavior.Status.RUNNING;
-        }).anyMatch((behavior) -> {
-            return behavior.b(worldserver, e0, i);
-        });
+        // Tuinity start - remove streams
+        List<WeightedList.a<Behavior<? super E>>> list = this.getList().getList();
+        for (int index = 0, len = list.size(); index < len; ++index) {
+            Behavior<? super E> behavior = list.get(index).getValue();
+            if (behavior.getStatus() == Status.RUNNING && behavior.b(worldserver, e0, i)) { // copied from removed code, make sure to update
+                return true;
+            }
+        }
+
+        return false;
+        // Tuinity end - remove streams
     }
 
     @Override
@@ -51,20 +57,28 @@ public class BehaviorGate<E extends EntityLiving> extends Behavior<E> {
 
     @Override
     protected void d(WorldServer worldserver, E e0, long i) {
-        this.e.c().filter((behavior) -> {
-            return behavior.a() == Behavior.Status.RUNNING;
-        }).forEach((behavior) -> {
-            behavior.f(worldserver, e0, i);
-        });
+        // Tuinity start - remove streams
+        List<WeightedList.a<Behavior<? super E>>> list = this.getList().getList();
+        for (int index = 0, len = list.size(); index < len; ++index) {
+            Behavior<? super E> behavior = list.get(index).getValue();
+            if (behavior.getStatus() == Behavior.Status.RUNNING) {
+                behavior.f(worldserver, e0, i); // copied from removed code, make sure to update
+            }
+        }
+        // Tuinity end - remove streams
     }
 
     @Override
     protected void c(WorldServer worldserver, E e0, long i) {
-        this.e.c().filter((behavior) -> {
-            return behavior.a() == Behavior.Status.RUNNING;
-        }).forEach((behavior) -> {
-            behavior.g(worldserver, e0, i);
-        });
+        // Tuinity start - remove streams
+        List<WeightedList.a<Behavior<? super E>>> list = this.getList().getList();
+        for (int index = 0, len = list.size(); index < len; ++index) {
+            Behavior<? super E> behavior = list.get(index).getValue();
+            if (behavior.getStatus() == Behavior.Status.RUNNING) {
+                behavior.g(worldserver, e0, i); // copied from removed code, make sure to update
+            }
+        }
+        // Tuinity end - remove streams
         BehaviorController behaviorcontroller = e0.getBehaviorController();
 
         this.b.forEach(behaviorcontroller::removeMemory); // Paper - decomp fix
@@ -84,21 +98,29 @@ public class BehaviorGate<E extends EntityLiving> extends Behavior<E> {
         RUN_ONE {
             @Override
             public <E extends EntityLiving> void a(WeightedList<Behavior<? super E>> weightedlist, WorldServer worldserver, E e0, long i) {
-                weightedlist.c().filter((behavior) -> {
-                    return behavior.a() == Behavior.Status.STOPPED;
-                }).filter((behavior) -> {
-                    return behavior.e(worldserver, e0, i);
-                }).findFirst();
+                // Tuinity start - remove streams
+                List<WeightedList.a<Behavior<? super E>>> list = weightedlist.getList();
+                for (int index = 0, len = list.size(); index < len; ++index) {
+                    Behavior<? super E> behavior = list.get(index).getValue();
+                    if (behavior.getStatus() == Behavior.Status.STOPPED && behavior.e(worldserver, e0, i)) { // copied from removed code, make sure to update
+                        break;
+                    }
+                }
+                // Tuinity end - remove streams
             }
         },
         TRY_ALL {
             @Override
             public <E extends EntityLiving> void a(WeightedList<Behavior<? super E>> weightedlist, WorldServer worldserver, E e0, long i) {
-                weightedlist.c().filter((behavior) -> {
-                    return behavior.a() == Behavior.Status.STOPPED;
-                }).forEach((behavior) -> {
-                    behavior.e(worldserver, e0, i);
-                });
+                // Tuinity start - remove streams
+                List<WeightedList.a<Behavior<? super E>>> list = weightedlist.getList();
+                for (int index = 0, len = list.size(); index < len; ++index) {
+                    Behavior<? super E> behavior = list.get(index).getValue();
+                    if (behavior.getStatus() == Behavior.Status.STOPPED) {
+                        behavior.e(worldserver, e0, i); // copied from removed code, make sure to update
+                    }
+                }
+                // Tuinity end - remove streams
             }
         };
 

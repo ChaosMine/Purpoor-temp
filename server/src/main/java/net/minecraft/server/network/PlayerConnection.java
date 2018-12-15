@@ -550,6 +550,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 double currDeltaZ = toZ - fromZ;
                 double d10 = Math.max(d6 * d6 + d7 * d7 + d8 * d8, (currDeltaX * currDeltaX + currDeltaY * currDeltaY + currDeltaZ * currDeltaZ) - 1);
                 // Paper end - fix large move vectors killing the server
+                // Tuinity start - fix large move vectors killing the server
+                double otherFieldX = d3 - this.v;
+                double otherFieldY = d4 - this.w - 1.0E-6D;
+                double otherFieldZ = d5 - this.x;
+                d10 = Math.max(d10, (otherFieldX * otherFieldX + otherFieldY * otherFieldY + otherFieldZ * otherFieldZ) - 1);
+                // Tuinity end - fix large move vectors killing the server
 
 
                 // CraftBukkit start - handle custom speeds and skipped ticks
@@ -578,7 +584,9 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 speed *= 2f; // TODO: Get the speed of the vehicle instead of the player
 
                 // Paper start - Prevent moving into unloaded chunks
-                if (player.world.paperConfig.preventMovingIntoUnloadedChunks && worldserver.getChunkIfLoadedImmediately((int) Math.floor(packetplayinvehiclemove.getX()) >> 4, (int) Math.floor(packetplayinvehiclemove.getZ()) >> 4) == null) {
+                if (player.world.paperConfig.preventMovingIntoUnloadedChunks // Tuinity - improve this check
+                        && (!worldserver.areChunksLoadedForMove(this.player.getBoundingBoxAt(this.player.locX(), this.player.locY(), this.player.locZ()).expand(toX - this.player.locX(), toY - this.player.locY(), toZ - this.player.locZ()))) // Tuinity - improve this check
+                    || !worldserver.areChunksLoadedForMove(entity.getBoundingBoxAt(entity.locX(), entity.locY(), entity.locZ()).expand(toX - entity.locX(), toY - entity.locY(), toZ - entity.locZ()))) { // Tuinity - improve this check
                     this.networkManager.sendPacket(new PacketPlayOutVehicleMove(entity));
                     return;
                 }
@@ -591,12 +599,14 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     return;
                 }
 
-                boolean flag = worldserver.getCubes(entity, entity.getBoundingBox().shrink(0.0625D));
+                //boolean flag = worldserver.getCubes(entity, entity.getBoundingBox().shrink(0.0625D)); // Tuinity - replace with different checks
+                AxisAlignedBB oldBox = entity.getBoundingBox(); // Tuinity - copy from player movement packet
 
-                d6 = d3 - this.v;
-                d7 = d4 - this.w - 1.0E-6D;
-                d8 = d5 - this.x;
+                d6 = d3 - this.v; // Tuinity - diff on change, used for checking large move vectors above
+                d7 = d4 - this.w - 1.0E-6D; // Tuinity - diff on change, used for checking large move vectors above
+                d8 = d5 - this.x; // Tuinity - diff on change, used for checking large move vectors above
                 entity.move(EnumMoveType.PLAYER, new Vec3D(d6, d7, d8));
+                boolean didCollide = toX != entity.locX() || toY != entity.locY() || toZ != entity.locZ(); // Tuinity - needed here as the difference in Y can be reset - also note: this is only a guess at whether collisions took place, floating point errors can make this true when it shouldn't be...
                 double d11 = d7;
 
                 d6 = d3 - entity.locX();
@@ -610,16 +620,25 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 boolean flag1 = false;
 
                 if (d10 > org.spigotmc.SpigotConfig.movedWronglyThreshold) { // Spigot
-                    flag1 = true;
+                    flag1 = true; // Tuinity - diff on change, this should be moved wrongly
                     PlayerConnection.LOGGER.warn("{} (vehicle of {}) moved wrongly! {}", entity.getDisplayName().getString(), this.player.getDisplayName().getString(), Math.sqrt(d10));
                 }
                 Location curPos = this.getPlayer().getLocation(); // Spigot
 
                 entity.setLocation(d3, d4, d5, f, f1);
                 player.setLocation(d3, d4, d5, this.player.yaw, this.player.pitch); // CraftBukkit
-                boolean flag2 = worldserver.getCubes(entity, entity.getBoundingBox().shrink(0.0625D));
+                //boolean flag2 = worldserver.getCubes(entity, entity.getBoundingBox().shrink(0.0625D)); // Tuinity - replace with different checks
 
-                if (flag && (flag1 || !flag2)) {
+                // Tuinity start - optimise out extra getCubes
+                boolean teleportBack = flag1; // violating this is always a fail
+                if (!teleportBack) {
+                    // note: only call after setLocation, or else getBoundingBox is wrong
+                    AxisAlignedBB newBox = entity.getBoundingBox();
+                    if (didCollide || !oldBox.equals(newBox)) {
+                        teleportBack = this.hasNewCollision(worldserver, entity, oldBox, newBox);
+                    } // else: no collision at all detected, why do we care?
+                }
+                if (teleportBack) { // Tuinity end - optimise out extra getCubes
                     entity.setLocation(d0, d1, d2, f, f1);
                     player.setLocation(d0, d1, d2, this.player.yaw, this.player.pitch); // CraftBukkit
                     this.networkManager.sendPacket(new PacketPlayOutVehicleMove(entity));
@@ -705,7 +724,32 @@ public class PlayerConnection implements PacketListenerPlayIn {
     }
 
     private boolean a(Entity entity) {
-        return entity.world.a(entity.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D)).allMatch(BlockBase.BlockData::isAir);
+        // Tuinity start - stop using streams, this is already a known fixed problem in Entity#move
+        AxisAlignedBB box = entity.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D);
+        int minX = MathHelper.floor(box.minX);
+        int minY = MathHelper.floor(box.minY);
+        int minZ = MathHelper.floor(box.minZ);
+        int maxX = MathHelper.floor(box.maxX);
+        int maxY = MathHelper.floor(box.maxY);
+        int maxZ = MathHelper.floor(box.maxZ);
+
+        World world = entity.world;
+        BlockPosition.MutableBlockPosition pos = new BlockPosition.MutableBlockPosition();
+
+        for (int y = minY; y <= maxY; ++y) {
+            for (int z = minZ; z <= maxZ; ++z) {
+                for (int x = minX; x <= maxX; ++x) {
+                    pos.setValues(x, y, z);
+                    IBlockData type = world.getTypeIfLoaded(pos);
+                    if (type != null && !type.isAir()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+        // Tuinity end - stop using streams, this is already a known fixed problem in Entity#move
     }
 
     @Override
@@ -1232,7 +1276,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 }
 
                 if (this.teleportPos != null) {
-                    if (this.e - this.A > 20) {
+                    if (false && this.e - this.A > 20) { // Tuinity - this will greatly screw with clients with > 1000ms RTT
                         this.A = this.e;
                         this.a(this.teleportPos.x, this.teleportPos.y, this.teleportPos.z, this.player.yaw, this.player.pitch);
                     }
@@ -1270,6 +1314,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
                         double currDeltaZ = toZ - prevZ;
                         double d11 = Math.max(d7 * d7 + d8 * d8 + d9 * d9, (currDeltaX * currDeltaX + currDeltaY * currDeltaY + currDeltaZ * currDeltaZ) - 1);
                         // Paper end - fix large move vectors killing the server
+                        // Tuinity start - fix large move vectors killing the server
+                        double otherFieldX = d4 - this.o;
+                        double otherFieldY = d5 - this.p;
+                        double otherFieldZ = d6 - this.q;
+                        d11 = Math.max(d11, (otherFieldX * otherFieldX + otherFieldY * otherFieldY + otherFieldZ * otherFieldZ) - 1);
+                        // Tuinity end - fix large move vectors killing the server
 
                         if (this.player.isSleeping()) {
                             if (d11 > 1.0D) {
@@ -1302,7 +1352,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                                 speed = player.abilities.walkSpeed * 10f;
                             }
                             // Paper start - Prevent moving into unloaded chunks
-                            if (player.world.paperConfig.preventMovingIntoUnloadedChunks && (this.player.locX() != toX || this.player.locZ() != toZ) && worldserver.getChunkIfLoadedImmediately((int) Math.floor(toX) >> 4, (int) Math.floor(toZ) >> 4) == null) { // Paper - use getIfLoadedImmediately
+                            if (player.world.paperConfig.preventMovingIntoUnloadedChunks && !((WorldServer)this.player.world).areChunksLoadedForMove(this.player.getBoundingBoxAt(this.player.locX(), this.player.locY(), this.player.locZ()).expand(toX - this.player.locX(), toY - this.player.locY(), toZ - this.player.locZ()))) { // Paper - use getIfLoadedImmediately // Tuinity - improve this check
                                 this.internalTeleport(this.player.locX(), this.player.locY(), this.player.locZ(), this.player.yaw, this.player.pitch, Collections.emptySet());
                                 return;
                             }
@@ -1319,11 +1369,11 @@ public class PlayerConnection implements PacketListenerPlayIn {
                                 }
                             }
 
-                            AxisAlignedBB axisalignedbb = this.player.getBoundingBox();
+                            AxisAlignedBB axisalignedbb = this.player.getBoundingBox(); // Tuinity - diff on change, should be old AABB
 
-                            d7 = d4 - this.o;
-                            d8 = d5 - this.p;
-                            d9 = d6 - this.q;
+                            d7 = d4 - this.o; // Tuinity - diff on change, used for checking large move vectors above
+                            d8 = d5 - this.p; // Tuinity - diff on change, used for checking large move vectors above
+                            d9 = d6 - this.q; // Tuinity - diff on change, used for checking large move vectors above
                             boolean flag = d8 > 0.0D;
 
                             if (this.player.isOnGround() && !packetplayinflying.b() && flag) {
@@ -1358,6 +1408,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                             }
 
                             this.player.move(EnumMoveType.PLAYER, new Vec3D(d7, d8, d9));
+                            boolean didCollide = toX != this.player.locX() || toY != this.player.locY() || toZ != this.player.locZ(); // Tuinity - needed here as the difference in Y can be reset - also note: this is only a guess at whether collisions took place, floating point errors can make this true when it shouldn't be...
                             this.player.setOnGround(packetplayinflying.b()); // CraftBukkit - SPIGOT-5810, SPIGOT-5835: reset by this.player.move
                             // Paper start - prevent position desync
                             if (this.teleportPos != null) {
@@ -1377,12 +1428,23 @@ public class PlayerConnection implements PacketListenerPlayIn {
                             boolean flag1 = false;
 
                             if (!this.player.H() && d11 > org.spigotmc.SpigotConfig.movedWronglyThreshold && !this.player.isSleeping() && !this.player.playerInteractManager.isCreative() && this.player.playerInteractManager.getGameMode() != EnumGamemode.SPECTATOR) { // Spigot
-                                flag1 = true;
+                                flag1 = true; // Tuinity - diff on change, this should be moved wrongly
                                 PlayerConnection.LOGGER.warn("{} moved wrongly!", this.player.getDisplayName().getString());
                             }
 
                             this.player.setLocation(d4, d5, d6, f, f1);
-                            if (!this.player.noclip && !this.player.isSleeping() && (flag1 && worldserver.getCubes(this.player, axisalignedbb) || this.a((IWorldReader) worldserver, axisalignedbb))) {
+                            // Tuinity start - optimise out extra getCubes
+                            // Original for reference:
+                            // boolean teleportBack = flag1 && worldserver.getCubes(this.player, axisalignedbb) || (didCollide && this.a((IWorldReader) worldserver, axisalignedbb));
+                            boolean teleportBack = flag1; // violating this is always a fail
+                            if (!this.player.noclip && !this.player.isSleeping() && !teleportBack) {
+                                AxisAlignedBB newBox = this.player.getBoundingBox();
+                                if (didCollide || !axisalignedbb.equals(newBox)) {
+                                    // note: only call after setLocation, or else getBoundingBox is wrong
+                                    teleportBack = this.hasNewCollision(worldserver, this.player, axisalignedbb, newBox);
+                                } // else: no collision at all detected, why do we care?
+                            }
+                            if (!this.player.noclip && !this.player.isSleeping() && teleportBack) { // Tuinity end - optimise out extra getCubes
                                 this.a(d0, d1, d2, f, f1);
                             } else {
                                 // CraftBukkit start - fire PlayerMoveEvent
@@ -1468,6 +1530,26 @@ public class PlayerConnection implements PacketListenerPlayIn {
             }
         }
     }
+
+    // Tuinity start - optimise out extra getCubes
+    private boolean hasNewCollision(final WorldServer world, final Entity entity, final AxisAlignedBB oldBox, final AxisAlignedBB newBox) {
+        final List<AxisAlignedBB> collisions = com.tuinity.tuinity.util.CachedLists.getTempCollisionList();
+        try {
+            world.getCollisions(entity, newBox, collisions, true);
+
+            for (int i = 0, len = collisions.size(); i < len; ++i) {
+                final AxisAlignedBB box = collisions.get(i);
+                if (!box.voxelShapeIntersect(oldBox)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } finally {
+            com.tuinity.tuinity.util.CachedLists.returnTempCollisionList(collisions);
+        }
+    }
+    // Tuinity end - optimise out extra getCubes
 
     private boolean a(IWorldReader iworldreader, AxisAlignedBB axisalignedbb) {
         Stream<VoxelShape> stream = iworldreader.d(this.player, this.player.getBoundingBox().shrink(9.999999747378752E-6D), (entity) -> {

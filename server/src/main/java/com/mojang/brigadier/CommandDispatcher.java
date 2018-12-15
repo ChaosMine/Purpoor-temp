@@ -590,10 +590,11 @@ public class CommandDispatcher<S> {
         final String truncatedInput = fullInput.substring(0, cursor);
         @SuppressWarnings("unchecked") final CompletableFuture<Suggestions>[] futures = new CompletableFuture[parent.getChildren().size()];
         int i = 0;
+        final String remainingLower = truncatedInput.substring(start).toLowerCase(); // Tuinity
         for (final CommandNode<S> node : parent.getChildren()) {
             CompletableFuture<Suggestions> future = Suggestions.empty();
             try {
-                future = node.listSuggestions(context.build(truncatedInput), new SuggestionsBuilder(truncatedInput, start));
+                future = node.listSuggestions(context.build(truncatedInput), new SuggestionsBuilder(truncatedInput, start, remainingLower)); // Tuinity
             } catch (final CommandSyntaxException ignored) {
             }
             futures[i++] = future;

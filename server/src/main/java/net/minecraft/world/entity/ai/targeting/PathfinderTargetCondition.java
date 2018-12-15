@@ -55,6 +55,7 @@ public class PathfinderTargetCondition {
         return this;
     }
 
+    public final boolean test(@Nullable EntityLiving entityliving, EntityLiving entityliving1) { return this.a(entityliving, entityliving1); } // Tuinity - OBFHELPER
     public boolean a(@Nullable EntityLiving entityliving, EntityLiving entityliving1) {
         if (entityliving == entityliving1) {
             return false;

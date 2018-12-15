@@ -1,5 +1,6 @@
 package net.minecraft.world.level;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
@@ -25,6 +26,156 @@ public class ChunkCache implements IBlockAccess, ICollisionAccess {
     protected final IChunkAccess[][] c;
     protected boolean d;
     protected final World e; protected final World getWorld() { return e; } // Paper - OBFHELPER
+
+    // Tuinity start - optimise pathfinder collision detection
+    @Override
+    public boolean getCubes(Entity entity) {
+        return !this.getCollisionsForBlocksOrWorldBorder(entity, entity.getBoundingBox(), null, true, null);
+    }
+
+    @Override
+    public boolean getCubes(Entity entity, AxisAlignedBB axisalignedbb) {
+        return !this.getCollisionsForBlocksOrWorldBorder(entity, axisalignedbb, null, true, null);
+    }
+
+    @Override
+    public boolean getCubes(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        return !this.getCollisionsForBlocksOrWorldBorder(entity, axisalignedbb, null, true, null);
+    }
+
+    public boolean getCollisionsForBlocksOrWorldBorder(@Nullable Entity entity, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list,
+                                                    boolean collidesWithUnloaded,
+                                                    java.util.function.BiPredicate<IBlockData, BlockPosition> predicate) {
+        boolean ret = false;
+        final boolean checkOnly = true;
+
+        if (entity != null) {
+            if (this.getWorldBorder().isAlmostCollidingOnBorder(axisalignedbb)) {
+                if (checkOnly) {
+                    return true;
+                } else {
+                    net.minecraft.world.phys.shapes.VoxelShapes.addBoxesTo(this.getWorldBorder().getCollisionShape(), list);
+                    ret = true;
+                }
+            }
+        }
+
+        int minBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.minX - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.maxX + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockY = net.minecraft.util.MathHelper.floor(axisalignedbb.minY - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockY = net.minecraft.util.MathHelper.floor(axisalignedbb.maxY + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.minZ - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.maxZ + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
+
+
+        BlockPosition.MutableBlockPosition mutablePos = new BlockPosition.MutableBlockPosition();
+        net.minecraft.world.phys.shapes.VoxelShapeCollision collisionShape = null;
+
+        // special cases:
+        if (minBlockY > 255 || maxBlockY < 0) {
+            // no point in checking
+            return ret;
+        }
+
+        int minYIterate = Math.max(0, minBlockY);
+        int maxYIterate = Math.min(255, maxBlockY);
+
+        int minChunkX = minBlockX >> 4;
+        int maxChunkX = maxBlockX >> 4;
+
+        int minChunkZ = minBlockZ >> 4;
+        int maxChunkZ = maxBlockZ >> 4;
+
+        // TODO special case single chunk?
+
+        for (int currChunkZ = minChunkZ; currChunkZ <= maxChunkZ; ++currChunkZ) {
+            int minZ = currChunkZ == minChunkZ ? minBlockZ & 15 : 0; // coordinate in chunk
+            int maxZ = currChunkZ == maxChunkZ ? maxBlockZ & 15 : 15; // coordinate in chunk
+
+            for (int currChunkX = minChunkX; currChunkX <= maxChunkX; ++currChunkX) {
+                int minX = currChunkX == minChunkX ? minBlockX & 15 : 0; // coordinate in chunk
+                int maxX = currChunkX == maxChunkX ? maxBlockX & 15 : 15; // coordinate in chunk
+
+                int chunkXGlobalPos = currChunkX << 4;
+                int chunkZGlobalPos = currChunkZ << 4;
+                net.minecraft.world.level.chunk.Chunk chunk = (net.minecraft.world.level.chunk.Chunk)this.getChunkIfLoaded(currChunkX, currChunkZ);
+
+                if (chunk == null) {
+                    if (collidesWithUnloaded) {
+                        if (checkOnly) {
+                            return true;
+                        } else {
+                            list.add(AxisAlignedBB.getBoxForChunk(currChunkX, currChunkZ));
+                            ret = true;
+                        }
+                    }
+                    continue;
+                }
+
+                net.minecraft.world.level.chunk.ChunkSection[] sections = chunk.getSections();
+
+                // bound y
+
+                for (int currY = minYIterate; currY <= maxYIterate; ++currY) {
+                    net.minecraft.world.level.chunk.ChunkSection section = sections[currY >>> 4];
+                    if (section == null || section.isFullOfAir()) {
+                        // empty
+                        // skip to next section
+                        currY = (currY & ~(15)) + 15; // increment by 15: iterator loop increments by the extra one
+                        continue;
+                    }
+
+                    net.minecraft.world.level.chunk.DataPaletteBlock<IBlockData> blocks = section.blockIds;
+
+                    for (int currZ = minZ; currZ <= maxZ; ++currZ) {
+                        for (int currX = minX; currX <= maxX; ++currX) {
+                            int localBlockIndex = (currX) | (currZ << 4) | ((currY & 15) << 8);
+                            int blockX = currX | chunkXGlobalPos;
+                            int blockY = currY;
+                            int blockZ = currZ | chunkZGlobalPos;
+
+                            int edgeCount = ((blockX == minBlockX || blockX == maxBlockX) ? 1 : 0) +
+                                    ((blockY == minBlockY || blockY == maxBlockY) ? 1 : 0) +
+                                    ((blockZ == minBlockZ || blockZ == maxBlockZ) ? 1 : 0);
+                            if (edgeCount == 3) {
+                                continue;
+                            }
+
+                            IBlockData blockData = blocks.rawGet(localBlockIndex);
+
+                            if ((edgeCount != 1 || blockData.shapeExceedsCube()) && (edgeCount != 2 || blockData.getBlock() == Blocks.MOVING_PISTON)) {
+                                mutablePos.setValues(blockX, blockY, blockZ);
+                                if (collisionShape == null) {
+                                    collisionShape = entity == null ? net.minecraft.world.phys.shapes.VoxelShapeCollision.a() : net.minecraft.world.phys.shapes.VoxelShapeCollision.a(entity);
+                                }
+                                VoxelShape voxelshape2 = blockData.getCollisionShape(this, mutablePos, collisionShape);
+                                if (voxelshape2 != net.minecraft.world.phys.shapes.VoxelShapes.getEmptyShape()) {
+                                    VoxelShape voxelshape3 = voxelshape2.offset((double)blockX, (double)blockY, (double)blockZ);
+
+                                    if (predicate != null && !predicate.test(blockData, mutablePos)) {
+                                        continue;
+                                    }
+
+                                    if (checkOnly) {
+                                        if (voxelshape3.intersects(axisalignedbb)) {
+                                            return true;
+                                        }
+                                    } else {
+                                        ret |= net.minecraft.world.phys.shapes.VoxelShapes.addBoxesToIfIntersects(voxelshape3, axisalignedbb, list);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+    // Tuinity end - optimise pathfinder collision detection
 
     public ChunkCache(World world, BlockPosition blockposition, BlockPosition blockposition1) {
         this.e = world;

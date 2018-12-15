@@ -65,6 +65,78 @@ public class WatchdogThread extends Thread
         }
     }
 
+    // Tuinity start - log detailed tick information
+    private void dumpEntity(net.minecraft.world.entity.Entity entity) {
+        Logger log = Bukkit.getServer().getLogger();
+        double posX, posY, posZ;
+        net.minecraft.world.phys.Vec3D mot;
+        double moveStartX, moveStartY, moveStartZ;
+        net.minecraft.world.phys.Vec3D moveVec;
+        synchronized (entity.posLock) {
+            posX = entity.locX();
+            posY = entity.locY();
+            posZ = entity.locZ();
+            mot = entity.getMot();
+            moveStartX = entity.getMoveStartX();
+            moveStartY = entity.getMoveStartY();
+            moveStartZ = entity.getMoveStartZ();
+            moveVec = entity.getMoveVector();
+        }
+
+        String entityType = entity.getMinecraftKey().toString();
+        java.util.UUID entityUUID = entity.getUniqueID();
+        net.minecraft.world.level.World world = entity.getWorld();
+
+        log.log(Level.SEVERE, "Ticking entity: " + entityType + ", entity class: " + entity.getClass().getName());
+        log.log(Level.SEVERE, "Entity status: dead: " + entity.dead + ", valid: " + entity.valid + ", alive: " + entity.isAlive() + ", is passenger: " + entity.isPassenger());
+        log.log(Level.SEVERE, "Entity UUID: " + entityUUID);
+        log.log(Level.SEVERE, "Position: world: '" + (world == null ? "unknown world?" : world.getWorld().getName()) + "' at location (" + posX + ", " + posY + ", " + posZ + ")");
+        log.log(Level.SEVERE, "Velocity: " + (mot == null ? "unknown velocity" : mot.toString()) + " (in blocks per tick)");
+        log.log(Level.SEVERE, "Entity AABB: " + entity.getBoundingBox());
+        if (moveVec != null) {
+            log.log(Level.SEVERE, "Move call information: ");
+            log.log(Level.SEVERE, "Start position: (" + moveStartX + ", " + moveStartY + ", " + moveStartZ + ")");
+            log.log(Level.SEVERE, "Move vector: " + moveVec.toString());
+        }
+    }
+
+    private void dumpTickingInfo() {
+        Logger log = Bukkit.getServer().getLogger();
+
+        // ticking entities
+        for (net.minecraft.world.entity.Entity entity : net.minecraft.server.level.WorldServer.getCurrentlyTickingEntities()) {
+            this.dumpEntity(entity);
+            net.minecraft.world.entity.Entity vehicle = entity.getVehicle();
+            if (vehicle != null) {
+                log.log(Level.SEVERE, "Detailing vehicle for above entity:");
+                this.dumpEntity(vehicle);
+            }
+        }
+
+        // packet processors
+        for (net.minecraft.network.PacketListener packetListener : net.minecraft.network.protocol.PlayerConnectionUtils.getCurrentPacketProcessors()) {
+            if (packetListener instanceof net.minecraft.server.network.PlayerConnection) {
+                net.minecraft.server.level.EntityPlayer player = ((net.minecraft.server.network.PlayerConnection)packetListener).player;
+                long totalPackets = net.minecraft.network.protocol.PlayerConnectionUtils.getTotalProcessedPackets();
+                if (player == null) {
+                    log.log(Level.SEVERE, "Handling packet for player connection or ticking player connection (null player): " + packetListener);
+                    log.log(Level.SEVERE, "Total packets processed on the main thread for all players: " + totalPackets);
+                } else {
+                    this.dumpEntity(player);
+                    net.minecraft.world.entity.Entity vehicle = player.getVehicle();
+                    if (vehicle != null) {
+                        log.log(Level.SEVERE, "Detailing vehicle for above entity:");
+                        this.dumpEntity(vehicle);
+                    }
+                    log.log(Level.SEVERE, "Total packets processed on the main thread for all players: " + totalPackets);
+                }
+            } else {
+                log.log(Level.SEVERE, "Handling packet for connection: " + packetListener);
+            }
+        }
+    }
+    // Tuinity end - log detailed tick information
+
     @Override
     public void run()
     {
@@ -121,6 +193,7 @@ public class WatchdogThread extends Thread
                 log.log( Level.SEVERE, "------------------------------" );
                 log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
                 ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                this.dumpTickingInfo(); // Tuinity - log detailed tick information
                 dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
                 log.log( Level.SEVERE, "------------------------------" );
                 //

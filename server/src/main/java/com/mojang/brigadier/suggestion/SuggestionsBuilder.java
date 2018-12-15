@@ -14,9 +14,16 @@ public class SuggestionsBuilder {
     private final String input;
     private final int start;
     private final String remaining;
+    private String remainingLowercase; public final String getRemainingLowercase() { return this.remainingLowercase == null ? this.remainingLowercase = this.remaining.toLowerCase() : this.remainingLowercase; } // Tuinity
     private final List<Suggestion> result = new ArrayList<>();
 
     public SuggestionsBuilder(final String input, final int start) {
+        // Tuinity start
+        this(input, start, null);
+    }
+    public SuggestionsBuilder(final String input, final int start, final String remainingLowercase) {
+        this.remainingLowercase = remainingLowercase;
+        // Tuinity end
         this.input = input;
         this.start = start;
         this.remaining = input.substring(start);

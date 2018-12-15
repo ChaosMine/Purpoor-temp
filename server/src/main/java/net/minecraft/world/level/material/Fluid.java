@@ -72,6 +72,7 @@ public final class Fluid extends IBlockDataHolder<FluidType, Fluid> {
         return this.getType().b(this);
     }
 
+    public final boolean isTagged(Tag<FluidType> tag) { return this.a(tag); } // Tuinity - OBFHELPER
     public boolean a(Tag<FluidType> tag) {
         return this.getType().a(tag);
     }

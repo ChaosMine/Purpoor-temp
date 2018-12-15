@@ -5,17 +5,17 @@ import java.util.Objects;
 public final class Ticket<T> implements Comparable<Ticket<?>> {
 
     private final TicketType<T> a;
-    private final int b;
+    private int b; public final void setTicketLevel(final int value) { this.b = value; } // Tuinity - remove final, add set OBFHELPER
     public final T identifier; public final T getObjectReason() { return this.identifier; } // Paper - OBFHELPER
-    private long d; public final long getCreationTick() { return this.d; } // Paper - OBFHELPER
+    private long d; public final long getCreationTick() { return this.d; } public final void setCreationTick(final long value) { this.d = value; }  // Paper - OBFHELPER // Tuinity - OBFHELPER
     public int priority = 0; // Paper
-    public long delayUnloadBy; // Paper
+    boolean isCached; // Tuinity - delay chunk unloads, this defends against really stupid plugins
 
     protected Ticket(TicketType<T> tickettype, int i, T t0) {
         this.a = tickettype;
         this.b = i;
         this.identifier = t0;
-        this.delayUnloadBy = tickettype.loadPeriod; // Paper
+        // Tuinity - delay chunk unloads
     }
 
     public int compareTo(Ticket<?> ticket) {
@@ -64,8 +64,9 @@ public final class Ticket<T> implements Comparable<Ticket<?>> {
         this.d = i;
     }
 
+    protected final boolean isExpired(long time) { return this.b(time); } // Tuinity - OBFHELPER
     protected boolean b(long i) {
-        long j = delayUnloadBy; // Paper
+        long j = this.a.b(); // Tuinity - delay chunk unloads
 
         return j != 0L && i - this.d > j;
     }

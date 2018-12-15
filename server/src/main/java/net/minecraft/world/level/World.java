@@ -154,6 +154,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public final com.destroystokyo.paper.PaperWorldConfig paperConfig; // Paper
     public final ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
 
+    public final com.tuinity.tuinity.config.TuinityConfig.WorldConfig tuinityConfig; // Tuinity - Server Config
+
     public final co.aikar.timings.WorldTimingsHandler timings; // Paper
     public static BlockPosition lastPhysicsProblem; // Spigot
     private org.spigotmc.TickLimiter entityLimiter;
@@ -189,11 +191,69 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         });
     }
     // Paper end - fix and optimise world upgrading
+    // Tuinity start - optimise checkDespawn
+    public final List<EntityPlayer> getNearbyPlayers(@Nullable Entity source, double sourceX, double sourceY, double sourceZ, double maxRange, @Nullable Predicate<Entity> predicate) {
+        Chunk chunk;
+        if (source == null || (chunk = source.getCurrentChunk()) == null || maxRange < 0.0 || maxRange >= net.minecraft.server.level.PlayerChunkMap.GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE) {
+            return this.getNearbyPlayersSlow(source, sourceX, sourceY, sourceZ, maxRange, predicate);
+        }
+
+        List<EntityPlayer> ret = new java.util.ArrayList<>();
+        chunk.getNearestPlayers(sourceX, sourceY, sourceZ, predicate, maxRange, ret);
+        return ret;
+    }
+
+    private List<EntityPlayer> getNearbyPlayersSlow(@Nullable Entity source, double sourceX, double sourceY, double sourceZ, double maxRange, @Nullable Predicate<Entity> predicate) {
+        List<EntityPlayer> ret = new java.util.ArrayList<>();
+        double maxRangeSquared = maxRange * maxRange;
+
+        for (EntityPlayer player : (List<EntityPlayer>)this.getPlayers()) {
+            if ((maxRange < 0.0 || player.getDistanceSquared(sourceX, sourceY, sourceZ) < maxRangeSquared)) {
+                if (predicate == null || predicate.test(player)) {
+                    ret.add(player);
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    private EntityPlayer getNearestPlayerSlow(@Nullable Entity source, double sourceX, double sourceY, double sourceZ, double maxRange, @Nullable Predicate<Entity> predicate) {
+        EntityPlayer closest = null;
+        double closestRangeSquared = maxRange < 0.0 ? Double.MAX_VALUE : maxRange * maxRange;
+
+        for (EntityPlayer player : (List<EntityPlayer>)this.getPlayers()) {
+            double distanceSquared = player.getDistanceSquared(sourceX, sourceY, sourceZ);
+            if (distanceSquared < closestRangeSquared && (predicate == null || predicate.test(player))) {
+                closest = player;
+                closestRangeSquared = distanceSquared;
+            }
+        }
+
+        return closest;
+    }
+
+
+    public final EntityPlayer getNearestPlayer(@Nullable Entity source, double sourceX, double sourceY, double sourceZ, double maxRange, @Nullable Predicate<Entity> predicate) {
+        Chunk chunk;
+        if (source == null || (chunk = source.getCurrentChunk()) == null || maxRange < 0.0 || maxRange >= net.minecraft.server.level.PlayerChunkMap.GENERAL_AREA_MAP_ACCEPTABLE_SEARCH_RANGE) {
+            return this.getNearestPlayerSlow(source, sourceX, sourceY, sourceZ, maxRange, predicate);
+        }
+
+        return chunk.findNearestPlayer(sourceX, sourceY, sourceZ, maxRange, predicate);
+    }
+
+    @Override
+    public @Nullable EntityHuman a(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) {
+        return this.getNearestPlayer(null, d0, d1, d2, d3, predicate);
+    }
+    // Tuinity end - optimise checkDespawn
 
     protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, final DimensionManager dimensionmanager, Supplier<GameProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper
         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName()); // Spigot
         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName(), this.spigotConfig); // Paper
         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
+        this.tuinityConfig = new com.tuinity.tuinity.config.TuinityConfig.WorldConfig(((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName()); // Tuinity - Server Config
         this.generator = gen;
         this.world = new CraftWorld((WorldServer) this, gen, env);
         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
@@ -355,6 +415,15 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     @Override
     public final Chunk getChunkAt(int i, int j) { // Paper - final to help inline
+        // Tuinity start - make sure loaded chunks get the inlined variant of this function
+        net.minecraft.server.level.ChunkProviderServer cps = ((WorldServer)this).chunkProvider;
+        if (cps.serverThread == Thread.currentThread()) {
+            Chunk ifLoaded = cps.getChunkAtIfLoadedMainThread(i, j);
+            if (ifLoaded != null) {
+                return ifLoaded;
+            }
+        }
+        // Tuinity end - make sure loaded chunks get the inlined variant of this function
         return (Chunk) this.getChunkAt(i, j, ChunkStatus.FULL, true); // Paper - avoid a method jump
     }
 
@@ -429,6 +498,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     @Override
     public boolean a(BlockPosition blockposition, IBlockData iblockdata, int i, int j) {
+        org.spigotmc.AsyncCatcher.catchOp("set type call"); // Tuinity
         // CraftBukkit start - tree generation
         if (this.captureTreeGeneration) {
             // Paper start
@@ -530,6 +600,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     // CraftBukkit start - Split off from above in order to directly send client and physic updates
     public void notifyAndUpdatePhysics(BlockPosition blockposition, Chunk chunk, IBlockData oldBlock, IBlockData newBlock, IBlockData actualBlock, int i, int j) {
+        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async notify and update"); // Tuinity
         IBlockData iblockdata = newBlock;
         IBlockData iblockdata1 = oldBlock;
         IBlockData iblockdata2 = actualBlock;
@@ -542,7 +613,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 this.notify(blockposition, iblockdata1, iblockdata, i);
                 // Paper start - per player view distance - allow block updates for non-ticking chunks in player view distance
                 // if copied from above
-            } else if ((i & 2) != 0 && (!this.isClientSide || (i & 4) == 0) && (this.isClientSide || chunk == null || ((WorldServer)this).getChunkProvider().playerChunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(MCUtil.getCoordinateKey(blockposition)) != null)) {
+            } else if ((i & 2) != 0 && (!this.isClientSide || (i & 4) == 0) && (this.isClientSide || chunk == null || ((WorldServer)this).getChunkProvider().playerChunkMap.playerChunkManager.broadcastMap.getObjectsInRange(MCUtil.getCoordinateKey(blockposition)) != null)) { // Tuinity - replace old player chunk management
                 ((WorldServer)this).getChunkProvider().flagDirty(blockposition);
                 // Paper end - per player view distance
             }
@@ -964,6 +1035,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return;
             // Paper end
         }
+        MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
     }
     // Paper start - Prevent armor stands from doing entity lookups
     @Override
@@ -1147,10 +1219,44 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         return this.getChunkAt(i, j, ChunkStatus.FULL, false);
     }
 
+    // Tuinity start - optimise hard collision handling
+    @Override
+    public List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        return this.getHardCollidingEntities(entity, axisalignedbb, predicate, Lists.newArrayList());
+    }
+
+    public List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate, List<Entity> list) {
+        // copied from below
+        int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
+        int j = MathHelper.floor((axisalignedbb.maxX + 2.0D) / 16.0D);
+        int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
+        int l = MathHelper.floor((axisalignedbb.maxZ + 2.0D) / 16.0D);
+
+        net.minecraft.server.level.ChunkProviderServer chunkProvider = ((WorldServer)this).getChunkProvider();
+
+        for (int i1 = i; i1 <= j; ++i1) {
+            for (int j1 = k; j1 <= l; ++j1) {
+                Chunk chunk = chunkProvider.getChunkAtIfLoadedMainThread(i1, j1);
+
+                if (chunk != null) {
+                    chunk.getHardCollidingEntities(entity, axisalignedbb, list, predicate);
+                }
+            }
+        }
+
+        return list;
+    }
+    // Tuinity end - optimise hard collision handling
+
     @Override
     public List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate) {
-        this.getMethodProfiler().c("getEntities");
+        // Tuinity start - add list parameter
         List<Entity> list = Lists.newArrayList();
+        return this.getEntities(entity, axisalignedbb, predicate, list);
+    }
+    public List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate, List<Entity> list) {
+        // Tuinity end - add list parameter
+        this.getMethodProfiler().c("getEntities");
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxX + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
@@ -1206,7 +1312,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
 
                 if (chunk != null) {
-                    chunk.a(oclass, axisalignedbb, list, predicate);
+                    chunk.getEntitiesClass(oclass, null, axisalignedbb, (Predicate)predicate, (List)list); // Tuinity - optimise lookup by entity class
                 }
             }
         }
@@ -1229,13 +1335,113 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
 
                 if (chunk != null) {
-                    chunk.a(oclass, axisalignedbb, list, predicate);
+                    chunk.getEntitiesClass(oclass, null, axisalignedbb, (Predicate)predicate, (List)list); // Tuinity - optimise lookup by entity class
                 }
             }
         }
 
         return list;
     }
+
+    // Tuinity start
+    @Override
+    public <T extends net.minecraft.world.entity.EntityLiving> T b(Class<? extends T> oclass, net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition pathfindertargetcondition, @Nullable net.minecraft.world.entity.EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) {
+        return this.getClosestEntity(oclass, pathfindertargetcondition, entityliving, d0, d1, d2, axisalignedbb);
+    }
+
+    @Override
+    public <T extends net.minecraft.world.entity.EntityLiving> T a(Class<? extends T> oclass, net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition pathfindertargetcondition, @Nullable net.minecraft.world.entity.EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) {
+        return this.getClosestEntity(oclass, pathfindertargetcondition, entityliving, d0, d1, d2, axisalignedbb);
+    }
+
+    public final <T extends net.minecraft.world.entity.EntityLiving> T getClosestEntity(Class<? extends T> clazz,
+                                                             net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition condition,
+                                                             @Nullable net.minecraft.world.entity.EntityLiving source,
+                                                             double x, double y, double z,
+                                                             AxisAlignedBB boundingBox) {
+        org.bukkit.craftbukkit.util.UnsafeList<Entity> entities = com.tuinity.tuinity.util.CachedLists.getTempGetEntitiesList();
+        try {
+            int lowerX = MCUtil.fastFloor((boundingBox.minX - 2.0D)) >> 4;
+            int upperX = MCUtil.fastFloor((boundingBox.maxX + 2.0D)) >> 4;
+            int lowerZ = MCUtil.fastFloor((boundingBox.minZ - 2.0D)) >> 4;
+            int upperZ = MCUtil.fastFloor((boundingBox.maxZ + 2.0D)) >> 4;
+
+            org.bukkit.craftbukkit.util.UnsafeList<Chunk> chunks = com.tuinity.tuinity.util.CachedLists.getTempGetChunksList();
+            try {
+                T closest = null;
+                double closestDistance = Double.MAX_VALUE;
+                net.minecraft.server.level.ChunkProviderServer chunkProvider = ((WorldServer)this).getChunkProvider();
+
+                int centerX = (lowerX + upperX) >> 1;
+                int centerZ = (lowerZ + upperZ) >> 1;
+                // Copied from MCUtil.getSpiralOutChunks
+                Chunk temp;
+                if ((temp = chunkProvider.getChunkAtIfLoadedImmediately(centerX, centerZ)) != null && temp.hasEntitiesMaybe(clazz)) {
+                    chunks.add(temp);
+                }
+                int radius = Math.max((upperX - lowerX + 1) >> 1, (upperZ - lowerZ + 1) >> 1);
+                for (int r = 1; r <= radius; r++) {
+                    int ox = -r;
+                    int oz = r;
+
+                    // Iterates the edge of half of the box; then negates for other half.
+                    while (ox <= r && oz > -r) {
+                        {
+                            int cx = centerX + ox;
+                            int cz = centerZ + oz;
+                            if (cx >= lowerX && cx <= upperX && cz >= lowerZ && cz <= upperZ &&
+                                    (temp = chunkProvider.getChunkAtIfLoadedImmediately(cx, cz)) != null &&
+                                    temp.hasEntitiesMaybe(clazz)) {
+                                chunks.add(temp);
+                            }
+                        }
+                        {
+                            int cx = centerX - ox;
+                            int cz = centerZ - oz;
+                            if (cx >= lowerX && cx <= upperX && cz >= lowerZ && cz <= upperZ &&
+                                    (temp = chunkProvider.getChunkAtIfLoadedImmediately(cx, cz)) != null &&
+                                    temp.hasEntitiesMaybe(clazz)) {
+                                chunks.add(temp);
+                            }
+                        }
+
+                        if (ox < r) {
+                            ox++;
+                        } else {
+                            oz--;
+                        }
+                    }
+                }
+
+                Object[] chunkData = chunks.getRawDataArray();
+                for (int cindex = 0, clen = chunks.size(); cindex < clen; ++cindex) {
+                    final Chunk chunk = (Chunk)chunkData[cindex];
+
+                    chunk.getEntitiesClass(clazz, source, boundingBox, null, entities);
+
+                    Object[] entityData = entities.getRawDataArray();
+                    for (int eindex = 0, entities_len = entities.size(); eindex < entities_len; ++eindex) {
+                        T entity = (T)entityData[eindex];
+                        double distance = entity.getDistanceSquared(x, y, z);
+                        // check distance first, as it's the least expensive
+                        if (distance < closestDistance && condition.test(source, entity)) {
+                            closest = entity;
+                            closestDistance = distance;
+                        }
+                    }
+
+                    entities.setSize(0);
+                }
+
+                return closest;
+            } finally {
+                com.tuinity.tuinity.util.CachedLists.returnTempGetChunksList(chunks);
+            }
+        } finally {
+            com.tuinity.tuinity.util.CachedLists.returnTempGetEntitiesList(entities);
+        }
+    }
+    // Tuinity end
 
     @Nullable
     public abstract Entity getEntity(int i);
