@@ -214,6 +214,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public int ping;
     public boolean viewingCredits;
     private int containerUpdateDelay; // Paper
+    public long loginTime; // Paper
     // Paper start - cancellable death event
     public boolean queueHealthUpdatePacket = false;
     public net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth queuedHealthUpdatePacket;
