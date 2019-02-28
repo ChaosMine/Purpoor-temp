@@ -30,6 +30,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
     private EntityHuman c;
     private final FormattedString[] g;
     private EnumColor color;
+    public java.util.UUID signEditor; // Paper
 
     public TileEntitySign() {
         super(TileEntityTypes.SIGN);
@@ -131,7 +132,10 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
     }
 
     public void a(EntityHuman entityhuman) {
-        this.c = entityhuman;
+        // Paper start
+        //this.c = entityhuman;
+        signEditor = entityhuman != null ? entityhuman.getUniqueID() : null;
+        // Paper end
     }
 
     public EntityHuman f() {
