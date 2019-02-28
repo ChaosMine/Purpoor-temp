@@ -256,6 +256,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     private int E;
     private int receivedMovePackets;
     private int processedMovePackets;
+    private static final int MAX_SIGN_LINE_LENGTH = Integer.getInteger("Paper.maxSignLength", 80);
     private static final long KEEPALIVE_LIMIT = Long.getLong("paper.playerconnection.keepalive", 30) * 1000; // Paper - provide property to set keepalive limit
 
     public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
@@ -2862,7 +2863,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
             List<net.kyori.adventure.text.Component> lines = new java.util.ArrayList<>();
 
             for (int i = 0; i < list.size(); ++i) {
-                lines.add(net.kyori.adventure.text.Component.text(SharedConstants.filterAllowedChatCharacters(list.get(i)))); // Paper - Replaced with anvil color stripping method to stop exploits that allow colored signs to be created.
+                // Paper start - cap line length - modified clients can send longer data than normal
+                String currentLine = list.get(i);
+                if (MAX_SIGN_LINE_LENGTH > 0 && currentLine.length() > MAX_SIGN_LINE_LENGTH) {
+                    // This handles multibyte characters as 1
+                    int offset = currentLine.codePoints().limit(MAX_SIGN_LINE_LENGTH).map(Character::charCount).sum();
+                    if (offset < currentLine.length()) {
+                        list.set(i, currentLine = currentLine.substring(0, offset));
+                    }
+                }
+                // Paper end
+                lines.add(net.kyori.adventure.text.Component.text(SharedConstants.filterAllowedChatCharacters(currentLine))); // Paper - Replaced with anvil color stripping method to stop exploits that allow colored signs to be created.
             }
             SignChangeEvent event = new SignChangeEvent(org.bukkit.craftbukkit.block.CraftBlock.at(worldserver, blockposition), this.getPlayer(), lines);
             this.server.getPluginManager().callEvent(event);
