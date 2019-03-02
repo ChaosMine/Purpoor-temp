@@ -31,6 +31,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
     private final FormattedString[] g;
     private EnumColor color;
     public java.util.UUID signEditor; // Paper
+    private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns"); // Paper
 
     public TileEntitySign() {
         super(TileEntityTypes.SIGN);
@@ -51,7 +52,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         }
 
         // CraftBukkit start
-        if (Boolean.getBoolean("convertLegacySigns")) {
+        if (CONVERT_LEGACY_SIGNS) { // Paper
             nbttagcompound.setBoolean("Bukkit.isConverted", true);
         }
         // CraftBukkit end
