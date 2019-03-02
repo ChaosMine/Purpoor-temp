@@ -55,6 +55,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutViewDistance;
 import net.minecraft.network.protocol.game.PacketPlayOutWorldBorder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.AdvancementDataPlayer;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ScoreboardServer;
 import net.minecraft.server.level.DemoPlayerInteractManager;
@@ -1016,9 +1017,9 @@ public abstract class PlayerList {
     }
     public boolean isWhitelisted(GameProfile gameprofile, org.bukkit.event.player.PlayerLoginEvent loginEvent) {
         boolean isOp = this.operators.d(gameprofile);
-        boolean isWhitelisted = !this.hasWhitelist || isOp || this.whitelist.d(gameprofile);
+        boolean isWhitelisted = !this.getHasWhitelist() || isOp || this.whitelist.d(gameprofile);
         final com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent event;
-        event = new com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent(MCUtil.toBukkit(gameprofile), this.hasWhitelist, isWhitelisted, isOp, org.spigotmc.SpigotConfig.whitelistMessage);
+        event = new com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent(MCUtil.toBukkit(gameprofile), this.getHasWhitelist(), isWhitelisted, isOp, org.spigotmc.SpigotConfig.whitelistMessage);
         event.callEvent();
         if (!event.isWhitelisted()) {
             if (loginEvent != null) {
