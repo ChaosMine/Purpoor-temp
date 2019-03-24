@@ -1171,7 +1171,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      *
      * @return the scoreboard manager or null if no worlds are loaded.
      */
-    @Nullable
+    @NotNull // Paper
     ScoreboardManager getScoreboardManager();
 
     /**
@@ -1441,7 +1441,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @param clazz the class of the tag entries
      * @return the tag or null
      */
-    @Nullable
+    @UndefinedNullability
     <T extends Keyed> Tag<T> getTag(@NotNull String registry, @NotNull NamespacedKey tag, @NotNull Class<T> clazz);
 
     /**
