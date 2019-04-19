@@ -1,13 +1,21 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.IRegistry;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.level.MobSpawnerData;
 import net.minecraft.world.level.block.entity.TileEntityMobSpawner;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
+// Paper start
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.inventory.ItemStack;
+// Paper end
 
 public class CraftCreatureSpawner extends CraftBlockEntityState<TileEntityMobSpawner> implements CreatureSpawner {
 
@@ -121,4 +129,30 @@ public class CraftCreatureSpawner extends CraftBlockEntityState<TileEntityMobSpa
     public void setSpawnRange(int spawnRange) {
         this.getSnapshot().getSpawner().spawnRange = spawnRange;
     }
+
+    // Paper start
+    @Override
+    public boolean isActivated() {
+        return this.getSnapshot().getSpawner().isActivated();
+    }
+
+    @Override
+    public void resetTimer() {
+        this.getSnapshot().getSpawner().resetTimer();
+    }
+
+    @Override
+    public void setSpawnedItem(ItemStack itemStack) {
+        Preconditions.checkArgument(itemStack != null && !itemStack.getType().isAir(), "spawners cannot spawn air");
+        net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
+        NBTTagCompound compound = new NBTTagCompound();
+        NBTTagCompound entity = new NBTTagCompound();
+        entity.setString("id", IRegistry.ENTITY_TYPE.getKey(EntityTypes.ITEM).toString());
+        entity.set("Item", item.save(new NBTTagCompound()));
+        compound.set("Entity", entity);
+        compound.setInt("Weight", this.getSnapshotNBT().hasKeyOfType("Weight", CraftMagicNumbers.NBT.TAG_ANY_NUMBER) ? this.getSnapshotNBT().getInt("Weight") : 1);
+        this.getSnapshot().getSpawner().setSpawnData(new MobSpawnerData(compound));
+        this.getSnapshot().getSpawner().mobs.clear();
+    }
+    // Paper end
 }
