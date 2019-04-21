@@ -1609,5 +1609,12 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      */
     @NotNull
     com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
+
+    /**
+     * Get the current internal server tick
+     *
+     * @return Current tick
+     */
+    int getCurrentTick();
     // Paper end
 }
