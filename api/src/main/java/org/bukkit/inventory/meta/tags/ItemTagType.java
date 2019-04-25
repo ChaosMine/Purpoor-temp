@@ -1,5 +1,6 @@
 package org.bukkit.inventory.meta.tags;
 
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,7 +43,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the primary object type that is stored in the given tag
  * @param <Z> the retrieved object type when applying this item tag type
+ *
+ * @deprecated please use {@link PersistentDataType} as this part of the api is being replaced
  */
+@Deprecated
 public interface ItemTagType<T, Z> {
 
     /*
