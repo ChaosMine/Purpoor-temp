@@ -172,7 +172,13 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
 
             entitycow.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
             entitycow.setHealth(this.getHealth());
-            entitycow.aA = this.aA;
+            // Purpur start - correctly copy rotation
+            entitycow.copyPositionRotation(this);
+            entitycow.setRenderYawOffset(this.getRenderYawOffset());
+            entitycow.setHeadRotation(this.getHeadRotation());
+            entitycow.lastYaw = this.lastYaw;
+            entitycow.lastPitch = this.lastPitch;
+            // Purpur end
             if (this.hasCustomName()) {
                 entitycow.setCustomName(this.getCustomName());
                 entitycow.setCustomNameVisible(this.getCustomNameVisible());
