@@ -209,5 +209,7 @@ public interface VanillaGoal<T extends Mob> extends Goal<T> {
     // Purpur start
     GoalKey<Phantom> FIND_CRYSTAL_GOAL = GoalKey.of(Phantom.class, NamespacedKey.minecraft("find_crystal_goal"));
     GoalKey<Phantom> ORBIT_CRYSTAL_GOAL = GoalKey.of(Phantom.class, NamespacedKey.minecraft("orbit_crystal_goal"));
+    GoalKey<Mob> HAS_RIDER = GoalKey.of(Mob.class, NamespacedKey.minecraft("has_rider"));
+    GoalKey<AbstractHorse> HORSE_HAS_RIDER = GoalKey.of(AbstractHorse.class, NamespacedKey.minecraft("horse_has_rider"));
     // Purpur end
 }

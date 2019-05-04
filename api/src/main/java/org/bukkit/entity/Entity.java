@@ -704,4 +704,35 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      */
     public boolean isTicking();
     // Paper end
+
+    // Purpur start
+    /**
+     * Get the riding player
+     *
+     * @return Riding player
+     */
+    @Nullable
+    Player getRider();
+
+    /**
+     * Check if entity is being ridden
+     *
+     * @return True if being ridden
+     */
+    boolean hasRider();
+
+    /**
+     * Check if entity is ridable
+     *
+     * @return True if ridable
+     */
+    boolean isRidable();
+
+    /**
+     * Check if entity is ridable in water
+     *
+     * @return True if ridable in water
+     */
+    boolean isRidableInWater();
+    // Purpur end
 }
