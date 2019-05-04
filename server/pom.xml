@@ -39,8 +39,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.tuinity</groupId>
-            <artifactId>tuinity-api</artifactId>
+            <!-- Purpur start - our "upstream" is Paper (not Tuinity), so this is necessary for DependencyLoading.kt to work properly -->
+            <groupId>net.pl3x.purpur</groupId>
+            <artifactId>purpur-api</artifactId>
+            <!-- Purpur end -->
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -194,6 +196,14 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <!-- Purpur - Snapshots -->
+        <repository>
+            <id>purpur-snapshots</id>
+            <url>https://repo.pl3x.net/</url>
+        </repository>
+    </repositories>
 
     <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
     <build>
@@ -400,8 +410,15 @@
                     <dependency>
                         <groupId>org.eclipse.jdt</groupId>
                         <artifactId>ecj</artifactId>
-                        <version>3.24.0</version>
+                        <!-- Purpur start -->
+                        <version>3.25.0</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-stdlib</artifactId>
+                        <version>1.4.33-SNAPSHOT</version>
+                    </dependency>
+                    <!-- Purpur end -->
                 </dependencies>
             </plugin>
             <plugin>

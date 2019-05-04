@@ -275,11 +275,12 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
             DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
             // Spigot start
-            if (org.spigotmc.SpigotConfig.bungee) {
-                DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
+            if (com.destroystokyo.paper.PaperConfig.isProxyOnlineMode()) { // Purpur
+                DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord or Velocity, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose."); // Purpur
                 DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
             } else {
                 DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
+                DedicatedServer.LOGGER.warn("You will not be offered any support as long as the server allows offline-mode players to join."); // Purpur
             }
             // Spigot end
             DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
