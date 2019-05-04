@@ -175,7 +175,7 @@ public abstract class EntityLiving extends Entity {
     public int maxNoDamageTicks;
     public final float ay;
     public final float az;
-    public float aA;
+    public float aA; public float getRenderYawOffset() { return this.aA; } public void setRenderYawOffset(float f) { this.aA = f; } // Purpur - OBFHELPER
     public float aB;
     public float aC;
     public float aD;

@@ -132,6 +132,11 @@ public class PurpurWorldConfig {
         chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);
     }
 
+    public int cowFeedMushrooms = 0;
+    private void cowSettings() {
+        cowFeedMushrooms = getInt("mobs.cow.feed-mushrooms-for-mooshroom", cowFeedMushrooms);
+    }
+
     public double creeperChargedChance = 0.0D;
     private void creeperSettings() {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);

@@ -2925,6 +2925,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.invulnerable = flag;
     }
 
+    public void copyPositionRotation(Entity entity) { this.u(entity); } // Purpur - OBFHELPER
     public void u(Entity entity) {
         this.setPositionRotation(entity.locX(), entity.locY(), entity.locZ(), entity.yaw, entity.pitch);
     }
