@@ -160,6 +160,14 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
             }
 
             return EnumInteractionResult.a(this.world.isClientSide);
+        // Purpur start
+        } else if (world.purpurConfig.snowGolemPutPumpkinBack && !hasPumpkin() && itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem()) {
+            setHasPumpkin(true);
+            if (!entityhuman.abilities.canInstantlyBuild) {
+                itemstack.subtract(1);
+            }
+            return EnumInteractionResult.SUCCESS;
+        // Purpur end
         } else {
             return EnumInteractionResult.PASS;
         }
@@ -170,6 +178,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
         this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_SNOW_GOLEM_SHEAR, soundcategory, 1.0F, 1.0F);
         if (!this.world.s_()) {
             this.setHasPumpkin(false);
+            if (world.purpurConfig.snowGolemDropsPumpkin) // Purpur
             this.a(new ItemStack(Items.dj), 1.7F);
         }
 

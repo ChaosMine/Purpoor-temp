@@ -208,6 +208,13 @@ public class PurpurWorldConfig {
         rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
     }
 
+    public boolean snowGolemDropsPumpkin = true;
+    public boolean snowGolemPutPumpkinBack = false;
+    private void snowGolemSettings() {
+        snowGolemDropsPumpkin = getBoolean("mobs.snow_golem.drop-pumpkin-when-sheared", snowGolemDropsPumpkin);
+        snowGolemPutPumpkinBack = getBoolean("mobs.snow_golem.pumpkin-can-be-added-back", snowGolemPutPumpkinBack);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     private void villagerSettings() {
