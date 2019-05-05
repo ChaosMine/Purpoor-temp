@@ -873,4 +873,20 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      */
     void setHurtDirection(float hurtDirection);
     // Paper end
+
+    // Purpur start
+    /**
+     * Gets the distance (in blocks) this entity can safely fall without taking damage
+     *
+     * @return Safe fall distance
+     */
+    float getSafeFallDistance();
+
+    /**
+     * Set the distance (in blocks) this entity can safely fall without taking damage
+     *
+     * @param safeFallDistance Safe fall distance
+     */
+    void setSafeFallDistance(float safeFallDistance);
+    // Purpur end
 }
