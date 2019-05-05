@@ -227,6 +227,7 @@ public abstract class EntityLiving extends Entity {
     // CraftBukkit start
     public int expToDrop;
     public int maxAirTicks = 300;
+    public float safeFallDistance = 3.0F; // Purpur
     public boolean forceDrops;
     public ArrayList<org.bukkit.inventory.ItemStack> drops = new ArrayList<org.bukkit.inventory.ItemStack>();
     public final org.bukkit.craftbukkit.attribute.CraftAttributeMap craftAttributes;
@@ -321,8 +322,8 @@ public abstract class EntityLiving extends Entity {
             this.cR();
         }
 
-        if (!this.world.isClientSide && this.fallDistance > 3.0F && flag) {
-            float f = (float) MathHelper.f(this.fallDistance - 3.0F);
+        if (!this.world.isClientSide && this.fallDistance > this.safeFallDistance && flag) { // Purpur
+            float f = (float) MathHelper.f(this.fallDistance - this.safeFallDistance); // Purpur
 
             if (!iblockdata.isAir()) {
                 double d1 = Math.min((double) (0.2F + f / 15.0F), 2.5D);
@@ -1787,7 +1788,7 @@ public abstract class EntityLiving extends Entity {
         MobEffect mobeffect = this.getEffect(MobEffects.JUMP);
         float f2 = mobeffect == null ? 0.0F : (float) (mobeffect.getAmplifier() + 1);
 
-        return MathHelper.f((f - 3.0F - f2) * f1);
+        return MathHelper.f((f - this.safeFallDistance - f2) * f1); // Purpur
     }
 
     protected void playBlockStepSound() {

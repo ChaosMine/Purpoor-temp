@@ -272,7 +272,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
 
     @Override
     protected int e(float f, float f1) {
-        return MathHelper.f((f * 0.5F - 3.0F) * f1);
+        return MathHelper.f((f * 0.5F - this.safeFallDistance) * f1); // Purpur
     }
 
     protected int getChestSlots() {

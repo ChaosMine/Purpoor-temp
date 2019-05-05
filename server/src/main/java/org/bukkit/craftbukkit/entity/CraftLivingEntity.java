@@ -875,4 +875,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         throw new IllegalArgumentException(entityCategory + " is an unrecognized entity category");
     }
     // Paper end
+
+    // Purpur start
+    @Override
+    public float getSafeFallDistance() {
+        return getHandle().safeFallDistance;
+    }
+
+    @Override
+    public void setSafeFallDistance(float safeFallDistance) {
+        getHandle().safeFallDistance = safeFallDistance;
+    }
+    // Purpur end
 }

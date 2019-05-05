@@ -13,6 +13,7 @@ public class EntityGiantZombie extends EntityMonster {
 
     public EntityGiantZombie(EntityTypes<? extends EntityGiantZombie> entitytypes, World world) {
         super(entitytypes, world);
+        this.safeFallDistance = 10.0F; // Purpur
     }
 
     @Override
