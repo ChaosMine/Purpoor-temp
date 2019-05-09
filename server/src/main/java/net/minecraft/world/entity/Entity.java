@@ -2284,8 +2284,8 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.a(new ItemStack(imaterial), (float) i);
     }
 
-    @Nullable
-    public EntityItem a(ItemStack itemstack) {
+    @Nullable public EntityItem dropItem(ItemStack itemstack) { return this.a(itemstack); } // Purpur - OBFHELPER
+    @Nullable public EntityItem a(ItemStack itemstack) {
         return this.a(itemstack, 0.0F);
     }
 

@@ -395,6 +395,15 @@ public class PurpurWorldConfig {
         ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
     }
 
+    public double phantomAttackedByCrystalRadius = 0.0D;
+    public float phantomAttackedByCrystalDamage = 1.0F;
+    public double phantomOrbitCrystalRadius = 0.0D;
+    private void phantomSettings() {
+        phantomAttackedByCrystalRadius = getDouble("mobs.phantom.attacked-by-crystal-range", phantomAttackedByCrystalRadius);
+        phantomAttackedByCrystalDamage = (float) getDouble("mobs.phantom.attacked-by-crystal-damage", phantomAttackedByCrystalDamage);
+        phantomOrbitCrystalRadius = getDouble("mobs.phantom.orbit-crystal-radius", phantomOrbitCrystalRadius);
+    }
+
     public boolean pigGiveSaddleBack = false;
     private void pigSettings() {
         pigGiveSaddleBack = getBoolean("mobs.pig.give-saddle-back", pigGiveSaddleBack);

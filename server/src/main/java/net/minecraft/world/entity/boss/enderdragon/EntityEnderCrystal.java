@@ -14,6 +14,7 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.monster.EntityPhantom;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
@@ -31,6 +32,12 @@ public class EntityEnderCrystal extends Entity {
     private static final DataWatcherObject<Boolean> d = DataWatcher.a(EntityEnderCrystal.class, DataWatcherRegistry.i);
     public int b;
     public boolean generatedByDragonFight = false; // Paper - Fix invulnerable end crystals
+    // Purpur start
+    private EntityPhantom targetPhantom;
+    private int phantomBeamTicks = 0;
+    private int phantomDamageCooldown = 0;
+    private int idleCooldown = 0;
+    // Purpur end
 
     public EntityEnderCrystal(EntityTypes<? extends EntityEnderCrystal> entitytypes, World world) {
         super(entitytypes, world);
@@ -80,7 +87,50 @@ public class EntityEnderCrystal extends Entity {
             // Paper end
         }
 
+        // Purpur start
+        if (world.purpurConfig.phantomAttackedByCrystalRadius <= 0 || --idleCooldown > 0) {
+            return; // on cooldown
+        }
+
+        if (targetPhantom == null) {
+            for (EntityPhantom phantom : world.getEntitiesInAABB(EntityPhantom.class, getBoundingBox().grow(world.purpurConfig.phantomAttackedByCrystalRadius))) {
+                if (phantom.hasLineOfSight(this)) {
+                    attackPhantom(phantom);
+                    break;
+                }
+            }
+        } else {
+            setBeamTarget(new BlockPosition(targetPhantom).add(0, -2, 0));
+            if (--phantomBeamTicks > 0 && targetPhantom.isAlive()) {
+                phantomDamageCooldown--;
+                if (targetPhantom.hasLineOfSight(this)) {
+                    if (phantomDamageCooldown <= 0) {
+                        phantomDamageCooldown = 20;
+                        targetPhantom.damageEntity(DamageSource.indirectMagic(this, this), world.purpurConfig.phantomAttackedByCrystalDamage);
+                    }
+                } else {
+                    forgetPhantom(); // no longer in sight
+                }
+            } else {
+                forgetPhantom(); // attacked long enough
+            }
+        }
     }
+
+    private void attackPhantom(EntityPhantom phantom) {
+        phantomDamageCooldown = 0;
+        phantomBeamTicks = 60;
+        targetPhantom = phantom;
+    }
+
+    private void forgetPhantom() {
+        targetPhantom = null;
+        setBeamTarget(null);
+        phantomBeamTicks = 0;
+        phantomDamageCooldown = 0;
+        idleCooldown = 60;
+    }
+    // Purpur end
 
     @Override
     protected void saveData(NBTTagCompound nbttagcompound) {
