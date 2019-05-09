@@ -212,6 +212,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             return false;
         }
         com.destroystokyo.paper.PaperConfig.registerCommands();
+        // Purpur start
+        try {
+            net.pl3x.purpur.PurpurConfig.init((java.io.File) options.valueOf("purpur-settings"));
+        } catch (Exception e) {
+            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
+            return false;
+        }
+        net.pl3x.purpur.PurpurConfig.registerCommands();
+        // Purpur end
         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
         // Paper end

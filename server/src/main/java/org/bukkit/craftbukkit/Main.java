@@ -154,6 +154,14 @@ public class Main {
                         .describedAs("Yml file");
                 /* Conctete End - Server Config */
 
+                // Purpur Start
+                acceptsAll(asList("purpur", "purpur-settings"), "File for purpur settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("purpur.yml"))
+                        .describedAs("Yml file");
+                // Purpur end
+
                 // Paper start
                 acceptsAll(asList("server-name"), "Name of the server")
                         .withRequiredArg()

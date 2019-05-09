@@ -118,6 +118,11 @@ public class PaperConfig {
             }
         }
 
+        // Purpur start - public save method for config migration
+        saveConfig();
+    }
+    public static void saveConfig() {
+        // Purpur end
         try {
             config.save(CONFIG_FILE);
         } catch (IOException ex) {

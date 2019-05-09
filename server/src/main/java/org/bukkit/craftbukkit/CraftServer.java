@@ -881,6 +881,7 @@ public final class CraftServer implements Server {
         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
         com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
         com.tuinity.tuinity.config.TuinityConfig.init((File) console.options.valueOf("tuinity-settings")); // Tuinity - Server Config
+        net.pl3x.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // Purpur
         for (WorldServer world : console.getWorlds()) {
             world.worldDataServer.setDifficulty(config.difficulty);
             world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
@@ -916,6 +917,7 @@ public final class CraftServer implements Server {
             world.spigotConfig.init(); // Spigot
             world.paperConfig.init(); // Paper
             world.tuinityConfig.init(); // Tuinity - Server Config
+            world.purpurConfig.init(); // Purpur
         }
 
         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
@@ -934,6 +936,7 @@ public final class CraftServer implements Server {
         reloadData();
         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
         com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
+        net.pl3x.purpur.PurpurConfig.registerCommands(); // Purpur
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
         ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
 
@@ -2384,6 +2387,18 @@ public final class CraftServer implements Server {
             return com.tuinity.tuinity.config.TuinityConfig.config;
         }
         // Tuinity end - add config to timings report
+
+        // Purpur start
+        @Override
+        public YamlConfiguration getPurpurConfig() {
+            return net.pl3x.purpur.PurpurConfig.config;
+        }
+
+        @Override
+        public java.util.Properties getServerProperties() {
+            return getProperties().properties;
+        }
+        // Purpur end
 
         @Override
         public void restart() {
