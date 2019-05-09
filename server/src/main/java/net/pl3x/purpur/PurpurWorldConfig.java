@@ -1,6 +1,12 @@
 package net.pl3x.purpur;
 
+import net.minecraft.core.IRegistry;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.MinecraftKey;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.ArrayList;
 import java.util.List;
 import static net.pl3x.purpur.PurpurConfig.log;
 
@@ -73,6 +79,29 @@ public class PurpurWorldConfig {
     private void playerInvulnerabilities() {
         playerSpawnInvulnerableTicks = getInt("gameplay-mechanics.player.spawn-invulnerable-ticks", playerSpawnInvulnerableTicks);
         playerInvulnerableWhileAcceptingResourcePack = getBoolean("gameplay-mechanics.player.invulnerable-while-accepting-resource-pack", playerInvulnerableWhileAcceptingResourcePack);
+    }
+
+    public boolean silkTouchEnabled = false;
+    public String silkTouchSpawnerName = "Spawner";
+    public List<String> silkTouchSpawnerLore = new ArrayList<>();
+    public List<Item> silkTouchTools = new ArrayList<>();
+    private void silkTouchSettings() {
+        silkTouchEnabled = getBoolean("gameplay-mechanics.silk-touch.enabled", silkTouchEnabled);
+        silkTouchSpawnerName = getString("gameplay-mechanics.silk-touch.spawner-name", silkTouchSpawnerName);
+        silkTouchSpawnerLore.clear();
+        getList("gameplay-mechanics.silk-touch.spawner-lore", new ArrayList<String>(){{
+            add("Spawns a {mob}");
+        }}).forEach(line -> silkTouchSpawnerLore.add(line.toString()));
+        silkTouchTools.clear();
+        getList("gameplay-mechanics.silk-touch.tools", new ArrayList<String>(){{
+            add("minecraft:iron_pickaxe");
+            add("minecraft:golden_pickaxe");
+            add("minecraft:diamond_pickaxe");
+            add("minecraft:netherite_pickaxe");
+        }}).forEach(key -> {
+            Item item = IRegistry.ITEM.get(new MinecraftKey(key.toString()));
+            if (item != Items.AIR) silkTouchTools.add(item);
+        });
     }
 
     public int villagerBrainTicks = 1;

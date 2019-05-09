@@ -81,6 +81,7 @@ public final class PaperAdventure {
         })
         .build();
     public static final LegacyComponentSerializer LEGACY_SECTION_UXRC = LegacyComponentSerializer.builder().flattener(FLATTENER).hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+    public static final LegacyComponentSerializer LEGACY_AMPERSAND = LegacyComponentSerializer.builder().character(LegacyComponentSerializer.AMPERSAND_CHAR).hexColors().build(); // Purpur
     public static final PlainComponentSerializer PLAIN = PlainComponentSerializer.builder().flattener(FLATTENER).build();
     public static final GsonComponentSerializer GSON = GsonComponentSerializer.builder()
         .legacyHoverEventSerializer(NBTLegacyHoverEventSerializer.INSTANCE)

@@ -2,6 +2,7 @@ package net.minecraft.world.item;
 
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.ItemSpawner;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumItemSlot;
@@ -193,7 +194,7 @@ public class Items {
     public static final Item ct = a(Blocks.PURPUR_BLOCK, CreativeModeTab.b);
     public static final Item cu = a(Blocks.PURPUR_PILLAR, CreativeModeTab.b);
     public static final Item cv = a(Blocks.PURPUR_STAIRS, CreativeModeTab.b);
-    public static final Item cw = a(Blocks.SPAWNER);
+    public static final Item cw = a(Blocks.SPAWNER, new ItemSpawner(Blocks.SPAWNER, new Item.Info().a(EnumItemRarity.EPIC))); // Purpur
     public static final Item cx = a(Blocks.OAK_STAIRS, CreativeModeTab.b);
     public static final Item cy = a(Blocks.CHEST, CreativeModeTab.c);
     public static final Item cz = a(Blocks.DIAMOND_ORE, CreativeModeTab.b);
