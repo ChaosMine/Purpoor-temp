@@ -445,7 +445,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
         this.networkManager.getClass();
         // CraftBukkit - Don't wait
-        minecraftserver.postToMainThread(networkmanager::handleDisconnection);
+        minecraftserver.scheduleOnMain(networkmanager::handleDisconnection); // Paper
     }
 
     private <T> void a(T t0, Consumer<T> consumer, BiFunction<ITextFilter, T, CompletableFuture<Optional<T>>> bifunction) {
