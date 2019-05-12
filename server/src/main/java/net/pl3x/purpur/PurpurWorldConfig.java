@@ -113,6 +113,28 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public float giantStepHeight = 2.0F;
+    public float giantJumpHeight = 1.0F;
+    public double giantMovementSpeed = 0.5D;
+    public double giantAttackDamage = 50.0D;
+    public boolean giantHaveAI = false;
+    public boolean giantHaveHostileAI = false;
+    public double giantMaxHealth = 100.0D;
+    private void giantSettings() {
+        giantStepHeight = (float) getDouble("mobs.giant.step-height", giantStepHeight);
+        giantJumpHeight = (float) getDouble("mobs.giant.jump-height", giantJumpHeight);
+        giantMovementSpeed = getDouble("mobs.giant.movement-speed", giantMovementSpeed);
+        giantAttackDamage = getDouble("mobs.giant.attack-damage", giantAttackDamage);
+        giantHaveAI = getBoolean("mobs.giant.have-ai", giantHaveAI);
+        giantHaveHostileAI = getBoolean("mobs.giant.have-hostile-ai", giantHaveHostileAI);
+        if (PurpurConfig.version < 8) {
+            double oldValue = getDouble("mobs.giant.max-health", giantMaxHealth);
+            set("mobs.giant.attributes.max-health", oldValue);
+            set("mobs.giant.max-health", null);
+        }
+        giantMaxHealth = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     private void villagerSettings() {

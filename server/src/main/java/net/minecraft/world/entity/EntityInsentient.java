@@ -1021,6 +1021,7 @@ public abstract class EntityInsentient extends EntityLiving {
         return f;
     }
 
+    protected void setEquipmentBasedOnDifficulty(DifficultyDamageScaler difficultydamagescaler) { a(difficultydamagescaler); } // Purpur - OBFHELPER
     protected void a(DifficultyDamageScaler difficultydamagescaler) {
         if (this.random.nextFloat() < 0.15F * difficultydamagescaler.d()) {
             int i = this.random.nextInt(2);
@@ -1128,6 +1129,7 @@ public abstract class EntityInsentient extends EntityLiving {
         }
     }
 
+    protected void setEnchantmentBasedOnDifficulty(DifficultyDamageScaler difficultydamagescaler) { b(difficultydamagescaler); } // Purpur - OBFHELPER
     protected void b(DifficultyDamageScaler difficultydamagescaler) {
         float f = difficultydamagescaler.d();
 

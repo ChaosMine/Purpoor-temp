@@ -260,6 +260,7 @@ public abstract class EntityLiving extends Entity {
         this.activeItem = ItemStack.b;
         this.by = Optional.empty();
         this.attributeMap = new AttributeMapBase(AttributeDefaults.a(entitytypes));
+        this.initAttributes(); // Purpur
         this.craftAttributes = new CraftAttributeMap(attributeMap); // CraftBukkit
         // CraftBukkit - setHealth(getMaxHealth()) inlined and simplified to skip the instanceof check for EntityPlayer, as getBukkitEntity() is not initialized in constructor
         this.datawatcher.set(EntityLiving.HEALTH, (float) this.getAttributeInstance(GenericAttributes.MAX_HEALTH).getValue());
@@ -274,6 +275,8 @@ public abstract class EntityLiving extends Entity {
 
         this.bg = this.a(new Dynamic(dynamicopsnbt, dynamicopsnbt.createMap((Map) ImmutableMap.of(dynamicopsnbt.createString("memories"), dynamicopsnbt.emptyMap()))));
     }
+
+    protected void initAttributes() {} // Purpur
 
     public BehaviorController<?> getBehaviorController() {
         return this.bg;
@@ -2273,7 +2276,7 @@ public abstract class EntityLiving extends Entity {
         this.enderTeleportTo(vec3d.x, vec3d.y, vec3d.z);
     }
 
-    protected float dJ() {
+    protected float dJ() { return getJumpHeight(); } public float getJumpHeight() { // Purpur - OBFHELPER
         return 0.42F * this.getBlockJumpFactor();
     }
 

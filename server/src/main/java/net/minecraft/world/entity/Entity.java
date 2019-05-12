@@ -228,7 +228,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public double D;
     public double E;
     public double F;
-    public float G; public final float getStepHeight() { return this.G; } // Tuinity - OBFHELPER
+    public float G; public final float getStepHeight() { return this.G; } public void setStepHeight(float stepHeight) { this.G = stepHeight; } // Tuinity - OBFHELPER // Purpur - OBFHELPER
     public boolean noclip;
     public float I;
     protected final Random random;
