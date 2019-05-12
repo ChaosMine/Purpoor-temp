@@ -188,6 +188,11 @@ public class PurpurWorldConfig {
         ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
     }
 
+    public boolean pigGiveSaddleBack = false;
+    private void pigSettings() {
+        pigGiveSaddleBack = getBoolean("mobs.pig.give-saddle-back", pigGiveSaddleBack);
+    }
+
     public String polarBearBreedableItemString = "";
     public Item polarBearBreedableItem = null;
     private void polarBearSettings() {
