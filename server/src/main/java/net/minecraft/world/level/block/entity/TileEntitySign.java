@@ -133,6 +133,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         return this.isEditable;
     }
 
+    public void setEditor(EntityHuman entityhuman) { a(entityhuman); } // Purpur - OBFHELPER
     public void a(EntityHuman entityhuman) {
         // Paper start
         //this.c = entityhuman;

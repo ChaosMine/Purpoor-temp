@@ -109,6 +109,11 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean signRightClickEdit = false;
+    private void signSettings() {
+        signRightClickEdit = getBoolean("blocks.sign.right-click-edit", signRightClickEdit);
+    }
+
     public boolean turtleEggsBreakFromExpOrbs = true;
     public boolean turtleEggsBreakFromItems = true;
     public boolean turtleEggsBreakFromMinecarts = true;

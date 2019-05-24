@@ -6,6 +6,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemDye;
+import net.minecraft.world.item.ItemSign;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
@@ -79,6 +80,17 @@ public abstract class BlockSign extends BlockTileEntity implements IBlockWaterlo
                         itemstack.subtract(1);
                     }
                 }
+
+                // Purpur start - right click to open sign editor
+                if (world.purpurConfig.signRightClickEdit && itemstack.getItem() instanceof ItemSign &&
+                        !entityhuman.isSneaking() && entityhuman.abilities.mayBuild &&
+                        entityhuman.getBukkitEntity().hasPermission("purpur.sign.edit")) {
+                    tileentitysign.isEditable = true;
+                    tileentitysign.a(entityhuman);
+                    entityhuman.openSign(tileentitysign);
+                    return EnumInteractionResult.SUCCESS;
+                }
+                // Purpur end
 
                 return tileentitysign.b(entityhuman) ? EnumInteractionResult.SUCCESS : EnumInteractionResult.PASS;
             } else {
