@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerChest;
+import net.minecraft.world.inventory.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BlockBarrel;
 import net.minecraft.world.level.block.Blocks;
@@ -68,7 +69,7 @@ public class TileEntityBarrel extends TileEntityLootable {
 
     private TileEntityBarrel(TileEntityTypes<?> tileentitytypes) {
         super(tileentitytypes);
-        this.items = NonNullList.a(27, ItemStack.b);
+        this.items = NonNullList.a(net.pl3x.purpur.PurpurConfig.barrelSixRows ? 54 : 27, ItemStack.b); // Purpur
     }
 
     public TileEntityBarrel() {
@@ -97,7 +98,7 @@ public class TileEntityBarrel extends TileEntityLootable {
 
     @Override
     public int getSize() {
-        return 27;
+        return net.pl3x.purpur.PurpurConfig.barrelSixRows ? 54 : 27; // Purpur
     }
 
     @Override
@@ -117,6 +118,7 @@ public class TileEntityBarrel extends TileEntityLootable {
 
     @Override
     protected Container createContainer(int i, PlayerInventory playerinventory) {
+        if (net.pl3x.purpur.PurpurConfig.barrelSixRows) return new ContainerChest(Containers.GENERIC_9X6, i, playerinventory, this, 6); // Purpur
         return ContainerChest.a(i, playerinventory, this);
     }
 

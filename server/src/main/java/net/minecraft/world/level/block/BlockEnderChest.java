@@ -11,6 +11,7 @@ import net.minecraft.world.TileInventory;
 import net.minecraft.world.entity.monster.piglin.PiglinAI;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.ContainerChest;
+import net.minecraft.world.inventory.Containers;
 import net.minecraft.world.inventory.InventoryEnderChest;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.level.GeneratorAccess;
@@ -81,6 +82,27 @@ public class BlockEnderChest extends BlockChestAbstract<TileEntityEnderChest> im
 
                 inventoryenderchest.a(tileentityenderchest);
                 entityhuman.openContainer(new TileInventory((i, playerinventory, entityhuman1) -> {
+                    // Purpur start
+                    if (net.pl3x.purpur.PurpurConfig.enderChestSixRows) {
+                        if (net.pl3x.purpur.PurpurConfig.enderChestPermissionRows) {
+                            org.bukkit.craftbukkit.entity.CraftHumanEntity player = entityhuman.getBukkitEntity();
+                            if (player.hasPermission("purpur.enderchest.rows.six")) {
+                                return new ContainerChest(Containers.GENERIC_9X6, i, playerinventory, inventoryenderchest, 6);
+                            } else if (player.hasPermission("purpur.enderchest.rows.five")) {
+                                return new ContainerChest(Containers.GENERIC_9X5, i, playerinventory, inventoryenderchest, 5);
+                            } else if (player.hasPermission("purpur.enderchest.rows.four")) {
+                                return new ContainerChest(Containers.GENERIC_9X4, i, playerinventory, inventoryenderchest, 4);
+                            } else if (player.hasPermission("purpur.enderchest.rows.three")) {
+                                return new ContainerChest(Containers.GENERIC_9X3, i, playerinventory, inventoryenderchest, 3);
+                            } else if (player.hasPermission("purpur.enderchest.rows.two")) {
+                                return new ContainerChest(Containers.GENERIC_9X2, i, playerinventory, inventoryenderchest, 2);
+                            } else if (player.hasPermission("purpur.enderchest.rows.one")) {
+                                return new ContainerChest(Containers.GENERIC_9X1, i, playerinventory, inventoryenderchest, 1);
+                            }
+                        }
+                        return new ContainerChest(Containers.GENERIC_9X6, i, playerinventory, inventoryenderchest, 6);
+                    }
+                    // Purpur end
                     return ContainerChest.a(i, playerinventory, inventoryenderchest);
                 }, BlockEnderChest.e));
                 entityhuman.a(StatisticList.OPEN_ENDERCHEST);

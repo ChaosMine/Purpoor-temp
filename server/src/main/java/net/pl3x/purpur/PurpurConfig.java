@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.inventory.InventoryType;
 
 import java.io.File;
 import java.io.IOException;
@@ -132,5 +133,24 @@ public class PurpurConfig {
     private static void timingsSettings() {
         timingsUrl = getString("settings.timings.url", timingsUrl);
         if (!TimingsManager.hiddenConfigs.contains("server-ip")) TimingsManager.hiddenConfigs.add("server-ip");
+    }
+
+    public static boolean barrelSixRows = false;
+    public static boolean enderChestSixRows = false;
+    public static boolean enderChestPermissionRows = false;
+    private static void blockSettings() {
+        if (version < 3) {
+            boolean oldValue = getBoolean("settings.barrel.packed-barrels", true);
+            set("settings.blocks.barrel.six-rows", oldValue);
+            set("settings.packed-barrels", null);
+            oldValue = getBoolean("settings.large-ender-chests", true);
+            set("settings.blocks.ender_chest.six-rows", oldValue);
+            set("settings.large-ender-chests", null);
+        }
+        barrelSixRows = getBoolean("settings.blocks.barrel.six-rows", barrelSixRows);
+        InventoryType.BARREL.setDefaultSize(barrelSixRows ? 54 : 27);
+        enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
+        InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
+        enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
     }
 }

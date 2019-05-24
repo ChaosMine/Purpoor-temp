@@ -82,7 +82,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public void setContents(ItemStack[] items) {
-        if (getSize() < items.length) {
+        if (false && getSize() < items.length) { // Purpur
             throw new IllegalArgumentException("Invalid inventory size; expected " + getSize() + " or less");
         }
 

@@ -212,8 +212,10 @@ public class CraftContainer extends Container {
             case PLAYER:
             case CHEST:
             case ENDER_CHEST:
+                delegate = new ContainerChest(net.pl3x.purpur.PurpurConfig.enderChestSixRows ? Containers.GENERIC_9X6 : Containers.GENERIC_9X3, windowId, bottom, top, top.getSize() / 9); // Purpur
+                break; // Purpur
             case BARREL:
-                delegate = new ContainerChest(Containers.GENERIC_9X3, windowId, bottom, top, top.getSize() / 9);
+                delegate = new ContainerChest(net.pl3x.purpur.PurpurConfig.barrelSixRows ? Containers.GENERIC_9X6 : Containers.GENERIC_9X3, windowId, bottom, top, top.getSize() / 9); // Purpur
                 break;
             case DISPENSER:
             case DROPPER:
