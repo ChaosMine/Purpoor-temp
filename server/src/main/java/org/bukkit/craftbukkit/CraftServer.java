@@ -2554,4 +2554,11 @@ public final class CraftServer implements Server {
     }
 
     // Paper end
+
+    // Purpur start
+    @Override
+    public String getServerName() {
+        return getProperties().serverName;
+    }
+    // Purpur end
 }
