@@ -1963,4 +1963,15 @@ public final class Bukkit {
     public static Server.Spigot spigot() {
         return server.spigot();
     }
+
+    // Purpur start
+    /**
+     * Get the name of this server
+     * @return the name of the server
+     */
+    @NotNull
+    public static String getServerName() {
+        return server.getServerName();
+    }
+    // Purpur end
 }

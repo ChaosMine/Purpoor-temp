@@ -1736,4 +1736,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     @NotNull
     io.papermc.paper.datapack.DatapackManager getDatapackManager();
     // Paper end
+
+    // Purpur start
+    /**
+     * Get the name of this server
+     * @return the name of the server
+     */
+    @NotNull
+    String getServerName();
+    // Purpur end
 }
