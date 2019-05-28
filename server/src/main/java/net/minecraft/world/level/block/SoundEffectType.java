@@ -54,10 +54,10 @@ public class SoundEffectType {
     public static final SoundEffectType U = new SoundEffectType(1.0F, 1.0F, SoundEffects.BLOCK_GILDED_BLACKSTONE_BREAK, SoundEffects.BLOCK_GILDED_BLACKSTONE_STEP, SoundEffects.BLOCK_GILDED_BLACKSTONE_PLACE, SoundEffects.BLOCK_GILDED_BLACKSTONE_HIT, SoundEffects.BLOCK_GILDED_BLACKSTONE_FALL);
     public final float volume;
     public final float pitch;
-    public final SoundEffect breakSound;
+    public final SoundEffect breakSound; public final SoundEffect getBreakSound() { return this.breakSound; } // Paper - OBFHELPER // PAIL private -> public, rename breakSound
     private final SoundEffect stepSound;
     private final SoundEffect placeSound;
-    public final SoundEffect hitSound;
+    public final SoundEffect hitSound; public final SoundEffect getHitSound() { return this.hitSound; } // Paper - OBFHELPER // PAIL private -> public, rename hitSound
     private final SoundEffect fallSound;
 
     public SoundEffectType(float f, float f1, SoundEffect soundeffect, SoundEffect soundeffect1, SoundEffect soundeffect2, SoundEffect soundeffect3, SoundEffect soundeffect4) {
