@@ -29,6 +29,7 @@ public interface CriterionTrigger<T extends CriterionInstance> {
             this.c = s;
         }
 
+        public T getInstance() { return a(); } // Purpur - OBFHELPER
         public T a() {
             return this.a;
         }

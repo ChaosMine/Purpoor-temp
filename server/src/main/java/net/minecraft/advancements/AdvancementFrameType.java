@@ -4,16 +4,27 @@ import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 
+import org.bukkit.advancement.FrameType; // Purpur
+
 public enum AdvancementFrameType {
 
-    TASK("task", 0, EnumChatFormat.GREEN), CHALLENGE("challenge", 26, EnumChatFormat.DARK_PURPLE), GOAL("goal", 52, EnumChatFormat.GREEN);
+    // Purpur start
+    TASK("task", 0, EnumChatFormat.GREEN, FrameType.TASK),
+    CHALLENGE("challenge", 26, EnumChatFormat.DARK_PURPLE, FrameType.CHALLENGE),
+    GOAL("goal", 52, EnumChatFormat.GREEN, FrameType.GOAL);
+    // Purpur end
 
     private final String d;
     private final int e;
     private final EnumChatFormat f;
     private final IChatBaseComponent g;
 
-    private AdvancementFrameType(String s, int i, EnumChatFormat enumchatformat) {
+    // Purpur start
+    public final FrameType bukkit;
+
+    AdvancementFrameType(String s, int i, EnumChatFormat enumchatformat, FrameType bukkit) {
+        this.bukkit = bukkit;
+        // Purpur end
         this.d = s;
         this.e = i;
         this.f = enumchatformat;

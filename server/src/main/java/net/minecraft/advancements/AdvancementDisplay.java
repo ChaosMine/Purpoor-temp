@@ -25,10 +25,11 @@ public class AdvancementDisplay {
     private final MinecraftKey d;
     private final AdvancementFrameType e;
     private final boolean f;
-    private final boolean g;
-    private final boolean h;
+    private boolean g; // Purpur - un-finalize
+    private boolean h; // Purpur - un-finalize
     private float i;
     private float j;
+    public final org.bukkit.advancement.AdvancementDisplay bukkit = new org.bukkit.craftbukkit.advancement.CraftAdvancementDisplay(this); // Purpur
 
     public AdvancementDisplay(ItemStack itemstack, IChatBaseComponent ichatbasecomponent, IChatBaseComponent ichatbasecomponent1, @Nullable MinecraftKey minecraftkey, AdvancementFrameType advancementframetype, boolean flag, boolean flag1, boolean flag2) {
         this.a = ichatbasecomponent;
@@ -46,10 +47,12 @@ public class AdvancementDisplay {
         this.j = f1;
     }
 
+    public IChatBaseComponent getTitle() { return a(); } // Purpur - OBFHELPER
     public IChatBaseComponent a() {
         return this.a;
     }
 
+    public IChatBaseComponent getDescription() { return b(); } // Purpur - OBFHELPER
     public IChatBaseComponent b() {
         return this.b;
     }
@@ -59,11 +62,14 @@ public class AdvancementDisplay {
         return this.e;
     }
 
+    public final void setShouldAnnounceToChat(boolean announce) { this.g = announce; } // Purpur - OBFHELPER
     public final boolean shouldAnnounceToChat() { return this.i(); } // Paper - OBFHELPER
     public boolean i() {
         return this.g;
     }
 
+    public void setHidden(boolean hidden) { this.h = hidden; } // Purpur - OBFHELPER
+    public boolean isHidden() { return j(); } // Purpur - OBFHELPER
     public boolean j() {
         return this.h;
     }

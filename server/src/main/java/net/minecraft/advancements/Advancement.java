@@ -78,7 +78,7 @@ public class Advancement {
 
     public final @Nullable AdvancementDisplay getAdvancementDisplay() { return this.c(); } // Paper - OBFHELPER
     @Nullable
-    public AdvancementDisplay c() {
+    public AdvancementDisplay c() { return getDisplay(); } public AdvancementDisplay getDisplay() { // Purpur
         return this.display;
     }
 
