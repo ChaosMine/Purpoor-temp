@@ -9,10 +9,12 @@ import com.google.common.collect.Maps;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkProviderServer;
+import net.minecraft.server.level.PlayerChunk;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.server.MCUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -41,7 +43,7 @@ import java.util.stream.Collectors;
 
 public class PaperCommand extends Command {
     private static final String BASE_PERM = "bukkit.command.paper.";
-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version").build();
+    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo").build();
 
     public PaperCommand(String name) {
         super(name);
@@ -68,6 +70,21 @@ public class PaperCommand extends Command {
                     return getListMatchingLast(sender, args, "help", "list");
                 if (args.length == 3)
                     return getListMatchingLast(sender, args, EntityTypes.getEntityNameList().stream().map(MinecraftKey::toString).sorted().toArray(String[]::new));
+                break;
+            case "debug":
+                if (args.length == 2) {
+                    return getListMatchingLast(sender, args, "help", "chunks");
+                }
+                break;
+            case "chunkinfo":
+                List<String> worldNames = new ArrayList<>();
+                worldNames.add("*");
+                for (org.bukkit.World world : Bukkit.getWorlds()) {
+                    worldNames.add(world.getName());
+                }
+                if (args.length == 2) {
+                    return getListMatchingLast(sender, args, worldNames);
+                }
                 break;
         }
         return Collections.emptyList();
@@ -135,6 +152,12 @@ public class PaperCommand extends Command {
             case "reload":
                 doReload(sender);
                 break;
+            case "debug":
+                doDebug(sender, args);
+                break;
+            case "chunkinfo":
+                doChunkInfo(sender, args);
+                break;
             case "ver":
                 if (!testPermission(sender, "version")) break; // "ver" needs a special check because it's an alias. All other commands are checked up before the switch statement (because they are present in the SUBCOMMANDS set)
             case "version":
@@ -150,6 +173,114 @@ public class PaperCommand extends Command {
         }
 
         return true;
+    }
+
+    private void doChunkInfo(CommandSender sender, String[] args) {
+        List<org.bukkit.World> worlds;
+        if (args.length < 2 || args[1].equals("*")) {
+            worlds = Bukkit.getWorlds();
+        } else {
+            worlds = new ArrayList<>(args.length - 1);
+            for (int i = 1; i < args.length; ++i) {
+                org.bukkit.World world = Bukkit.getWorld(args[i]);
+                if (world == null) {
+                    sender.sendMessage(ChatColor.RED + "World '" + args[i] + "' is invalid");
+                    return;
+                }
+                worlds.add(world);
+            }
+        }
+
+        int accumulatedTotal = 0;
+        int accumulatedInactive = 0;
+        int accumulatedBorder = 0;
+        int accumulatedTicking = 0;
+        int accumulatedEntityTicking = 0;
+
+        for (org.bukkit.World bukkitWorld : worlds) {
+            WorldServer world = ((CraftWorld)bukkitWorld).getHandle();
+
+            int total = 0;
+            int inactive = 0;
+            int border = 0;
+            int ticking = 0;
+            int entityTicking = 0;
+
+            for (PlayerChunk chunk : world.getChunkProvider().playerChunkMap.updatingChunks.values()) {
+                if (chunk.getFullChunkIfCached() == null) {
+                    continue;
+                }
+
+                ++total;
+
+                PlayerChunk.State state = PlayerChunk.getChunkState(chunk.getTicketLevel());
+
+                switch (state) {
+                    case INACCESSIBLE:
+                        ++inactive;
+                        continue;
+                    case BORDER:
+                        ++border;
+                        continue;
+                    case TICKING:
+                        ++ticking;
+                        continue;
+                    case ENTITY_TICKING:
+                        ++entityTicking;
+                        continue;
+                }
+            }
+
+            accumulatedTotal += total;
+            accumulatedInactive += inactive;
+            accumulatedBorder += border;
+            accumulatedTicking += ticking;
+            accumulatedEntityTicking += entityTicking;
+
+            sender.sendMessage(ChatColor.BLUE + "Chunks in " + ChatColor.GREEN + bukkitWorld.getName() + ChatColor.DARK_AQUA + ":");
+            sender.sendMessage(ChatColor.BLUE + "Total: " + ChatColor.DARK_AQUA + total + ChatColor.BLUE + " Inactive: " + ChatColor.DARK_AQUA
+                               + inactive + ChatColor.BLUE + " Border: " + ChatColor.DARK_AQUA + border + ChatColor.BLUE + " Ticking: "
+                               + ChatColor.DARK_AQUA + ticking + ChatColor.BLUE + " Entity: " + ChatColor.DARK_AQUA + entityTicking);
+        }
+        if (worlds.size() > 1) {
+            sender.sendMessage(ChatColor.BLUE + "Chunks in " + ChatColor.GREEN + "all listed worlds" + ChatColor.DARK_AQUA + ":");
+            sender.sendMessage(ChatColor.BLUE + "Total: " + ChatColor.DARK_AQUA + accumulatedTotal + ChatColor.BLUE + " Inactive: " + ChatColor.DARK_AQUA
+                               + accumulatedInactive + ChatColor.BLUE + " Border: " + ChatColor.DARK_AQUA + accumulatedBorder + ChatColor.BLUE + " Ticking: "
+                               + ChatColor.DARK_AQUA + accumulatedTicking + ChatColor.BLUE + " Entity: " + ChatColor.DARK_AQUA + accumulatedEntityTicking);
+        }
+    }
+
+    private void doDebug(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Use /paper debug [chunks] help for more information on a specific command");
+            return;
+        }
+
+        String debugType = args[1].toLowerCase(Locale.ENGLISH);
+        switch (debugType) {
+            case "chunks":
+                if (args.length >= 3 && args[2].toLowerCase(Locale.ENGLISH).equals("help")) {
+                    sender.sendMessage(ChatColor.RED + "Use /paper debug chunks to dump loaded chunk information to a file");
+                    break;
+                }
+                File file = new File(new File(new File("."), "debug"),
+                    "chunks-" + DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss").format(LocalDateTime.now()) + ".txt");
+                sender.sendMessage(ChatColor.GREEN + "Writing chunk information dump to " + file.toString());
+                try {
+                    MCUtil.dumpChunks(file);
+                    sender.sendMessage(ChatColor.GREEN + "Successfully written chunk information!");
+                } catch (Throwable thr) {
+                    MinecraftServer.LOGGER.warn("Failed to dump chunk information to file " + file.toString(), thr);
+                    sender.sendMessage(ChatColor.RED + "Failed to dump chunk information, see console");
+                }
+
+                break;
+            case "help":
+                // fall through to default
+            default:
+                sender.sendMessage(ChatColor.RED + "Use /paper debug [chunks] help for more information on a specific command");
+                return;
+        }
     }
 
     /*

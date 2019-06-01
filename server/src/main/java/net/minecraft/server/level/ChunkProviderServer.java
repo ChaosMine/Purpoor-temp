@@ -46,7 +46,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap; // Paper
 
 public class ChunkProviderServer extends IChunkProvider {
 
-    private static final List<ChunkStatus> b = ChunkStatus.a();
+    private static final List<ChunkStatus> b = ChunkStatus.a(); public static final List<ChunkStatus> getPossibleChunkStatuses() { return ChunkProviderServer.b; } // Paper - OBFHELPER
     private final ChunkMapDistance chunkMapDistance;
     public final ChunkGenerator chunkGenerator;
     private final WorldServer world;
