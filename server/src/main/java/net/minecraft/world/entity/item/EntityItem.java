@@ -33,6 +33,7 @@ import net.minecraft.world.phys.Vec3D;
 
 // CraftBukkit start
 import net.minecraft.server.MinecraftServer;
+import org.bukkit.Material; // Paper
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 // CraftBukkit end
@@ -161,7 +162,7 @@ public class EntityItem extends Entity {
                 }
             }
 
-            if (!this.world.isClientSide && this.age >= world.spigotConfig.itemDespawnRate) { // Spigot
+            if (!this.world.isClientSide && this.age >= this.getDespawnRate()) { // Spigot // Paper
                 // CraftBukkit start - fire ItemDespawnEvent
                 if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
                     this.age = 0;
@@ -185,7 +186,7 @@ public class EntityItem extends Entity {
         this.lastTick = MinecraftServer.currentTick;
         // CraftBukkit end
 
-        if (!this.world.isClientSide && this.age >= world.spigotConfig.itemDespawnRate) { // Spigot
+        if (!this.world.isClientSide && this.age >= this.getDespawnRate()) { // Spigot // Paper
             // CraftBukkit start - fire ItemDespawnEvent
             if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
                 this.age = 0;
@@ -535,8 +536,15 @@ public class EntityItem extends Entity {
 
     public void s() {
         this.o();
-        this.age = world.spigotConfig.itemDespawnRate - 1; // Spigot
+        this.age = this.getDespawnRate() - 1; // Spigot // Paper
     }
+
+    // Paper start
+    public int getDespawnRate(){
+        Material material = this.getItemStack().getBukkitStack().getType();
+        return world.paperConfig.altItemDespawnRateMap.getOrDefault(material, world.spigotConfig.itemDespawnRate);
+    }
+    // Paper end
 
     @Override
     public Packet<?> P() {
