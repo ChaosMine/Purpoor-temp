@@ -146,6 +146,7 @@ public class PacketStatusListener implements PacketStatusInListener {
 
             this.networkManager.sendPacket(new PacketStatusOutServerInfo(ping));
             */
+            if (this.minecraftServer.getServerPing().getServerData() == null) return; // Purpur - do not respond to pings before we know the protocol version
             com.destroystokyo.paper.network.StandardPaperServerListPingEventImpl.processRequest(this.minecraftServer, this.networkManager);
             // Paper end
         }
