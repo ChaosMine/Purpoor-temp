@@ -1604,6 +1604,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     @Override
     public void openSign(TileEntitySign tileentitysign) {
+        if (world.purpurConfig.signAllowColors) this.playerConnection.sendPacket(tileentitysign.getTranslatedUpdatePacket()); // Purpur
         tileentitysign.a((EntityHuman) this);
         this.playerConnection.sendPacket(new PacketPlayOutOpenSignEditor(tileentitysign.getPosition()));
     }

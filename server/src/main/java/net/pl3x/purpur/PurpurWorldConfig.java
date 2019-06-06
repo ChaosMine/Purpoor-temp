@@ -109,8 +109,10 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean signAllowColors = false;
     public boolean signRightClickEdit = false;
     private void signSettings() {
+        signAllowColors = getBoolean("blocks.sign.allow-colors", signAllowColors);
         signRightClickEdit = getBoolean("blocks.sign.right-click-edit", signRightClickEdit);
     }
 

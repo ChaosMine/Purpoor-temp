@@ -3087,6 +3087,15 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     }
                 }
                 // Paper end
+                // Purpur start
+                if (worldserver.purpurConfig.signAllowColors) {
+                    final org.bukkit.entity.Player bukkitPlayer = player.getBukkitEntity();
+                    if (bukkitPlayer.hasPermission("purpur.sign.color")) currentLine = currentLine.replaceAll("(?i)&([0-9a-fr])", "\u00a7$1");
+                    if (bukkitPlayer.hasPermission("purpur.sign.style")) currentLine = currentLine.replaceAll("(?i)&([l-or])", "\u00a7$1");
+                    if (bukkitPlayer.hasPermission("purpur.sign.magic")) currentLine = currentLine.replaceAll("(?i)&([kr])", "\u00a7$1");
+                    lines.add(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(currentLine));
+                } else
+                // Purpur end
                 lines.add(net.kyori.adventure.text.Component.text(SharedConstants.filterAllowedChatCharacters(currentLine))); // Paper - Replaced with anvil color stripping method to stop exploits that allow colored signs to be created.
             }
             SignChangeEvent event = new SignChangeEvent(org.bukkit.craftbukkit.block.CraftBlock.at(worldserver, blockposition), this.getPlayer(), lines);

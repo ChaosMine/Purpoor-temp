@@ -1,6 +1,7 @@
 package net.minecraft.world.level.block.entity;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.papermc.paper.adventure.PaperAdventure; // Purpur
 import javax.annotation.Nullable;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICommandListener;
@@ -112,6 +113,18 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         this.lines[i] = ichatbasecomponent;
         this.g[i] = null;
     }
+
+    // Purpur start
+    public PacketPlayOutTileEntityData getTranslatedUpdatePacket() {
+        NBTTagCompound nbt = save(new NBTTagCompound());
+        for (int i = 0; i < 4; ++i) {
+            String line = PaperAdventure.LEGACY_AMPERSAND.serialize(PaperAdventure.asAdventure(lines[i]));
+            nbt.setString("Text" + (i + 1), net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson().serialize(net.kyori.adventure.text.Component.text(line)));
+        }
+        nbt.setString("PurpurEditor", "true");
+        return new PacketPlayOutTileEntityData(position, 9, nbt);
+    }
+    // Purpur end
 
     @Nullable
     @Override
