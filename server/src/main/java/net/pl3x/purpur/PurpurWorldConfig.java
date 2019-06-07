@@ -104,6 +104,15 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean turtleEggsBreakFromExpOrbs = true;
+    public boolean turtleEggsBreakFromItems = true;
+    public boolean turtleEggsBreakFromMinecarts = true;
+    private void turtleEggSettings() {
+        turtleEggsBreakFromExpOrbs = getBoolean("blocks.turtle_egg.break-from-exp-orbs", turtleEggsBreakFromExpOrbs);
+        turtleEggsBreakFromItems = getBoolean("blocks.turtle_egg.break-from-items", turtleEggsBreakFromItems);
+        turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     private void villagerSettings() {

@@ -9,12 +9,15 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ambient.EntityBat;
 import net.minecraft.world.entity.animal.EntityTurtle;
+import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.vehicle.EntityMinecartAbstract;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.level.GameRules;
@@ -189,6 +192,23 @@ public class BlockTurtleEgg extends Block {
     }
 
     private boolean a(World world, Entity entity) {
-        return !(entity instanceof EntityTurtle) && !(entity instanceof EntityBat) ? (!(entity instanceof EntityLiving) ? false : entity instanceof EntityHuman || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) : false;
+        // Purpur start - fix MC-168772
+        if (entity instanceof EntityTurtle) {
+            return false;
+        }
+        if (!world.purpurConfig.turtleEggsBreakFromExpOrbs && entity instanceof EntityExperienceOrb) {
+            return false;
+        }
+        if (!world.purpurConfig.turtleEggsBreakFromItems && entity instanceof EntityItem) {
+            return false;
+        }
+        if (!world.purpurConfig.turtleEggsBreakFromMinecarts && entity instanceof EntityMinecartAbstract) {
+            return false;
+        }
+        if (entity instanceof EntityLiving && !(entity instanceof EntityHuman)) {
+            return world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+        }
+        return true;
+        // Purpur end
     }
 }
