@@ -81,7 +81,7 @@ public class Chunk implements IChunkAccess {
     private TickList<Block> o;
     private TickList<FluidType> p;
     private boolean q;
-    private long lastSaved;
+    public long lastSaved; // Paper
     private volatile boolean s;
     private long inhabitedTime;
     @Nullable
