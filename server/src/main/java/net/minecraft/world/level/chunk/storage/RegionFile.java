@@ -27,6 +27,7 @@ import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTCompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,6 +44,30 @@ public class RegionFile implements AutoCloseable {
     @VisibleForTesting
     protected final RegionFileBitSet freeSectors;
     public final File file; // Paper
+
+    // Paper start - Cache chunk status
+    private final ChunkStatus[] statuses = new ChunkStatus[32 * 32];
+
+    private boolean closed;
+
+    // invoked on write/read
+    public void setStatus(int x, int z, ChunkStatus status) {
+        if (this.closed) {
+            // We've used an invalid region file.
+            throw new IllegalStateException("RegionFile is closed");
+        }
+        this.statuses[getChunkLocation(x, z)] = status;
+    }
+
+    public ChunkStatus getStatusIfCached(int x, int z) {
+        if (this.closed) {
+            // We've used an invalid region file.
+            throw new IllegalStateException("RegionFile is closed");
+        }
+        final int location = getChunkLocation(x, z);
+        return this.statuses[location];
+    }
+    // Paper end
 
     public RegionFile(File file, File file1, boolean flag) throws IOException {
         this(file.toPath(), file1.toPath(), RegionFileCompression.b, flag);
@@ -380,11 +405,13 @@ public class RegionFile implements AutoCloseable {
         return this.getOffset(chunkcoordintpair) != 0;
     }
 
+    private static int getChunkLocation(int x, int z) { return (x & 31) + (z & 31) * 32; } // Paper - OBFHELPER - sort of, mirror of logic below
     private static int g(ChunkCoordIntPair chunkcoordintpair) {
         return chunkcoordintpair.j() + chunkcoordintpair.k() * 32;
     }
 
     public void close() throws IOException {
+        this.closed = true; // Paper
         try {
             this.d();
         } finally {
