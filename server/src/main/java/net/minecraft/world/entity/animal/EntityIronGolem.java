@@ -30,6 +30,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.IEntityAngerable;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalMoveTowardsTarget;
@@ -70,6 +71,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
 
     @Override
     protected void initPathfinder() {
+        if (world.purpurConfig.ironGolemCanSwim) this.goalSelector.a(0, new PathfinderGoalFloat(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 1.0D, true));
         this.goalSelector.a(2, new PathfinderGoalMoveTowardsTarget(this, 0.9D, 32.0F));
         this.goalSelector.a(2, new PathfinderGoalStrollVillage(this, 0.6D, false));

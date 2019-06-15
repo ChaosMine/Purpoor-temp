@@ -154,6 +154,11 @@ public class PurpurWorldConfig {
         illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
     }
 
+    public boolean ironGolemCanSwim = false;
+    private void ironGolemSettings() {
+        ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
+    }
+
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
     private void rabbitSettings() {
