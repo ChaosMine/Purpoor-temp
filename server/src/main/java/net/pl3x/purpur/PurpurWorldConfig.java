@@ -109,6 +109,11 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean farmlandGetsMoistFromBelow = false;
+    private void farmlandSettings() {
+        farmlandGetsMoistFromBelow = getBoolean("blocks.farmland.gets-moist-from-below", farmlandGetsMoistFromBelow);
+    }
+
     public boolean signAllowColors = false;
     public boolean signRightClickEdit = false;
     private void signSettings() {

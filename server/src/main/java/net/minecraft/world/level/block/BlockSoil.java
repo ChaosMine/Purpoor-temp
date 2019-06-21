@@ -159,7 +159,7 @@ public class BlockSoil extends Block {
             }
         }
 
-        return false;
+        return ((WorldServer) iworldreader).purpurConfig.farmlandGetsMoistFromBelow && iworldreader.getFluid(blockposition.shift(EnumDirection.DOWN)).isTagged(TagsFluid.WATER); // Purpur
         // Tuinity end - remove abstract block iteration
     }
 
