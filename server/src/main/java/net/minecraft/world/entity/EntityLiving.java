@@ -193,9 +193,9 @@ public abstract class EntityLiving extends Entity {
     protected int aO;protected int getKillCount() { return this.aO; } // Paper - OBFHELPER
     public float lastDamage;
     public boolean jumping; // Paper protected -> public
-    public float aR;
-    public float aS;
-    public float aT;
+    public float aR; public float getStrafe() { return aR; } public void setStrafe(float strafe) { aR = strafe; } // Purpur - OBFHELPER
+    public float aS; public float getVertical() { return aS; } public void setVertical(float vertical) { aS = vertical; } // Purpur - OBFHELPER
+    public float aT; public float getForward() { return aT; } public void setForward(float forward) { aT = forward; } // Purpur - OBFHELPER
     protected int aU;
     protected double aV;
     protected double aW;

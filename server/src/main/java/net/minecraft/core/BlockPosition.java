@@ -42,6 +42,12 @@ public class BlockPosition extends BaseBlockPosition {
     private static final int m = 38;
     // Paper end
 
+    // Purpur start
+    public BlockPosition(net.minecraft.world.entity.Entity entity) {
+        super(entity.locX(), entity.locY(), entity.locZ());
+    }
+    // Purpur end
+
     public BlockPosition(int i, int j, int k) {
         super(i, j, k);
     }

@@ -121,8 +121,10 @@ public class ItemMinecart extends Item {
         IBlockData iblockdata = world.getType(blockposition);
 
         if (!iblockdata.a((Tag) TagsBlock.RAILS)) {
-            return EnumInteractionResult.FAIL;
-        } else {
+            // Purpur start - place minecarts anywhere
+            if (!world.purpurConfig.minecartPlaceAnywhere) return EnumInteractionResult.FAIL;
+            if (iblockdata.getMaterial().isSolid()) blockposition = blockposition.shift(itemactioncontext.getClickedFace());
+        } //else { // Purpur end - place minecarts anywhere
             ItemStack itemstack = itemactioncontext.getItemStack();
 
             if (!world.isClientSide) {
@@ -149,6 +151,6 @@ public class ItemMinecart extends Item {
 
             itemstack.subtract(1);
             return EnumInteractionResult.a(world.isClientSide);
-        }
+        //} // Purpur - place minecarts anywhere
     }
 }

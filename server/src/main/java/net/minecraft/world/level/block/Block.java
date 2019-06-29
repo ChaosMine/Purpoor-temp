@@ -83,6 +83,7 @@ public class Block extends BlockBase implements IMaterial {
         return timing;
     }
     // Paper end
+    public net.minecraft.world.level.material.Material getMaterial() { return material; } // Purpur - OBFHELPER
     @Nullable
     private String name;
     @Nullable
