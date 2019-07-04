@@ -146,6 +146,11 @@ public class PurpurWorldConfig {
         idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
     }
 
+    public boolean disableDropsOnCrammingDeath = false;
+    private void miscGameplayMechanicsSettings() {
+        disableDropsOnCrammingDeath = getBoolean("gameplay-mechanics.disable-drops-on-cramming-death", disableDropsOnCrammingDeath);
+    }
+
     public int playerSpawnInvulnerableTicks = 60;
     public boolean playerInvulnerableWhileAcceptingResourcePack = false;
     private void playerInvulnerabilities() {

@@ -1595,8 +1595,10 @@ public abstract class EntityLiving extends Entity {
 
         this.dropInventory(); // CraftBukkit - from below
         if (this.cW() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
+            if (!(damagesource == DamageSource.CRAMMING && world.purpurConfig.disableDropsOnCrammingDeath)) { // Purpur
             this.a(damagesource, flag);
             this.dropDeathLoot(damagesource, i, flag);
+            } // Purpur
         }
         // CraftBukkit start - Call death event
         org.bukkit.event.entity.EntityDeathEvent deathEvent = CraftEventFactory.callEntityDeathEvent(this, this.drops); // Paper
