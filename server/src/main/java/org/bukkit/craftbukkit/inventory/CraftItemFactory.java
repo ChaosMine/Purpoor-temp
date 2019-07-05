@@ -401,4 +401,18 @@ public final class CraftItemFactory implements ItemFactory {
             new net.md_5.bungee.api.chat.TextComponent(customName));
     }
     // Paper end
+
+    // Purpur start
+    @Override
+    public ItemStack getMonsterEgg(org.bukkit.entity.EntityType type) {
+        if (type == null) {
+            return null;
+        }
+        String name = type.getKey().toString();
+        net.minecraft.resources.MinecraftKey key = new net.minecraft.resources.MinecraftKey(name);
+        net.minecraft.world.entity.EntityTypes types = net.minecraft.world.entity.EntityTypes.getFromKey(key);
+        net.minecraft.world.item.ItemMonsterEgg egg = net.minecraft.world.item.ItemMonsterEgg.a.get(types);
+        return new net.minecraft.world.item.ItemStack(egg).asBukkitMirror();
+    }
+    // Purpur end
 }

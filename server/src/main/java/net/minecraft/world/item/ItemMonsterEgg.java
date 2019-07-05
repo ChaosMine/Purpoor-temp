@@ -35,7 +35,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public class ItemMonsterEgg extends Item {
 
-    private static final Map<EntityTypes<?>, ItemMonsterEgg> a = Maps.newIdentityHashMap();
+    public static final Map<EntityTypes<?>, ItemMonsterEgg> a = Maps.newIdentityHashMap(); // Purpur - private -> public
     private final int b;
     private final int c;
     private final EntityTypes<?> d;
