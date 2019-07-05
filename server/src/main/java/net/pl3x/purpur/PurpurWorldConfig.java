@@ -135,6 +135,20 @@ public class PurpurWorldConfig {
         giantMaxHealth = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
     }
 
+    public double illusionerMovementSpeed = 0.5D;
+    public double illusionerFollowRange = 18.0D;
+    public double illusionerMaxHealth = 32.0D;
+    private void illusionerSettings() {
+        illusionerMovementSpeed = getDouble("mobs.illusioner.movement-speed", illusionerMovementSpeed);
+        illusionerFollowRange = getDouble("mobs.illusioner.follow-range", illusionerFollowRange);
+        if (PurpurConfig.version < 8) {
+            double oldValue = getDouble("mobs.illusioner.max-health", illusionerMaxHealth);
+            set("mobs.illusioner.attributes.max-health", oldValue);
+            set("mobs.illusioner.max-health", null);
+        }
+        illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     private void villagerSettings() {

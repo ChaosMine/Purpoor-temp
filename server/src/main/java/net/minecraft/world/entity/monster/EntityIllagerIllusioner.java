@@ -56,6 +56,15 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
 
     }
 
+    // Purpur start
+    @Override
+    protected void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.world.purpurConfig.illusionerMovementSpeed);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(this.world.purpurConfig.illusionerFollowRange);
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.illusionerMaxHealth);
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
