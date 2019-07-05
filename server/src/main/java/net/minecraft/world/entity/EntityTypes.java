@@ -274,6 +274,16 @@ public class EntityTypes<T extends Entity> {
         return (EntityTypes) IRegistry.a((IRegistry) IRegistry.ENTITY_TYPE, s, (Object) entitytypes_builder.a(s));
     }
 
+    // Purpur start
+    public static EntityTypes getFromBukkitType(org.bukkit.entity.EntityType bukkitType) {
+        return getFromKey(new MinecraftKey(bukkitType.getKey().toString()));
+    }
+
+    public static EntityTypes getFromKey(MinecraftKey key) {
+        return IRegistry.ENTITY_TYPE.get(key);
+    }
+    // Purpur end
+
     public static MinecraftKey getName(EntityTypes<?> entitytypes) {
         return IRegistry.ENTITY_TYPE.getKey(entitytypes);
     }
@@ -439,6 +449,16 @@ public class EntityTypes<T extends Entity> {
         return this.bg;
     }
 
+    // Purpur start
+    public String getName() {
+        return IRegistry.ENTITY_TYPE.getKey(this).getKey();
+    }
+
+    public String getTranslatedName() {
+        return getNameComponent().getString();
+    }
+    // Purpur end
+
     public String getDescriptionId() { return f(); } // Paper - OBFHELPER
     public String f() {
         if (this.bo == null) {
@@ -448,6 +468,7 @@ public class EntityTypes<T extends Entity> {
         return this.bo;
     }
 
+    public IChatBaseComponent getNameComponent() { return g(); } // Purpur - OBFHELPER
     public IChatBaseComponent g() {
         if (this.bp == null) {
             this.bp = new ChatMessage(this.f());

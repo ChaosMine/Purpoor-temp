@@ -33,6 +33,13 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
 
+// Purpur start
+import net.pl3x.purpur.event.PlayerSetSpawnerTypeWithEggEvent;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+// Purpur end
+
 public class ItemMonsterEgg extends Item {
 
     public static final Map<EntityTypes<?>, ItemMonsterEgg> a = Maps.newIdentityHashMap(); // Purpur - private -> public
@@ -66,6 +73,15 @@ public class ItemMonsterEgg extends Item {
                 if (tileentity instanceof TileEntityMobSpawner) {
                     MobSpawnerAbstract mobspawnerabstract = ((TileEntityMobSpawner) tileentity).getSpawner();
                     EntityTypes<?> entitytypes = this.a(itemstack.getTag());
+
+                    // Purpur start
+                    org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                    PlayerSetSpawnerTypeWithEggEvent event = new PlayerSetSpawnerTypeWithEggEvent((Player) itemactioncontext.getEntity().getBukkitEntity(), bukkitBlock, (CreatureSpawner) bukkitBlock.getState(), EntityType.fromName(entitytypes.getName()));
+                    if (!event.callEvent()) {
+                        return EnumInteractionResult.FAIL;
+                    }
+                    entitytypes = EntityTypes.getFromBukkitType(event.getEntityType());
+                    // Purpur end
 
                     mobspawnerabstract.setMobName(entitytypes);
                     tileentity.update();
