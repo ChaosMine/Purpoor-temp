@@ -9,11 +9,11 @@ import net.minecraft.world.phys.Vec3D;
 public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
 
     protected int a;
-    protected short b;
-    protected short c;
-    protected short d;
-    protected byte e;
-    protected byte f;
+    protected short b; public short getX() { return b; } // Purpur - OBFHELPER
+    protected short c; public short getY() { return c; } // Purpur - OBFHELPER
+    protected short d; public short getZ() { return d; } // Purpur - OBFHELPER
+    protected byte e; public byte getYaw() { return e; } // Purpur - OBFHELPER
+    protected byte f; public byte getPitch() { return f; } // Purpur - OBFHELPER
     protected boolean g;
     protected boolean h;
     protected boolean i;

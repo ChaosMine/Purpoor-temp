@@ -200,6 +200,7 @@ public class EntityTrackerEntry {
                         this.o = 0;
                         packet1 = new PacketPlayOutEntityTeleport(this.tracker);
                     }
+                    if (net.pl3x.purpur.PurpurConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Purpur
                 }
 
                 if ((this.e || this.tracker.impulse || this.tracker instanceof EntityLiving && ((EntityLiving) this.tracker).isGliding()) && this.tickCounter > 0) {
@@ -285,6 +286,22 @@ public class EntityTrackerEntry {
         }
 
     }
+
+    // Purpur start
+    private boolean isUselessPacket(Packet<?> possibleUselessPacket) {
+        if (possibleUselessPacket instanceof PacketPlayOutEntity) {
+            PacketPlayOutEntity packet = (PacketPlayOutEntity) possibleUselessPacket;
+            if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutRelEntityMove) {
+                return packet.getX() == 0 && packet.getY() == 0 && packet.getZ() == 0;
+            } else if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook) {
+                return packet.getX() == 0 && packet.getY() == 0 && packet.getZ() == 0 && packet.getYaw() == 0 && packet.getPitch() == 0;
+            } else if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutEntityLook) {
+                return packet.getYaw() == 0 && packet.getPitch() == 0;
+            }
+        }
+        return false;
+    }
+    // Purpur end
 
     public void a(EntityPlayer entityplayer) {
         this.tracker.c(entityplayer);

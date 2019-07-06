@@ -179,6 +179,11 @@ public class PurpurConfig {
         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
     }
 
+    public static boolean dontSendUselessEntityPackets = false;
+    private static void dontSendUselessEntityPackets() {
+        dontSendUselessEntityPackets = getBoolean("settings.dont-send-useless-entity-packets", dontSendUselessEntityPackets);
+    }
+
     public static boolean loggerSuppressInitLegacyMaterialError = false;
     public static boolean loggerSuppressIgnoredAdvancementWarnings = false;
     private static void loggerSettings() {
