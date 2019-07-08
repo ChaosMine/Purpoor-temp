@@ -155,4 +155,9 @@ public class PurpurWorldConfig {
         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
     }
+
+    public double zombieHorseSpawnChance = 0.0D;
+    private void zombieHorseSettings() {
+        zombieHorseSpawnChance = getDouble("mobs.zombie_horse.spawn-chance", zombieHorseSpawnChance);
+    }
 }

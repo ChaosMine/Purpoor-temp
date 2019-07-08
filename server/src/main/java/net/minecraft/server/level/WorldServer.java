@@ -96,6 +96,7 @@ import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntityWaterAnimal;
+import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
 import net.minecraft.world.entity.animal.horse.EntityHorseSkeleton;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
@@ -1219,12 +1220,18 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 boolean flag1 = this.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && this.random.nextDouble() < (double) difficultydamagescaler.b() * paperConfig.skeleHorseSpawnChance; // Paper
 
                 if (flag1) {
-                    EntityHorseSkeleton entityhorseskeleton = (EntityHorseSkeleton) EntityTypes.SKELETON_HORSE.a((World) this);
-
-                    entityhorseskeleton.t(true);
-                    entityhorseskeleton.setAgeRaw(0);
-                    entityhorseskeleton.setPosition((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
-                    this.addEntity(entityhorseskeleton, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING); // CraftBukkit
+                    // Purpur start
+                    EntityHorseAbstract horse;
+                    if (purpurConfig.zombieHorseSpawnChance > 0D && random.nextDouble() <= purpurConfig.zombieHorseSpawnChance) {
+                        horse = EntityTypes.ZOMBIE_HORSE.create(this);
+                    } else {
+                        horse = EntityTypes.SKELETON_HORSE.create(this);
+                        ((EntityHorseSkeleton) horse).setTrap(true);
+                    }
+                    horse.setAgeRaw(0);
+                    horse.setPosition(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                    addEntity(horse, CreatureSpawnEvent.SpawnReason.LIGHTNING); // CraftBukkit
+                    // Purpur end
                 }
 
                 EntityLightning entitylightning = (EntityLightning) EntityTypes.LIGHTNING_BOLT.a((World) this);
