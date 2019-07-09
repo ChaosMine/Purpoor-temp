@@ -304,6 +304,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener {
         this.datawatcher.register(Entity.at, false);
         this.datawatcher.register(Entity.POSE, EntityPose.STANDING);
         this.initDatawatcher();
+        this.getDataWatcher().registrationLocked = true; // Spigot
         this.headHeight = this.getHeadHeight(EntityPose.STANDING, this.size);
     }
 
