@@ -118,6 +118,11 @@ public class PurpurWorldConfig {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
+    public boolean foxTypeChangesWithTulips = false;
+    private void foxSettings() {
+        foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
+    }
+
     public float giantStepHeight = 2.0F;
     public float giantJumpHeight = 1.0F;
     public double giantMovementSpeed = 0.5D;

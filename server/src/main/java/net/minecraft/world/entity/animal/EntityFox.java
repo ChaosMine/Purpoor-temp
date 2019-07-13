@@ -30,6 +30,8 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.DifficultyDamageScaler;
+import net.minecraft.world.EnumHand;
+import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAgeable;
@@ -107,9 +109,9 @@ public class EntityFox extends EntityAnimal {
     private static final Predicate<Entity> bv = (entity) -> {
         return !entity.bx() && IEntitySelector.e.test(entity);
     };
-    private PathfinderGoal bw;
-    private PathfinderGoal bx;
-    private PathfinderGoal by;
+    private PathfinderGoal bw; private PathfinderGoal attackAnimalGoal() { return bw; } // Purpur - OBFHELPER
+    private PathfinderGoal bx; private PathfinderGoal attackTurtleGoal() { return bx; } // Purpur - OBFHELPER
+    private PathfinderGoal by; private PathfinderGoal attackFishGoal() { return by; } // Purpur - OBFHELPER
     private float bz;
     private float bA;
     private float bB;
@@ -297,6 +299,11 @@ public class EntityFox extends EntityAnimal {
     }
 
     private void initializePathFinderGoals() {
+        // Purpur start - do not add duplicate goals
+        this.targetSelector.a(attackAnimalGoal());
+        this.targetSelector.a(attackTurtleGoal());
+        this.targetSelector.a(attackFishGoal());
+        // Purpur end
         if (this.getFoxType() == EntityFox.Type.RED) {
             this.targetSelector.a(4, this.bw);
             this.targetSelector.a(4, this.bx);
@@ -329,6 +336,7 @@ public class EntityFox extends EntityAnimal {
 
     public void setFoxType(EntityFox.Type entityfox_type) {
         this.datawatcher.set(EntityFox.bo, entityfox_type.b());
+        initializePathFinderGoals(); // Purpur - fix API bug not updating pathfinders on type change
     }
 
     private List<UUID> fa() {
@@ -644,6 +652,27 @@ public class EntityFox extends EntityAnimal {
 
     private boolean c(UUID uuid) {
         return this.fa().contains(uuid);
+    }
+
+    @Override
+    public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
+        if (world.purpurConfig.foxTypeChangesWithTulips) {
+            ItemStack itemstack = entityhuman.b(enumhand);
+            if (getFoxType() == Type.RED && itemstack.getItem() == Items.whiteTulip()) {
+                setFoxType(Type.SNOW);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemstack.subtract(1);
+                }
+                return EnumInteractionResult.SUCCESS;
+            } else if (getFoxType() == Type.SNOW && itemstack.getItem() == Items.orangeTulip()) {
+                setFoxType(Type.RED);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemstack.subtract(1);
+                }
+                return EnumInteractionResult.SUCCESS;
+            }
+        }
+        return super.b(entityhuman, enumhand);
     }
 
     @Override

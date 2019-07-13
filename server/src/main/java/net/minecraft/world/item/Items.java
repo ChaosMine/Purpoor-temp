@@ -133,8 +133,8 @@ public class Items {
     public static final Item bk = a(Blocks.ALLIUM, CreativeModeTab.c);
     public static final Item bl = a(Blocks.AZURE_BLUET, CreativeModeTab.c);
     public static final Item bm = a(Blocks.RED_TULIP, CreativeModeTab.c);
-    public static final Item bn = a(Blocks.ORANGE_TULIP, CreativeModeTab.c);
-    public static final Item bo = a(Blocks.WHITE_TULIP, CreativeModeTab.c);
+    public static final Item bn = a(Blocks.ORANGE_TULIP, CreativeModeTab.c); public static Item orangeTulip() { return bn; } // Purpur - OBFHELPER
+    public static final Item bo = a(Blocks.WHITE_TULIP, CreativeModeTab.c); public static Item whiteTulip() { return bo; } // Purpur - OBFHELPER
     public static final Item bp = a(Blocks.PINK_TULIP, CreativeModeTab.c);
     public static final Item bq = a(Blocks.OXEYE_DAISY, CreativeModeTab.c);
     public static final Item br = a(Blocks.CORNFLOWER, CreativeModeTab.c);
