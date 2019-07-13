@@ -12,6 +12,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.PlayerChunk;
+import net.minecraft.server.level.PlayerChunkMap;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAreaEffectCloud;
@@ -144,6 +147,7 @@ import net.minecraft.world.entity.vehicle.EntityMinecartHopper;
 import net.minecraft.world.entity.vehicle.EntityMinecartMobSpawner;
 import net.minecraft.world.entity.vehicle.EntityMinecartRideable;
 import net.minecraft.world.entity.vehicle.EntityMinecartTNT;
+import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.bukkit.Chunk; // Paper
 import org.bukkit.EntityEffect;
@@ -507,6 +511,28 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         entity.lastPitch = pitch;
         entity.setHeadRotation(yaw);
     }
+
+    @Override// Paper start
+    public java.util.concurrent.CompletableFuture<Boolean> teleportAsync(Location loc, @javax.annotation.Nonnull org.bukkit.event.player.PlayerTeleportEvent.TeleportCause cause) {
+        PlayerChunkMap playerChunkMap = ((CraftWorld) loc.getWorld()).getHandle().getChunkProvider().playerChunkMap;
+        java.util.concurrent.CompletableFuture<Boolean> future = new java.util.concurrent.CompletableFuture<>();
+
+        loc.getWorld().getChunkAtAsyncUrgently(loc).thenCompose(chunk -> {
+            ChunkCoordIntPair pair = new ChunkCoordIntPair(chunk.getX(), chunk.getZ());
+            ((CraftWorld) loc.getWorld()).getHandle().getChunkProvider().addTicketAtLevel(TicketType.POST_TELEPORT, pair, 31, 0);
+            PlayerChunk updatingChunk = playerChunkMap.getUpdatingChunk(pair.pair());
+            if (updatingChunk != null) {
+                return updatingChunk.getEntityTickingFuture();
+            } else {
+                return java.util.concurrent.CompletableFuture.completedFuture(com.mojang.datafixers.util.Either.left(((org.bukkit.craftbukkit.CraftChunk)chunk).getHandle()));
+            }
+        }).thenAccept((chunk) -> future.complete(teleport(loc, cause))).exceptionally(ex -> {
+            future.completeExceptionally(ex);
+            return null;
+        });
+        return future;
+    }
+    // Paper end
 
     @Override
     public boolean teleport(Location location) {

@@ -45,6 +45,8 @@ public class RegionFile implements AutoCloseable {
     protected final RegionFileBitSet freeSectors;
     public final File file; // Paper
 
+    public final java.util.concurrent.locks.ReentrantLock fileLock = new java.util.concurrent.locks.ReentrantLock(true); // Paper
+
     // Paper start - Cache chunk status
     private final ChunkStatus[] statuses = new ChunkStatus[32 * 32];
 
@@ -251,7 +253,7 @@ public class RegionFile implements AutoCloseable {
         return (i + 4096 - 1) / 4096;
     }
 
-    public boolean b(ChunkCoordIntPair chunkcoordintpair) {
+    public synchronized boolean b(ChunkCoordIntPair chunkcoordintpair) { // Paper - synchronized
         int i = this.getOffset(chunkcoordintpair);
 
         if (i == 0) {
@@ -411,6 +413,11 @@ public class RegionFile implements AutoCloseable {
     }
 
     public void close() throws IOException {
+        // Paper start - Prevent regionfiles from being closed during use
+        this.fileLock.lock();
+        synchronized (this) {
+        try {
+        // Paper end
         this.closed = true; // Paper
         try {
             this.d();
@@ -421,6 +428,10 @@ public class RegionFile implements AutoCloseable {
                 this.dataFile.close();
             }
         }
+        } finally { // Paper start - Prevent regionfiles from being closed during use
+            this.fileLock.unlock();
+        }
+        } // Paper end
 
     }
 

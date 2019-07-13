@@ -22,7 +22,9 @@ import java.util.stream.Stream;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.LightEngineGraphSection;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.IWorldReader;
@@ -36,8 +38,16 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     private final VillagePlace.a a = new VillagePlace.a();
     private final LongSet b = new LongOpenHashSet();
 
+    private final WorldServer world; // Paper
+
     public VillagePlace(File file, DataFixer datafixer, boolean flag) {
+        // Paper start - add world parameter
+        this(file, datafixer, flag, null);
+    }
+    public VillagePlace(File file, DataFixer datafixer, boolean flag, WorldServer world) {
         super(file, VillagePlaceSection::a, VillagePlaceSection::new, datafixer, DataFixTypes.POI_CHUNK, flag);
+        this.world = world;
+        // Paper end - add world parameter
     }
 
     public void a(BlockPosition blockposition, VillagePlaceType villageplacetype) {
@@ -155,7 +165,23 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
     @Override
     public void a(BooleanSupplier booleansupplier) {
-        super.a(booleansupplier);
+        // Paper start - async chunk io
+        if (this.world == null) {
+            super.a(booleansupplier);
+        } else {
+            //super.a(booleansupplier); // re-implement below
+            while (!((RegionFileSection)this).d.isEmpty() && booleansupplier.getAsBoolean()) {
+                ChunkCoordIntPair chunkcoordintpair = SectionPosition.a(((RegionFileSection)this).d.firstLong()).r();
+
+                NBTTagCompound data;
+                try (co.aikar.timings.Timing ignored1 = this.world.timings.poiSaveDataSerialization.startTiming()) {
+                    data = this.getData(chunkcoordintpair);
+                }
+                com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(this.world,
+                    chunkcoordintpair.x, chunkcoordintpair.z, data, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.LOW_PRIORITY);
+            }
+        }
+        // Paper end
         this.a.a();
     }
 
@@ -254,6 +280,35 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
             super.b(Integer.MAX_VALUE);
         }
     }
+
+    // Paper start - Asynchronous chunk io
+    @javax.annotation.Nullable
+    @Override
+    public NBTTagCompound read(ChunkCoordIntPair chunkcoordintpair) throws java.io.IOException {
+        if (this.world != null && Thread.currentThread() != com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE) {
+            NBTTagCompound ret = com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE
+                .loadChunkDataAsyncFuture(this.world, chunkcoordintpair.x, chunkcoordintpair.z, com.destroystokyo.paper.io.IOUtil.getPriorityForCurrentThread(),
+                    true, false, true).join().poiData;
+
+            if (ret == com.destroystokyo.paper.io.PaperFileIOThread.FAILURE_VALUE) {
+                throw new java.io.IOException("See logs for further detail");
+            }
+            return ret;
+        }
+        return super.read(chunkcoordintpair);
+    }
+
+    @Override
+    public void write(ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound) throws java.io.IOException {
+        if (this.world != null && Thread.currentThread() != com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE) {
+            com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(
+                this.world, chunkcoordintpair.x, chunkcoordintpair.z, nbttagcompound, null,
+                com.destroystokyo.paper.io.IOUtil.getPriorityForCurrentThread());
+            return;
+        }
+        super.write(chunkcoordintpair, nbttagcompound);
+    }
+    // Paper end
 
     public static enum Occupancy {
 

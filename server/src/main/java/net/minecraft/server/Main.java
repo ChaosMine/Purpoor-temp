@@ -42,6 +42,7 @@ import net.minecraft.server.players.UserCache;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.datafix.DataConverterRegistry;
 import net.minecraft.util.worldupdate.WorldUpgrader;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.level.DataPackConfiguration;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
@@ -210,6 +211,7 @@ public class Main {
 
             convertable_conversionsession.a((IRegistryCustom) iregistrycustom_dimension, (SaveData) object);
             */
+            Class.forName(VillagerTrades.class.getName());// Paper - load this sync so it won't fail later async
             final DedicatedServer dedicatedserver = (DedicatedServer) MinecraftServer.a((thread) -> {
                 DedicatedServer dedicatedserver1 = new DedicatedServer(optionset, datapackconfiguration1, thread, iregistrycustom_dimension, convertable_conversionsession, resourcepackrepository, datapackresources, null, dedicatedserversettings, DataConverterRegistry.a(), minecraftsessionservice, gameprofilerepository, usercache, WorldLoadListenerLogger::new);
 

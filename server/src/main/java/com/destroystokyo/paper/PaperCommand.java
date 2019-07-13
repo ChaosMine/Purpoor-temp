@@ -1,5 +1,6 @@
 package com.destroystokyo.paper;
 
+import com.destroystokyo.paper.io.chunk.ChunkTaskManager;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
@@ -43,7 +44,7 @@ import java.util.stream.Collectors;
 
 public class PaperCommand extends Command {
     private static final String BASE_PERM = "bukkit.command.paper.";
-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo").build();
+    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "dumpwaiting").build();
 
     public PaperCommand(String name) {
         super(name);
@@ -154,6 +155,9 @@ public class PaperCommand extends Command {
                 break;
             case "debug":
                 doDebug(sender, args);
+                break;
+            case "dumpwaiting":
+                ChunkTaskManager.dumpAllChunkLoadInfo();
                 break;
             case "chunkinfo":
                 doChunkInfo(sender, args);

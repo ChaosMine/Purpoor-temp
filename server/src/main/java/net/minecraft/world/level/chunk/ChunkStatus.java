@@ -170,6 +170,7 @@ public class ChunkStatus {
         return ChunkStatus.q.size();
     }
 
+    public static int getTicketLevelOffset(ChunkStatus status) { return ChunkStatus.a(status); } // Paper - OBFHELPER
     public static int a(ChunkStatus chunkstatus) {
         return ChunkStatus.r.getInt(chunkstatus.c());
     }
@@ -185,6 +186,7 @@ public class ChunkStatus {
         this.t = chunkstatus == null ? 0 : chunkstatus.c() + 1;
     }
 
+    public final int getStatusIndex() { return c(); } // Paper - OBFHELPER
     public int c() {
         return this.t;
     }
@@ -193,7 +195,7 @@ public class ChunkStatus {
         return this.s;
     }
 
-    public ChunkStatus getPreviousStatus() { return this.e(); } // Paper - OBFHELPER
+    public final ChunkStatus getPreviousStatus() { return this.e(); } // Paper - OBFHELPER
     public ChunkStatus e() {
         return this.u;
     }
@@ -206,6 +208,7 @@ public class ChunkStatus {
         return this.w.doWork(this, worldserver, definedstructuremanager, lightenginethreaded, function, ichunkaccess);
     }
 
+    public final int getNeighborRadius() { return this.f(); } // Paper - OBFHELPER
     public int f() {
         return this.x;
     }
@@ -233,6 +236,7 @@ public class ChunkStatus {
         return this.z;
     }
 
+    public final boolean isAtLeastStatus(ChunkStatus chunkstatus) { return b(chunkstatus); } // Paper - OBFHELPER
     public boolean b(ChunkStatus chunkstatus) {
         return this.c() >= chunkstatus.c();
     }
