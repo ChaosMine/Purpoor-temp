@@ -468,8 +468,17 @@ public final class ItemStack {
         }
     }
 
+    public boolean isDamaged() { return f(); } // Purpur - OBFHELPER
     public boolean f() {
         return this.e() && this.getDamage() > 0;
+    }
+
+    public float getDamagePercent() {
+        if (isDamaged()) {
+            return (float) getDamage() / (float) getItem().getMaxDurability();
+        } else {
+            return 0F;
+        }
     }
 
     public int getDamage() {

@@ -269,7 +269,30 @@ public class EnchantmentManager {
         return getEnchantmentLevel(Enchantments.CHANNELING, itemstack) > 0;
     }
 
-    public static @javax.annotation.Nonnull ItemStack getRandomEquippedItemWithEnchant(Enchantment enchantment, EntityLiving entityliving) { Entry<EnumItemSlot, ItemStack> entry = b(enchantment, entityliving); return entry != null ? entry.getValue() : ItemStack.NULL_ITEM; } // Paper - OBFHELPER
+    // Purpur start
+    @Nullable
+    public static Entry<EnumItemSlot, ItemStack> getMostDamagedEquipment(Enchantment enchantment, EntityLiving entityliving) {
+        Map<EnumItemSlot, ItemStack> map = enchantment.a(entityliving);
+        if (map.isEmpty()) {
+            return null;
+        }
+        Entry<EnumItemSlot, ItemStack> item = null;
+        float maxPercent = 0F;
+        for (Entry<EnumItemSlot, ItemStack> entry : map.entrySet()) {
+            ItemStack itemstack = entry.getValue();
+            if (!itemstack.isEmpty() && itemstack.isDamaged() && getEnchantmentLevel(enchantment, itemstack) > 0) {
+                float percent = itemstack.getDamagePercent();
+                if (item == null || percent > maxPercent) {
+                    item = entry;
+                    maxPercent = percent;
+                }
+            }
+        }
+        return item;
+    }
+    // Purpur end
+
+    public static @javax.annotation.Nonnull ItemStack getRandomEquippedItemWithEnchant(Enchantment enchantment, EntityLiving entityliving) { Entry<EnumItemSlot, ItemStack> entry = enchantment == Enchantments.MENDING && entityliving.world.purpurConfig.useBetterMending ? getMostDamagedEquipment(enchantment, entityliving) : b(enchantment, entityliving); return entry != null ? entry.getValue() : ItemStack.NULL_ITEM; } // Paper - OBFHELPER
     @Nullable public static Entry<EnumItemSlot, ItemStack> b(Enchantment enchantment, EntityLiving entityliving) {
         return a(enchantment, entityliving, (itemstack) -> {
             return true;

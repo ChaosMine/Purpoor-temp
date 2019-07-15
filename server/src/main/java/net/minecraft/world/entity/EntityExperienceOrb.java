@@ -236,7 +236,7 @@ public class EntityExperienceOrb extends Entity {
             if (this.d == 0 && entityhuman.bu == 0 && new com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent(((EntityPlayer) entityhuman).getBukkitEntity(), (org.bukkit.entity.ExperienceOrb) this.getBukkitEntity()).callEvent()) { // Paper
                 entityhuman.bu = 2;
                 entityhuman.receive(this, 1);
-                Entry<EnumItemSlot, ItemStack> entry = EnchantmentManager.a(Enchantments.MENDING, (EntityLiving) entityhuman, ItemStack::f);
+                Entry<EnumItemSlot, ItemStack> entry = world.purpurConfig.useBetterMending ? EnchantmentManager.getMostDamagedEquipment(Enchantments.MENDING, entityhuman) : EnchantmentManager.a(Enchantments.MENDING, entityhuman, ItemStack::isDamaged); // Purpur
 
                 if (entry != null) {
                     ItemStack itemstack = (ItemStack) entry.getValue();
