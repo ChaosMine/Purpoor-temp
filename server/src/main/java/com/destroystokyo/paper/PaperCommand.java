@@ -1,6 +1,7 @@
 package com.destroystokyo.paper;
 
 import com.destroystokyo.paper.io.chunk.ChunkTaskManager;
+import com.destroystokyo.paper.io.SyncLoadFinder;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
@@ -8,6 +9,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.resources.MinecraftKey;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.PlayerChunk;
@@ -29,6 +34,9 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,7 +52,7 @@ import java.util.stream.Collectors;
 
 public class PaperCommand extends Command {
     private static final String BASE_PERM = "bukkit.command.paper.";
-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "dumpwaiting").build();
+    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "dumpwaiting", "syncloadinfo").build();
 
     public PaperCommand(String name) {
         super(name);
@@ -162,6 +170,9 @@ public class PaperCommand extends Command {
             case "chunkinfo":
                 doChunkInfo(sender, args);
                 break;
+            case "syncloadinfo":
+                this.doSyncLoadInfo(sender, args);
+                break;
             case "ver":
                 if (!testPermission(sender, "version")) break; // "ver" needs a special check because it's an alias. All other commands are checked up before the switch statement (because they are present in the SUBCOMMANDS set)
             case "version":
@@ -177,6 +188,40 @@ public class PaperCommand extends Command {
         }
 
         return true;
+    }
+
+    private void doSyncLoadInfo(CommandSender sender, String[] args) {
+        if (!SyncLoadFinder.ENABLED) {
+            sender.sendMessage(ChatColor.RED + "This command requires the server startup flag '-Dpaper.debug-sync-loads=true' to be set.");
+            return;
+        }
+        File file = new File(new File(new File("."), "debug"),
+            "sync-load-info" + DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss").format(LocalDateTime.now()) + ".txt");
+        file.getParentFile().mkdirs();
+        sender.sendMessage(ChatColor.GREEN + "Writing sync load info to " + file.toString());
+
+
+        try {
+            final JsonObject data = SyncLoadFinder.serialize();
+
+            StringWriter stringWriter = new StringWriter();
+            JsonWriter jsonWriter = new JsonWriter(stringWriter);
+            jsonWriter.setIndent(" ");
+            jsonWriter.setLenient(false);
+            Streams.write(data, jsonWriter);
+
+            String fileData = stringWriter.toString();
+
+            try (
+                PrintStream out = new PrintStream(new FileOutputStream(file), false, "UTF-8")
+            ) {
+                out.print(fileData);
+            }
+            sender.sendMessage(ChatColor.GREEN + "Successfully written sync load information!");
+        } catch (Throwable thr) {
+            sender.sendMessage(ChatColor.RED + "Failed to write sync load information");
+            thr.printStackTrace();
+        }
     }
 
     private void doChunkInfo(CommandSender sender, String[] args) {

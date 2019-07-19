@@ -1130,7 +1130,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
         for (int i1 = i; i1 <= j; ++i1) {
             for (int j1 = k; j1 <= l; ++j1) {
-                Chunk chunk = ichunkprovider.getChunkAt(i1, j1, false);
+                Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
 
                 if (chunk != null) {
                     chunk.a(entity, axisalignedbb, list, predicate);
@@ -1151,7 +1151,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
         for (int i1 = i; i1 < j; ++i1) {
             for (int j1 = k; j1 < l; ++j1) {
-                Chunk chunk = this.getChunkProvider().getChunkAt(i1, j1, false);
+                Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
 
                 if (chunk != null) {
                     chunk.a(entitytypes, axisalignedbb, list, predicate);
@@ -1174,7 +1174,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
         for (int i1 = i; i1 < j; ++i1) {
             for (int j1 = k; j1 < l; ++j1) {
-                Chunk chunk = ichunkprovider.getChunkAt(i1, j1, false);
+                Chunk chunk = (Chunk)this.getChunkIfLoadedImmediately(i1, j1); // Paper
 
                 if (chunk != null) {
                     chunk.a(oclass, axisalignedbb, list, predicate);
