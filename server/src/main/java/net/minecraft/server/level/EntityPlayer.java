@@ -1581,7 +1581,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     @Override
     public boolean isInvulnerable(DamageSource damagesource) {
-        return super.isInvulnerable(damagesource) || this.H() || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER;
+        return super.isInvulnerable(damagesource) || this.H() || damagesource == DamageSource.CRAMMING || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER; // Purpur
     }
 
     @Override
