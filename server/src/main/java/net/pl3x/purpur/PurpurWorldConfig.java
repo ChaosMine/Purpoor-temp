@@ -322,12 +322,16 @@ public class PurpurWorldConfig {
     public boolean villagerCanBeLeashed = false;
     public boolean villagerFarmingBypassMobGriefing = false;
     public boolean villagerFollowEmeraldBlock = false;
+    public int villagerSpawnIronGolemRadius = 0;
+    public int villagerSpawnIronGolemLimit = 0;
     private void villagerSettings() {
         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
         villagerCanBeLeashed = getBoolean("mobs.villager.can-be-leashed", villagerCanBeLeashed);
         villagerFarmingBypassMobGriefing = getBoolean("mobs.villager.bypass-mob-griefing", villagerFarmingBypassMobGriefing);
         villagerFollowEmeraldBlock = getBoolean("mobs.villager.follow-emerald-blocks", villagerFollowEmeraldBlock);
+        villagerSpawnIronGolemRadius = getInt("mobs.villager.spawn-iron-golem.radius", villagerSpawnIronGolemRadius);
+        villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
     }
 
     public boolean villagerTraderCanBeLeashed = false;

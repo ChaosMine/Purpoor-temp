@@ -975,6 +975,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
     @Nullable
     private EntityIronGolem d(WorldServer worldserver) {
+        if (world.purpurConfig.villagerSpawnIronGolemRadius > 0 && world.a(EntityIronGolem.class, getBoundingBox().grow(world.purpurConfig.villagerSpawnIronGolemRadius)).size() > world.purpurConfig.villagerSpawnIronGolemLimit) return null; // Purpur
         BlockPosition blockposition = this.getChunkCoordinates();
 
         for (int i = 0; i < 10; ++i) {
