@@ -2560,5 +2560,10 @@ public final class CraftServer implements Server {
     public String getServerName() {
         return getProperties().serverName;
     }
+
+    @Override
+    public boolean isLagging() {
+        return getServer().lagging;
+    }
     // Purpur end
 }

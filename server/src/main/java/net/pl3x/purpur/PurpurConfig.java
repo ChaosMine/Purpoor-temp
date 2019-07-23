@@ -150,6 +150,11 @@ public class PurpurConfig {
         if (!TimingsManager.hiddenConfigs.contains("server-ip")) TimingsManager.hiddenConfigs.add("server-ip");
     }
 
+    public static double laggingThreshold = 19.0D;
+    private static void tickLoopSettings() {
+        laggingThreshold = getDouble("settings.lagging-threshold", laggingThreshold);
+    }
+
     public static boolean barrelSixRows = false;
     public static boolean enderChestSixRows = false;
     public static boolean enderChestPermissionRows = false;

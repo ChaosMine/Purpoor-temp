@@ -280,6 +280,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public static final int TICK_TIME = 1000000000 / TPS;
     private static final int SAMPLE_INTERVAL = 20; // Paper
     public final double[] recentTps = new double[ 3 ];
+    public boolean lagging = false; // Purpur
     public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
     // Spigot end
 
@@ -1123,6 +1124,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                         recentTps[1] = tps5.getAverage();
                         recentTps[2] = tps15.getAverage();
                         // Paper end
+                        lagging = recentTps[0] < net.pl3x.purpur.PurpurConfig.laggingThreshold; // Purpur
                         tickSection = curTime;
                     }
                     // Tuinity - replace logic
