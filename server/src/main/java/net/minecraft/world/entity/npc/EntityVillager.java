@@ -127,6 +127,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     }, MemoryModuleType.MEETING_POINT, (entityvillager, villageplacetype) -> {
         return villageplacetype == VillagePlaceType.s;
     });
+    private final int brainTickOffset; // Purpur
 
     public EntityVillager(EntityTypes<? extends EntityVillager> entitytypes, World world) {
         this(entitytypes, world, VillagerType.PLAINS);
@@ -139,6 +140,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         this.getNavigation().d(true);
         this.setCanPickupLoot(true);
         this.setVillagerData(this.getVillagerData().withType(villagertype).withProfession(VillagerProfession.NONE));
+        this.brainTickOffset = getRandom().nextInt(100); // Purpur
     }
 
     @Override
@@ -235,6 +237,10 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     protected void mobTick() { mobTick(false); }
     protected void mobTick(boolean inactive) {
         this.world.getMethodProfiler().enter("villagerBrain");
+        // Purpur start
+        boolean tick = (world.getTime() + brainTickOffset) % world.purpurConfig.villagerBrainTicks == 0;
+        if (((WorldServer) world).getMinecraftServer().lagging ? tick : world.purpurConfig.villagerUseBrainTicksOnlyWhenLagging || tick)
+        // Purpur end
         if (!inactive) this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
         this.world.getMethodProfiler().exit();
         if (this.bF) {

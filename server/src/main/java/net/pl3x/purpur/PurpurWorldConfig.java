@@ -74,4 +74,11 @@ public class PurpurWorldConfig {
         playerSpawnInvulnerableTicks = getInt("gameplay-mechanics.player.spawn-invulnerable-ticks", playerSpawnInvulnerableTicks);
         playerInvulnerableWhileAcceptingResourcePack = getBoolean("gameplay-mechanics.player.invulnerable-while-accepting-resource-pack", playerInvulnerableWhileAcceptingResourcePack);
     }
+
+    public int villagerBrainTicks = 1;
+    public boolean villagerUseBrainTicksOnlyWhenLagging = true;
+    private void villagerSettings() {
+        villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
+        villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
+    }
 }
