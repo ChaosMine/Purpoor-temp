@@ -132,7 +132,7 @@ public enum InventoryType {
     STONECUTTER(2, "Stonecutter")
     ;
 
-    private final int size;
+    private int size; // Purpur - remove final
     private final String title;
     private final boolean isCreatable;
 
@@ -158,6 +158,12 @@ public enum InventoryType {
         this.isCreatable = isCreatable;
         this.defaultTitleComponent = net.kyori.adventure.text.Component.text(defaultTitle); // Paper - Adventure
     }
+
+    // Purpur start
+    public void setDefaultSize(int size) {
+        this.size = size;
+    }
+    // Purpur end
 
     public int getDefaultSize() {
         return size;
