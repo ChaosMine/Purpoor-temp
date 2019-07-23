@@ -1973,5 +1973,14 @@ public final class Bukkit {
     public static String getServerName() {
         return server.getServerName();
     }
+
+    /**
+     * Check if server is lagging according to laggy threshold setting
+     *
+     * @return True if lagging
+     */
+    public static boolean isLagging() {
+        return server.isLagging();
+    }
     // Purpur end
 }

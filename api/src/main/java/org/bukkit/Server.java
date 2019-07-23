@@ -1744,5 +1744,12 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      */
     @NotNull
     String getServerName();
+
+    /**
+     * Check if server is lagging according to laggy threshold setting
+     *
+     * @return True if lagging
+     */
+    boolean isLagging();
     // Purpur end
 }
