@@ -507,4 +507,9 @@ public class PaperWorldConfig {
             Bukkit.getLogger().warning("You have enabled permission-based Anti-Xray checking - depending on your permission plugin, this may cause performance issues");
         }
     }
+
+    public boolean disableRelativeProjectileVelocity;
+    private void disableRelativeProjectileVelocity() {
+        disableRelativeProjectileVelocity = getBoolean("game-mechanics.disable-relative-projectile-velocity", false);
+    }
 }
