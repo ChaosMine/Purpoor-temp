@@ -2952,7 +2952,16 @@ public abstract class EntityLiving extends Entity {
             if (itemstack.getItem() == Items.ELYTRA && ItemElytra.d(itemstack)) {
                 flag = true;
                 if (!this.world.isClientSide && (this.be + 1) % 20 == 0) {
-                    itemstack.damage(1, this, (entityliving) -> {
+                    // Purpur start
+                    int damage = world.purpurConfig.elytraDamagePerSecond;
+                    if (world.purpurConfig.elytraDamageMultiplyBySpeed > 0) {
+                        double speed = getMot().magnitudeSquared();
+                        if (speed > world.purpurConfig.elytraDamageMultiplyBySpeed) {
+                            damage *= (int) speed;
+                        }
+                    }
+                    itemstack.damage(damage, this, (entityliving) -> {
+                    // Purpur end
                         entityliving.broadcastItemBreak(EnumItemSlot.CHEST);
                     });
                 }

@@ -165,6 +165,19 @@ public class PurpurWorldConfig {
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);
     }
 
+    public int elytraDamagePerSecond = 1;
+    public double elytraDamageMultiplyBySpeed = 0;
+    public boolean elytraIgnoreUnbreaking = false;
+    public int elytraDamagePerFireworkBoost = 0;
+    public int elytraDamagePerTridentBoost = 0;
+    private void elytraSettings() {
+        elytraDamagePerSecond = getInt("gameplay-mechanics.elytra.damage-per-second", elytraDamagePerSecond);
+        elytraDamageMultiplyBySpeed = getDouble("gameplay-mechanics.elytra.damage-multiplied-by-speed", elytraDamageMultiplyBySpeed);
+        elytraIgnoreUnbreaking = getBoolean("gameplay-mechanics.elytra.ignore-unbreaking", elytraIgnoreUnbreaking);
+        elytraDamagePerFireworkBoost = getInt("gameplay-mechanics.elytra.damage-per-boost.firework", elytraDamagePerFireworkBoost);
+        elytraDamagePerTridentBoost = getInt("gameplay-mechanics.elytra.damage-per-boost.trident", elytraDamagePerTridentBoost);
+    }
+
     public String playerDeathExpDropEquation = "expLevel * 7";
     public int playerDeathExpDropMax = 100;
     private void playerDeathExpSettings() {

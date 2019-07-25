@@ -123,6 +123,16 @@ public class ItemTrident extends Item implements ItemVanishable {
                         f2 *= f6 / f5;
                         f3 *= f6 / f5;
                         f4 *= f6 / f5;
+
+                        // Purpur start
+                        ItemStack chestItem = entityhuman.getEquipment(EnumItemSlot.CHEST);
+                        if (chestItem.getItem() == Items.ELYTRA && world.purpurConfig.elytraDamagePerTridentBoost > 0) {
+                            chestItem.damage(world.purpurConfig.elytraDamagePerTridentBoost, entityhuman, (entity) -> {
+                                entity.broadcastItemBreak(EnumItemSlot.CHEST);
+                            });
+                        }
+                        // Purpur end
+
                         entityhuman.i((double) f2, (double) f3, (double) f4);
                         entityhuman.r(20);
                         if (entityhuman.isOnGround()) {

@@ -7,6 +7,7 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.InteractionResultWrapper;
+import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityFireworks;
 import net.minecraft.world.item.context.ItemActionContext;
@@ -53,6 +54,14 @@ public class ItemFireworks extends Item {
                 // Paper start
                 com.destroystokyo.paper.event.player.PlayerElytraBoostEvent event = new com.destroystokyo.paper.event.player.PlayerElytraBoostEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (org.bukkit.entity.Firework) entityfireworks.getBukkitEntity());
                 if (event.callEvent() && world.addEntity(entityfireworks)) {
+                    // Purpur start
+                    if (world.purpurConfig.elytraDamagePerFireworkBoost > 0) {
+                        ItemStack chestItem = entityhuman.getEquipment(EnumItemSlot.CHEST);
+                        if (chestItem.getItem() == Items.ELYTRA) {
+                            chestItem.damage(world.purpurConfig.elytraDamagePerFireworkBoost, entityhuman, (entityliving) -> entityliving.broadcastItemBreak(EnumItemSlot.CHEST));
+                        }
+                    }
+                    // Purpur end
                     if (event.shouldConsume() && !entityhuman.abilities.canInstantlyBuild) {
                         itemstack.subtract(1);
                     } else ((EntityPlayer) entityhuman).getBukkitEntity().updateInventory();

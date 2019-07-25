@@ -500,7 +500,7 @@ public final class ItemStack {
             int j;
 
             if (i > 0) {
-                j = EnchantmentManager.getEnchantmentLevel(Enchantments.DURABILITY, this);
+                j = (getItem() == Items.ELYTRA && entityplayer != null && entityplayer.world.purpurConfig.elytraIgnoreUnbreaking) ? 0 : EnchantmentManager.getEnchantmentLevel(Enchantments.DURABILITY, this); // Purpur
                 int k = 0;
 
                 for (int l = 0; j > 0 && l < i; ++l) {
@@ -546,6 +546,12 @@ public final class ItemStack {
                 if (this.isDamaged(i, t0.getRandom(), t0 instanceof EntityPlayer ? (EntityPlayer) t0 : null)) {
                     consumer.accept(t0);
                     Item item = this.getItem();
+                    // Purpur start
+                    if (item == Items.ELYTRA) {
+                        setDamage(item.getMaxDurability() - 1);
+                        return;
+                    }
+                    // Purpur end
                     // CraftBukkit start - Check for item breaking
                     if (this.count == 1 && t0 instanceof EntityHuman) {
                         org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerItemBreakEvent((EntityHuman) t0, this);
