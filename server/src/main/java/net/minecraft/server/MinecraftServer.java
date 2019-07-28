@@ -279,7 +279,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public static final int TPS = 20;
     public static final int TICK_TIME = 1000000000 / TPS;
     private static final int SAMPLE_INTERVAL = 20; // Paper
-    public final double[] recentTps = new double[ 3 ];
+    public final double[] recentTps = new double[ 4 ]; // Purpur
     public boolean lagging = false; // Purpur
     public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
     // Spigot end
@@ -1024,6 +1024,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
     private long lastTick = 0;
     private long catchupTime = 0;
+    public final RollingAverage tps5s = new RollingAverage(5); // Purpur
     public final RollingAverage tps1 = new RollingAverage(60);
     public final RollingAverage tps5 = new RollingAverage(60 * 5);
     public final RollingAverage tps15 = new RollingAverage(60 * 15);
@@ -1116,13 +1117,17 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                     {
                         final long diff = curTime - tickSection;
                         java.math.BigDecimal currentTps = TPS_BASE.divide(new java.math.BigDecimal(diff), 30, java.math.RoundingMode.HALF_UP);
+                        tps5s.add(currentTps, diff); // Purpur
                         tps1.add(currentTps, diff);
                         tps5.add(currentTps, diff);
                         tps15.add(currentTps, diff);
                         // Backwards compat with bad plugins
-                        recentTps[0] = tps1.getAverage();
-                        recentTps[1] = tps5.getAverage();
-                        recentTps[2] = tps15.getAverage();
+                        // Purpur start
+                        recentTps[0] = tps5s.getAverage();
+                        recentTps[1] = tps1.getAverage();
+                        recentTps[2] = tps5.getAverage();
+                        recentTps[3] = tps15.getAverage();
+                        // Purpur end
                         // Paper end
                         lagging = recentTps[0] < net.pl3x.purpur.PurpurConfig.laggingThreshold; // Purpur
                         tickSection = curTime;
