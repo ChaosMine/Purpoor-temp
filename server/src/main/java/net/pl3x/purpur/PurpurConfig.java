@@ -1,6 +1,7 @@
 package net.pl3x.purpur;
 
 import com.google.common.base.Throwables;
+import net.minecraft.locale.LocaleLanguage;
 import net.minecraft.server.MinecraftServer;
 import net.pl3x.purpur.command.PurpurCommand;
 import org.bukkit.Bukkit;
@@ -127,6 +128,15 @@ public class PurpurConfig {
     private static String getString(String path, String def) {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
+    }
+
+    public static String afkBroadcastAway = "§e§o%s is now AFK";
+    public static String afkBroadcastBack = "§e§o%s is no longer AFK";
+    public static String afkTabListPrefix = "[AFK] ";
+    private static void messages() {
+        afkBroadcastAway = getString("settings.messages.afk-broadcast-away", afkBroadcastAway);
+        afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
+        afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
     }
 
     public static String timingsUrl = "https://timings.pl3x.net";

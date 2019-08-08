@@ -183,28 +183,18 @@ public interface IEntityAccess {
     }
     // Paper end
 
-    default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
-        Iterator iterator = this.getPlayers().iterator();
-
-        double d4;
-
-        do {
-            EntityHuman entityhuman;
-
-            do {
-                do {
-                    if (!iterator.hasNext()) {
-                        return false;
-                    }
-
-                    entityhuman = (EntityHuman) iterator.next();
-                } while (!IEntitySelector.g.test(entityhuman));
-            } while (!IEntitySelector.b.test(entityhuman));
-
-            d4 = entityhuman.h(d0, d1, d2);
-        } while (d3 >= 0.0D && d4 >= d3 * d3);
-
-        return true;
+    // Purpur start
+    default boolean isPlayerNearby(double x, double y, double z, double distance) {
+        double distanceSq = distance * distance;
+        for (EntityHuman player : getPlayers()) {
+            if (IEntitySelector.notSpectator().test(player) && IEntitySelector.isLivingAlive().test(player) && IEntitySelector.notAfk.test(player)) {
+                if (distance < 0.0D || player.getDistanceSquared(x, y, z) < distanceSq) {
+                    return true;
+                }
+            }
+        }
+        return false;
+        // Purpur end
     }
 
     @Nullable

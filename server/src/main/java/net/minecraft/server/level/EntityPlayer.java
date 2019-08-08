@@ -2103,7 +2103,53 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     public void resetIdleTimer() {
         this.ca = SystemUtils.getMonotonicMillis();
+        setAfk(false); // Purpur
     }
+
+    // Purpur start
+    private boolean isAfk = false;
+
+    @Override
+    public void setAfk(boolean setAfk) {
+        if (this.isAfk == setAfk) {
+            return;
+        }
+
+        String msg = setAfk ? net.pl3x.purpur.PurpurConfig.afkBroadcastAway : net.pl3x.purpur.PurpurConfig.afkBroadcastBack;
+
+        net.pl3x.purpur.event.PlayerAFKEvent event = new net.pl3x.purpur.event.PlayerAFKEvent(getBukkitEntity(), setAfk, world.purpurConfig.idleTimeoutKick, msg, !Bukkit.isPrimaryThread());
+        if (!event.callEvent() || event.shouldKick()) {
+            return;
+        }
+
+        this.isAfk = setAfk;
+
+        if (!setAfk) {
+            resetIdleTimer();
+        }
+
+        msg = event.getBroadcastMsg();
+        if (msg != null && !msg.isEmpty()) {
+            server.getPlayerList().sendMessage(org.bukkit.craftbukkit.util.CraftChatMessage.fromStringOrNull(String.format(msg, getProfile().getName())));
+        }
+
+        if (world.purpurConfig.idleTimeoutUpdateTabList) {
+            getBukkitEntity().setPlayerListName((setAfk ? net.pl3x.purpur.PurpurConfig.afkTabListPrefix : "") + getName());
+        }
+
+        ((WorldServer) world).everyoneSleeping();
+    }
+
+    @Override
+    public boolean isAfk() {
+        return isAfk;
+    }
+
+    @Override
+    public boolean isCollidable() {
+        return !isAfk() && super.isCollidable();
+    }
+    // Purpur end
 
     public ServerStatisticManager getStatisticManager() {
         return this.serverStatisticManager;

@@ -15,6 +15,7 @@ import net.minecraft.world.scores.ScoreboardTeamBase;
 public final class IEntitySelector {
 
     public static final Predicate<Entity> a = Entity::isAlive;
+    public static Predicate<EntityLiving> isLivingAlive() { return b; } // Purpur - OBFHELPER
     public static final Predicate<EntityLiving> b = EntityLiving::isAlive;
     public static final Predicate<Entity> c = (entity) -> {
         return entity.isAlive() && !entity.isVehicle() && !entity.isPassenger();
@@ -35,6 +36,7 @@ public final class IEntitySelector {
         return !entity.isSpectator();
     };
     public static Predicate<EntityHuman> isInsomniac = (player) -> MathHelper.clamp(((EntityPlayer) player).getStatisticManager().getStatisticValue(StatisticList.CUSTOM.get(StatisticList.TIME_SINCE_REST)), 1, Integer.MAX_VALUE) >= 72000; // Paper
+    public static Predicate<EntityHuman> notAfk = (player) -> !player.isAfk(); // Purpur
 
     // Paper start
     public static final Predicate<Entity> affectsSpawning = (entity) -> {

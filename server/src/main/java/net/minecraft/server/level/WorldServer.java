@@ -1002,7 +1002,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         // CraftBukkit end
 
         if (this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> {
-            return !entityplayer.isSpectator() && !entityplayer.isDeeplySleeping() && !entityplayer.fauxSleeping; // CraftBukkit
+            return !entityplayer.isSpectator() && !entityplayer.isDeeplySleeping() && !entityplayer.fauxSleeping && !(purpurConfig.idleTimeoutCountAsSleeping && entityplayer.isAfk()); // CraftBukkit // Purpur
         })) {
             // CraftBukkit start
             long l = this.worldData.getDayTime() + 24000L;
@@ -1345,7 +1345,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             while (iterator.hasNext()) {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping())) { // CraftBukkit
+                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping()) || (purpurConfig.idleTimeoutCountAsSleeping && entityplayer.isAfk())) { // CraftBukkit // Purpur
                     ++i;
                 } else if (entityplayer.isSleeping()) {
                     ++j;

@@ -204,6 +204,7 @@ public class ActivationRange
         {
 
             player.activatedTick = MinecraftServer.currentTick;
+            if (!player.world.purpurConfig.idleTimeoutTickNearbyEntities && player.isAfk()) continue; // Purpur
             maxBB = player.getBoundingBox().grow( maxRange, 256, maxRange );
             ActivationType.MISC.boundingBox = player.getBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
             ActivationType.RAIDER.boundingBox = player.getBoundingBox().grow( raiderActivationRange, 256, raiderActivationRange );

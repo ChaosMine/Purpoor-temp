@@ -399,6 +399,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
         }
 
         if (this.player.F() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.F() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
+            // Purpur start
+            this.player.setAfk(true);
+            if (!this.player.world.purpurConfig.idleTimeoutKick) {
+                return;
+            }
+            // Purpur end
             this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
             this.disconnect(new ChatMessage("multiplayer.disconnect.idling"), org.bukkit.event.player.PlayerKickEvent.Cause.IDLING); // Paper - kick event cause
         }
@@ -681,6 +687,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     this.lastPosZ = to.getZ();
                     this.lastYaw = to.getYaw();
                     this.lastPitch = to.getPitch();
+
+                    if (!to.getWorld().getUID().equals(from.getWorld().getUID()) || to.getBlockX() != from.getBlockX() || to.getBlockY() != from.getBlockY() || to.getBlockZ() != from.getBlockZ() || to.getYaw() != from.getYaw() || to.getPitch() != from.getPitch()) this.player.resetIdleTimer(); // Purpur
 
                     // Skip the first time we do this
                     if (true) { // Spigot - don't skip any move events
@@ -1429,7 +1437,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
                             if (!this.player.H() && d11 > org.spigotmc.SpigotConfig.movedWronglyThreshold && !this.player.isSleeping() && !this.player.playerInteractManager.isCreative() && this.player.playerInteractManager.getGameMode() != EnumGamemode.SPECTATOR) { // Spigot
                                 flag1 = true; // Tuinity - diff on change, this should be moved wrongly
-                                PlayerConnection.LOGGER.warn("{} moved wrongly!", this.player.getDisplayName().getString());
+                                PlayerConnection.LOGGER.warn("{} moved wrongly! ({})", this.player.getDisplayName().getString(), d11); // Purpur
                             }
 
                             this.player.setLocation(d4, d5, d6, f, f1);
@@ -1478,6 +1486,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
                                     this.lastPosZ = to.getZ();
                                     this.lastYaw = to.getYaw();
                                     this.lastPitch = to.getPitch();
+
+                                    if (!to.getWorld().getUID().equals(from.getWorld().getUID()) || to.getBlockX() != from.getBlockX() || to.getBlockY() != from.getBlockY() || to.getBlockZ() != from.getBlockZ() || to.getYaw() != from.getYaw() || to.getPitch() != from.getPitch()) this.player.resetIdleTimer(); // Purpur
 
                                     // Skip the first time we do this
                                     if (from.getX() != Double.MAX_VALUE) {

@@ -181,6 +181,15 @@ public abstract class EntityHuman extends EntityLiving {
     }
     // CraftBukkit end
 
+    // Purpur start
+    public void setAfk(boolean setAfk){
+    }
+
+    public boolean isAfk() {
+        return false;
+    }
+    // Purpur end
+
     public EntityHuman(World world, BlockPosition blockposition, float f, GameProfile gameprofile) {
         super(EntityTypes.PLAYER, world);
         this.bL = ItemStack.b;

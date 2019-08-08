@@ -56,4 +56,15 @@ public class PurpurWorldConfig {
         PurpurConfig.config.addDefault("world-settings.default." + path, def);
         return PurpurConfig.config.getString("world-settings." + worldName + "." + path, PurpurConfig.config.getString("world-settings.default." + path));
     }
+
+    public boolean idleTimeoutKick = true;
+    public boolean idleTimeoutTickNearbyEntities = true;
+    public boolean idleTimeoutCountAsSleeping = false;
+    public boolean idleTimeoutUpdateTabList = false;
+    private void playerIdleTimeoutSettings() {
+        idleTimeoutKick = getBoolean("gameplay-mechanics.player.idle-timeout.kick-if-idle", idleTimeoutKick);
+        idleTimeoutTickNearbyEntities = getBoolean("gameplay-mechanics.player.idle-timeout.tick-nearby-entities", idleTimeoutTickNearbyEntities);
+        idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.player.idle-timeout.count-as-sleeping", idleTimeoutCountAsSleeping);
+        idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
+    }
 }

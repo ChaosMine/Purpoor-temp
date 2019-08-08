@@ -2500,4 +2500,21 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return spigot;
     }
     // Spigot end
+
+    // Purpur start
+    @Override
+    public boolean isAfk() {
+        return getHandle().isAfk();
+    }
+
+    @Override
+    public void setAfk(boolean setAfk) {
+        getHandle().setAfk(setAfk);
+    }
+
+    @Override
+    public void resetIdleTimer() {
+        getHandle().resetIdleTimer();
+    }
+    // Purpur end
 }
