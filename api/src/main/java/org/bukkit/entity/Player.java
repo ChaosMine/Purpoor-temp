@@ -2139,4 +2139,25 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     @Override
     Spigot spigot();
     // Spigot end
+
+    // Purpur start
+    /**
+     * Check if player is AFK
+     *
+     * @return True if AFK
+     */
+    boolean isAfk();
+
+    /**
+     * Set player as AFK
+     *
+     * @param setAfk Whether to set AFK or not
+     */
+    void setAfk(boolean setAfk);
+
+    /**
+     * Reset the idle timer back to 0
+     */
+    void resetIdleTimer();
+    // Purpur end
 }
