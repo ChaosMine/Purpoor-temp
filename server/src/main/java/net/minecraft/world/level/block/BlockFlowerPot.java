@@ -21,6 +21,8 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 
+import io.papermc.paper.event.player.PlayerFlowerPotManipulateEvent; // Paper
+
 public class BlockFlowerPot extends Block {
 
     private static final Map<Block, Block> b = Maps.newHashMap();
@@ -52,6 +54,27 @@ public class BlockFlowerPot extends Block {
         boolean flag1 = this.c == Blocks.AIR;
 
         if (flag != flag1) {
+            // Paper start
+            org.bukkit.entity.Player player = (org.bukkit.entity.Player) entityhuman.getBukkitEntity();
+            boolean placing = flag1;
+            org.bukkit.block.Block bukkitblock = org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition);
+            org.bukkit.inventory.ItemStack bukkititemstack = org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(itemstack);
+            org.bukkit.Material mat = org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(c);
+            org.bukkit.inventory.ItemStack bukkititemstack1 = new org.bukkit.inventory.ItemStack(mat, 1);
+            org.bukkit.inventory.ItemStack whichitem = placing ? bukkititemstack : bukkititemstack1;
+
+            PlayerFlowerPotManipulateEvent event = new PlayerFlowerPotManipulateEvent(player, bukkitblock, whichitem, placing);
+            player.getServer().getPluginManager().callEvent(event);
+
+            if (event.isCancelled()) {
+                // Update client
+                player.sendBlockChange(bukkitblock.getLocation(), bukkitblock.getBlockData());
+                player.updateInventory();
+
+                return EnumInteractionResult.PASS;
+            }
+            // Paper end
+
             if (flag1) {
                 world.setTypeAndData(blockposition, block.getBlockData(), 3);
                 entityhuman.a(StatisticList.POT_FLOWER);
