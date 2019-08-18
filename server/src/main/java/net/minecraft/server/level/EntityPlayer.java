@@ -94,6 +94,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.entity.EnumMainHand;
 import net.minecraft.world.entity.IEntityAngerable;
 import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
@@ -219,6 +220,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public boolean queueHealthUpdatePacket = false;
     public net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth queuedHealthUpdatePacket;
     // Paper end
+    // Paper start - mob spawning rework
+    public static final int ENUMCREATURETYPE_TOTAL_ENUMS = EnumCreatureType.values().length;
+    public final int[] mobCounts = new int[ENUMCREATURETYPE_TOTAL_ENUMS]; // Paper
+    public final com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> cachedSingleMobDistanceMap;
+    // Paper end
 
     // CraftBukkit start
     public String displayName;
@@ -257,6 +263,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.adventure$displayName = net.kyori.adventure.text.Component.text(this.getName()); // Paper
         this.canPickUpLoot = true;
         this.maxHealthCache = this.getMaxHealth();
+        this.cachedSingleMobDistanceMap = new com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
     }
 
     // Yes, this doesn't match Vanilla, but it's the best we can do for now.
@@ -2061,6 +2068,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     }
 
+    public final SectionPosition getPlayerMapSection() { return this.O(); } // Paper - OBFHELPER
     public SectionPosition O() {
         return this.cj;
     }

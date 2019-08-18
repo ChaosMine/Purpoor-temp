@@ -16,6 +16,7 @@ import net.minecraft.core.IPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
@@ -62,6 +63,11 @@ public final class SpawnerCreature {
     });
 
     public static SpawnerCreature.d a(int i, Iterable<Entity> iterable, SpawnerCreature.b spawnercreature_b) {
+        // Paper start - add countMobs parameter
+        return countMobs(i, iterable, spawnercreature_b, false);
+    }
+    public static SpawnerCreature.d countMobs(int i, Iterable<Entity> iterable, SpawnerCreature.b spawnercreature_b, boolean countMobs) {
+        // Paper end - add countMobs parameter
         SpawnerCreatureProbabilities spawnercreatureprobabilities = new SpawnerCreatureProbabilities();
         Object2IntOpenHashMap<EnumCreatureType> object2intopenhashmap = new Object2IntOpenHashMap();
         Iterator iterator = iterable.iterator();
@@ -99,6 +105,11 @@ public final class SpawnerCreature {
                     }
 
                     object2intopenhashmap.addTo(enumcreaturetype, 1);
+                    // Paper start
+                    if (countMobs) {
+                        ((WorldServer)chunk.world).getChunkProvider().playerChunkMap.updatePlayerMobTypeMap(entity);
+                    }
+                    // Paper end
                 });
             }
         }
@@ -157,13 +168,31 @@ public final class SpawnerCreature {
                 continue;
             }
 
-            if ((flag || !enumcreaturetype.d()) && (flag1 || enumcreaturetype.d()) && (flag2 || !enumcreaturetype.e()) && spawnercreature_d.a(enumcreaturetype, limit)) {
+            // Paper start - only allow spawns upto the limit per chunk and update count afterwards
+            int currEntityCount = spawnercreature_d.getEntityCountsByType().getInt(enumcreaturetype);
+            int k1 = limit * spawnercreature_d.getSpawnerChunks() / SpawnerCreature.b;
+            int difference = k1 - currEntityCount;
+
+            if (worldserver.paperConfig.perPlayerMobSpawns) {
+                int minDiff = Integer.MAX_VALUE;
+                for (EntityPlayer entityplayer : worldserver.getChunkProvider().playerChunkMap.playerMobDistanceMap.getPlayersInRange(chunk.getPos())) {
+                    minDiff = Math.min(limit - worldserver.getChunkProvider().playerChunkMap.getMobCountNear(entityplayer, enumcreaturetype), minDiff);
+                }
+                difference = (minDiff == Integer.MAX_VALUE) ? 0 : minDiff;
+            }
+            // Paper end
+
+            // Paper start - per player mob spawning
+            if ((flag || !enumcreaturetype.d()) && (flag1 || enumcreaturetype.d()) && (flag2 || !enumcreaturetype.e()) && difference > 0) {
                 // CraftBukkit end
-                a(enumcreaturetype, worldserver, chunk, (entitytypes, blockposition, ichunkaccess) -> {
+                int spawnCount = spawnMobs(enumcreaturetype, worldserver, chunk, (entitytypes, blockposition, ichunkaccess) -> {
                     return spawnercreature_d.a(entitytypes, blockposition, ichunkaccess);
                 }, (entityinsentient, ichunkaccess) -> {
                     spawnercreature_d.a(entityinsentient, ichunkaccess);
-                });
+                },
+                difference, worldserver.paperConfig.perPlayerMobSpawns ? worldserver.getChunkProvider().playerChunkMap::updatePlayerMobTypeMap : null);
+                spawnercreature_d.getEntityCountsByType().mergeInt(enumcreaturetype, spawnCount, Integer::sum);
+                // Paper end - per player mob spawning
             }
         }
 
@@ -172,22 +201,34 @@ public final class SpawnerCreature {
     }
 
     public static void a(EnumCreatureType enumcreaturetype, WorldServer worldserver, Chunk chunk, SpawnerCreature.c spawnercreature_c, SpawnerCreature.a spawnercreature_a) {
+        // Paper start - add parameters and int ret type
+        spawnMobs(enumcreaturetype, worldserver, chunk, spawnercreature_c, spawnercreature_a, Integer.MAX_VALUE, null);
+    }
+    public static int spawnMobs(EnumCreatureType enumcreaturetype, WorldServer worldserver, Chunk chunk, SpawnerCreature.c spawnercreature_c, SpawnerCreature.a spawnercreature_a, int maxSpawns, Consumer<Entity> trackEntity) {
+        // Paper end - add parameters and int ret type
         BlockPosition blockposition = getRandomPosition(worldserver, chunk);
 
         if (blockposition.getY() >= 1) {
-            a(enumcreaturetype, worldserver, (IChunkAccess) chunk, blockposition, spawnercreature_c, spawnercreature_a);
+            return spawnMobsInternal(enumcreaturetype, worldserver, (IChunkAccess) chunk, blockposition, spawnercreature_c, spawnercreature_a, maxSpawns, trackEntity);
         }
+        return 0; // Paper
     }
 
     public static void a(EnumCreatureType enumcreaturetype, WorldServer worldserver, IChunkAccess ichunkaccess, BlockPosition blockposition, SpawnerCreature.c spawnercreature_c, SpawnerCreature.a spawnercreature_a) {
+        // Paper start - add maxSpawns parameter and return spawned mobs
+        spawnMobsInternal(enumcreaturetype, worldserver, ichunkaccess, blockposition, spawnercreature_c, spawnercreature_a, Integer.MAX_VALUE, null);
+    }
+    public static int spawnMobsInternal(EnumCreatureType enumcreaturetype, WorldServer worldserver, IChunkAccess ichunkaccess, BlockPosition blockposition, SpawnerCreature.c spawnercreature_c, SpawnerCreature.a spawnercreature_a, int maxSpawns, Consumer<Entity> trackEntity) {
+        // Paper end - add maxSpawns parameter and return spawned mobs
         StructureManager structuremanager = worldserver.getStructureManager();
         ChunkGenerator chunkgenerator = worldserver.getChunkProvider().getChunkGenerator();
         int i = blockposition.getY();
         IBlockData iblockdata = worldserver.getTypeIfLoadedAndInBounds(blockposition); // Paper - don't load chunks for mob spawn
+        int j = 0; // Paper - moved up
 
         if (iblockdata != null && !iblockdata.isOccluding(ichunkaccess, blockposition)) { // Paper - don't load chunks for mob spawn
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
-            int j = 0;
+            // Paper - moved up
             int k = 0;
 
             while (k < 3) {
@@ -227,7 +268,7 @@ public final class SpawnerCreature {
                                     // Paper start
                                     Boolean doSpawning = a(worldserver, enumcreaturetype, structuremanager, chunkgenerator, biomesettingsmobs_c, blockposition_mutableblockposition, d2);
                                     if (doSpawning == null) {
-                                        return;
+                                        return j; // Paper
                                     }
                                     if (doSpawning && spawnercreature_c.test(biomesettingsmobs_c.c, blockposition_mutableblockposition, ichunkaccess)) {
                                         // Paper end
@@ -235,7 +276,7 @@ public final class SpawnerCreature {
 
 
                                         if (entityinsentient == null) {
-                                            return;
+                                            return j; // Paper
                                         }
 
                                         entityinsentient.setPositionRotation(d0, (double) i, d1, worldserver.random.nextFloat() * 360.0F, 0.0F);
@@ -244,13 +285,18 @@ public final class SpawnerCreature {
                                             // CraftBukkit start
                                             worldserver.addAllEntities(entityinsentient, SpawnReason.NATURAL);
                                             if (!entityinsentient.dead) {
-                                                ++j;
+                                                ++j; // Paper - force diff on name change - we expect this to be the total amount spawned
                                                 ++k1;
                                                 spawnercreature_a.run(entityinsentient, ichunkaccess);
+                                                // Paper start
+                                                if (trackEntity != null) {
+                                                    trackEntity.accept(entityinsentient);
+                                                }
+                                                // Paper end
                                             }
                                             // CraftBukkit end
-                                            if (j >= entityinsentient.getMaxSpawnGroup()) {
-                                                return;
+                                            if (j >= entityinsentient.getMaxSpawnGroup() || j >= maxSpawns) { // Paper
+                                                return j; // Paper
                                             }
 
                                             if (entityinsentient.c(k1)) {
@@ -272,6 +318,7 @@ public final class SpawnerCreature {
             }
 
         }
+        return j; // Paper
     }
 
     private static boolean a(WorldServer worldserver, IChunkAccess ichunkaccess, BlockPosition.MutableBlockPosition blockposition_mutableblockposition, double d0) {
@@ -512,8 +559,8 @@ public final class SpawnerCreature {
 
     public static class d {
 
-        private final int a;
-        private final Object2IntOpenHashMap<EnumCreatureType> b;
+        private final int a; final int getSpawnerChunks() { return this.a; } // Paper - OBFHELPER
+        private final Object2IntOpenHashMap<EnumCreatureType> b; final Object2IntMap<EnumCreatureType> getEntityCountsByType() { return this.b; } // Paper - OBFHELPER
         private final SpawnerCreatureProbabilities c;
         private final Object2IntMap<EnumCreatureType> d;
         @Nullable
@@ -574,7 +621,7 @@ public final class SpawnerCreature {
 
         // CraftBukkit start
         private boolean a(EnumCreatureType enumcreaturetype, int limit) {
-            int i = limit * this.a / SpawnerCreature.b;
+            int i = limit * this.a / SpawnerCreature.b; // Paper - diff on change, needed in the spawn method
             // CraftBukkit end
 
             return this.b.getInt(enumcreaturetype) < i;

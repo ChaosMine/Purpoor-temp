@@ -72,6 +72,7 @@ import net.minecraft.util.thread.ThreadedMailbox;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -129,7 +130,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     public final Int2ObjectMap<PlayerChunkMap.EntityTracker> trackedEntities;
     private final Long2ByteMap z;
     private final Queue<Runnable> A; private final Queue<Runnable> getUnloadQueueTasks() { return this.A; } // Paper - OBFHELPER
-    private int viewDistance;
+    int viewDistance; // Paper - private -> package private
+    public final com.destroystokyo.paper.util.PlayerMobDistanceMap playerMobDistanceMap; // Paper
 
     // CraftBukkit start - recursion-safe executor for Chunk loadCallback() and unloadCallback()
     public final CallbackExecutor callbackExecutor = new CallbackExecutor();
@@ -208,6 +210,24 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         this.l = supplier;
         this.m = new VillagePlace(new File(this.w, "poi"), datafixer, flag, this.world); // Paper
         this.setViewDistance(i);
+        this.playerMobDistanceMap = this.world.paperConfig.perPlayerMobSpawns ? new com.destroystokyo.paper.util.PlayerMobDistanceMap() : null; // Paper
+    }
+
+    public void updatePlayerMobTypeMap(Entity entity) {
+        if (!this.world.paperConfig.perPlayerMobSpawns) {
+            return;
+        }
+        int chunkX = (int)Math.floor(entity.locX()) >> 4;
+        int chunkZ = (int)Math.floor(entity.locZ()) >> 4;
+        int index = entity.getEntityType().getEnumCreatureType().ordinal();
+
+        for (EntityPlayer player : this.playerMobDistanceMap.getPlayersInRange(chunkX, chunkZ)) {
+            ++player.mobCounts[index];
+        }
+    }
+
+    public int getMobCountNear(EntityPlayer entityPlayer, EnumCreatureType enumCreatureType) {
+        return entityPlayer.mobCounts[enumCreatureType.ordinal()];
     }
 
     private static double a(ChunkCoordIntPair chunkcoordintpair, Entity entity) {
