@@ -613,7 +613,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         boolean flag = this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT);
         short short0 = 500;
 
-        if (this.bF != null && !this.bF.isPreviouslyKilled()) {
+        if (getEnderDragonBattle() != null && (world.purpurConfig.enderDragonAlwaysDropsFullExp || !getEnderDragonBattle().isPreviouslyKilled())) { // Purpur
             short0 = 12000;
         }
 

@@ -142,6 +142,11 @@ public class PurpurWorldConfig {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
+    public boolean enderDragonAlwaysDropsFullExp = false;
+    private void enderDragonSettings() {
+        enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
+    }
+
     public boolean foxTypeChangesWithTulips = false;
     private void foxSettings() {
         foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
