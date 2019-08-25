@@ -54,7 +54,7 @@ public class ItemArmor extends Item implements ItemWearable {
             return false;
         } else {
             EntityLiving entityliving = (EntityLiving) list.get(0);
-            EnumItemSlot enumitemslot = EntityInsentient.j(itemstack);
+            EnumItemSlot enumitemslot = isourceblock.getWorld().purpurConfig.dispenserApplyCursedArmor ? EntityInsentient.getSlotForItemStack(itemstack) : EntityInsentient.getSlotForDispenser(itemstack); // Purpur
             ItemStack itemstack1 = itemstack.cloneAndSubtract(1);
             // CraftBukkit start
             World world = isourceblock.getWorld();
@@ -113,6 +113,7 @@ public class ItemArmor extends Item implements ItemWearable {
         this.m = builder.build();
     }
 
+    public EnumItemSlot getEquipmentSlot() { return b(); } // Purpur - OBFHELPER
     public EnumItemSlot b() {
         return this.b;
     }

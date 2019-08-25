@@ -65,6 +65,7 @@ import net.minecraft.world.item.ItemSword;
 import net.minecraft.world.item.ItemTool;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
@@ -1068,6 +1069,13 @@ public abstract class EntityInsentient extends EntityLiving {
 
     }
 
+    // Purpur start
+    public static EnumItemSlot getSlotForDispenser(ItemStack itemstack) {
+        return EnchantmentManager.getEnchantmentLevel(Enchantments.BINDING_CURSE, itemstack) > 0 ? EnumItemSlot.MAINHAND : getSlotForItemStack(itemstack);
+    }
+    // Purpur end
+
+    public static EnumItemSlot getSlotForItemStack(ItemStack itemstack) { return j(itemstack); } // Purpur - OBFHELPER
     public static EnumItemSlot j(ItemStack itemstack) {
         Item item = itemstack.getItem();
 
