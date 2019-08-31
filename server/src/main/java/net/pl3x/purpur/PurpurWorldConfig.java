@@ -154,6 +154,13 @@ public class PurpurWorldConfig {
         illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
     }
 
+    public double rabbitNaturalToast = 0.0D;
+    public double rabbitNaturalKiller = 0.0D;
+    private void rabbitSettings() {
+        rabbitNaturalToast = getDouble("mobs.rabbit.spawn-toast-chance", rabbitNaturalToast);
+        rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     private void villagerSettings() {

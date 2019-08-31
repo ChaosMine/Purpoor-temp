@@ -352,6 +352,10 @@ public class EntityRabbit extends EntityAnimal {
             if (!this.hasCustomName()) {
                 this.setCustomName(new ChatMessage(SystemUtils.a("entity", EntityRabbit.bp)));
             }
+        // Purpur start
+        } else if (i == 98) {
+            setCustomName(new ChatMessage("Toast"));
+            // Purpur end
         }
 
         this.datawatcher.set(EntityRabbit.bo, i);
@@ -373,6 +377,16 @@ public class EntityRabbit extends EntityAnimal {
     }
 
     private int a(GeneratorAccess generatoraccess) {
+        // Purpur start
+        World world = generatoraccess.getMinecraftWorld();
+        if (world.purpurConfig.rabbitNaturalKiller > 0D && random.nextDouble() <= world.purpurConfig.rabbitNaturalKiller) {
+            return 99;
+        }
+        if (world.purpurConfig.rabbitNaturalToast > 0D && random.nextDouble() <= world.purpurConfig.rabbitNaturalToast) {
+            return 98;
+        }
+        // Purpur end
+
         BiomeBase biomebase = generatoraccess.getBiome(this.getChunkCoordinates());
         int i = this.random.nextInt(100);
 
