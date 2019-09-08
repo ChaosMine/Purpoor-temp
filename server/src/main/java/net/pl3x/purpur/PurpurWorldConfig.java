@@ -146,6 +146,7 @@ public class PurpurWorldConfig {
         idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
     }
 
+    public boolean boatEjectPlayersOnLand = false;
     public boolean disableDropsOnCrammingDeath = false;
     public boolean entitiesPickUpLootBypassMobGriefing = false;
     public boolean milkCuresBadOmen = true;
@@ -153,6 +154,7 @@ public class PurpurWorldConfig {
     public double voidDamageHeight = -64.0D;
     public double voidDamageDealt = 4.0D;
     private void miscGameplayMechanicsSettings() {
+        boatEjectPlayersOnLand = getBoolean("gameplay-mechanics.boat.eject-players-on-land", boatEjectPlayersOnLand);
         disableDropsOnCrammingDeath = getBoolean("gameplay-mechanics.disable-drops-on-cramming-death", disableDropsOnCrammingDeath);
         entitiesPickUpLootBypassMobGriefing = getBoolean("gameplay-mechanics.entities-pick-up-loot-bypass-mob-griefing", entitiesPickUpLootBypassMobGriefing);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);

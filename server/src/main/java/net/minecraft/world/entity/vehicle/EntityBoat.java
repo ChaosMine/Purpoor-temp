@@ -487,6 +487,7 @@ public class EntityBoat extends Entity {
 
             if (f > 0.0F) {
                 this.aw = f;
+                if (world.purpurConfig.boatEjectPlayersOnLand) ejectPassengers(); // Purpur
                 return EntityBoat.EnumStatus.ON_LAND;
             } else {
                 return EntityBoat.EnumStatus.IN_AIR;
