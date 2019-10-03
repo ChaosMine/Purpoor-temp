@@ -49,6 +49,7 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.monster.EntityBlaze;
 import net.minecraft.world.entity.monster.EntityEnderman;
 import net.minecraft.world.entity.monster.IMonster;
+import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.vehicle.EntityBoat;
 import net.minecraft.world.item.Item;
@@ -1218,6 +1219,7 @@ public abstract class EntityInsentient extends EntityLiving {
         if (!this.isAlive()) {
             return EnumInteractionResult.PASS;
         } else if (this.getLeashHolder() == entityhuman) {
+            if (enumhand == EnumHand.OFF_HAND && (world.purpurConfig.villagerCanBeLeashed || world.purpurConfig.villagerTraderCanBeLeashed) && this instanceof EntityVillagerAbstract) return EnumInteractionResult.CONSUME; // Purpur
             // CraftBukkit start - fire PlayerUnleashEntityEvent
             // Paper start - drop leash variable
             PlayerUnleashEntityEvent event = CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman, !entityhuman.abilities.canInstantlyBuild);

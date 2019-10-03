@@ -97,6 +97,13 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
     }
 
+    // Purpur - start
+    @Override
+    public boolean a(EntityHuman entityhuman) {
+        return world.purpurConfig.villagerTraderCanBeLeashed && !this.isLeashed();
+    }
+    // Purpur - end
+
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {

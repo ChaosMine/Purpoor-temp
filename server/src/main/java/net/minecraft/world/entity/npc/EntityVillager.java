@@ -149,6 +149,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     protected void initPathfinder() {
         if (world.purpurConfig.villagerFollowEmeraldBlock) this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, TEMPT_ITEMS));
     }
+
+    @Override
+    public boolean a(EntityHuman entityhuman) {
+        return world.purpurConfig.villagerCanBeLeashed && !this.isLeashed();
+    }
     // Purpur end
 
     @Override
