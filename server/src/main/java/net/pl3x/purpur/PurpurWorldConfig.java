@@ -63,6 +63,11 @@ public class PurpurWorldConfig {
         return PurpurConfig.config.getString("world-settings." + worldName + "." + path, PurpurConfig.config.getString("world-settings.default." + path));
     }
 
+    public float armorstandStepHeight = 0.0F;
+    private void armorstandSettings() {
+        armorstandStepHeight = (float) getDouble("gameplay-mechanics.armorstand.step-height", armorstandStepHeight);
+    }
+
     public boolean idleTimeoutKick = true;
     public boolean idleTimeoutTickNearbyEntities = true;
     public boolean idleTimeoutCountAsSleeping = false;

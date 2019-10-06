@@ -660,6 +660,7 @@ public class EntityArmorStand extends EntityLiving {
 
     @Override
     public void tick() {
+        setStepHeight(world.purpurConfig.armorstandStepHeight); // Purpur
         // Paper start
         if (!this.canTick) {
             if (this.noTickPoseDirty) {
