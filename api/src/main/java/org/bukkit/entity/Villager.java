@@ -113,6 +113,13 @@ public interface Villager extends AbstractVillager {
      */
     public void wakeup();
 
+    // Purpur start
+    /**
+     * Reset this villager's trade offers
+     */
+    public void resetOffers();
+    // Purpur end
+
     /**
      * Represents Villager type, usually corresponding to what biome they spawn
      * in.
