@@ -113,6 +113,13 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
         return this.tradingPlayer != null;
     }
 
+    // Paper start
+    public void resetOffers() {
+        this.trades = new MerchantRecipeList();
+        this.updateTrades();
+    }
+    // Paper end
+
     @Override
     public MerchantRecipeList getOffers() {
         if (this.trades == null) {
@@ -235,6 +242,7 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
         return this.world;
     }
 
+    protected final void updateTrades() { eW(); } // Paper - OBFHELPER
     protected abstract void eW();
 
     protected void a(MerchantRecipeList merchantrecipelist, VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption, int i) {
