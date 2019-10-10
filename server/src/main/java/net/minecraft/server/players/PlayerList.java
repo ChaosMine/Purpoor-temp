@@ -846,6 +846,8 @@ public abstract class PlayerList {
             entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityEffect(entityplayer.getId(), mobEffect));
         }
 
+        entityplayer.setSneaking(false); // Paper - fix MC-10657
+
         // Fire advancement trigger
         entityplayer.triggerDimensionAdvancements(((CraftWorld) fromWorld).getHandle());
 
