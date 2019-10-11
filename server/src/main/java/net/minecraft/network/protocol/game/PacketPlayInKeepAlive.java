@@ -24,6 +24,7 @@ public class PacketPlayInKeepAlive implements Packet<PacketListenerPlayIn> {
         packetdataserializer.writeLong(this.a);
     }
 
+    public long getId() { return b(); } // Purpur - OBFHELPER
     public long b() {
         return this.a;
     }

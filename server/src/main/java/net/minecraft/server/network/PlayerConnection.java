@@ -233,6 +233,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     private long lastKeepAlive = SystemUtils.getMonotonicMillis(); private void setLastPing(long lastPing) { this.lastKeepAlive = lastPing;}; private long getLastPing() { return this.lastKeepAlive;}; // Paper - OBFHELPER
     private boolean awaitingKeepAlive; private void setPendingPing(boolean isPending) { this.awaitingKeepAlive = isPending;}; private boolean isPendingPing() { return this.awaitingKeepAlive;}; // Paper - OBFHELPER
     private long h; private void setKeepAliveID(long keepAliveID) { this.h = keepAliveID;}; private long getKeepAliveID() {return this.h; };  // Paper - OBFHELPER
+    private java.util.List<Long> keepAlives = new java.util.ArrayList<>(); // Purpur
     // CraftBukkit start - multithreaded fields
     private volatile int chatThrottle;
     private static final AtomicIntegerFieldUpdater chatSpamField = AtomicIntegerFieldUpdater.newUpdater(PlayerConnection.class, "chatThrottle");
@@ -366,6 +367,21 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // This should effectively place the keepalive handling back to "as it was" before 1.12.2
         long currentTime = SystemUtils.getMonotonicMillis();
         long elapsedTime = currentTime - this.getLastPing();
+
+        // Purpur start
+        if (net.pl3x.purpur.PurpurConfig.useAlternateKeepAlive) {
+            if (elapsedTime >= 1000L) { // 1 second
+                if (!processedDisconnect && keepAlives.size() > KEEPALIVE_LIMIT) {
+                    PlayerConnection.LOGGER.warn("{} was kicked due to keepalive timeout!", player.getName());
+                    disconnect(new ChatMessage("disconnect.timeout"));
+                } else {
+                    setLastPing(currentTime); // hijack this field for 1 second intervals
+                    keepAlives.add(currentTime); // currentTime is ID
+                    sendPacket(new PacketPlayOutKeepAlive(currentTime));
+                }
+            }
+        } else
+        // Purpur end
 
         if (this.isPendingPing()) {
             if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
@@ -3093,6 +3109,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
     @Override
     public void a(PacketPlayInKeepAlive packetplayinkeepalive) {
+        // Purpur start
+        if (net.pl3x.purpur.PurpurConfig.useAlternateKeepAlive) {
+            long id = packetplayinkeepalive.getId();
+            if (keepAlives.size() > 0 && keepAlives.contains(id)) {
+                int ping = (int) (SystemUtils.getMonotonicMillis() - id);
+                player.ping = (player.ping * 3 + ping) / 4;
+                keepAlives.clear(); // we got a valid response, lets roll with it and forget the rest
+            }
+        } else
+        // Purpur end
         //PlayerConnectionUtils.ensureMainThread(packetplayinkeepalive, this, this.player.getWorldServer()); // CraftBukkit // Paper - This shouldn't be on the main thread
         if (this.awaitingKeepAlive && packetplayinkeepalive.b() == this.h) {
             int i = (int) (SystemUtils.getMonotonicMillis() - this.lastKeepAlive);
