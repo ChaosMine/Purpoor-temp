@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public class PathfinderGoalLlamaFollow extends PathfinderGoal {
 
-    public final EntityLlama a;
+    public final EntityLlama a; public EntityLlama getLlama() { return a; } // Purpur
     private double b;
     private int c;
 
@@ -23,6 +23,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
 
     @Override
     public boolean a() {
+        if (!getLlama().shouldJoinCaravan) return false; // Purpur
         if (!this.a.isLeashed() && !this.a.fC()) {
             List<Entity> list = this.a.world.getEntities(this.a, this.a.getBoundingBox().grow(9.0D, 4.0D, 9.0D), (entity) -> {
                 EntityTypes<?> entitytypes = entity.getEntityType();
@@ -82,6 +83,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
 
     @Override
     public boolean b() {
+        if (!getLlama().shouldJoinCaravan) return false; // Purpur
         if (this.a.fC() && this.a.fD().isAlive() && this.a(this.a, 0)) {
             double d0 = this.a.h((Entity) this.a.fD());
 

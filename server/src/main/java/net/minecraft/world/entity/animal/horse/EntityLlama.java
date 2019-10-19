@@ -63,7 +63,8 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     @Nullable
     private EntityLlama bB;
     @Nullable
-    private EntityLlama bC;
+    private EntityLlama bC; public EntityLlama getCaravanTail() { return bC; } // Purpur - OBFHELPER
+    public boolean shouldJoinCaravan = true; // Purpur
 
     public EntityLlama(EntityTypes<? extends EntityLlama> entitytypes, World world) {
         super(entitytypes, world);
@@ -92,6 +93,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
             nbttagcompound.set("DecorItem", this.inventoryChest.getItem(1).save(new NBTTagCompound()));
         }
 
+        nbttagcompound.setBoolean("Purpur.ShouldJoinCaravan", shouldJoinCaravan); // Purpur
     }
 
     @Override
@@ -103,6 +105,11 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
             this.inventoryChest.setItem(1, ItemStack.a(nbttagcompound.getCompound("DecorItem")));
         }
 
+        // Purpur start
+        if (nbttagcompound.hasKey("Purpur.ShouldJoinCaravan")) {
+            nbttagcompound.setBoolean("Purpur.ShouldJoinCaravan", shouldJoinCaravan);
+        }
+        // Purpur end
         this.fe();
     }
 
@@ -437,19 +444,24 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
         }
     }
 
+    public void leaveCaravan() { fA(); } // Purpur - OBFHELPER
     public void fA() {
         if (this.bB != null) {
+            new net.pl3x.purpur.event.entity.LlamaLeaveCaravanEvent((org.bukkit.entity.Llama) getBukkitEntity()).callEvent(); // Purpur
             this.bB.bC = null;
         }
 
         this.bB = null;
     }
 
+    public void joinCaravan(EntityLlama entitiyllama) { a(entitiyllama); } // Purpur - OBFHELPER
     public void a(EntityLlama entityllama) {
+        if (!shouldJoinCaravan || !new net.pl3x.purpur.event.entity.LlamaJoinCaravanEvent((org.bukkit.entity.Llama) getBukkitEntity(), (org.bukkit.entity.Llama) entityllama.getBukkitEntity()).callEvent()) return; // Purpur
         this.bB = entityllama;
         this.bB.bC = this;
     }
 
+    public boolean hasCaravanTail() { return fB(); } // Purpur - OBFHELPER
     public boolean fB() {
         return this.bC != null;
     }
@@ -460,7 +472,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     }
 
     @Nullable
-    public EntityLlama fD() {
+    public EntityLlama fD() { return getCaravanHead(); } public EntityLlama getCaravanHead() { // Purpur - OBFHELPER
         return this.bB;
     }
 
