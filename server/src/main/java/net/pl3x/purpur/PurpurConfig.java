@@ -178,4 +178,11 @@ public class PurpurConfig {
         InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
     }
+
+    public static boolean loggerSuppressInitLegacyMaterialError = false;
+    public static boolean loggerSuppressIgnoredAdvancementWarnings = false;
+    private static void loggerSettings() {
+        loggerSuppressInitLegacyMaterialError = getBoolean("settings.logger.suppress-init-legacy-material-errors", loggerSuppressInitLegacyMaterialError);
+        loggerSuppressIgnoredAdvancementWarnings = getBoolean("settings.logger.suppress-ignored-advancement-warnings", loggerSuppressIgnoredAdvancementWarnings);
+    }
 }

@@ -190,6 +190,7 @@ public class AdvancementDataPlayer {
                         if (advancement == null) {
                             // CraftBukkit start
                             if (entry.getKey().getNamespace().equals("minecraft")) {
+                                if (!net.pl3x.purpur.PurpurConfig.loggerSuppressIgnoredAdvancementWarnings) // Purpur
                                 AdvancementDataPlayer.LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", entry.getKey(), this.f);
                             }
                             // CraftBukkit end
