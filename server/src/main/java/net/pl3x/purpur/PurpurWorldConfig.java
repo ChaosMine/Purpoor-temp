@@ -192,6 +192,13 @@ public class PurpurWorldConfig {
         farmlandGetsMoistFromBelow = getBoolean("blocks.farmland.gets-moist-from-below", farmlandGetsMoistFromBelow);
     }
 
+    public boolean lavaInfinite = false;
+    public int lavaInfiniteRequiredSources = 2;
+    private void lavaSettings() {
+        lavaInfinite = getBoolean("blocks.lava.infinite-source", lavaInfinite);
+        lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
+    }
+
     public boolean signAllowColors = false;
     public boolean signRightClickEdit = false;
     private void signSettings() {

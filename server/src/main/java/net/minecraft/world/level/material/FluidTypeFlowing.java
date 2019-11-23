@@ -217,7 +217,7 @@ public abstract class FluidTypeFlowing extends FluidType {
             }
         }
 
-        if (this.f() && j >= 2) {
+        if (infinite(iworldreader) && j >= getRequiredSources(iworldreader)) { // Purpur
             IBlockData iblockdata2 = iworldreader.getType(blockposition.down());
             Fluid fluid1 = iblockdata2.getFluid();
 
@@ -288,6 +288,17 @@ public abstract class FluidTypeFlowing extends FluidType {
         return (Fluid) this.e().h().set(FluidTypeFlowing.FALLING, flag);
     }
 
+    // Purpur start
+    protected boolean infinite(IWorldReader iworldreader) {
+        return infinite();
+    }
+
+    protected int getRequiredSources(IWorldReader iworldreader) {
+        return 2;
+    }
+    // Purpur end
+
+    protected boolean infinite() { return f(); } // Purpur - OBFHELPER
     protected abstract boolean f();
 
     protected void a(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata, EnumDirection enumdirection, Fluid fluid) {

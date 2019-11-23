@@ -163,6 +163,18 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
         generatoraccess.triggerEffect(1501, blockposition, 0);
     }
 
+    // Purpur start
+    @Override
+    protected boolean infinite(IWorldReader iworldreader) {
+        return iworldreader.getWorldBorder().world.purpurConfig.lavaInfinite;
+    }
+
+    @Override
+    protected int getRequiredSources(IWorldReader iworldreader) {
+        return iworldreader.getWorldBorder().world.purpurConfig.lavaInfiniteRequiredSources;
+    }
+    // Purpur end
+
     @Override
     protected boolean f() {
         return false;
