@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
+import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +18,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAreaEffectCloud;
 import net.minecraft.world.entity.EntityLightning;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
@@ -39,6 +42,7 @@ import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.World;
 
 // CraftBukkit start
+import net.minecraft.world.level.WorldAccess;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
@@ -58,6 +62,17 @@ public class EntityCreeper extends EntityMonster {
     public EntityCreeper(EntityTypes<? extends EntityCreeper> entitytypes, World world) {
         super(entitytypes, world);
     }
+
+    // Purpur start
+    @Override
+    public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @javax.annotation.Nullable GroupDataEntity groupdataentity, @javax.annotation.Nullable NBTTagCompound nbttagcompound) {
+        double chance = worldaccess.getMinecraftWorld().purpurConfig.creeperChargedChance;
+        if (chance > 0D && random.nextDouble() <= chance) {
+            setPowered(true);
+        }
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
+    }
+    // Purpur end
 
     @Override
     protected void initPathfinder() {

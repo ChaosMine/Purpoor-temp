@@ -113,6 +113,11 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public double creeperChargedChance = 0.0D;
+    private void creeperSettings() {
+        creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
+    }
+
     public float giantStepHeight = 2.0F;
     public float giantJumpHeight = 1.0F;
     public double giantMovementSpeed = 0.5D;
