@@ -320,10 +320,17 @@ public class PurpurWorldConfig {
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     public boolean villagerFarmingBypassMobGriefing = false;
+    public boolean villagerFollowEmeraldBlock = false;
     private void villagerSettings() {
         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
         villagerFarmingBypassMobGriefing = getBoolean("mobs.villager.bypass-mob-griefing", villagerFarmingBypassMobGriefing);
+        villagerFollowEmeraldBlock = getBoolean("mobs.villager.follow-emerald-blocks", villagerFollowEmeraldBlock);
+    }
+
+    public boolean villagerTraderFollowEmeraldBlock = false;
+    private void villagerTraderSettings() {
+        villagerTraderFollowEmeraldBlock = getBoolean("mobs.wandering_trader.follow-emerald-blocks", villagerTraderFollowEmeraldBlock);
     }
 
     public boolean witherSkeletonTakesWitherDamage = false;

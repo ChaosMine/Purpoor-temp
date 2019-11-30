@@ -59,6 +59,7 @@ import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.behavior.Behaviors;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
 import net.minecraft.world.entity.ai.gossip.Reputation;
 import net.minecraft.world.entity.ai.gossip.ReputationType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -142,6 +143,13 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         this.setVillagerData(this.getVillagerData().withType(villagertype).withProfession(VillagerProfession.NONE));
         this.brainTickOffset = getRandom().nextInt(100); // Purpur
     }
+
+    // Purpur start
+    @Override
+    protected void initPathfinder() {
+        if (world.purpurConfig.villagerFollowEmeraldBlock) this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, TEMPT_ITEMS));
+    }
+    // Purpur end
 
     @Override
     public BehaviorController<EntityVillager> getBehaviorController() {

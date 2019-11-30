@@ -25,11 +25,13 @@ import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.item.trading.IMerchant;
 import net.minecraft.world.item.trading.MerchantRecipe;
 import net.minecraft.world.item.trading.MerchantRecipeList;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
 
 // CraftBukkit start
@@ -44,6 +46,8 @@ import io.papermc.paper.event.player.PlayerTradeEvent;
 // Paper end
 
 public abstract class EntityVillagerAbstract extends EntityAgeable implements NPC, IMerchant {
+
+    static final RecipeItemStack TEMPT_ITEMS = RecipeItemStack.a(Blocks.EMERALD_BLOCK.getItem()); // Purpur
 
     // CraftBukkit start
     private CraftMerchant craftMerchant;

@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtTradingPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalMoveTowardsRestriction;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalTradeWithPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalUseItem;
 import net.minecraft.world.entity.monster.EntityEvoker;
@@ -89,6 +90,7 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
         this.goalSelector.a(1, new PathfinderGoalPanic(this, 0.5D));
         this.goalSelector.a(1, new PathfinderGoalLookAtTradingPlayer(this));
         this.goalSelector.a(2, new EntityVillagerTrader.a(this, 2.0D, 0.35D));
+        if (world.purpurConfig.villagerTraderFollowEmeraldBlock) this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, TEMPT_ITEMS)); // Purpur
         this.goalSelector.a(4, new PathfinderGoalMoveTowardsRestriction(this, 0.35D));
         this.goalSelector.a(8, new PathfinderGoalRandomStrollLand(this, 0.35D));
         this.goalSelector.a(9, new PathfinderGoalInteract(this, EntityHuman.class, 3.0F, 1.0F));
