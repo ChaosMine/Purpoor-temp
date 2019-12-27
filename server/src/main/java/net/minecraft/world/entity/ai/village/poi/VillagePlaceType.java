@@ -53,7 +53,7 @@ public class VillagePlaceType {
     public static final VillagePlaceType o = a("shepherd", a(Blocks.LOOM), 1, 1);
     public static final VillagePlaceType p = a("toolsmith", a(Blocks.SMITHING_TABLE), 1, 1);
     public static final VillagePlaceType q = a("weaponsmith", a(Blocks.GRINDSTONE), 1, 1);
-    public static final VillagePlaceType r = a("home", VillagePlaceType.z, 1, 1);
+    public static final VillagePlaceType r = a("home", VillagePlaceType.z, 1, 1); public static VillagePlaceType home() { return r; } // Purpur - OBFHELPER
     public static final VillagePlaceType s = a("meeting", a(Blocks.BELL), 32, 6);
     public static final VillagePlaceType t = a("beehive", a(Blocks.BEEHIVE), 0, 1);
     public static final VillagePlaceType u = a("bee_nest", a(Blocks.BEE_NEST), 0, 1);
@@ -92,6 +92,7 @@ public class VillagePlaceType {
         return this.D;
     }
 
+    public Predicate<VillagePlaceType> predicate() { return c(); } // Purpur - OBFHELPER
     public Predicate<VillagePlaceType> c() {
         return this.E;
     }

@@ -34,7 +34,7 @@ public class MobSpawnerCat implements MobSpawner {
             if (this.a > 0) {
                 return 0;
             } else {
-                this.a = 1200;
+                this.a = worldserver.purpurConfig.catSpawnDelay; // Purpur;
                 EntityPlayer entityplayer = worldserver.q_();
 
                 if (entityplayer == null) {
@@ -68,10 +68,12 @@ public class MobSpawnerCat implements MobSpawner {
     }
 
     private int a(WorldServer worldserver, BlockPosition blockposition) {
-        boolean flag = true;
-
-        if (worldserver.y().a(VillagePlaceType.r.c(), blockposition, 48, VillagePlace.Occupancy.IS_OCCUPIED) > 4L) {
-            List<EntityCat> list = worldserver.a(EntityCat.class, (new AxisAlignedBB(blockposition)).grow(48.0D, 8.0D, 48.0D));
+        // Purpur start
+        int range = worldserver.purpurConfig.catSpawnVillageScanRange;
+        if (range <= 0) return 0;
+        if (worldserver.getPoiStorage().count(VillagePlaceType.home().predicate(), blockposition, range, VillagePlace.Occupancy.IS_OCCUPIED) > 4L) {
+            List<EntityCat> list = worldserver.getEntitiesInAABB(EntityCat.class, (new AxisAlignedBB(blockposition)).grow(range, 8.0D, range));
+            // Purpur end
 
             if (list.size() < 5) {
                 return this.a(blockposition, worldserver);
@@ -82,9 +84,11 @@ public class MobSpawnerCat implements MobSpawner {
     }
 
     private int b(WorldServer worldserver, BlockPosition blockposition) {
-        boolean flag = true;
-        List<EntityCat> list = worldserver.a(EntityCat.class, (new AxisAlignedBB(blockposition)).grow(16.0D, 8.0D, 16.0D));
-
+        // Purpur start
+        int range = worldserver.purpurConfig.catSpawnSwampHutScanRange;
+        if (range <= 0) return 0;
+        List<EntityCat> list = worldserver.getEntitiesInAABB(EntityCat.class, (new AxisAlignedBB(blockposition)).grow(range, 8.0D, range));
+        // Purpur end
         return list.size() < 1 ? this.a(blockposition, worldserver) : 0;
     }
 

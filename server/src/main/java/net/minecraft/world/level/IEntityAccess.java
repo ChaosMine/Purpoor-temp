@@ -56,6 +56,7 @@ public interface IEntityAccess {
         }
     }
 
+    default <T extends Entity> List<T> getEntitiesInAABB(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) { return a(oclass, axisalignedbb); } // Purpur - OBFHELPER
     default <T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
         return this.a(oclass, axisalignedbb, IEntitySelector.g);
     }

@@ -118,6 +118,15 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public int catSpawnDelay = 1200;
+    public int catSpawnSwampHutScanRange = 16;
+    public int catSpawnVillageScanRange = 48;
+    private void catSettings() {
+        catSpawnDelay = getInt("mobs.cat.spawn-delay", catSpawnDelay);
+        catSpawnSwampHutScanRange = getInt("mobs.cat.scan-range-for-other-cats.swamp-hut", catSpawnSwampHutScanRange);
+        catSpawnVillageScanRange = getInt("mobs.cat.scan-range-for-other-cats.village", catSpawnVillageScanRange);
+    }
+
     public boolean chickenRetaliate = false;
     private void chickenSettings() {
         chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);

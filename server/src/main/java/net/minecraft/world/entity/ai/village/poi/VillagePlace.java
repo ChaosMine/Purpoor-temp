@@ -191,6 +191,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
         ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition);
     }
 
+    public long count(Predicate<VillagePlaceType> predicate, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) { return a(predicate, blockposition, i, villageplace_occupancy); } // Purpur - OBFHELPER
     public long a(Predicate<VillagePlaceType> predicate, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) {
         return this.c(predicate, blockposition, i, villageplace_occupancy).count();
     }
