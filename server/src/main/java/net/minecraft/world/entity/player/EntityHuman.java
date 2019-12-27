@@ -182,6 +182,8 @@ public abstract class EntityHuman extends EntityLiving {
     // CraftBukkit end
 
     // Purpur start
+    private javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino");
+
     public void setAfk(boolean setAfk){
     }
 
@@ -1825,9 +1827,18 @@ public abstract class EntityHuman extends EntityLiving {
     @Override
     protected int getExpValue(EntityHuman entityhuman) {
         if (!this.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) && !this.isSpectator()) {
-            int i = this.expLevel * 7;
-
-            return i > 100 ? 100 : i;
+            // Purpur start
+            int toDrop;
+            try {
+                scriptEngine.eval("expLevel = " + expLevel);
+                scriptEngine.eval("expTotal = " + expTotal);
+                scriptEngine.eval("exp = " + exp);
+                toDrop = (int) Math.round((Double) scriptEngine.eval(world.purpurConfig.playerDeathExpDropEquation));
+            } catch (Exception ignore) {
+                toDrop = expLevel * 7;
+            }
+            return Math.min(toDrop, world.purpurConfig.playerDeathExpDropMax);
+            // Purpur end
         } else {
             return 0;
         }

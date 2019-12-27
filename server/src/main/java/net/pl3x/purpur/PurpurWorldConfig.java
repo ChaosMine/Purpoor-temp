@@ -157,6 +157,13 @@ public class PurpurWorldConfig {
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
     }
 
+    public String playerDeathExpDropEquation = "expLevel * 7";
+    public int playerDeathExpDropMax = 100;
+    private void playerDeathExpSettings() {
+        playerDeathExpDropEquation = getString("gameplay-mechanics.player.exp-dropped-on-death.equation", playerDeathExpDropEquation);
+        playerDeathExpDropMax = getInt("gameplay-mechanics.player.exp-dropped-on-death.maximum", playerDeathExpDropMax);
+    }
+
     public int playerSpawnInvulnerableTicks = 60;
     public boolean playerInvulnerableWhileAcceptingResourcePack = false;
     private void playerInvulnerabilities() {
