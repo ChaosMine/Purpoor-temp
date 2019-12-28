@@ -1174,6 +1174,7 @@ public abstract class PlayerList {
             } else {
                 b0 = (byte) (24 + i);
             }
+            if (b0 < 28 && entityplayer.getBukkitEntity().hasPermission("purpur.debug.f3n")) b0 = 28; // Purpur
 
             entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityStatus(entityplayer, b0));
         }
