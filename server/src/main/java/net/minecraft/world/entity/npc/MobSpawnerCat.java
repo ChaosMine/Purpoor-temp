@@ -98,8 +98,9 @@ public class MobSpawnerCat implements MobSpawner {
         if (entitycat == null) {
             return 0;
         } else {
+            entitycat.setPositionRotation(blockposition, 0.0F, 0.0F); // Purpur
             entitycat.prepare(worldserver, worldserver.getDamageScaler(blockposition), EnumMobSpawn.NATURAL, (GroupDataEntity) null, (NBTTagCompound) null);
-            entitycat.setPositionRotation(blockposition, 0.0F, 0.0F);
+            //entitycat.setPositionRotation(blockposition, 0.0F, 0.0F); // Purpur - move up - fixes non black cat types spawning inside swamp huts
             worldserver.addAllEntities(entitycat);
             return 1;
         }
