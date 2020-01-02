@@ -145,7 +145,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
 
     @Override
     public int a(IWorldReader iworldreader) {
-        return iworldreader.getDimensionManager().isNether() ? 10 : 30;
+        return iworldreader.getDimensionManager().isNether() ? iworldreader.getWorldBorder().world.purpurConfig.lavaSpeedNether : iworldreader.getWorldBorder().world.purpurConfig.lavaSpeedNotNether; // Purpur
     }
 
     @Override

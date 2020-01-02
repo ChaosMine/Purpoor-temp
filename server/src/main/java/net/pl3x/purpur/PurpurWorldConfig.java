@@ -194,9 +194,13 @@ public class PurpurWorldConfig {
 
     public boolean lavaInfinite = false;
     public int lavaInfiniteRequiredSources = 2;
+    public int lavaSpeedNether = 10;
+    public int lavaSpeedNotNether = 30;
     private void lavaSettings() {
         lavaInfinite = getBoolean("blocks.lava.infinite-source", lavaInfinite);
         lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
+        lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
+        lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
     }
 
     public boolean signAllowColors = false;
