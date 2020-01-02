@@ -694,6 +694,7 @@ public final class ItemStack {
         return this.tag;
     }
 
+    public NBTTagCompound getOrCreateSubTag(String s) { return a(s); } // Purpur - OBFHELPER
     public NBTTagCompound a(String s) {
         if (this.tag != null && this.tag.hasKeyOfType(s, 10)) {
             return this.tag.getCompound(s);
