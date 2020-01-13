@@ -176,7 +176,24 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                             int j2 = i1 + k * l1;
                             ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
                             if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
-                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS);
+                            // Paper start - seed based feature search
+                            IChunkAccess ichunkaccess = null;
+                            if (structuremanager.getWorld().paperConfig.seedBasedFeatureSearch) {
+                                BiomeBase biomeBase = structuremanager.getWorld().getBiomeManager().getBiome(new BlockPosition(chunkcoordintpair.getBlockX() + 9, 0, chunkcoordintpair.getBlockZ() + 9));
+                                if (!biomeBase.e().a(this)) {
+                                    continue;
+                                }
+                                if (!structuremanager.getWorld().paperConfig.seedBasedFeatureSearchLoadsChunks) {
+                                    ichunkaccess = structuremanager.getWorld().getChunkIfLoaded(chunkcoordintpair.x, chunkcoordintpair.z);
+                                    if (ichunkaccess == null) {
+                                        return chunkcoordintpair.asPosition().add(8, blockposition.getY(), 8);
+                                    }
+                                }
+                            }
+                            if (ichunkaccess == null) {
+                                ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS);
+                            }
+                            // Paper end
                             StructureStart<?> structurestart = structuremanager.a(SectionPosition.a(ichunkaccess.getPos(), 0), this, ichunkaccess);
 
                             if (structurestart != null && structurestart.e()) {

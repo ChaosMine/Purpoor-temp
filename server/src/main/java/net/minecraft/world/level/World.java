@@ -1511,8 +1511,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         return this.methodProfiler;
     }
 
-    @Override
-    public BiomeManager d() {
+    public BiomeManager getBiomeManager() { return d(); } // Paper - OBFHELPER
+    @Override public BiomeManager d() {
         return this.biomeManager;
     }
 

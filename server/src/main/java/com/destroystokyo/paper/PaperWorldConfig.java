@@ -337,6 +337,14 @@ public class PaperWorldConfig {
         }
     }
 
+    public boolean seedBasedFeatureSearch = true;
+    public boolean seedBasedFeatureSearchLoadsChunks = true;
+    private void seedBasedFeatureSearch() {
+        seedBasedFeatureSearch = getBoolean("seed-based-feature-search", seedBasedFeatureSearch);
+        seedBasedFeatureSearchLoadsChunks = getBoolean("seed-based-feature-search-loads-chunks", seedBasedFeatureSearchLoadsChunks);
+        log("Feature search is based on seed: " + seedBasedFeatureSearch + ", loads chunks:" + seedBasedFeatureSearchLoadsChunks);
+    }
+
     public int maxCollisionsPerEntity;
     private void maxEntityCollision() {
         maxCollisionsPerEntity = getInt( "max-entity-collisions", this.spigotConfig.getInt("max-entity-collisions", 8) );

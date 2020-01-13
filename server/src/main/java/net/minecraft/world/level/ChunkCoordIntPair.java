@@ -68,10 +68,12 @@ public class ChunkCoordIntPair {
         }
     }
 
+    public int getBlockX() { return d(); } // Paper - OBFHELPER
     public int d() {
         return this.x << 4;
     }
 
+    public int getBlockZ() { return e(); } // Paper - OBFHELPER
     public int e() {
         return this.z << 4;
     }

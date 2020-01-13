@@ -23,6 +23,7 @@ public class BiomeManager {
         return new BiomeManager(worldchunkmanager, this.b, this.c);
     }
 
+    public BiomeBase getBiome(BlockPosition blockposition) { return a(blockposition); } // Paper - OBFHELPER
     public BiomeBase a(BlockPosition blockposition) {
         return this.c.a(this.b, blockposition.getX(), blockposition.getY(), blockposition.getZ(), this.a);
     }
