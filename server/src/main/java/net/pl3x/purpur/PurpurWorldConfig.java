@@ -313,6 +313,11 @@ public class PurpurWorldConfig {
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
     }
 
+    public boolean witherSkeletonTakesWitherDamage = false;
+    private void witherSkeletonSettings() {
+        witherSkeletonTakesWitherDamage = getBoolean("mobs.wither_skeleton.takes-wither-damage", witherSkeletonTakesWitherDamage);
+    }
+
     public double zombieHorseSpawnChance = 0.0D;
     private void zombieHorseSettings() {
         zombieHorseSpawnChance = getDouble("mobs.zombie_horse.spawn-chance", zombieHorseSpawnChance);

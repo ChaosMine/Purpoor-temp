@@ -122,6 +122,6 @@ public class EntitySkeletonWither extends EntitySkeletonAbstract {
 
     @Override
     public boolean d(MobEffect mobeffect) {
-        return mobeffect.getMobEffect() == MobEffects.WITHER ? false : super.d(mobeffect);
+        return (world.purpurConfig.witherSkeletonTakesWitherDamage || mobeffect.getMobEffect() != MobEffects.WITHER) && super.d(mobeffect); // Purpur
     }
 }
