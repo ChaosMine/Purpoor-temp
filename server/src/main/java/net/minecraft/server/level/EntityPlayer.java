@@ -2,6 +2,7 @@ package net.minecraft.server.level;
 
 import com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent;
 import com.google.common.collect.Lists;
+import com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent; // Paper
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.DataResult;
@@ -191,7 +192,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public int lastSentExp = -99999999;
     public int invulnerableTicks = 60;
     private EnumChatVisibility bY;
-    private boolean bZ = true;
+    private boolean bZ = true; public boolean hasChatColorsEnabled() { return this.bZ; } // Paper - OBFHELPER
     private long ca = SystemUtils.getMonotonicMillis();
     private Entity spectatedEntity;
     public boolean worldChangeInvuln;
@@ -1810,6 +1811,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public String locale = null; // CraftBukkit - add, lowercase // Paper - default to null
     public java.util.Locale adventure$locale = java.util.Locale.US; // Paper
     public void a(PacketPlayInSettings packetplayinsettings) {
+        new PlayerClientOptionsChangeEvent(getBukkitEntity(), packetplayinsettings.locale, packetplayinsettings.viewDistance, com.destroystokyo.paper.ClientOption.ChatVisibility.valueOf(packetplayinsettings.getChatVisibility().name()), packetplayinsettings.hasChatColorsEnabled(), new com.destroystokyo.paper.PaperSkinParts(packetplayinsettings.getSkinParts()), packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT).callEvent(); // Paper - settings event
         // CraftBukkit start
         if (getMainHand() != packetplayinsettings.getMainHand()) {
             PlayerChangedMainHandEvent event = new PlayerChangedMainHandEvent(getBukkitEntity(), getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT);
