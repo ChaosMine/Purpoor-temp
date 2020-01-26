@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ControllerMove {
 
-    protected final EntityInsentient a;
+    protected final EntityInsentient a; public final EntityInsentient getEntity() { return a; } // Paper - OBFHELPER
     protected double b;
     protected double c;
     protected double d;
