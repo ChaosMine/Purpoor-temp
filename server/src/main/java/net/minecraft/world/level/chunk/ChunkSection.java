@@ -14,11 +14,13 @@ import net.minecraft.world.level.material.Fluid;
 public class ChunkSection {
 
     public static final DataPalette<IBlockData> GLOBAL_PALETTE = new DataPaletteGlobal<>(Block.REGISTRY_ID, Blocks.AIR.getBlockData());
-    private final int yPos;
+    final int yPos; // Paper - private -> package-private
     short nonEmptyBlockCount; // Paper - package-private
-    private short tickingBlockCount;
+    short tickingBlockCount; // Paper - private -> package-private
     private short e;
     final DataPaletteBlock<IBlockData> blockIds; // Paper - package-private
+
+    public final com.destroystokyo.paper.util.maplist.IBlockDataList tickingList = new com.destroystokyo.paper.util.maplist.IBlockDataList(); // Paper
 
     // Paper start - Anti-Xray - Add parameters
     @Deprecated public ChunkSection(int i) { this(i, null, null, true); } // Notice for updates: Please make sure this constructor isn't used anywhere
@@ -74,6 +76,9 @@ public class ChunkSection {
             --this.nonEmptyBlockCount;
             if (iblockdata1.isTicking()) {
                 --this.tickingBlockCount;
+                // Paper start
+                this.tickingList.remove(i, j, k);
+                // Paper end
             }
         }
 
@@ -85,6 +90,9 @@ public class ChunkSection {
             ++this.nonEmptyBlockCount;
             if (iblockdata.isTicking()) {
                 ++this.tickingBlockCount;
+                // Paper start
+                this.tickingList.add(i, j, k, iblockdata);
+                // Paper end
             }
         }
 
@@ -120,23 +128,29 @@ public class ChunkSection {
     }
 
     public void recalcBlockCounts() {
+        // Paper start
+        this.tickingList.clear();
+        // Paper end
         this.nonEmptyBlockCount = 0;
         this.tickingBlockCount = 0;
         this.e = 0;
-        this.blockIds.a((iblockdata, i) -> {
+        this.blockIds.forEachLocation((iblockdata, location) -> { // Paper
             Fluid fluid = iblockdata.getFluid();
 
             if (!iblockdata.isAir()) {
-                this.nonEmptyBlockCount = (short) (this.nonEmptyBlockCount + i);
+                this.nonEmptyBlockCount = (short) (this.nonEmptyBlockCount + 1);
                 if (iblockdata.isTicking()) {
-                    this.tickingBlockCount = (short) (this.tickingBlockCount + i);
+                    this.tickingBlockCount = (short) (this.tickingBlockCount + 1);
+                    // Paper start
+                    this.tickingList.add(location, iblockdata);
+                    // Paper end
                 }
             }
 
             if (!fluid.isEmpty()) {
-                this.nonEmptyBlockCount = (short) (this.nonEmptyBlockCount + i);
+                this.nonEmptyBlockCount = (short) (this.nonEmptyBlockCount + 1);
                 if (fluid.f()) {
-                    this.e = (short) (this.e + i);
+                    this.e = (short) (this.e + 1);
                 }
             }
 
