@@ -260,6 +260,7 @@ public class SystemUtils {
         return supplier.get();
     }
 
+    public static <T> T peek(T t0, Consumer<T> consumer) { return a(t0, consumer); } // Paper - OBFHELPER
     public static <T> T a(T t0, Consumer<T> consumer) {
         consumer.accept(t0);
         return t0;

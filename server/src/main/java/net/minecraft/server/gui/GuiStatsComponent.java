@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 
 public class GuiStatsComponent extends JComponent {
 
-    private static final DecimalFormat a = (DecimalFormat) SystemUtils.a((Object) (new DecimalFormat("########0.000")), (decimalformat) -> {
+    private static final DecimalFormat a = (DecimalFormat) SystemUtils.a(new DecimalFormat("########0.000"), (decimalformat) -> { // Paper - decompile error
         decimalformat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
     });
     private final int[] b = new int[256];
