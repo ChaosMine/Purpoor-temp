@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -62,6 +63,8 @@ public class BlockPortal extends Block {
 
                 if (entity != null) {
                     entity.resetPortalCooldown();
+                    entity.fromNetherPortal = true; // Paper
+                    if (worldserver.paperConfig.nerfNetherPortalPigmen) ((EntityInsentient) entity).aware = false; // Paper
                 }
             }
         }
