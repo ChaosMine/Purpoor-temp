@@ -181,7 +181,7 @@ public class Main {
             float javaVersion = Float.parseFloat(System.getProperty("java.class.version"));
             if (javaVersion > 60.0) {
                 System.err.println("Unsupported Java detected (" + javaVersion + "). Only up to Java 16 is supported.");
-                return;
+                if (!Boolean.getBoolean("Paper.IgnoreJavaVersion")) return; // Paper
             }
 
             try {
