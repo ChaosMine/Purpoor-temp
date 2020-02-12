@@ -10,6 +10,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -2912,6 +2913,20 @@ public abstract class EntityLiving extends Entity {
 
         this.collideNearby();
         this.world.getMethodProfiler().exit();
+        // Paper start
+        if (((WorldServer) world).hasEntityMoveEvent) {
+            if (lastX != locX() || lastY != locY() || lastZ != locZ() || lastYaw != yaw || lastPitch != pitch) {
+                Location from = new Location(world.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
+                Location to = new Location (world.getWorld(), locX(), locY(), locZ(), yaw, pitch);
+                EntityMoveEvent event = new EntityMoveEvent(getBukkitLivingEntity(), from, to.clone());
+                if (!event.callEvent()) {
+                    setLocation(from.getX(), from.getY(), from.getZ(), from.getYaw(), from.getPitch());
+                } else if (!to.equals(event.getTo())) {
+                    setLocation(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ(), event.getTo().getYaw(), event.getTo().getPitch());
+                }
+            }
+        }
+        // Paper end
         if (!this.world.isClientSide && this.dO() && this.aG()) {
             this.damageEntity(DamageSource.DROWN, 1.0F);
         }

@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.papermc.paper.adventure.PaperAdventure; // Paper
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -1460,6 +1461,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         while (iterator.hasNext()) {
             WorldServer worldserver = (WorldServer) iterator.next();
             worldserver.hasPhysicsEvent =  org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper
+            worldserver.hasEntityMoveEvent =  EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper
             TileEntityHopper.skipHopperEvents = worldserver.paperConfig.disableHopperMoveEvents || org.bukkit.event.inventory.InventoryMoveItemEvent.getHandlerList().getRegisteredListeners().length == 0; // Paper
 
             this.methodProfiler.a(() -> {

@@ -213,6 +213,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     public final Convertable.ConversionSession convertable;
     public final UUID uuid;
     public boolean hasPhysicsEvent = true; // Paper
+    public boolean hasEntityMoveEvent = false; // Paper
     private static Throwable getAddToWorldStackTrace(Entity entity) {
         return new Throwable(entity + " Added to world at " + new java.util.Date());
     }
