@@ -825,7 +825,7 @@ public class ChunkProviderServer extends IChunkProvider {
             int l = this.chunkMapDistance.b();
             // Paper start - per player mob spawning
             SpawnerCreature.d spawnercreature_d; // moved down
-            if (this.playerChunkMap.playerMobDistanceMap != null) {
+            if ((this.allowAnimals || this.allowMonsters) && this.playerChunkMap.playerMobDistanceMap != null) { // don't update when animals and monsters are disabled
                 // update distance map
                 this.world.timings.playerMobDistanceMapUpdate.startTiming();
                 this.playerChunkMap.playerMobDistanceMap.update(this.world.players, this.playerChunkMap.viewDistance);
