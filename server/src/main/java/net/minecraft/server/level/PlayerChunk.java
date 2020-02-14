@@ -496,7 +496,9 @@ public class PlayerChunk {
                     PlayerChunk.this.isTickingReady = true;
 
 
-
+                    // Paper start - rewrite ticklistserver
+                    PlayerChunk.this.chunkMap.world.onChunkSetTicking(PlayerChunk.this.location.x, PlayerChunk.this.location.z);
+                    // Paper end - rewrite ticklistserver
 
                 }
             });
