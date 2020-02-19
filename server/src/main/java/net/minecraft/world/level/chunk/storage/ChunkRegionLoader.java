@@ -580,6 +580,7 @@ public class ChunkRegionLoader {
 
                 while (iterator1.hasNext()) {
                     Entity entity = (Entity) iterator1.next();
+                    if (!entity.canSaveToDisk()) continue; // Purpur
                     final EntityTypes<?> entityType = entity.getEntityType();
                     final int saveLimit = worldserver.paperConfig.entityPerChunkSaveLimits.getOrDefault(entityType, -1);
                     if (saveLimit > -1) {

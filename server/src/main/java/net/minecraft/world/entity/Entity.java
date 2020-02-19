@@ -445,6 +445,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.headHeight = this.getHeadHeight(EntityPose.STANDING, this.size);
     }
 
+    // Purpur start
+    public boolean canSaveToDisk() {
+        return true;
+    }
+    // Purpur end
+
     public boolean isSpectator() {
         return false;
     }
