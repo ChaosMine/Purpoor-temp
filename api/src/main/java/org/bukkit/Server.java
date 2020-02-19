@@ -1614,6 +1614,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
         }
         // Tuinity end - add config to timings report
 
+        // Purpur start
+        @NotNull
+        public org.bukkit.configuration.file.YamlConfiguration getPurpurConfig() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @NotNull
+        public java.util.Properties getServerProperties() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        // Purpur end
+
         /**
          * Sends the component to the player
          *
