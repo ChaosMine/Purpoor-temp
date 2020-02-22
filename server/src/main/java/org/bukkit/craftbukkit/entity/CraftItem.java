@@ -114,4 +114,46 @@ public class CraftItem extends CraftEntity implements Item {
     public EntityType getType() {
         return EntityType.DROPPED_ITEM;
     }
+
+    // Purpur start
+    @Override
+    public void setImmuneToCactus(boolean immuneToCactus) {
+        item.immuneToCactus = immuneToCactus;
+    }
+
+    @Override
+    public boolean isImmuneToCactus() {
+        return item.immuneToCactus;
+    }
+
+    @Override
+    public void setImmuneToExplosion(boolean immuneToExplosion) {
+        item.immuneToExplosion = immuneToExplosion;
+    }
+
+    @Override
+    public boolean isImmuneToExplosion() {
+        return item.immuneToExplosion;
+    }
+
+    @Override
+    public void setImmuneToFire(boolean immuneToFire) {
+        item.immuneToFire = immuneToFire;
+    }
+
+    @Override
+    public boolean isImmuneToFire() {
+        return item.immuneToFire;
+    }
+
+    @Override
+    public void setImmuneToLightning(boolean immuneToLightning) {
+        item.immuneToLightning = immuneToLightning;
+    }
+
+    @Override
+    public boolean isImmuneToLightning() {
+        return item.immuneToLightning;
+    }
+    // Purpur end
 }

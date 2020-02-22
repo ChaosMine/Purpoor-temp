@@ -67,7 +67,7 @@ public class EntityTrackerEntry {
     private boolean q;
     private boolean r;
     // CraftBukkit start
-    final Set<EntityPlayer> trackedPlayers; // Paper - private -> package
+    public final Set<EntityPlayer> trackedPlayers; // Paper - private -> public
     // Paper start
     private java.util.Map<EntityPlayer, Boolean> trackedPlayerMap = null;
 

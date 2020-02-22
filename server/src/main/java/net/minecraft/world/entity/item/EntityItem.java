@@ -50,6 +50,12 @@ public class EntityItem extends Entity {
     public final float b;
     private int lastTick = MinecraftServer.currentTick - 1; // CraftBukkit
     public boolean canMobPickup = true; // Paper
+    // Purpur start
+    public boolean immuneToCactus = false;
+    public boolean immuneToExplosion = false;
+    public boolean immuneToFire = false;
+    public boolean immuneToLightning = false;
+    // Purpur end
 
     public EntityItem(EntityTypes<? extends EntityItem> entitytypes, World world) {
         super(entitytypes, world);
@@ -309,6 +315,16 @@ public class EntityItem extends Entity {
             return false;
         } else if (!this.getItemStack().getItem().a(damagesource)) {
             return false;
+        // Purpur start
+        } else if (
+                (immuneToCactus && damagesource == DamageSource.CACTUS) ||
+                (immuneToFire && (damagesource.isFire() || damagesource == DamageSource.FIRE)) ||
+                (immuneToLightning && damagesource == DamageSource.LIGHTNING) ||
+                (immuneToExplosion && damagesource.isExplosion())
+        ) {
+            respawnOnClient();
+            return false;
+        // Purpur end
         } else {
             // CraftBukkit start
             if (org.bukkit.craftbukkit.event.CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f)) {
@@ -489,6 +505,12 @@ public class EntityItem extends Entity {
         com.google.common.base.Preconditions.checkArgument(!itemstack.isEmpty(), "Cannot drop air"); // CraftBukkit
         this.getDataWatcher().set(EntityItem.ITEM, itemstack);
         this.getDataWatcher().markDirty(EntityItem.ITEM); // CraftBukkit - SPIGOT-4591, must mark dirty
+        // Purpur start
+        if (world.purpurConfig.itemImmuneToCactus.contains(itemstack.getItem())) immuneToCactus = true;
+        if (world.purpurConfig.itemImmuneToExplosion.contains(itemstack.getItem())) immuneToExplosion = true;
+        if (world.purpurConfig.itemImmuneToFire.contains(itemstack.getItem())) immuneToFire = true;
+        if (world.purpurConfig.itemImmuneToLightning.contains(itemstack.getItem())) immuneToLightning = true;
+        // Purpur end
     }
 
     @Override
@@ -570,4 +592,15 @@ public class EntityItem extends Entity {
         super.setPositionRaw(x, y, z);
     }
     // Paper end - fix MC-4
+
+    // Purpur start
+    public void respawnOnClient() {
+        Packet<?> spawnPacket = new PacketPlayOutSpawnEntity(this);
+        Packet<?> metadataPacket = new net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata(getId(), getDataWatcher(), true);
+        for (net.minecraft.server.level.EntityPlayer entityplayer : this.tracker.trackerEntry.trackedPlayers) {
+            entityplayer.playerConnection.sendPacket(spawnPacket);
+            entityplayer.playerConnection.sendPacket(metadataPacket);
+        }
+    }
+    // Purpur end
 }

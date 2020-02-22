@@ -1609,6 +1609,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     }
 
+    public boolean isInLiquid(Tag<FluidType> tag) { return a(tag); } // Purpur - OBFHELPER
     public boolean a(Tag<FluidType> tag) {
         return this.O == tag;
     }

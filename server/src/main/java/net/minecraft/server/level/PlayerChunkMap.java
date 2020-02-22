@@ -2431,7 +2431,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
 
     public class EntityTracker {
 
-        final EntityTrackerEntry trackerEntry; // Paper - private -> package private
+        public final EntityTrackerEntry trackerEntry; // Paper - private -> package private // Purpur -> public
         private final Entity tracker;
         private final int trackingDistance;
         private SectionPosition e;
