@@ -2113,7 +2113,7 @@ public abstract class EntityLiving extends Entity {
 
     @Override
     protected void an() {
-        this.damageEntity(DamageSource.OUT_OF_WORLD, 4.0F);
+        this.damageEntity(DamageSource.OUT_OF_WORLD, (float) world.purpurConfig.voidDamageDealt);
     }
 
     protected void dA() {

@@ -748,7 +748,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     // Paper start
     protected void performVoidDamage() {
-        if (this.locY() < -64.0D || (this.world.getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER
+        if (this.locY() < world.purpurConfig.voidDamageHeight || (this.world.getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER // Purpur
             && world.paperConfig.doNetherTopVoidDamage()
             && this.locY() >= world.paperConfig.netherVoidTopDamageHeight)) {
             this.doVoidDamage();
