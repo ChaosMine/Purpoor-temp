@@ -1660,6 +1660,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.pitch = MathHelper.a(f1, -90.0F, 90.0F) % 360.0F;
         this.lastYaw = this.yaw;
         this.lastPitch = this.pitch;
+        if (valid && !dead) world.getChunkAt((int) Math.floor(this.locX()) >> 4, (int) Math.floor(this.locZ()) >> 4); // CraftBukkit // Paper // Purpur
     }
 
     public void f(double d0, double d1, double d2) {

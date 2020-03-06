@@ -2594,7 +2594,7 @@ public abstract class EntityLiving extends Entity {
             }
         }
 
-        this.movementTick();
+        if (!dead) this.movementTick(); // Purpur
         double d0 = this.locX() - this.lastX;
         double d1 = this.locZ() - this.lastZ;
         float f = (float) (d0 * d0 + d1 * d1);
