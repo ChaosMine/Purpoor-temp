@@ -211,6 +211,7 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
         }
     }
 
+    public EntityPlayer getPlayerOrException() throws CommandSyntaxException { return h(); } // Purpur - OBFHELPER
     public EntityPlayer h() throws CommandSyntaxException {
         if (!(this.k instanceof EntityPlayer)) {
             throw CommandListenerWrapper.a.create();

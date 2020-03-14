@@ -78,10 +78,12 @@ public class ArgumentEntity implements ArgumentType<EntitySelector> {
         return ((EntitySelector) commandcontext.getArgument(s, EntitySelector.class)).c((CommandListenerWrapper) commandcontext.getSource());
     }
 
+    public static ArgumentEntity players() { return d(); } // Purpur - OBFHELPER
     public static ArgumentEntity d() {
         return new ArgumentEntity(false, true);
     }
 
+    public static Collection<EntityPlayer> getPlayers(CommandContext<CommandListenerWrapper> commandcontext, String s) throws CommandSyntaxException { return f(commandcontext, s); } // Purpur - OBFHELPER
     public static Collection<EntityPlayer> f(CommandContext<CommandListenerWrapper> commandcontext, String s) throws CommandSyntaxException {
         List<EntityPlayer> list = ((EntitySelector) commandcontext.getArgument(s, EntitySelector.class)).d((CommandListenerWrapper) commandcontext.getSource());
 

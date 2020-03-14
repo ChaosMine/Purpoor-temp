@@ -191,6 +191,7 @@ public class CommandDispatcher {
             CommandIdleTimeout.a(this.b);
             CommandStop.a(this.b);
             CommandWhitelist.a(this.b);
+            net.pl3x.purpur.command.PingCommand.register(getDispatcher()); // Purpur
         }
 
         if (commanddispatcher_servertype.d) {
@@ -436,10 +437,12 @@ public class CommandDispatcher {
 
     }
 
+    public static LiteralArgumentBuilder<CommandListenerWrapper> literal(String s) { return a(s); } // Purpur - OBFHELPER
     public static LiteralArgumentBuilder<CommandListenerWrapper> a(String s) {
         return LiteralArgumentBuilder.literal(s);
     }
 
+    public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> argument(String s, ArgumentType<T> argumenttype) { return a(s, argumenttype); } // Purpur - OBFHELPER
     public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> a(String s, ArgumentType<T> argumenttype) {
         return RequiredArgumentBuilder.argument(s, argumenttype);
     }
@@ -455,6 +458,7 @@ public class CommandDispatcher {
         };
     }
 
+    public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> getDispatcher() { return a(); } // Purpur - OBFHELPER
     public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> a() { return this.dispatcher(); } public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> dispatcher() { // Paper - OBFHELPER
         return this.b;
     }

@@ -133,10 +133,12 @@ public class PurpurConfig {
     public static String afkBroadcastAway = "§e§o%s is now AFK";
     public static String afkBroadcastBack = "§e§o%s is no longer AFK";
     public static String afkTabListPrefix = "[AFK] ";
+    public static String pingCommandOutput = "§a%s's ping is %sms";
     private static void messages() {
         afkBroadcastAway = getString("settings.messages.afk-broadcast-away", afkBroadcastAway);
         afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
+        pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
     }
 
     public static String serverModName = "Purpur";
