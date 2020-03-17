@@ -358,6 +358,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         if (this.hivePos == null) {
             return false;
         } else {
+            if (!this.world.isLoadedAndInBounds(hivePos)) return false; // Paper
             TileEntity tileentity = this.world.getTileEntity(this.hivePos);
 
             return tileentity instanceof TileEntityBeehive && ((TileEntityBeehive) tileentity).d();
@@ -390,6 +391,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
     }
 
     private boolean i(BlockPosition blockposition) {
+        if (!this.world.isLoadedAndInBounds(blockposition)) return false; // Paper
         TileEntity tileentity = this.world.getTileEntity(blockposition);
 
         return tileentity instanceof TileEntityBeehive ? !((TileEntityBeehive) tileentity).isFull() : false;
@@ -632,6 +634,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         @Override
         public boolean g() {
             if (EntityBee.this.hasHivePos() && EntityBee.this.fd() && EntityBee.this.hivePos.a((IPosition) EntityBee.this.getPositionVector(), 2.0D)) {
+                if (!EntityBee.this.world.isLoadedAndInBounds(EntityBee.this.hivePos)) return false; // Paper
                 TileEntity tileentity = EntityBee.this.world.getTileEntity(EntityBee.this.hivePos);
 
                 if (tileentity instanceof TileEntityBeehive) {
@@ -655,6 +658,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         @Override
         public void c() {
+            if (!EntityBee.this.world.isLoadedAndInBounds(EntityBee.this.hivePos)) return; // Paper
             TileEntity tileentity = EntityBee.this.world.getTileEntity(EntityBee.this.hivePos);
 
             if (tileentity instanceof TileEntityBeehive) {
