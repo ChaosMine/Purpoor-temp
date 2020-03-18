@@ -71,7 +71,12 @@ public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Inte
                 if (j == -1) {
                     j = this.c.getFirstEmptySlotIndex();
                 }
-
+                // Paper start
+                if (j == -1) {
+                    this.c.player.drop(itemstack.cloneItemStack(), false);
+                    break;
+                }
+                // Paper end
                 ItemStack itemstack1 = itemstack.cloneItemStack();
 
                 itemstack1.setCount(1);
