@@ -60,7 +60,7 @@ public class EntityThrownTrident extends EntityArrow {
 
         Entity entity = this.getShooter();
 
-        if ((this.ai || this.t()) && entity != null) {
+        if ((this.ai || this.t() || (world.purpurConfig.tridentLoyaltyVoidReturnHeight < 0.0D && locY() < world.purpurConfig.tridentLoyaltyVoidReturnHeight)) && entity != null) { // Purpur
             byte b0 = (Byte) this.datawatcher.get(EntityThrownTrident.g);
 
             if (b0 > 0 && !this.z()) {
