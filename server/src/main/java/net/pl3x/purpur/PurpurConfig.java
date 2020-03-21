@@ -139,6 +139,11 @@ public class PurpurConfig {
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
     }
 
+    public static String serverModName = "Purpur";
+    private static void serverModName() {
+        serverModName = getString("settings.server-mod-name", serverModName);
+    }
+
     public static String timingsUrl = "https://timings.pl3x.net";
     private static void timingsSettings() {
         timingsUrl = getString("settings.timings.url", timingsUrl);

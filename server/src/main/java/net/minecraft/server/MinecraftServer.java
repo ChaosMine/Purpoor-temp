@@ -1655,7 +1655,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
 
     public String getServerModName() {
-        return "Purpur"; // Purpur // Tuinity // Paper // Spigot // CraftBukkit
+        return net.pl3x.purpur.PurpurConfig.serverModName; // Purpur // Tuinity // Paper // Spigot // CraftBukkit
     }
 
     public CrashReport b(CrashReport crashreport) {
