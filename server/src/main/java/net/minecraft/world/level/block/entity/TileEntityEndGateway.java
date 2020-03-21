@@ -153,6 +153,7 @@ public class TileEntityEndGateway extends TileEntityEnderPortal implements ITick
 
     public void b(Entity entity) {
         if (this.world instanceof WorldServer && !this.f()) {
+            if (!entity.canPortal()) return; // Purpur
             this.c = 100;
             if (this.exitPortal == null && this.world.getTypeKey() == DimensionManager.THE_END) { // CraftBukkit - work in alternate worlds
                 this.a((WorldServer) this.world);
