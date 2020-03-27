@@ -56,6 +56,23 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
         this.a(PathType.LAVA, 8.0F);
     }
 
+    // Purpur start
+    @Override
+    public boolean jockeyOnlyBaby() {
+        return world.purpurConfig.zombifiedPiglinJockeyOnlyBaby;
+    }
+
+    @Override
+    public double jockeyChance() {
+        return world.purpurConfig.zombifiedPiglinJockeyChance;
+    }
+
+    @Override
+    public boolean jockeyTryExistingChickens() {
+        return world.purpurConfig.zombifiedPiglinJockeyTryExistingChickens;
+    }
+    // Purpur end
+
     @Override
     public void setAngerTarget(@Nullable UUID uuid) {
         this.br = uuid;

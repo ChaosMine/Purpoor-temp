@@ -70,6 +70,23 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
         this.setVillagerData(this.getVillagerData().withProfession((VillagerProfession) IRegistry.VILLAGER_PROFESSION.a(this.random)));
     }
 
+    // Purpur start
+    @Override
+    public boolean jockeyOnlyBaby() {
+        return world.purpurConfig.zombieVillagerJockeyOnlyBaby;
+    }
+
+    @Override
+    public double jockeyChance() {
+        return world.purpurConfig.zombieVillagerJockeyChance;
+    }
+
+    @Override
+    public boolean jockeyTryExistingChickens() {
+        return world.purpurConfig.zombieVillagerJockeyTryExistingChickens;
+    }
+    // Purpur end
+
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();

@@ -22,6 +22,23 @@ public class EntityZombieHusk extends EntityZombie {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean jockeyOnlyBaby() {
+        return world.purpurConfig.huskJockeyOnlyBaby;
+    }
+
+    @Override
+    public double jockeyChance() {
+        return world.purpurConfig.huskJockeyChance;
+    }
+
+    @Override
+    public boolean jockeyTryExistingChickens() {
+        return world.purpurConfig.huskJockeyTryExistingChickens;
+    }
+    // Purpur end
+
     public static boolean a(EntityTypes<EntityZombieHusk> entitytypes, WorldAccess worldaccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         return b(entitytypes, worldaccess, enummobspawn, blockposition, random) && (enummobspawn == EnumMobSpawn.SPAWNER || worldaccess.e(blockposition));
     }

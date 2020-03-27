@@ -3,6 +3,7 @@ package net.minecraft.world.entity.monster;
 import com.mojang.serialization.DynamicOps;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -105,6 +106,20 @@ public class EntityZombie extends EntityMonster {
     public EntityZombie(World world) {
         this(EntityTypes.ZOMBIE, world);
     }
+
+    // Purpur start
+    public boolean jockeyOnlyBaby() {
+        return world.purpurConfig.zombieJockeyOnlyBaby;
+    }
+
+    public double jockeyChance() {
+        return world.purpurConfig.zombieJockeyChance;
+    }
+
+    public boolean jockeyTryExistingChickens() {
+        return world.purpurConfig.zombieJockeyTryExistingChickens;
+    }
+    // Purpur end
 
     @Override
     protected void initPathfinder() {
@@ -506,19 +521,19 @@ public class EntityZombie extends EntityMonster {
         if (object instanceof EntityZombie.GroupDataZombie) {
             EntityZombie.GroupDataZombie entityzombie_groupdatazombie = (EntityZombie.GroupDataZombie) object;
 
-            if (entityzombie_groupdatazombie.a) {
-                this.setBaby(true);
+            // Purpur start
+            if (!jockeyOnlyBaby() || entityzombie_groupdatazombie.isBaby()) {
+                this.setBaby(entityzombie_groupdatazombie.isBaby());
                 if (entityzombie_groupdatazombie.b) {
-                    if ((double) worldaccess.getRandom().nextFloat() < 0.05D) {
-                        List<EntityChicken> list = worldaccess.a(EntityChicken.class, this.getBoundingBox().grow(5.0D, 3.0D, 5.0D), IEntitySelector.c);
+                    if ((double) worldaccess.getRandom().nextFloat() < jockeyChance()) {
+                        List<EntityChicken> list = jockeyTryExistingChickens() ? worldaccess.a(EntityChicken.class, this.getBoundingBox().grow(5.0D, 3.0D, 5.0D), IEntitySelector.c) : Collections.emptyList();
 
                         if (!list.isEmpty()) {
                             EntityChicken entitychicken = (EntityChicken) list.get(0);
 
                             entitychicken.setChickenJockey(true);
                             this.startRiding(entitychicken);
-                        }
-                    } else if ((double) worldaccess.getRandom().nextFloat() < 0.05D) {
+                        } else { // Purpur
                         EntityChicken entitychicken1 = (EntityChicken) EntityTypes.CHICKEN.a(this.world);
 
                         entitychicken1.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, 0.0F);
@@ -526,6 +541,7 @@ public class EntityZombie extends EntityMonster {
                         entitychicken1.setChickenJockey(true);
                         this.startRiding(entitychicken1);
                         worldaccess.addEntity(entitychicken1, CreatureSpawnEvent.SpawnReason.MOUNT); // CraftBukkit
+                        } // Purpur
                     }
                 }
             }
@@ -628,7 +644,7 @@ public class EntityZombie extends EntityMonster {
 
     public static class GroupDataZombie implements GroupDataEntity {
 
-        public final boolean a;
+        public final boolean a; public boolean isBaby() { return a; } // Purpur - OBFHELPER
         public final boolean b;
 
         public GroupDataZombie(boolean flag, boolean flag1) {

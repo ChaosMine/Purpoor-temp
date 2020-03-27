@@ -321,6 +321,15 @@ public class PurpurWorldConfig {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
+    public boolean drownedJockeyOnlyBaby = true;
+    public double drownedJockeyChance = 0.05D;
+    public boolean drownedJockeyTryExistingChickens = true;
+    private void drownedSettings() {
+        drownedJockeyOnlyBaby = getBoolean("mobs.drowned.jockey.only-babies", drownedJockeyOnlyBaby);
+        drownedJockeyChance = getDouble("mobs.drowned.jockey.chance", drownedJockeyChance);
+        drownedJockeyTryExistingChickens = getBoolean("mobs.drowned.jockey.try-existing-chickens", drownedJockeyTryExistingChickens);
+    }
+
     public boolean enderDragonAlwaysDropsFullExp = false;
     private void enderDragonSettings() {
         enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
@@ -356,6 +365,15 @@ public class PurpurWorldConfig {
             set("mobs.giant.max-health", null);
         }
         giantMaxHealth = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
+    }
+
+    public boolean huskJockeyOnlyBaby = true;
+    public double huskJockeyChance = 0.05D;
+    public boolean huskJockeyTryExistingChickens = true;
+    private void huskSettings() {
+        huskJockeyOnlyBaby = getBoolean("mobs.husk.jockey.only-babies", huskJockeyOnlyBaby);
+        huskJockeyChance = getDouble("mobs.husk.jockey.chance", huskJockeyChance);
+        huskJockeyTryExistingChickens = getBoolean("mobs.husk.jockey.try-existing-chickens", huskJockeyTryExistingChickens);
     }
 
     public double illusionerMovementSpeed = 0.5D;
@@ -433,8 +451,35 @@ public class PurpurWorldConfig {
         witherSkeletonTakesWitherDamage = getBoolean("mobs.wither_skeleton.takes-wither-damage", witherSkeletonTakesWitherDamage);
     }
 
+    public boolean zombieJockeyOnlyBaby = true;
+    public double zombieJockeyChance = 0.05D;
+    public boolean zombieJockeyTryExistingChickens = true;
+    private void zombieSettings() {
+        zombieJockeyOnlyBaby = getBoolean("mobs.zombie.jockey.only-babies", zombieJockeyOnlyBaby);
+        zombieJockeyChance = getDouble("mobs.zombie.jockey.chance", zombieJockeyChance);
+        zombieJockeyTryExistingChickens = getBoolean("mobs.zombie.jockey.try-existing-chickens", zombieJockeyTryExistingChickens);
+    }
+
     public double zombieHorseSpawnChance = 0.0D;
     private void zombieHorseSettings() {
         zombieHorseSpawnChance = getDouble("mobs.zombie_horse.spawn-chance", zombieHorseSpawnChance);
+    }
+
+    public boolean zombifiedPiglinJockeyOnlyBaby = true;
+    public double zombifiedPiglinJockeyChance = 0.05D;
+    public boolean zombifiedPiglinJockeyTryExistingChickens = true;
+    private void zombifiedPiglinSettings() {
+        zombifiedPiglinJockeyOnlyBaby = getBoolean("mobs.zombified_piglin.jockey.only-babies", zombifiedPiglinJockeyOnlyBaby);
+        zombifiedPiglinJockeyChance = getDouble("mobs.zombified_piglin.jockey.chance", zombifiedPiglinJockeyChance);
+        zombifiedPiglinJockeyTryExistingChickens = getBoolean("mobs.zombified_piglin.jockey.try-existing-chickens", zombifiedPiglinJockeyTryExistingChickens);
+    }
+
+    public boolean zombieVillagerJockeyOnlyBaby = true;
+    public double zombieVillagerJockeyChance = 0.05D;
+    public boolean zombieVillagerJockeyTryExistingChickens = true;
+    private void zombieVillagerSettings() {
+        zombieVillagerJockeyOnlyBaby = getBoolean("mobs.zombie_villager.jockey.only-babies", zombieVillagerJockeyOnlyBaby);
+        zombieVillagerJockeyChance = getDouble("mobs.zombie_villager.jockey.chance", zombieVillagerJockeyChance);
+        zombieVillagerJockeyTryExistingChickens = getBoolean("mobs.zombie_villager.jockey.try-existing-chickens", zombieVillagerJockeyTryExistingChickens);
     }
 }

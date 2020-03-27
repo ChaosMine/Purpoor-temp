@@ -72,6 +72,23 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         this.navigationLand = new Navigation(this, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean jockeyOnlyBaby() {
+        return world.purpurConfig.drownedJockeyOnlyBaby;
+    }
+
+    @Override
+    public double jockeyChance() {
+        return world.purpurConfig.drownedJockeyChance;
+    }
+
+    @Override
+    public boolean jockeyTryExistingChickens() {
+        return world.purpurConfig.drownedJockeyTryExistingChickens;
+    }
+    // Purpur end
+
     @Override
     protected void m() {
         this.goalSelector.a(1, new EntityDrowned.c(this, 1.0D));
