@@ -164,6 +164,14 @@ public class PurpurWorldConfig {
         ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
     }
 
+    public String polarBearBreedableItemString = "";
+    public Item polarBearBreedableItem = null;
+    private void polarBearSettings() {
+        polarBearBreedableItemString = getString("mobs.polar_bear.breedable-item", polarBearBreedableItemString);
+        Item item = IRegistry.ITEM.get(new MinecraftKey(polarBearBreedableItemString));
+        if (item != Items.AIR) polarBearBreedableItem = item;
+    }
+
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
     private void rabbitSettings() {
