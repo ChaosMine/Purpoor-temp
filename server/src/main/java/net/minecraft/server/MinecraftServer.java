@@ -1141,7 +1141,13 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                     this.a(this::canSleepForTick);
                     this.methodProfiler.exitEnter("nextTickWait");
                     this.X = true;
-                    this.W = Math.max(SystemUtils.getMonotonicMillis() + 50L, this.nextTick);
+                    // Purpur start - tps catchup
+                    if (net.pl3x.purpur.PurpurConfig.tpsCatchup) {
+                        this.W = Math.max(SystemUtils.getMonotonicMillis() + 50L, this.nextTick);
+                    } else {
+                        this.W = this.nextTick = curTime / 1000000L + 50L;
+                    }
+                    // Purpur end - tps catchup
                     this.sleepForTick();
                     this.methodProfiler.exit();
                     this.methodProfiler.b();

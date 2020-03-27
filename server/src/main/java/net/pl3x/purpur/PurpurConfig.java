@@ -190,4 +190,9 @@ public class PurpurConfig {
         loggerSuppressInitLegacyMaterialError = getBoolean("settings.logger.suppress-init-legacy-material-errors", loggerSuppressInitLegacyMaterialError);
         loggerSuppressIgnoredAdvancementWarnings = getBoolean("settings.logger.suppress-ignored-advancement-warnings", loggerSuppressIgnoredAdvancementWarnings);
     }
+
+    public static boolean tpsCatchup = true;
+    private static void tpsCatchup() {
+        tpsCatchup = getBoolean("settings.tps-catchup", tpsCatchup);
+    }
 }
