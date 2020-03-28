@@ -35,6 +35,7 @@ public abstract class CommandNode<S> implements Comparable<CommandNode<S>> {
     private final RedirectModifier<S> modifier;
     private final boolean forks;
     private Command<S> command;
+    private String permission = null; public String getPermission() { return permission; } public void setPermission(String permission) { this.permission = permission; } // Purpur
     // CraftBukkit start
     public void removeCommand(String name) {
         children.remove(name);

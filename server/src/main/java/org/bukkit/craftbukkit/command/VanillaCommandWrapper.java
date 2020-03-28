@@ -94,6 +94,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         } else {
             commandName = vanillaCommand.getRedirect().getName();
         }
+        if (vanillaCommand.getPermission() != null) return vanillaCommand.getPermission(); // Purpur
         return "minecraft.command." + stripDefaultNamespace(commandName);
     }
 
