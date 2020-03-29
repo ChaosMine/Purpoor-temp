@@ -148,6 +148,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     // Paper start
+    public boolean isQueuedForRegister = false;
     public static Random SHARED_RANDOM = new Random() {
         private boolean locked = false;
         @Override
