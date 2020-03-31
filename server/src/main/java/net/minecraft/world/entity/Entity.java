@@ -1813,9 +1813,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                     bworld = server.getWorld(worldName);
                 }
 
-                if (bworld == null) {
-                    bworld = ((org.bukkit.craftbukkit.CraftServer) server).getServer().getWorldServer(World.OVERWORLD).getWorld();
-                }
+                // Paper start - Move player to spawn point if spawn in unloaded world
+//                if (bworld == null) {
+//                    bworld = ((org.bukkit.craftbukkit.CraftServer) server).getServer().getWorldServer(World.OVERWORLD).getWorld();
+//                }
+                // Paper end - Move player to spawn point if spawn in unloaded world
 
                 spawnIn(bworld == null ? null : ((CraftWorld) bworld).getHandle());
             }
