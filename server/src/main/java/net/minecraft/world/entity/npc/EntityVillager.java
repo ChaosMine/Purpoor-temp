@@ -712,7 +712,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
     @Override
     public boolean canBreed() {
-        return this.bx + this.fv() >= 12 && this.getAge() == 0;
+        return world.purpurConfig.villagerCanBreed && this.bx + this.fv() >= 12 && this.getAge() == 0; // Purpur
     }
 
     private boolean fr() {
