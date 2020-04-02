@@ -169,6 +169,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     private CraftEntity bukkitEntity;
 
     PlayerChunkMap.EntityTracker tracker; // Paper
+    public boolean collisionLoadChunks = false; // Paper
     public Throwable addedToWorldStack; // Paper - entity debug
     public CraftEntity getBukkitEntity() {
         if (bukkitEntity == null) {
