@@ -376,6 +376,7 @@ public class CommandDispatcher {
     }
 
     private void runSync(EntityPlayer entityplayer, Collection<String> bukkit, RootCommandNode<ICompletionProvider> rootcommandnode) {
+        if (PlayerCommandSendEvent.getHandlerList().getRegisteredListeners().length > 0) { // Purpur - skip all this crap if there's nothing listening
         // Paper end - Async command map building
         new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandListenerWrapper>(entityplayer.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
         PlayerCommandSendEvent event = new PlayerCommandSendEvent(entityplayer.getBukkitEntity(), new LinkedHashSet<>(bukkit));
@@ -388,6 +389,7 @@ public class CommandDispatcher {
             }
         }
         // CraftBukkit end
+        } // Purpur - skip event
         entityplayer.playerConnection.sendPacket(new PacketPlayOutCommands(rootcommandnode));
     }
 
