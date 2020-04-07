@@ -26,6 +26,7 @@ import net.minecraft.ReportedException;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap; // Paper
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +48,7 @@ public class NBTTagCompound implements NBTBase {
             if (i > 512) {
                 throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
             } else {
-                HashMap hashmap = Maps.newHashMap();
+                Object2ObjectOpenHashMap<String, NBTBase> hashmap = new Object2ObjectOpenHashMap<>(8, 0.8f); // Paper - reduce memory footprint of NBTTagCompound
 
                 byte b0;
 
@@ -83,7 +84,7 @@ public class NBTTagCompound implements NBTBase {
     }
 
     public NBTTagCompound() {
-        this(Maps.newHashMap());
+        this(new Object2ObjectOpenHashMap<>(8, 0.8f)); // Paper - reduce memory footprint of NBTTagCompound
     }
 
     @Override
@@ -417,9 +418,17 @@ public class NBTTagCompound implements NBTBase {
 
     @Override
     public NBTTagCompound clone() {
-        Map<String, NBTBase> map = Maps.newHashMap(Maps.transformValues(this.map, NBTBase::clone));
+        // Paper start - reduce memory footprint of NBTTagCompound
+        Object2ObjectOpenHashMap<String, NBTBase> ret = new Object2ObjectOpenHashMap<>(this.map.size(), 0.8f);
 
-        return new NBTTagCompound(map);
+        Iterator<Map.Entry<String, NBTBase>> iterator = (this.map instanceof Object2ObjectOpenHashMap) ? ((Object2ObjectOpenHashMap)this.map).object2ObjectEntrySet().fastIterator() : this.map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, NBTBase> entry = iterator.next();
+            ret.put(entry.getKey(), entry.getValue().clone());
+        }
+
+        return new NBTTagCompound(ret);
+        // Paper end - reduce memory footprint of NBTTagCompound
     }
 
     public boolean equals(Object object) {
