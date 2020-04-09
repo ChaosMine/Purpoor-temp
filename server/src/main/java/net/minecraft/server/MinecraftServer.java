@@ -777,7 +777,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         this.executeModerately();
         // CraftBukkit end
         if (worldserver.getWorld().getKeepSpawnInMemory()) worldloadlistener.b(); // Paper
-        chunkproviderserver.getLightEngine().a(5);
+        chunkproviderserver.getLightEngine().a(worldserver.paperConfig.lightQueueSize); // Paper - increase light queue size
         // CraftBukkit start
         // this.updateSpawnFlags();
         worldserver.setSpawnFlags(this.getSpawnMonsters(), this.getSpawnAnimals());
