@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.WorldLoadListener;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.profiling.GameProfilerFiller;
@@ -718,6 +719,7 @@ public class ChunkProviderServer extends IChunkProvider {
         this.world.getMethodProfiler().enter("purge");
         this.world.timings.doChunkMap.startTiming(); // Spigot
         this.chunkMapDistance.purgeTickets();
+        this.world.getMinecraftServer().midTickLoadChunks(); // Paper
         this.tickDistanceManager();
         this.world.timings.doChunkMap.stopTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("chunks");
@@ -727,6 +729,7 @@ public class ChunkProviderServer extends IChunkProvider {
         this.world.timings.doChunkUnload.startTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("unload");
         this.playerChunkMap.unloadChunks(booleansupplier);
+        this.world.getMinecraftServer().midTickLoadChunks(); // Paper
         this.world.timings.doChunkUnload.stopTiming(); // Spigot
         this.world.getMethodProfiler().exit();
         this.clearCache();
@@ -781,7 +784,7 @@ public class ChunkProviderServer extends IChunkProvider {
             };
             // Paper end
             this.world.timings.chunkTicks.startTiming(); // Paper
-            this.playerChunkMap.forEachVisibleChunk((playerchunk) -> { // Paper - safe iterator incase chunk loads, also no wrapping
+            final int[] chunksTicked = {0}; this.playerChunkMap.forEachVisibleChunk((playerchunk) -> { // Paper - safe iterator incase chunk loads, also no wrapping
                 Optional<Chunk> optional = ((Either) playerchunk.a().getNow(PlayerChunk.UNLOADED_CHUNK)).left();
 
                 if (optional.isPresent()) {
@@ -805,6 +808,7 @@ public class ChunkProviderServer extends IChunkProvider {
                             //this.world.timings.chunkTicks.startTiming(); // Spigot // Paper
                             this.world.a(chunk, k);
                             //this.world.timings.chunkTicks.stopTiming(); // Spigot // Paper
+                            if (chunksTicked[0]++ % 10 == 0) this.world.getMinecraftServer().midTickLoadChunks(); // Paper
                         }
                     }
                 }
@@ -961,6 +965,41 @@ public class ChunkProviderServer extends IChunkProvider {
             ChunkProviderServer.this.world.getMethodProfiler().c("runTask");
             super.executeTask(runnable);
         }
+
+        // Paper start
+        private long lastMidTickChunkTask = 0;
+        public boolean pollChunkLoadTasks() {
+            if (com.destroystokyo.paper.io.chunk.ChunkTaskManager.pollChunkWaitQueue() || ChunkProviderServer.this.world.asyncChunkTaskManager.pollNextChunkTask()) {
+                try {
+                    ChunkProviderServer.this.tickDistanceManager();
+                } finally {
+                    // from below: process pending Chunk loadCallback() and unloadCallback() after each run task
+                    playerChunkMap.callbackExecutor.run();
+                }
+                return true;
+            }
+            return false;
+        }
+        public void midTickLoadChunks() {
+            MinecraftServer server = ChunkProviderServer.this.world.getMinecraftServer();
+            // always try to load chunks, restrain generation/other updates only. don't count these towards tick count
+            //noinspection StatementWithEmptyBody
+            while (pollChunkLoadTasks()) {}
+
+            if (System.nanoTime() - lastMidTickChunkTask < 200000) {
+                return;
+            }
+
+            for (;server.midTickChunksTasksRan < com.destroystokyo.paper.PaperConfig.midTickChunkTasks && server.canSleepForTick();) {
+                if (this.executeNext()) {
+                    server.midTickChunksTasksRan++;
+                    lastMidTickChunkTask = System.nanoTime();
+                } else {
+                    break;
+                }
+            }
+        }
+        // Paper end
 
         @Override
         protected boolean executeNext() {
