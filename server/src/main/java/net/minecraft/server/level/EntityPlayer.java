@@ -254,7 +254,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.serverStatisticManager = minecraftserver.getPlayerList().getStatisticManager(this);
         this.advancementDataPlayer = minecraftserver.getPlayerList().f(this);
         this.G = 1.0F;
-        this.c(worldserver);
+        //this.c(worldserver); // Paper - don't move to spawn on login, only first join
         this.co = minecraftserver.a(this);
 
         this.cachedSingleHashSet = new com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
@@ -306,6 +306,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     }
     // CraftBukkit end
 
+    public final void moveToSpawn(WorldServer worldserver) { c(worldserver); } // Paper - OBFHELPER
     private void c(WorldServer worldserver) {
         BlockPosition blockposition = worldserver.getSpawn();
 
@@ -483,7 +484,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 position = Vec3D.a(((WorldServer) world).getSpawn());
             }
             this.world = world;
-            this.setPosition(position.getX(), position.getY(), position.getZ());
+            this.setPositionRaw(position.getX(), position.getY(), position.getZ()); // Paper - don't register to chunks yet
         }
         this.playerInteractManager.a((WorldServer) world);
     }
