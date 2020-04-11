@@ -60,6 +60,7 @@ import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.server.players.WhiteListEntry;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityLiving;
@@ -72,6 +73,7 @@ import net.minecraft.world.inventory.Container;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.entity.TileEntitySign;
@@ -850,6 +852,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void setRotation(float yaw, float pitch) {
         throw new UnsupportedOperationException("Cannot set rotation of players. Consider teleporting instead.");
     }
+
+    // Paper start
+    @Override
+    public java.util.concurrent.CompletableFuture<Boolean> teleportAsync(Location loc, @javax.annotation.Nonnull PlayerTeleportEvent.TeleportCause cause) {
+        ((CraftWorld)loc.getWorld()).getHandle().getChunkProvider().markAreaHighPriority(new ChunkCoordIntPair(MathHelper.floor(loc.getX()) >> 4, MathHelper.floor(loc.getZ()) >> 4), 28, 3); // Paper - load area high priority
+        return super.teleportAsync(loc, cause);
+    }
+    // Paper end
 
     @Override
     public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
