@@ -113,6 +113,11 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public boolean chickenRetaliate = false;
+    private void chickenSettings() {
+        chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);
+    }
+
     public double creeperChargedChance = 0.0D;
     private void creeperSettings() {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);

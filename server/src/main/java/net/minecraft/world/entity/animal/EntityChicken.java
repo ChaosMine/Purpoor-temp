@@ -20,10 +20,12 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
+import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -51,16 +53,33 @@ public class EntityChicken extends EntityAnimal {
         this.a(PathType.WATER, 0.0F);
     }
 
+    // Purpur start
+    @Override
+    protected void initAttributes() {
+        if (world.purpurConfig.chickenRetaliate) {
+            this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(2.0D);
+        }
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
-        this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D));
+        //this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D)); // Purpur - moved down
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
         this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, EntityChicken.bv));
         this.goalSelector.a(4, new PathfinderGoalFollowParent(this, 1.1D));
         this.goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 1.0D));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+        // Purpur start
+        if (world.purpurConfig.chickenRetaliate) {
+            this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 1.0D, false));
+            this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this));
+        } else {
+            this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D));
+        }
+        // Purpur end
     }
 
     @Override
@@ -69,7 +88,7 @@ public class EntityChicken extends EntityAnimal {
     }
 
     public static AttributeProvider.Builder eK() {
-        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 4.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.25D);
+        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 4.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.25D).a(GenericAttributes.ATTACK_DAMAGE, 0.0D); // Purpur
     }
 
     @Override
