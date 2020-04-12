@@ -177,7 +177,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private final Queue<Entity> entitiesToAdd = Queues.newArrayDeque();
     public final List<EntityPlayer> players = Lists.newArrayList(); // Paper - private -> public
     public final ChunkProviderServer chunkProvider; // Paper - public
-    boolean tickingEntities;
+    public boolean tickingEntities; // Paper - expose for watchdog
     // Paper start
     List<java.lang.Runnable> afterEntityTickingTasks = Lists.newArrayList();
     public void doIfNotEntityTicking(java.lang.Runnable run) {

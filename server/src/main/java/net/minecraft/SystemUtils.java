@@ -130,6 +130,7 @@ public class SystemUtils {
         return SystemUtils.f;
     }
 
+    public static void shutdownServerThreadPool() { h(); } // Paper - OBFHELPER
     public static void h() {
         a(SystemUtils.e);
         a(SystemUtils.f);
