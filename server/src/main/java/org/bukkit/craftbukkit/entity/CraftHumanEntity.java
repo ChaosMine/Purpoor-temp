@@ -324,7 +324,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (adventure$title == null) adventure$title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(container.getBukkitView().getTitle()); // Paper
 
         //player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, CraftChatMessage.fromString(title)[0])); // Paper // Paper - comment
-        player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper
+        if (!player.isFrozen()) player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper
         getHandle().activeContainer = container;
         getHandle().activeContainer.addSlotListener(player);
     }
@@ -398,7 +398,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         net.kyori.adventure.text.Component adventure$title = inventory.title(); // Paper
         if (adventure$title == null) adventure$title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(inventory.getTitle()); // Paper
         //player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, CraftChatMessage.fromString(title)[0])); // Paper - comment
-        player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper
+        if (!player.isFrozen()) player.playerConnection.sendPacket(new PacketPlayOutOpenWindow(container.windowId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper
         player.activeContainer = container;
         player.activeContainer.addSlotListener(player);
     }
