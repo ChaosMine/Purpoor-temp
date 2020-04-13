@@ -187,7 +187,7 @@ public class Items {
     public static final Item cm = a(Blocks.BOOKSHELF, CreativeModeTab.b);
     public static final Item cn = a(Blocks.MOSSY_COBBLESTONE, CreativeModeTab.b);
     public static final Item co = a(Blocks.OBSIDIAN, CreativeModeTab.b);
-    public static final Item cp = a((ItemBlock) (new ItemBlockWallable(Blocks.TORCH, Blocks.WALL_TORCH, (new Item.Info()).a(CreativeModeTab.c))));
+    public static final Item cp = a((ItemBlock) (new ItemBlockWallable(Blocks.TORCH, Blocks.WALL_TORCH, (new Item.Info()).a(CreativeModeTab.c)))); public static final Item torch() { return cp; } // Purpur - OBFHELPER
     public static final Item cq = a(Blocks.END_ROD, CreativeModeTab.c);
     public static final Item cr = a(Blocks.CHORUS_PLANT, CreativeModeTab.c);
     public static final Item cs = a(Blocks.CHORUS_FLOWER, CreativeModeTab.c);
@@ -239,7 +239,7 @@ public class Items {
     public static final Item dm = a(Blocks.SOUL_SOIL, CreativeModeTab.b);
     public static final Item dn = a(Blocks.BASALT, CreativeModeTab.b);
     public static final Item do_ = a(Blocks.cP, CreativeModeTab.b);
-    public static final Item dp = a((ItemBlock) (new ItemBlockWallable(Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH, (new Item.Info()).a(CreativeModeTab.c))));
+    public static final Item dp = a((ItemBlock) (new ItemBlockWallable(Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH, (new Item.Info()).a(CreativeModeTab.c)))); public static final Item soulTorch() { return dp; } // Purpur - OBFHELPER
     public static final Item dq = a(Blocks.GLOWSTONE, CreativeModeTab.b);
     public static final Item dr = a(Blocks.JACK_O_LANTERN, CreativeModeTab.b);
     public static final Item ds = a(Blocks.OAK_TRAPDOOR, CreativeModeTab.d);

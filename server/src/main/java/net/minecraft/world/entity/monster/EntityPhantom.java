@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.DifficultyDamageScaler;
+import net.minecraft.world.EnumHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityFlying;
@@ -41,6 +42,7 @@ import net.minecraft.world.entity.boss.enderdragon.EntityEnderCrystal;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.levelgen.HeightMap;
@@ -54,6 +56,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
     private BlockPosition d; public void setHome(BlockPosition home) { this.d = home; } public BlockPosition getHome() { return this.d; } // Purpur - OBFHELPER
     private EntityPhantom.AttackPhase bo; public AttackPhase getAttackPhase() { return this.bo; } // Purpur - OBFHELPER
     private Vec3D crystalPosition; // Purpur
+    private static final RecipeItemStack TORCH = RecipeItemStack.a(Items.torch(), Items.soulTorch()); // Purpur
 
     public EntityPhantom(EntityTypes<? extends EntityPhantom> entitytypes, World world) {
         super(entitytypes, world);
@@ -166,7 +169,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
     @Override
     public void movementTick() {
-        if (this.isAlive() && shouldBurnInDay && this.eG()) { // Paper - Configurable Burning
+        if (this.isAlive() && (((shouldBurnInDay || world.purpurConfig.phantomBurnInDaylight) && this.isInDaylight()) || (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(this)) >= world.purpurConfig.phantomBurnInLight))) { // Paper - Configurable Burning // Purpur
             this.setOnFire(8);
         }
 
@@ -422,7 +425,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
             } else {
                 this.c = 60;
                 List<EntityHuman> list = EntityPhantom.this.world.a(this.b, (EntityLiving) EntityPhantom.this, EntityPhantom.this.getBoundingBox().grow(16.0D, 64.0D, 16.0D));
-
+                if (world.purpurConfig.phantomIgnorePlayersWithTorch) list.removeIf(human -> TORCH.test(human.getItemInHand(EnumHand.MAIN_HAND)) || TORCH.test(human.getItemInHand(EnumHand.OFF_HAND)));// Purpur
                 if (!list.isEmpty()) {
                     list.sort(Comparator.comparing(Entity::locY).reversed());
                     Iterator iterator = list.iterator();
@@ -521,6 +524,12 @@ public class EntityPhantom extends EntityFlying implements IMonster {
                 return false;
             } else if (entityliving instanceof EntityHuman && (((EntityHuman) entityliving).isSpectator() || ((EntityHuman) entityliving).isCreative())) {
                 return false;
+            // Purpur start
+            } else if (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(EntityPhantom.this)) >= world.purpurConfig.phantomBurnInLight) {
+                return false;
+            } else if (world.purpurConfig.phantomIgnorePlayersWithTorch && (TORCH.test(entityliving.getItemInHand(EnumHand.MAIN_HAND)) || TORCH.test(entityliving.getItemInHand(EnumHand.OFF_HAND)))) {
+                return false;
+            // Purpur end
             } else if (!this.a()) {
                 return false;
             } else {
