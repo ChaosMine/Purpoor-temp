@@ -330,6 +330,11 @@ public class PurpurWorldConfig {
         signRightClickEdit = getBoolean("blocks.sign.right-click-edit", signRightClickEdit);
     }
 
+    public boolean spawnerDeactivateByRedstone = false;
+    private void spawnerSettings() {
+        spawnerDeactivateByRedstone = getBoolean("blocks.spawner.deactivate-by-redstone", spawnerDeactivateByRedstone);
+    }
+
     public boolean turtleEggsBreakFromExpOrbs = true;
     public boolean turtleEggsBreakFromItems = true;
     public boolean turtleEggsBreakFromMinecarts = true;

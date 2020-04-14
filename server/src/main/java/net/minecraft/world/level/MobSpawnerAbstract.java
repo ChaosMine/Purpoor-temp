@@ -69,6 +69,7 @@ public abstract class MobSpawnerAbstract {
     private boolean h() {
         BlockPosition blockposition = this.b();
 
+        if (getWorld().purpurConfig.spawnerDeactivateByRedstone && getWorld().isBlockIndirectlyPowered(blockposition)) { return false; } // Purpur
         return this.a().isAffectsSpawningPlayerNearby((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, (double) this.requiredPlayerRange); // Paper
     }
 
@@ -348,7 +349,7 @@ public abstract class MobSpawnerAbstract {
 
     public abstract void a(int i);
 
-    public abstract World a();
+    public abstract World a(); public World getWorld() { return a(); } // Purpur - OBFHELPER
 
     public abstract BlockPosition b();
 }
