@@ -69,12 +69,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeMapBase;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.projectile.EntityFireworks;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumGamemode;
+import net.minecraft.world.level.World;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.saveddata.maps.MapIcon;
@@ -2284,6 +2286,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             return type.getType().cast(getClientViewDistance());
         }
         throw new RuntimeException("Unknown settings type");
+    }
+
+    @Override
+    public org.bukkit.entity.Firework boostElytra(ItemStack firework) {
+        Validate.isTrue(isGliding(), "Player must be gliding");
+        Validate.isTrue(firework != null, "firework == null");
+        Validate.isTrue(firework.getType() == Material.FIREWORK_ROCKET, "Firework must be Material.FIREWORK_ROCKET");
+
+        net.minecraft.world.item.ItemStack item = org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(firework);
+        World world = ((CraftWorld) getWorld()).getHandle();
+        EntityFireworks entity = new EntityFireworks(world, item, getHandle());
+        return world.addEntity(entity)
+            ? (org.bukkit.entity.Firework) entity.getBukkitEntity()
+            : null;
     }
     // Paper end
 
