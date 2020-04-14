@@ -812,4 +812,9 @@ public class PaperWorldConfig {
         fixWitherTargetingBug = getBoolean("fix-wither-targeting-bug", false);
         log("Withers properly target players: " + fixWitherTargetingBug);
     }
+
+    public boolean allowUsingSignsInsideSpawnProtection = false;
+    private void allowUsingSignsInsideSpawnProtection() {
+        allowUsingSignsInsideSpawnProtection = getBoolean("allow-using-signs-inside-spawn-protection", allowUsingSignsInsideSpawnProtection);
+    }
 }

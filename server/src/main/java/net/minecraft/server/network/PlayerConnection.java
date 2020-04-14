@@ -143,6 +143,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockCommand;
+import net.minecraft.world.level.block.BlockSign;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
@@ -1692,7 +1693,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
         this.player.resetIdleTimer();
         if (blockposition.getY() < this.minecraftServer.getMaxBuildHeight()) {
-            if (this.teleportPos == null && this.player.h((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D) < 64.0D && worldserver.a((EntityHuman) this.player, blockposition)) {
+            if (this.teleportPos == null && this.player.h((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D) < 64.0D && (worldserver.a((EntityHuman) this.player, blockposition) || (worldserver.paperConfig.allowUsingSignsInsideSpawnProtection && worldserver.getType(blockposition).getBlock() instanceof BlockSign))) { // Paper
                 // CraftBukkit start - Check if we can actually do something over this large a distance
                 // Paper - move check up
                 this.player.clearActiveItem(); // SPIGOT-4706
