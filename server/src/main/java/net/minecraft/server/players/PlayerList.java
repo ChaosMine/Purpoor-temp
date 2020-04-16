@@ -288,7 +288,9 @@ public abstract class PlayerList {
 
         if (jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure
             joinMessage = PaperAdventure.asVanilla(jm); // Paper - Adventure
-            server.getPlayerList().sendAll(new PacketPlayOutChat(joinMessage, ChatMessageType.SYSTEM, SystemUtils.b)); // Paper - Adventure
+            // Paper start - Removed sendAll for loop and broadcasted to console also
+            server.getPlayerList().sendMessage(joinMessage); // Paper - Adventure
+            // Paper end
         }
         // CraftBukkit end
 
