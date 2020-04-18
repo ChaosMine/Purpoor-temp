@@ -1021,6 +1021,7 @@ public class ChunkProviderServer extends IChunkProvider {
                 return super.executeNext() || execChunkTask; // Paper
             }
         } finally {
+            playerChunkMap.chunkLoadConversionCallbackExecutor.run(); // Paper - Add chunk load conversion callback executor to prevent deadlock due to recursion in the chunk task queue sorter
             playerChunkMap.callbackExecutor.run();
         }
         // CraftBukkit end
