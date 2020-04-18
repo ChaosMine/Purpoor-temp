@@ -245,8 +245,8 @@ public abstract class ChunkMapDistance {
         ObjectSet<EntityPlayer> objectset = (ObjectSet) this.c.get(i);
         if (objectset == null) return; // CraftBukkit - SPIGOT-6208
 
-        objectset.remove(entityplayer);
-        if (objectset.isEmpty()) {
+        if (objectset != null) objectset.remove(entityplayer); // Paper - some state corruption happens here, don't crash, clean up gracefully.
+        if (objectset == null || objectset.isEmpty()) { // Paper
             this.c.remove(i);
             this.f.update(i, Integer.MAX_VALUE, false);
             this.g.update(i, Integer.MAX_VALUE, false);
