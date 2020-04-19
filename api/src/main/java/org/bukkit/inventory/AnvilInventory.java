@@ -109,4 +109,14 @@ public interface AnvilInventory extends Inventory {
         setItem(2, result);
     }
     // Paper end
+
+    // Purpur start
+    boolean canBypassCost();
+
+    void setBypassCost(boolean bypassCost);
+
+    boolean canDoUnsafeEnchants();
+
+    void setDoUnsafeEnchants(boolean canDoUnsafeEnchants);
+    // Purpur end
 }
