@@ -2,8 +2,13 @@ package net.minecraft.world.inventory;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutWindowData;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -33,6 +38,8 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
     public int maximumRepairCost = 40;
     private CraftInventoryView bukkitEntity;
     // CraftBukkit end
+    public boolean bypassCost = false; // Purpur
+    public boolean canDoUnsafeEnchants = false; // Purpur
 
     public ContainerAnvil(int i, PlayerInventory playerinventory) {
         this(i, playerinventory, ContainerAccess.a);
@@ -51,12 +58,14 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
 
     @Override
     protected boolean b(EntityHuman entityhuman, boolean flag) {
-        return (entityhuman.abilities.canInstantlyBuild || entityhuman.expLevel >= this.levelCost.get()) && this.levelCost.get() > 0;
+        return (entityhuman.abilities.canInstantlyBuild || entityhuman.expLevel >= this.levelCost.get()) && (bypassCost || this.levelCost.get() > 0); // Purpur
     }
 
     @Override
     protected ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
+        if (net.pl3x.purpur.event.inventory.AnvilTakeResultEvent.getHandlerList().getRegisteredListeners().length > 0) new net.pl3x.purpur.event.inventory.AnvilTakeResultEvent(entityhuman.getBukkitEntity(), getBukkitView(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)).callEvent(); // Purpur
         if (!entityhuman.abilities.canInstantlyBuild) {
+            if (bypassCost) ((EntityPlayer) entityhuman).lastSentExp = -1; else // Purpur
             entityhuman.levelDown(-this.levelCost.get());
         }
 
@@ -107,6 +116,12 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
 
     @Override
     public void e() {
+        // Purpur start
+        bypassCost = false;
+        canDoUnsafeEnchants = false;
+        if (net.pl3x.purpur.event.inventory.AnvilUpdateResultEvent.getHandlerList().getRegisteredListeners().length > 0) new net.pl3x.purpur.event.inventory.AnvilUpdateResultEvent(getBukkitView()).callEvent();
+        // Purpur end
+
         ItemStack itemstack = this.repairInventory.getItem(0);
 
         this.levelCost.set(1);
@@ -183,7 +198,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
                             int i2 = (Integer) map1.get(enchantment);
 
                             i2 = l1 == i2 ? i2 + 1 : Math.max(i2, l1);
-                            boolean flag3 = enchantment.canEnchant(itemstack);
+                            boolean flag3 = canDoUnsafeEnchants || enchantment.canEnchant(itemstack); // Purpur
 
                             if (this.player.abilities.canInstantlyBuild || itemstack.getItem() == Items.ENCHANTED_BOOK) {
                                 flag3 = true;
@@ -195,7 +210,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
                                 Enchantment enchantment1 = (Enchantment) iterator1.next();
 
                                 if (enchantment1 != enchantment && !enchantment.isCompatible(enchantment1)) {
-                                    flag3 = false;
+                                    flag3 = canDoUnsafeEnchants; // Purpur
                                     ++i;
                                 }
                             }
@@ -266,6 +281,13 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
                 this.levelCost.set(maximumRepairCost - 1); // CraftBukkit
             }
 
+            // Purpur start
+            if (bypassCost && levelCost.get() >= maximumRepairCost) {
+                itemstack.getOrCreateTagAndSet("Purpur.realCost", NBTTagInt.a(levelCost.get()));
+                levelCost.set(maximumRepairCost - 1);
+            }
+            // Purpur end
+
             if (this.levelCost.get() >= maximumRepairCost && !this.player.abilities.canInstantlyBuild) { // CraftBukkit
                 itemstack1 = ItemStack.b;
             }
@@ -287,6 +309,12 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
 
             org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), itemstack1); // CraftBukkit
             this.c();
+            // Purpur start
+            if (canDoUnsafeEnchants && itemstack1 != ItemStack.NULL_ITEM) {
+                ((EntityPlayer) player).playerConnection.sendPacket(new PacketPlayOutSetSlot(windowId, 2, itemstack1));
+                ((EntityPlayer) player).playerConnection.sendPacket(new PacketPlayOutWindowData(windowId, 0, levelCost.get()));
+            }
+            // Purpur end
         }
     }
 
