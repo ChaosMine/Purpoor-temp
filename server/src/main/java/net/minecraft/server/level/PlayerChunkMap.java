@@ -1586,7 +1586,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         });
     }
 
-    protected void addEntity(Entity entity) {
+    public void addEntity(Entity entity) { // Paper - protected -> public
         org.spigotmc.AsyncCatcher.catchOp("entity track"); // Spigot
         // Paper start - ignore and warn about illegal addEntity calls instead of crashing server
         if (!entity.valid || entity.world != this.world || this.trackedEntities.containsKey(entity.getId())) {
@@ -1595,6 +1595,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 .printStackTrace();
             return;
         }
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).supressTrackerForLogin) return; // Delay adding to tracker until after list packets
         // Paper end
         if (!(entity instanceof EntityComplexPart)) {
             EntityTypes<?> entitytypes = entity.getEntityType();
