@@ -31,6 +31,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.ChatHoverable;
 import net.minecraft.network.chat.ChatMessage;
@@ -175,6 +176,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     private static final Logger LOGGER = LogManager.getLogger();
     public PlayerConnection playerConnection;
+    public NetworkManager networkManager; // Paper
     public final MinecraftServer server;
     public final PlayerInteractManager playerInteractManager;
     public final Deque<Integer> removeQueue = new ArrayDeque<>(); // Paper
@@ -241,6 +243,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     public boolean joining = true;
     public boolean sentListPacket = false;
     public boolean supressTrackerForLogin = false; // Paper
+    public boolean didPlayerJoinEvent = false; // Paper
     public Integer clientViewDistance;
     // CraftBukkit end
     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper

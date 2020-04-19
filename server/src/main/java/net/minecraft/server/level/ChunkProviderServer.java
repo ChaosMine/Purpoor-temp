@@ -629,7 +629,7 @@ public class ChunkProviderServer extends IChunkProvider {
         return this.serverThreadQueue.executeNext();
     }
 
-    private boolean tickDistanceManager() {
+    public boolean tickDistanceManager() { // Paper - private -> public
         boolean flag = this.chunkMapDistance.a(this.playerChunkMap);
         boolean flag1 = this.playerChunkMap.b();
 

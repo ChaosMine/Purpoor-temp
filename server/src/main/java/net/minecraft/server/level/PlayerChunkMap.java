@@ -147,7 +147,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     private final Mailbox<ChunkTaskQueueSorter.a<Runnable>> mailboxWorldGen;
     private final Mailbox<ChunkTaskQueueSorter.a<Runnable>> mailboxMain;
     public final WorldLoadListener worldLoadListener;
-    public final PlayerChunkMap.a chunkDistanceManager;
+    public final PlayerChunkMap.a chunkDistanceManager; public final ChunkMapDistance getChunkDistanceManager() { return this.chunkDistanceManager; } // Paper - OBFHELPER
     private final AtomicInteger u;
     public final DefinedStructureManager definedStructureManager; // Paper - private -> public
     private final File w;
