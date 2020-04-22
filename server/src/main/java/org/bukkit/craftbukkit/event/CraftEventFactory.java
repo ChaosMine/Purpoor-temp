@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
+import io.papermc.paper.event.block.BlockFailedDispenseEvent;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,7 +124,6 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.ExperienceOrb; // Paper
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Result;
@@ -1796,4 +1796,12 @@ public class CraftEventFactory {
         Bukkit.getPluginManager().callEvent(event);
         return event;
     }
+
+    // Paper start
+    public static boolean handleBlockFailedDispenseEvent(WorldServer worldserver, BlockPosition blockposition) {
+        org.bukkit.block.Block block = worldserver.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+        BlockFailedDispenseEvent event = new BlockFailedDispenseEvent(block);
+        return event.callEvent();
+    }
+    // Paper end
 }

@@ -81,6 +81,7 @@ public class BlockDispenser extends BlockTileEntity {
         int i = tileentitydispenser.h();
 
         if (i < 0) {
+            if (org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFailedDispenseEvent(worldserver, blockposition)) // Paper - BlockFailedDispenseEvent is called here
             worldserver.triggerEffect(1001, blockposition, 0);
         } else {
             ItemStack itemstack = tileentitydispenser.getItem(i);
