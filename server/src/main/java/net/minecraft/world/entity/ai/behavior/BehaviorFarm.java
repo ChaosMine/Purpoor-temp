@@ -38,7 +38,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
     }
 
     protected boolean a(WorldServer worldserver, EntityVillager entityvillager) {
-        if (!worldserver.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+        if (!worldserver.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && !worldserver.purpurConfig.villagerFarmingBypassMobGriefing) { // Purpur
             return false;
         } else if (entityvillager.getVillagerData().getProfession() != VillagerProfession.FARMER) {
             return false;

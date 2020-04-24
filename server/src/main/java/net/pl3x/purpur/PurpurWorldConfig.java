@@ -319,9 +319,11 @@ public class PurpurWorldConfig {
 
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
+    public boolean villagerFarmingBypassMobGriefing = false;
     private void villagerSettings() {
         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
+        villagerFarmingBypassMobGriefing = getBoolean("mobs.villager.bypass-mob-griefing", villagerFarmingBypassMobGriefing);
     }
 
     public boolean witherSkeletonTakesWitherDamage = false;
