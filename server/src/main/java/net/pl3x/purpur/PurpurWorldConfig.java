@@ -147,10 +147,12 @@ public class PurpurWorldConfig {
     }
 
     public boolean disableDropsOnCrammingDeath = false;
+    public boolean entitiesPickUpLootBypassMobGriefing = false;
     public boolean milkCuresBadOmen = true;
     public double tridentLoyaltyVoidReturnHeight = 0.0D;
     private void miscGameplayMechanicsSettings() {
         disableDropsOnCrammingDeath = getBoolean("gameplay-mechanics.disable-drops-on-cramming-death", disableDropsOnCrammingDeath);
+        entitiesPickUpLootBypassMobGriefing = getBoolean("gameplay-mechanics.entities-pick-up-loot-bypass-mob-griefing", entitiesPickUpLootBypassMobGriefing);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
     }

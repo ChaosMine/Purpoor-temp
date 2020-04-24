@@ -614,7 +614,7 @@ public abstract class EntityInsentient extends EntityLiving {
     public void movementTick() {
         super.movementTick();
         this.world.getMethodProfiler().enter("looting");
-        if (!this.world.isClientSide && this.canPickupLoot() && this.isAlive() && !this.killed && this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+        if (!this.world.isClientSide && this.canPickupLoot() && this.isAlive() && !this.killed && (this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || world.purpurConfig.entitiesPickUpLootBypassMobGriefing)) { // Purpur
             List<EntityItem> list = this.world.a(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
             Iterator iterator = list.iterator();
 
