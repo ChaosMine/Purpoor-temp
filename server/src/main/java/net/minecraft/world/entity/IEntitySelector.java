@@ -3,6 +3,9 @@ package net.minecraft.world.entity;
 import com.google.common.base.Predicates;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.stats.StatisticList;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -31,6 +34,7 @@ public final class IEntitySelector {
     public static final Predicate<Entity> g = (entity) -> {
         return !entity.isSpectator();
     };
+    public static Predicate<EntityHuman> isInsomniac = (player) -> MathHelper.clamp(((EntityPlayer) player).getStatisticManager().getStatisticValue(StatisticList.CUSTOM.get(StatisticList.TIME_SINCE_REST)), 1, Integer.MAX_VALUE) >= 72000; // Paper
 
     // Paper start
     public static final Predicate<Entity> affectsSpawning = (entity) -> {
