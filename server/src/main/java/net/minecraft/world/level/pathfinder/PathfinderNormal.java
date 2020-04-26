@@ -498,7 +498,7 @@ public class PathfinderNormal extends PathfinderAbstract {
                             return PathType.DANGER_FIRE;
                         }
 
-                        if (iblockaccess.getFluid(blockposition_mutableblockposition).a((Tag) TagsFluid.WATER)) {
+                        if (iblockdata.getFluid().a((Tag) TagsFluid.WATER)) { // Paper - remove another getType call
                             return PathType.WATER_BORDER;
                         }
                         } // Paper
@@ -528,7 +528,7 @@ public class PathfinderNormal extends PathfinderAbstract {
             } else if (iblockdata.a(Blocks.COCOA)) {
                 return PathType.COCOA;
             } else {
-                Fluid fluid = iblockaccess.getFluid(blockposition);
+                Fluid fluid = iblockdata.getFluid(); // Paper - remove another get type call
 
                 return fluid.a((Tag) TagsFluid.WATER) ? PathType.WATER : (fluid.a((Tag) TagsFluid.LAVA) ? PathType.LAVA : (a(iblockdata) ? PathType.DAMAGE_FIRE : (BlockDoor.l(iblockdata) && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_WOOD_CLOSED : (block instanceof BlockDoor && material == Material.ORE && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_IRON_CLOSED : (block instanceof BlockDoor && (Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_OPEN : (block instanceof BlockMinecartTrackAbstract ? PathType.RAIL : (block instanceof BlockLeaves ? PathType.LEAVES : (!block.a((Tag) TagsBlock.FENCES) && !block.a((Tag) TagsBlock.WALLS) && (!(block instanceof BlockFenceGate) || (Boolean) iblockdata.get(BlockFenceGate.OPEN)) ? (!iblockdata.a(iblockaccess, blockposition, PathMode.LAND) ? PathType.BLOCKED : PathType.OPEN) : PathType.FENCE))))))));
             }
