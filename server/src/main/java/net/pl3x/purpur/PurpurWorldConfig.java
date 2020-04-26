@@ -225,14 +225,21 @@ public class PurpurWorldConfig {
         cowFeedMushrooms = getInt("mobs.cow.feed-mushrooms-for-mooshroom", cowFeedMushrooms);
     }
 
+    public boolean creeperAllowGriefing = true;
     public double creeperChargedChance = 0.0D;
     private void creeperSettings() {
+        creeperAllowGriefing = getBoolean("mobs.creeper.allow-griefing", creeperAllowGriefing);
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
     public boolean enderDragonAlwaysDropsFullExp = false;
     private void enderDragonSettings() {
         enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
+    }
+
+    public boolean endermanAllowGriefing = true;
+    private void endermanSettings() {
+        endermanAllowGriefing = getBoolean("mobs.enderman.allow-griefing", endermanAllowGriefing);
     }
 
     public boolean foxTypeChangesWithTulips = false;

@@ -423,6 +423,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         @Override
         public boolean a() {
+            if (!enderman.world.purpurConfig.endermanAllowGriefing) return false; // Purpur
             return this.enderman.getCarried() != null ? false : (!this.enderman.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.enderman.getRandom().nextInt(20) == 0);
         }
 
@@ -456,7 +457,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
     static class PathfinderGoalEndermanPlaceBlock extends PathfinderGoal {
 
-        private final EntityEnderman a;
+        private final EntityEnderman a; public EntityEnderman getEnderman() { return a; } // Purpur - OBFHELPER
 
         public PathfinderGoalEndermanPlaceBlock(EntityEnderman entityenderman) {
             this.a = entityenderman;
@@ -464,6 +465,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         @Override
         public boolean a() {
+            if (!getEnderman().world.purpurConfig.endermanAllowGriefing) return false; // Purpur
             return this.a.getCarried() == null ? false : (!this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.a.getRandom().nextInt(2000) == 0);
         }
 
