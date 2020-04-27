@@ -10,7 +10,7 @@ import net.minecraft.world.level.chunk.NibbleArray;
 public class LightEngineStorageBlock extends LightEngineStorage<LightEngineStorageBlock.a> {
 
     protected LightEngineStorageBlock(ILightAccess ilightaccess) {
-        super(EnumSkyBlock.BLOCK, ilightaccess, new LightEngineStorageBlock.a(new Long2ObjectOpenHashMap()));
+        super(EnumSkyBlock.BLOCK, ilightaccess, new LightEngineStorageBlock.a(new com.destroystokyo.paper.util.map.QueuedChangesMapLong2Object<>(), false)); // Paper - avoid copying light data
     }
 
     @Override
@@ -23,13 +23,13 @@ public class LightEngineStorageBlock extends LightEngineStorage<LightEngineStora
 
     public static final class a extends LightEngineStorageArray<LightEngineStorageBlock.a> {
 
-        public a(Long2ObjectOpenHashMap<NibbleArray> long2objectopenhashmap) {
-            super(long2objectopenhashmap);
+        public a(com.destroystokyo.paper.util.map.QueuedChangesMapLong2Object<NibbleArray> long2objectopenhashmap, boolean isVisible) { // Paper - avoid copying light data
+            super(long2objectopenhashmap, isVisible); // Paper - avoid copying light data
         }
 
         @Override
         public LightEngineStorageBlock.a b() {
-            return new LightEngineStorageBlock.a(this.a.clone());
+            return new a(this.data, true); // Paper - avoid copying light data
         }
     }
 }
