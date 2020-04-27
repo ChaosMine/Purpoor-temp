@@ -16,6 +16,7 @@ public final class LightEngineBlock extends LightEngineLayer<LightEngineStorageB
 
     private static final EnumDirection[] e = EnumDirection.values();
     private final BlockPosition.MutableBlockPosition f = new BlockPosition.MutableBlockPosition();
+    private final MutableInt mutableint = new MutableInt(); // Paper
 
     public LightEngineBlock(ILightAccess ilightaccess) {
         super(ilightaccess, EnumSkyBlock.BLOCK, new LightEngineStorageBlock(ilightaccess));
@@ -47,7 +48,7 @@ public final class LightEngineBlock extends LightEngineLayer<LightEngineStorageB
             if (enumdirection == null) {
                 return 15;
             } else {
-                MutableInt mutableint = new MutableInt();
+                //MutableInt mutableint = new MutableInt(); // Paper - share mutableint, single threaded
                 IBlockData iblockdata = this.a(j, mutableint);
 
                 if (mutableint.getValue() >= 15) {
