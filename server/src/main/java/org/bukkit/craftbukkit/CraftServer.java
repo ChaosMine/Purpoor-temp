@@ -2033,6 +2033,32 @@ public final class CraftServer implements Server {
         return new CraftChunkData(world);
     }
 
+    // Paper start
+    @Override
+    public ChunkGenerator.ChunkData createVanillaChunkData(World world, int x, int z) {
+        // get empty object
+        CraftChunkData data = (CraftChunkData) createChunkData(world);
+        // do bunch of vanilla shit
+        net.minecraft.server.level.WorldServer nmsWorld = ((CraftWorld) world).getHandle();
+        net.minecraft.world.level.chunk.ProtoChunk protoChunk = new net.minecraft.world.level.chunk.ProtoChunk(new net.minecraft.world.level.ChunkCoordIntPair(x, z), net.minecraft.world.level.chunk.ChunkConverter.getEmptyConverter(), nmsWorld);
+        List<net.minecraft.world.level.chunk.IChunkAccess> list = new ArrayList<>();
+        list.add(protoChunk);
+        net.minecraft.server.level.RegionLimitedWorldAccess genRegion = new net.minecraft.server.level.RegionLimitedWorldAccess(nmsWorld, list);
+        // call vanilla generator, one feature after another. Order here is important!
+        net.minecraft.world.level.chunk.ChunkGenerator chunkGenerator = nmsWorld.getChunkProvider().chunkGenerator;
+        if (chunkGenerator instanceof org.bukkit.craftbukkit.generator.CustomChunkGenerator) {
+            chunkGenerator = ((org.bukkit.craftbukkit.generator.CustomChunkGenerator) chunkGenerator).delegate;
+        }
+        chunkGenerator.createBiomes(nmsWorld.r().b(IRegistry.ay), protoChunk);
+        chunkGenerator.buildNoise(genRegion, nmsWorld.getStructureManager(), protoChunk);
+        chunkGenerator.buildBase(genRegion, protoChunk);
+        // copy over generated sections
+        data.setRawChunkData(protoChunk.getSections());
+        // hooray!
+        return data;
+    }
+    // Paper end
+
     @Override
     public BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags) {
         return new CraftBossBar(title, color, style, flags);
