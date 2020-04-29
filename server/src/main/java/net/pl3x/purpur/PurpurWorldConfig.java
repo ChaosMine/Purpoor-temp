@@ -247,6 +247,11 @@ public class PurpurWorldConfig {
         teleportIfOutsideBorder = getBoolean("gameplay-mechanics.player.teleport-if-outside-border", teleportIfOutsideBorder);
     }
 
+    public boolean totemOfUndyingWorksInInventory = false;
+    private void totemOfUndyingWorksInInventory() {
+        totemOfUndyingWorksInInventory = getBoolean("gameplay-mechanics.player.totem-of-undying-works-in-inventory", totemOfUndyingWorksInInventory);
+    }
+
     public boolean silkTouchEnabled = false;
     public String silkTouchSpawnerName = "Spawner";
     public List<String> silkTouchSpawnerLore = new ArrayList<>();

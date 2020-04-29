@@ -1423,6 +1423,19 @@ public abstract class EntityLiving extends Entity {
                 }
             }
 
+            // Purpur start
+            if (world.purpurConfig.totemOfUndyingWorksInInventory && this instanceof EntityPlayer && (itemstack == null || itemstack.getItem() != Items.TOTEM_OF_UNDYING)) {
+                EntityPlayer player = (EntityPlayer) this;
+                for (ItemStack item : player.inventory.items) {
+                    if (item.getItem() == Items.TOTEM_OF_UNDYING) {
+                        itemstack1 = item;
+                        itemstack = item.cloneItemStack();
+                        break;
+                    }
+                }
+            }
+            // Purpur end
+
             EntityResurrectEvent event = new EntityResurrectEvent((LivingEntity) this.getBukkitEntity());
             event.setCancelled(itemstack == null);
             this.world.getServer().getPluginManager().callEvent(event);
