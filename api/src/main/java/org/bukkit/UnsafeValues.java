@@ -97,5 +97,9 @@ public interface UnsafeValues {
     static boolean isLegacyPlugin(org.bukkit.plugin.Plugin plugin) {
         return !Bukkit.getUnsafe().isSupportedApiVersion(plugin.getDescription().getAPIVersion());
     }
+
+    byte[] serializeItem(ItemStack item);
+
+    ItemStack deserializeItem(byte[] data);
     // Paper end
 }
