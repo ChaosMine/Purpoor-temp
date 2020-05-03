@@ -2159,5 +2159,26 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * Reset the idle timer back to 0
      */
     void resetIdleTimer();
+
+    /**
+     * Check if player is invulnerable from recently spawning or accepting a resource pack
+     *
+     * @return True if invulnerable
+     */
+    boolean isSpawnInvulnerable();
+
+    /**
+     * Get invulnerable ticks remaining
+     *
+     * @return Invulnerable ticks
+     */
+    int getSpawnInvulnerableTicks();
+
+    /**
+     * Set invulnerable ticks remaining
+     *
+     * @param invulnerableTicks Invulnerable ticks remaining
+     */
+    void setSpawnInvulnerableTicks(int invulnerableTicks);
     // Purpur end
 }
