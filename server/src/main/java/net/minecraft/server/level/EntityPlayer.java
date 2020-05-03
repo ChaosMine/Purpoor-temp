@@ -285,6 +285,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.canPickUpLoot = true;
         this.maxHealthCache = this.getMaxHealth();
         this.cachedSingleMobDistanceMap = new com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<>(this); // Paper
+
+        this.invulnerableTicks = world.purpurConfig.playerSpawnInvulnerableTicks; // Purpur
     }
     // Paper start
     public BlockPosition getPointInFront(double inFront) {
@@ -1129,6 +1131,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     }
 
+    // Purpur start
+    public boolean isSpawnInvulnerable() {
+        return invulnerableTicks > 0 || frozen;
+    }
+    // Purpur end
+
     @Override
     public boolean damageEntity(DamageSource damagesource, float f) {
         if (this.isInvulnerable(damagesource)) {
@@ -1136,7 +1144,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         } else {
             boolean flag = this.server.j() && this.canPvP() && "fall".equals(damagesource.translationIndex);
 
-            if (!flag && this.invulnerableTicks > 0 && damagesource != DamageSource.OUT_OF_WORLD) {
+            if (!flag && isSpawnInvulnerable() && damagesource != DamageSource.OUT_OF_WORLD) { // Purpur
                 return false;
             } else {
                 if (damagesource instanceof EntityDamageSource) {
@@ -1313,6 +1321,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             }
             // Paper end
 
+            this.invulnerableTicks = worldserver.purpurConfig.playerSpawnInvulnerableTicks; // Purpur
             return this;
         }
     }
@@ -2521,8 +2530,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     @Override
     public boolean isFrozen() { // Paper - protected > public
-        return super.isFrozen() || (this.playerConnection != null && this.playerConnection.isDisconnected()); // Paper
+        return super.isFrozen() || frozen || (this.playerConnection != null && this.playerConnection.isDisconnected()); // Paper // Purpur
     }
+
+    // Purpur start
+    private boolean frozen = false;
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+    // Purpur end
 
     @Override
     public Scoreboard getScoreboard() {

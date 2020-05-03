@@ -1910,6 +1910,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         PlayerConnectionUtils.ensureMainThread(packetplayinresourcepackstatus, this, this.player.getWorldServer());
         // Paper start
         PlayerResourcePackStatusEvent.Status packStatus = PlayerResourcePackStatusEvent.Status.values()[packetplayinresourcepackstatus.status.ordinal()];
+        if (player.world.purpurConfig.playerInvulnerableWhileAcceptingResourcePack) player.setFrozen(packStatus == PlayerResourcePackStatusEvent.Status.ACCEPTED); // Purpur
         player.getBukkitEntity().setResourcePackStatus(packStatus);
         this.server.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(getPlayer(), packStatus));
         // Paper end

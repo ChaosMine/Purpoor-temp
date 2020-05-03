@@ -2516,5 +2516,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void resetIdleTimer() {
         getHandle().resetIdleTimer();
     }
+
+    @Override
+    public boolean isSpawnInvulnerable() {
+        return getHandle().isSpawnInvulnerable();
+    }
+
+    @Override
+    public int getSpawnInvulnerableTicks() {
+        return getHandle().invulnerableTicks;
+    }
+
+    @Override
+    public void setSpawnInvulnerableTicks(int invulnerableTicks) {
+        getHandle().invulnerableTicks = invulnerableTicks;
+    }
     // Purpur end
 }

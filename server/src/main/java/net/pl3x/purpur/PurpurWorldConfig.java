@@ -67,4 +67,11 @@ public class PurpurWorldConfig {
         idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.player.idle-timeout.count-as-sleeping", idleTimeoutCountAsSleeping);
         idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
     }
+
+    public int playerSpawnInvulnerableTicks = 60;
+    public boolean playerInvulnerableWhileAcceptingResourcePack = false;
+    private void playerInvulnerabilities() {
+        playerSpawnInvulnerableTicks = getInt("gameplay-mechanics.player.spawn-invulnerable-ticks", playerSpawnInvulnerableTicks);
+        playerInvulnerableWhileAcceptingResourcePack = getBoolean("gameplay-mechanics.player.invulnerable-while-accepting-resource-pack", playerInvulnerableWhileAcceptingResourcePack);
+    }
 }

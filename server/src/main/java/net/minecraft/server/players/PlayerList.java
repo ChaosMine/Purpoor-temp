@@ -1015,6 +1015,8 @@ public abstract class PlayerList {
         }
         // Paper end
 
+        entityplayer1.invulnerableTicks = entityplayer1.world.purpurConfig.playerSpawnInvulnerableTicks; // Purpur
+
         // CraftBukkit end
         return entityplayer1;
     }
