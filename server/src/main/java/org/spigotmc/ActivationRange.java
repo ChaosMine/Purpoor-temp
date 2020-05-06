@@ -2,6 +2,7 @@ package org.spigotmc;
 
 import java.util.Collection;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityCreature;
@@ -197,7 +198,7 @@ public class ActivationRange
         maxRange = Math.max( maxRange, waterActivationRange );
         maxRange = Math.max( maxRange, villagerActivationRange );
         // Paper end
-        maxRange = Math.min( ( world.spigotConfig.viewDistance << 4 ) - 8, maxRange );
+        maxRange = Math.min( ( ((WorldServer)world).getChunkProvider().playerChunkMap.getEffectiveViewDistance() << 4 ) - 8, maxRange ); // Paper - no-tick view distance
 
         for ( EntityHuman player : world.getPlayers() )
         {

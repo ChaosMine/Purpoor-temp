@@ -28,7 +28,12 @@ import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkProviderServer;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ChunkTaskQueueSorter;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.PlayerChunk;
+import net.minecraft.server.level.PlayerChunkMap;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.EntitySlice;
 import net.minecraft.util.MathHelper;
@@ -243,7 +248,51 @@ public class Chunk implements IChunkAccess {
     }
 
     protected void onNeighbourChange(final long bitsetBefore, final long bitsetAfter) {
+        // Paper start - no-tick view distance
+        ChunkProviderServer chunkProviderServer = ((WorldServer)this.world).getChunkProvider();
+        PlayerChunkMap chunkMap = chunkProviderServer.playerChunkMap;
+        // this code handles the addition of ticking tickets - the distance map handles the removal
+        if (!areNeighboursLoaded(bitsetBefore, 2) && areNeighboursLoaded(bitsetAfter, 2)) {
+            if (chunkMap.playerViewDistanceTickMap.getObjectsInRange(this.coordinateKey) != null) {
+                // now we're ready for entity ticking
+                chunkProviderServer.serverThreadQueue.execute(() -> {
+                    // double check that this condition still holds.
+                    if (Chunk.this.areNeighboursLoaded(2) && chunkMap.playerViewDistanceTickMap.getObjectsInRange(Chunk.this.coordinateKey) != null) {
+                        chunkProviderServer.addTicketAtLevel(TicketType.PLAYER, Chunk.this.loc, 31, Chunk.this.loc); // 31 -> entity ticking, TODO check on update
+                    }
+                });
+            }
+        }
 
+        // this code handles the chunk sending
+        if (!areNeighboursLoaded(bitsetBefore, 1) && areNeighboursLoaded(bitsetAfter, 1)) {
+            if (chunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(this.coordinateKey) != null) {
+                // now we're ready to send
+                chunkMap.mailboxMain.a(ChunkTaskQueueSorter.a(chunkMap.getUpdatingChunk(this.coordinateKey), (() -> { // Copied frm PlayerChunkMap
+                    // double check that this condition still holds.
+                    if (!Chunk.this.areNeighboursLoaded(1)) {
+                        return;
+                    }
+                    com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> inRange = chunkMap.playerViewDistanceBroadcastMap.getObjectsInRange(Chunk.this.coordinateKey);
+                    if (inRange == null) {
+                        return;
+                    }
+
+                    // broadcast
+                    Object[] backingSet = inRange.getBackingSet();
+                    Packet[] chunkPackets = new Packet[2];
+                    for (int index = 0, len = backingSet.length; index < len; ++index) {
+                        Object temp = backingSet[index];
+                        if (!(temp instanceof EntityPlayer)) {
+                            continue;
+                        }
+                        EntityPlayer player = (EntityPlayer)temp;
+                        chunkMap.sendChunk(player, chunkPackets, Chunk.this);
+                    }
+                })));
+            }
+        }
+        // Paper end - no-tick view distance
     }
 
     public final boolean isAnyNeighborsLoaded() {
@@ -1132,7 +1181,7 @@ public class Chunk implements IChunkAccess {
                     IBlockData iblockdata = this.getType(blockposition);
                     IBlockData iblockdata1 = Block.b(iblockdata, (GeneratorAccess) this.world, blockposition);
 
-                    this.world.setTypeAndData(blockposition, iblockdata1, 20);
+                    this.world.setTypeAndData(blockposition, iblockdata1, 20 | 2); // Paper - We send chunks before they're ticking ready, so we need to notify here
                 }
 
                 this.n[i].clear();

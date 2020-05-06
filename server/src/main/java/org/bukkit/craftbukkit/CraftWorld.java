@@ -32,6 +32,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.ChunkMapDistance;
 import net.minecraft.server.level.PlayerChunk;
+import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.Ticket;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.server.level.WorldServer;
@@ -2550,9 +2551,38 @@ public class CraftWorld implements World {
     // Spigot start
     @Override
     public int getViewDistance() {
-        return world.spigotConfig.viewDistance;
+        return getHandle().getChunkProvider().playerChunkMap.getEffectiveViewDistance(); // Paper - no-tick view distance
     }
     // Spigot end
+
+    // Paper start - per player view distance
+    @Override
+    public void setViewDistance(int viewDistance) {
+        if (viewDistance < 2 || viewDistance > 32) {
+            throw new IllegalArgumentException("View distance " + viewDistance + " is out of range of [2, 32]");
+        }
+        PlayerChunkMap chunkMap = getHandle().getChunkProvider().playerChunkMap;
+        if (viewDistance != chunkMap.getEffectiveViewDistance()) {
+            chunkMap.setViewDistance(viewDistance);
+        }
+    }
+
+    @Override
+    public int getNoTickViewDistance() {
+        return getHandle().getChunkProvider().playerChunkMap.getEffectiveNoTickViewDistance();
+    }
+
+    @Override
+    public void setNoTickViewDistance(int viewDistance) {
+        if ((viewDistance < 2 || viewDistance > 32) && viewDistance != -1) {
+            throw new IllegalArgumentException("View distance " + viewDistance + " is out of range of [2, 32]");
+        }
+        PlayerChunkMap chunkMap = getHandle().getChunkProvider().playerChunkMap;
+        if (viewDistance != chunkMap.getRawNoTickViewDistance()) {
+            chunkMap.setNoTickViewDistance(viewDistance);
+        }
+    }
+    // Paper end - per player view distance
 
     // Spigot start
     private final org.bukkit.World.Spigot spigot = new org.bukkit.World.Spigot()
