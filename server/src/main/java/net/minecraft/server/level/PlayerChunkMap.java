@@ -346,11 +346,12 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         Mailbox<Runnable> mailbox = Mailbox.a("main", iasynctaskhandler::a);
 
         this.worldLoadListener = worldloadlistener;
-        ThreadedMailbox<Runnable> threadedmailbox1 = ThreadedMailbox.a(executor, "light");
+        ThreadedMailbox<Runnable> lightthreaded; ThreadedMailbox<Runnable> threadedmailbox1 = lightthreaded = ThreadedMailbox.a(executor, "light"); // Paper
 
         this.p = new ChunkTaskQueueSorter(ImmutableList.of(threadedmailbox, mailbox, threadedmailbox1), executor, Integer.MAX_VALUE);
         this.mailboxWorldGen = this.p.a(threadedmailbox, false);
         this.mailboxMain = this.p.a(mailbox, false);
+        this.mailboxLight = this.p.a(lightthreaded, false);// Paper
         this.lightEngine = new LightEngineThreaded(ilightaccess, this, this.world.getDimensionManager().hasSkyLight(), threadedmailbox1, this.p.a(threadedmailbox1, false));
         this.chunkDistanceManager = new PlayerChunkMap.a(executor, iasynctaskhandler); this.chunkDistanceManager.chunkMap = this; // Paper
         this.l = supplier;
