@@ -86,5 +86,15 @@ public class CraftConsoleCommandSender extends ServerCommandSender implements Co
     public void sendMessage(final net.kyori.adventure.identity.Identity identity, final net.kyori.adventure.text.Component message, final net.kyori.adventure.audience.MessageType type) {
         this.sendRawMessage(org.bukkit.craftbukkit.util.CraftChatMessage.fromComponent(io.papermc.paper.adventure.PaperAdventure.asVanilla(message)));
     }
+
+    @Override
+    public boolean hasPermission(String name) {
+        return com.destroystokyo.paper.PaperConfig.consoleHasAllPermissions || super.hasPermission(name);
+    }
+
+    @Override
+    public boolean hasPermission(org.bukkit.permissions.Permission perm) {
+        return com.destroystokyo.paper.PaperConfig.consoleHasAllPermissions || super.hasPermission(perm);
+    }
     // Paper end
 }

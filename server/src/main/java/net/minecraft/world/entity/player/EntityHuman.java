@@ -1889,7 +1889,7 @@ public abstract class EntityHuman extends EntityLiving {
         }
     }
 
-    protected void releaseShoulderEntities() {
+    public void releaseShoulderEntities() { // Paper - protected -> public
         if (this.e + 20L < this.world.getTime()) {
             // CraftBukkit start
             if (this.spawnEntityFromShoulder(this.getShoulderEntityLeft())) {
