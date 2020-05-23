@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.RegistryBlocks;
 import net.minecraft.core.SectionPosition;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
@@ -199,15 +200,9 @@ public class ChunkRegionLoader {
                 object2 = protochunkticklist1;
             }
 
-            object = new Chunk(worldserver.getMinecraftWorld(), chunkcoordintpair, biomestorage, chunkconverter, (TickList) object1, (TickList) object2, j, achunksection, (chunk) -> {
-                loadEntities(nbttagcompound1, chunk);
-                // CraftBukkit start - load chunk persistent data from nbt
-                net.minecraft.nbt.NBTBase persistentBase = nbttagcompound1.get("ChunkBukkitValues");
-                if (persistentBase instanceof NBTTagCompound) {
-                    chunk.persistentDataContainer.putAll((NBTTagCompound) persistentBase);
-                }
-                // CraftBukkit end
-            });
+            object = new Chunk(worldserver.getMinecraftWorld(), chunkcoordintpair, biomestorage, chunkconverter, (TickList) object1, (TickList) object2, j, achunksection, // Paper start - fix massive nbt memory leak due to lambda. move lambda into a container method to not leak scope. Only clone needed NBT keys.
+                createLoadEntitiesConsumer(new SafeNBTCopy(nbttagcompound1, "TileEntities", "Entities", "ChunkBukkitValues")) // Paper - move CB Chunk PDC into here
+            );// Paper end
         } else {
             ProtoChunk protochunk = new ProtoChunk(chunkcoordintpair, chunkconverter, achunksection, protochunkticklist, protochunkticklist1, worldserver); // Paper - Anti-Xray - Add parameter
 
@@ -313,6 +308,50 @@ public class ChunkRegionLoader {
             return new InProgressChunkHolder(protochunk1, tasksToExecuteOnMain); // Paper - Async chunk loading
         }
     }
+    // Paper start
+
+    /**
+     * This wrapper will error out if any key is accessed that wasn't copied so we can catch it easy on an update
+     */
+    private static class SafeNBTCopy extends NBTTagCompound {
+        private final java.util.Set<String> keys = new java.util.HashSet<String>();
+        public SafeNBTCopy(NBTTagCompound base, String... keys) {
+            for (String key : keys) {
+                this.keys.add(key);
+                final NBTBase nbtBase = base.get(key);
+                if (nbtBase != null) {
+                    this.set(key, nbtBase);
+                }
+            }
+        }
+
+        @Override
+        public boolean hasKey(String s) {
+            if (super.hasKey(s)) {
+                return true;
+            } else if (keys.contains(s)) {
+                return false;
+            }
+            throw new IllegalStateException("Missing Key " + s + " in SafeNBTCopy");
+        }
+
+        @Override
+        public boolean hasKeyOfType(String s, int i) {
+            return hasKey(s) && super.hasKeyOfType(s, i);
+        }
+    }
+    private static java.util.function.Consumer<Chunk> createLoadEntitiesConsumer(NBTTagCompound nbt) {
+        return (chunk) -> {
+            loadEntities(nbt, chunk);
+            // CraftBukkit start - load chunk persistent data from nbt
+            NBTBase persistentBase = nbt.get("ChunkBukkitValues");
+            if (persistentBase instanceof NBTTagCompound) {
+                chunk.persistentDataContainer.putAll((NBTTagCompound) persistentBase);
+            }
+            // CraftBukkit end
+        };
+    }
+    // Paper end
 
     // Paper start - async chunk save for unload
     public static final class AsyncSaveData {
