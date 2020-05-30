@@ -795,7 +795,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             return either.mapLeft((list) -> {
                 return (Chunk) list.get(list.size() / 2);
             });
-        }, this.executor);
+        }, this.mainInvokingExecutor); // Paper
     }
 
     @Nullable
@@ -1145,7 +1145,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     IChunkAccess ichunkaccess = (IChunkAccess) optional.get();
 
                     if (ichunkaccess.getChunkStatus().b(chunkstatus)) {
-                        CompletableFuture completablefuture1;
+                        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture1; // Paper
 
                         if (chunkstatus == ChunkStatus.LIGHT) {
                             completablefuture1 = this.b(playerchunk, chunkstatus);
@@ -1161,7 +1161,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                         return this.b(playerchunk, chunkstatus);
                     }
                 }
-            }, this.executor);
+            }, this.mainInvokingExecutor).thenComposeAsync(CompletableFuture::completedFuture, this.mainInvokingExecutor); // Paper - optimize chunk status progression without jumping through thread pool - ensure main
         }
     }
 
@@ -1282,6 +1282,12 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 return CompletableFuture.completedFuture(Either.right(playerchunk_failure));
             });
         }, (runnable) -> {
+            // Paper start - optimize chunk status progression without jumping through thread pool
+            if (playerchunk.canAdvanceStatus()) {
+                this.mainInvokingExecutor.execute(runnable);
+                return;
+            }
+            // Paper end
             this.mailboxWorldGen.a(ChunkTaskQueueSorter.a(playerchunk, runnable));
         });
     }
