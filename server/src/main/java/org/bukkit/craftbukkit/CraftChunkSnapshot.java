@@ -79,7 +79,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
     public Material getBlockType(int x, int y, int z) {
         CraftChunk.validateChunkCoordinates(x, y, z);
 
-        return CraftMagicNumbers.getMaterial(blockids[y >> 4].a(x, y & 0xF, z).getBlock());
+        return blockids[y >> 4].a(x, y & 0xF, z).getBukkitMaterial(); // Paper - optimise getType calls
     }
 
     @Override

@@ -135,7 +135,7 @@ public class CraftBlockState implements BlockState {
 
     @Override
     public Material getType() {
-        return CraftMagicNumbers.getMaterial(data.getBlock());
+        return data.getBukkitMaterial(); // Paper - optimise getType calls
     }
 
     public void setFlag(int flag) {

@@ -45,7 +45,7 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public Material getMaterial() {
-        return CraftMagicNumbers.getMaterial(state.getBlock());
+        return state.getBukkitMaterial(); // Paper - optimise getType calls
     }
 
     public IBlockData getState() {
