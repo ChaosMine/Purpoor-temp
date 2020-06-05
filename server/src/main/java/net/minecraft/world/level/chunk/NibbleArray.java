@@ -11,6 +11,13 @@ import net.minecraft.server.MCUtil;
 public class NibbleArray {
 
     // Paper start
+    public static final NibbleArray EMPTY_NIBBLE_ARRAY = new NibbleArray() {
+        @Override
+        public byte[] asBytes() {
+            throw new IllegalStateException();
+        }
+    };
+    public long lightCacheKey = Long.MIN_VALUE;
     public static byte[] EMPTY_NIBBLE = new byte[2048];
     private static final int nibbleBucketSizeMultiplier = Integer.getInteger("Paper.nibbleBucketSize", 3072);
     private static final int maxPoolSize = Integer.getInteger("Paper.maxNibblePoolSize", (int) Math.min(6, Math.max(1, Runtime.getRuntime().maxMemory() / 1024 / 1024 / 1024)) * (nibbleBucketSizeMultiplier * 8));

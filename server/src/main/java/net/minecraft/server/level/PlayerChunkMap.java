@@ -99,6 +99,7 @@ import net.minecraft.world.level.chunk.storage.RegionFile;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import net.minecraft.world.level.storage.Convertable;
+import net.minecraft.world.level.storage.WorldDataServer;
 import net.minecraft.world.level.storage.WorldPersistentData;
 import net.minecraft.world.phys.Vec3D;
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet; // Paper
@@ -331,6 +332,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
     // Paper end
 
+    private final java.util.concurrent.ExecutorService lightThread;
     public PlayerChunkMap(WorldServer worldserver, Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, DefinedStructureManager definedstructuremanager, Executor executor, IAsyncTaskHandler<Runnable> iasynctaskhandler, ILightAccess ilightaccess, ChunkGenerator chunkgenerator, WorldLoadListener worldloadlistener, Supplier<WorldPersistentData> supplier, int i, boolean flag) {
         super(new File(convertable_conversionsession.a(worldserver.getDimensionKey()), "region"), datafixer, flag);
         //this.visibleChunks = this.updatingChunks.clone(); // Paper - no more cloning
@@ -362,7 +364,15 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         Mailbox<Runnable> mailbox = Mailbox.a("main", iasynctaskhandler::a);
 
         this.worldLoadListener = worldloadlistener;
-        ThreadedMailbox<Runnable> lightthreaded; ThreadedMailbox<Runnable> threadedmailbox1 = lightthreaded = ThreadedMailbox.a(executor, "light"); // Paper
+        // Paper start - use light thread
+        ThreadedMailbox<Runnable> lightthreaded; ThreadedMailbox<Runnable> threadedmailbox1 = lightthreaded = ThreadedMailbox.a(lightThread = java.util.concurrent.Executors.newSingleThreadExecutor(r -> {
+            Thread thread = new Thread(r);
+            thread.setName(((WorldDataServer)world.getWorldData()).getName() + " - Light");
+            thread.setDaemon(true);
+            thread.setPriority(Thread.NORM_PRIORITY+1);
+            return thread;
+        }), "light");
+        // Paper end
 
         this.p = new ChunkTaskQueueSorter(ImmutableList.of(threadedmailbox, mailbox, threadedmailbox1), executor, Integer.MAX_VALUE);
         this.mailboxWorldGen = this.p.a(threadedmailbox, false);
@@ -708,6 +718,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         // Paper end
     }
 
+    protected final IntSupplier getPrioritySupplier(long i) { return c(i); } // Paper - OBFHELPER
     protected IntSupplier c(long i) {
         return () -> {
             PlayerChunk playerchunk = this.getVisibleChunk(i);
@@ -835,6 +846,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     @Override
     public void close() throws IOException {
         try {
+            this.lightThread.shutdown(); // Paper
             this.p.close();
             this.world.asyncChunkTaskManager.close(true); // Paper - Required since we're closing regionfiles in the next line
             this.m.close();
