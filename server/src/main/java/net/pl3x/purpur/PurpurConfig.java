@@ -127,4 +127,10 @@ public class PurpurConfig {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
     }
+
+    public static String timingsUrl = "https://timings.pl3x.net";
+    private static void timingsSettings() {
+        timingsUrl = getString("settings.timings.url", timingsUrl);
+        if (!TimingsManager.hiddenConfigs.contains("server-ip")) TimingsManager.hiddenConfigs.add("server-ip");
+    }
 }
