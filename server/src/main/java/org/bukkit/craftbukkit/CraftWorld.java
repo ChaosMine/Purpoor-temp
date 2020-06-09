@@ -30,6 +30,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutCustomSoundEffect;
 import net.minecraft.network.protocol.game.PacketPlayOutUpdateTime;
 import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.ChunkMapDistance;
 import net.minecraft.server.level.PlayerChunk;
 import net.minecraft.server.level.PlayerChunkMap;
@@ -407,8 +408,21 @@ public class CraftWorld implements World {
 
     @Override
     public Chunk getChunkAt(int x, int z) {
-        return this.world.getChunkProvider().getChunkAt(x, z, true).bukkitChunk;
+        // Paper start - add ticket to hold chunk for a little while longer if plugin accesses it
+        net.minecraft.world.level.chunk.Chunk chunk = world.getChunkProvider().getChunkAtIfLoadedImmediately(x, z);
+        if (chunk == null) {
+            addTicket(x, z);
+            chunk = this.world.getChunkProvider().getChunkAt(x, z, true);
+        }
+        return chunk.bukkitChunk;
+        // Paper end
     }
+
+    // Paper start
+    private void addTicket(int x, int z) {
+        MCUtil.MAIN_EXECUTOR.execute(() -> world.getChunkProvider().addTicket(TicketType.PLUGIN, new ChunkCoordIntPair(x, z), 0, Unit.INSTANCE)); // Paper
+    }
+    // Paper end
 
     @Override
     public Chunk getChunkAt(Block block) {
@@ -483,7 +497,7 @@ public class CraftWorld implements World {
     public boolean unloadChunkRequest(int x, int z) {
         org.spigotmc.AsyncCatcher.catchOp("chunk unload"); // Spigot
         if (isChunkLoaded(x, z)) {
-            world.getChunkProvider().removeTicket(TicketType.PLUGIN, new ChunkCoordIntPair(x, z), 1, Unit.INSTANCE);
+            world.getChunkProvider().removeTicket(TicketType.PLUGIN, new ChunkCoordIntPair(x, z), 0, Unit.INSTANCE); // Paper
         }
 
         return true;
@@ -560,9 +574,12 @@ public class CraftWorld implements World {
         org.spigotmc.AsyncCatcher.catchOp("chunk load"); // Spigot
         // Paper start - Optimize this method
         ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(x, z);
+        IChunkAccess immediate = world.getChunkProvider().getChunkAtIfLoadedImmediately(x, z); // Paper
+        if (immediate != null) return true; // Paper
 
         if (!generate) {
-            IChunkAccess immediate = world.getChunkProvider().getChunkAtImmediately(x, z);
+
+            //IChunkAccess immediate = world.getChunkProvider().getChunkAtImmediately(x, z); // Paper
             if (immediate == null) {
                 immediate = world.getChunkProvider().playerChunkMap.getUnloadingChunk(x, z);
             }
@@ -570,7 +587,7 @@ public class CraftWorld implements World {
                 if (!(immediate instanceof ProtoChunkExtension) && !(immediate instanceof net.minecraft.world.level.chunk.Chunk)) {
                     return false; // not full status
                 }
-                world.getChunkProvider().addTicket(TicketType.PLUGIN, chunkPos, 1, Unit.INSTANCE);
+                world.getChunkProvider().addTicket(TicketType.PLUGIN, chunkPos, 0, Unit.INSTANCE); // Paper
                 world.getChunkAt(x, z); // make sure we're at ticket level 32 or lower
                 return true;
             }
@@ -597,7 +614,7 @@ public class CraftWorld implements World {
             // we do this so we do not re-read the chunk data on disk
         }
 
-        world.getChunkProvider().addTicket(TicketType.PLUGIN, chunkPos, 1, Unit.INSTANCE);
+        world.getChunkProvider().addTicket(TicketType.PLUGIN, chunkPos, 0, Unit.INSTANCE); // Paper
         world.getChunkProvider().getChunkAt(x, z, ChunkStatus.FULL, true);
         return true;
         // Paper end
@@ -2547,6 +2564,7 @@ public class CraftWorld implements World {
         }
         return this.world.getChunkProvider().getChunkAtAsynchronously(x, z, gen, urgent).thenComposeAsync((either) -> {
             net.minecraft.world.level.chunk.Chunk chunk = (net.minecraft.world.level.chunk.Chunk) either.left().orElse(null);
+            if (chunk != null) addTicket(x, z); // Paper
             return CompletableFuture.completedFuture(chunk == null ? null : chunk.getBukkitChunk());
         }, net.minecraft.server.MinecraftServer.getServer());
     }
