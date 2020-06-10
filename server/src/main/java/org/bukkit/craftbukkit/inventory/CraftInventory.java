@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.inventory.InventoryEnderChest;
 import net.minecraft.world.inventory.InventoryMerchant;
 import net.minecraft.world.level.block.entity.IHopper;
+import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityBarrel;
 import net.minecraft.world.level.block.entity.TileEntityBlastFurnace;
 import net.minecraft.world.level.block.entity.TileEntityBrewingStand;
@@ -525,6 +526,13 @@ public class CraftInventory implements Inventory {
     public InventoryHolder getHolder() {
         return inventory.getOwner();
     }
+
+    // Paper start - getHolder without snapshot
+    @Override
+    public InventoryHolder getHolder(boolean useSnapshot) {
+        return inventory instanceof TileEntity ? ((TileEntity) inventory).getOwner(useSnapshot) : getHolder();
+    }
+    // Paper end
 
     @Override
     public int getMaxStackSize() {
