@@ -103,6 +103,11 @@ public class EntityFallingBlock extends Entity {
 
     @Override
     public void tick() {
+        // Paper start - fix sand duping
+        if (this.dead) {
+            return;
+        }
+        // Paper end - fix sand duping
         if (this.block.isAir()) {
             this.die();
         } else {
@@ -124,6 +129,12 @@ public class EntityFallingBlock extends Entity {
             }
 
             this.move(EnumMoveType.SELF, this.getMot());
+
+            // Paper start - fix sand duping
+            if (this.dead) {
+                return;
+            }
+            // Paper end - fix sand duping
 
             // Paper start - Configurable EntityFallingBlock height nerf
             if (this.world.paperConfig.fallingBlockHeightNerf != 0 && this.locY() > this.world.paperConfig.fallingBlockHeightNerf) {
