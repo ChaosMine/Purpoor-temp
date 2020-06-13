@@ -879,6 +879,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
         nbttagcompound.setInt("DragonPhase", this.bG.a().getControllerPhase().b());
+        nbttagcompound.setInt("Paper.DeathTick", this.deathAnimationTicks); // Paper
     }
 
     @Override
@@ -887,6 +888,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         if (nbttagcompound.hasKey("DragonPhase")) {
             this.bG.setControllerPhase(DragonControllerPhase.getById(nbttagcompound.getInt("DragonPhase")));
         }
+        this.deathAnimationTicks = nbttagcompound.getInt("Paper.DeathTick"); // Paper
 
     }
 
