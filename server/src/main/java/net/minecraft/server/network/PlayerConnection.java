@@ -1703,7 +1703,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     IChatMutableComponent ichatmutablecomponent = (new ChatMessage("build.tooHigh", new Object[]{this.minecraftServer.getMaxBuildHeight()})).a(EnumChatFormat.RED);
 
                     this.player.playerConnection.sendPacket(new PacketPlayOutChat(ichatmutablecomponent, ChatMessageType.GAME_INFO, SystemUtils.b));
-                } else if (enuminteractionresult.b()) {
+                } else if (enuminteractionresult.b() && !this.player.playerInteractManager.interactResult) {
                     this.player.swingHand(enumhand, true);
                 }
             }
@@ -2204,7 +2204,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
         MovingObjectPosition movingobjectposition = this.player.world.rayTrace(new RayTrace(vec3d, vec3d1, RayTrace.BlockCollisionOption.OUTLINE, RayTrace.FluidCollisionOption.NONE, player));
 
-        if (movingobjectposition == null || movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.BLOCK) {
+        if (movingobjectposition == null || movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.BLOCK || this.player.playerInteractManager.getGameMode() == EnumGamemode.ADVENTURE) { // Paper - call PlayerInteractEvent when left-clicking on a block in adventure mode
             CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand(), EnumHand.MAIN_HAND);
         }
 
