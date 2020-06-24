@@ -13,6 +13,10 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end
 
+// Paper start
+import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
+// Paper end
+
 public class ContainerBeacon extends Container {
 
     private final IInventory beacon;
@@ -139,9 +143,15 @@ public class ContainerBeacon extends Container {
 
     public void c(int i, int j) {
         if (this.d.hasItem()) {
-            this.containerProperties.setProperty(1, i);
-            this.containerProperties.setProperty(2, j);
+            // Paper start
+            PlayerChangeBeaconEffectEvent event = new PlayerChangeBeaconEffectEvent((org.bukkit.entity.Player) this.player.player.getBukkitEntity(), org.bukkit.potion.PotionEffectType.getById(i), org.bukkit.potion.PotionEffectType.getById(j), this.containerAccess.getLocation().getBlock());
+            if (event.callEvent()) {
+                this.containerProperties.setProperty(1, event.getPrimary() == null ? 0 : event.getPrimary().getId());
+                this.containerProperties.setProperty(2, event.getSecondary() == null ? 0 : event.getSecondary().getId());
+                if (!event.willConsumeItem()) return;
             this.d.a(1);
+            }
+            // Paper end
         }
 
     }
