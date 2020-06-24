@@ -108,4 +108,19 @@ public class CraftBeacon extends CraftBlockEntityState<TileEntityBeacon> impleme
     public void setLock(String key) {
         this.getSnapshot().chestLock = (key == null) ? ChestLock.a : new ChestLock(key);
     }
+
+    @Override
+    public double getEffectRange() {
+        return this.getSnapshot().getEffectRange();
+    }
+
+    @Override
+    public void setEffectRange(double range) {
+        this.getSnapshot().setEffectRange(range);
+    }
+
+    @Override
+    public void resetEffectRange() {
+        this.getSnapshot().resetEffectRange();
+    }
 }

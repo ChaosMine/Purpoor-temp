@@ -73,6 +73,26 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
         return (hasSecondaryEffect()) ? CraftPotionUtil.toBukkit(new MobEffect(this.secondaryEffect, getLevel(), getAmplification(), true, true)) : null;
     }
     // CraftBukkit end
+    // Paper start - add field/methods for custom range
+    private final String PAPER_RANGE_TAG = "Paper.Range";
+    private double effectRange = -1;
+
+    public double getEffectRange() {
+        if (this.effectRange < 0) {
+            return this.levels * 10 + 10;
+        } else {
+            return effectRange;
+        }
+    }
+
+    public void setEffectRange(double range) {
+        this.effectRange = range;
+    }
+
+    public void resetEffectRange() {
+        this.effectRange = -1;
+    }
+    // Paper end
 
     public TileEntityBeacon() {
         super(TileEntityTypes.BEACON);
@@ -263,7 +283,8 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
     public List getHumansInRange() {
         {
-            double d0 = (double) (this.levels * 10 + 10);
+            // Paper - custom beacon ranges
+            double d0 = this.getEffectRange();
 
             AxisAlignedBB axisalignedbb = (new AxisAlignedBB(this.position)).g(d0).b(0.0D, (double) this.world.getBuildHeight(), 0.0D);
             List<EntityHuman> list = this.world.a(EntityHuman.class, axisalignedbb);
@@ -363,6 +384,9 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
         this.secondaryEffect = MobEffectList.fromId(nbttagcompound.getInt("Secondary"));
         this.levels = nbttagcompound.getInt("Levels"); // SPIGOT-5053, use where available
         // CraftBukkit end
+        // Paper
+        this.effectRange = nbttagcompound.hasKeyOfType(PAPER_RANGE_TAG, 6) ? nbttagcompound.getDouble(PAPER_RANGE_TAG) : -1;
+
         if (nbttagcompound.hasKeyOfType("CustomName", 8)) {
             this.customName = IChatBaseComponent.ChatSerializer.a(nbttagcompound.getString("CustomName"));
         }
@@ -379,6 +403,8 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
         if (this.customName != null) {
             nbttagcompound.setString("CustomName", IChatBaseComponent.ChatSerializer.a(this.customName));
         }
+        // Paper
+        nbttagcompound.setDouble(PAPER_RANGE_TAG, this.effectRange);
 
         this.chestLock.a(nbttagcompound);
         return nbttagcompound;
