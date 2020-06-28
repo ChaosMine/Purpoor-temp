@@ -3,6 +3,7 @@ package net.minecraft.network.protocol.game;
 
 import java.io.IOException;
 import java.util.UUID;
+import net.minecraft.SystemUtils;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.chat.ChatMessageType;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -21,7 +22,7 @@ public class PacketPlayOutChat implements Packet<PacketListenerPlayOut> {
     public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, ChatMessageType chatmessagetype, UUID uuid) {
         this.a = ichatbasecomponent;
         this.b = chatmessagetype;
-        this.c = uuid;
+        this.c = uuid != null ? uuid : SystemUtils.getNullUUID(); // Paper
     }
 
     @Override
