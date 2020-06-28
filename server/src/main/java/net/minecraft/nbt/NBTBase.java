@@ -26,6 +26,7 @@ public interface NBTBase {
         return this.toString();
     }
 
+    default IChatBaseComponent getNbtPrettyComponent() { return this.l(); } // Paper - OBFHELPER
     default IChatBaseComponent l() {
         return this.a("", 0);
     }

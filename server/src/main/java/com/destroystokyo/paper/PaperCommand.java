@@ -9,6 +9,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.game.PacketPlayOutLightUpdate;
 import net.minecraft.resources.MinecraftKey;
 import com.google.gson.JsonObject;
@@ -36,7 +37,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,7 +62,7 @@ import java.util.stream.Collectors;
 
 public class PaperCommand extends Command {
     private static final String BASE_PERM = "bukkit.command.paper.";
-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "dumpwaiting", "syncloadinfo", "fixlight").build();
+    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "dumpwaiting", "syncloadinfo", "fixlight", "dumpitem").build();
 
     public PaperCommand(String name) {
         super(name);
@@ -168,6 +171,9 @@ public class PaperCommand extends Command {
             case "reload":
                 doReload(sender);
                 break;
+            case "dumpitem":
+                doDumpItem(sender);
+                break;
             case "debug":
                 doDebug(sender, args);
                 break;
@@ -198,6 +204,19 @@ public class PaperCommand extends Command {
         }
 
         return true;
+    }
+
+    private void doDumpItem(CommandSender sender) {
+        ItemStack itemInHand = ((CraftPlayer) sender).getItemInHand();
+        net.minecraft.world.item.ItemStack itemStack = CraftItemStack.asNMSCopy(itemInHand);
+        NBTTagCompound tag = itemStack.getTag();
+        if (tag != null) {
+            String nbt = org.bukkit.craftbukkit.util.CraftChatMessage.fromComponent(tag.getNbtPrettyComponent());
+            Bukkit.getConsoleSender().sendMessage(nbt);
+            sender.sendMessage(nbt);
+        } else {
+            sender.sendMessage("Item does not have NBT");
+        }
     }
 
     private void doFixLight(CommandSender sender, String[] args) {
