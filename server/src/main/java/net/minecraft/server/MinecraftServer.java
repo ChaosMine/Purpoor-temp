@@ -1647,11 +1647,15 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         }
     }
 
-    public void a(EnumDifficulty enumdifficulty, boolean flag) {
-        if (flag || !this.saveData.isDifficultyLocked()) {
-            this.saveData.setDifficulty(this.saveData.isHardcore() ? EnumDifficulty.HARD : enumdifficulty);
-            this.updateSpawnFlags();
-            this.getPlayerList().getPlayers().forEach(this::b);
+    // Paper start - fix per world difficulty
+    public void setWorldDifficulty(WorldServer world, EnumDifficulty enumdifficulty, boolean forcefullySet) { this.a(world, enumdifficulty, forcefullySet); }
+    public void a(WorldServer world, EnumDifficulty enumdifficulty, boolean flag) {
+        WorldDataServer worldData = world.worldDataServer;
+        if (flag || !worldData.isDifficultyLocked()) {
+            worldData.setDifficulty(worldData.isHardcore() ? EnumDifficulty.HARD : enumdifficulty);
+            world.setSpawnFlags(worldData.getDifficulty() != EnumDifficulty.PEACEFUL && ((DedicatedServer) this).propertyManager.getProperties().spawnMonsters, this.getSpawnAnimals());
+            //this.getPlayerList().getPlayers().forEach(this::b); // Commented: WorldDataServer#setDifficulty handles updating players' difficulties
+            // Paper end
         }
     }
 
