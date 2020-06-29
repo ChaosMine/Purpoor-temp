@@ -206,4 +206,8 @@ public interface VanillaGoal<T extends Mob> extends Goal<T> {
     GoalKey<Zombie> ZOMBIE_ATTACK = GoalKey.of(Zombie.class, NamespacedKey.minecraft("zombie_attack"));
     GoalKey<Creature> STROLL_VILLAGE_GOLEM = GoalKey.of(Creature.class, NamespacedKey.minecraft("stroll_village_golem"));
     GoalKey<Mob> UNIVERSAL_ANGER_RESET = GoalKey.of(Mob.class, NamespacedKey.minecraft("universal_anger_reset"));
+    // Purpur start
+    GoalKey<Phantom> FIND_CRYSTAL_GOAL = GoalKey.of(Phantom.class, NamespacedKey.minecraft("find_crystal_goal"));
+    GoalKey<Phantom> ORBIT_CRYSTAL_GOAL = GoalKey.of(Phantom.class, NamespacedKey.minecraft("orbit_crystal_goal"));
+    // Purpur end
 }
