@@ -40,6 +40,7 @@ import net.minecraft.world.level.levelgen.feature.structures.WorldGenFeatureDefi
 import net.minecraft.world.level.levelgen.feature.structures.WorldGenFeatureDefinedStructurePoolTemplate;
 import net.minecraft.world.level.levelgen.structure.StructureBoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.WorldGenFeaturePillagerOutpostPoolPiece;
 import net.minecraft.world.level.levelgen.synth.NoiseGenerator;
 import net.minecraft.world.level.levelgen.synth.NoiseGenerator3;
@@ -455,7 +456,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         while (iterator.hasNext()) {
             StructureGenerator<?> structuregenerator = (StructureGenerator) iterator.next();
 
-            structuremanager.a(SectionPosition.a(chunkcoordintpair, 0), structuregenerator).forEach((structurestart) -> {
+            for (StructureStart<?> structurestart : structuremanager.getFeatureStarts(SectionPosition.a(chunkcoordintpair, 0), structuregenerator)) { // Paper - remove structure streams
                 Iterator iterator1 = structurestart.d().iterator();
 
                 while (iterator1.hasNext()) {
@@ -487,7 +488,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
                     }
                 }
 
-            });
+            } // Paper - remove structure streams
         }
 
         double[][][] adouble = new double[2][this.p + 1][this.o + 1];
