@@ -1167,12 +1167,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.inWater;
     }
 
-    private boolean isInRain() {
+    public boolean isInRain() { // Paper - private -> public
         BlockPosition blockposition = this.getChunkCoordinates();
 
         return this.world.isRainingAt(blockposition) || this.world.isRainingAt(new BlockPosition((double) blockposition.getX(), this.getBoundingBox().maxY, (double) blockposition.getZ()));
     }
 
+    public final boolean isInBubbleColumn() { return k(); } // Paper - OBFHELPER
     private boolean k() {
         return this.world.getType(this.getChunkCoordinates()).a(Blocks.BUBBLE_COLUMN);
     }
@@ -1186,6 +1187,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.isInWater() || this.isInRain() || this.k();
     }
 
+    public final boolean isInWaterOrBubbleColumn() { return aH(); } // Paper - OBFHELPER
     public boolean aH() {
         return this.isInWater() || this.k();
     }
@@ -1328,6 +1330,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.O == tag;
     }
 
+    public final boolean isInLava() { return aQ(); } // Paper - OBFHELPER
     public boolean aQ() {
         return !this.justCreated && this.M.getDouble(TagsFluid.LAVA) > 0.0D;
     }
