@@ -93,7 +93,7 @@ import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
 public abstract class EntityInsentient extends EntityLiving {
 
     private static final DataWatcherObject<Byte> b = DataWatcher.a(EntityInsentient.class, DataWatcherRegistry.a);
-    public int e;
+    public int e;public void setAmbientSoundTime(int time) { this.e = time; } // Paper - OBFHELPER
     protected int f;
     protected ControllerLook lookController;
     protected ControllerMove moveController;
@@ -295,6 +295,7 @@ public abstract class EntityInsentient extends EntityLiving {
         this.datawatcher.register(EntityInsentient.b, (byte) 0);
     }
 
+    public int getAmbientSoundInterval() { return D(); } // Paper - OBFHELPER
     public int D() {
         return 80;
     }

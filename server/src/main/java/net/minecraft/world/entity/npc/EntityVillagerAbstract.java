@@ -39,6 +39,9 @@ import org.bukkit.craftbukkit.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 // CraftBukkit end
+// Paper start
+import io.papermc.paper.event.player.PlayerTradeEvent;
+// Paper end
 
 public abstract class EntityVillagerAbstract extends EntityAgeable implements NPC, IMerchant {
 
@@ -135,16 +138,27 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
 
     @Override
     public void a(MerchantRecipe merchantrecipe) {
-        merchantrecipe.increaseUses();
-        this.e = -this.D();
-        this.b(merchantrecipe);
+        // Paper - moved down
+        // Paper start
         if (this.tradingPlayer instanceof EntityPlayer) {
-            CriterionTriggers.s.a((EntityPlayer) this.tradingPlayer, this, merchantrecipe.getSellingItem());
+            PlayerTradeEvent event = new PlayerTradeEvent(((EntityPlayer) this.tradingPlayer).getBukkitEntity(), (AbstractVillager) this.getBukkitEntity(), merchantrecipe.asBukkit(), true, true);
+            event.callEvent();
+            if (!event.isCancelled()) {
+                MerchantRecipe recipe = CraftMerchantRecipe.fromBukkit(event.getTrade()).toMinecraft();
+                if (event.willIncreaseTradeUses()) recipe.increaseUses();
+                this.setAmbientSoundTime(-getAmbientSoundInterval());
+                if (event.isRewardingExp()) this.rewardTradeXp(recipe);
+                CriterionTriggers.s.a((EntityPlayer) this.tradingPlayer, this, recipe.getSellingItem());
+            }
+        } else {
+            merchantrecipe.increaseUses();
+            this.setAmbientSoundTime(-getAmbientSoundInterval());
+            this.rewardTradeXp(merchantrecipe);
         }
-
+        // Paper end
     }
 
-    protected abstract void b(MerchantRecipe merchantrecipe);
+    protected abstract void b(MerchantRecipe merchantrecipe); public void rewardTradeXp(MerchantRecipe merchantrecipe) { this.b(merchantrecipe); } // Paper - OBFHELPER
 
     @Override
     public boolean isRegularVillager() {
