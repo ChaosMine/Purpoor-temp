@@ -15,6 +15,7 @@ public interface IBlockLightAccess extends IBlockAccess {
         return this.e().b(blockposition, i);
     }
 
+    default boolean isSkyVisible(BlockPosition blockposition) { return e(blockposition); } // Purpur - OBFHELPER
     default boolean e(BlockPosition blockposition) {
         return this.getBrightness(EnumSkyBlock.SKY, blockposition) >= this.K();
     }

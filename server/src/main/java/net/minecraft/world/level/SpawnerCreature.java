@@ -428,6 +428,7 @@ public final class SpawnerCreature {
         return new BlockPosition(i, l, j);
     }
 
+    public static boolean canSpawn(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, Fluid fluid, EntityTypes entitytypes) { return a(iblockaccess, blockposition, iblockdata, fluid, entitytypes); } // Purpur - OBFHELPER
     public static boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, Fluid fluid, EntityTypes<?> entitytypes) {
         return iblockdata.r(iblockaccess, blockposition) ? false : (iblockdata.isPowerSource() ? false : (!fluid.isEmpty() ? false : (iblockdata.a((Tag) TagsBlock.PREVENT_MOB_SPAWNING_INSIDE) ? false : !entitytypes.a(iblockdata))));
     }

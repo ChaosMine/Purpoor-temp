@@ -21,6 +21,7 @@ public enum EnumDifficulty {
         this.g = s;
     }
 
+    public int getId() { return a(); } // Purpur - OBFHELPER
     public int a() {
         return this.f;
     }

@@ -14,6 +14,7 @@ public class DifficultyDamageScaler {
         this.b = this.a(enumdifficulty, i, j, f);
     }
 
+    public EnumDifficulty getGlobalDifficulty() { return a(); } // Purpur - OBFHELPER
     public EnumDifficulty a() {
         return this.a;
     }
@@ -22,6 +23,7 @@ public class DifficultyDamageScaler {
         return this.b;
     }
 
+    public boolean isHarderThan(float f) { return a(f); } // Purpur - OBFHELPER
     public boolean a(float f) {
         return this.b > f;
     }

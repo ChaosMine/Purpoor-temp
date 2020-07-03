@@ -398,10 +398,34 @@ public class PurpurWorldConfig {
     public double phantomAttackedByCrystalRadius = 0.0D;
     public float phantomAttackedByCrystalDamage = 1.0F;
     public double phantomOrbitCrystalRadius = 0.0D;
+    public int phantomSpawnDelayMin = 1200;
+    public int phantomSpawnDelayMax = 2400;
+    public int phantomSpawnMinSkyDarkness = 5;
+    public boolean phantomSpawnOnlyAboveSeaLevel = true;
+    public boolean phantomSpawnOnlyWithVisibleSky = true;
+    public double phantomSpawnLocalDifficultyChance = 3.0D;
+    public int phantomSpawnMinTimeSinceSlept = 72000;
+    public int phantomSpawnMinOverhead = 20;
+    public int phantomSpawnMaxOverhead = 35;
+    public int phantomSpawnOverheadRadius = 10;
+    public int phantomSpawnMinPerAttempt = 1;
+    public int phantomSpawnMaxPerAttempt = -1;
     private void phantomSettings() {
         phantomAttackedByCrystalRadius = getDouble("mobs.phantom.attacked-by-crystal-range", phantomAttackedByCrystalRadius);
         phantomAttackedByCrystalDamage = (float) getDouble("mobs.phantom.attacked-by-crystal-damage", phantomAttackedByCrystalDamage);
         phantomOrbitCrystalRadius = getDouble("mobs.phantom.orbit-crystal-radius", phantomOrbitCrystalRadius);
+        phantomSpawnDelayMin = getInt("mobs.phantom.spawn.delay.min", phantomSpawnDelayMin);
+        phantomSpawnDelayMax = getInt("mobs.phantom.spawn.delay.max", phantomSpawnDelayMax);
+        phantomSpawnMinSkyDarkness = getInt("mobs.phantom.spawn.min-sky-darkness", phantomSpawnMinSkyDarkness);
+        phantomSpawnOnlyAboveSeaLevel = getBoolean("mobs.phantom.spawn.only-above-sea-level", phantomSpawnOnlyAboveSeaLevel);
+        phantomSpawnOnlyWithVisibleSky = getBoolean("mobs.phantom.spawn.only-with-visible-sky", phantomSpawnOnlyWithVisibleSky);
+        phantomSpawnLocalDifficultyChance = getDouble("mobs.phantom.spawn.local-difficulty-chance", phantomSpawnLocalDifficultyChance);
+        phantomSpawnMinTimeSinceSlept = getInt("mobs.phantom.spawn.min-time-since-slept", phantomSpawnMinTimeSinceSlept);
+        phantomSpawnMinOverhead = getInt("mobs.phantom.spawn.overhead.min", phantomSpawnMinOverhead);
+        phantomSpawnMaxOverhead = getInt("mobs.phantom.spawn.overhead.max", phantomSpawnMaxOverhead);
+        phantomSpawnOverheadRadius = getInt("mobs.phantom.spawn.overhead.radius", phantomSpawnOverheadRadius);
+        phantomSpawnMinPerAttempt = getInt("mobs.phantom.spawn.per-attempt.min", phantomSpawnMinPerAttempt);
+        phantomSpawnMaxPerAttempt = getInt("mobs.phantom.spawn.per-attempt.max", phantomSpawnMaxPerAttempt);
     }
 
     public boolean pigGiveSaddleBack = false;

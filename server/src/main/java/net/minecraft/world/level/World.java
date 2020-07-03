@@ -1664,6 +1664,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         return new DifficultyDamageScaler(this.getDifficulty(), this.getDayTime(), i, f);
     }
 
+    public int getSkyDarkness() { return c(); } // Purpur - OBFHELPER
     @Override
     public int c() {
         return this.d;
