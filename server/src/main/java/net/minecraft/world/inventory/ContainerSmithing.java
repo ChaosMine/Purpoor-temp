@@ -79,6 +79,7 @@ public class ContainerSmithing extends ContainerAnvilAbstract {
             // CraftBukkit end
         }
 
+        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareResultEvent(this, 2); // Paper
     }
 
     @Override

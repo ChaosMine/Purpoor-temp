@@ -157,6 +157,7 @@ public class ContainerGrindstone extends Container {
         super.a(iinventory);
         if (iinventory == this.craftInventory) {
             this.e();
+            org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareResultEvent(this, 2); // Paper
         }
 
     }
