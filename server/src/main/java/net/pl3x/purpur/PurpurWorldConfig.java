@@ -297,6 +297,22 @@ public class PurpurWorldConfig {
         lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
     }
 
+    public boolean respawnAnchorExplode = true;
+    public double respawnAnchorExplosionPower = 5.0D;
+    public boolean respawnAnchorExplosionFire = true;
+    public Explosion.Effect respawnAnchorExplosionEffect = Explosion.Effect.DESTROY;
+    private void respawnAnchorSettings() {
+        respawnAnchorExplode = getBoolean("blocks.respawn_anchor.explode", respawnAnchorExplode);
+        respawnAnchorExplosionPower = getDouble("blocks.respawn_anchor.explosion-power", respawnAnchorExplosionPower);
+        respawnAnchorExplosionFire = getBoolean("blocks.respawn_anchor.explosion-fire", respawnAnchorExplosionFire);
+        try {
+            respawnAnchorExplosionEffect = Explosion.Effect.valueOf(getString("blocks.respawn_anchor.explosion-effect", respawnAnchorExplosionEffect.name()));
+        } catch (IllegalArgumentException e) {
+            log(Level.SEVERE, "Unknown value for `blocks.respawn_anchor.explosion-effect`! Using default of `DESTROY`");
+            respawnAnchorExplosionEffect = Explosion.Effect.DESTROY;
+        }
+    }
+
     public boolean signAllowColors = false;
     public boolean signRightClickEdit = false;
     private void signSettings() {

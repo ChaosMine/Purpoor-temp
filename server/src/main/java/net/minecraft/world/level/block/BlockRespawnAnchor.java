@@ -115,10 +115,7 @@ public class BlockRespawnAnchor extends Block {
 
     private void d(IBlockData iblockdata, World world, final BlockPosition blockposition) {
         world.a(blockposition, false);
-        Stream stream = EnumDirection.EnumDirectionLimit.HORIZONTAL.a();
-
-        blockposition.getClass();
-        boolean flag = stream.map(blockposition::shift).anyMatch((blockposition1) -> {
+        boolean flag = EnumDirection.EnumDirectionLimit.HORIZONTAL.a().map(blockposition::shift).anyMatch((blockposition1) -> { // Purpur - decompile error
             return a(blockposition1, world);
         });
         final boolean flag1 = flag || world.getFluid(blockposition.up()).a((Tag) TagsFluid.WATER);
@@ -129,7 +126,7 @@ public class BlockRespawnAnchor extends Block {
             }
         };
 
-        world.createExplosion((Entity) null, DamageSource.a(), explosiondamagecalculator, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, 5.0F, true, Explosion.Effect.DESTROY);
+        if (world.purpurConfig.respawnAnchorExplode) world.createExplosion(null, DamageSource.a(), explosiondamagecalculator, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, (float) world.purpurConfig.respawnAnchorExplosionPower, world.purpurConfig.respawnAnchorExplosionFire, world.purpurConfig.respawnAnchorExplosionEffect); // Purpur
     }
 
     public static boolean a(World world) {
