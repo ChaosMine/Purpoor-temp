@@ -138,7 +138,7 @@ public class BlockBed extends BlockFacingHorizontal implements ITileEntity {
                     world.a(blockposition1, false);
                 }
 
-                world.createExplosion((Entity) null, DamageSource.a(), (ExplosionDamageCalculator) null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, 5.0F, true, Explosion.Effect.DESTROY);
+                if (world.purpurConfig.bedExplode) world.createExplosion(null, DamageSource.a(), null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, (float) world.purpurConfig.bedExplosionPower, world.purpurConfig.bedExplosionFire, world.purpurConfig.bedExplosionEffect); // Purpur
                 return EnumInteractionResult.SUCCESS;
             }
         }
