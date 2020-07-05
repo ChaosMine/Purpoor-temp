@@ -82,6 +82,11 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         return entityliving.getMonsterType() != EnumMonsterType.UNDEAD && entityliving.ei();
     };
     private static final PathfinderTargetCondition bz = (new PathfinderTargetCondition()).a(20.0D).a(EntityWither.by);
+    // Paper start
+    private boolean canPortal = false;
+
+    public void setCanTravelThroughPortals(boolean canPortal) { this.canPortal = canPortal; }
+    // Paper end
 
     public EntityWither(EntityTypes<? extends EntityWither> entitytypes, World world) {
         super(entitytypes, world);
@@ -580,6 +585,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         this.datawatcher.set((DataWatcherObject) EntityWither.bo.get(i), j);
     }
 
+    public final boolean isPowered() { return this.S_(); } // Paper - OBFHELPER
     public boolean S_() {
         return this.getHealth() <= this.getMaxHealth() / 2.0F;
     }
@@ -596,7 +602,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
     @Override
     public boolean canPortal() {
-        return false;
+        return super.canPortal() && canPortal; // Paper
     }
 
     @Override
