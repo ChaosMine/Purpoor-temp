@@ -163,7 +163,7 @@ public class ItemBucket extends Item {
             // CraftBukkit end
             if (!flag1) {
                 return movingobjectpositionblock != null && this.a(entityhuman, world, movingobjectpositionblock.getBlockPosition().shift(movingobjectpositionblock.getDirection()), (MovingObjectPositionBlock) null, enumdirection, clicked, itemstack, enumhand); // CraftBukkit // Paper - add enumhand
-            } else if (world.getDimensionManager().isNether() && this.fluidType.a((Tag) TagsFluid.WATER)) {
+            } else if ((world.isNether() || (world.isTheEnd() && !net.pl3x.purpur.PurpurConfig.allowWaterPlacementInTheEnd)) && this.fluidType.a((Tag) TagsFluid.WATER)) { // Purpur
                 int i = blockposition.getX();
                 int j = blockposition.getY();
                 int k = blockposition.getZ();
@@ -171,7 +171,7 @@ public class ItemBucket extends Item {
                 world.playSound(entityhuman, blockposition, SoundEffects.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
                 for (int l = 0; l < 8; ++l) {
-                    world.addParticle(Particles.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
+                    ((WorldServer) world).sendParticles(null, Particles.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 1, 0.0D, 0.0D, 0.0D, 0.0D, true); // Purpur
                 }
 
                 return true;

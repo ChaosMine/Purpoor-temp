@@ -186,6 +186,11 @@ public class PurpurConfig {
         dontSendUselessEntityPackets = getBoolean("settings.dont-send-useless-entity-packets", dontSendUselessEntityPackets);
     }
 
+    public static boolean allowWaterPlacementInTheEnd = true;
+    private static void allowWaterPlacementInEnd() {
+        allowWaterPlacementInTheEnd = getBoolean("settings.allow-water-placement-in-the-end", allowWaterPlacementInTheEnd);
+    }
+
     public static boolean loggerSuppressInitLegacyMaterialError = false;
     public static boolean loggerSuppressIgnoredAdvancementWarnings = false;
     private static void loggerSettings() {

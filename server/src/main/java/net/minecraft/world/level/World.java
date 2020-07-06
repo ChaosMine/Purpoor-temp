@@ -1739,4 +1739,14 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public final boolean isDebugWorld() {
         return this.debugWorld;
     }
+
+    // Purpur start
+    public boolean isNether() {
+        return getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER;
+    }
+
+    public boolean isTheEnd() {
+        return getWorld().getEnvironment() == org.bukkit.World.Environment.THE_END;
+    }
+    // Purpur end
 }

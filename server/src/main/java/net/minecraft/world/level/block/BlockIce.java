@@ -27,7 +27,7 @@ public class BlockIce extends BlockHalfTransparent {
     public void a(World world, EntityHuman entityhuman, BlockPosition blockposition, IBlockData iblockdata, @Nullable TileEntity tileentity, ItemStack itemstack) {
         super.a(world, entityhuman, blockposition, iblockdata, tileentity, itemstack);
         if (EnchantmentManager.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemstack) == 0) {
-            if (world.getDimensionManager().isNether()) {
+            if (world.isNether() || (world.isTheEnd() && !net.pl3x.purpur.PurpurConfig.allowWaterPlacementInTheEnd)) { // Purpur
                 world.a(blockposition, false);
                 return;
             }
@@ -55,7 +55,7 @@ public class BlockIce extends BlockHalfTransparent {
             return;
         }
         // CraftBukkit end
-        if (world.getDimensionManager().isNether()) {
+        if (world.isNether() || (world.isTheEnd() && !net.pl3x.purpur.PurpurConfig.allowWaterPlacementInTheEnd)) { // Purpur
             world.a(blockposition, false);
         } else {
             world.setTypeUpdate(blockposition, Blocks.WATER.getBlockData());
