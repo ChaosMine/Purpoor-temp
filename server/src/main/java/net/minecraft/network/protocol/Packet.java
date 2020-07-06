@@ -2,8 +2,10 @@ package net.minecraft.network.protocol;
 
 import io.netty.channel.ChannelFuture; // Paper
 import java.io.IOException;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.PacketListener;
+import net.minecraft.server.level.EntityPlayer;
 
 public interface Packet<T extends PacketListener> {
 
