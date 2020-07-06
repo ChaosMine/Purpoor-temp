@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
@@ -108,6 +109,16 @@ public class EntityZombie extends EntityMonster {
     }
 
     // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.zombieRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.zombieRidableInWater;
+    }
+
     public boolean jockeyOnlyBaby() {
         return world.purpurConfig.zombieJockeyOnlyBaby;
     }
@@ -123,9 +134,11 @@ public class EntityZombie extends EntityMonster {
 
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         if (world.paperConfig.zombiesTargetTurtleEggs) this.goalSelector.a(4, new EntityZombie.a(this, 1.0D, 3)); // Paper
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.m();
     }
 

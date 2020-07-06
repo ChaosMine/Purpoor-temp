@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -66,12 +67,34 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
     private static final IntRange bs = TimeRange.a(20, 39);
     private int bt;
     private UUID bu;
+    private int standTimer = 0; // Purpur
 
     public EntityPolarBear(EntityTypes<? extends EntityPolarBear> entitytypes, World world) {
         super(entitytypes, world);
     }
 
     // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.polarBearRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.polarBearRidableInWater;
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (!isStanding()) {
+            if (hasPurpurRider() && getPurpurRider().getForward() == 0 && getPurpurRider().getStrafe() == 0) {
+                setStanding(true);
+                playSound(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean mate(EntityAnimal entityanimal) {
         if (entityanimal == this) {
@@ -109,6 +132,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
     protected void initPathfinder() {
         super.initPathfinder();
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityPolarBear.c());
         this.goalSelector.a(1, new EntityPolarBear.d());
         // Purpur start
@@ -121,6 +145,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
         this.goalSelector.a(5, new PathfinderGoalRandomStroll(this, 1.0D));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new EntityPolarBear.b());
         this.targetSelector.a(2, new EntityPolarBear.a());
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, this::a_));
@@ -233,6 +258,11 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
             this.a((WorldServer) this.world, true);
         }
 
+        // Purpur start
+        if (isStanding() && --standTimer <= 0) {
+            setStanding(false);
+        }
+        // Purpur end
     }
 
     @Override
@@ -266,6 +296,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
     public void setStanding(boolean standing) { t(standing); } // Purpur - OBFHELPER
     public void t(boolean flag) {
         this.datawatcher.set(EntityPolarBear.bo, flag);
+        standTimer = flag ? 20 : -1; // Purpur
     }
 
     @Override

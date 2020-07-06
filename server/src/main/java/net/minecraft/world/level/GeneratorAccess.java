@@ -48,6 +48,7 @@ public interface GeneratorAccess extends ICombinedAccess, IWorldTime {
 
     void addParticle(ParticleParam particleparam, double d0, double d1, double d2, double d3, double d4, double d5);
 
+    default void playEvent(@Nullable EntityHuman entityhuman, int i, BlockPosition blockposition, int j) { a(entityhuman, i, blockposition, j); } // Purpur - OBFHELPER
     void a(@Nullable EntityHuman entityhuman, int i, BlockPosition blockposition, int j);
 
     default int getHeight() {

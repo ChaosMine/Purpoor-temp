@@ -57,6 +57,18 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.mooshroomRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.mooshroomRidableInWater;
+    }
+    // Purpur end
+
     @Override
     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
         return iworldreader.getType(blockposition.down()).a(Blocks.MYCELIUM) ? 10.0F : iworldreader.y(blockposition) - 0.5F;
@@ -118,7 +130,7 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
         } else if (itemstack.getItem() == Items.SHEARS && this.canShear()) {
             // CraftBukkit start
             if (!CraftEventFactory.handlePlayerShearEntityEvent(entityhuman, this, itemstack, enumhand)) {
-                return EnumInteractionResult.PASS;
+                return tryRide(entityhuman, enumhand); // Purpur
             }
             // CraftBukkit end
             this.shear(SoundCategory.PLAYERS);
@@ -138,7 +150,7 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
                 Optional<Pair<MobEffectList, Integer>> optional = this.l(itemstack);
 
                 if (!optional.isPresent()) {
-                    return EnumInteractionResult.PASS;
+                    return tryRide(entityhuman, enumhand); // Purpur
                 }
 
                 Pair<MobEffectList, Integer> pair = (Pair) optional.get();

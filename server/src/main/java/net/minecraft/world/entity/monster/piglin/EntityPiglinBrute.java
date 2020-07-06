@@ -39,6 +39,18 @@ public class EntityPiglinBrute extends EntityPiglinAbstract {
         this.f = 20;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.piglinBruteRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.piglinBruteRidableInWater;
+    }
+    // Purpur end
+
     public static AttributeProvider.Builder eS() {
         return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 50.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.3499999940395355D).a(GenericAttributes.ATTACK_DAMAGE, 7.0D);
     }
@@ -68,7 +80,7 @@ public class EntityPiglinBrute extends EntityPiglinAbstract {
 
     @Override
     public BehaviorController<EntityPiglinBrute> getBehaviorController() {
-        return super.getBehaviorController();
+        return (BehaviorController<EntityPiglinBrute>) super.getBehaviorController(); // Purpur - decompile error
     }
 
     @Override
@@ -84,7 +96,8 @@ public class EntityPiglinBrute extends EntityPiglinAbstract {
     @Override
     protected void mobTick() {
         this.world.getMethodProfiler().enter("piglinBruteBrain");
-        this.getBehaviorController().a((WorldServer) this.world, (EntityLiving) this);
+        if (getPurpurRider() == null) // Purpur - only use brain if no rider
+        this.getBehaviorController().a((WorldServer) this.world, this); // Purpur - decompile error
         this.world.getMethodProfiler().exit();
         PiglinBruteAI.b(this);
         PiglinBruteAI.c(this);

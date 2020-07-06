@@ -32,6 +32,7 @@ import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -146,7 +147,18 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.villagerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.villagerRidableInWater;
+    }
+
+    @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         if (world.purpurConfig.villagerFollowEmeraldBlock) this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, TEMPT_ITEMS));
     }
 
@@ -311,7 +323,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.eN() && !this.isSleeping()) {
             if (this.isBaby()) {
                 this.fk();
-                return EnumInteractionResult.a(this.world.isClientSide);
+                return super.b(entityhuman, enumhand); // Purpur
             } else {
                 boolean flag = this.getOffers().isEmpty();
 
@@ -324,8 +336,9 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                 }
 
                 if (flag) {
-                    return EnumInteractionResult.a(this.world.isClientSide);
+                    return tryRide(entityhuman, enumhand); // Purpur
                 } else {
+                    if (world.purpurConfig.villagerRidable && itemstack.isEmpty()) return tryRide(entityhuman, enumhand); // Purpur
                     if (!this.world.isClientSide && !this.trades.isEmpty()) {
                         this.h(entityhuman);
                     }

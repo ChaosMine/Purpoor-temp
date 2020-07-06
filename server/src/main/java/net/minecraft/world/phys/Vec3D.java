@@ -50,6 +50,7 @@ public class Vec3D implements IPosition {
         return new Vec3D(vec3d.x - this.x, vec3d.y - this.y, vec3d.z - this.z);
     }
 
+    public Vec3D normalize() { return d(); } // Purpur - OBFHELPER
     public Vec3D d() {
         double d0 = (double) MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 
@@ -109,6 +110,7 @@ public class Vec3D implements IPosition {
         return d3 * d3 + d4 * d4 + d5 * d5;
     }
 
+    public Vec3D scale(double scale) { return a(scale); } // Purpur - OBFHELPER
     public Vec3D a(double d0) {
         return this.d(d0, d0, d0);
     }
@@ -117,6 +119,7 @@ public class Vec3D implements IPosition {
         return this.d(vec3d.x, vec3d.y, vec3d.z);
     }
 
+    public Vec3D multiply (double x, double y, double z) { return d(x, y, z); } // Purpur - OBFHELPER
     public Vec3D d(double d0, double d1, double d2) {
         return new Vec3D(this.x * d0, this.y * d1, this.z * d2);
     }

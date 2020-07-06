@@ -24,6 +24,16 @@ public class EntityZombieHusk extends EntityZombie {
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.huskRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.huskRidableInWater;
+    }
+
+    @Override
     public boolean jockeyOnlyBaby() {
         return world.purpurConfig.huskJockeyOnlyBaby;
     }

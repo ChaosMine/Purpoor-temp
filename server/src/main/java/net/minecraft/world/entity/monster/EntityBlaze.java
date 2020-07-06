@@ -5,6 +5,7 @@ import net.minecraft.core.particles.Particles;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
@@ -12,6 +13,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
@@ -35,6 +37,7 @@ public class EntityBlaze extends EntityMonster {
 
     public EntityBlaze(EntityTypes<? extends EntityBlaze> entitytypes, World world) {
         super(entitytypes, world);
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASDFlyingWithSpacebar(this, 0.3F); // Purpur
         this.a(PathType.WATER, -1.0F);
         this.a(PathType.LAVA, 8.0F);
         this.a(PathType.DANGER_FIRE, 0.0F);
@@ -42,19 +45,50 @@ public class EntityBlaze extends EntityMonster {
         this.f = 10;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.blazeRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.blazeRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.blazeMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue();
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 1.0, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(4, new EntityBlaze.PathfinderGoalBlazeFireball(this));
         this.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
         this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D, 0.0F));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
-        this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[0])).a());
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(new Class[0])); // Purpur - decompile error
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
     }
 
     public static AttributeProvider.Builder m() {
-        return EntityMonster.eR().a(GenericAttributes.ATTACK_DAMAGE, 6.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.23000000417232513D).a(GenericAttributes.FOLLOW_RANGE, 48.0D);
+        return EntityMonster.eR().a(GenericAttributes.ATTACK_DAMAGE, 6.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.23000000417232513D).a(GenericAttributes.FOLLOW_RANGE, 48.0D).a(GenericAttributes.FLYING_SPEED, 0.6D); // Purpur
     }
 
     @Override
@@ -109,6 +143,14 @@ public class EntityBlaze extends EntityMonster {
 
     @Override
     protected void mobTick() {
+        // Purpur start
+        if (hasPurpurRider()) {
+            Vec3D mot = getMot();
+            setMot(mot.x, getVertical() > 0 ? 0.07D : -0.07D, mot.z);
+            return;
+        }
+        // Purpur end
+
         --this.c;
         if (this.c <= 0) {
             this.c = 100;

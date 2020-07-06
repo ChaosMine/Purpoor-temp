@@ -14,6 +14,18 @@ public class EntityCod extends EntityFishSchool {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.codRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
+
     @Override
     protected ItemStack eK() {
         return new ItemStack(Items.COD_BUCKET);

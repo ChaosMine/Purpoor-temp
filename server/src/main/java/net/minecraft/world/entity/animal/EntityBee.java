@@ -22,6 +22,7 @@ import net.minecraft.network.protocol.game.PacketDebug;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -44,10 +45,10 @@ import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMonsterType;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.IEntityAngerable;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.control.ControllerLook;
 import net.minecraft.world.entity.ai.control.ControllerMoveFlying;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
@@ -111,6 +112,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     public EntityBee(EntityTypes<? extends EntityBee> entitytypes, World world) {
         super(entitytypes, world);
+        final net.pl3x.purpur.controller.ControllerMoveWASDFlying flyingController = new net.pl3x.purpur.controller.ControllerMoveWASDFlying(this, 0.25F, false); // Purpur
         // Paper start - apply gravity to bees when they get stuck in the void, fixes MC-167279
         this.moveController = new ControllerMoveFlying(this, 20, true) {
             @Override
@@ -120,6 +122,22 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                 }
                 super.tick();
             }
+
+            // Purpur start
+            @Override
+            public void a() { // tick
+                if (getEntity().hasPurpurRider()) {
+                    flyingController.tick(getEntity().getPurpurRider());
+                } else {
+                    tick();
+                }
+            }
+
+            @Override
+            public boolean b() { // isUpdating
+                return getEntity().hasPurpurRider() || super.b();
+            }
+            // Purpur end
         };
         // Paper end
         this.lookController = new EntityBee.j(this);
@@ -129,6 +147,35 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         this.a(PathType.COCOA, -1.0F);
         this.a(PathType.FENCE, -1.0F);
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.beeRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.beeRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.beeMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue() * 2;
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, speed, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+    // Purpur end
 
     @Override
     protected void initDatawatcher() {
@@ -144,6 +191,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(0, new EntityBee.b(this, 1.399999976158142D, true));
         this.goalSelector.a(1, new EntityBee.d());
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
@@ -159,6 +207,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         this.goalSelector.a(7, new EntityBee.g());
         this.goalSelector.a(8, new EntityBee.l());
         this.goalSelector.a(9, new PathfinderGoalFloat(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new EntityBee.h(this)).a(new Class[0]));
         this.targetSelector.a(2, new EntityBee.c(this));
         this.targetSelector.a(3, new PathfinderGoalUniversalAngerReset<>(this, true));
@@ -629,6 +678,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         private d() {
             super(); // CraftBukkit - decompile error
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - enter hive
         }
 
         @Override
@@ -691,6 +741,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         private g() {
             super(); // CraftBukkit - decompile error
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - grow crop
         }
 
         @Override
@@ -755,6 +806,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         private i() {
             super(); // CraftBukkit - decompile error
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - go to hive
         }
 
         @Override
@@ -978,16 +1030,16 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         }
     }
 
-    class j extends ControllerLook {
+    class j extends net.pl3x.purpur.controller.ControllerLookWASD { // Purpur
 
         j(EntityInsentient entityinsentient) {
             super(entityinsentient);
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (!EntityBee.this.isAngry()) {
-                super.a();
+                super.tick(); // Purpur
             }
         }
 

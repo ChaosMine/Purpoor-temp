@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerJump;
-import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
@@ -75,6 +75,18 @@ public class EntityRabbit extends EntityAnimal {
         this.initializePathFinderGoals(); // CraftBukkit - moved code
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.rabbitRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.rabbitRidableInWater;
+    }
+    // Purpur end
+
     // CraftBukkit start - code from constructor
     public void initializePathFinderGoals(){
         this.i(0.0D);
@@ -83,7 +95,8 @@ public class EntityRabbit extends EntityAnimal {
 
     @Override
     public void initPathfinder() {
-        this.goalSelector.a(1, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalFloat(this)); // Purpur
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityRabbit.PathfinderGoalRabbitPanic(this, 2.2D));
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 0.8D));
         this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, RecipeItemStack.a(Items.CARROT, Items.GOLDEN_CARROT, Blocks.DANDELION), false));
@@ -96,7 +109,15 @@ public class EntityRabbit extends EntityAnimal {
     }
 
     @Override
-    protected float dJ() {
+    // Purpur start
+    public float getJumpHeight() {
+        if (hasPurpurRider()) {
+            if (getForward() < 0) {
+                setSpeed(getForward() * 2F);
+            }
+            return actualJump ? 0.5F : 0.3F;
+        }
+        // Purpur end
         if (!this.positionChanged && (!this.moveController.b() || this.moveController.e() <= this.locY() + 0.5D)) {
             PathEntity pathentity = this.navigation.k();
 
@@ -115,7 +136,7 @@ public class EntityRabbit extends EntityAnimal {
     }
 
     @Override
-    protected void jump() {
+    public void jump() { // Purpur - protected -> public
         super.jump();
         double d0 = this.moveController.c();
 
@@ -147,6 +168,7 @@ public class EntityRabbit extends EntityAnimal {
 
     }
 
+    public void startJumping() { eK(); } // Purpur - OBFHELPER
     public void eK() {
         this.setJumping(true);
         this.br = 10;
@@ -161,6 +183,13 @@ public class EntityRabbit extends EntityAnimal {
 
     @Override
     public void mobTick() {
+        // Purpur start
+        if (hasPurpurRider()) {
+            handleJumping();
+            return;
+        }
+        // Purpur end
+
         if (this.bt > 0) {
             --this.bt;
         }
@@ -210,6 +239,39 @@ public class EntityRabbit extends EntityAnimal {
 
         this.bs = this.onGround;
     }
+
+    // Purpur start
+    private boolean wasOnGround;
+    private boolean actualJump;
+
+    private void handleJumping() {
+        if (onGround) {
+            ControllerJumpRabbit jumpController = (ControllerJumpRabbit) getJumpController();
+            if (!wasOnGround) {
+                setJumping(false);
+                jumpController.setCanJump(false);
+            }
+            if (!jumpController.isJumping()) {
+                if (moveController.b()) { // isUpdating
+                    startJumping();
+                }
+            } else if (!jumpController.canJump()) {
+                jumpController.setCanJump(true);
+            }
+        }
+        wasOnGround = onGround;
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (onGround) {
+            actualJump = true;
+            jump();
+            actualJump = false;
+        }
+        return true;
+    }
+    // Purpur end
 
     @Override
     public boolean aO() {
@@ -540,7 +602,7 @@ public class EntityRabbit extends EntityAnimal {
         }
     }
 
-    static class ControllerMoveRabbit extends ControllerMove {
+    static class ControllerMoveRabbit extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
         private final EntityRabbit i;
         private double j;
@@ -551,14 +613,14 @@ public class EntityRabbit extends EntityAnimal {
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (this.i.onGround && !this.i.jumping && !((EntityRabbit.ControllerJumpRabbit) this.i.bi).c()) {
                 this.i.i(0.0D);
             } else if (this.b()) {
                 this.i.i(this.j);
             }
 
-            super.a();
+            super.tick(); // Purpur
         }
 
         @Override
@@ -585,14 +647,17 @@ public class EntityRabbit extends EntityAnimal {
             this.c = entityrabbit;
         }
 
+        public boolean isJumping() { return c(); } // Purpur - OBFHELPER
         public boolean c() {
             return this.a;
         }
 
+        public boolean canJump() { return d(); } // Purpur - OBFHELPER
         public boolean d() {
             return this.d;
         }
 
+        public void setCanJump(boolean canJump) { a(canJump); } // Purpur - OBFHELPER
         public void a(boolean flag) {
             this.d = flag;
         }

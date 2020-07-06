@@ -2,6 +2,7 @@ package net.minecraft.world.entity.animal;
 
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -55,6 +56,16 @@ public class EntityChicken extends EntityAnimal {
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.chickenRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.chickenRidableInWater;
+    }
+
+    @Override
     protected void initAttributes() {
         if (world.purpurConfig.chickenRetaliate) {
             this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(2.0D);
@@ -65,6 +76,7 @@ public class EntityChicken extends EntityAnimal {
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         //this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D)); // Purpur - moved down
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
         this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, EntityChicken.bv));
@@ -75,6 +87,7 @@ public class EntityChicken extends EntityAnimal {
         // Purpur start
         if (world.purpurConfig.chickenRetaliate) {
             this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 1.0D, false));
+            this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
             this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this));
         } else {
             this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D));

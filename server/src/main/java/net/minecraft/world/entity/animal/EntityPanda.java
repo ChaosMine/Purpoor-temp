@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -101,6 +102,27 @@ public class EntityPanda extends EntityAnimal {
 
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.pandaRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.pandaRidableInWater;
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        this.setForwardSpeed(0.0F);
+        this.setScared(false);
+        this.setEating(false);
+        this.setLayingOnBack(false);
+    }
+    // Purpur end
+
     @Override
     public boolean e(ItemStack itemstack) {
         EnumItemSlot enumitemslot = EntityInsentient.j(itemstack);
@@ -124,6 +146,7 @@ public class EntityPanda extends EntityAnimal {
         return this.w(8);
     }
 
+    public void setScared(boolean scared) { this.t(scared); } // Purpur - OBFHELPER
     public void t(boolean flag) {
         this.d(8, flag);
     }
@@ -132,6 +155,7 @@ public class EntityPanda extends EntityAnimal {
         return this.w(16);
     }
 
+    public void setLayingOnBack(boolean layingOnBack) { this.u(layingOnBack); } // Purpur - OBFHELPER
     public void u(boolean flag) {
         this.d(16, flag);
     }
@@ -148,6 +172,7 @@ public class EntityPanda extends EntityAnimal {
         return (Integer) this.datawatcher.get(EntityPanda.br);
     }
 
+    public void setEating(boolean eating) { this.v(eating); } // Purpur - OBFHELPER
     private void v(int i) {
         this.datawatcher.set(EntityPanda.br, i);
     }
@@ -256,6 +281,7 @@ public class EntityPanda extends EntityAnimal {
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(2, new EntityPanda.i(this, 2.0D));
         this.goalSelector.a(2, new EntityPanda.d(this, 1.0D));
         this.goalSelector.a(3, new EntityPanda.b(this, 1.2000000476837158D, true));
@@ -271,6 +297,7 @@ public class EntityPanda extends EntityAnimal {
         this.goalSelector.a(12, new EntityPanda.j(this));
         this.goalSelector.a(13, new PathfinderGoalFollowParent(this, 1.25D));
         this.goalSelector.a(14, new PathfinderGoalRandomStrollLand(this, 1.0D));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new EntityPanda.e(this, new Class[0])).a(new Class[0]));
     }
 
@@ -591,7 +618,7 @@ public class EntityPanda extends EntityAnimal {
         ItemStack itemstack = entityhuman.b(enumhand);
 
         if (this.ff()) {
-            return EnumInteractionResult.PASS;
+            return tryRide(entityhuman, enumhand); // Purpur
         } else if (this.eN()) {
             this.u(false);
             return EnumInteractionResult.a(this.world.isClientSide);
@@ -608,7 +635,7 @@ public class EntityPanda extends EntityAnimal {
                 this.g(entityhuman);
             } else {
                 if (this.world.isClientSide || this.eM() || this.isInWater()) {
-                    return EnumInteractionResult.PASS;
+                    return tryRide(entityhuman, enumhand); // Purpur
                 }
 
                 this.ft();
@@ -625,7 +652,7 @@ public class EntityPanda extends EntityAnimal {
 
             return EnumInteractionResult.SUCCESS;
         } else {
-            return EnumInteractionResult.PASS;
+            return tryRide(entityhuman, enumhand); // Purpur
         }
     }
 
@@ -738,6 +765,7 @@ public class EntityPanda extends EntityAnimal {
 
         public f(EntityPanda entitypanda) {
             this.a = entitypanda;
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - lay on back
         }
 
         @Override
@@ -901,6 +929,7 @@ public class EntityPanda extends EntityAnimal {
 
         public l(EntityPanda entitypanda) {
             this.a = entitypanda;
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - sneeze
         }
 
         @Override
@@ -1030,7 +1059,7 @@ public class EntityPanda extends EntityAnimal {
         }
     }
 
-    static class h extends ControllerMove {
+    static class h extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
         private final EntityPanda i;
 
@@ -1040,9 +1069,9 @@ public class EntityPanda extends EntityAnimal {
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (this.i.fh()) {
-                super.a();
+                super.tick(); // Purpur
             }
         }
     }

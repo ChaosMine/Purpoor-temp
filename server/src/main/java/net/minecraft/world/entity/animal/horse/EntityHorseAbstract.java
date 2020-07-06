@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHorseHasRider;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.players.NameReferencingFileConverter;
@@ -43,6 +44,8 @@ import net.minecraft.world.entity.IJumpable;
 import net.minecraft.world.entity.ISaddleable;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.control.ControllerLook;
+import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
@@ -101,12 +104,27 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
 
     protected EntityHorseAbstract(EntityTypes<? extends EntityHorseAbstract> entitytypes, World world) {
         super(entitytypes, world);
+        this.moveController = new ControllerMove(this); // Purpur - use vanilla controller
+        this.lookController = new ControllerLook(this); // Purpur - use vanilla controller
         this.G = 1.0F;
         this.loadChest();
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return false; // vanilla handles
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return false;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHorseHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.2D));
         this.goalSelector.a(1, new PathfinderGoalTame(this, 1.2D));
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D, EntityHorseAbstract.class));
@@ -114,6 +132,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
         this.goalSelector.a(6, new PathfinderGoalRandomStrollLand(this, 0.7D));
         this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHorseHasRider(this)); // Purpur
         this.eV();
     }
 

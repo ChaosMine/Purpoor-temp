@@ -14,6 +14,18 @@ public class EntitySalmon extends EntityFishSchool {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.salmonRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
+
     @Override
     public int eN() {
         return 5;

@@ -15,6 +15,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
@@ -89,6 +90,18 @@ public class EntityTurtle extends EntityAnimal {
         this.moveController = new EntityTurtle.e(this);
         this.G = 1.0F;
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.turtleRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.turtleRidableInWater;
+    }
+    // Purpur end
 
     public void setHomePos(BlockPosition blockposition) {
         this.datawatcher.set(EntityTurtle.bp, blockposition.immutableCopy()); // Paper - called with mutablepos...
@@ -198,12 +211,13 @@ public class EntityTurtle extends EntityAnimal {
 
     @Override
     protected void initPathfinder() {
-        this.goalSelector.a(0, new EntityTurtle.f(this, 1.2D));
-        this.goalSelector.a(1, new EntityTurtle.a(this, 1.0D));
-        this.goalSelector.a(1, new EntityTurtle.d(this, 1.0D));
-        this.goalSelector.a(2, new EntityTurtle.i(this, 1.1D, Blocks.SEAGRASS.getItem()));
-        this.goalSelector.a(3, new EntityTurtle.c(this, 1.0D));
-        this.goalSelector.a(4, new EntityTurtle.b(this, 1.0D));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        this.goalSelector.a(1, new EntityTurtle.f(this, 1.2D)); // Purpur
+        this.goalSelector.a(2, new EntityTurtle.a(this, 1.0D)); // Purpur
+        this.goalSelector.a(2, new EntityTurtle.d(this, 1.0D)); // Purpur
+        this.goalSelector.a(3, new EntityTurtle.i(this, 1.1D, Blocks.SEAGRASS.getItem())); // Purpur
+        this.goalSelector.a(4, new EntityTurtle.c(this, 1.0D)); // Purpur
+        this.goalSelector.a(5, new EntityTurtle.b(this, 1.0D)); // Purpur
         this.goalSelector.a(7, new EntityTurtle.j(this, 1.0D));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(9, new EntityTurtle.h(this, 1.0D, 100));
@@ -386,13 +400,15 @@ public class EntityTurtle extends EntityAnimal {
         }
     }
 
-    static class e extends ControllerMove {
+    static class e extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
-        private final EntityTurtle i;
+        private final EntityTurtle i; public EntityTurtle getTurtle() { return i; } // Purpur - OBFHELPER
+        private final net.pl3x.purpur.controller.ControllerMoveWASDWater waterController; // Purpur
 
         e(EntityTurtle entityturtle) {
-            super(entityturtle);
+            super(entityturtle, 0.1D); // Purpur
             this.i = entityturtle;
+            waterController = new net.pl3x.purpur.controller.ControllerMoveWASDWater(entityturtle, 0.25D); // Purpur
         }
 
         private void g() {
@@ -412,7 +428,18 @@ public class EntityTurtle extends EntityAnimal {
         }
 
         @Override
-        public void a() {
+        // Purpur start
+        public void tick(EntityHuman rider) {
+            if (getTurtle().isInWater()) {
+                waterController.tick(rider);
+            } else {
+                super.tick(rider);
+            }
+        }
+
+        @Override
+        public void tick() {
+            // Purpur end
             this.g();
             if (this.h == ControllerMove.Operation.MOVE_TO && !this.i.getNavigation().m()) {
                 double d0 = this.b - this.i.locX();

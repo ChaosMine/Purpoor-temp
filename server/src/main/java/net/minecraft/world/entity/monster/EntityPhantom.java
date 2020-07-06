@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -29,11 +30,11 @@ import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.EnumMonsterType;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.control.ControllerLook;
-import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.control.EntityAIBodyControl;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
@@ -68,6 +69,59 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         this.lookController = new EntityPhantom.f(this);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.phantomRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.phantomRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.phantomMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue();
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, speed, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+
+    public static AttributeProvider.Builder defaultAttributes() {
+        return EntityMonster.eR().a(GenericAttributes.FLYING_SPEED, 3.0D);
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (hasPurpurRider() && getPurpurRider().getBukkitEntity().hasPermission("allow.special.phantom")) {
+            shoot();
+        }
+        return false;
+    }
+
+    public boolean shoot() {
+        org.bukkit.Location loc = ((org.bukkit.entity.LivingEntity) getBukkitEntity()).getEyeLocation();
+        loc.setPitch(-loc.getPitch());
+        org.bukkit.util.Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
+
+        net.pl3x.purpur.entity.PhantomFlames flames = new net.pl3x.purpur.entity.PhantomFlames(world, this);
+        flames.canGrief = world.purpurConfig.phantomAllowGriefing;
+        flames.shoot(target.getX() - locX(), target.getY() - locY(), target.getZ() - locZ(), 1.0F, 5.0F);
+        world.addEntity(flames);
+        return true;
+    }
+    // Purpur end
+
     @Override
     protected EntityAIBodyControl r() {
         return new EntityPhantom.d(this);
@@ -76,6 +130,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
     @Override
     protected void initPathfinder() {
         // Purpur start
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this));
         if (world.purpurConfig.phantomOrbitCrystalRadius > 0) {
             this.goalSelector.a(1, new FindCrystalGoal(this));
             this.goalSelector.a(2, new OrbitCrystalGoal(this));
@@ -83,6 +138,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         this.goalSelector.a(3, new EntityPhantom.c()); // PickAttackGoal
         this.goalSelector.a(4, new EntityPhantom.i()); // SweepAttackGoal
         this.goalSelector.a(5, new EntityPhantom.e()); // OrbitPointGoal
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this));
         this.targetSelector.a(1, new EntityPhantom.b()); // AttackPlayer Goal
         // Purpur end
     }
@@ -169,7 +225,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
     @Override
     public void movementTick() {
-        if (this.isAlive() && (((shouldBurnInDay || world.purpurConfig.phantomBurnInDaylight) && this.isInDaylight()) || (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(this)) >= world.purpurConfig.phantomBurnInLight))) { // Paper - Configurable Burning // Purpur
+        if (this.isAlive() && !hasPurpurRider() && (((shouldBurnInDay || world.purpurConfig.phantomBurnInDaylight) && this.isInDaylight()) || (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(this)) >= world.purpurConfig.phantomBurnInLight))) { // Paper - Configurable Burning // Purpur
             this.setOnFire(8);
         }
 
@@ -418,7 +474,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
         @Override
         public boolean a() {
-            if (isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
+            if (getPurpurRider() != null || isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
             if (this.c > 0) {
                 --this.c;
                 return false;
@@ -447,7 +503,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
         @Override
         public boolean b() {
-            if (isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
+            if (getPurpurRider() != null || isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
             EntityLiving entityliving = EntityPhantom.this.getGoalTarget();
 
             return entityliving != null ? EntityPhantom.this.a(entityliving, PathfinderTargetCondition.a) : false;
@@ -462,7 +518,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
         @Override
         public boolean a() {
-            if (isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
+            if (getPurpurRider() != null || isCirclingCrystal()) return false; // Purpur - pathfinder does not have a flag
             EntityLiving entityliving = EntityPhantom.this.getGoalTarget();
 
             return entityliving != null ? EntityPhantom.this.a(EntityPhantom.this.getGoalTarget(), PathfinderTargetCondition.a) : false;
@@ -660,14 +716,23 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         }
     }
 
-    class f extends ControllerLook {
+    class f extends net.pl3x.purpur.controller.ControllerLookWASD { // Purpur
 
         public f(EntityInsentient entityinsentient) {
             super(entityinsentient);
         }
 
         @Override
-        public void a() {}
+        // Purpur start
+        public void tick(EntityHuman rider) {
+            setYawPitch(rider.yaw, -rider.pitch * 0.75F);
+        }
+
+        @Override
+        public void tick() {
+            // do nothing
+        }
+        // Purpur end
     }
 
     class d extends EntityAIBodyControl {
@@ -683,7 +748,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         }
     }
 
-    class g extends ControllerMove {
+    class g extends net.pl3x.purpur.controller.ControllerMoveWASDFlying { // Purpur
 
         private float j = 0.1F;
 
@@ -692,7 +757,19 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         }
 
         @Override
-        public void a() {
+        // Purpur start
+        public void tick(EntityHuman rider) {
+            if (!EntityPhantom.this.onGround) {
+                // phantom is always in motion when flying
+                // TODO - FIX THIS
+                // rider.setForward(1.0F);
+            }
+            super.tick(rider);
+        }
+
+        @Override
+        public void tick() {
+            // Purpur end
             if (EntityPhantom.this.positionChanged) {
                 EntityPhantom.this.yaw += 180.0F;
                 this.j = 0.1F;

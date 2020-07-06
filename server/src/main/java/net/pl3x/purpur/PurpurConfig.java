@@ -137,11 +137,13 @@ public class PurpurConfig {
     public static String afkBroadcastBack = "§e§o%s is no longer AFK";
     public static String afkTabListPrefix = "[AFK] ";
     public static String pingCommandOutput = "§a%s's ping is %sms";
+    public static String cannotRideMob = "§cYou cannot mount that mob";
     private static void messages() {
         afkBroadcastAway = getString("settings.messages.afk-broadcast-away", afkBroadcastAway);
         afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
         pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
+        cannotRideMob = getString("settings.messages.cannot-ride-mob", cannotRideMob);
     }
 
     public static int dungeonSeed = -1;

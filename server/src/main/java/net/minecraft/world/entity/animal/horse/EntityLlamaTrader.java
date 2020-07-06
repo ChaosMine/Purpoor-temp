@@ -27,6 +27,23 @@ public class EntityLlamaTrader extends EntityLlama {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.llamaTraderRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.llamaTraderRidableInWater;
+    }
+
+    @Override
+    public boolean hasSaddle() {
+        return super.hasSaddle() || isTamed();
+    }
+    // Purpur end
+
     @Override
     protected EntityLlama fz() {
         return (EntityLlama) EntityTypes.TRADER_LLAMA.a(this.world);

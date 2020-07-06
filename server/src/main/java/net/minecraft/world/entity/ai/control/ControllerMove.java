@@ -20,9 +20,9 @@ public class ControllerMove {
     protected double b;
     protected double c;
     protected double d;
-    protected double e;
-    protected float f;
-    protected float g;
+    protected double e; public double getSpeed() { return e; } public void setSpeed(double speed) { this.e = speed; } // Purpur - OBFHELPER
+    protected float f; public float getForward() { return f; } public void setForward(float forward) { this.f = forward; } // Purpur - OBFHELPER
+    protected float g; public float getStrafe() { return g; } public void setStrafe(float strafe) { this.g = strafe; } // Purpur - OBFHELPER
     protected ControllerMove.Operation h;
 
     public ControllerMove(EntityInsentient entityinsentient) {

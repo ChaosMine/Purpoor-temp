@@ -23,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.IEntitySelector;
@@ -95,6 +96,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
     private final int[] bK = new int[24];
     private final Path bL = new Path();
     private Explosion explosionSource = new Explosion(null, this, null, null, Double.NaN, Double.NaN, Double.NaN, Float.NaN, true, Explosion.Effect.DESTROY); // CraftBukkit - reusable source for CraftTNTPrimed.getSource()
+    private boolean hadRider; // Purpur
 
     public EntityEnderDragon(EntityTypes<? extends EntityEnderDragon> entitytypes, World world) {
         super(EntityTypes.ENDER_DRAGON, world);
@@ -109,7 +111,43 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         }
 
         this.bG = new DragonControllerManager(this);
+        // Purpur start
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASDFlying(this) {
+            @Override
+            public void tick() {
+                // dragon doesn't use the controller. do nothing
+            }
+        };
+        this.lookController = new net.pl3x.purpur.controller.ControllerLookWASD(this) {
+            @Override
+            public void tick() {
+                // dragon doesn't use the controller. do nothing
+            }
+
+            @Override
+            public void tick(EntityHuman rider) {
+                setYawPitch(rider.yaw - 180F, rider.pitch * 0.5F);
+            }
+        };
+        // Purpur end
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.enderDragonRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.enderDragonRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.enderDragonMaxY;
+    }
+    // Purpur end
 
     public static AttributeProvider.Builder m() {
         return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 200.0D);
@@ -143,6 +181,37 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
     @Override
     public void movementTick() {
+        // Purpur start
+        boolean hasRider = getPurpurRider() != null;
+        if (hasRider) {
+            if (!hadRider) {
+                hadRider = true;
+                noclip = false;
+                this.size = EntitySize.b(4.0F, 2.0F);
+            }
+
+            // dragon doesn't use controllers, so must tick manually
+            moveController.a();
+            lookController.a();
+
+            moveRelative((float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * 0.1F, new Vec3D(-getStrafe(), getVertical(), -getForward()));
+            Vec3D mot = getMot();
+            setMot(mot);
+            move(EnumMoveType.PLAYER, mot);
+
+            mot = mot.multiply(0.9F, 0.9F, 0.9F);
+            setMot(mot);
+
+            // control wing flap speed on client
+            getDragonControllerManager().setControllerPhase(mot.getX() * mot.getX() + mot.getZ() * mot.getZ() < 0.005F ? DragonControllerPhase.HOVER : DragonControllerPhase.HOLDING_PATTERN);
+        } else if (hadRider) {
+            hadRider = false;
+            noclip = true;
+            this.size = EntitySize.b(16.0F, 8.0F);
+            getDragonControllerManager().setControllerPhase(DragonControllerPhase.HOLDING_PATTERN); // HoldingPattern
+        }
+        // Purpur end
+
         float f;
         float f1;
 
@@ -164,6 +233,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
         this.bp = this.bq;
         if (this.dl()) {
+            if (hasRider) ejectPassengers(); // Purpur
             f = (this.random.nextFloat() - 0.5F) * 8.0F;
             f1 = (this.random.nextFloat() - 0.5F) * 4.0F;
             float f2 = (this.random.nextFloat() - 0.5F) * 8.0F;
@@ -175,9 +245,9 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
             f1 = 0.2F / (MathHelper.sqrt(c(vec3d)) * 10.0F + 1.0F);
             f1 *= (float) Math.pow(2.0D, vec3d.y);
-            if (this.bG.a().a()) {
+            if (!hasRider && this.bG.a().a()) { // Purpur
                 this.bq += 0.1F;
-            } else if (this.br) {
+            } else if (!hasRider && this.br) { // Purpur
                 this.bq += f1 * 0.5F;
             } else {
                 this.bq += f1;
@@ -221,7 +291,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                     }
 
                     this.bG.a().b();
-                } else {
+                } else if (!hasRider) { // Purpur
                     IDragonController idragoncontroller = this.bG.a();
 
                     idragoncontroller.c();
@@ -288,7 +358,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 this.a(this.bz, (double) (f11 * 0.5F), 0.0D, (double) (-f12 * 0.5F));
                 this.a(this.bD, (double) (f12 * 4.5F), 2.0D, (double) (f11 * 4.5F));
                 this.a(this.bE, (double) (f12 * -4.5F), 2.0D, (double) (f11 * -4.5F));
-                if (!this.world.isClientSide && this.hurtTicks == 0) {
+                if (!hasRider && !this.world.isClientSide && this.hurtTicks == 0) { // Purpur
                     this.a(this.world.getEntities(this, this.bD.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e));
                     this.a(this.world.getEntities(this, this.bE.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e));
                     this.b(this.world.getEntities(this, this.bo.getBoundingBox().g(1.0D), IEntitySelector.e));
@@ -331,7 +401,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 }
 
                 if (!this.world.isClientSide) {
-                    this.br = this.b(this.bo.getBoundingBox()) | this.b(this.by.getBoundingBox()) | this.b(this.bz.getBoundingBox());
+                    this.br = !hasRider && this.b(this.bo.getBoundingBox()) | this.b(this.by.getBoundingBox()) | this.b(this.bz.getBoundingBox()); // Purpur
                     if (this.bF != null) {
                         this.bF.b(this);
                     }

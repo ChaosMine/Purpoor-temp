@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -73,6 +74,7 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(0, new PathfinderGoalUseItem<>(this, PotionUtil.a(new ItemStack(Items.POTION), Potions.INVISIBILITY), SoundEffects.ENTITY_WANDERING_TRADER_DISAPPEARED, (entityvillagertrader) -> {
             return canDrinkPotion && this.world.isNight() && !entityvillagertrader.isInvisible(); // Paper - Add more WanderingTrader API
         }));
@@ -98,6 +100,16 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     }
 
     // Purpur - start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.villagerTraderRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.villagerTraderRidableInWater;
+    }
+
     @Override
     public boolean a(EntityHuman entityhuman) {
         return world.purpurConfig.villagerTraderCanBeLeashed && !this.isLeashed();
@@ -125,8 +137,9 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
             }
 
             if (this.getOffers().isEmpty()) {
-                return EnumInteractionResult.a(this.world.isClientSide);
+                return tryRide(entityhuman, enumhand); // Purpur
             } else {
+                if (world.purpurConfig.villagerTraderRidable && itemstack.isEmpty()) return tryRide(entityhuman, enumhand); // Purpur
                 if (!this.world.isClientSide) {
                     this.setTradingPlayer(entityhuman);
                     this.openTrade(entityhuman, this.getScoreboardDisplayName(), 1);

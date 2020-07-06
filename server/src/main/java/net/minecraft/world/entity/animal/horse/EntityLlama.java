@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHorseHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -68,7 +69,46 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
 
     public EntityLlama(EntityTypes<? extends EntityLlama> entitytypes, World world) {
         super(entitytypes, world);
+        // Purpur start
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASD(this) {
+            @Override
+            public void a() { // tick
+                if (entity.hasPurpurRider() && hasSaddle()) {
+                    tick(entity.getPurpurRider());
+                } else {
+                    tick();
+                }
+            }
+        };
+        this.lookController = new net.pl3x.purpur.controller.ControllerLookWASD(this) {
+            @Override
+            public void a() { // tick
+                if (entity.hasPurpurRider() && hasSaddle()) {
+                    tick(entity.getPurpurRider());
+                } else {
+                    tick();
+                }
+            }
+        };
+        // Purpur end
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.llamaRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.llamaRidableInWater;
+    }
+
+    @Override
+    public boolean hasSaddle() {
+        return super.hasSaddle() || (isTamed() && getColor() != null);
+    }
+    // Purpur end
 
     public void setStrength(int i) {
         this.datawatcher.set(EntityLlama.bx, Math.max(1, Math.min(5, i)));
@@ -116,6 +156,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHorseHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalTame(this, 1.2D));
         this.goalSelector.a(2, new PathfinderGoalLlamaFollow(this, 2.0999999046325684D));
         this.goalSelector.a(3, new PathfinderGoalArrowAttack(this, 1.25D, 40, 20.0F));
@@ -125,6 +166,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
         this.goalSelector.a(6, new PathfinderGoalRandomStrollLand(this, 0.7D));
         this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHorseHasRider(this)); // Purpur
         this.targetSelector.a(1, new EntityLlama.c(this));
         this.targetSelector.a(2, new EntityLlama.a(this));
     }
@@ -362,7 +404,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     }
 
     @Nullable
-    public EnumColor fy() {
+    public EnumColor fy() { return getColor(); } public EnumColor getColor() { // Purpur - OBFHELPER
         int i = (Integer) this.datawatcher.get(EntityLlama.by);
 
         return i == -1 ? null : EnumColor.fromColorIndex(i);

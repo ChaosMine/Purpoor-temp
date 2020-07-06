@@ -144,6 +144,7 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
         return this.i(entityliving) ? false : super.c(entityliving);
     }
 
+    public boolean isOwner(EntityLiving entityLiving) { return i(entityLiving); } // Purpur - OBFHELPER
     public boolean i(EntityLiving entityliving) {
         return entityliving == this.getOwner();
     }

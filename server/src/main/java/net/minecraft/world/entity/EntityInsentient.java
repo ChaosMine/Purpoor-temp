@@ -46,8 +46,6 @@ import net.minecraft.world.entity.ai.sensing.EntitySenses;
 import net.minecraft.world.entity.decoration.EntityHanging;
 import net.minecraft.world.entity.decoration.EntityLeash;
 import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.monster.EntityBlaze;
-import net.minecraft.world.entity.monster.EntityEnderman;
 import net.minecraft.world.entity.monster.IMonster;
 import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -100,7 +98,7 @@ public abstract class EntityInsentient extends EntityLiving {
     protected int f;
     protected ControllerLook lookController;
     protected ControllerMove moveController;
-    protected ControllerJump bi;
+    protected ControllerJump bi; public ControllerJump getJumpController() { return bi; } // Purpur - OBFHELPER
     private final EntityAIBodyControl c;
     protected NavigationAbstract navigation;
     public PathfinderGoalSelector goalSelector;
@@ -138,8 +136,8 @@ public abstract class EntityInsentient extends EntityLiving {
         this.bA = -1.0F;
         this.goalSelector = new PathfinderGoalSelector(world.getMethodProfilerSupplier());
         this.targetSelector = new PathfinderGoalSelector(world.getMethodProfilerSupplier());
-        this.lookController = new ControllerLook(this);
-        this.moveController = new ControllerMove(this);
+        this.lookController = new net.pl3x.purpur.controller.ControllerLookWASD(this); // Purpur
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASD(this); // Purpur
         this.bi = new ControllerJump(this);
         this.c = this.r();
         this.navigation = this.b(world);
@@ -328,10 +326,10 @@ public abstract class EntityInsentient extends EntityLiving {
     // Purpur start
     private void incrementTicksSinceLastInteraction() {
         ++ticksSinceLastInteraction;
-        //if (hasRider()) {
-        //    ticksSinceLastInteraction = 0;
-        //    return;
-        //}
+        if (hasPurpurRider()) {
+            ticksSinceLastInteraction = 0;
+            return;
+        }
         if (world.purpurConfig.entityLifeSpan <= 0) {
             return; // feature disabled
         }
@@ -626,14 +624,17 @@ public abstract class EntityInsentient extends EntityLiving {
         return super.dp();
     }
 
+    public void setForwardSpeed(float speed) { this.t(speed); } // Purpur - OBFHELPER
     public void t(float f) {
         this.aT = f;
     }
 
+    public void setVerticalSpeed(float speed) { this.u(speed); } // Purpur - OBFHELPER
     public void u(float f) {
         this.aS = f;
     }
 
+    public void setStrafeSpeed(float speed) { this.v(speed); } // Purpur - OBFHELPER
     public void v(float f) {
         this.aR = f;
     }
@@ -1326,7 +1327,7 @@ public abstract class EntityInsentient extends EntityLiving {
     protected void a(EntityHuman entityhuman, EntityInsentient entityinsentient) {}
 
     protected EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
-        return EnumInteractionResult.PASS;
+        return tryRide(entityhuman, enumhand); // Purpur
     }
 
     public boolean ev() {
@@ -1707,4 +1708,54 @@ public abstract class EntityInsentient extends EntityLiving {
         this.unleash(true, event.isDropLeash());
         // Paper end
     }
+
+    // Purpur start
+    public double getMaxY() {
+        return world.getHeight();
+    }
+
+    public EnumInteractionResult tryRide(EntityHuman entityhuman, EnumHand enumhand) {
+        if (!isRidable()) {
+            return EnumInteractionResult.PASS;
+        }
+        if (enumhand != EnumHand.MAIN_HAND) {
+            return EnumInteractionResult.PASS;
+        }
+        if (entityhuman.isSneaking()) {
+            return EnumInteractionResult.PASS;
+        }
+        if (!entityhuman.getItemInHand(enumhand).isEmpty()) {
+            return EnumInteractionResult.PASS;
+        }
+        if (!passengers.isEmpty() || entityhuman.isPassenger()) {
+            return EnumInteractionResult.PASS;
+        }
+        if (this instanceof EntityTameableAnimal) {
+            EntityTameableAnimal tameable = (EntityTameableAnimal) this;
+            if (tameable.isTamed() && !tameable.isOwner(entityhuman)) {
+                return EnumInteractionResult.PASS;
+            }
+            if (!tameable.isTamed() && !world.purpurConfig.untamedTamablesAreRidable) {
+                return EnumInteractionResult.PASS;
+            }
+        }
+        if (this instanceof EntityAgeable) {
+            EntityAgeable ageable = (EntityAgeable) this;
+            if (ageable.isBaby() && !world.purpurConfig.babiesAreRidable) {
+                return EnumInteractionResult.PASS;
+            }
+        }
+        if (!entityhuman.getBukkitEntity().hasPermission("allow.ride." + getEntityType().getName())) {
+            entityhuman.sendMessage(net.pl3x.purpur.PurpurConfig.cannotRideMob);
+            return EnumInteractionResult.PASS;
+        }
+        entityhuman.yaw = this.yaw;
+        entityhuman.pitch = this.pitch;
+        if (entityhuman.startRiding(this)) {
+            return EnumInteractionResult.SUCCESS;
+        } else {
+            return EnumInteractionResult.PASS;
+        }
+    }
+    // Purpur end
 }

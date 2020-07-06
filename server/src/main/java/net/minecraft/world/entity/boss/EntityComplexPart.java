@@ -2,11 +2,14 @@ package net.minecraft.world.entity.boss;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.EnumHand;
+import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
+import net.minecraft.world.entity.player.EntityHuman;
 
 public class EntityComplexPart extends Entity {
 
@@ -55,4 +58,11 @@ public class EntityComplexPart extends Entity {
     public EntitySize a(EntityPose entitypose) {
         return this.d;
     }
+
+    // Purpur start
+    @Override
+    public EnumInteractionResult a(EntityHuman entityhuman, EnumHand enumhand) {
+        return owner.isAlive() ? owner.tryRide(entityhuman, enumhand) : EnumInteractionResult.PASS;
+    }
+    // Purpur end
 }

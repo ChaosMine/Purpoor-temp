@@ -21,6 +21,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public final class ProjectileHelper {
 
+    public static MovingObjectPosition getHitResult(Entity entity, Predicate<Entity> predicate) { return a(entity, predicate); } // Purpur - OBFHELPER
     public static MovingObjectPosition a(Entity entity, Predicate<Entity> predicate) {
         Vec3D vec3d = entity.getMot();
         World world = entity.world;

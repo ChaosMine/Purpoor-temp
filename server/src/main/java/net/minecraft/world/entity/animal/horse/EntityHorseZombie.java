@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMonsterType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,6 +24,18 @@ public class EntityHorseZombie extends EntityHorseAbstract {
     public EntityHorseZombie(EntityTypes<? extends EntityHorseZombie> entitytypes, World world) {
         super(entitytypes, world);
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.zombieHorseRidableInWater;
+    }
+
+    @Override
+    public boolean isTamed() {
+        return true;
+    }
+    // Purpur end
 
     public static AttributeProvider.Builder eL() {
         return fi().a(GenericAttributes.MAX_HEALTH, 15.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.20000000298023224D);
@@ -95,5 +108,5 @@ public class EntityHorseZombie extends EntityHorseAbstract {
     }
 
     @Override
-    protected void eV() {}
+    protected void eV() { if (world.purpurConfig.zombieHorseCanSwim) goalSelector.a(0, new PathfinderGoalFloat(this)); } // Purpur
 }

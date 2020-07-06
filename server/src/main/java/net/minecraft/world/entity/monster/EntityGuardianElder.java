@@ -30,6 +30,18 @@ public class EntityGuardianElder extends EntityGuardian {
 
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.elderGuardianRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
+
     public static AttributeProvider.Builder m() {
         return EntityGuardian.eM().a(GenericAttributes.MOVEMENT_SPEED, 0.30000001192092896D).a(GenericAttributes.ATTACK_DAMAGE, 8.0D).a(GenericAttributes.MAX_HEALTH, 80.0D);
     }

@@ -21,6 +21,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
@@ -48,8 +49,6 @@ import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.IEntitySelector;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.control.ControllerLook;
-import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
@@ -127,6 +126,39 @@ public class EntityFox extends EntityAnimal {
         this.setCanPickupLoot(true);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.foxRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.foxRidableInWater;
+    }
+
+    @Override
+    public float getJumpHeight() {
+        return !hasPurpurRider() ? super.getJumpHeight() : 0.5F;
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        setCanPickupLoot(false);
+        stopActions();
+        setChasing(false);
+        spit(getEquipment(EnumItemSlot.MAINHAND));
+        setSlot(EnumItemSlot.MAINHAND, ItemStack.NULL_ITEM);
+    }
+
+    @Override
+    public void onDismount(EntityHuman entityhuman) {
+        super.onDismount(entityhuman);
+        setCanPickupLoot(true);
+    }
+    // Purpur end
+
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
@@ -146,6 +178,7 @@ public class EntityFox extends EntityAnimal {
             return entityliving instanceof EntityFishSchool;
         });
         this.goalSelector.a(0, new EntityFox.g());
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityFox.b());
         this.goalSelector.a(2, new EntityFox.n(2.2D));
         this.goalSelector.a(3, new EntityFox.e(1.0D));
@@ -171,6 +204,7 @@ public class EntityFox extends EntityAnimal {
         this.goalSelector.a(11, new EntityFox.p());
         this.goalSelector.a(12, new EntityFox.j(this, EntityHuman.class, 24.0F));
         this.goalSelector.a(13, new EntityFox.r());
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(3, new EntityFox.a(EntityLiving.class, false, false, (entityliving) -> {
             return EntityFox.bt.test(entityliving) && !this.c(entityliving.getUniqueID());
         }));
@@ -458,6 +492,7 @@ public class EntityFox extends EntityAnimal {
         return itemstack1.isEmpty() || this.bD > 0 && item.isFood() && !itemstack1.getItem().isFood();
     }
 
+    public void spit(ItemStack itemstack) { m(itemstack); } // Purpur - OBFHELPER
     private void m(ItemStack itemstack) {
         if (!itemstack.isEmpty() && !this.world.isClientSide) {
             EntityItem entityitem = new EntityItem(this.world, this.locX() + this.getLookDirection().x, this.locY() + 1.0D, this.locZ() + this.getLookDirection().z, itemstack);
@@ -553,6 +588,7 @@ public class EntityFox extends EntityAnimal {
         return this.t(16);
     }
 
+    public void setChasing(boolean flag) { u(flag); } // Purpur - OBFHELPER
     public void u(boolean flag) {
         this.d(16, flag);
     }
@@ -595,6 +631,7 @@ public class EntityFox extends EntityAnimal {
         this.setSleeping(false);
     }
 
+    public void stopActions() { fd(); } // Purpur - OBFHELPER
     private void fd() {
         this.w(false);
         this.setCrouching(false);
@@ -760,16 +797,16 @@ public class EntityFox extends EntityAnimal {
         }
     }
 
-    public class k extends ControllerLook {
+    public class k extends net.pl3x.purpur.controller.ControllerLookWASD { // Purpur
 
         public k() {
             super(EntityFox.this);
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (!EntityFox.this.isSleeping()) {
-                super.a();
+                super.tick(); // Purpur
             }
 
         }
@@ -1439,16 +1476,16 @@ public class EntityFox extends EntityAnimal {
         }
     }
 
-    class m extends ControllerMove {
+    class m extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
         public m() {
             super(EntityFox.this);
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (EntityFox.this.fe()) {
-                super.a();
+                super.tick(); // Purpur
             }
 
         }

@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
@@ -74,12 +75,45 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         this.moveController = new EntitySlime.ControllerMoveSlime(this);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.slimeRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.slimeRidableInWater;
+    }
+
+    protected boolean actualJump;
+
+    @Override
+    public float getJumpHeight() {
+        float height = super.getJumpHeight();
+        return hasPurpurRider() && actualJump ? height * 1.5F : height;
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (onGround && hasPurpurRider()) {
+            actualJump = true;
+            if (getPurpurRider().getForward() == 0 || getPurpurRider().getStrafe() == 0) {
+                jump(); // jump() here if not moving
+            }
+        }
+        return true; // do not jump() in wasd controller, let vanilla controller handle
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntitySlime.PathfinderGoalSlimeRandomJump(this));
         this.goalSelector.a(2, new EntitySlime.PathfinderGoalSlimeNearestPlayer(this));
         this.goalSelector.a(3, new EntitySlime.PathfinderGoalSlimeRandomDirection(this));
         this.goalSelector.a(5, new EntitySlime.PathfinderGoalSlimeIdle(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, (entityliving) -> {
             return Math.abs(entityliving.locY() - this.locY()) <= 4.0D;
         }));
@@ -365,11 +399,12 @@ public class EntitySlime extends EntityInsentient implements IMonster {
     }
 
     @Override
-    protected void jump() {
+    public void jump() { // Purpur - protected -> public
         Vec3D vec3d = this.getMot();
 
         this.setMot(vec3d.x, (double) this.dJ(), vec3d.z);
         this.impulse = true;
+        this.actualJump = false; // Purpur
     }
 
     @Nullable
@@ -538,10 +573,10 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         // Paper end
     }
 
-    static class ControllerMoveSlime extends ControllerMove {
+    static class ControllerMoveSlime extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
         private float i;
-        private int j;
+        private int j; private int getJumpDelay() { return j; } private void setJumpDelay(int delay) { j = delay; } // Purpur - OBFHELPER
         private final EntitySlime k;
         private boolean l;
 
@@ -563,15 +598,27 @@ public class EntitySlime extends EntityInsentient implements IMonster {
 
         @Override
         public void a() {
+            // Purpur start
+            if (entity.hasPurpurRider()) {
+                tick(entity.getPurpurRider());
+                if (entity.getForward() != 0 || entity.getStrafe() != 0) {
+                    if (getJumpDelay() > 10) {
+                        setJumpDelay(6);
+                    }
+                } else {
+                    setJumpDelay(20);
+                }
+            } else {
+            // Purpur end
             this.a.yaw = this.a(this.a.yaw, this.i, 90.0F);
             this.a.aC = this.a.yaw;
             this.a.aA = this.a.yaw;
-            if (this.h != ControllerMove.Operation.MOVE_TO) {
+            } if (!entity.hasPurpurRider() && this.h != ControllerMove.Operation.MOVE_TO) { // Purpur
                 this.a.t(0.0F);
             } else {
                 this.h = ControllerMove.Operation.WAIT;
                 if (this.a.isOnGround()) {
-                    this.a.q((float) (this.e * this.a.b(GenericAttributes.MOVEMENT_SPEED)));
+                    this.a.q((float) (this.e * this.a.b(GenericAttributes.MOVEMENT_SPEED) * (entity.hasPurpurRider() && (entity.getPurpurRider().getForward() != 0 || entity.getPurpurRider().getStrafe() != 0) ? 2.0D : 1.0D))); // Purpur
                     if (this.j-- <= 0) {
                         this.j = this.k.eJ();
                         if (this.l) {
@@ -588,7 +635,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
                         this.a.q(0.0F);
                     }
                 } else {
-                    this.a.q((float) (this.e * this.a.b(GenericAttributes.MOVEMENT_SPEED)));
+                    this.a.q((float) (this.e * this.a.b(GenericAttributes.MOVEMENT_SPEED) * (entity.hasPurpurRider() && (entity.getPurpurRider().getForward() != 0 || entity.getPurpurRider().getStrafe() != 0) ? 2.0D : 1.0D))); // Purpur
                 }
 
             }

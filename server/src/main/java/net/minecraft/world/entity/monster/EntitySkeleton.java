@@ -15,6 +15,18 @@ public class EntitySkeleton extends EntitySkeletonAbstract {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.skeletonRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.skeletonRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected SoundEffect getSoundAmbient() {
         return SoundEffects.ENTITY_SKELETON_AMBIENT;

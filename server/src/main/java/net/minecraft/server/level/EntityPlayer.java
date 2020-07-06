@@ -80,7 +80,6 @@ import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
-import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.RecipeBookServer;
 import net.minecraft.stats.ServerStatisticManager;
 import net.minecraft.stats.Statistic;
@@ -132,7 +131,6 @@ import net.minecraft.world.level.block.entity.TileEntityCommand;
 import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.portal.ShapeDetectorShape;
-import net.minecraft.world.level.storage.WorldData;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.scores.ScoreboardScore;
@@ -652,6 +650,15 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
 
         this.advancementDataPlayer.b(this);
+
+        // Purpur start
+        if (this.world.purpurConfig.useNightVisionWhenRiding && this.getVehicle() != null && this.getVehicle().getPurpurRider() == this && world.getTime() % 100 == 0) { // 5 seconds
+            MobEffect nightVision = this.getEffect(MobEffects.NIGHT_VISION);
+            if (nightVision == null || nightVision.getDuration() <= 300) { // 15 seconds
+                this.addEffect(new MobEffect(MobEffects.NIGHT_VISION, 400, 0)); // 20 seconds
+            }
+        }
+        // Purpur end
     }
 
     public void playerTick() {

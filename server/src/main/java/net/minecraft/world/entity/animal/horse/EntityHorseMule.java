@@ -15,6 +15,12 @@ public class EntityHorseMule extends EntityHorseChestedAbstract {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.muleRidableInWater;
+    }
+    // Purpur end
     @Override
     protected SoundEffect getSoundAmbient() {
         super.getSoundAmbient();

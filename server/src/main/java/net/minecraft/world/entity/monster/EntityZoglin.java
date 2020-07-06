@@ -62,6 +62,18 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
         this.f = 5;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.zoglinRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.zoglinRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected BehaviorController.b<EntityZoglin> cK() {
         return BehaviorController.a((Collection) EntityZoglin.c, (Collection) EntityZoglin.b);
@@ -93,10 +105,10 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
     }
 
     private Optional<? extends EntityLiving> eO() {
-        return ((List) this.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(ImmutableList.of())).stream().filter(EntityZoglin::i).findFirst();
+        return (this.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(ImmutableList.of())).stream().filter(EntityZoglin::predicate).findFirst(); // Purpur - decompile error
     }
 
-    private static boolean i(EntityLiving entityliving) {
+    private static boolean predicate(EntityLiving entityliving) { // Purpur - decompile error
         EntityTypes<?> entitytypes = entityliving.getEntityType();
 
         return entitytypes != EntityTypes.ZOGLIN && entitytypes != EntityTypes.CREEPER && IEntitySelector.f.test(entityliving);
@@ -181,14 +193,14 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
 
     @Override
     public BehaviorController<EntityZoglin> getBehaviorController() {
-        return super.getBehaviorController();
+        return (BehaviorController<EntityZoglin>) super.getBehaviorController(); // Purpur - decompile error
     }
 
     protected void eL() {
-        Activity activity = (Activity) this.bg.f().orElse((Object) null);
+        Activity activity = (Activity) this.bg.f().orElse(null); // Purpur - decompile error
 
         this.bg.a((List) ImmutableList.of(Activity.FLIGHT, Activity.IDLE));
-        Activity activity1 = (Activity) this.bg.f().orElse((Object) null);
+        Activity activity1 = (Activity) this.bg.f().orElse(null); // Purpur - decompile error
 
         if (activity1 == Activity.FLIGHT && activity != Activity.FLIGHT) {
             this.eN();
@@ -200,7 +212,8 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
     @Override
     protected void mobTick() {
         this.world.getMethodProfiler().enter("zoglinBrain");
-        this.getBehaviorController().a((WorldServer) this.world, (EntityLiving) this);
+        if (getPurpurRider() == null) // Purpur - only use brain if no rider
+        this.getBehaviorController().a((WorldServer) this.world, this); // Purpur - decompile error
         this.world.getMethodProfiler().exit();
         this.eL();
     }

@@ -12,9 +12,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.PlayerChunkMap;
-import net.minecraft.server.level.TicketType;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAreaEffectCloud;
@@ -147,7 +144,6 @@ import net.minecraft.world.entity.vehicle.EntityMinecartHopper;
 import net.minecraft.world.entity.vehicle.EntityMinecartMobSpawner;
 import net.minecraft.world.entity.vehicle.EntityMinecartRideable;
 import net.minecraft.world.entity.vehicle.EntityMinecartTNT;
-import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.bukkit.Chunk; // Paper
 import org.bukkit.EntityEffect;
@@ -1175,4 +1171,26 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         return getHandle().isTicking();
     }
     // Paper end
+
+    // Purpur start
+    @Override
+    public org.bukkit.entity.Player getRider() {
+        return hasRider() ? (org.bukkit.entity.Player) getHandle().getPurpurRider().getBukkitEntity() : null;
+    }
+
+    @Override
+    public boolean hasRider() {
+        return getHandle().hasPurpurRider();
+    }
+
+    @Override
+    public boolean isRidable() {
+        return getHandle().isRidable();
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return getHandle().isRidableInWater();
+    }
+    // Purpur end
 }

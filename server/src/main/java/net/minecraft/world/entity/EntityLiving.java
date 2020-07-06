@@ -558,7 +558,7 @@ public abstract class EntityLiving extends Entity {
 
     @Override
     public boolean bt() {
-        return false;
+        return isRidableInWater(); // Purpur
     }
 
     protected void cU() {
@@ -2297,7 +2297,7 @@ public abstract class EntityLiving extends Entity {
         return 0.42F * this.getBlockJumpFactor();
     }
 
-    protected void jump() {
+    public void jump() { // Purpur - protected -> public
         float f = this.dJ();
 
         if (this.hasEffect(MobEffects.JUMP)) {
@@ -2546,10 +2546,12 @@ public abstract class EntityLiving extends Entity {
         return this.onGround ? this.dN() * (0.21600002F / (f * f * f)) : this.aE;
     }
 
+    public float getSpeed() { return dN(); } // Purpur - OBFHELPER
     public float dN() {
         return this.bu;
     }
 
+    public void setSpeed(float speed) { q(speed); } // Purpur - OBFHELPER
     public void q(float f) {
         this.bu = f;
     }
@@ -2935,8 +2937,10 @@ public abstract class EntityLiving extends Entity {
         this.collideNearby();
         this.world.getMethodProfiler().exit();
         // Paper start
-        if (((WorldServer) world).hasEntityMoveEvent) {
-            if (lastX != locX() || lastY != locY() || lastZ != locZ() || lastYaw != yaw || lastPitch != pitch) {
+        // Purpur start
+        if (lastX != locX() || lastY != locY() || lastZ != locZ() || lastYaw != yaw || lastPitch != pitch) {
+            if (((WorldServer) world).hasEntityMoveEvent) {
+                // Purpur end
                 Location from = new Location(world.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
                 Location to = new Location (world.getWorld(), locX(), locY(), locZ(), yaw, pitch);
                 EntityMoveEvent event = new EntityMoveEvent(getBukkitLivingEntity(), from, to.clone());
@@ -2946,6 +2950,21 @@ public abstract class EntityLiving extends Entity {
                     setLocation(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ(), event.getTo().getYaw(), event.getTo().getPitch());
                 }
             }
+            // Purpur start
+            if (hasPurpurRider()) {
+                getPurpurRider().resetIdleTimer();
+                if (((WorldServer) world).hasRidableMoveEvent && this instanceof EntityInsentient) {
+                    Location from = new Location(world.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
+                    Location to = new Location(world.getWorld(), locX(), locY(), locZ(), yaw, pitch);
+                    net.pl3x.purpur.event.entity.RidableMoveEvent event = new net.pl3x.purpur.event.entity.RidableMoveEvent((org.bukkit.entity.Mob) getBukkitLivingEntity(), (Player) getPurpurRider().getBukkitEntity(), from, to.clone());
+                    if (!event.callEvent()) {
+                        setLocation(from.getX(), from.getY(), from.getZ(), from.getYaw(), from.getPitch());
+                    } else if (!to.equals(event.getTo())) {
+                        setLocation(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
+                    }
+                }
+            }
+            // Purpur end
         }
         // Paper end
         if (!this.world.isClientSide && this.dO() && this.aG()) {

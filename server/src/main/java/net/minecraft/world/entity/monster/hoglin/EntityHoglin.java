@@ -54,12 +54,24 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     public int conversionTicks = 0;
     public boolean cannotBeHunted = false;
     protected static final ImmutableList<? extends SensorType<? extends Sensor<? super EntityHoglin>>> bo = ImmutableList.of(SensorType.c, SensorType.d, SensorType.n, SensorType.m);
-    protected static final ImmutableList<? extends MemoryModuleType<?>> bp = ImmutableList.of(MemoryModuleType.BREED_TARGET, MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.PATH, MemoryModuleType.ATTACK_TARGET, MemoryModuleType.ATTACK_COOLING_DOWN, MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, new MemoryModuleType[]{MemoryModuleType.AVOID_TARGET, MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT, MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, MemoryModuleType.NEAREST_VISIBLE_ADULY, MemoryModuleType.NEAREST_REPELLENT, MemoryModuleType.PACIFIED});
+    protected static final ImmutableList<? extends MemoryModuleType> bp = ImmutableList.of(MemoryModuleType.BREED_TARGET, MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.PATH, MemoryModuleType.ATTACK_TARGET, MemoryModuleType.ATTACK_COOLING_DOWN, MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, new MemoryModuleType[]{MemoryModuleType.AVOID_TARGET, MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT, MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, MemoryModuleType.NEAREST_VISIBLE_ADULY, MemoryModuleType.NEAREST_REPELLENT, MemoryModuleType.PACIFIED}); // Purpur - decompile error
 
     public EntityHoglin(EntityTypes<? extends EntityHoglin> entitytypes, World world) {
         super(entitytypes, world);
         this.f = 5;
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.hoglinRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.hoglinRidableInWater;
+    }
+    // Purpur end
 
     @Override
     public boolean a(EntityHuman entityhuman) {
@@ -118,13 +130,14 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
 
     @Override
     public BehaviorController<EntityHoglin> getBehaviorController() {
-        return super.getBehaviorController();
+        return (BehaviorController<EntityHoglin>) super.getBehaviorController(); // Purpur decompile error
     }
 
     @Override
     protected void mobTick() {
         this.world.getMethodProfiler().enter("hoglinBrain");
-        this.getBehaviorController().a((WorldServer) this.world, (EntityLiving) this);
+        if (getPurpurRider() == null) // Purpur - only use brain if no rider
+        this.getBehaviorController().a((WorldServer) this.world, this); // Purpour - decompile error
         this.world.getMethodProfiler().exit();
         HoglinAI.a(this);
         if (this.isConverting()) {
@@ -300,7 +313,7 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
 
     @Override
     protected SoundEffect getSoundAmbient() {
-        return this.world.isClientSide ? null : (SoundEffect) HoglinAI.b(this).orElse((Object) null);
+        return this.world.isClientSide ? null : (SoundEffect) HoglinAI.b(this).orElse(null); // Purpur - decompile error
     }
 
     @Override

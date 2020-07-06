@@ -25,7 +25,7 @@ public abstract class EntityFishSchool extends EntityFish {
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
-        this.goalSelector.a(5, new PathfinderGoalFishSchool(this));
+        this.goalSelector.a(6, new PathfinderGoalFishSchool(this)); // Purpur
     }
 
     @Override

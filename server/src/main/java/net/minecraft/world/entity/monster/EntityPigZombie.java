@@ -58,6 +58,16 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.zombifiedPiglinRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.zombifiedPiglinRidableInWater;
+    }
+
+    @Override
     public boolean jockeyOnlyBaby() {
         return world.purpurConfig.zombifiedPiglinJockeyOnlyBaby;
     }

@@ -4,6 +4,7 @@ package net.minecraft.world.entity.animal;
 import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -55,16 +57,37 @@ public class EntitySquid extends EntityWaterAnimal {
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.squidRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+
+    @Override
     public AxisAlignedBB getAxisForFluidCheck() {
         // Stops squids from floating just over the water
         return this.getBoundingBox().shrink(0.001D).offsetY(world.purpurConfig.squidOffsetWaterCheck);
+    }
+
+    private void rotateVectorAroundY(org.bukkit.util.Vector vector, double degrees) {
+        double rad = Math.toRadians(degrees);
+        double cos = Math.cos(rad);
+        double sine = Math.sin(rad);
+        double x = vector.getX();
+        double z = vector.getZ();
+        vector.setX(cos * x - sine * z);
+        vector.setZ(sine * x + cos * z);
     }
     // Purpur end
 
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new EntitySquid.PathfinderGoalSquid(this));
-        this.goalSelector.a(1, new EntitySquid.a());
+        this.goalSelector.a(1, new PathfinderGoalHasRider(this)); // Purpur
+        this.goalSelector.a(2, new EntitySquid.a()); // Purpur
     }
 
     public static AttributeProvider.Builder m() {
@@ -209,6 +232,7 @@ public class EntitySquid extends EntityWaterAnimal {
         return blockposition.getY() > generatoraccess.getMinecraftWorld().spigotConfig.squidSpawnRangeMin && blockposition.getY() < maxHeight; // Spigot // Paper
     }
 
+    public void setMovementVector(float x, float y, float z) { a(x, y, z); } // Purpur - OBFHELPER
     public void a(float f, float f1, float f2) {
         this.bw = f;
         this.bx = f1;
@@ -280,7 +304,7 @@ public class EntitySquid extends EntityWaterAnimal {
 
     class PathfinderGoalSquid extends PathfinderGoal {
 
-        private final EntitySquid b;
+        private final EntitySquid b; public EntitySquid getSquid() { return b; } // Purpur - OBFHELPER
 
         public PathfinderGoalSquid(EntitySquid entitysquid) {
             this.b = entitysquid;
@@ -293,6 +317,38 @@ public class EntitySquid extends EntityWaterAnimal {
 
         @Override
         public void e() {
+            // Purpur start
+            EntitySquid squid = getSquid();
+            EntityHuman rider = squid.getPurpurRider();
+            if (rider != null) {
+                if (rider.jumping) {
+                    squid.onSpacebar();
+                }
+                float forward = rider.getForward();
+                float strafe = rider.getStrafe();
+                float speed = (float) squid.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * 10F;
+                if (forward < 0.0F) {
+                    speed *= -0.5;
+                }
+                org.bukkit.util.Vector dir = rider.getBukkitEntity().getEyeLocation().getDirection().normalize().multiply(speed / 20.0F);
+                if (strafe != 0.0F) {
+                    if (forward == 0.0F) {
+                        dir.setY(0);
+                        rotateVectorAroundY(dir, strafe > 0.0F ? -90 : 90);
+                    } else if (forward < 0.0F) {
+                        rotateVectorAroundY(dir, strafe > 0.0F ? 45 : -45);
+                    } else {
+                        rotateVectorAroundY(dir, strafe > 0.0F ? -45 : 45);
+                    }
+                }
+                if (forward != 0.0F || strafe != 0.0F) {
+                    squid.setMovementVector((float) dir.getX(), (float) dir.getY(), (float) dir.getZ());
+                } else {
+                    squid.setMovementVector(0.0F, 0.0F, 0.0F);
+                }
+                return;
+            }
+            // Purpur end
             int i = this.b.dd();
 
             if (i > 100) {

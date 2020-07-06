@@ -24,7 +24,7 @@ public abstract class IProjectile extends Entity {
 
     private UUID shooter;
     private int c;
-    private boolean d;
+    private boolean d; public boolean leftOwner() { return d; } public void setLeftOwner(boolean leftOwner) { this.d = leftOwner; } // Purpur - OBFHELPER
 
     // CraftBukkit start
     private boolean hitCancelled = false;
@@ -90,6 +90,7 @@ public abstract class IProjectile extends Entity {
         super.tick();
     }
 
+    public boolean checkIfLeftOwner() { return this.h(); } // Purpur - OBFHELPER
     private boolean h() {
         Entity entity = this.getShooter();
 
@@ -167,7 +168,7 @@ public abstract class IProjectile extends Entity {
         iblockdata.a(this.world, iblockdata, movingobjectpositionblock, this);
     }
 
-    protected boolean a(Entity entity) {
+    protected boolean a(Entity entity) { return hitPredicate(entity); } public boolean hitPredicate(Entity entity) { // Purpur - OBFHELPER
         if (!entity.isSpectator() && entity.isAlive() && entity.isInteractable()) {
             Entity entity1 = this.getShooter();
             // Paper start - Cancel hit for vanished players

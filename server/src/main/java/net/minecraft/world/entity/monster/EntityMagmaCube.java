@@ -29,6 +29,23 @@ public class EntityMagmaCube extends EntitySlime {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.magmaCubeRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.magmaCubeRidableInWater;
+    }
+
+    @Override
+    public float getJumpHeight() {
+        return 0.42F * this.getBlockJumpFactor(); // from EntityLiving
+    }
+    // Purpur end
+
     public static AttributeProvider.Builder m() {
         return EntityMonster.eR().a(GenericAttributes.MOVEMENT_SPEED, 0.20000000298023224D);
     }
@@ -79,11 +96,12 @@ public class EntityMagmaCube extends EntitySlime {
     }
 
     @Override
-    protected void jump() {
+    public void jump() { // Purpur - protected -> public
         Vec3D vec3d = this.getMot();
 
         this.setMot(vec3d.x, (double) (this.dJ() + (float) this.getSize() * 0.1F), vec3d.z);
         this.impulse = true;
+        this.actualJump = false; // Purpur
     }
 
     @Override

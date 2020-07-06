@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -84,9 +85,22 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         this.a(PathType.WATER, -1.0F);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.endermanRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.endermanRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityEnderman.a(this));
         this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0D, false));
         this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D, 0.0F));
@@ -94,6 +108,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.goalSelector.a(10, new EntityEnderman.PathfinderGoalEndermanPlaceBlock(this));
         this.goalSelector.a(11, new EntityEnderman.PathfinderGoalEndermanPickupBlock(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new EntityEnderman.PathfinderGoalPlayerWhoLookedAtTarget(this, this::a_));
         this.targetSelector.a(2, new PathfinderGoalHurtByTarget(this, new Class[0]));
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityEndermite.class, 10, true, false, EntityEnderman.bq));
@@ -274,7 +289,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
     @Override
     protected void mobTick() {
-        if (this.world.isDay() && this.ticksLived >= this.bs + 600) {
+        if (!hasPurpurRider() && this.world.isDay() && this.ticksLived >= this.bs + 600) { // Purpur - no random teleporting
             float f = this.aR();
 
             if (f > 0.5F && this.world.e(this.getChunkCoordinates()) && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.tryEscape(EndermanEscapeEvent.Reason.RUNAWAY)) { // Paper
@@ -376,6 +391,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         if (this.isInvulnerable(damagesource)) {
             return false;
         } else if (net.pl3x.purpur.PurpurConfig.endermanShortHeight && damagesource == DamageSource.STUCK) { return false; // Purpur - no suffocation damage if short height
+        } else if (hasPurpurRider()) { return super.damageEntity(damagesource, f); // Purpur - no teleporting on damage
         } else if (damagesource instanceof EntityDamageSourceIndirect) {
             if (this.tryEscape(EndermanEscapeEvent.Reason.INDIRECT)) { // Paper start
             for (int i = 0; i < 64; ++i) {
@@ -420,6 +436,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         public PathfinderGoalEndermanPickupBlock(EntityEnderman entityenderman) {
             this.enderman = entityenderman;
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur
         }
 
         @Override
@@ -462,6 +479,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         public PathfinderGoalEndermanPlaceBlock(EntityEnderman entityenderman) {
             this.a = entityenderman;
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur
         }
 
         @Override

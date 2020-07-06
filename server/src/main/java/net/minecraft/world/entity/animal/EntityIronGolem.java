@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -69,9 +70,22 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
         this.G = 1.0F;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.ironGolemRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.ironGolemRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         if (world.purpurConfig.ironGolemCanSwim) this.goalSelector.a(0, new PathfinderGoalFloat(this)); // Purpur
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 1.0D, true));
         this.goalSelector.a(2, new PathfinderGoalMoveTowardsTarget(this, 0.9D, 32.0F));
         this.goalSelector.a(2, new PathfinderGoalStrollVillage(this, 0.6D, false));
@@ -79,6 +93,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
         this.goalSelector.a(5, new PathfinderGoalOfferFlower(this));
         this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalDefendVillage(this));
         this.targetSelector.a(2, new PathfinderGoalHurtByTarget(this, new Class[0]));
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, this::a_));
@@ -248,13 +263,13 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
         Item item = itemstack.getItem();
 
         if (item != Items.IRON_INGOT) {
-            return EnumInteractionResult.PASS;
+            return tryRide(entityhuman, enumhand); // Purpur
         } else {
             float f = this.getHealth();
 
             this.heal(25.0F);
             if (this.getHealth() == f) {
-                return EnumInteractionResult.PASS;
+                return tryRide(entityhuman, enumhand); // Purpur
             } else {
                 float f1 = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
 

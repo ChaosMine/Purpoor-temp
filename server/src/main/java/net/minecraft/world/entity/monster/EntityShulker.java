@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -71,12 +72,26 @@ public class EntityShulker extends EntityGolem implements IMonster {
         this.f = 5;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.shulkerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.shulkerRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(4, new EntityShulker.a());
         this.goalSelector.a(7, new EntityShulker.e());
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(new Class[0])); // CraftBukkit - decompile error
         this.targetSelector.a(2, new EntityShulker.d(this));
         this.targetSelector.a(3, new EntityShulker.c(this));
@@ -560,7 +575,7 @@ public class EntityShulker extends EntityGolem implements IMonster {
 
         private int b;
 
-        private e() {}
+        private e() { this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); } // Purpur - peek
 
         @Override
         public boolean a() {

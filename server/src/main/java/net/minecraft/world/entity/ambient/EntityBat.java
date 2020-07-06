@@ -21,6 +21,7 @@ import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
@@ -40,8 +41,47 @@ public class EntityBat extends EntityAmbient {
 
     public EntityBat(EntityTypes<? extends EntityBat> entitytypes, World world) {
         super(entitytypes, world);
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASDFlyingWithSpacebar(this, 0.075F); // Purpur
         this.setAsleep(true);
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.batRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.batRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.batMaxY;
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        if (isAsleep()) {
+            setAsleep(false);
+            world.playEffect(null, 1025, new BlockPosition(this).up(), 0);
+        }
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue() * 2;
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 0.25, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+    // Purpur end
 
     @Override
     protected void initDatawatcher() {
@@ -87,7 +127,7 @@ public class EntityBat extends EntityAmbient {
     protected void collideNearby() {}
 
     public static AttributeProvider.Builder m() {
-        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 6.0D);
+        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 6.0D).a(GenericAttributes.FLYING_SPEED, 0.6D); // Purpur
     }
 
     public boolean isAsleep() {
@@ -119,6 +159,13 @@ public class EntityBat extends EntityAmbient {
 
     @Override
     protected void mobTick() {
+        // Purpur start
+        if (hasPurpurRider()) {
+            Vec3D mot = getMot();
+            setMot(mot.x, mot.y + (getVertical() > 0 ? 0.07D : 0.0D), mot.z);
+            return;
+        }
+        // Purpur end
         super.mobTick();
         BlockPosition blockposition = this.getChunkCoordinates();
         BlockPosition blockposition1 = blockposition.up();

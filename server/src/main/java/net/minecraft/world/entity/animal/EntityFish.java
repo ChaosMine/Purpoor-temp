@@ -1,13 +1,14 @@
 package net.minecraft.world.entity.animal;
 
 import java.util.Random;
-import java.util.function.Predicate;
+
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -29,7 +30,6 @@ import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomSwim;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
 import net.minecraft.world.entity.ai.navigation.NavigationAbstract;
 import net.minecraft.world.entity.ai.navigation.NavigationGuardian;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -116,13 +116,12 @@ public abstract class EntityFish extends EntityWaterAnimal {
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
-        this.goalSelector.a(0, new PathfinderGoalPanic(this, 1.25D));
-        PathfinderGoalSelector pathfindergoalselector = this.goalSelector;
-        Predicate predicate = IEntitySelector.g;
-
-        predicate.getClass();
-        pathfindergoalselector.a(2, new PathfinderGoalAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, predicate::test));
-        this.goalSelector.a(4, new EntityFish.b(this));
+        // Purpur start
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.25D));
+        this.goalSelector.a(3, new PathfinderGoalAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, IEntitySelector.g::test)); // Purpur - decompile error
+        this.goalSelector.a(5, new EntityFish.b(this));
+        // Purpur end
     }
 
     @Override
@@ -133,7 +132,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
     @Override
     public void g(Vec3D vec3d) {
         if (this.doAITick() && this.isInWater()) {
-            this.a(0.01F, vec3d);
+            this.a(hasPurpurRider() ? getSpeed() : 0.01F, vec3d); // Purpur
             this.move(EnumMoveType.SELF, this.getMot());
             this.setMot(this.getMot().a(0.9D));
             if (this.getGoalTarget() == null) {
@@ -220,9 +219,9 @@ public abstract class EntityFish extends EntityWaterAnimal {
     @Override
     protected void b(BlockPosition blockposition, IBlockData iblockdata) {}
 
-    static class a extends ControllerMove {
+    static class a extends net.pl3x.purpur.controller.ControllerMoveWASDWater { // Purpur
 
-        private final EntityFish i;
+        private final EntityFish i; public EntityFish getFish() { return i; } // Purpur - OBFHELPER
 
         a(EntityFish entityfish) {
             super(entityfish);
@@ -230,7 +229,15 @@ public abstract class EntityFish extends EntityWaterAnimal {
         }
 
         @Override
-        public void a() {
+        // Purpur start
+        public void tick(EntityHuman rider) {
+            super.tick(rider);
+            getFish().setMot(getFish().getMot().add(0.0D, 0.005D, 0.0D));
+        }
+
+        @Override
+        public void tick() {
+            // Purpur end
             if (this.i.a((Tag) TagsFluid.WATER)) {
                 this.i.setMot(this.i.getMot().add(0.0D, 0.005D, 0.0D));
             }

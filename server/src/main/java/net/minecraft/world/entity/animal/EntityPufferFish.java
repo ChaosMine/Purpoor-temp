@@ -39,6 +39,18 @@ public class EntityPufferFish extends EntityFish {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.pufferfishRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
+
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();
@@ -82,7 +94,7 @@ public class EntityPufferFish extends EntityFish {
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
-        this.goalSelector.a(1, new EntityPufferFish.a(this));
+        this.goalSelector.a(2, new EntityPufferFish.a(this)); // Purpur
     }
 
     @Override

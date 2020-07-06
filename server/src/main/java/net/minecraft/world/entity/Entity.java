@@ -22,6 +22,7 @@ import net.minecraft.BlockUtil;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
+import net.minecraft.SystemUtils;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICommandListener;
@@ -104,7 +105,6 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
-import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
@@ -197,7 +197,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     private int id;
     public boolean i; public final boolean blocksEntitySpawning() { return this.i; } // Paper - OBFHELPER
     public final List<Entity> passengers;
-    protected int j;
+    protected int j; public int getRideCooldown() { return j; } // Purpur - OBFHELPER
     @Nullable
     private Entity vehicle;
     public boolean attachedToPlayer;
@@ -213,7 +213,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public float lastYaw;
     public float lastPitch;
     private AxisAlignedBB boundingBox;
-    protected boolean onGround;
+    public boolean onGround; // Purpur - protected -> public
     public boolean positionChanged;
     public boolean v;
     public boolean velocityChanged;
@@ -269,7 +269,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     private boolean az;
     private final double[] aA;
     private long aB;
-    private EntitySize size;
+    protected EntitySize size; // Purpur - private -> protected
     private float headHeight;
     // CraftBukkit start
     public boolean persist = true;
@@ -1619,6 +1619,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return !this.justCreated && this.M.getDouble(TagsFluid.LAVA) > 0.0D;
     }
 
+    public void moveRelative(float speed, Vec3D motion) { this.a(speed, motion); } // Purpur - OBFHELPER
     public void a(float f, Vec3D vec3d) {
         Vec3D vec3d1 = a(vec3d, f, this.yaw);
 
@@ -2384,6 +2385,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.a(entity, false);
     }
 
+    public boolean startRiding(Entity entity, boolean flag) { return a(entity, flag); } // Purpur - OBFHELPER
     public boolean a(Entity entity, boolean flag) {
         for (Entity entity1 = entity; entity1.vehicle != null; entity1 = entity1.vehicle) {
             if (entity1.vehicle == this) {
@@ -2479,6 +2481,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 this.passengers.add(entity);
             }
 
+            // Purpur start
+            if (isRidable() && passengers.get(0) == entity && entity instanceof EntityHuman) {
+                EntityHuman entityhuman = (EntityHuman) entity;
+                onMount(entityhuman);
+                this.purpurRider = entityhuman;
+            }
+            // Purpur end
         }
         return true; // CraftBukkit
     }
@@ -2519,6 +2528,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 return false;
             }
             // Spigot end
+            // Purpur start
+            if (purpurRider != null && passengers.get(0) == purpurRider) {
+                onDismount(purpurRider);
+                this.purpurRider = null;
+            }
+            // Purpur end
             this.passengers.remove(entity);
             entity.j = 60;
         }
@@ -2685,6 +2700,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.setFlag(4, flag);
     }
 
+    public boolean isGlowing() { return bE(); } // Purpur - OBFHELPER
     public boolean bE() {
         return this.glowing || this.world.isClientSide && this.getFlag(6);
     }
@@ -2907,6 +2923,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     public void setHeadRotation(float f) {}
 
+    public void setBodyYaw(float yaw) { n(yaw); } // Purpur - OBFHELPER
     public void n(float f) {}
 
     public boolean bL() {
@@ -3347,6 +3364,18 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public boolean a_(int i, ItemStack itemstack) {
         return false;
     }
+
+    // Purpur Start
+    public void sendMessage(String str) {
+        sendMessage(org.bukkit.craftbukkit.util.CraftChatMessage.fromStringOrNull(str));
+    }
+
+    public void sendMessage(IChatBaseComponent ichatbasecomponent) {
+        if (ichatbasecomponent != null) {
+            sendMessage(ichatbasecomponent, SystemUtils.getNullUUID());
+        }
+    }
+    // Purpur end
 
     @Override
     public void sendMessage(IChatBaseComponent ichatbasecomponent, UUID uuid) {}
@@ -3800,4 +3829,47 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return ((ChunkProviderServer) world.getChunkProvider()).isInEntityTickingChunk(this);
     }
     // Paper end
+
+    // Purpur start
+    private EntityHuman purpurRider;
+
+    public EntityHuman getPurpurRider() {
+        return purpurRider;
+    }
+
+    public boolean hasPurpurRider() {
+        return purpurRider != null;
+    }
+
+    public boolean isRidable() {
+        return false;
+    }
+
+    public boolean isRidableInWater() {
+        return false;
+    }
+
+    public void onMount(EntityHuman entityhuman) {
+        if (this instanceof EntityInsentient) {
+            ((EntityInsentient) this).setGoalTarget(null, null, false);
+            ((EntityInsentient) this).getNavigation().stopPathfinding();
+        }
+        entityhuman.setJumping(false); // fixes jump on mount
+    }
+
+    public void onDismount(EntityHuman entityhuman) {
+    }
+
+    public boolean onSpacebar() {
+        return false;
+    }
+
+    public boolean onClick(EnumHand hand) {
+        return false;
+    }
+
+    public boolean processClick(EnumHand hand) {
+        return false;
+    }
+    // Purpur end
 }

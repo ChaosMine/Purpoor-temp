@@ -2,6 +2,7 @@ package net.minecraft.world.entity.monster;
 
 // Paper start
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
+import net.minecraft.server.PathfinderGoalHasRider;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Witch;
 // Paper end
@@ -63,6 +64,18 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.witchRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.witchRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
@@ -71,10 +84,12 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
         });
         this.bs = new PathfinderGoalNearestAttackableTargetWitch<>(this, EntityHuman.class, 10, true, false, (Predicate) null);
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
+        this.goalSelector.a(1, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(2, new PathfinderGoalArrowAttack(this, 1.0D, 60, 10.0F));
         this.goalSelector.a(2, new PathfinderGoalRandomStrollLand(this, 1.0D));
         this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class}));
         this.targetSelector.a(2, this.br);
         this.targetSelector.a(3, this.bs);

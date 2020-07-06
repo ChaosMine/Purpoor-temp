@@ -3,7 +3,7 @@ package net.minecraft.world.entity.ai.control;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EntityInsentient;
 
-public class ControllerLookDolphin extends ControllerLook {
+public class ControllerLookDolphin extends net.pl3x.purpur.controller.ControllerLookWASD { // Purpur
 
     private final int h;
 
@@ -13,7 +13,7 @@ public class ControllerLookDolphin extends ControllerLook {
     }
 
     @Override
-    public void a() {
+    public void tick() { // Purpur
         if (this.d) {
             this.d = false;
             this.a.aC = this.a(this.a.aC, this.h() + 20.0F, this.b);

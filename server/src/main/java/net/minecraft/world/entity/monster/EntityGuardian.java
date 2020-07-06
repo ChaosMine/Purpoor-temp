@@ -9,6 +9,7 @@ import net.minecraft.core.particles.Particles;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
@@ -63,15 +64,36 @@ public class EntityGuardian extends EntityMonster {
         this.f = 10;
         this.a(PathType.WATER, 0.0F);
         this.moveController = new EntityGuardian.ControllerMoveGuardian(this);
+        // Purpur start
+        this.lookController = new net.pl3x.purpur.controller.ControllerLookWASD(this) {
+            @Override
+            public void setYawPitch(float yaw, float pitch) {
+                super.setYawPitch(yaw, pitch * 0.35F);
+            }
+        };
+        // Purpur end
         this.bo = this.random.nextFloat();
         this.bp = this.bo;
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.guardianRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
 
     @Override
     protected void initPathfinder() {
         PathfinderGoalMoveTowardsRestriction pathfindergoalmovetowardsrestriction = new PathfinderGoalMoveTowardsRestriction(this, 1.0D);
 
         this.goalRandomStroll = new PathfinderGoalRandomStroll(this, 1.0D, 80);
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(4, new EntityGuardian.PathfinderGoalGuardianAttack(this));
         this.goalSelector.a(5, pathfindergoalmovetowardsrestriction);
         this.goalSelector.a(7, this.goalRandomStroll);
@@ -80,6 +102,7 @@ public class EntityGuardian extends EntityMonster {
         this.goalSelector.a(9, new PathfinderGoalRandomLookaround(this));
         this.goalRandomStroll.a(EnumSet.of(PathfinderGoal.Type.MOVE, PathfinderGoal.Type.LOOK));
         pathfindergoalmovetowardsrestriction.a(EnumSet.of(PathfinderGoal.Type.MOVE, PathfinderGoal.Type.LOOK));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityLiving.class, 10, true, false, new EntityGuardian.EntitySelectorGuardianTargetHumanSquid(this)));
     }
 
@@ -113,6 +136,7 @@ public class EntityGuardian extends EntityMonster {
         return (Boolean) this.datawatcher.get(EntityGuardian.b);
     }
 
+    private void setMovingFlag(boolean movingFlag) { t(movingFlag); } // Purpur - OBFHELPER
     private void t(boolean flag) {
         this.datawatcher.set(EntityGuardian.b, flag);
     }
@@ -327,7 +351,7 @@ public class EntityGuardian extends EntityMonster {
     @Override
     public void g(Vec3D vec3d) {
         if (this.doAITick() && this.isInWater()) {
-            this.a(0.1F, vec3d);
+            this.a(hasPurpurRider() ? getSpeed() : 0.1F, vec3d); // Purpur
             this.move(EnumMoveType.SELF, this.getMot());
             this.setMot(this.getMot().a(0.9D));
             if (!this.eN() && this.getGoalTarget() == null) {
@@ -339,17 +363,26 @@ public class EntityGuardian extends EntityMonster {
 
     }
 
-    static class ControllerMoveGuardian extends ControllerMove {
+    static class ControllerMoveGuardian extends net.pl3x.purpur.controller.ControllerMoveWASDWater { // Purpur
 
-        private final EntityGuardian i;
+        private final EntityGuardian i; private EntityGuardian getGuardian() { return i; } // Purpur - OBFHELPER
 
         public ControllerMoveGuardian(EntityGuardian entityguardian) {
             super(entityguardian);
             this.i = entityguardian;
         }
 
+        // Purpur start
         @Override
-        public void a() {
+        public void tick(EntityHuman rider) {
+            super.tick(rider);
+            getGuardian().setMot(getGuardian().getMot().add(0.0D, 0.005D, 0.0D));
+            getGuardian().setMovingFlag(getGuardian().getForward() > 0.0F); // control tail speed
+        }
+        // Purpur end
+
+        @Override
+        public void tick() { // Purpur
             if (this.h == ControllerMove.Operation.MOVE_TO && !this.i.getNavigation().m()) {
                 Vec3D vec3d = new Vec3D(this.b - this.i.locX(), this.c - this.i.locY(), this.d - this.i.locZ());
                 double d0 = vec3d.f();

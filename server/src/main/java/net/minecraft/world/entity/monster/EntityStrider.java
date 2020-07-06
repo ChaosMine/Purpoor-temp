@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
@@ -94,6 +95,18 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
         this.a(PathType.DAMAGE_FIRE, 0.0F);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.striderRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.striderRidableInWater;
+    }
+    // Purpur end
+
     public static boolean c(EntityTypes<EntityStrider> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
 
@@ -155,6 +168,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     @Override
     protected void initPathfinder() {
         this.bv = new PathfinderGoalPanic(this, 1.65D);
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, this.bv);
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
         this.bu = new PathfinderGoalTempt(this, 1.4D, false, EntityStrider.bp);
@@ -434,7 +448,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
             if (!enuminteractionresult.a()) {
                 ItemStack itemstack = entityhuman.b(enumhand);
 
-                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, (EntityLiving) this, enumhand) : EnumInteractionResult.PASS;
+                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, (EntityLiving) this, enumhand) : tryRide(entityhuman, enumhand); // Purpur
             } else {
                 if (flag && !this.isSilent()) {
                     this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_STRIDER_EAT, this.getSoundCategory(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);

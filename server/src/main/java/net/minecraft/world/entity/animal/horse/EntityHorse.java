@@ -41,6 +41,13 @@ public class EntityHorse extends EntityHorseAbstract {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.horseRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void eK() {
         this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue((double) this.fp());

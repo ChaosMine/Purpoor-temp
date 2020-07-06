@@ -72,6 +72,16 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.zombieVillagerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.zombieVillagerRidableInWater;
+    }
+
+    @Override
     public boolean jockeyOnlyBaby() {
         return world.purpurConfig.zombieVillagerJockeyOnlyBaby;
     }

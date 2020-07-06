@@ -24,6 +24,18 @@ public class EntityCaveSpider extends EntitySpider {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.caveSpiderRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.caveSpiderRidableInWater;
+    }
+    // Purpur end
+
     public static AttributeProvider.Builder m() {
         return EntitySpider.eK().a(GenericAttributes.MAX_HEALTH, 12.0D);
     }

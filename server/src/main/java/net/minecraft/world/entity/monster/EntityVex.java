@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
@@ -54,6 +55,45 @@ public class EntityVex extends EntityMonster {
         this.f = 3;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.vexRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.vexRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.vexMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider()) {
+            float speed;
+            if (onGround) {
+                speed = (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * 0.1F;
+            } else {
+                speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue();
+            }
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 1.0, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+
+    @Override
+    public boolean b(float f, float f1) {
+        return false; //  no fall damage please
+    }
+    // Purpur end
+
     @Override
     public void move(EnumMoveType enummovetype, Vec3D vec3d) {
         super.move(enummovetype, vec3d);
@@ -62,7 +102,7 @@ public class EntityVex extends EntityMonster {
 
     @Override
     public void tick() {
-        this.noclip = true;
+        this.noclip = !hasPurpurRider(); // Purpur
         super.tick();
         this.noclip = false;
         this.setNoGravity(true);
@@ -77,17 +117,19 @@ public class EntityVex extends EntityMonster {
     protected void initPathfinder() {
         super.initPathfinder();
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(4, new EntityVex.a());
         this.goalSelector.a(8, new EntityVex.d());
         this.goalSelector.a(9, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 3.0F, 1.0F));
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class})).a(new Class[0])); // CraftBukkit - decompile error
         this.targetSelector.a(2, new EntityVex.b(this));
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
     }
 
     public static AttributeProvider.Builder m() {
-        return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 14.0D).a(GenericAttributes.ATTACK_DAMAGE, 4.0D);
+        return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 14.0D).a(GenericAttributes.ATTACK_DAMAGE, 4.0D).a(GenericAttributes.FLYING_SPEED, 0.6D); // Purpur
     }
 
     @Override
@@ -319,14 +361,14 @@ public class EntityVex extends EntityMonster {
         }
     }
 
-    class c extends ControllerMove {
+    class c extends net.pl3x.purpur.controller.ControllerMoveWASDFlying { // Purpur
 
         public c(EntityVex entityvex) {
             super(entityvex);
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (this.h == ControllerMove.Operation.MOVE_TO) {
                 Vec3D vec3d = new Vec3D(this.b - EntityVex.this.locX(), this.c - EntityVex.this.locY(), this.d - EntityVex.this.locZ());
                 double d0 = vec3d.f();

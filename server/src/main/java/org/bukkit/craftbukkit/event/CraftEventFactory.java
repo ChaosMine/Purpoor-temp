@@ -548,6 +548,18 @@ public class CraftEventFactory {
         }
         craftServer.getPluginManager().callEvent(event);
 
+        // Purpur start
+        switch (action) {
+            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR:
+                who.processClick(EnumHand.MAIN_HAND);
+                break;
+            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR:
+                who.processClick(EnumHand.OFF_HAND);
+        }
+        // Purpur end
+
         return event;
     }
 
@@ -951,6 +963,7 @@ public class CraftEventFactory {
                     damageCause = DamageCause.ENTITY_EXPLOSION;
                 }
                 event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), entity.getBukkitEntity(), damageCause, modifiers, modifierFunctions);
+                damager.processClick(EnumHand.MAIN_HAND); // Purpur
             }
             event.setCancelled(cancelled);
 
@@ -1035,6 +1048,7 @@ public class CraftEventFactory {
             if (!event.isCancelled()) {
                 event.getEntity().setLastDamageCause(event);
             }
+            damager.getHandle().processClick(EnumHand.MAIN_HAND); // Purpur
             return event;
         }
 
@@ -1084,6 +1098,7 @@ public class CraftEventFactory {
         EntityDamageEvent event;
         if (damager != null) {
             event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), damagee.getBukkitEntity(), cause, modifiers, modifierFunctions);
+            damager.processClick(EnumHand.MAIN_HAND); // Purpur
         } else {
             event = new EntityDamageEvent(damagee.getBukkitEntity(), cause, modifiers, modifierFunctions);
         }

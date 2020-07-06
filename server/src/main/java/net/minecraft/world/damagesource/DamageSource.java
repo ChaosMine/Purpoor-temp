@@ -67,6 +67,7 @@ public class DamageSource {
         return new EntityDamageSource("mob", entityliving);
     }
 
+    public static DamageSource indirectMobAttack(Entity entity, EntityLiving entityliving) { return a(entity, entityliving); } // Purpur - OBFHELPER
     public static DamageSource a(Entity entity, EntityLiving entityliving) {
         return new EntityDamageSourceIndirect("mob", entity, entityliving);
     }
@@ -128,6 +129,7 @@ public class DamageSource {
         return this.B;
     }
 
+    public DamageSource setProjectile() { return c(); } // Purpur - OBFHELPER
     public DamageSource c() {
         this.B = true;
         return this;

@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.EnumMonsterType;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
@@ -47,10 +49,23 @@ public class EntityEvoker extends EntityIllagerWizard {
         this.f = 10;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.evokerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.evokerRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityEvoker.b());
         this.goalSelector.a(2, new PathfinderGoalAvoidTarget<>(this, EntityHuman.class, 8.0F, 0.6D, 1.0D));
         this.goalSelector.a(4, new EntityEvoker.c());
@@ -59,6 +74,7 @@ public class EntityEvoker extends EntityIllagerWizard {
         this.goalSelector.a(8, new PathfinderGoalRandomStroll(this, 0.6D));
         this.goalSelector.a(9, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 3.0F, 1.0F));
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class})).a(new Class[0])); // Paper - decompile fix
         this.targetSelector.a(2, (new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true)).a(300));
         this.targetSelector.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)).a(300));
@@ -139,6 +155,7 @@ public class EntityEvoker extends EntityIllagerWizard {
 
         public d() {
             super();
+            this.a(java.util.EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - wolololo spell
         }
 
         @Override
@@ -217,6 +234,7 @@ public class EntityEvoker extends EntityIllagerWizard {
         private c() {
             super();
             this.e = (new PathfinderTargetCondition()).a(16.0D).c().e().a().b();
+            this.a(java.util.EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - summon spell
         }
 
         @Override
@@ -273,6 +291,7 @@ public class EntityEvoker extends EntityIllagerWizard {
 
         private a() {
             super();
+            this.a(java.util.EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - attack with spell
         }
 
         @Override

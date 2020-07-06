@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockLeaves;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.Pathfinder;
@@ -61,14 +61,37 @@ public class EntityRavager extends EntityRaider {
         this.f = 20;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.ravagerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.ravagerRidableInWater;
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        getNavigation().stopPathfinding();
+
+        double speed = this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getBaseValue();
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         super.initPathfinder();
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(4, new EntityRavager.a());
         this.goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 0.4D));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(2, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class})).a(new Class[0])); // CraftBukkit - decompile error
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
         this.targetSelector.a(4, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, true));
@@ -140,7 +163,7 @@ public class EntityRavager extends EntityRaider {
     @Override
     public void movementTick() {
         super.movementTick();
-        if (this.isAlive()) {
+        if (this.isAlive() && !hasPurpurRider()) {
             if (this.isFrozen()) {
                 this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.0D);
             } else {

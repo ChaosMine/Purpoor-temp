@@ -102,6 +102,7 @@ public class AttributeProvider {
             return this;
         }
 
+        public AttributeProvider build() { return a(); } // Purpur - OBFHELPER
         public AttributeProvider a() {
             this.b = true;
             return new AttributeProvider(this.a);

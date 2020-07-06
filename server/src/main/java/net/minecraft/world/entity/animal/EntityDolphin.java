@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -81,6 +82,7 @@ public class EntityDolphin extends EntityWaterAnimal {
     public static final Predicate<EntityItem> b = (entityitem) -> {
         return !entityitem.p() && entityitem.isAlive() && entityitem.isInWater();
     };
+    private int spitCooldown; // Purpur
 
     public EntityDolphin(EntityTypes<? extends EntityDolphin> entitytypes, World world) {
         super(entitytypes, world);
@@ -88,6 +90,45 @@ public class EntityDolphin extends EntityWaterAnimal {
         this.lookController = new ControllerLookDolphin(this, 10);
         this.setCanPickupLoot(true);
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.dolphinRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (spitCooldown == 0 && hasPurpurRider()) {
+            spitCooldown = world.purpurConfig.dolphinSpitCooldown;
+            if (!hasPurpurRider()) {
+                return false;
+            }
+
+            org.bukkit.craftbukkit.entity.CraftPlayer player = (org.bukkit.craftbukkit.entity.CraftPlayer) getPurpurRider().getBukkitEntity();
+            if (!player.hasPermission("allow.special.dolphin")) {
+                return false;
+            }
+
+            org.bukkit.Location loc = player.getEyeLocation();
+            loc.setPitch(loc.getPitch() - 10);
+            org.bukkit.util.Vector target = loc.getDirection().normalize().multiply(10).add(loc.toVector());
+
+            net.pl3x.purpur.entity.DolphinSpit spit = new net.pl3x.purpur.entity.DolphinSpit(world, this);
+            spit.shoot(target.getX() - locX(), target.getY() - locY(), target.getZ() - locZ(), world.purpurConfig.dolphinSpitSpeed, 5.0F);
+
+            world.addEntity(spit);
+            playSound(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F);
+            return true;
+        }
+        return false;
+    }
+    // Purpur end
 
     @Nullable
     @Override
@@ -163,6 +204,7 @@ public class EntityDolphin extends EntityWaterAnimal {
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalBreath(this));
         this.goalSelector.a(0, new PathfinderGoalWater(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityDolphin.b(this));
         this.goalSelector.a(2, new EntityDolphin.c(this, 4.0D));
         this.goalSelector.a(4, new PathfinderGoalRandomSwim(this, 1.0D, 10));
@@ -173,6 +215,7 @@ public class EntityDolphin extends EntityWaterAnimal {
         this.goalSelector.a(8, new EntityDolphin.d());
         this.goalSelector.a(8, new PathfinderGoalFollowBoat(this));
         this.goalSelector.a(9, new PathfinderGoalAvoidTarget<>(this, EntityGuardian.class, 8.0F, 1.0D, 1.0D));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityGuardian.class})).a(new Class[0])); // CraftBukkit - decompile error
     }
 
@@ -224,7 +267,7 @@ public class EntityDolphin extends EntityWaterAnimal {
 
     @Override
     protected boolean n(Entity entity) {
-        return true;
+        return getRideCooldown() <= 0; // Purpur - make dolphin honor ride cooldown like all other non-boss mobs
     }
 
     @Override
@@ -259,6 +302,9 @@ public class EntityDolphin extends EntityWaterAnimal {
     @Override
     public void tick() {
         super.tick();
+        if (spitCooldown > 0) {
+            spitCooldown--;
+        }
         if (this.isNoAI()) {
             this.setAirTicks(this.bH());
         } else {
@@ -532,7 +578,7 @@ public class EntityDolphin extends EntityWaterAnimal {
 
         private int b;
 
-        private d() {}
+        private d() { this.a(java.util.EnumSet.of(PathfinderGoal.Type.MOVE)); } // Purpur - play with item
 
         @Override
         public boolean a() {
@@ -600,7 +646,7 @@ public class EntityDolphin extends EntityWaterAnimal {
         }
     }
 
-    static class a extends ControllerMove {
+    static class a extends net.pl3x.purpur.controller.ControllerMoveWASDWater { // Purpur
 
         private final EntityDolphin i;
 
@@ -610,7 +656,20 @@ public class EntityDolphin extends EntityWaterAnimal {
         }
 
         @Override
-        public void a() {
+        // Purpur start
+        public void tick(EntityHuman rider) {
+            if (this.i.getAirTicks() < 150) {
+                // if drowning override player WASD controls to find air
+                tick();
+            } else {
+                super.tick(rider);
+                this.i.setMot(this.i.getMot().add(0.0D, 0.005D, 0.0D));
+            }
+        }
+
+        @Override
+        public void tick() {
+            // Purpur end
             if (this.i.isInWater()) {
                 this.i.setMot(this.i.getMot().add(0.0D, 0.005D, 0.0D));
             }

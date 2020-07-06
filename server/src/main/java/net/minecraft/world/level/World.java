@@ -1748,5 +1748,10 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public boolean isTheEnd() {
         return getWorld().getEnvironment() == org.bukkit.World.Environment.THE_END;
     }
+
+    // Purpur start
+    public void playEffect(@Nullable EntityHuman entityhuman, int i, BlockPosition blockposition, int j) {
+        this.a(entityhuman, i, blockposition, j);
+    }
     // Purpur end
 }

@@ -16,6 +16,13 @@ public class EntityHorseDonkey extends EntityHorseChestedAbstract {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.donkeyRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected SoundEffect getSoundAmbient() {
         super.getSoundAmbient();

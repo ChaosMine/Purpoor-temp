@@ -42,11 +42,6 @@ public class PurpurWorldConfig {
         }
     }
 
-    public double vindicatorJohnnySpawnChance = 0D;
-    private void vindicatorSettings() {
-        vindicatorJohnnySpawnChance = getDouble("mobs.vindicator.johnny.spawn-chance", vindicatorJohnnySpawnChance);
-    }
-
     private ConfigurationSection getConfigurationSection(String path) {
         ConfigurationSection section = PurpurConfig.config.getConfigurationSection("world-settings." + worldName + "." + path);
         return section != null ? section : PurpurConfig.config.getConfigurationSection("world-settings.default." + path);
@@ -385,61 +380,186 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public boolean babiesAreRidable = true;
+    public boolean untamedTamablesAreRidable = true;
+    public boolean useNightVisionWhenRiding = false;
+    private void ridableSettings() {
+        babiesAreRidable = getBoolean("ridable-settings.babies-are-ridable", babiesAreRidable);
+        untamedTamablesAreRidable = getBoolean("ridable-settings.untamed-tamables-are-ridable", untamedTamablesAreRidable);
+        useNightVisionWhenRiding = getBoolean("ridable-settings.use-night-vision", useNightVisionWhenRiding);
+    }
+
+    public boolean batRidable = false;
+    public boolean batRidableInWater = false;
+    public double batMaxY = 256D;
+    private void batSettings() {
+        batRidable = getBoolean("mobs.bat.ridable", batRidable);
+        batRidableInWater = getBoolean("mobs.bat.ridable-in-water", batRidableInWater);
+        batMaxY = getDouble("mobs.bat.ridable-max-y", batMaxY);
+    }
+
+    public boolean beeRidable = false;
+    public boolean beeRidableInWater = false;
+    public double beeMaxY = 256D;
+    private void beeSettings() {
+        beeRidable = getBoolean("mobs.bee.ridable", beeRidable);
+        beeRidableInWater = getBoolean("mobs.bee.ridable-in-water", beeRidableInWater);
+        beeMaxY = getDouble("mobs.bee.ridable-max-y", beeMaxY);
+    }
+
+    public boolean blazeRidable = false;
+    public boolean blazeRidableInWater = false;
+    public double blazeMaxY = 256D;
+    private void blazeSettings() {
+        blazeRidable = getBoolean("mobs.blaze.ridable", blazeRidable);
+        blazeRidableInWater = getBoolean("mobs.blaze.ridable-in-water", blazeRidableInWater);
+        blazeMaxY = getDouble("mobs.blaze.ridable-max-y", blazeMaxY);
+    }
+
+    public boolean catRidable = false;
+    public boolean catRidableInWater = false;
     public int catSpawnDelay = 1200;
     public int catSpawnSwampHutScanRange = 16;
     public int catSpawnVillageScanRange = 48;
     private void catSettings() {
+        catRidable = getBoolean("mobs.cat.ridable", catRidable);
+        catRidableInWater = getBoolean("mobs.cat.ridable-in-water", catRidableInWater);
         catSpawnDelay = getInt("mobs.cat.spawn-delay", catSpawnDelay);
         catSpawnSwampHutScanRange = getInt("mobs.cat.scan-range-for-other-cats.swamp-hut", catSpawnSwampHutScanRange);
         catSpawnVillageScanRange = getInt("mobs.cat.scan-range-for-other-cats.village", catSpawnVillageScanRange);
     }
 
+    public boolean caveSpiderRidable = false;
+    public boolean caveSpiderRidableInWater = false;
+    private void caveSpiderSettings() {
+        caveSpiderRidable = getBoolean("mobs.cave_spider.ridable", caveSpiderRidable);
+        caveSpiderRidableInWater = getBoolean("mobs.cave_spider.ridable-in-water", caveSpiderRidableInWater);
+    }
+
+    public boolean chickenRidable = false;
+    public boolean chickenRidableInWater = false;
     public boolean chickenRetaliate = false;
     private void chickenSettings() {
+        chickenRidable = getBoolean("mobs.chicken.ridable", chickenRidable);
+        chickenRidableInWater = getBoolean("mobs.chicken.ridable-in-water", chickenRidableInWater);
         chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);
     }
 
+    public boolean codRidable = false;
+    private void codSettings() {
+        codRidable = getBoolean("mobs.cod.ridable", codRidable);
+    }
+
+    public boolean cowRidable = false;
+    public boolean cowRidableInWater = false;
     public int cowFeedMushrooms = 0;
     private void cowSettings() {
+        cowRidable = getBoolean("mobs.cow.ridable", cowRidable);
+        cowRidableInWater = getBoolean("mobs.cow.ridable-in-water", cowRidableInWater);
         cowFeedMushrooms = getInt("mobs.cow.feed-mushrooms-for-mooshroom", cowFeedMushrooms);
     }
 
+    public boolean creeperRidable = false;
+    public boolean creeperRidableInWater = false;
     public boolean creeperAllowGriefing = true;
     public double creeperChargedChance = 0.0D;
     private void creeperSettings() {
+        creeperRidable = getBoolean("mobs.creeper.ridable", creeperRidable);
+        creeperRidableInWater = getBoolean("mobs.creeper.ridable-in-water", creeperRidableInWater);
         creeperAllowGriefing = getBoolean("mobs.creeper.allow-griefing", creeperAllowGriefing);
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
+    public boolean dolphinRidable = false;
+    public int dolphinSpitCooldown = 20;
+    public float dolphinSpitSpeed = 1.0F;
+    public float dolphinSpitDamage = 2.0F;
     public boolean dolphinDisableTreasureSearching = false;
     private void dolphinSettings() {
+        dolphinRidable = getBoolean("mobs.dolphin.ridable", dolphinRidable);
+        dolphinSpitCooldown = getInt("mobs.dolphin.spit.cooldown", dolphinSpitCooldown);
+        dolphinSpitSpeed = (float) getDouble("mobs.dolphin.spit.speed", dolphinSpitSpeed);
+        dolphinSpitDamage = (float) getDouble("mobs.dolphin.spit.damage", dolphinSpitDamage);
         dolphinDisableTreasureSearching = getBoolean("mobs.dolphin.disable-treasure-searching", dolphinDisableTreasureSearching);
     }
 
+    public boolean donkeyRidableInWater = false;
+    private void donkeySettings() {
+        donkeyRidableInWater = getBoolean("mobs.donkey.ridable-in-water", donkeyRidableInWater);
+    }
+
+    public boolean drownedRidable = false;
+    public boolean drownedRidableInWater = false;
     public boolean drownedJockeyOnlyBaby = true;
     public double drownedJockeyChance = 0.05D;
     public boolean drownedJockeyTryExistingChickens = true;
     private void drownedSettings() {
+        drownedRidable = getBoolean("mobs.drowned.ridable", drownedRidable);
+        drownedRidableInWater = getBoolean("mobs.drowned.ridable-in-water", drownedRidableInWater);
         drownedJockeyOnlyBaby = getBoolean("mobs.drowned.jockey.only-babies", drownedJockeyOnlyBaby);
         drownedJockeyChance = getDouble("mobs.drowned.jockey.chance", drownedJockeyChance);
         drownedJockeyTryExistingChickens = getBoolean("mobs.drowned.jockey.try-existing-chickens", drownedJockeyTryExistingChickens);
     }
 
+    public boolean elderGuardianRidable = false;
+    private void elderGuardianSettings() {
+        elderGuardianRidable = getBoolean("mobs.elder_guardian.ridable", elderGuardianRidable);
+    }
+
+    public boolean enderDragonRidable = false;
+    public boolean enderDragonRidableInWater = false;
+    public double enderDragonMaxY = 256D;
     public boolean enderDragonAlwaysDropsFullExp = false;
     private void enderDragonSettings() {
+        enderDragonRidable = getBoolean("mobs.ender_dragon.ridable", enderDragonRidable);
+        enderDragonRidableInWater = getBoolean("mobs.ender_dragon.ridable-in-water", enderDragonRidableInWater);
+        enderDragonMaxY = getDouble("mobs.ender_dragon.ridable-max-y", enderDragonMaxY);
         enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
     }
 
+    public boolean endermanRidable = false;
+    public boolean endermanRidableInWater = false;
     public boolean endermanAllowGriefing = true;
     private void endermanSettings() {
+        endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
+        endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
         endermanAllowGriefing = getBoolean("mobs.enderman.allow-griefing", endermanAllowGriefing);
     }
 
+    public boolean endermiteRidable = false;
+    public boolean endermiteRidableInWater = false;
+    private void endermiteSettings() {
+        endermiteRidable = getBoolean("mobs.endermite.ridable", endermiteRidable);
+        endermiteRidableInWater = getBoolean("mobs.endermite.ridable-in-water", endermiteRidableInWater);
+    }
+
+    public boolean evokerRidable = false;
+    public boolean evokerRidableInWater = false;
+    private void evokerSettings() {
+        evokerRidable = getBoolean("mobs.evoker.ridable", evokerRidable);
+        evokerRidableInWater = getBoolean("mobs.evoker.ridable-in-water", evokerRidableInWater);
+    }
+
+    public boolean foxRidable = false;
+    public boolean foxRidableInWater = false;
     public boolean foxTypeChangesWithTulips = false;
     private void foxSettings() {
+        foxRidable = getBoolean("mobs.fox.ridable", foxRidable);
+        foxRidableInWater = getBoolean("mobs.fox.ridable-in-water", foxRidableInWater);
         foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
     }
 
+    public boolean ghastRidable = false;
+    public boolean ghastRidableInWater = false;
+    public double ghastMaxY = 256D;
+    private void ghastSettings() {
+        ghastRidable = getBoolean("mobs.ghast.ridable", ghastRidable);
+        ghastRidableInWater = getBoolean("mobs.ghast.ridable-in-water", ghastRidableInWater);
+        ghastMaxY = getDouble("mobs.ghast.ridable-max-y", ghastMaxY);
+    }
+
+    public boolean giantRidable = false;
+    public boolean giantRidableInWater = false;
     public float giantStepHeight = 2.0F;
     public float giantJumpHeight = 1.0F;
     public double giantMovementSpeed = 0.5D;
@@ -448,6 +568,8 @@ public class PurpurWorldConfig {
     public boolean giantHaveHostileAI = false;
     public double giantMaxHealth = 100.0D;
     private void giantSettings() {
+        giantRidable = getBoolean("mobs.giant.ridable", giantRidable);
+        giantRidableInWater = getBoolean("mobs.giant.ridable-in-water", giantRidableInWater);
         giantStepHeight = (float) getDouble("mobs.giant.step-height", giantStepHeight);
         giantJumpHeight = (float) getDouble("mobs.giant.jump-height", giantJumpHeight);
         giantMovementSpeed = getDouble("mobs.giant.movement-speed", giantMovementSpeed);
@@ -462,19 +584,44 @@ public class PurpurWorldConfig {
         giantMaxHealth = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
     }
 
+    public boolean guardianRidable = false;
+    private void guardianSettings() {
+        guardianRidable = getBoolean("mobs.guardian.ridable", guardianRidable);
+    }
+
+    public boolean hoglinRidable = false;
+    public boolean hoglinRidableInWater = false;
+    private void hoglinSettings() {
+        hoglinRidable = getBoolean("mobs.hoglin.ridable", hoglinRidable);
+        hoglinRidableInWater = getBoolean("mobs.hoglin.ridable-in-water", hoglinRidableInWater);
+    }
+
+    public boolean horseRidableInWater = false;
+    private void horseSettings() {
+        horseRidableInWater = getBoolean("mobs.horse.ridable-in-water", horseRidableInWater);
+    }
+
+    public boolean huskRidable = false;
+    public boolean huskRidableInWater = false;
     public boolean huskJockeyOnlyBaby = true;
     public double huskJockeyChance = 0.05D;
     public boolean huskJockeyTryExistingChickens = true;
     private void huskSettings() {
+        huskRidable = getBoolean("mobs.husk.ridable", huskRidable);
+        huskRidableInWater = getBoolean("mobs.husk.ridable-in-water", huskRidableInWater);
         huskJockeyOnlyBaby = getBoolean("mobs.husk.jockey.only-babies", huskJockeyOnlyBaby);
         huskJockeyChance = getDouble("mobs.husk.jockey.chance", huskJockeyChance);
         huskJockeyTryExistingChickens = getBoolean("mobs.husk.jockey.try-existing-chickens", huskJockeyTryExistingChickens);
     }
 
+    public boolean illusionerRidable = false;
+    public boolean illusionerRidableInWater = false;
     public double illusionerMovementSpeed = 0.5D;
     public double illusionerFollowRange = 18.0D;
     public double illusionerMaxHealth = 32.0D;
     private void illusionerSettings() {
+        illusionerRidable = getBoolean("mobs.illusioner.ridable", illusionerRidable);
+        illusionerRidableInWater = getBoolean("mobs.illusioner.ridable-in-water", illusionerRidableInWater);
         illusionerMovementSpeed = getDouble("mobs.illusioner.movement-speed", illusionerMovementSpeed);
         illusionerFollowRange = getDouble("mobs.illusioner.follow-range", illusionerFollowRange);
         if (PurpurConfig.version < 8) {
@@ -485,11 +632,76 @@ public class PurpurWorldConfig {
         illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
     }
 
+    public boolean ironGolemRidable = false;
+    public boolean ironGolemRidableInWater = false;
     public boolean ironGolemCanSwim = false;
     private void ironGolemSettings() {
+        ironGolemRidable = getBoolean("mobs.iron_golem.ridable", ironGolemRidable);
+        ironGolemRidableInWater = getBoolean("mobs.iron_golem.ridable-in-water", ironGolemRidableInWater);
         ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
     }
 
+    public boolean llamaRidable = false;
+    public boolean llamaRidableInWater = false;
+    private void llamaSettings() {
+        llamaRidable = getBoolean("mobs.llama.ridable", llamaRidable);
+        llamaRidableInWater = getBoolean("mobs.llama.ridable-in-water", llamaRidableInWater);
+    }
+
+    public boolean llamaTraderRidable = false;
+    public boolean llamaTraderRidableInWater = false;
+    private void llamaTraderSettings() {
+        llamaTraderRidable = getBoolean("mobs.trader_llama.ridable", llamaTraderRidable);
+        llamaTraderRidableInWater = getBoolean("mobs.trader_llama.ridable-in-water", llamaTraderRidableInWater);
+    }
+
+    public boolean magmaCubeRidable = false;
+    public boolean magmaCubeRidableInWater = false;
+    private void magmaCubeSettings() {
+        magmaCubeRidable = getBoolean("mobs.magma_cube.ridable", magmaCubeRidable);
+        magmaCubeRidableInWater = getBoolean("mobs.magma_cube.ridable-in-water", magmaCubeRidableInWater);
+    }
+
+    public boolean mooshroomRidable = false;
+    public boolean mooshroomRidableInWater = false;
+    private void mooshroomSettings() {
+        mooshroomRidable = getBoolean("mobs.mooshroom.ridable", mooshroomRidable);
+        mooshroomRidableInWater = getBoolean("mobs.mooshroom.ridable-in-water", mooshroomRidableInWater);
+    }
+
+    public boolean muleRidableInWater = false;
+    private void muleSettings() {
+        muleRidableInWater = getBoolean("mobs.mule.ridable-in-water", muleRidableInWater);
+    }
+
+    public boolean ocelotRidable = false;
+    public boolean ocelotRidableInWater = false;
+    private void ocelotSettings() {
+        ocelotRidable = getBoolean("mobs.ocelot.ridable", ocelotRidable);
+        ocelotRidableInWater = getBoolean("mobs.ocelot.ridable-in-water", ocelotRidableInWater);
+    }
+
+    public boolean pandaRidable = false;
+    public boolean pandaRidableInWater = false;
+    private void pandaSettings() {
+        pandaRidable = getBoolean("mobs.panda.ridable", pandaRidable);
+        pandaRidableInWater = getBoolean("mobs.panda.ridable-in-water", pandaRidableInWater);
+    }
+
+    public boolean parrotRidable = false;
+    public boolean parrotRidableInWater = false;
+    public double parrotMaxY = 256D;
+    private void parrotSettings() {
+        parrotRidable = getBoolean("mobs.parrot.ridable", parrotRidable);
+        parrotRidableInWater = getBoolean("mobs.parrot.ridable-in-water", parrotRidableInWater);
+        parrotMaxY = getDouble("mobs.parrot.ridable-max-y", parrotMaxY);
+    }
+
+    public boolean phantomRidable = false;
+    public boolean phantomRidableInWater = false;
+    public double phantomMaxY = 256D;
+    public float phantomFlameDamage = 1.0F;
+    public int phantomFlameFireTime = 8;
     public double phantomAttackedByCrystalRadius = 0.0D;
     public float phantomAttackedByCrystalDamage = 1.0F;
     public double phantomOrbitCrystalRadius = 0.0D;
@@ -508,7 +720,13 @@ public class PurpurWorldConfig {
     public int phantomBurnInLight = 0;
     public boolean phantomIgnorePlayersWithTorch = false;
     public boolean phantomBurnInDaylight = true;
+    public boolean phantomAllowGriefing = false;
     private void phantomSettings() {
+        phantomRidable = getBoolean("mobs.phantom.ridable", phantomRidable);
+        phantomRidableInWater = getBoolean("mobs.phantom.ridable-in-water", phantomRidableInWater);
+        phantomMaxY = getDouble("mobs.phantom.ridable-max-y", phantomMaxY);
+        phantomFlameDamage = (float) getDouble("mobs.phantom.flames.damage", phantomFlameDamage);
+        phantomFlameFireTime = getInt("mobs.phantom.flames.fire-time", phantomFlameFireTime);
         phantomAttackedByCrystalRadius = getDouble("mobs.phantom.attacked-by-crystal-range", phantomAttackedByCrystalRadius);
         phantomAttackedByCrystalDamage = (float) getDouble("mobs.phantom.attacked-by-crystal-damage", phantomAttackedByCrystalDamage);
         phantomOrbitCrystalRadius = getDouble("mobs.phantom.orbit-crystal-radius", phantomOrbitCrystalRadius);
@@ -527,42 +745,187 @@ public class PurpurWorldConfig {
         phantomBurnInLight = getInt("mobs.phantom.burn-in-light", phantomBurnInLight);
         phantomBurnInDaylight = getBoolean("mobs.phantom.burn-in-daylight", phantomBurnInDaylight);
         phantomIgnorePlayersWithTorch = getBoolean("mobs.phantom.ignore-players-with-torch", phantomIgnorePlayersWithTorch);
+        phantomAllowGriefing = getBoolean("mobs.phantom.allow-griefing", phantomAllowGriefing);
     }
 
+    public boolean pigRidable = false;
+    public boolean pigRidableInWater = false;
     public boolean pigGiveSaddleBack = false;
     private void pigSettings() {
+        pigRidable = getBoolean("mobs.pig.ridable", pigRidable);
+        pigRidableInWater = getBoolean("mobs.pig.ridable-in-water", pigRidableInWater);
         pigGiveSaddleBack = getBoolean("mobs.pig.give-saddle-back", pigGiveSaddleBack);
     }
 
+    public boolean piglinRidable = false;
+    public boolean piglinRidableInWater = false;
+    private void piglinSettings() {
+        piglinRidable = getBoolean("mobs.piglin.ridable", piglinRidable);
+        piglinRidableInWater = getBoolean("mobs.piglin.ridable-in-water", piglinRidableInWater);
+    }
+
+    public boolean piglinBruteRidable = false;
+    public boolean piglinBruteRidableInWater = false;
+    private void piglinBruteSettings() {
+        piglinBruteRidable = getBoolean("mobs.piglin_brute.ridable", piglinBruteRidable);
+        piglinBruteRidableInWater = getBoolean("mobs.piglin_brute.ridable-in-water", piglinBruteRidableInWater);
+    }
+
+    public boolean pillagerRidable = false;
+    public boolean pillagerRidableInWater = false;
+    private void pillagerSettings() {
+        pillagerRidable = getBoolean("mobs.pillager.ridable", pillagerRidable);
+        pillagerRidableInWater = getBoolean("mobs.pillager.ridable-in-water", pillagerRidableInWater);
+    }
+
+    public boolean polarBearRidable = false;
+    public boolean polarBearRidableInWater = false;
     public String polarBearBreedableItemString = "";
     public Item polarBearBreedableItem = null;
     private void polarBearSettings() {
+        polarBearRidable = getBoolean("mobs.polar_bear.ridable", polarBearRidable);
+        polarBearRidableInWater = getBoolean("mobs.polar_bear.ridable-in-water", polarBearRidableInWater);
         polarBearBreedableItemString = getString("mobs.polar_bear.breedable-item", polarBearBreedableItemString);
         Item item = IRegistry.ITEM.get(new MinecraftKey(polarBearBreedableItemString));
         if (item != Items.AIR) polarBearBreedableItem = item;
     }
 
+    public boolean pufferfishRidable = false;
+    private void pufferfishSettings() {
+        pufferfishRidable = getBoolean("mobs.pufferfish.ridable", pufferfishRidable);
+    }
+
+    public boolean rabbitRidable = false;
+    public boolean rabbitRidableInWater = false;
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
     private void rabbitSettings() {
+        rabbitRidable = getBoolean("mobs.rabbit.ridable", rabbitRidable);
+        rabbitRidableInWater = getBoolean("mobs.rabbit.ridable-in-water", rabbitRidableInWater);
         rabbitNaturalToast = getDouble("mobs.rabbit.spawn-toast-chance", rabbitNaturalToast);
         rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
     }
 
+    public boolean ravagerRidable = false;
+    public boolean ravagerRidableInWater = false;
+    private void ravagerSettings() {
+        ravagerRidable = getBoolean("mobs.ravager.ridable", ravagerRidable);
+        ravagerRidableInWater = getBoolean("mobs.ravager.ridable-in-water", ravagerRidableInWater);
+    }
+
+    public boolean salmonRidable = false;
+    private void salmonSettings() {
+        salmonRidable = getBoolean("mobs.salmon.ridable", salmonRidable);
+    }
+
+    public boolean sheepRidable = false;
+    public boolean sheepRidableInWater = false;
+    private void sheepSettings() {
+        sheepRidable = getBoolean("mobs.sheep.ridable", sheepRidable);
+        sheepRidableInWater = getBoolean("mobs.sheep.ridable-in-water", sheepRidableInWater);
+    }
+
+    public boolean shulkerRidable = false;
+    public boolean shulkerRidableInWater = false;
+    private void shulkerSettings() {
+        shulkerRidable = getBoolean("mobs.shulker.ridable", shulkerRidable);
+        shulkerRidableInWater = getBoolean("mobs.shulker.ridable-in-water", shulkerRidableInWater);
+    }
+
+    public boolean silverfishRidable = false;
+    public boolean silverfishRidableInWater = false;
+    private void silverfishSettings() {
+        silverfishRidable = getBoolean("mobs.silverfish.ridable", silverfishRidable);
+        silverfishRidableInWater = getBoolean("mobs.silverfish.ridable-in-water", silverfishRidableInWater);
+    }
+
+    public boolean skeletonRidable = false;
+    public boolean skeletonRidableInWater = false;
+    private void skeletonSettings() {
+        skeletonRidable = getBoolean("mobs.skeleton.ridable", skeletonRidable);
+        skeletonRidableInWater = getBoolean("mobs.skeleton.ridable-in-water", skeletonRidableInWater);
+    }
+
+    public boolean skeletonHorseCanSwim = false;
+    public boolean skeletonHorseRidableInWater = true;
+    private void skeletonHorseSettings() {
+        skeletonHorseCanSwim = getBoolean("mobs.skeleton_horse.can-swim", skeletonHorseCanSwim);
+        skeletonHorseRidableInWater = getBoolean("mobs.skeleton_horse.ridable-in-water", skeletonHorseRidableInWater);
+    }
+
+    public boolean slimeRidable = false;
+    public boolean slimeRidableInWater = false;
+    private void slimeSettings() {
+        slimeRidable = getBoolean("mobs.slime.ridable", slimeRidable);
+        slimeRidableInWater = getBoolean("mobs.slime.ridable-in-water", slimeRidableInWater);
+    }
+
+    public boolean snowGolemRidable = false;
+    public boolean snowGolemRidableInWater = false;
+    public boolean snowGolemLeaveTrailWhenRidden = false;
     public boolean snowGolemDropsPumpkin = true;
     public boolean snowGolemPutPumpkinBack = false;
     private void snowGolemSettings() {
+        snowGolemRidable = getBoolean("mobs.snow_golem.ridable", snowGolemRidable);
+        snowGolemRidableInWater = getBoolean("mobs.snow_golem.ridable-in-water", snowGolemRidableInWater);
+        snowGolemLeaveTrailWhenRidden = getBoolean("mobs.snow_golem.leave-trail-when-ridden", snowGolemLeaveTrailWhenRidden);
         snowGolemDropsPumpkin = getBoolean("mobs.snow_golem.drop-pumpkin-when-sheared", snowGolemDropsPumpkin);
         snowGolemPutPumpkinBack = getBoolean("mobs.snow_golem.pumpkin-can-be-added-back", snowGolemPutPumpkinBack);
     }
 
+    public boolean squidRidable = false;
     public boolean squidImmuneToEAR = true;
     public double squidOffsetWaterCheck = 0.0D;
     private void squidSettings() {
+        squidRidable = getBoolean("mobs.squid.ridable", squidRidable);
         squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
         squidOffsetWaterCheck = getDouble("mobs.squid.water-offset-check", squidOffsetWaterCheck);
     }
 
+    public boolean spiderRidable = false;
+    public boolean spiderRidableInWater = false;
+    private void spiderSettings() {
+        spiderRidable = getBoolean("mobs.spider.ridable", spiderRidable);
+        spiderRidableInWater = getBoolean("mobs.spider.ridable-in-water", spiderRidableInWater);
+    }
+
+    public boolean strayRidable = false;
+    public boolean strayRidableInWater = false;
+    private void straySettings() {
+        strayRidable = getBoolean("mobs.stray.ridable", strayRidable);
+        strayRidableInWater = getBoolean("mobs.stray.ridable-in-water", strayRidableInWater);
+    }
+
+    public boolean striderRidable = false;
+    public boolean striderRidableInWater = false;
+    private void striderSettings() {
+        striderRidable = getBoolean("mobs.strider.ridable", striderRidable);
+        striderRidableInWater = getBoolean("mobs.strider.ridable-in-water", striderRidableInWater);
+    }
+
+    public boolean tropicalFishRidable = false;
+    private void tropicalFishSettings() {
+        tropicalFishRidable = getBoolean("mobs.tropical_fish.ridable", tropicalFishRidable);
+    }
+
+    public boolean turtleRidable = false;
+    public boolean turtleRidableInWater = false;
+    private void turtleSettings() {
+        turtleRidable = getBoolean("mobs.turtle.ridable", turtleRidable);
+        turtleRidableInWater = getBoolean("mobs.turtle.ridable-in-water", turtleRidableInWater);
+    }
+
+    public boolean vexRidable = false;
+    public boolean vexRidableInWater = false;
+    public double vexMaxY = 256D;
+    private void vexSettings() {
+        vexRidable = getBoolean("mobs.vex.ridable", vexRidable);
+        vexRidableInWater = getBoolean("mobs.vex.ridable-in-water", vexRidableInWater);
+        vexMaxY = getDouble("mobs.vex.ridable-max-y", vexMaxY);
+    }
+
+    public boolean villagerRidable = false;
+    public boolean villagerRidableInWater = false;
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     public boolean villagerCanBeLeashed = false;
@@ -572,6 +935,8 @@ public class PurpurWorldConfig {
     public int villagerSpawnIronGolemLimit = 0;
     public boolean villagerCanBreed = true;
     private void villagerSettings() {
+        villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
+        villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
         villagerCanBeLeashed = getBoolean("mobs.villager.can-be-leashed", villagerCanBeLeashed);
@@ -582,45 +947,108 @@ public class PurpurWorldConfig {
         villagerCanBreed = getBoolean("mobs.villager.can-breed", villagerCanBreed);
     }
 
+    public boolean villagerTraderRidable = false;
+    public boolean villagerTraderRidableInWater = false;
     public boolean villagerTraderCanBeLeashed = false;
     public boolean villagerTraderFollowEmeraldBlock = false;
     private void villagerTraderSettings() {
+        villagerTraderRidable = getBoolean("mobs.wandering_trader.ridable", villagerTraderRidable);
+        villagerTraderRidableInWater = getBoolean("mobs.wandering_trader.ridable-in-water", villagerTraderRidableInWater);
         villagerTraderCanBeLeashed = getBoolean("mobs.wandering_trader.can-be-leashed", villagerTraderCanBeLeashed);
         villagerTraderFollowEmeraldBlock = getBoolean("mobs.wandering_trader.follow-emerald-blocks", villagerTraderFollowEmeraldBlock);
     }
 
+    public boolean vindicatorRidable = false;
+    public boolean vindicatorRidableInWater = false;
+    public double vindicatorJohnnySpawnChance = 0D;
+    private void vindicatorSettings() {
+        vindicatorRidable = getBoolean("mobs.vindicator.ridable", vindicatorRidable);
+        vindicatorRidableInWater = getBoolean("mobs.vindicator.ridable-in-water", vindicatorRidableInWater);
+        vindicatorJohnnySpawnChance = getDouble("mobs.vindicator.johnny.spawn-chance", vindicatorJohnnySpawnChance);
+    }
+
+    public boolean witchRidable = false;
+    public boolean witchRidableInWater = false;
+    private void witchSettings() {
+        witchRidable = getBoolean("mobs.witch.ridable", witchRidable);
+        witchRidableInWater = getBoolean("mobs.witch.ridable-in-water", witchRidableInWater);
+    }
+
+    public boolean witherRidable = false;
+    public boolean witherRidableInWater = false;
+    public double witherMaxY = 256D;
+    private void witherSettings() {
+        witherRidable = getBoolean("mobs.wither.ridable", witherRidable);
+        witherRidableInWater = getBoolean("mobs.wither.ridable-in-water", witherRidableInWater);
+        witherMaxY = getDouble("mobs.wither.ridable-max-y", witherMaxY);
+    }
+
+    public boolean witherSkeletonRidable = false;
+    public boolean witherSkeletonRidableInWater = false;
     public boolean witherSkeletonTakesWitherDamage = false;
     private void witherSkeletonSettings() {
+        witherSkeletonRidable = getBoolean("mobs.wither_skeleton.ridable", witherSkeletonRidable);
+        witherSkeletonRidableInWater = getBoolean("mobs.wither_skeleton.ridable-in-water", witherSkeletonRidableInWater);
         witherSkeletonTakesWitherDamage = getBoolean("mobs.wither_skeleton.takes-wither-damage", witherSkeletonTakesWitherDamage);
     }
 
+    public boolean wolfRidable = false;
+    public boolean wolfRidableInWater = false;
+    private void wolfSettings() {
+        wolfRidable = getBoolean("mobs.wolf.ridable", wolfRidable);
+        wolfRidableInWater = getBoolean("mobs.wolf.ridable-in-water", wolfRidableInWater);
+    }
+
+    public boolean zoglinRidable = false;
+    public boolean zoglinRidableInWater = false;
+    private void zoglinSettings() {
+        zoglinRidable = getBoolean("mobs.zoglin.ridable", zoglinRidable);
+        zoglinRidableInWater = getBoolean("mobs.zoglin.ridable-in-water", zoglinRidableInWater);
+    }
+
+    public boolean zombieRidable = false;
+    public boolean zombieRidableInWater = false;
     public boolean zombieJockeyOnlyBaby = true;
     public double zombieJockeyChance = 0.05D;
     public boolean zombieJockeyTryExistingChickens = true;
     private void zombieSettings() {
+        zombieRidable = getBoolean("mobs.zombie.ridable", zombieRidable);
+        zombieRidableInWater = getBoolean("mobs.zombie.ridable-in-water", zombieRidableInWater);
         zombieJockeyOnlyBaby = getBoolean("mobs.zombie.jockey.only-babies", zombieJockeyOnlyBaby);
         zombieJockeyChance = getDouble("mobs.zombie.jockey.chance", zombieJockeyChance);
         zombieJockeyTryExistingChickens = getBoolean("mobs.zombie.jockey.try-existing-chickens", zombieJockeyTryExistingChickens);
     }
 
+    public boolean zombieHorseCanSwim = false;
+    public boolean zombieHorseRidableInWater = false;
     public double zombieHorseSpawnChance = 0.0D;
     private void zombieHorseSettings() {
+        zombieHorseCanSwim = getBoolean("mobs.zombie_horse.can-swim", zombieHorseCanSwim);
+        zombieHorseRidableInWater = getBoolean("mobs.zombie_horse.ridable-in-water", zombieHorseRidableInWater);
         zombieHorseSpawnChance = getDouble("mobs.zombie_horse.spawn-chance", zombieHorseSpawnChance);
     }
 
+    public boolean zombifiedPiglinRidable = false;
+    public boolean zombifiedPiglinRidableInWater = false;
     public boolean zombifiedPiglinJockeyOnlyBaby = true;
     public double zombifiedPiglinJockeyChance = 0.05D;
     public boolean zombifiedPiglinJockeyTryExistingChickens = true;
     private void zombifiedPiglinSettings() {
+        zombifiedPiglinRidable = getBoolean("mobs.zombified_piglin.ridable", zombifiedPiglinRidable);
+        zombifiedPiglinRidableInWater = getBoolean("mobs.zombified_piglin.ridable-in-water", zombifiedPiglinRidableInWater);
         zombifiedPiglinJockeyOnlyBaby = getBoolean("mobs.zombified_piglin.jockey.only-babies", zombifiedPiglinJockeyOnlyBaby);
         zombifiedPiglinJockeyChance = getDouble("mobs.zombified_piglin.jockey.chance", zombifiedPiglinJockeyChance);
         zombifiedPiglinJockeyTryExistingChickens = getBoolean("mobs.zombified_piglin.jockey.try-existing-chickens", zombifiedPiglinJockeyTryExistingChickens);
     }
 
+    public boolean zombieVillagerRidable = false;
+    public boolean zombieVillagerRidableInWater = false;
     public boolean zombieVillagerJockeyOnlyBaby = true;
     public double zombieVillagerJockeyChance = 0.05D;
     public boolean zombieVillagerJockeyTryExistingChickens = true;
     private void zombieVillagerSettings() {
+        zombieVillagerRidable = getBoolean("mobs.zombie_villager.ridable", zombieVillagerRidable);
+        zombieVillagerRidableInWater = getBoolean("mobs.zombie_villager.ridable-in-water", zombieVillagerRidableInWater);
         zombieVillagerJockeyOnlyBaby = getBoolean("mobs.zombie_villager.jockey.only-babies", zombieVillagerJockeyOnlyBaby);
         zombieVillagerJockeyChance = getDouble("mobs.zombie_villager.jockey.chance", zombieVillagerJockeyChance);
         zombieVillagerJockeyTryExistingChickens = getBoolean("mobs.zombie_villager.jockey.try-existing-chickens", zombieVillagerJockeyTryExistingChickens);

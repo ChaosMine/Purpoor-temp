@@ -86,6 +86,18 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
         this.f = 5;
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.piglinRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.piglinRidableInWater;
+    }
+    // Purpur end
+
     @Override
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
@@ -275,6 +287,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     @Override
     protected void mobTick() {
         this.world.getMethodProfiler().enter("piglinBrain");
+        if (getPurpurRider() == null) // Purpur - only use brain if no rider
         this.getBehaviorController().a((WorldServer) this.world, (EntityPiglin) this); // CraftBukkit - decompile error
         this.world.getMethodProfiler().exit();
         PiglinAI.b(this);

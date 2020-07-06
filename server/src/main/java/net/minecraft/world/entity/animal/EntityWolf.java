@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -91,9 +92,27 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         this.setTamed(false);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.wolfRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.wolfRidableInWater;
+    }
+
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        setSitting(false);
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
+        this.goalSelector.a(1, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(2, new PathfinderGoalSit(this));
         this.goalSelector.a(3, new EntityWolf.a<>(this, EntityLlama.class, 24.0F, 1.5D, 1.5D));
         this.goalSelector.a(4, new PathfinderGoalLeapAtTarget(this, 0.4F));
@@ -104,6 +123,7 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         this.goalSelector.a(9, new PathfinderGoalBeg(this, 8.0F));
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(10, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(this));
         this.targetSelector.a(3, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(new Class[0])); // CraftBukkit - decompile error

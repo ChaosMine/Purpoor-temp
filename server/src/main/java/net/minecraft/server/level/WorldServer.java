@@ -216,6 +216,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     public final UUID uuid;
     public boolean hasPhysicsEvent = true; // Paper
     public boolean hasEntityMoveEvent = false; // Paper
+    public boolean hasRidableMoveEvent = false; // Purpur
     private static Throwable getAddToWorldStackTrace(Entity entity) {
         return new Throwable(entity + " Added to world at " + new java.util.Date());
     }

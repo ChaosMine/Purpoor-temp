@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -104,6 +105,25 @@ public class EntityCat extends EntityTameableAnimal {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.catRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.catRidableInWater;
+    }
+
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        setSitting(false);
+        setSleepingWithOwner(false);
+        setHeadDown(false);
+    }
+    // Purpur end
+
     public MinecraftKey eU() {
         return (MinecraftKey) EntityCat.bq.getOrDefault(this.getCatType(), EntityCat.bq.get(0));
     }
@@ -111,7 +131,8 @@ public class EntityCat extends EntityTameableAnimal {
     @Override
     protected void initPathfinder() {
         this.bx = new EntityCat.PathfinderGoalTemptChance(this, 0.6D, EntityCat.br, true);
-        this.goalSelector.a(1, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalFloat(this)); // Purpur
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalSit(this));
         this.goalSelector.a(2, new EntityCat.b(this));
         this.goalSelector.a(3, this.bx);
@@ -123,6 +144,7 @@ public class EntityCat extends EntityTameableAnimal {
         this.goalSelector.a(10, new PathfinderGoalBreed(this, 0.8D));
         this.goalSelector.a(11, new PathfinderGoalRandomStrollLand(this, 0.8D, 1.0000001E-5F));
         this.goalSelector.a(12, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 10.0F));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalRandomTargetNonTamed<>(this, EntityRabbit.class, false, (Predicate) null));
         this.targetSelector.a(1, new PathfinderGoalRandomTargetNonTamed<>(this, EntityTurtle.class, false, EntityTurtle.bo));
     }
@@ -139,6 +161,7 @@ public class EntityCat extends EntityTameableAnimal {
         this.datawatcher.set(EntityCat.bs, i);
     }
 
+    public void setSleepingWithOwner(boolean flag) { x(flag); } // Purpur - OBFHELPER
     public void x(boolean flag) {
         this.datawatcher.set(EntityCat.bt, flag);
     }
@@ -147,6 +170,7 @@ public class EntityCat extends EntityTameableAnimal {
         return (Boolean) this.datawatcher.get(EntityCat.bt);
     }
 
+    public void setHeadDown(boolean flag) { y(flag); } // Purpur - OBFHELPER
     public void y(boolean flag) {
         this.datawatcher.set(EntityCat.bu, flag);
     }
@@ -365,6 +389,7 @@ public class EntityCat extends EntityTameableAnimal {
 
     @Override
     public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
+        if (hasPurpurRider()) return EnumInteractionResult.PASS; // Purpur
         ItemStack itemstack = entityhuman.b(enumhand);
         Item item = itemstack.getItem();
 
@@ -462,6 +487,7 @@ public class EntityCat extends EntityTameableAnimal {
 
         public b(EntityCat entitycat) {
             this.a = entitycat;
+            this.a(java.util.EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - lay on owner
         }
 
         @Override

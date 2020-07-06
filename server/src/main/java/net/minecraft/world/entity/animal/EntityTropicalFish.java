@@ -37,6 +37,18 @@ public class EntityTropicalFish extends EntityFishSchool {
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.tropicalFishRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return true;
+    }
+    // Purpur end
+
     @Override
     protected void initDatawatcher() {
         super.initDatawatcher();

@@ -3,6 +3,7 @@ package net.minecraft.world.entity.monster;
 import javax.annotation.Nullable;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
@@ -58,6 +59,16 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.illusionerRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.illusionerRidableInWater;
+    }
+
+    @Override
     protected void initAttributes() {
         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.world.purpurConfig.illusionerMovementSpeed);
         this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(this.world.purpurConfig.illusionerFollowRange);
@@ -69,6 +80,7 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
     protected void initPathfinder() {
         super.initPathfinder();
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new EntityIllagerWizard.b());
         this.goalSelector.a(4, new EntityIllagerIllusioner.b());
         this.goalSelector.a(5, new EntityIllagerIllusioner.a());
@@ -76,6 +88,7 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
         this.goalSelector.a(8, new PathfinderGoalRandomStroll(this, 0.6D));
         this.goalSelector.a(9, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 3.0F, 1.0F));
         this.goalSelector.a(10, new PathfinderGoalLookAtPlayer(this, EntityInsentient.class, 8.0F));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityRaider.class})).a(new Class[0])); // CraftBukkit - decompile error
         this.targetSelector.a(2, (new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true)).a(300));
         this.targetSelector.a(3, (new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)).a(300));

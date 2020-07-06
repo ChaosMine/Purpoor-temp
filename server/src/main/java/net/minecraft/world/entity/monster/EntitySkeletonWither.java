@@ -34,6 +34,18 @@ public class EntitySkeletonWither extends EntitySkeletonAbstract {
         this.a(PathType.LAVA, 8.0F);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.witherSkeletonRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.witherSkeletonRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityPiglinAbstract.class, true));

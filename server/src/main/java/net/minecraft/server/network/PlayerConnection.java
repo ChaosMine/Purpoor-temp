@@ -2481,6 +2481,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     }
                     this.server.getPluginManager().callEvent(event);
 
+                    player.processClick(enumhand); // Purpur
+
                     // Fish bucket - SPIGOT-4048
                     if ((entity instanceof EntityFish && origItem != null && origItem.getItem() == Items.WATER_BUCKET) && (event.isCancelled() || this.player.inventory.getItemInHand() == null || this.player.inventory.getItemInHand().getItem() != origItem)) {
                         this.sendPacket(new PacketPlayOutSpawnEntityLiving((EntityFish) entity));

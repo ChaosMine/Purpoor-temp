@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -58,12 +59,27 @@ public class EntityCreeper extends EntityMonster {
     public int maxFuseTicks = 30;
     public int explosionRadius = 3;
     private int bs;
+    // Purpur start
+    private int spacebarCharge = 0;
+    private int prevSpacebarCharge = 0;
+    private int powerToggleDelay = 0;
+    // Purpur end
 
     public EntityCreeper(EntityTypes<? extends EntityCreeper> entitytypes, World world) {
         super(entitytypes, world);
     }
 
     // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.creeperRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.creeperRidableInWater;
+    }
+
     @Override
     public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @javax.annotation.Nullable GroupDataEntity groupdataentity, @javax.annotation.Nullable NBTTagCompound nbttagcompound) {
         double chance = worldaccess.getMinecraftWorld().purpurConfig.creeperChargedChance;
@@ -72,18 +88,69 @@ public class EntityCreeper extends EntityMonster {
         }
         return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
+
+    @Override
+    protected void mobTick() {
+        if (powerToggleDelay > 0) {
+            powerToggleDelay--;
+        }
+        if (hasPurpurRider()) {
+            if (getPurpurRider().getForward() != 0 || getPurpurRider().getStrafe() != 0) {
+                spacebarCharge = 0;
+                setIgnited(false);
+            }
+            if (spacebarCharge == prevSpacebarCharge) {
+                spacebarCharge = 0;
+            }
+            prevSpacebarCharge = spacebarCharge;
+        }
+        super.mobTick();
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        setIgnited(false);
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (powerToggleDelay > 0) {
+            return true; // just toggled power, do not jump or ignite
+        }
+        spacebarCharge++;
+        if (spacebarCharge > maxFuseTicks - 2) {
+            spacebarCharge = 0;
+            if (getPurpurRider().getBukkitEntity().hasPermission("allow.powered.creeper")) {
+                powerToggleDelay = 20;
+                setPowered(!isPowered());
+                setIgnited(false);
+                return true;
+            }
+        }
+        if (!isIgnited()) {
+            if (hasPurpurRider() && getPurpurRider().getForward() == 0 && getPurpurRider().getStrafe() == 0 &&
+                    getPurpurRider().getBukkitEntity().hasPermission("allow.special.creeper")) {
+                setIgnited(true);
+                return true;
+            }
+        }
+        return getForward() == 0 && getStrafe() == 0; // do not jump if standing still
+    }
     // Purpur end
 
     @Override
     protected void initPathfinder() {
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, new PathfinderGoalSwell(this));
+        this.goalSelector.a(3, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(3, new PathfinderGoalAvoidTarget<>(this, EntityOcelot.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.a(3, new PathfinderGoalAvoidTarget<>(this, EntityCat.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 1.0D, false));
         this.goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 0.8D));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
         this.targetSelector.a(2, new PathfinderGoalHurtByTarget(this, new Class[0]));
     }
@@ -214,6 +281,7 @@ public class EntityCreeper extends EntityMonster {
         return (Integer) this.datawatcher.get(EntityCreeper.b);
     }
 
+    public void setSwellDirection(int i) { a(i); } // Purpur - OBFHELPER
     public void a(int i) {
         this.datawatcher.set(EntityCreeper.b, i);
     }
@@ -314,6 +382,7 @@ public class EntityCreeper extends EntityMonster {
             com.destroystokyo.paper.event.entity.CreeperIgniteEvent event = new com.destroystokyo.paper.event.entity.CreeperIgniteEvent((org.bukkit.entity.Creeper) getBukkitEntity(), ignited);
             if (event.callEvent()) {
                 this.datawatcher.set(EntityCreeper.d, event.isIgnited());
+                if (!event.isIgnited()) setSwellDirection(-1); // Purpur
             }
         }
         // Paper end

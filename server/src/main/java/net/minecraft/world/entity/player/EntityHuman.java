@@ -111,7 +111,6 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.ScoreboardTeam;
-import net.minecraft.world.scores.ScoreboardTeamBase;
 
 // CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
@@ -182,6 +181,8 @@ public abstract class EntityHuman extends EntityLiving {
     // CraftBukkit end
 
     // Purpur start
+    public abstract void resetIdleTimer();
+
     private javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino");
 
     public void setAfk(boolean setAfk){
@@ -2265,4 +2266,15 @@ public abstract class EntityHuman extends EntityLiving {
             return this.g;
         }
     }
+
+    // Purpur start
+    @Override
+    public boolean processClick(EnumHand hand) {
+        Entity vehicle = getRootVehicle();
+        if (vehicle != null && vehicle.getPurpurRider() == this) {
+            return vehicle.onClick(hand);
+        }
+        return false;
+    }
+    // Purpur end
 }

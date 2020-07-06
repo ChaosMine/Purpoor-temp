@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMove;
@@ -44,11 +46,42 @@ public class EntityGhast extends EntityFlying implements IMonster {
         this.moveController = new EntityGhast.ControllerGhast(this);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.ghastRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.ghastRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.ghastMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue();
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 1.0, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(5, new EntityGhast.PathfinderGoalGhastIdleMove(this));
         this.goalSelector.a(7, new EntityGhast.PathfinderGoalGhastMoveTowardsTarget(this));
         this.goalSelector.a(7, new EntityGhast.PathfinderGoalGhastAttackTarget(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, (entityliving) -> {
             return Math.abs(entityliving.locY() - this.locY()) <= 4.0D;
         }));
@@ -86,7 +119,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
     }
 
     public static AttributeProvider.Builder eJ() {
-        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 10.0D).a(GenericAttributes.FOLLOW_RANGE, 100.0D);
+        return EntityInsentient.p().a(GenericAttributes.MAX_HEALTH, 10.0D).a(GenericAttributes.FOLLOW_RANGE, 100.0D).a(GenericAttributes.FLYING_SPEED, 0.6D); // Purpur
     }
 
     @Override
@@ -285,7 +318,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
         }
     }
 
-    static class ControllerGhast extends ControllerMove {
+    static class ControllerGhast extends net.pl3x.purpur.controller.ControllerMoveWASDFlying { // Purpur
 
         private final EntityGhast i;
         private int j;
@@ -296,7 +329,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             if (this.h == ControllerMove.Operation.MOVE_TO) {
                 if (this.j-- <= 0) {
                     this.j += this.i.getRandom().nextInt(5) + 2;

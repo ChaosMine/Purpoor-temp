@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -50,12 +51,26 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
         super(entitytypes, world);
     }
 
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.snowGolemRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.snowGolemRidableInWater;
+    }
+    // Purpur end
+
     @Override
     protected void initPathfinder() {
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalArrowAttack(this, 1.25D, 20, 10.0F));
         this.goalSelector.a(2, new PathfinderGoalRandomStrollLand(this, 1.0D, 1.0000001E-5F));
         this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
         this.goalSelector.a(4, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<>(this, EntityInsentient.class, 10, true, false, (entityliving) -> {
             return entityliving instanceof IMonster;
         }));
@@ -107,6 +122,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
                 return;
             }
 
+            if (hasPurpurRider() && !world.purpurConfig.snowGolemLeaveTrailWhenRidden) return; // Purpur - don't leave snow trail when being ridden
             IBlockData iblockdata = Blocks.SNOW.getBlockData();
 
             for (int l = 0; l < 4; ++l) {
@@ -149,7 +165,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
         if (itemstack.getItem() == Items.SHEARS && this.canShear()) {
             // CraftBukkit start
             if (!CraftEventFactory.handlePlayerShearEntityEvent(entityhuman, this, itemstack, enumhand)) {
-                return EnumInteractionResult.PASS;
+                return tryRide(entityhuman, enumhand); // Purpur
             }
             // CraftBukkit end
             this.shear(SoundCategory.PLAYERS);
@@ -169,7 +185,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
             return EnumInteractionResult.SUCCESS;
         // Purpur end
         } else {
-            return EnumInteractionResult.PASS;
+            return tryRide(entityhuman, enumhand); // Purpur
         }
     }
 

@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
@@ -119,11 +121,57 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
 
     public EntityParrot(EntityTypes<? extends EntityParrot> entitytypes, World world) {
         super(entitytypes, world);
-        this.moveController = new ControllerMoveFlying(this, 10, false);
+        // Purpur start
+        final net.pl3x.purpur.controller.ControllerMoveWASDFlyingWithSpacebar flyingController = new net.pl3x.purpur.controller.ControllerMoveWASDFlyingWithSpacebar(this, 0.3F);
+        this.moveController = new ControllerMoveFlying(this, 10, false) {
+            @Override
+            public void a() { // tick
+                if (getEntity().hasPurpurRider()) {
+                    flyingController.tick(getEntity().getPurpurRider());
+                } else {
+                    tick();
+                }
+            }
+
+            @Override
+            public boolean b() { // isUpdating
+                return getEntity().hasPurpurRider() ? getForward() != 0 || getStrafe() != 0 : super.b();
+            }
+        };
+        // Purpur end
         this.a(PathType.DANGER_FIRE, -1.0F);
         this.a(PathType.DAMAGE_FIRE, -1.0F);
         this.a(PathType.COCOA, -1.0F);
     }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.parrotRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.parrotRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.parrotMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue() * 2;
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 0.25, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+    // Purpur end
 
     @Nullable
     @Override
@@ -143,8 +191,10 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
 
     @Override
     protected void initPathfinder() {
-        this.goalSelector.a(0, new PathfinderGoalPanic(this, 1.25D));
+        // this.goalSelector.a(0, new PathfinderGoalPanic(this, 1.25D)); // Purpur - move down
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.25D)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(2, new PathfinderGoalSit(this));
         this.goalSelector.a(2, new PathfinderGoalFollowOwner(this, 1.0D, 5.0F, 1.0F, true));

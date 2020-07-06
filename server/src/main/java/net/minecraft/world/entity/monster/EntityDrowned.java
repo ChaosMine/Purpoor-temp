@@ -74,6 +74,16 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
 
     // Purpur start
     @Override
+    public boolean isRidable() {
+        return world.purpurConfig.drownedRidable;
+    }
+
+    @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.drownedRidableInWater;
+    }
+
+    @Override
     public boolean jockeyOnlyBaby() {
         return world.purpurConfig.drownedJockeyOnlyBaby;
     }
@@ -270,7 +280,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         this.d = flag;
     }
 
-    static class d extends ControllerMove {
+    static class d extends net.pl3x.purpur.controller.ControllerMoveWASD { // Purpur
 
         private final EntityDrowned i;
 
@@ -280,7 +290,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         }
 
         @Override
-        public void a() {
+        public void tick() { // Purpur
             EntityLiving entityliving = this.i.getGoalTarget();
 
             if (this.i.eW() && this.i.isInWater()) {
@@ -313,7 +323,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
                     this.i.setMot(this.i.getMot().add(0.0D, -0.008D, 0.0D));
                 }
 
-                super.a();
+                super.tick(); // Purpur
             }
 
         }
@@ -452,6 +462,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
             this.a = entitydrowned;
             this.b = d0;
             this.c = i;
+            this.a(EnumSet.of(PathfinderGoal.Type.UNKNOWN_BEHAVIOR)); // Purpur - swim up
         }
 
         @Override

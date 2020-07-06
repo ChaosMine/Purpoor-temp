@@ -12,6 +12,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.server.level.BossBattleServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.sounds.SoundEffect;
@@ -20,6 +21,7 @@ import net.minecraft.tags.TagsBlock;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.BossBattle;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
@@ -28,6 +30,7 @@ import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMonsterType;
+import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
@@ -48,14 +51,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.IMaterial;
+import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.phys.MovingObjectPosition;
+import net.minecraft.world.phys.MovingObjectPositionBlock;
+import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
 
 // CraftBukkit start
 import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -82,6 +87,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         return entityliving.getMonsterType() != EnumMonsterType.UNDEAD && entityliving.ei();
     };
     private static final PathfinderTargetCondition bz = (new PathfinderTargetCondition()).a(20.0D).a(EntityWither.by);
+    private int shootCooldown = 0; // Purpur
     // Paper start
     private boolean canPortal = false;
 
@@ -94,15 +100,122 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         this.setHealth(this.getMaxHealth());
         this.getNavigation().d(true);
         this.f = 50;
+        this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASDFlyingWithSpacebar(this, 0.1F); // Purpur
+    }
+
+    // Purpur start
+    @Override
+    public boolean isRidable() {
+        return world.purpurConfig.witherRidable;
     }
 
     @Override
+    public boolean isRidableInWater() {
+        return world.purpurConfig.witherRidableInWater;
+    }
+
+    @Override
+    public double getMaxY() {
+        return world.purpurConfig.witherMaxY;
+    }
+
+    @Override
+    public void g(Vec3D vec3d) {
+        super.g(vec3d);
+        if (hasPurpurRider() && !onGround) {
+            float speed = (float) getAttributeInstance(GenericAttributes.FLYING_SPEED).getValue() * 5F;
+            setSpeed(speed);
+            Vec3D mot = getMot();
+            move(EnumMoveType.SELF, mot.multiply(speed, 0.5, speed));
+            setMot(mot.a(0.9D));
+        }
+    }
+
+    @Override
+    public void onMount(EntityHuman entityhuman) {
+        super.onMount(entityhuman);
+        this.datawatcher.set(bo.get(0), 0);
+        this.datawatcher.set(bo.get(1), 0);
+        this.datawatcher.set(bo.get(2), 0);
+        getNavigation().stopPathfinding();
+        shootCooldown = 20;
+    }
+
+    @Override
+    public boolean onClick(EnumHand hand) {
+        return shoot(getPurpurRider(), hand == EnumHand.MAIN_HAND ? new int[]{1} : new int[]{2});
+    }
+
+    public boolean shoot(EntityHuman rider, int[] heads) {
+        if (shootCooldown > 0) {
+            return false;
+        }
+
+        shootCooldown = 20;
+        if (rider == null) {
+            return false;
+        }
+
+        org.bukkit.craftbukkit.entity.CraftHumanEntity player = rider.getBukkitEntity();
+        if (!player.hasPermission("allow.special.wither")) {
+            return false;
+        }
+
+        MovingObjectPosition rayTrace = getRayTrace(120, RayTrace.FluidCollisionOption.NONE);
+        if (rayTrace == null) {
+            return false;
+        }
+
+        Vec3D loc;
+        if (rayTrace.getType() == MovingObjectPosition.EnumMovingObjectType.BLOCK) {
+            BlockPosition pos = ((MovingObjectPositionBlock) rayTrace).getBlockPosition();
+            loc = new Vec3D(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+        } else if (rayTrace.getType() == MovingObjectPosition.EnumMovingObjectType.ENTITY) {
+            Entity target = ((MovingObjectPositionEntity) rayTrace).getEntity();
+            loc = new Vec3D(target.locX(), target.locY() + (target.getHeadHeight() / 2), target.locZ());
+        } else {
+            org.bukkit.block.Block block = player.getTargetBlock(null, 120);
+            loc = new Vec3D(block.getX() + 0.5D, block.getY() + 0.5D, block.getZ() + 0.5D);
+        }
+
+        for (int head : heads) {
+            shoot(head, loc.getX(), loc.getY(), loc.getZ(), rider);
+        }
+
+        return true; // handled
+    }
+
+    public void shoot(int head, double x, double y, double z, EntityHuman rider) {
+        world.playEvent(null, 1024, getChunkCoordinates(), 0);
+        double headX = getHeadX(head);
+        double headY = getHeadY(head);
+        double headZ = getHeadZ(head);
+        EntityWitherSkull skull = new EntityWitherSkull(world, this, x - headX, y - headY, z - headZ) {
+            @Override
+            public boolean canSaveToDisk() {
+                return false;
+            }
+
+            @Override
+            public boolean hitPredicate(Entity target) {
+                // do not hit rider
+                return target != rider && super.hitPredicate(target);
+            }
+        };
+        skull.setPositionRaw(headX, headY, headZ);
+        world.addEntity(skull);
+    }
+    // Purpur end
+
+    @Override
     protected void initPathfinder() {
-        this.goalSelector.a(0, new EntityWither.a());
+        this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        this.goalSelector.a(1, new EntityWither.a()); // Purpur
         this.goalSelector.a(2, new PathfinderGoalArrowAttack(this, 1.0D, 40, 20.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 1.0D));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this, new Class[0]));
         if(this.world.paperConfig.fixWitherTargetingBug) this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 0, false, false, null)); // Paper - Fix MC-29274
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityInsentient.class, 0, false, false, EntityWither.by));
@@ -245,6 +358,16 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
     @Override
     protected void mobTick() {
+        // Purpur start
+        if (hasPurpurRider()) {
+            Vec3D mot = getMot();
+            setMot(mot.x, mot.y + (getVertical() > 0 ? 0.07D : 0.0D), mot.z);
+        }
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
+        // Purpur end
+
         int i;
 
         if (this.getInvul() > 0) {
@@ -428,7 +551,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         this.bossBattle.removePlayer(entityplayer);
     }
 
-    private double u(int i) {
+    private double u(int i) { return getHeadX(i); } private double getHeadX(int i) { // Purpur - OBFHELPER
         if (i <= 0) {
             return this.locX();
         } else {
@@ -439,11 +562,11 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         }
     }
 
-    private double v(int i) {
+    private double v(int i) { return getHeadY(i); } private double getHeadY(int i) { // Purpur - OBFHELPER
         return i <= 0 ? this.locY() + 3.0D : this.locY() + 2.2D;
     }
 
-    private double w(int i) {
+    private double w(int i) { return getHeadZ(i); } private double getHeadZ(int i) { // Purpur - OBFHELPER
         if (i <= 0) {
             return this.locZ();
         } else {
@@ -567,7 +690,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
     }
 
     public static AttributeProvider.Builder eK() {
-        return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 300.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.6000000238418579D).a(GenericAttributes.FOLLOW_RANGE, 40.0D).a(GenericAttributes.ARMOR, 4.0D);
+        return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 300.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.6000000238418579D).a(GenericAttributes.FOLLOW_RANGE, 40.0D).a(GenericAttributes.ARMOR, 4.0D).a(GenericAttributes.FLYING_SPEED, 0.6D); // Purpur
     }
 
     public int getInvul() {
@@ -579,11 +702,11 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
     }
 
     public int getHeadTarget(int i) {
-        return (Integer) this.datawatcher.get((DataWatcherObject) EntityWither.bo.get(i));
+        return hasPurpurRider() ? 0 : this.datawatcher.get(EntityWither.bo.get(i)); // Purpur
     }
 
     public void setHeadTarget(int i, int j) {
-        this.datawatcher.set((DataWatcherObject) EntityWither.bo.get(i), j);
+        if (!hasPurpurRider()) this.datawatcher.set(EntityWither.bo.get(i), j); // Purpur
     }
 
     public final boolean isPowered() { return this.S_(); } // Paper - OBFHELPER
