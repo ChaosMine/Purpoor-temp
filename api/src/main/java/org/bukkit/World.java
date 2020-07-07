@@ -3482,6 +3482,120 @@ public interface World extends PluginMessageRecipient, Metadatable, net.kyori.ad
     @Nullable
     public Location locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored);
 
+    // Paper start
+    /**
+     * Locates the nearest biome based on an origin, biome type, and radius to search.
+     * Step defaults to {@code 8}.
+     *
+     * @param origin Origin location
+     * @param biome Biome to find
+     * @param radius radius to search
+     * @return Location of biome or null if not found in specified radius
+     */
+    @Nullable
+    Location locateNearestBiome(@NotNull Location origin, @NotNull Biome biome, int radius);
+
+    /**
+     * Locates the nearest biome based on an origin, biome type, and radius to search
+     * and step
+     *
+     * @param origin Origin location
+     * @param biome Biome to find
+     * @param radius radius to search
+     * @param step Search step 1 would mean checking every block, 8 would be every 8th block
+     * @return Location of biome or null if not found in specified radius
+     */
+    @Nullable
+    Location locateNearestBiome(@NotNull Location origin, @NotNull Biome biome, int radius, int step);
+
+    /**
+     * Checks if the world:
+     * <ul>
+     *     <li>evaporates water</li>
+     *     <li>dries sponges</li>
+     *     <li>has lava spread faster and further</li>
+     * </ul>
+     *
+     * @return true if ultrawarm, false if not
+     */
+    boolean isUltrawarm();
+
+    /**
+     * Checks if the world is natural.
+     * <p>
+     *     If {@code false}, compasses will spin randomly in the world.
+     *     If {@code true}, nether portals will spawn zombified piglins.
+     * </p>
+     *
+     * @return true or false
+     */
+    boolean isNatural();
+
+    /**
+     * Gets the coordinate scaling of this world.
+     *
+     * @return the coordinate scale
+     */
+    double getCoordinateScale();
+
+    /**
+     * Checks if the world has skylight access
+     *
+     * @return whether there is skylight
+     */
+    boolean hasSkylight();
+
+    /**
+     * Checks if the world has a bedrock ceiling
+     *
+     * @return whether the world has a bedrock ceiling
+     */
+    boolean hasBedrockCeiling();
+
+    /**
+     * Checks if piglins will turn into Zombified Piglins in this world
+     *
+     * @return whether Piglins will <i>not</i> transform
+     */
+    boolean isPiglinSafe();
+
+    /**
+     * Checks if beds work
+     *
+     * @return whether beds work
+     */
+    boolean doesBedWork();
+
+    /**
+     * Checks if respawn anchors work
+     *
+     * @return whether respawn anchors work
+     */
+    boolean doesRespawnAnchorWork();
+
+    /**
+     * Checks if this world supports raids
+     *
+     * @return whether this world supports raids
+     */
+    boolean hasRaids();
+
+    /**
+     * Checks if this world has a fixed time
+     *
+     * @return whether this world has fixed time
+     */
+    boolean isFixedTime();
+
+    /**
+     * Gets the collection of materials that burn infinitely in this world.
+     *
+     * @return the materials that will forever stay lit by fire
+     */
+    @NotNull
+    Collection<Material> getInfiniburn();
+    // Paper end
+
     // Spigot start
     /**
      * Returns the view distance used for this world.
