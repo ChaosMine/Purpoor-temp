@@ -391,7 +391,14 @@ public abstract class BlockBase {
         }
         // Paper end
 
+        // Paper start
+        protected boolean isTicking;
+        protected Fluid fluid;
+        // Paper end
+
         public void a() {
+            this.fluid = this.getBlock().d(this.p()); // Paper - moved from getFluid()
+            this.isTicking = this.getBlock().isTicking(this.p()); // Paper - moved from isTicking()
             if (!this.getBlock().o()) {
                 this.a = new BlockBase.BlockData.Cache(this.p());
             }
@@ -430,19 +437,19 @@ public abstract class BlockBase {
             return this.getBlock().d(this.p(), iblockaccess, blockposition);
         }
 
-        public boolean d() {
+        public final boolean d() { // Paper
             return this.a == null || this.a.c;
         }
 
-        public boolean e() {
+        public final boolean e() { // Paper
             return this.e;
         }
 
-        public int f() {
+        public final int f() { // Paper
             return this.b;
         }
 
-        public boolean isAir() {
+        public final boolean isAir() { // Paper
             return this.f;
         }
 
@@ -508,7 +515,7 @@ public abstract class BlockBase {
             }
         }
 
-        public boolean l() {
+        public final boolean l() { // Paper
             return this.k;
         }
 
@@ -680,12 +687,12 @@ public abstract class BlockBase {
             return this.getBlock().a(block);
         }
 
-        public Fluid getFluid() {
-            return this.getBlock().d(this.p());
+        public final Fluid getFluid() { // Paper
+            return this.fluid; // Paper - moved into init
         }
 
-        public boolean isTicking() {
-            return this.getBlock().isTicking(this.p());
+        public final boolean isTicking() { // Paper
+            return this.isTicking; // Paper - moved into init
         }
 
         public SoundEffectType getStepSound() {

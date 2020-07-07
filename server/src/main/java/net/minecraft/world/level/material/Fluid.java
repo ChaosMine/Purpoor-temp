@@ -20,8 +20,12 @@ public final class Fluid extends IBlockDataHolder<FluidType, Fluid> {
 
     public static final Codec<Fluid> a = a((Codec) IRegistry.FLUID, FluidType::h).stable();
 
+    // Paper start
+    protected final boolean isEmpty;
+    // Paper end
     public Fluid(FluidType fluidtype, ImmutableMap<IBlockState<?>, Comparable<?>> immutablemap, MapCodec<Fluid> mapcodec) {
         super(fluidtype, immutablemap, mapcodec);
+        this.isEmpty = fluidtype.b(); // Paper - moved from isEmpty()
     }
 
     public FluidType getType() {
@@ -33,7 +37,7 @@ public final class Fluid extends IBlockDataHolder<FluidType, Fluid> {
     }
 
     public boolean isEmpty() {
-        return this.getType().b();
+        return this.isEmpty; // Paper - moved into constructor
     }
 
     public float getHeight(IBlockAccess iblockaccess, BlockPosition blockposition) {
