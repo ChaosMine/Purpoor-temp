@@ -142,10 +142,10 @@ public class DimensionManager {
     public static IRegistryCustom.Dimension a(IRegistryCustom.Dimension iregistrycustom_dimension) {
         IRegistryWritable<DimensionManager> iregistrywritable = iregistrycustom_dimension.b(IRegistry.K);
 
-        iregistrywritable.a(DimensionManager.OVERWORLD, (Object) DimensionManager.OVERWORLD_IMPL, Lifecycle.stable());
-        iregistrywritable.a(DimensionManager.l, (Object) DimensionManager.m, Lifecycle.stable());
-        iregistrywritable.a(DimensionManager.THE_NETHER, (Object) DimensionManager.THE_NETHER_IMPL, Lifecycle.stable());
-        iregistrywritable.a(DimensionManager.THE_END, (Object) DimensionManager.THE_END_IMPL, Lifecycle.stable());
+        iregistrywritable.a(DimensionManager.OVERWORLD, DimensionManager.OVERWORLD_IMPL, Lifecycle.stable()); // Paper - decompile fix
+        iregistrywritable.a(DimensionManager.l, DimensionManager.m, Lifecycle.stable()); // Paper - decompile fix
+        iregistrywritable.a(DimensionManager.THE_NETHER, DimensionManager.THE_NETHER_IMPL, Lifecycle.stable()); // Paper - decompile fix
+        iregistrywritable.a(DimensionManager.THE_END, DimensionManager.THE_END_IMPL, Lifecycle.stable()); // Paper - decompile fix
         return iregistrycustom_dimension;
     }
 
@@ -164,10 +164,10 @@ public class DimensionManager {
     public static RegistryMaterials<WorldDimension> a(IRegistry<DimensionManager> iregistry, IRegistry<BiomeBase> iregistry1, IRegistry<GeneratorSettingBase> iregistry2, long i) {
         RegistryMaterials<WorldDimension> registrymaterials = new RegistryMaterials<>(IRegistry.M, Lifecycle.experimental());
 
-        registrymaterials.a(WorldDimension.THE_NETHER, (Object) (new WorldDimension(() -> {
+        registrymaterials.a(WorldDimension.THE_NETHER, (new WorldDimension(() -> { // Paper - decompile fix
             return (DimensionManager) iregistry.d(DimensionManager.THE_NETHER);
         }, b(iregistry1, iregistry2, i))), Lifecycle.stable());
-        registrymaterials.a(WorldDimension.THE_END, (Object) (new WorldDimension(() -> {
+        registrymaterials.a(WorldDimension.THE_END, (new WorldDimension(() -> { // Paper - decompile fix
             return (DimensionManager) iregistry.d(DimensionManager.THE_END);
         }, a(iregistry1, iregistry2, i))), Lifecycle.stable());
         return registrymaterials;
@@ -256,6 +256,7 @@ public class DimensionManager {
         return this.E[i];
     }
 
+    public Tag<Block> getInfiniburnTag() { return o(); } // Paper - OBFHELPER
     public Tag<Block> o() {
         Tag<Block> tag = TagsBlock.a().a(this.infiniburn);
 

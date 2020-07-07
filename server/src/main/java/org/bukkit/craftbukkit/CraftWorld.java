@@ -2533,6 +2533,75 @@ public class CraftWorld implements World {
         return (nearest == null) ? null : new Location(this, nearest.getX(), nearest.getY(), nearest.getZ());
     }
 
+    // Paper start
+    @Override
+    public Location locateNearestBiome(Location origin, Biome biome, int radius) {
+        return this.locateNearestBiome(origin, biome, radius, 8);
+    }
+
+    @Override
+    public Location locateNearestBiome(Location origin, Biome biome, int radius, int step) {
+        BlockPosition originPos = new BlockPosition(origin.getX(), origin.getY(), origin.getZ());
+        BlockPosition nearest = getHandle().getNearestBiome(CraftBlock.biomeToBiomeBase(getHandle().getWorldCustomRegistry().b(IRegistry.ay), biome), originPos, radius, step);
+        return (nearest == null) ? null : new Location(this, nearest.getX(), nearest.getY(), nearest.getZ());
+    }
+
+    @Override
+    public boolean isUltrawarm() {
+        return getHandle().getDimensionManager().isNether();
+    }
+
+    @Override
+    public boolean isNatural() {
+        return getHandle().getDimensionManager().isNatural();
+    }
+
+    @Override
+    public double getCoordinateScale() {
+        return getHandle().getDimensionManager().getCoordinateScale();
+    }
+
+    @Override
+    public boolean hasSkylight() {
+        return getHandle().getDimensionManager().hasSkyLight();
+    }
+
+    @Override
+    public boolean hasBedrockCeiling() {
+        return getHandle().getDimensionManager().hasSkyLight();
+    }
+
+    @Override
+    public boolean isPiglinSafe() {
+        return getHandle().getDimensionManager().isPiglinSafe();
+    }
+
+    @Override
+    public boolean doesBedWork() {
+        return getHandle().getDimensionManager().isBedWorks();
+    }
+
+    @Override
+    public boolean doesRespawnAnchorWork() {
+        return getHandle().getDimensionManager().isRespawnAnchorWorks();
+    }
+
+    @Override
+    public boolean hasRaids() {
+        return getHandle().getDimensionManager().hasRaids();
+    }
+
+    @Override
+    public boolean isFixedTime() {
+        return getHandle().getDimensionManager().isFixedTime();
+    }
+
+    @Override
+    public Collection<org.bukkit.Material> getInfiniburn() {
+        return com.google.common.collect.Sets.newHashSet(com.google.common.collect.Iterators.transform(getHandle().getDimensionManager().getInfiniburnTag().getTagged().iterator(), CraftMagicNumbers::getMaterial));
+    }
+    // Paper end
+
     @Override
     public Raid locateNearestRaid(Location location, int radius) {
         Validate.notNull(location, "Location cannot be null");

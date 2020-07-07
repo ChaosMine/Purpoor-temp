@@ -1869,6 +1869,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         return !this.worldDataServer.getGeneratorSettings().shouldGenerateMapFeatures() ? null : this.getChunkProvider().getChunkGenerator().findNearestMapFeature(this, structuregenerator, blockposition, i, flag); // CraftBukkit
     }
 
+    public BlockPosition getNearestBiome(BiomeBase biomeBase, BlockPosition blockPosition, int radius, int step) { return this.a(biomeBase, blockPosition, radius, step); } // Paper - OBFHELPER
     @Nullable
     public BlockPosition a(BiomeBase biomebase, BlockPosition blockposition, int i, int j) {
         return this.getChunkProvider().getChunkGenerator().getWorldChunkManager().a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), i, j, (biomebase1) -> {
@@ -1891,6 +1892,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         return this.savingDisabled;
     }
 
+    public IRegistryCustom getWorldCustomRegistry() { return r(); } // Paper - OBFHELPER
     @Override
     public IRegistryCustom r() {
         return this.server.getCustomRegistry();
