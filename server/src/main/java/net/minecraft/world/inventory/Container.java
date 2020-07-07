@@ -11,6 +11,7 @@ import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IInventory;
@@ -61,7 +62,12 @@ public abstract class Container {
     }
     private IChatBaseComponent title;
     public final IChatBaseComponent getTitle() {
-        Preconditions.checkState(this.title != null, "Title not set");
+        // Paper start - return chat component with empty text instead of throwing error
+        // Preconditions.checkState(this.title != null, "Title not set");
+        if(this.title == null){
+            return new ChatComponentText("");
+        }
+        // Paper end
         return this.title;
     }
     public final void setTitle(IChatBaseComponent title) {
