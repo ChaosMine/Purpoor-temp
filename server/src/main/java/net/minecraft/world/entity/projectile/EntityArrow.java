@@ -171,6 +171,7 @@ public abstract class EntityArrow extends IProjectile {
 
             ++this.c;
         } else {
+            if (ticksLived > 200) this.tickDespawnCounter(); // Paper - tick despawnCounter regardless after 10 seconds
             this.c = 0;
             Vec3D vec3d2 = this.getPositionVector();
 
@@ -292,6 +293,7 @@ public abstract class EntityArrow extends IProjectile {
 
     }
 
+    protected final void tickDespawnCounter() { this.h(); } // Paper - OBFHELPER
     protected void h() {
         ++this.despawnCounter;
         if (this.despawnCounter >= (fromPlayer == PickupStatus.CREATIVE_ONLY ? world.paperConfig.creativeArrowDespawnRate : (fromPlayer == PickupStatus.DISALLOWED ? world.paperConfig.nonPlayerArrowDespawnRate : ((this instanceof EntityThrownTrident) ? world.spigotConfig.tridentDespawnRate : world.spigotConfig.arrowDespawnRate)))) { // Spigot // Paper - TODO: Extract this to init?
