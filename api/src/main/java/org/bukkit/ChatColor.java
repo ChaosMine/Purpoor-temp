@@ -413,4 +413,30 @@ public enum ChatColor {
             BY_CHAR.put(color.code, color);
         }
     }
+
+    // Purpur start
+    public static final Pattern HEX_PATTERN = Pattern.compile("(#[A-Fa-f0-9]{6})");
+
+    @Nullable
+    public static String replaceHex(@Nullable String str) {
+        if (str != null) {
+            java.util.regex.Matcher matcher = HEX_PATTERN.matcher(str);
+            while (matcher.find()) {
+                String group = matcher.group(1);
+                str = str.replace(group, net.md_5.bungee.api.ChatColor.of(group).toString());
+            }
+        }
+        return str;
+    }
+
+    @Nullable
+    public static String color(@Nullable String str) {
+        return color(str, true);
+    }
+
+    @Nullable
+    public static String color(@Nullable String str, boolean parseHex) {
+        return str != null ? net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', parseHex ? replaceHex(str) : str) : str;
+    }
+    // Purpur end
 }
