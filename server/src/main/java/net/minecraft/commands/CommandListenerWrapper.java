@@ -55,7 +55,7 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
     private final ResultConsumer<CommandListenerWrapper> l;
     private final ArgumentAnchor.Anchor m;
     private final Vec2F n;
-    public volatile CommandNode currentCommand; // CraftBukkit
+    public ThreadLocal<CommandNode> currentCommand = new ThreadLocal<>(); // CraftBukkit // Paper
 
     public CommandListenerWrapper(ICommandListener icommandlistener, Vec3D vec3d, Vec2F vec2f, WorldServer worldserver, int i, String s, IChatBaseComponent ichatbasecomponent, MinecraftServer minecraftserver, @Nullable Entity entity) {
         this(icommandlistener, vec3d, vec2f, worldserver, i, s, ichatbasecomponent, minecraftserver, entity, false, (commandcontext, flag, j) -> {
@@ -172,9 +172,11 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
     @Override
     public boolean hasPermission(int i) {
         // CraftBukkit start
-        CommandNode currentCommand = this.currentCommand;
+        // Paper start - fix concurrency issue
+        CommandNode currentCommand = this.currentCommand.get();
         if (currentCommand != null) {
             return hasPermission(i, org.bukkit.craftbukkit.command.VanillaCommandWrapper.getPermission(currentCommand));
+            // Paper end
         }
         // CraftBukkit end
 
