@@ -124,7 +124,7 @@ public abstract class EntityInsentient extends EntityLiving {
     private NBTTagCompound by;
     private BlockPosition bz;
     private float bA;
-
+    public int ticksSinceLastInteraction; // Purpur
     public boolean aware = true; // CraftBukkit
 
     protected EntityInsentient(EntityTypes<? extends EntityInsentient> entitytypes, World world) {
@@ -276,6 +276,7 @@ public abstract class EntityInsentient extends EntityLiving {
                 entityliving = null;
             }
         }
+        if (entityliving instanceof EntityPlayer) this.ticksSinceLastInteraction = 0; // Purpur
         this.goalTarget = entityliving;
         return true;
         // CraftBukkit end
@@ -320,9 +321,34 @@ public abstract class EntityInsentient extends EntityLiving {
             this.m();
             this.F();
         }
-
+        incrementTicksSinceLastInteraction(); // Purpur
         this.world.getMethodProfiler().exit();
     }
+
+    // Purpur start
+    private void incrementTicksSinceLastInteraction() {
+        ++ticksSinceLastInteraction;
+        //if (hasRider()) {
+        //    ticksSinceLastInteraction = 0;
+        //    return;
+        //}
+        if (world.purpurConfig.entityLifeSpan <= 0) {
+            return; // feature disabled
+        }
+        if (!isTypeNotPersistent(0) || isPersistent() || isSpecialPersistence() || hasCustomName()) {
+            return; // mob persistent
+        }
+        if (ticksSinceLastInteraction > world.purpurConfig.entityLifeSpan) {
+            this.dead = true;
+        }
+    }
+
+    @Override
+    public boolean damageEntity(DamageSource damagesource, float f) {
+        if (damagesource.getEntity() instanceof EntityPlayer) this.ticksSinceLastInteraction = 0; // Purpur
+        return super.damageEntity(damagesource, f);
+    }
+    // Purpur end
 
     @Override
     protected void c(DamageSource damagesource) {
@@ -497,6 +523,7 @@ public abstract class EntityInsentient extends EntityLiving {
         }
 
         nbttagcompound.setBoolean("Bukkit.Aware", this.aware); // CraftBukkit
+        nbttagcompound.setInt("Purpur.ticksSinceLastInteraction", ticksSinceLastInteraction); // Purpur
     }
 
     @Override
@@ -567,6 +594,11 @@ public abstract class EntityInsentient extends EntityLiving {
             this.aware = nbttagcompound.getBoolean("Bukkit.Aware");
         }
         // CraftBukkit end
+        // Purpur start
+        if (nbttagcompound.hasKey("Purpur.ticksSinceLastInteraction")) {
+            ticksSinceLastInteraction = nbttagcompound.getInt("Purpur.ticksSinceLastInteraction");
+        }
+        // Purpur end
     }
 
     @Override
@@ -1626,7 +1658,7 @@ public abstract class EntityInsentient extends EntityLiving {
             this.a((EntityLiving) this, entity);
             this.z(entity);
         }
-
+        if (entity instanceof EntityPlayer) this.ticksSinceLastInteraction = 0; // Purpur
         return flag;
     }
 

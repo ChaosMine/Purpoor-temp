@@ -137,6 +137,11 @@ public class PurpurWorldConfig {
         }
     }
 
+    public int entityLifeSpan = 0;
+    private void entitySettings() {
+        entityLifeSpan = getInt("gameplay-mechanics.entity-lifespan", entityLifeSpan);
+    }
+
     public List<Item> itemImmuneToCactus = new ArrayList<>();
     public List<Item> itemImmuneToExplosion = new ArrayList<>();
     public List<Item> itemImmuneToFire = new ArrayList<>();
