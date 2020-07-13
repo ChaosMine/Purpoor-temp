@@ -39,6 +39,7 @@ import net.minecraft.advancements.CriterionInstance;
 import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggers;
+import net.minecraft.advancements.critereon.CriterionTriggerAbstract;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.ChatMessageType;
 import net.minecraft.network.protocol.game.PacketPlayOutAdvancements;
@@ -68,6 +69,10 @@ public class AdvancementDataPlayer {
     @Nullable
     private Advancement l;
     private boolean m = true;
+
+    // Paper start - fix advancement data player leakage
+    public final Map<CriterionTriggerAbstract, Set<CriterionTrigger.a>> criterionData = Maps.newIdentityHashMap();
+    // Paper end - fix advancement data player leakage
 
     public AdvancementDataPlayer(DataFixer datafixer, PlayerList playerlist, AdvancementDataWorld advancementdataworld, File file, EntityPlayer entityplayer) {
         this.d = datafixer;
