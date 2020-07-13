@@ -242,6 +242,11 @@ public class PurpurWorldConfig {
         playerInvulnerableWhileAcceptingResourcePack = getBoolean("gameplay-mechanics.player.invulnerable-while-accepting-resource-pack", playerInvulnerableWhileAcceptingResourcePack);
     }
 
+    public boolean teleportIfOutsideBorder = false;
+    private void teleportIfOutsideBorder() {
+        teleportIfOutsideBorder = getBoolean("gameplay-mechanics.player.teleport-if-outside-border", teleportIfOutsideBorder);
+    }
+
     public boolean silkTouchEnabled = false;
     public String silkTouchSpawnerName = "Spawner";
     public List<String> silkTouchSpawnerLore = new ArrayList<>();

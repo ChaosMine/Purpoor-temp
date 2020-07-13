@@ -2588,4 +2588,26 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         return (CraftPlayer) super.getBukkitEntity();
     }
     // CraftBukkit end
+
+    // Purpur start
+    public void teleport(Location to) {
+        this.ejectPassengers();
+        this.stopRiding(true);
+
+        if (this.isSleeping()) {
+            this.wakeup(true, false);
+        }
+
+        if (this.activeContainer != this.defaultContainer) {
+            this.closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason.TELEPORT);
+        }
+
+        WorldServer toWorld = ((CraftWorld) to.getWorld()).getHandle();
+        if (this.world == toWorld) {
+            this.playerConnection.teleport(to);
+        } else {
+            this.server.getPlayerList().moveToWorld(this, toWorld, true, to, !toWorld.paperConfig.disableTeleportationSuffocationCheck);
+        }
+    }
+    // Purpur end
 }

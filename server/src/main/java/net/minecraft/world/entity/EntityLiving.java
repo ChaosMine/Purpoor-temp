@@ -45,6 +45,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
@@ -375,6 +376,7 @@ public abstract class EntityLiving extends Entity {
                     double d1 = this.world.getWorldBorder().getDamageAmount();
 
                     if (d1 > 0.0D) {
+                        if (world.purpurConfig.teleportIfOutsideBorder && this instanceof EntityPlayer) { ((EntityPlayer) this).teleport(MCUtil.toLocation(world, world.getSpawn())); return; } // Purpur
                         this.damageEntity(DamageSource.STUCK, (float) Math.max(1, MathHelper.floor(-d0 * d1)));
                     }
                 }
