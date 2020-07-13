@@ -499,6 +499,11 @@ public class PurpurWorldConfig {
         snowGolemPutPumpkinBack = getBoolean("mobs.snow_golem.pumpkin-can-be-added-back", snowGolemPutPumpkinBack);
     }
 
+    public boolean squidImmuneToEAR = true;
+    private void squidSettings() {
+        squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
+    }
+
     public int villagerBrainTicks = 1;
     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
     public boolean villagerCanBeLeashed = false;

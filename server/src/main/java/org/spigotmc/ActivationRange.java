@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ambient.EntityAmbient;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntitySheep;
+import net.minecraft.world.entity.animal.EntitySquid;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
@@ -375,6 +376,7 @@ public class ActivationRange
      */
     public static boolean checkIfActive(Entity entity)
     {
+        if (entity.world.purpurConfig.squidImmuneToEAR && entity instanceof EntitySquid) return true; // Purpur
         // Never safe to skip fireworks or entities not yet added to chunk
         if ( !entity.inChunk || entity instanceof EntityFireworks ) {
             return true;
