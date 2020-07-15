@@ -27,12 +27,21 @@ public class WorldGenDungeons extends WorldGenerator<WorldGenFeatureEmptyConfigu
     private static final Logger LOGGER = LogManager.getLogger();
     private static final EntityTypes<?>[] ab = new EntityTypes[]{EntityTypes.SKELETON, EntityTypes.ZOMBIE, EntityTypes.ZOMBIE, EntityTypes.SPIDER};
     private static final IBlockData ac = Blocks.CAVE_AIR.getBlockData();
+    private Random random; // Purpur
 
     public WorldGenDungeons(Codec<WorldGenFeatureEmptyConfiguration> codec) {
         super(codec);
     }
 
+    public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) { return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration); } // Purpur - decompile error?
     public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+        // Purpur start
+        if (this.random == null) {
+            int seed = net.pl3x.purpur.PurpurConfig.dungeonSeed;
+            this.random = seed == -1 ? random : new Random(seed);
+        }
+        random = this.random;
+        // Purpur end
         boolean flag = true;
         int i = random.nextInt(2) + 2;
         int j = -i - 1;
