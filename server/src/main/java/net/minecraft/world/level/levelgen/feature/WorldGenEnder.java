@@ -36,7 +36,8 @@ public class WorldGenEnder extends WorldGenerator<WorldGenFeatureEndSpikeConfigu
     }
 
     public static List<WorldGenEnder.Spike> a(GeneratorAccessSeed generatoraccessseed) {
-        Random random = new Random(generatoraccessseed.getSeed());
+        int seed = net.pl3x.purpur.PurpurConfig.endSpikeSeed; // Purpur
+        Random random = new Random(seed == -1 ? generatoraccessseed.getSeed() : seed); // Purpur
         long i = random.nextLong() & 65535L;
 
         return (List) WorldGenEnder.a.getUnchecked(i);

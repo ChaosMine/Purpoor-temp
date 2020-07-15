@@ -1,5 +1,6 @@
 package net.pl3x.purpur;
 
+import co.aikar.timings.TimingsManager;
 import com.google.common.base.Throwables;
 import net.minecraft.locale.LocaleLanguage;
 import net.minecraft.server.MinecraftServer;
@@ -139,6 +140,13 @@ public class PurpurConfig {
         afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
         pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
+    }
+
+    public static int endSpikeSeed = -1;
+    private static void seedSettings() {
+        endSpikeSeed = getInt("settings.seed.end-spike", endSpikeSeed);
+        if (!TimingsManager.hiddenConfigs.contains("settings.seed")) TimingsManager.hiddenConfigs.add("settings.seed");
+        if (!TimingsManager.hiddenConfigs.contains("settings.seed.end-spike")) TimingsManager.hiddenConfigs.add("settings.seed.end-spike");
     }
 
     public static String serverModName = "Purpur";
