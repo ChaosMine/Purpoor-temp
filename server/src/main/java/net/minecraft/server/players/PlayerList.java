@@ -83,6 +83,7 @@ import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.block.BlockRespawnAnchor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.border.IWorldBorderListener;
@@ -850,6 +851,7 @@ public abstract class PlayerList {
         // Paper start
         boolean isBedSpawn = false;
         boolean isRespawn = false;
+        boolean isLocAltered = false; // Paper - Fix SPIGOT-5989
         // Paper end
 
         // CraftBukkit start - fire PlayerRespawnEvent
@@ -860,7 +862,7 @@ public abstract class PlayerList {
                 Optional optional;
 
                 if (blockposition != null) {
-                    optional = EntityHuman.getBed(worldserver1, blockposition, f, flag1, flag);
+                    optional = EntityHuman.getBed(worldserver1, blockposition, f, flag1, true); // Paper - Fix SPIGOT-5989
                 } else {
                     optional = Optional.empty();
                 }
@@ -903,7 +905,12 @@ public abstract class PlayerList {
             }
             // Spigot End
 
-            location = respawnEvent.getRespawnLocation();
+            // Paper start - Fix SPIGOT-5989
+            if (!location.equals(respawnEvent.getRespawnLocation()) ) {
+                location = respawnEvent.getRespawnLocation();
+                isLocAltered = true;
+            }
+            // Paper end
             if (!flag) entityplayer.reset(); // SPIGOT-4785
             isRespawn = true; // Paper
         } else {
@@ -941,8 +948,12 @@ public abstract class PlayerList {
         }
         // entityplayer1.syncInventory();
         entityplayer1.setHealth(entityplayer1.getHealth());
-        if (flag2) {
-            entityplayer1.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(SoundEffects.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.BLOCKS, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0F, 1.0F));
+        // Paper start - Fix SPIGOT-5989
+        if (flag2 && !isLocAltered) {
+            IBlockData data = worldserver1.getType(blockposition);
+            worldserver1.setTypeAndData(blockposition, data.set(BlockRespawnAnchor.a, data.get(BlockRespawnAnchor.a) - 1), 3);
+            entityplayer1.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(SoundEffects.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.BLOCKS, (double) location.getX(), (double) location.getY(), (double) location.getZ(), 1.0F, 1.0F));
+        // Paper end
         }
         // Added from changeDimension
         updateClient(entityplayer); // Update health, etc...
