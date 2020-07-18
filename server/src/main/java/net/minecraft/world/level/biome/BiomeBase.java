@@ -23,7 +23,9 @@ import net.minecraft.core.SectionPosition;
 import net.minecraft.data.RegistryGeneration;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.RegionLimitedWorldAccess;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.INamable;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumSkyBlock;
@@ -257,6 +259,10 @@ public final class BiomeBase {
         return this.k;
     }
 
+    // Tuinity start - populator seed control
+    private static final java.security.SecureRandom SECURE_RANDOM = new java.security.SecureRandom();
+    // Tuinity end - populator seed control
+
     public void a(StructureManager structuremanager, ChunkGenerator chunkgenerator, RegionLimitedWorldAccess regionlimitedworldaccess, long i, SeededRandom seededrandom, BlockPosition blockposition) {
         List<List<Supplier<WorldGenFeatureConfigured<?, ?>>>> list = this.k.c();
         int j = WorldGenStage.Decoration.values().length;
@@ -293,12 +299,24 @@ public final class BiomeBase {
                 }
             }
 
+            // Tuinity start - populator seed control
+            long populatorSeed;
+            WorldServer world = (WorldServer)((ChunkProviderServer)regionlimitedworldaccess.getChunkProvider()).getWorld();
+            if (world.tuinityConfig.useRandomPopulatorSeed) {
+                populatorSeed = SECURE_RANDOM.nextLong();
+            } else if (world.tuinityConfig.populatorSeed != null) {
+                populatorSeed = world.tuinityConfig.populatorSeed.longValue();
+            } else {
+                populatorSeed = i;
+            }
+            // Tuinity end - populator seed control
+
             if (list.size() > k) {
                 for (Iterator iterator1 = ((List) list.get(k)).iterator(); iterator1.hasNext(); ++l) {
                     Supplier<WorldGenFeatureConfigured<?, ?>> supplier = (Supplier) iterator1.next();
                     WorldGenFeatureConfigured<?, ?> worldgenfeatureconfigured = (WorldGenFeatureConfigured) supplier.get();
 
-                    seededrandom.b(i, l, k);
+                    seededrandom.b(populatorSeed, l, k); // Tuinity - populator seed control - move i up into default branch
 
                     try {
                         worldgenfeatureconfigured.a(regionlimitedworldaccess, chunkgenerator, seededrandom, blockposition);

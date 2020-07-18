@@ -1,5 +1,6 @@
 package com.tuinity.tuinity.config;
 
+import co.aikar.timings.TimingsManager;
 import com.destroystokyo.paper.util.SneakyThrow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.TicketType;
@@ -449,6 +450,20 @@ public final class TuinityConfig {
             final int threads = this.getInt("tick-threads", -1);
             this.threads = threads == -1 ? TuinityConfig.tickThreads : threads;
         }*/
+
+        public Long populatorSeed;
+        public boolean useRandomPopulatorSeed;
+
+        private void populatorSeed() {
+            final String seedString = this.getString("worldgen.seeds.populator", "default");
+            if (seedString.equalsIgnoreCase("random")) {
+                this.useRandomPopulatorSeed = true;
+            } else if (!seedString.equalsIgnoreCase("default")) {
+                this.populatorSeed = Long.parseLong(seedString);
+            }
+            if (!TimingsManager.hiddenConfigs.contains("worldgen.seeds.populator")) TimingsManager.hiddenConfigs.add("worldgen.seeds.populator");
+        }
+
     }
 
 }
