@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 
 public class ItemPotion extends Item {
@@ -36,6 +37,7 @@ public class ItemPotion extends Item {
             CriterionTriggers.z.a((EntityPlayer) entityhuman, itemstack);
         }
 
+        List<MobEffect> instantLater = new java.util.ArrayList<>(); // Paper - Fix harming potion dupe
         if (!world.isClientSide) {
             List<MobEffect> list = PotionUtil.getEffects(itemstack);
             Iterator iterator = list.iterator();
@@ -44,7 +46,7 @@ public class ItemPotion extends Item {
                 MobEffect mobeffect = (MobEffect) iterator.next();
 
                 if (mobeffect.getMobEffect().isInstant()) {
-                    mobeffect.getMobEffect().applyInstantEffect(entityhuman, entityhuman, entityliving, mobeffect.getAmplifier(), 1.0D);
+                    instantLater.add(mobeffect); // Paper - Fix harming potion dupe
                 } else {
                     entityliving.addEffect(new MobEffect(mobeffect), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.POTION_DRINK); // CraftBukkit
                 }
@@ -58,7 +60,20 @@ public class ItemPotion extends Item {
             }
         }
 
+        // Paper start - Fix harming potion dupe
+        for (MobEffect mobeffect : instantLater) {
+            mobeffect.getMobEffect().applyInstantEffect(entityhuman, entityhuman, entityliving, mobeffect.getAmplifier(), 1.0D);
+        }
+        // Paper end
+
         if (entityhuman == null || !entityhuman.abilities.canInstantlyBuild) {
+            // Paper start - Fix harming potion dupe
+            if (entityliving.getHealth() <= 0 && !entityliving.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+                entityliving.dropItem(new ItemStack(Items.GLASS_BOTTLE), 0);
+                return ItemStack.NULL_ITEM;
+            }
+            // Paper end
+
             if (itemstack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);
             }
