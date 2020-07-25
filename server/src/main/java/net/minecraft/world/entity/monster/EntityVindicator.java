@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
@@ -122,6 +123,12 @@ public class EntityVindicator extends EntityIllagerAbstract {
         ((Navigation) this.getNavigation()).a(true);
         this.a(difficultydamagescaler);
         this.b(difficultydamagescaler);
+        // Purpur start
+        World world = worldaccess.getMinecraftWorld();
+        if (world.purpurConfig.vindicatorJohnnySpawnChance > 0D && random.nextDouble() <= world.purpurConfig.vindicatorJohnnySpawnChance) {
+            setCustomName(new ChatMessage("Johnny"));
+        }
+        // Purpur end
         return groupdataentity1;
     }
 

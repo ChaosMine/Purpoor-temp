@@ -40,6 +40,11 @@ public class PurpurWorldConfig {
         }
     }
 
+    public double vindicatorJohnnySpawnChance = 0D;
+    private void vindicatorSettings() {
+        vindicatorJohnnySpawnChance = getDouble("mobs.vindicator.johnny.spawn-chance", vindicatorJohnnySpawnChance);
+    }
+
     private ConfigurationSection getConfigurationSection(String path) {
         ConfigurationSection section = PurpurConfig.config.getConfigurationSection("world-settings." + worldName + "." + path);
         return section != null ? section : PurpurConfig.config.getConfigurationSection("world-settings.default." + path);
