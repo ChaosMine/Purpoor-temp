@@ -31,7 +31,7 @@ public class EntityLightning extends Entity {
 
     private int lifeTicks;
     public long b;
-    private int d;
+    private int d; public int getFlashCount() { return d; } public void setFlashCount(int flashes) { this.d = flashes; } // Paper - OBFHELPER
     public boolean isEffect;
     @Nullable
     private EntityPlayer f;
@@ -48,6 +48,16 @@ public class EntityLightning extends Entity {
     public void setEffect(boolean flag) {
         this.isEffect = flag;
     }
+
+    // Paper start
+    public int getLifeTicks() {
+        return lifeTicks;
+    }
+
+    public void setLifeTicks(int lifeTicks) {
+        this.lifeTicks = lifeTicks;
+    }
+    // Paper end
 
     @Override
     public SoundCategory getSoundCategory() {
