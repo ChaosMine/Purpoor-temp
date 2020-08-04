@@ -24,6 +24,7 @@ public class BlockChorusFruit extends BlockSprawling {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
+        if (net.pl3x.purpur.PurpurConfig.disableChorusPlantUpdates) return this.getBlockData(); // Purpur
         return this.a((IBlockAccess) blockactioncontext.getWorld(), blockactioncontext.getClickPosition());
     }
 
@@ -40,6 +41,7 @@ public class BlockChorusFruit extends BlockSprawling {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
+        if (net.pl3x.purpur.PurpurConfig.disableChorusPlantUpdates) return iblockdata; // Purpur
         if (!iblockdata.canPlace(generatoraccess, blockposition)) {
             generatoraccess.getBlockTickList().a(blockposition, this, 1);
             return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);

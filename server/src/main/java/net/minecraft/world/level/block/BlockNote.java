@@ -35,11 +35,13 @@ public class BlockNote extends Block {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
+        if (net.pl3x.purpur.PurpurConfig.disableNoteBlockUpdates) return this.getBlockData(); // Purpur
         return (IBlockData) this.getBlockData().set(BlockNote.INSTRUMENT, BlockPropertyInstrument.a(blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition().down())));
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
+        if (net.pl3x.purpur.PurpurConfig.disableNoteBlockUpdates) return iblockdata; // Purpur
         return enumdirection == EnumDirection.DOWN ? (IBlockData) iblockdata.set(BlockNote.INSTRUMENT, BlockPropertyInstrument.a(iblockdata1)) : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
     }
 

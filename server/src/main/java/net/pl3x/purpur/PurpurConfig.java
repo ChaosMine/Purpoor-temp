@@ -202,6 +202,15 @@ public class PurpurConfig {
         allowWaterPlacementInTheEnd = getBoolean("settings.allow-water-placement-in-the-end", allowWaterPlacementInTheEnd);
     }
 
+    public static boolean disableMushroomBlockUpdates = false;
+    public static boolean disableNoteBlockUpdates = false;
+    public static boolean disableChorusPlantUpdates = false;
+    private static void blockUpdatesSettings() {
+        disableMushroomBlockUpdates = getBoolean("settings.blocks.disable-mushroom-updates", disableMushroomBlockUpdates);
+        disableNoteBlockUpdates = getBoolean("settings.blocks.disable-note-block-updates", disableNoteBlockUpdates);
+        disableChorusPlantUpdates = getBoolean("settings.blocks.disable-chorus-plant-updates", disableChorusPlantUpdates);
+    }
+
     public static boolean loggerSuppressInitLegacyMaterialError = false;
     public static boolean loggerSuppressIgnoredAdvancementWarnings = false;
     private static void loggerSettings() {
