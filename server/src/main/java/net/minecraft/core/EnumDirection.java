@@ -116,6 +116,7 @@ public enum EnumDirection implements INamable {
         return fromType1(this.h);
     }
 
+    public EnumDirection rotateCW() { return g(); } // Purpur - OBFHELPER
     public EnumDirection g() {
         switch (this) {
             case NORTH:
@@ -131,6 +132,7 @@ public enum EnumDirection implements INamable {
         }
     }
 
+    public EnumDirection rotateCCW() { return h(); } // Purpur - OBFHELPER
     public EnumDirection h() {
         switch (this) {
             case NORTH:
@@ -162,6 +164,7 @@ public enum EnumDirection implements INamable {
         return this.j;
     }
 
+    public EnumDirection.EnumAxis getAxis() { return n(); } // Purpur - OBFHELPER
     public EnumDirection.EnumAxis n() {
         return this.k;
     }

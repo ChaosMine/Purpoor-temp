@@ -52,6 +52,7 @@ import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BlockAnvil;
 import net.minecraft.world.level.block.BlockBeehive;
 import net.minecraft.world.level.block.BlockCampfire;
 import net.minecraft.world.level.block.BlockDispenser;
@@ -995,6 +996,23 @@ public interface IDispenseBehavior {
             }
         }));
         BlockDispenser.a((IMaterial) Items.SHEARS.getItem(), (IDispenseBehavior) (new DispenseBehaviorShears()));
+        // Purpur start
+        BlockDispenser.a(Blocks.ANVIL, new DispenseBehaviorMaybe() {
+            @Override
+            protected ItemStack a(ISourceBlock dispenser, ItemStack itemstack) {
+                World world = dispenser.getWorld();
+                if (!world.purpurConfig.dispenserPlaceAnvils) return super.a(dispenser, itemstack);
+                EnumDirection facing = dispenser.getBlockData().get(BlockDispenser.FACING);
+                BlockPosition blockposition = dispenser.getBlockPosition().shift(facing);
+                IBlockData iblockdata = world.getType(blockposition);
+                if (iblockdata.isAir()) {
+                    world.setTypeUpdate(blockposition, Blocks.ANVIL.getBlockData().set(BlockAnvil.FACING, facing.getAxis() == EnumDirection.EnumAxis.Y ? EnumDirection.NORTH : facing.rotateCW()));
+                    itemstack.subtract(1);
+                }
+                return itemstack;
+            }
+        });
+        // Purpur end
     }
 
     static void a(ISourceBlock isourceblock, Entity entity, EnumDirection enumdirection) {
