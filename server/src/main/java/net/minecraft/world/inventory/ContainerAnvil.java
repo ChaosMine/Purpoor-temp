@@ -28,6 +28,13 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end
 
+// Purpur start
+import io.papermc.paper.adventure.PaperAdventure;
+import net.kyori.adventure.text.Component;
+
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
+// Purpur end
+
 public class ContainerAnvil extends ContainerAnvilAbstract {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -269,6 +276,17 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
             } else if (!this.renameText.equals(itemstack.getName().getString())) {
                 b1 = 1;
                 i += b1;
+                // Purpur start
+                if (player != null && player.world.purpurConfig.anvilAllowColors && player.getBukkitEntity().hasPermission("purpur.anvil.color")) {
+                    final Component renameTextComponent;
+                    if (renameText.startsWith("&r") && player.getBukkitEntity().hasPermission("purpur.anvil.remove_italics")) {
+                        renameTextComponent = PaperAdventure.LEGACY_AMPERSAND.deserialize(renameText.substring(2)).decoration(ITALIC, false);
+                    } else {
+                        renameTextComponent = PaperAdventure.LEGACY_AMPERSAND.deserialize(renameText);
+                    }
+                    itemstack1.a(PaperAdventure.asVanilla(renameTextComponent));
+                } else
+                // Purpur end
                 itemstack1.a((IChatBaseComponent) (new ChatComponentText(this.renameText)));
             }
 
