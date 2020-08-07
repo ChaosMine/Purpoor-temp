@@ -532,14 +532,14 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         // CraftBukkit end
         if (com.destroystokyo.paper.PaperConfig.useOptimizedTickList) {
             this.nextTickListBlock = new com.destroystokyo.paper.server.ticklist.PaperTickList<>(this, (block) -> {
-                return block == null || block.getBlockData().isAir();
+                return block == null || block.getBlockData().isAir() || purpurConfig.noRandomTickBlocks.contains(block); // Purpur
             }, IRegistry.BLOCK::getKey, this::b, "Blocks"); // Paper - Timings
             this.nextTickListFluid = new com.destroystokyo.paper.server.ticklist.PaperTickList<>(this, (fluidtype) -> {
                 return fluidtype == null || fluidtype == FluidTypes.EMPTY;
             }, IRegistry.FLUID::getKey, this::a, "Fluids"); // Paper - Timings
         } else {
             this.nextTickListBlock = new TickListServer<>(this, (block) -> {
-                return block == null || block.getBlockData().isAir();
+                return block == null || block.getBlockData().isAir() || purpurConfig.noRandomTickBlocks.contains(block); // Purpur
             }, IRegistry.BLOCK::getKey, this::b, "Blocks"); // Paper - Timings
             this.nextTickListFluid = new TickListServer<>(this, (fluidtype) -> {
                 return fluidtype == null || fluidtype == FluidTypes.EMPTY;

@@ -671,10 +671,12 @@ public abstract class BlockBase {
         }
 
         public void a(WorldServer worldserver, BlockPosition blockposition, Random random) {
+            if (worldserver.purpurConfig.noRandomTickBlocks.contains(getBlock())) return; // Purpur
             this.getBlock().tickAlways(this.p(), worldserver, blockposition, random);
         }
 
         public void b(WorldServer worldserver, BlockPosition blockposition, Random random) {
+            if (worldserver.purpurConfig.noRandomTickBlocks.contains(getBlock())) return; // Purpur
             this.getBlock().tick(this.p(), worldserver, blockposition, random);
         }
 

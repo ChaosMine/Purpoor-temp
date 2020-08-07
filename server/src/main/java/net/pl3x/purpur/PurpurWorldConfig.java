@@ -11,8 +11,10 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static net.pl3x.purpur.PurpurConfig.log;
@@ -245,6 +247,28 @@ public class PurpurWorldConfig {
     private void playerInvulnerabilities() {
         playerSpawnInvulnerableTicks = getInt("gameplay-mechanics.player.spawn-invulnerable-ticks", playerSpawnInvulnerableTicks);
         playerInvulnerableWhileAcceptingResourcePack = getBoolean("gameplay-mechanics.player.invulnerable-while-accepting-resource-pack", playerInvulnerableWhileAcceptingResourcePack);
+    }
+
+    public Set<Block> noRandomTickBlocks = new HashSet<>();
+    private void noRandomTickBlocks() {
+        if (PurpurConfig.version < 11) {
+            List<String> oldList = PurpurConfig.config.getStringList("world-settings." + worldName + ".blocks.no-tick");
+            if (!oldList.isEmpty()) {
+                PurpurConfig.config.set("world-settings." + worldName + ".blocks.no-random-tick", oldList);
+                PurpurConfig.config.set("world-settings." + worldName + ".blocks.no-tick", null);
+            }
+            oldList = PurpurConfig.config.getStringList("world-settings.default.blocks.no-tick");
+            if (!oldList.isEmpty()) {
+                PurpurConfig.config.set("world-settings.default.blocks.no-random-tick", oldList);
+                PurpurConfig.config.set("world-settings.default.blocks.no-tick", null);
+            }
+        }
+        getList("blocks.no-random-tick", new ArrayList<>()).forEach(key -> {
+            Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
+            if (!block.getBlockData().isAir()) {
+                noRandomTickBlocks.add(block);
+            }
+        });
     }
 
     public boolean teleportIfOutsideBorder = false;
