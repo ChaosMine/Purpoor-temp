@@ -135,7 +135,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public boolean captureBlockStates = false;
     public boolean captureTreeGeneration = false;
     public Map<BlockPosition, org.bukkit.craftbukkit.block.CraftBlockState> capturedBlockStates = new java.util.LinkedHashMap<>(); // Paper
-    public Map<BlockPosition, TileEntity> capturedTileEntities = new HashMap<>();
+    public Map<BlockPosition, TileEntity> capturedTileEntities = new java.util.LinkedHashMap<>(); // Paper
     public List<EntityItem> captureDrops;
     public long ticksPerAnimalSpawns;
     public long ticksPerMonsterSpawns;
