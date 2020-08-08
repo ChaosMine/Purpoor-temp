@@ -393,6 +393,7 @@ public class EntityDolphin extends EntityWaterAnimal {
 
         @Override
         public boolean a() {
+            if (this.a.world.purpurConfig.dolphinDisableTreasureSearching) return false; // Purpur
             return this.a.gotFish() && this.a.getAirTicks() >= 100 && this.a.world.getWorld().canGenerateStructures(); // MC-151364, SPIGOT-5494: hangs if generate-structures=false
         }
 

@@ -411,6 +411,11 @@ public class PurpurWorldConfig {
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
     }
 
+    public boolean dolphinDisableTreasureSearching = false;
+    private void dolphinSettings() {
+        dolphinDisableTreasureSearching = getBoolean("mobs.dolphin.disable-treasure-searching", dolphinDisableTreasureSearching);
+    }
+
     public boolean drownedJockeyOnlyBaby = true;
     public double drownedJockeyChance = 0.05D;
     public boolean drownedJockeyTryExistingChickens = true;
