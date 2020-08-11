@@ -851,5 +851,17 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor
         ItemMeta itemMeta = getItemMeta();
         return itemMeta != null && itemMeta.hasItemFlag(flag);
     }
+
+    /**
+     * Gets the translation key for this itemstack.
+     * This is not the same as getting the translation key
+     * for the material of this itemstack.
+     *
+     * @return the translation key
+     */
+    @NotNull
+    public String getTranslationKey() {
+        return Bukkit.getUnsafe().getTranslationKey(this);
+    }
     // Paper end
 }
