@@ -268,7 +268,8 @@ public class EntityTypes<T extends Entity> {
     private IChatBaseComponent bp;
     @Nullable
     private MinecraftKey bq;
-    private final EntitySize br;
+    public void setEntitySize(EntitySize entitySize) { this.br = entitySize; } // Purpur - OBFHELPER
+    private EntitySize br; // Purpur - remove final
 
     private static <T extends Entity> EntityTypes<T> a(String s, EntityTypes.Builder entitytypes_builder) { // CraftBukkit - decompile error
         return (EntityTypes) IRegistry.a((IRegistry) IRegistry.ENTITY_TYPE, s, (Object) entitytypes_builder.a(s));

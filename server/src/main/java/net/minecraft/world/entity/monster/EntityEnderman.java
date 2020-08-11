@@ -375,6 +375,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
     public boolean damageEntity(DamageSource damagesource, float f) {
         if (this.isInvulnerable(damagesource)) {
             return false;
+        } else if (net.pl3x.purpur.PurpurConfig.endermanShortHeight && damagesource == DamageSource.STUCK) { return false; // Purpur - no suffocation damage if short height
         } else if (damagesource instanceof EntityDamageSourceIndirect) {
             if (this.tryEscape(EndermanEscapeEvent.Reason.INDIRECT)) { // Paper start
             for (int i = 0; i < 64; ++i) {

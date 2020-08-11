@@ -4,6 +4,8 @@ import co.aikar.timings.TimingsManager;
 import com.google.common.base.Throwables;
 import net.minecraft.locale.LocaleLanguage;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.EntitySize;
+import net.minecraft.world.entity.EntityTypes;
 import net.pl3x.purpur.command.PurpurCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -190,6 +192,12 @@ public class PurpurConfig {
         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
         InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
+    }
+
+    public static boolean endermanShortHeight = false;
+    private static void entitySettings() {
+        endermanShortHeight = getBoolean("settings.entity.enderman.short-height", endermanShortHeight);
+        if (endermanShortHeight) EntityTypes.ENDERMAN.setEntitySize(EntitySize.b(0.6F, 1.9F));
     }
 
     public static boolean dontSendUselessEntityPackets = false;
