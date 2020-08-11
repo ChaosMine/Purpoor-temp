@@ -45,6 +45,7 @@ import org.bukkit.Registry;
 import org.bukkit.UnsafeValues;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.legacy.CraftLegacy;
@@ -419,6 +420,30 @@ public final class CraftMagicNumbers implements UnsafeValues {
             com.destroystokyo.paper.util.SneakyThrow.sneaky(ex);
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public String getTranslationKey(Material mat) {
+        if (mat.isBlock()) {
+            return getBlock(mat).getOrCreateDescriptionId();
+        }
+        return getItem(mat).getName();
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.block.Block block) {
+        return ((org.bukkit.craftbukkit.block.CraftBlock)block).getNMS().getBlock().getOrCreateDescriptionId();
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.entity.EntityType type) {
+        return net.minecraft.world.entity.EntityTypes.getByName(type.getName()).map(net.minecraft.world.entity.EntityTypes::getDescriptionId).orElse(null);
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.inventory.ItemStack itemStack) {
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        return nmsItemStack.getItem().getDescriptionId(nmsItemStack);
     }
     // Paper end
 

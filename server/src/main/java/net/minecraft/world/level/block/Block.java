@@ -318,6 +318,7 @@ public class Block extends BlockBase implements IMaterial {
         return !this.material.isBuildable() && !this.material.isLiquid();
     }
 
+    public String getOrCreateDescriptionId() { return i(); } // Paper - OBFHELPER
     public String i() {
         if (this.name == null) {
             this.name = SystemUtils.a("block", IRegistry.BLOCK.getKey(this));
