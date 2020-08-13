@@ -3595,8 +3595,13 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         this.lastYaw = this.yaw;
     }
 
+    // Purpur start
+    public AxisAlignedBB getAxisForFluidCheck() {
+        return this.getBoundingBox().shrink(0.001D);
+    }
     public boolean a(Tag<FluidType> tag, double d0) {
-        AxisAlignedBB axisalignedbb = this.getBoundingBox().shrink(0.001D);
+        AxisAlignedBB axisalignedbb = getAxisForFluidCheck();
+        // Purpur end
         int i = MathHelper.floor(axisalignedbb.minX);
         int j = MathHelper.f(axisalignedbb.maxX);
         int k = MathHelper.floor(axisalignedbb.minY);

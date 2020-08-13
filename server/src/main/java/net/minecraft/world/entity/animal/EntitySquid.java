@@ -27,6 +27,7 @@ import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 
 public class EntitySquid extends EntityWaterAnimal {
@@ -51,6 +52,14 @@ public class EntitySquid extends EntityWaterAnimal {
         //this.random.setSeed((long) this.getId()); // Paper
         this.bu = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
     }
+
+    // Purpur start
+    @Override
+    public AxisAlignedBB getAxisForFluidCheck() {
+        // Stops squids from floating just over the water
+        return this.getBoundingBox().shrink(0.001D).offsetY(world.purpurConfig.squidOffsetWaterCheck);
+    }
+    // Purpur end
 
     @Override
     protected void initPathfinder() {

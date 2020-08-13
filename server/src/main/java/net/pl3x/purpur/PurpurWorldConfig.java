@@ -557,8 +557,10 @@ public class PurpurWorldConfig {
     }
 
     public boolean squidImmuneToEAR = true;
+    public double squidOffsetWaterCheck = 0.0D;
     private void squidSettings() {
         squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
+        squidOffsetWaterCheck = getDouble("mobs.squid.water-offset-check", squidOffsetWaterCheck);
     }
 
     public int villagerBrainTicks = 1;
