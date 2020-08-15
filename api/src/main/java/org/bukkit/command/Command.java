@@ -184,9 +184,13 @@ public abstract class Command {
             return true;
         }
 
+        // Purpur start
+        String permissionMessage = this.permissionMessage;
         if (permissionMessage == null) {
-            target.sendMessage(Bukkit.getPermissionMessage()); // Paper
-        } else if (permissionMessage.length() != 0) {
+            permissionMessage = Bukkit.getPermissionMessage();
+        }
+        if (permissionMessage.length() != 0) {
+        // Purpur end
             for (String line : permissionMessage.replace("<permission>", permission).split("\n")) {
                 target.sendMessage(line);
             }
