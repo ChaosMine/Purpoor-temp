@@ -42,7 +42,7 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
             return ((NoiseGeneratorOctaves) entry.getValue()).a((double) i, (double) l, (double) j);
         })).get()).getKey();
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
-        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, 128, l1));
+        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, k, l1)); // Purpur - use configured height
 
         for (int k2 = k; k2 >= 0; --k2) { // Paper - fix MC-187716 - use configured height
             blockposition_mutableblockposition.d(k1, k2, l1);
