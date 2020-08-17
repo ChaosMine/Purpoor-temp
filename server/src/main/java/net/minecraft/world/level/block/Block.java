@@ -140,6 +140,7 @@ public class Block extends BlockBase implements IMaterial {
         return tag.isTagged(this);
     }
 
+    public boolean equals(Block block) { return a(block); } // Purpur - OBFHELPER
     public boolean a(Block block) {
         return this == block;
     }

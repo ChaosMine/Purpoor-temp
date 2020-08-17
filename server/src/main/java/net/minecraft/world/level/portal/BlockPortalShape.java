@@ -28,7 +28,7 @@ import org.bukkit.event.world.PortalCreateEvent;
 public class BlockPortalShape {
 
     private static final BlockBase.e a = (iblockdata, iblockaccess, blockposition) -> {
-        return iblockdata.a(Blocks.OBSIDIAN);
+        return iblockdata.equals(Blocks.OBSIDIAN) || (net.pl3x.purpur.PurpurConfig.cryingObsidianValidForPortalFrame && iblockdata.equals(Blocks.CRYING_OBSIDIAN)); // Purpur
     };
     private final GeneratorAccess b;
     private final EnumDirection.EnumAxis c;

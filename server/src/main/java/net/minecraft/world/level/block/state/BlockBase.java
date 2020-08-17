@@ -742,6 +742,7 @@ public abstract class BlockBase {
         }
 
         public final boolean isSameInstance(Block block) { return a(block); } // Paper - OBFHELPER
+        public boolean equals(Block block) { return a(block); } // Purpur - OBFHELPER
         public boolean a(Block block) {
             return this.getBlock().a(block);
         }
