@@ -202,6 +202,7 @@ public class PurpurWorldConfig {
     public boolean boatEjectPlayersOnLand = false;
     public boolean disableDropsOnCrammingDeath = false;
     public boolean entitiesPickUpLootBypassMobGriefing = false;
+    public boolean entitiesCanUsePortals = true;
     public boolean milkCuresBadOmen = true;
     public double tridentLoyaltyVoidReturnHeight = 0.0D;
     public double voidDamageHeight = -64.0D;
@@ -211,6 +212,7 @@ public class PurpurWorldConfig {
         boatEjectPlayersOnLand = getBoolean("gameplay-mechanics.boat.eject-players-on-land", boatEjectPlayersOnLand);
         disableDropsOnCrammingDeath = getBoolean("gameplay-mechanics.disable-drops-on-cramming-death", disableDropsOnCrammingDeath);
         entitiesPickUpLootBypassMobGriefing = getBoolean("gameplay-mechanics.entities-pick-up-loot-bypass-mob-griefing", entitiesPickUpLootBypassMobGriefing);
+        entitiesCanUsePortals = getBoolean("gameplay-mechanics.entities-can-use-portals", entitiesCanUsePortals);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
         voidDamageHeight = getDouble("gameplay-mechanics.void-damage-height", voidDamageHeight);

@@ -2560,7 +2560,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public void d(BlockPosition blockposition) {
         if (this.ai()) {
             this.resetPortalCooldown();
-        } else {
+        } else if (world.purpurConfig.entitiesCanUsePortals || this instanceof EntityPlayer) { // Purpur
             if (!this.world.isClientSide && !blockposition.equals(this.ac)) {
                 this.ac = blockposition.immutableCopy();
             }
@@ -3141,7 +3141,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean canPortal() {
-        return isAlive() && valid; // Paper
+        return isAlive() && valid && (world.purpurConfig.entitiesCanUsePortals || this instanceof EntityPlayer); // Paper // Purpur
     }
 
     public float a(Explosion explosion, IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, Fluid fluid, float f) {
