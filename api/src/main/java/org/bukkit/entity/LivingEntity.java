@@ -888,5 +888,12 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      * @param safeFallDistance Safe fall distance
      */
     void setSafeFallDistance(float safeFallDistance);
+
+    /**
+     * Play item break animation for the item in specified equipment slot
+     *
+     * @param slot Equipment slot to play break animation for
+     */
+    void broadcastItemBreak(@NotNull org.bukkit.inventory.EquipmentSlot slot);
     // Purpur end
 }
