@@ -886,5 +886,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public void setSafeFallDistance(float safeFallDistance) {
         getHandle().safeFallDistance = safeFallDistance;
     }
+
+    @Override
+    public void broadcastItemBreak(org.bukkit.inventory.EquipmentSlot slot) {
+        if (slot == null) return;
+        getHandle().broadcastItemBreak(org.bukkit.craftbukkit.CraftEquipmentSlot.getNMS(slot));
+    }
     // Purpur end
 }
