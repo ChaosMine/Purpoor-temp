@@ -422,7 +422,7 @@ public class LoginListener implements PacketLoginInListener {
         return new GameProfile(uuid, gameprofile.getName());
     }
 
-    static enum EnumProtocolState {
+    public enum EnumProtocolState { // Paper - package private -> public
 
         HELLO, KEY, AUTHENTICATING, NEGOTIATING, READY_TO_ACCEPT, DELAY_ACCEPT, ACCEPTED;
 

@@ -33,6 +33,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutTabComplete;
 import net.minecraft.network.protocol.game.PacketPlayOutTitle;
 import net.minecraft.server.CancelledPacketHandleException;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.network.LoginListener;
 import net.minecraft.server.network.PlayerConnection;
@@ -382,10 +383,22 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
     }
     // Paper end
 
+    private static final int MAX_PER_TICK = com.destroystokyo.paper.PaperConfig.maxJoinsPerTick; // Paper
+    private static int joinAttemptsThisTick; // Paper
+    private static int currTick; // Paper
     public void a() {
         this.p();
+        // Paper start
+        if (currTick != MinecraftServer.currentTick) {
+            currTick = MinecraftServer.currentTick;
+            joinAttemptsThisTick = 0;
+        }
+        // Paper end
         if (this.packetListener instanceof LoginListener) {
+            if ( ((LoginListener) this.packetListener).getLoginState() != LoginListener.EnumProtocolState.READY_TO_ACCEPT // Paper
+                     || (joinAttemptsThisTick++ < MAX_PER_TICK)) { // Paper - limit the number of joins which can be processed each tick
             ((LoginListener) this.packetListener).tick();
+            } // Paper
         }
 
         if (this.packetListener instanceof PlayerConnection) {
