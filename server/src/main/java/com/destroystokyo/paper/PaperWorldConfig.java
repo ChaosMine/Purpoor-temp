@@ -699,4 +699,17 @@ public class PaperWorldConfig {
             log("The Ender Dragon will be removed if she already exists without a portal.");
         }
     }
+
+    public int wanderingTraderSpawnMinuteTicks = 1200;
+    public int wanderingTraderSpawnDayTicks = 24000;
+    public int wanderingTraderSpawnChanceFailureIncrement = 25;
+    public int wanderingTraderSpawnChanceMin = 25;
+    public int wanderingTraderSpawnChanceMax = 75;
+    private void wanderingTraderSettings() {
+        wanderingTraderSpawnMinuteTicks = getInt("wandering-trader.spawn-minute-length", wanderingTraderSpawnMinuteTicks);
+        wanderingTraderSpawnDayTicks = getInt("wandering-trader.spawn-day-length", wanderingTraderSpawnDayTicks);
+        wanderingTraderSpawnChanceFailureIncrement = getInt("wandering-trader.spawn-chance-failure-increment", wanderingTraderSpawnChanceFailureIncrement);
+        wanderingTraderSpawnChanceMin = getInt("wandering-trader.spawn-chance-min", wanderingTraderSpawnChanceMin);
+        wanderingTraderSpawnChanceMax = getInt("wandering-trader.spawn-chance-max", wanderingTraderSpawnChanceMax);
+    }
 }

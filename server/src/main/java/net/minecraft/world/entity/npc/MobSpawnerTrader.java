@@ -30,49 +30,59 @@ public class MobSpawnerTrader implements MobSpawner {
 
     private final Random a = new Random();
     private final IWorldDataServer b;
-    private int c;
-    private int d;
-    private int e;
+    private int c; public final int getMinuteTimer() { return this.c; } public final void setMinuteTimer(int x) { this.c = x; } // Paper - OBFHELPER
+    private int d; public final int getDayTimer() { return this.d; } public final void setDayTimer(int x) { this.d = x; } // Paper - OBFHELPER
+    private int e; public final int getSpawnChance() { return this.e; } public final void setSpawnChance(int x) { this.e = x; } // Paper - OBFHELPER
 
     public MobSpawnerTrader(IWorldDataServer iworlddataserver) {
         this.b = iworlddataserver;
-        this.c = 1200;
-        this.d = iworlddataserver.v();
-        this.e = iworlddataserver.w();
-        if (this.d == 0 && this.e == 0) {
-            this.d = 24000;
-            iworlddataserver.g(this.d);
-            this.e = 25;
-            iworlddataserver.h(this.e);
-        }
+        // Paper start
+        this.setMinuteTimer(Integer.MIN_VALUE);
+        //this.d = iworlddataserver.v(); // Paper - This value is read from the world file only for the first spawn, after which vanilla uses a hardcoded value
+        //this.e = iworlddataserver.w(); // Paper - This value is read from the world file only for the first spawn, after which vanilla uses a hardcoded value
+        //if (this.d == 0 && this.e == 0) {
+        //    this.d = 24000;
+        //    iworlddataserver.g(this.d);
+        //    this.e = 25;
+        //    iworlddataserver.h(this.e);
+        //}
+        // Paper end
 
     }
 
     @Override
     public int a(WorldServer worldserver, boolean flag, boolean flag1) {
+        // Paper start
+        if (this.getMinuteTimer() == Integer.MIN_VALUE) {
+            this.setMinuteTimer(worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            this.setDayTimer(worldserver.paperConfig.wanderingTraderSpawnDayTicks);
+            this.setSpawnChance(worldserver.paperConfig.wanderingTraderSpawnChanceMin);
+        }
         if (!worldserver.getGameRules().getBoolean(GameRules.DO_TRADER_SPAWNING)) {
             return 0;
-        } else if (--this.c > 0) {
+        } else if (this.getMinuteTimer() - 1 > 0) {
+            this.setMinuteTimer(this.getMinuteTimer() - 1);
             return 0;
         } else {
-            this.c = 1200;
-            this.d -= 1200;
-            this.b.g(this.d);
-            if (this.d > 0) {
+            this.setMinuteTimer(worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            this.setDayTimer(getDayTimer() - worldserver.paperConfig.wanderingTraderSpawnMinuteTicks);
+            //this.b.g(this.d); // Paper - We don't need to save this value to disk if it gets set back to a hardcoded value anyways
+            if (this.getDayTimer() > 0) {
                 return 0;
             } else {
-                this.d = 24000;
+                this.setDayTimer(worldserver.paperConfig.wanderingTraderSpawnDayTicks);
                 if (!worldserver.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
                     return 0;
                 } else {
-                    int i = this.e;
+                    int i = this.getSpawnChance();
 
-                    this.e = MathHelper.clamp(this.e + 25, 25, 75);
-                    this.b.h(this.e);
+                    this.setSpawnChance(MathHelper.clamp(i + worldserver.paperConfig.wanderingTraderSpawnChanceFailureIncrement, worldserver.paperConfig.wanderingTraderSpawnChanceMin, worldserver.paperConfig.wanderingTraderSpawnChanceMax));
+                    //this.b.h(this.e); // Paper - We don't need to save this value to disk if it gets set back to a hardcoded value anyways
                     if (this.a.nextInt(100) > i) {
                         return 0;
                     } else if (this.a(worldserver)) {
-                        this.e = 25;
+                        this.setSpawnChance(worldserver.paperConfig.wanderingTraderSpawnChanceMin);
+                        // Paper end
                         return 1;
                     } else {
                         return 0;
