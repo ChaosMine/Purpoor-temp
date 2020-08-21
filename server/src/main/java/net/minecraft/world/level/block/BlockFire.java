@@ -15,6 +15,7 @@ import net.minecraft.core.EnumDirection;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.item.context.BlockActionContext;
+import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
@@ -364,8 +365,10 @@ public class BlockFire extends BlockFireAbstract {
     }
 
     @Override
-    public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        super.onPlace(iblockdata, world, blockposition, iblockdata1, flag);
+    // Paper start - ItemActionContext param
+    public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag, ItemActionContext itemActionContext) {
+        super.onPlace(iblockdata, world, blockposition, iblockdata1, flag, itemActionContext);
+        // Paper end
         world.getBlockTickList().a(blockposition, this, a(world.random));
     }
 

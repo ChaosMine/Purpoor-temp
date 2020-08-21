@@ -32,6 +32,7 @@ import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
+import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.BlockAccessAir;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
@@ -120,6 +121,12 @@ public abstract class BlockBase {
         PacketDebug.a(world, blockposition);
     }
 
+    // Paper start - add ItemActionContext param
+    @Deprecated
+    public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag, ItemActionContext itemActionContext) {
+        this.onPlace(iblockdata, world, blockposition, iblockdata1, flag);
+    }
+    // Paper end
     @Deprecated
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         org.spigotmc.AsyncCatcher.catchOp("block onPlace"); // Spigot

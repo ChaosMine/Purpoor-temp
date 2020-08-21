@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.context.BlockActionContext;
+import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
@@ -66,14 +67,17 @@ public abstract class BlockFireAbstract extends Block {
         super.a(iblockdata, world, blockposition, entity);
     }
 
+    // Paper start - ItemActionContext param
+    @Override public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) { this.onPlace(iblockdata, world, blockposition, iblockdata1, flag, null); }
     @Override
-    public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
+    public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag, ItemActionContext itemActionContext) {
+        // Paper end
         if (!iblockdata1.a(iblockdata.getBlock())) {
             if (a(world)) {
                 Optional<BlockPortalShape> optional = BlockPortalShape.a((GeneratorAccess) world, blockposition, EnumDirection.EnumAxis.X);
 
                 if (optional.isPresent()) {
-                    ((BlockPortalShape) optional.get()).createPortal();
+                    ((BlockPortalShape) optional.get()).createPortal(itemActionContext); // Paper - pass ItemActionContext param
                     return;
                 }
             }
