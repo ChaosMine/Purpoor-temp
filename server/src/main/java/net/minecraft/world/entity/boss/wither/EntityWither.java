@@ -205,6 +205,11 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         skull.setPositionRaw(headX, headY, headZ);
         world.addEntity(skull);
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(world.purpurConfig.witherMaxHealth);
+    }
     // Purpur end
 
     @Override
@@ -409,7 +414,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
             this.setInvul(i);
             if (this.ticksLived % 10 == 0) {
-                this.heal(10.0F, EntityRegainHealthEvent.RegainReason.WITHER_SPAWN); // CraftBukkit
+                this.heal(this.getMaxHealth() / 33, EntityRegainHealthEvent.RegainReason.WITHER_SPAWN); // CraftBukkit // Purpur - use max health for healing instead of a constant
             }
 
         } else {
@@ -518,8 +523,10 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                 }
             }
 
-            if (this.ticksLived % 20 == 0) {
-                this.heal(1.0F, EntityRegainHealthEvent.RegainReason.REGEN); // CraftBukkit
+            // Purpur start - customizable heal rate and amount
+            if (this.ticksLived % world.purpurConfig.witherHealthRegenDelay == 0) {
+                this.heal(world.purpurConfig.witherHealthRegenAmount, EntityRegainHealthEvent.RegainReason.REGEN); // CraftBukkit
+                // Purpur end
             }
 
             //this.bossBattle.setProgress(this.getHealth() / this.getMaxHealth()); // Paper - Moved down
