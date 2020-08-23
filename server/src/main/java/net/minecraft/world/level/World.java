@@ -255,7 +255,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName(), this.spigotConfig); // Paper
         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
         this.tuinityConfig = new com.tuinity.tuinity.config.TuinityConfig.WorldConfig(((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName()); // Tuinity - Server Config
-        this.purpurConfig = new net.pl3x.purpur.PurpurWorldConfig((((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName())); // Purpur
+        this.purpurConfig = new net.pl3x.purpur.PurpurWorldConfig((((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName()), env); // Purpur
         this.generator = gen;
         this.world = new CraftWorld((WorldServer) this, gen, env);
         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit

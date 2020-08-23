@@ -7,6 +7,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.resources.MinecraftKey;
+import org.apache.commons.lang3.BooleanUtils;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static net.pl3x.purpur.PurpurConfig.log;
@@ -22,9 +25,11 @@ import static net.pl3x.purpur.PurpurConfig.log;
 public class PurpurWorldConfig {
 
     private final String worldName;
+    private final World.Environment environment;
 
-    public PurpurWorldConfig(String worldName) {
+    public PurpurWorldConfig(String worldName, World.Environment environment) {
         this.worldName = worldName;
+        this.environment = environment;
         init();
     }
 
@@ -50,6 +55,12 @@ public class PurpurWorldConfig {
     private boolean getBoolean(String path, boolean def) {
         PurpurConfig.config.addDefault("world-settings.default." + path, def);
         return PurpurConfig.config.getBoolean("world-settings." + worldName + "." + path, PurpurConfig.config.getBoolean("world-settings.default." + path));
+    }
+
+    private boolean getBoolean(String path, Predicate<Boolean> predicate) {
+        String val = getString(path, "default").toLowerCase();
+        Boolean bool = BooleanUtils.toBooleanObject(val, "true", "false", "default");
+        return predicate.test(bool);
     }
 
     private double getDouble(String path, double def) {
@@ -217,6 +228,21 @@ public class PurpurWorldConfig {
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
         voidDamageHeight = getDouble("gameplay-mechanics.void-damage-height", voidDamageHeight);
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);
+    }
+
+    public boolean catSpawning;
+    public boolean patrolSpawning;
+    public boolean phantomSpawning;
+    public boolean villagerTraderSpawning;
+    public boolean villageSiegeSpawning;
+    private void mobSpawnerSettings() {
+        // values of "default" or null will default to true only if the world environment is normal (aka overworld)
+        Predicate<Boolean> predicate = (bool) -> (bool != null && bool) || (bool == null && environment == World.Environment.NORMAL);
+        catSpawning = getBoolean("gameplay-mechanics.mob-spawning.village-cats", predicate);
+        patrolSpawning = getBoolean("gameplay-mechanics.mob-spawning.raid-patrols", predicate);
+        phantomSpawning = getBoolean("gameplay-mechanics.mob-spawning.phantoms", predicate);
+        villagerTraderSpawning = getBoolean("gameplay-mechanics.mob-spawning.wandering-traders", predicate);
+        villageSiegeSpawning = getBoolean("gameplay-mechanics.mob-spawning.village-sieges", predicate);
     }
 
     public int elytraDamagePerSecond = 1;

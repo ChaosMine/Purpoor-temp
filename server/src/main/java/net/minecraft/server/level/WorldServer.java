@@ -92,6 +92,7 @@ import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.entity.ReputationHandler;
 import net.minecraft.world.entity.ai.navigation.NavigationAbstract;
 import net.minecraft.world.entity.ai.village.ReputationEvent;
+import net.minecraft.world.entity.ai.village.VillageSiege;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.entity.animal.EntityAnimal;
@@ -101,6 +102,8 @@ import net.minecraft.world.entity.animal.horse.EntityHorseSkeleton;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
 import net.minecraft.world.entity.item.EntityItem;
+import net.minecraft.world.entity.npc.MobSpawnerCat;
+import net.minecraft.world.entity.npc.MobSpawnerTrader;
 import net.minecraft.world.entity.npc.NPC;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.raid.PersistentRaid;
@@ -133,6 +136,8 @@ import net.minecraft.world.level.chunk.storage.RegionFile;
 import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.dimension.end.EnderDragonBattle;
 import net.minecraft.world.level.levelgen.HeightMap;
+import net.minecraft.world.level.levelgen.MobSpawnerPatrol;
+import net.minecraft.world.level.levelgen.MobSpawnerPhantom;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.levelgen.structure.StructureBoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -550,7 +555,24 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.L = new ObjectLinkedOpenHashSet();
         this.Q = flag1;
         this.server = minecraftserver;
-        this.mobSpawners = list;
+        // Purpur start - enable/disable MobSpawners per world
+        this.mobSpawners = new java.util.ArrayList<>();
+        if (purpurConfig.phantomSpawning) {
+            mobSpawners.add(new MobSpawnerPhantom());
+        }
+        if (purpurConfig.patrolSpawning) {
+            mobSpawners.add(new MobSpawnerPatrol());
+        }
+        if (purpurConfig.catSpawning) {
+            mobSpawners.add(new MobSpawnerCat());
+        }
+        if (purpurConfig.villageSiegeSpawning) {
+            mobSpawners.add(new VillageSiege());
+        }
+        if (purpurConfig.villagerTraderSpawning) {
+            mobSpawners.add(new MobSpawnerTrader(iworlddataserver));
+        }
+        // Purpur end
         // CraftBukkit start
         this.worldDataServer = (WorldDataServer) iworlddataserver;
         worldDataServer.world = this;

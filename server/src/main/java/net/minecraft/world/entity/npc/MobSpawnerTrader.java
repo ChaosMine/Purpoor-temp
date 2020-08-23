@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.EntityPlayer;
@@ -153,7 +154,17 @@ public class MobSpawnerTrader implements MobSpawner {
             int k = blockposition.getX() + this.a.nextInt(i * 2) - i;
             int l = blockposition.getZ() + this.a.nextInt(i * 2) - i;
             int i1 = iworldreader.a(HeightMap.Type.WORLD_SURFACE, k, l);
-            BlockPosition blockposition2 = new BlockPosition(k, i1, l);
+            // Purpur start - allow traders to spawn below nether roof
+            BlockPosition.MutableBlockPosition blockposition2 = new BlockPosition.MutableBlockPosition(k, i1, l);
+            if (iworldreader.getDimensionManager().hasCeiling()) {
+                do {
+                    blockposition2.c(EnumDirection.DOWN);
+                } while (!iworldreader.getType(blockposition2).isAir());
+                do {
+                    blockposition2.c(EnumDirection.DOWN);
+                } while (iworldreader.getType(blockposition2).isAir() && blockposition2.getY() > 0);
+            }
+            // Purpur end
 
             if (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, iworldreader, blockposition2, EntityTypes.WANDERING_TRADER)) {
                 blockposition1 = blockposition2;
