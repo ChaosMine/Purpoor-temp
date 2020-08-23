@@ -668,4 +668,9 @@ public class PaperWorldConfig {
             maxLightningFlashDistance = 512; // Vanilla value
         }
     }
+
+    public boolean zombiesTargetTurtleEggs = true;
+    private void zombiesTargetTurtleEggs() {
+        zombiesTargetTurtleEggs = getBoolean("zombies-target-turtle-eggs", zombiesTargetTurtleEggs);
+    }
 }
