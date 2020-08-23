@@ -137,7 +137,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 // CraftBukkit end
 
-import co.aikar.timings.MinecraftTimings; // Paper
 
 public abstract class EntityLiving extends Entity {
 
@@ -2959,7 +2958,7 @@ public abstract class EntityLiving extends Entity {
             return;
         }
         // Paper - end don't run getEntities if we're not going to use its result
-        List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.a(this));
+        List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.pushable(this, world.paperConfig.fixClimbingBypassingCrammingRule)); // Paper - fix climbing bypassing cramming rule
 
         if (!list.isEmpty()) {
             // Paper - move up
@@ -3097,9 +3096,16 @@ public abstract class EntityLiving extends Entity {
         return !this.dead && this.collides; // CraftBukkit
     }
 
+    // Paper start
     @Override
     public boolean isCollidable() {
-        return this.isAlive() && !this.isSpectator() && !this.isClimbing() && this.collides; // CraftBukkit
+        return this.isCollidable(world.paperConfig.fixClimbingBypassingCrammingRule);
+    }
+
+    @Override
+    public boolean isCollidable(boolean ignoreClimbing) {
+        return this.isAlive() && !this.isSpectator() && (ignoreClimbing || !this.isClimbing()) && this.collides; // CraftBukkit
+        // Paper end
     }
 
     // CraftBukkit start - collidable API

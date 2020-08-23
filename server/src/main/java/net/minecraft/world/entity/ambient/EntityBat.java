@@ -76,7 +76,7 @@ public class EntityBat extends EntityAmbient {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
         return false;
     }
 

@@ -362,7 +362,7 @@ public class EntityArmorStand extends EntityLiving {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
         return false;
     }
 

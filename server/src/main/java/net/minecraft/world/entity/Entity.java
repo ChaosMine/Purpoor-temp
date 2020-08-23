@@ -1576,6 +1576,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean isCollidable() {
+        // Paper start
+        return isCollidable(false);
+    }
+
+    public boolean isCollidable(boolean ignoreClimbing) {
+        // Paper end
         return false;
     }
 

@@ -51,11 +51,17 @@ public final class IEntitySelector {
     }
 
     public static Predicate<Entity> a(Entity entity) {
+        // Paper start - ignoreClimbing param
+        return pushable(entity, false);
+    }
+
+    public static Predicate<Entity> pushable(Entity entity, boolean ignoreClimbing) {
+        // Paper end
         ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
         ScoreboardTeamBase.EnumTeamPush scoreboardteambase_enumteampush = scoreboardteambase == null ? ScoreboardTeamBase.EnumTeamPush.ALWAYS : scoreboardteambase.getCollisionRule();
 
         return (Predicate) (scoreboardteambase_enumteampush == ScoreboardTeamBase.EnumTeamPush.NEVER ? Predicates.alwaysFalse() : IEntitySelector.g.and((entity1) -> {
-            if (!entity1.canCollideWith(entity) || !entity.canCollideWith(entity1)) { // CraftBukkit - collidable API
+            if (!entity1.isCollidable(ignoreClimbing) || !entity1.canCollideWith(entity) || !entity.canCollideWith(entity1)) { // CraftBukkit - collidable API // Paper - isCollidable
                 return false;
             } else if (entity.world.isClientSide && (!(entity1 instanceof EntityHuman) || !((EntityHuman) entity1).ez())) {
                 return false;

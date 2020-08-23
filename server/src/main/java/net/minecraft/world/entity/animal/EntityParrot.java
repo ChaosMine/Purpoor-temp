@@ -368,8 +368,8 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
     }
 
     @Override
-    public boolean isCollidable() {
-        return super.isCollidable(); // CraftBukkit - collidable API
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
+        return super.isCollidable(ignoreClimbing); // CraftBukkit - collidable API // Paper
     }
 
     @Override

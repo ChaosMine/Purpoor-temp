@@ -227,7 +227,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
         return !this.isVehicle();
     }
 

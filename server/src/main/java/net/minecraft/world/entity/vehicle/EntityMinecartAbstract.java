@@ -145,7 +145,7 @@ public abstract class EntityMinecartAbstract extends Entity {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
         return true;
     }
 

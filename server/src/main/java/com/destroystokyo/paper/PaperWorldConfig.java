@@ -712,4 +712,9 @@ public class PaperWorldConfig {
         wanderingTraderSpawnChanceMin = getInt("wandering-trader.spawn-chance-min", wanderingTraderSpawnChanceMin);
         wanderingTraderSpawnChanceMax = getInt("wandering-trader.spawn-chance-max", wanderingTraderSpawnChanceMax);
     }
+
+    public boolean fixClimbingBypassingCrammingRule = false;
+    private void fixClimbingBypassingCrammingRule() {
+        fixClimbingBypassingCrammingRule = getBoolean("fix-climbing-bypassing-cramming-rule", fixClimbingBypassingCrammingRule);
+    }
 }

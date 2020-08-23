@@ -150,7 +150,7 @@ public class EntityBoat extends Entity {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean isCollidable(boolean ignoreClimbing) { // Paper
         return true;
     }
 
