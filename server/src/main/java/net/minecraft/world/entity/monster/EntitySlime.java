@@ -246,6 +246,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
                     entityslime.setPersistent();
                 }
 
+                entityslime.aware = this.aware; // Paper
                 entityslime.setCustomName(ichatbasecomponent);
                 entityslime.setNoAI(flag);
                 entityslime.setInvulnerable(this.isInvulnerable());
