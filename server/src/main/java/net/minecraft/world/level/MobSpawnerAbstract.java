@@ -165,6 +165,7 @@ public abstract class MobSpawnerAbstract {
                                 return;
                             }
 
+                            entity.preserveMotion = true; // Paper - preserve entity motion from tag
                             entity.setPositionRotation(entity.locX(), entity.locY(), entity.locZ(), world.random.nextFloat() * 360.0F, 0.0F);
                             if (entity instanceof EntityInsentient) {
                                 EntityInsentient entityinsentient = (EntityInsentient) entity;

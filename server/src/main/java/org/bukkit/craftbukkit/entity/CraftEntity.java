@@ -558,7 +558,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         }
 
         // entity.setLocation() throws no event, and so cannot be cancelled
-        entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        entity.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()); // Paper - use proper setPosition, as per vanilla teleporting
         // SPIGOT-619: Force sync head rotation also
         entity.setHeadRotation(location.getYaw());
         ((net.minecraft.server.level.WorldServer) entity.world).chunkCheck(entity); // Spigot - register to new chunk
