@@ -50,7 +50,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                     synchronized (throttleTracker) {
                         if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.get(address) < connectionThrottle) {
                             throttleTracker.put(address, currentTime);
-                            ChatMessage chatmessage = new ChatMessage(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage); // Paper - Configurable connection throttle kick message
+                            IChatBaseComponent chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage, true)[0]; // Paper - Configurable connection throttle kick message // Paper - Fix hex colors not working in some kick messages
                             this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.c.close(chatmessage);
                             return;
@@ -76,12 +76,12 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 }
                 // CraftBukkit end
                 if (packethandshakinginsetprotocol.c() != SharedConstants.getGameVersion().getProtocolVersion()) {
-                    ChatMessage chatmessage;
+                    IChatBaseComponent chatmessage; // Paper - Fix hex colors not working in some kick messages
 
                     if (packethandshakinginsetprotocol.c() < 754) {
-                        chatmessage = new ChatMessage( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedClientMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) ); // Spigot
+                        chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedClientMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) , true )[0]; // Spigot // Paper - Fix hex colors not working in some kick messages
                     } else {
-                        chatmessage = new ChatMessage( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) ); // Spigot
+                        chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage.replaceAll("'", "''"), SharedConstants.getGameVersion().getName() ) , true )[0]; // Spigot // Paper - Fix hex colors not working in some kick messages
                     }
 
                     this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
@@ -99,7 +99,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                     if (event.callEvent()) {
                         // If we've failed somehow, let the client know so and go no further.
                         if (event.isFailed()) {
-                            chatmessage = new ChatMessage(event.getFailMessage());
+                            IChatBaseComponent chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(event.getFailMessage(), true)[0]; // Paper - Fix hex colors not working in some kick messages
                             this.getNetworkManager().sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.getNetworkManager().close(chatmessage);
                             return;
