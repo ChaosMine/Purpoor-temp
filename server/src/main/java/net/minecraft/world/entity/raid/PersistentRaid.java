@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public class PersistentRaid extends PersistentBase {
 
+    public final Map<java.util.UUID, Integer> playerCooldowns = new java.util.HashMap<>(); // Purpur
     public final Map<Integer, Raid> raids = Maps.newHashMap();
     private final WorldServer b;
     private int c;
@@ -45,6 +46,17 @@ public class PersistentRaid extends PersistentBase {
 
     public void a() {
         ++this.d;
+        // Purpur start
+        if (b.purpurConfig.raidCooldownSeconds != 0 && this.d % 20 == 0) {
+            com.google.common.collect.ImmutableMap.copyOf(playerCooldowns).forEach((id, i) -> {
+                if (i < 1) {
+                    playerCooldowns.remove(id);
+                } else {
+                    playerCooldowns.put(id, i - 1);
+                }
+            });
+        }
+        // Purpur end
         Iterator iterator = this.raids.values().iterator();
 
         while (iterator.hasNext()) {
@@ -128,10 +140,15 @@ public class PersistentRaid extends PersistentBase {
 
                 if (flag) {
                     // CraftBukkit start
-                    if (!org.bukkit.craftbukkit.event.CraftEventFactory.callRaidTriggerEvent(raid, entityplayer)) {
+                    if ((b.purpurConfig.raidCooldownSeconds != 0 && playerCooldowns.containsKey(entityplayer.getUniqueID())) || !org.bukkit.craftbukkit.event.CraftEventFactory.callRaidTriggerEvent(raid, entityplayer)) { // Purpur
                         entityplayer.removeEffect(MobEffects.BAD_OMEN);
                         return null;
                     }
+                    // Purpur start
+                    if (b.purpurConfig.raidCooldownSeconds != 0) {
+                        playerCooldowns.put(entityplayer.getUniqueID(), b.purpurConfig.raidCooldownSeconds);
+                    }
+                    // Purpur end
 
                     if (!this.raids.containsKey(raid.getId())) {
                         this.raids.put(raid.getId(), raid);

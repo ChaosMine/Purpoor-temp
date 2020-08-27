@@ -218,6 +218,7 @@ public class PurpurWorldConfig {
     public double tridentLoyaltyVoidReturnHeight = 0.0D;
     public double voidDamageHeight = -64.0D;
     public double voidDamageDealt = 4.0D;
+    public int raidCooldownSeconds = 0;
     private void miscGameplayMechanicsSettings() {
         useBetterMending = getBoolean("gameplay-mechanics.use-better-mending", useBetterMending);
         boatEjectPlayersOnLand = getBoolean("gameplay-mechanics.boat.eject-players-on-land", boatEjectPlayersOnLand);
@@ -228,6 +229,7 @@ public class PurpurWorldConfig {
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
         voidDamageHeight = getDouble("gameplay-mechanics.void-damage-height", voidDamageHeight);
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);
+        raidCooldownSeconds = getInt("gameplay-mechanics.raid-cooldown-seconds", raidCooldownSeconds);
     }
 
     public boolean catSpawning;
