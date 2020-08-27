@@ -262,7 +262,7 @@ public class Block extends BlockBase implements IMaterial {
 
     }
 
-    public static void a(World world, BlockPosition blockposition, ItemStack itemstack) {
+    public static void a(World world, BlockPosition blockposition, ItemStack itemstack) { dropItem(world, blockposition, itemstack); } public static void dropItem(World world, BlockPosition blockposition, ItemStack itemstack) { // Paper - OBFHELPER
         if (!world.isClientSide && !itemstack.isEmpty() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
             float f = 0.5F;
             double d0 = (double) (world.random.nextFloat() * 0.5F) + 0.25D;

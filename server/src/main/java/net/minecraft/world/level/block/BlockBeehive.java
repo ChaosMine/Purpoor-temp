@@ -1,5 +1,7 @@
 package net.minecraft.world.level.block;
 
+import io.papermc.paper.event.block.PlayerShearBlockEvent; // Paper - PlayerShearBlockEvent namespace conflicts
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +12,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
@@ -116,8 +119,19 @@ public class BlockBeehive extends BlockTileEntity {
 
         if (i >= 5) {
             if (itemstack.getItem() == Items.SHEARS) {
+                // Paper start - Add PlayerShearBlockEvent
+                PlayerShearBlockEvent event = new PlayerShearBlockEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), MCUtil.toBukkitBlock(world, blockposition), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (enumhand == EnumHand.OFF_HAND ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND), new java.util.ArrayList<>());
+                event.getDrops().add(org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(new ItemStack(Items.HONEYCOMB, 3)));
+                if (!event.callEvent()) {
+                    return EnumInteractionResult.PASS;
+                }
+                // Paper end
                 world.playSound(entityhuman, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-                a(world, blockposition);
+                // Paper start - Add PlayerShearBlockEvent
+                for (org.bukkit.inventory.ItemStack item : event.getDrops()) {
+                    dropItem(world, blockposition, org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(item));
+                }
+                // Paper end
                 itemstack.damage(1, entityhuman, (entityhuman1) -> {
                     entityhuman1.broadcastItemBreak(enumhand);
                 });
