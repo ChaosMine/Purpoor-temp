@@ -3483,4 +3483,10 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
         void accept(Entity entity, double d0, double d1, double d2);
     }
+
+    // Paper start
+    public static int nextEntityId() {
+        return entityCount.incrementAndGet();
+    }
+    // Paper end
 }
