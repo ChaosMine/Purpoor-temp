@@ -61,7 +61,7 @@ public abstract class EntityArrow extends IProjectile {
     protected int c;
     public EntityArrow.PickupStatus fromPlayer;
     public int shake;
-    public int despawnCounter;
+    //public int despawnCounter; // Purpur - moved to IProjectile
     private double damage;
     public int knockbackStrength;
     private SoundEffect ak;
@@ -293,13 +293,23 @@ public abstract class EntityArrow extends IProjectile {
 
     }
 
-    protected final void tickDespawnCounter() { this.h(); } // Paper - OBFHELPER
-    protected void h() {
-        ++this.despawnCounter;
-        if (this.despawnCounter >= (fromPlayer == PickupStatus.CREATIVE_ONLY ? world.paperConfig.creativeArrowDespawnRate : (fromPlayer == PickupStatus.DISALLOWED ? world.paperConfig.nonPlayerArrowDespawnRate : ((this instanceof EntityThrownTrident) ? world.spigotConfig.tridentDespawnRate : world.spigotConfig.arrowDespawnRate)))) { // Spigot // Paper - TODO: Extract this to init?
-            this.die();
+    // Purpur start
+    protected int getPurpurDespawnRate() {
+        if (fromPlayer == PickupStatus.CREATIVE_ONLY) {
+            return world.paperConfig.creativeArrowDespawnRate;
         }
+        if (fromPlayer == PickupStatus.DISALLOWED) {
+            return world.paperConfig.nonPlayerArrowDespawnRate;
+        }
+        if (this instanceof EntityThrownTrident) {
+            return world.spigotConfig.tridentDespawnRate;
+        }
+        return world.spigotConfig.arrowDespawnRate;
+    }
+    // Purpur end
 
+    protected void h() {
+        tickDespawnCounter(); // Purpur
     }
 
     private void A() {

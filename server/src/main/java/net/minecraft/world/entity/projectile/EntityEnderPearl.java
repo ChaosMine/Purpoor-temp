@@ -122,4 +122,11 @@ public class EntityEnderPearl extends EntityProjectileThrowable {
 
         return super.b(worldserver);
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.enderPearlDespawnRate;
+    }
+    // Purpur end
 }

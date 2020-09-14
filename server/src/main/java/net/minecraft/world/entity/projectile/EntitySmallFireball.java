@@ -100,4 +100,11 @@ public class EntitySmallFireball extends EntityFireballFireball {
     public boolean damageEntity(DamageSource damagesource, float f) {
         return false;
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.smallFireballDespawnRate;
+    }
+    // Purpur end
 }

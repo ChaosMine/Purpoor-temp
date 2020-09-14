@@ -77,4 +77,11 @@ public class EntityLargeFireball extends EntityFireballFireball {
         }
 
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.largeFireballDespawnRate;
+    }
+    // Purpur end
 }

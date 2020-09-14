@@ -61,4 +61,11 @@ public class EntityThrownExpBottle extends EntityProjectileThrowable {
         }
 
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.expBottleDespawnRate;
+    }
+    // Purpur end
 }

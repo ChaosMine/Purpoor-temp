@@ -99,4 +99,11 @@ public class EntityEgg extends EntityProjectileThrowable {
     protected Item getDefaultItem() {
         return Items.EGG;
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.eggDespawnRate;
+    }
+    // Purpur end
 }

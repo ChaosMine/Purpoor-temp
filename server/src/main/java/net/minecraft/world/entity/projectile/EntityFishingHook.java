@@ -615,4 +615,11 @@ public class EntityFishingHook extends IProjectile {
 
         private HookState() {}
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.fishingHookDespawnRate;
+    }
+    // Purpur end
 }

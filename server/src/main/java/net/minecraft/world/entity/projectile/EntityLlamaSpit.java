@@ -86,4 +86,11 @@ public class EntityLlamaSpit extends IProjectile {
     public Packet<?> P() {
         return new PacketPlayOutSpawnEntity(this);
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.llamaSpitDespawnRate;
+    }
+    // Purpur end
 }

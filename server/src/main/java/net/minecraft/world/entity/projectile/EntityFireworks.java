@@ -323,4 +323,11 @@ public class EntityFireworks extends IProjectile {
     public Packet<?> P() {
         return new PacketPlayOutSpawnEntity(this);
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.fireworkDespawnRate;
+    }
+    // Purpur end
 }

@@ -283,4 +283,11 @@ public class EntityPotion extends EntityProjectileThrowable {
         }
 
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.potionDespawnRate;
+    }
+    // Purpur end
 }

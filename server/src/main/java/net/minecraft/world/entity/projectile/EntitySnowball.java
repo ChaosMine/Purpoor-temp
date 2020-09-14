@@ -25,6 +25,12 @@ public class EntitySnowball extends EntityProjectileThrowable {
         super(EntityTypes.SNOWBALL, d0, d1, d2, world);
     }
 
+    // Purpur start
+    protected int getPurpurDespawnRate() {
+        return world.purpurConfig.snowballDespawnRate;
+    }
+    // Purpur end
+
     @Override
     protected Item getDefaultItem() {
         return Items.SNOWBALL;

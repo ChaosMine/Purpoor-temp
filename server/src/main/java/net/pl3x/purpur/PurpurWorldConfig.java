@@ -209,6 +209,35 @@ public class PurpurWorldConfig {
         idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
     }
 
+    public int dragonFireballDespawnRate = -1;
+    public int eggDespawnRate = -1;
+    public int enderPearlDespawnRate = -1;
+    public int expBottleDespawnRate = -1;
+    public int fireworkDespawnRate = -1;
+    public int fishingHookDespawnRate = -1;
+    public int largeFireballDespawnRate = -1;
+    public int llamaSpitDespawnRate = -1;
+    public int potionDespawnRate = -1;
+    public int shulkerBulletDespawnRate = -1;
+    public int smallFireballDespawnRate = -1;
+    public int snowballDespawnRate = -1;
+    public int witherSkullDespawnRate = -1;
+    private void projectileDespawnRateSettings() {
+        dragonFireballDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.dragon_fireball", dragonFireballDespawnRate);
+        eggDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.egg", eggDespawnRate);
+        enderPearlDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.ender_pearl", enderPearlDespawnRate);
+        expBottleDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.experience_bottle", expBottleDespawnRate);
+        fireworkDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.firework_rocket", fireworkDespawnRate);
+        fishingHookDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.fishing_bobber", fishingHookDespawnRate);
+        largeFireballDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.fireball", largeFireballDespawnRate);
+        llamaSpitDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.llama_spit", llamaSpitDespawnRate);
+        potionDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.potion", potionDespawnRate);
+        shulkerBulletDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.shulker_bullet", shulkerBulletDespawnRate);
+        smallFireballDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.small_fireball", smallFireballDespawnRate);
+        snowballDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.snowball", snowballDespawnRate);
+        witherSkullDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.wither_skull", witherSkullDespawnRate);
+    }
+
     public boolean useBetterMending = false;
     public boolean boatEjectPlayersOnLand = false;
     public boolean disableDropsOnCrammingDeath = false;

@@ -137,4 +137,11 @@ public class EntityWitherSkull extends EntityFireball {
     protected boolean W_() {
         return false;
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.witherSkullDespawnRate;
+    }
+    // Purpur end
 }

@@ -25,6 +25,7 @@ public abstract class IProjectile extends Entity {
     private UUID shooter;
     private int c;
     private boolean d; public boolean leftOwner() { return d; } public void setLeftOwner(boolean leftOwner) { this.d = leftOwner; } // Purpur - OBFHELPER
+    public int despawnCounter; // Purpur - moved from EntityArrow
 
     // CraftBukkit start
     private boolean hitCancelled = false;
@@ -33,6 +34,19 @@ public abstract class IProjectile extends Entity {
     IProjectile(EntityTypes<? extends IProjectile> entitytypes, World world) {
         super(entitytypes, world);
     }
+
+    // Purpur start
+    protected final void tickDespawnCounter() {
+        if (this.getPurpurDespawnRate() != -1) {
+            ++this.despawnCounter;
+            if (this.despawnCounter >= this.getPurpurDespawnRate()) {
+                this.die();
+            }
+        }
+    }
+
+    protected abstract int getPurpurDespawnRate();
+    // Purpur end
 
     public void setShooter(@Nullable Entity entity) {
         if (entity != null) {
@@ -88,6 +102,12 @@ public abstract class IProjectile extends Entity {
         }
 
         super.tick();
+
+        // Purpur start
+        if (!(this instanceof EntityArrow)) { // EntityArrow handles its own despawn counter
+            this.tickDespawnCounter();
+        }
+        // Purpur end
     }
 
     public boolean checkIfLeftOwner() { return this.h(); } // Purpur - OBFHELPER

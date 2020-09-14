@@ -87,4 +87,11 @@ public class EntityDragonFireball extends EntityFireball {
     protected boolean W_() {
         return false;
     }
+
+    // Purpur start
+    @Override
+    protected int getPurpurDespawnRate() {
+        return this.world.purpurConfig.dragonFireballDespawnRate;
+    }
+    // Purpur end
 }
