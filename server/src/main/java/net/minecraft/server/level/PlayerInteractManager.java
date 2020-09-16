@@ -12,6 +12,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.ITileInventory;
 import net.minecraft.world.InteractionResultWrapper;
+import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.ItemActionContext;
@@ -419,10 +420,12 @@ public class PlayerInteractManager {
                     // return true; // CraftBukkit
                 }
                 // CraftBukkit start
+                java.util.List<EntityItem> itemsToDrop = world.captureDrops; // Paper - store current list
+                world.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
                 if (event.isDropItems()) {
-                    org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, world.captureDrops);
+                    org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                 }
-                world.captureDrops = null;
+                //world.captureDrops = null; // Paper - move up
 
                 // Drop event experience
                 if (flag && event != null) {

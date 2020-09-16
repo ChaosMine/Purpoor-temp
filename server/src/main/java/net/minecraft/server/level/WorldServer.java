@@ -99,6 +99,7 @@ import net.minecraft.world.entity.animal.EntityWaterAnimal;
 import net.minecraft.world.entity.animal.horse.EntityHorseSkeleton;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
+import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.npc.NPC;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.raid.PersistentRaid;
@@ -1290,6 +1291,13 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         } else if (this.isUUIDTaken(entity)) {
             return false;
         } else {
+            // Paper start - capture all item additions to the world
+            if (captureDrops != null && entity instanceof EntityItem) {
+                captureDrops.add((EntityItem) entity);
+                return true;
+            }
+            // Paper end
+
             if (!CraftEventFactory.doEntityAddEventCalling(this, entity, spawnReason)) {
                 return false;
             }
