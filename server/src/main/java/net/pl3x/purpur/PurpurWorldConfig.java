@@ -1081,12 +1081,14 @@ public class PurpurWorldConfig {
     public boolean zombieJockeyOnlyBaby = true;
     public double zombieJockeyChance = 0.05D;
     public boolean zombieJockeyTryExistingChickens = true;
+    public boolean zombieAggressiveTowardsVillagerWhenLagging = true;
     private void zombieSettings() {
         zombieRidable = getBoolean("mobs.zombie.ridable", zombieRidable);
         zombieRidableInWater = getBoolean("mobs.zombie.ridable-in-water", zombieRidableInWater);
         zombieJockeyOnlyBaby = getBoolean("mobs.zombie.jockey.only-babies", zombieJockeyOnlyBaby);
         zombieJockeyChance = getDouble("mobs.zombie.jockey.chance", zombieJockeyChance);
         zombieJockeyTryExistingChickens = getBoolean("mobs.zombie.jockey.try-existing-chickens", zombieJockeyTryExistingChickens);
+        zombieAggressiveTowardsVillagerWhenLagging = getBoolean("mobs.zombie.aggressive-towards-villager-when-lagging", zombieAggressiveTowardsVillagerWhenLagging);
     }
 
     public boolean zombieHorseCanSwim = false;

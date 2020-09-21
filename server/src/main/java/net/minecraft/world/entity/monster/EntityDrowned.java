@@ -109,7 +109,18 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         this.goalSelector.a(7, new PathfinderGoalRandomStroll(this, 1.0D));
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[]{EntityDrowned.class})).a(EntityPigZombie.class));
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, this::i));
-        if ( world.spigotConfig.zombieAggressiveTowardsVillager ) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)); // Paper
+        // Purpur start
+        if ( world.spigotConfig.zombieAggressiveTowardsVillager ) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<EntityVillagerAbstract>(this, EntityVillagerAbstract.class, false) { // Spigot
+            @Override
+            public boolean a() {
+                return (world.purpurConfig.zombieAggressiveTowardsVillagerWhenLagging || !world.getMinecraftServer().server.isLagging()) && super.a();
+            }
+            @Override
+            public boolean b() {
+                return (world.purpurConfig.zombieAggressiveTowardsVillagerWhenLagging || !world.getMinecraftServer().server.isLagging()) && super.b();
+            }
+        });
+        // Purpur end
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, true));
         this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bo));
     }

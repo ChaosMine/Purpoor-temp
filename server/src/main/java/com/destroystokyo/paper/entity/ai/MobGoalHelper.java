@@ -305,6 +305,10 @@ public class MobGoalHelper {
         deobfuscationMap.put("wither_a", "wither_do_nothing");
         deobfuscationMap.put("wolf_a", "wolf_avoid_entity");
         deobfuscationMap.put("zombie_a", "zombie_attack_turtle_egg");
+        // Purpur start
+        deobfuscationMap.put("zombie_1", "zombie_attack_villager");
+        deobfuscationMap.put("drowned_1", "drowned_attack_villager");
+        // Purpur end
 
         ignored.add("selector_1");
         ignored.add("selector_2");

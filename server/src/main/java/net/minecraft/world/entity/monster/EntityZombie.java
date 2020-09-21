@@ -148,7 +148,18 @@ public class EntityZombie extends EntityMonster {
         this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D));
         this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(EntityPigZombie.class));
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
-        if ( world.spigotConfig.zombieAggressiveTowardsVillager ) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)); // Spigot
+        // Purpur start
+        if ( world.spigotConfig.zombieAggressiveTowardsVillager ) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<EntityVillagerAbstract>(this, EntityVillagerAbstract.class, false) { // Spigot
+            @Override
+            public boolean a() {
+                return (world.purpurConfig.zombieAggressiveTowardsVillagerWhenLagging || !world.getMinecraftServer().server.isLagging()) && super.a();
+            }
+            @Override
+            public boolean b() {
+                return (world.purpurConfig.zombieAggressiveTowardsVillagerWhenLagging || !world.getMinecraftServer().server.isLagging()) && super.b();
+            }
+        });
+        // Purpur end
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, true));
         this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bo));
     }
