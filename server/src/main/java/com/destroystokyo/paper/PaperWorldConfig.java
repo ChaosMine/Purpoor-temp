@@ -806,4 +806,10 @@ public class PaperWorldConfig {
     private void setUpdatePathfindingOnBlockUpdate() {
         updatePathfindingOnBlockUpdate = getBoolean("update-pathfinding-on-block-update", this.updatePathfindingOnBlockUpdate);
     }
+
+    public boolean fixWitherTargetingBug = false;
+    private void witherSettings() {
+        fixWitherTargetingBug = getBoolean("fix-wither-targeting-bug", false);
+        log("Withers properly target players: " + fixWitherTargetingBug);
+    }
 }

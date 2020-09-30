@@ -104,6 +104,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this, new Class[0]));
+        if(this.world.paperConfig.fixWitherTargetingBug) this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 0, false, false, null)); // Paper - Fix MC-29274
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityInsentient.class, 0, false, false, EntityWither.by));
     }
 
