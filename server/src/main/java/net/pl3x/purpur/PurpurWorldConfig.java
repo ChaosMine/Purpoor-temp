@@ -244,6 +244,7 @@ public class PurpurWorldConfig {
     public boolean entitiesPickUpLootBypassMobGriefing = false;
     public boolean entitiesCanUsePortals = true;
     public boolean milkCuresBadOmen = true;
+    public boolean persistentTileEntityDisplayNames = false;
     public double tridentLoyaltyVoidReturnHeight = 0.0D;
     public double voidDamageHeight = -64.0D;
     public double voidDamageDealt = 4.0D;
@@ -255,6 +256,7 @@ public class PurpurWorldConfig {
         entitiesPickUpLootBypassMobGriefing = getBoolean("gameplay-mechanics.entities-pick-up-loot-bypass-mob-griefing", entitiesPickUpLootBypassMobGriefing);
         entitiesCanUsePortals = getBoolean("gameplay-mechanics.entities-can-use-portals", entitiesCanUsePortals);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);
+        persistentTileEntityDisplayNames = getBoolean("gameplay-mechanics.persistent-tileentity-display-names-and-lore", persistentTileEntityDisplayNames);
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
         voidDamageHeight = getDouble("gameplay-mechanics.void-damage-height", voidDamageHeight);
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);

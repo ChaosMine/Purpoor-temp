@@ -6,6 +6,8 @@ import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.level.World;
@@ -105,9 +107,25 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /
             this.persistentDataContainer.putAll((NBTTagCompound) persistentDataTag);
         }
         // CraftBukkit end
+        // Purpur start
+        if (nbttagcompound.hasKey("Purpur.persistentDisplayName")) {
+            this.persistentDisplayName = nbttagcompound.getString("Purpur.persistentDisplayName");
+        }
+        if (nbttagcompound.hasKey("Purpur.persistentLore")) {
+            this.persistentLore = nbttagcompound.getList("Purpur.persistentLore", 8);
+        }
+        // Purpur end
     }
 
     public NBTTagCompound save(NBTTagCompound nbttagcompound) {
+        // Purpur start
+        if (this.persistentDisplayName != null) {
+            nbttagcompound.set("Purpur.persistentDisplayName", NBTTagString.create(this.persistentDisplayName));
+        }
+        if (this.persistentLore != null) {
+            nbttagcompound.set("Purpur.persistentLore", this.persistentLore);
+        }
+        // Purpur end
         return this.b(nbttagcompound);
     }
 
@@ -274,4 +292,25 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /
         return null;
     }
     // CraftBukkit end
+
+    // Purpur start
+    private String persistentDisplayName = null;
+    private NBTTagList persistentLore = null;
+
+    public void setPersistentDisplayName(String json) {
+        this.persistentDisplayName = json;
+    }
+
+    public void setPersistentLore(NBTTagList lore) {
+        this.persistentLore = lore;
+    }
+
+    public String getPersistentDisplayName() {
+        return this.persistentDisplayName;
+    }
+
+    public NBTTagList getPersistentLore() {
+        return this.persistentLore;
+    }
+    // Purpur end
 }

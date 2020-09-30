@@ -119,7 +119,24 @@ public class ItemBlock extends Item {
     }
 
     protected boolean a(BlockPosition blockposition, World world, @Nullable EntityHuman entityhuman, ItemStack itemstack, IBlockData iblockdata) {
-        return a(world, entityhuman, blockposition, itemstack);
+        // Purpur start
+        boolean handled = a(world, entityhuman, blockposition, itemstack);
+        if (world.purpurConfig.persistentTileEntityDisplayNames && itemstack.hasTag()) {
+            NBTTagCompound display = itemstack.getSubTag("display");
+            if (display != null) {
+                TileEntity tile = world.getTileEntity(blockposition);
+                if (tile != null) {
+                    if (display.hasKeyOfType("Name", 8)) {
+                        tile.setPersistentDisplayName(display.getString("Name"));
+                    }
+                    if (display.hasKeyOfType("Lore", 9)) {
+                        tile.setPersistentLore(display.getList("Lore", 8));
+                    }
+                }
+            }
+        }
+        return handled;
+        // Purpur end
     }
 
     @Nullable

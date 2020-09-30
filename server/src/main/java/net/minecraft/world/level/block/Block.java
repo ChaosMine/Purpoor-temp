@@ -15,10 +15,15 @@ import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryBlockID;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
+import net.minecraft.world.INamableTileEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityLiving;
@@ -247,7 +252,7 @@ public class Block extends BlockBase implements IMaterial {
     public static void a(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition, @Nullable TileEntity tileentity) {
         if (generatoraccess instanceof WorldServer) {
             a(iblockdata, (WorldServer) generatoraccess, blockposition, tileentity).forEach((itemstack) -> {
-                a((World) ((WorldServer) generatoraccess), blockposition, itemstack);
+                dropItem((WorldServer) generatoraccess, blockposition, applyDisplayNameAndLoreFromTile(itemstack, tileentity)); // Purpur
             });
             iblockdata.dropNaturally((WorldServer) generatoraccess, blockposition, ItemStack.b);
         }
@@ -256,13 +261,55 @@ public class Block extends BlockBase implements IMaterial {
 
     public static void dropItems(IBlockData iblockdata, World world, BlockPosition blockposition, @Nullable TileEntity tileentity, Entity entity, ItemStack itemstack) {
         if (world instanceof WorldServer) {
-            getDrops(iblockdata, (WorldServer) world, blockposition, tileentity, entity, itemstack).forEach((itemstack1) -> {
-                a(world, blockposition, itemstack1);
+            // Purpur start
+            getDrops(iblockdata, (WorldServer) world, blockposition, tileentity, entity, itemstack).forEach(stackToDrop -> {
+                dropItem(world, blockposition, applyDisplayNameAndLoreFromTile(stackToDrop, tileentity));
+                // Purpur end
             });
             iblockdata.dropNaturally((WorldServer) world, blockposition, itemstack);
         }
 
     }
+
+    // Purpur start
+    private static ItemStack applyDisplayNameAndLoreFromTile(ItemStack itemStack, TileEntity tile) {
+        if (itemStack.getItem() instanceof ItemBlock) {
+            if (tile != null && tile.getWorld() instanceof WorldServer && tile.getWorld().purpurConfig.persistentTileEntityDisplayNames) {
+                String name = tile.getPersistentDisplayName();
+                NBTTagList lore = tile.getPersistentLore();
+                if (tile instanceof INamableTileEntity) {
+                    INamableTileEntity namedTile = (INamableTileEntity) tile;
+                    if (namedTile.hasCustomName()) {
+                        name = IChatBaseComponent.ChatSerializer.componentToJson(namedTile.getCustomName());
+                    }
+                }
+
+                if (name != null || lore != null) {
+                    NBTTagCompound display = itemStack.getSubTag("display");
+                    if (display == null) {
+                        display = new NBTTagCompound();
+                    }
+
+                    if (name != null) {
+                        display.set("Name", NBTTagString.create(name));
+                    }
+                    if (lore != null) {
+                        display.set("Lore", lore);
+                    }
+
+                    NBTTagCompound tag = itemStack.getTag();
+                    if (tag == null) {
+                        tag = new NBTTagCompound();
+                    }
+                    tag.set("display", display);
+
+                    itemStack.setTag(tag);
+                }
+            }
+        }
+        return itemStack;
+    }
+    // Purpur end
 
     public static void a(World world, BlockPosition blockposition, ItemStack itemstack) { dropItem(world, blockposition, itemstack); } public static void dropItem(World world, BlockPosition blockposition, ItemStack itemstack) { // Paper - OBFHELPER
         if (!world.isClientSide && !itemstack.isEmpty() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
