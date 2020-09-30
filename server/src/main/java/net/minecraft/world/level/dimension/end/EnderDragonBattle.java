@@ -214,7 +214,7 @@ public class EnderDragonBattle {
             this.dragonUUID = entityenderdragon.getUniqueID();
             EnderDragonBattle.LOGGER.info("Found that there's a dragon still alive ({})", entityenderdragon);
             this.dragonKilled = false;
-            if (!flag) {
+            if (!flag && this.world.paperConfig.shouldRemoveDragon) { // Paper
                 EnderDragonBattle.LOGGER.info("But we didn't have a portal, let's remove it.");
                 entityenderdragon.die();
                 this.dragonUUID = null;

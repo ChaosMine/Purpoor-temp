@@ -683,4 +683,12 @@ public class PaperWorldConfig {
             log("Using vanilla redstone algorithm.");
         }
     }
+
+    public boolean shouldRemoveDragon = false;
+    private void shouldRemoveDragon() {
+        shouldRemoveDragon = getBoolean("should-remove-dragon", shouldRemoveDragon);
+        if (shouldRemoveDragon) {
+            log("The Ender Dragon will be removed if she already exists without a portal.");
+        }
+    }
 }
