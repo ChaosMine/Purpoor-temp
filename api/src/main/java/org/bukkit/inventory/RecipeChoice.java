@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable; // Purpur
 
 /**
  * Represents a potential item match within a recipe. All choices within a
@@ -152,6 +153,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
     public static class ExactChoice implements RecipeChoice {
 
         private List<ItemStack> choices;
+        private Predicate<ItemStack> predicate; // Purpur
 
         public ExactChoice(@NotNull ItemStack stack) {
             this(Arrays.asList(stack));
@@ -196,6 +198,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
 
         @Override
         public boolean test(@NotNull ItemStack t) {
+            if (predicate != null) return predicate.test(t); // Purpur
             for (ItemStack match : choices) {
                 if (t.isSimilar(match)) {
                     return true;
@@ -204,6 +207,17 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
 
             return false;
         }
+
+        // Purpur start
+        @Nullable
+        public Predicate<ItemStack> getPredicate() {
+            return predicate;
+        }
+
+        public void setPredicate(@Nullable Predicate<ItemStack> predicate) {
+            this.predicate = predicate;
+        }
+        // Purpur end
 
         @Override
         public int hashCode() {
