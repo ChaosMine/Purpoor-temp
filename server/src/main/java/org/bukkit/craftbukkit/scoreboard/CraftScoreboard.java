@@ -19,6 +19,7 @@ import org.bukkit.scoreboard.Team;
 
 public final class CraftScoreboard implements org.bukkit.scoreboard.Scoreboard {
     final Scoreboard board;
+    boolean registeredGlobally = false; // Paper
 
     CraftScoreboard(Scoreboard board) {
         this.board = board;
@@ -45,6 +46,12 @@ public final class CraftScoreboard implements org.bukkit.scoreboard.Scoreboard {
         Validate.isTrue(name.length() <= 16, "The name '" + name + "' is longer than the limit of 16 characters");
         Validate.isTrue(board.getObjective(name) == null, "An objective of name '" + name + "' already exists");
         CraftCriteria craftCriteria = CraftCriteria.getFromBukkit(criteria);
+        // Paper start - the block comment from the old registerNewObjective didnt cause a conflict when rebasing, so this block wasn't added to the adventure registerNewObjective
+        if (craftCriteria.criteria != net.minecraft.world.scores.criteria.IScoreboardCriteria.DUMMY && !registeredGlobally) {
+            net.minecraft.server.MinecraftServer.getServer().server.getScoreboardManager().registerScoreboardForVanilla(this);
+            registeredGlobally = true;
+        }
+        // Paper end
         ScoreboardObjective objective = board.registerObjective(name, craftCriteria.criteria, io.papermc.paper.adventure.PaperAdventure.asVanilla(displayName), CraftScoreboardTranslations.fromBukkitRender(renderType));
         return new CraftObjective(this, objective);
     }
@@ -66,6 +73,12 @@ public final class CraftScoreboard implements org.bukkit.scoreboard.Scoreboard {
         Validate.isTrue(board.getObjective(name) == null, "An objective of name '" + name + "' already exists");
 
         CraftCriteria craftCriteria = CraftCriteria.getFromBukkit(criteria);
+        // Paper start
+        if (craftCriteria.criteria != net.minecraft.server.IScoreboardCriteria.DUMMY && !registeredGlobally) {
+            net.minecraft.server.MinecraftServer.getServer().server.getScoreboardManager().registerScoreboardForVanilla(this);
+            registeredGlobally = true;
+        }
+        // Paper end
         ScoreboardObjective objective = board.registerObjective(name, craftCriteria.criteria, CraftChatMessage.fromStringOrNull(displayName), CraftScoreboardTranslations.fromBukkitRender(renderType));
         return new CraftObjective(this, objective);*/ // Paper
         return registerNewObjective(name, criteria, io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(displayName), renderType); // Paper

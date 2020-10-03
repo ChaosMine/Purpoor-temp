@@ -462,4 +462,9 @@ public class PaperConfig {
     private static void maxJoinsPerTick() {
         maxJoinsPerTick = getInt("settings.max-joins-per-tick", 3);
     }
+
+    public static boolean trackPluginScoreboards;
+    private static void trackPluginScoreboards() {
+        trackPluginScoreboards = getBoolean("settings.track-plugin-scoreboards", false);
+    }
 }
