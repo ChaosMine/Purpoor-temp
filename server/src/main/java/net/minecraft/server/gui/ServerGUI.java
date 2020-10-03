@@ -31,6 +31,11 @@ import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+// Paper start
+import java.io.IOException;
+import java.util.Objects;
+import javax.imageio.ImageIO;
+// Paper end
 
 public class ServerGUI extends JComponent {
 
@@ -56,6 +61,15 @@ public class ServerGUI extends JComponent {
         jframe.pack();
         jframe.setLocationRelativeTo((Component) null);
         jframe.setVisible(true);
+        jframe.setName("Minecraft server"); // Paper
+
+        // Paper start - Add logo as frame image
+        try {
+            jframe.setIconImage(ImageIO.read(Objects.requireNonNull(ServerGUI.class.getClassLoader().getResourceAsStream("logo.png"))));
+        } catch (IOException ignore) {
+        }
+        // Paper end
+
         jframe.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowevent) {
                 if (!servergui.f.getAndSet(true)) {

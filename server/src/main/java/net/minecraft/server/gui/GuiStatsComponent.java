@@ -18,7 +18,7 @@ public class GuiStatsComponent extends JComponent {
     });
     private final int[] b = new int[256];
     private int c;
-    private final String[] d = new String[11];
+    private final String[] d = new String[12]; public String[] getStatEntries() { return this.d; } // Paper - change size, OBFHELPER
     private final MinecraftServer e;
     private final Timer f;
 
@@ -37,8 +37,18 @@ public class GuiStatsComponent extends JComponent {
     private void b() {
         long i = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
+        // Paper start - Add tps entry
+        double[] tps = org.bukkit.Bukkit.getTPS();
+        String[] tpsAvg = new String[tps.length];
+
+        for ( int g = 0; g < tps.length; g++) {
+            tpsAvg[g] = format( tps[g] );
+        }
         this.d[0] = "Memory use: " + i / 1024L / 1024L + " mb (" + Runtime.getRuntime().freeMemory() * 100L / Runtime.getRuntime().maxMemory() + "% free)";
         this.d[1] = "Avg tick: " + GuiStatsComponent.a.format(this.a(this.e.h) * 1.0E-6D) + " ms";
+        getStatEntries()[2] = "TPS from last 1m, 5m, 15m: " + String.join(", ", tpsAvg);
+        // Paper end
+
         this.b[this.c++ & 255] = (int) (i * 100L / Runtime.getRuntime().maxMemory());
         this.repaint();
     }
@@ -85,4 +95,10 @@ public class GuiStatsComponent extends JComponent {
     public void a() {
         this.f.stop();
     }
+
+    // Paper - start Add tps entry
+    private static String format(double tps) {
+        return ( ( tps > 21.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 ); // only print * at 21, we commonly peak to 20.02 as the tick sleep is not accurate enough, stop the noise
+    }
+    // Paper end
 }
