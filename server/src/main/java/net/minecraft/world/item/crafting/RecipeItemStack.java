@@ -36,6 +36,7 @@ public final class RecipeItemStack implements Predicate<ItemStack> {
     public ItemStack[] choices;
     private IntList d;
     public boolean exact; // CraftBukkit
+    public Predicate<org.bukkit.inventory.ItemStack> predicate; // Purpur
 
     public RecipeItemStack(Stream<? extends RecipeItemStack.Provider> stream) {
         this.b = (RecipeItemStack.Provider[]) stream.toArray((i) -> {
@@ -62,6 +63,12 @@ public final class RecipeItemStack implements Predicate<ItemStack> {
             if (this.choices.length == 0) {
                 return itemstack.isEmpty();
             } else {
+                // Purpur start
+                if (predicate != null) {
+                    return predicate.test(itemstack.asBukkitCopy());
+                }
+                // Purpur end
+
                 ItemStack[] aitemstack = this.choices;
                 int i = aitemstack.length;
 

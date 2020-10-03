@@ -22,6 +22,7 @@ public interface CraftRecipe extends Recipe {
         } else if (bukkit instanceof RecipeChoice.ExactChoice) {
             stack = new RecipeItemStack(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map((mat) -> new net.minecraft.world.item.crafting.RecipeItemStack.StackProvider(CraftItemStack.asNMSCopy(mat))));
             stack.exact = true;
+            stack.predicate = ((RecipeChoice.ExactChoice) bukkit).getPredicate(); // Purpur
         } else {
             throw new IllegalArgumentException("Unknown recipe stack instance " + bukkit);
         }
