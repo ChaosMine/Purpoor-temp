@@ -14,6 +14,7 @@ import net.minecraft.world.Clearable;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.InventoryUtils;
+import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeCampfire;
 import net.minecraft.world.item.crafting.Recipes;
@@ -92,7 +93,11 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
                     result = blockCookEvent.getResult();
                     itemstack1 = CraftItemStack.asNMSCopy(result);
                     // CraftBukkit end
-                    InventoryUtils.dropItem(this.world, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), itemstack1);
+                    // Paper start
+                    EntityItem droppedItem = new EntityItem(this.world, blockposition.getX() + 0.5D, blockposition.getY() + 0.5D, blockposition.getZ() + 0.5D, itemstack1.cloneAndSubtract(this.world.random.nextInt(21) + 10));
+                    droppedItem.setMot(this.world.random.nextGaussian() * 0.05D, this.world.random.nextGaussian() * 0.05D + 0.2D, this.world.random.nextGaussian() * 0.05D);
+                    this.world.addEntity(droppedItem);
+                    // Paper end
                     this.items.set(i, ItemStack.b);
                     this.k();
                 }
