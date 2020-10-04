@@ -937,10 +937,12 @@ public class PurpurWorldConfig {
     public boolean squidRidable = false;
     public boolean squidImmuneToEAR = true;
     public double squidOffsetWaterCheck = 0.0D;
+    public boolean squidsCanFly = false;
     private void squidSettings() {
         squidRidable = getBoolean("mobs.squid.ridable", squidRidable);
         squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
         squidOffsetWaterCheck = getDouble("mobs.squid.water-offset-check", squidOffsetWaterCheck);
+        squidsCanFly = getBoolean("mobs.squid.can-fly", squidsCanFly);
     }
 
     public boolean spiderRidable = false;

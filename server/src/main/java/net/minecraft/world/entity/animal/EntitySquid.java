@@ -81,6 +81,11 @@ public class EntitySquid extends EntityWaterAnimal {
         vector.setX(cos * x - sine * z);
         vector.setZ(sine * x + cos * z);
     }
+
+    @Override
+    public boolean isInWater() {
+        return this.inWater || world.purpurConfig.squidsCanFly;
+    }
     // Purpur end
 
     @Override
@@ -146,6 +151,7 @@ public class EntitySquid extends EntityWaterAnimal {
         }
 
         if (this.aH()) {
+            if (world.purpurConfig.squidsCanFly) setNoGravity(!inWater); // Purpur
             if (this.bp < 3.1415927F) {
                 float f = this.bp / 3.1415927F;
 
@@ -353,7 +359,7 @@ public class EntitySquid extends EntityWaterAnimal {
 
             if (i > 100) {
                 this.b.a(0.0F, 0.0F, 0.0F);
-            } else if (this.b.getRandom().nextInt(50) == 0 || !this.b.inWater || !this.b.eK()) {
+            } else if (this.b.getRandom().nextInt(50) == 0 || !this.b.isInWater() || !this.b.eK()) { // Purpur
                 float f = this.b.getRandom().nextFloat() * 6.2831855F;
                 float f1 = MathHelper.cos(f) * 0.2F;
                 float f2 = -0.1F + this.b.getRandom().nextFloat() * 0.2F;
