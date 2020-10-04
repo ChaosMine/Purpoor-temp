@@ -48,6 +48,7 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.TicketType;
@@ -3487,6 +3488,10 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     // Paper start
     public static int nextEntityId() {
         return entityCount.incrementAndGet();
+    }
+
+    public boolean isTicking() {
+        return ((ChunkProviderServer) world.getChunkProvider()).isInEntityTickingChunk(this);
     }
     // Paper end
 }

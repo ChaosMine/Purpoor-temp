@@ -1161,5 +1161,9 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public boolean isInLava() {
         return getHandle().isInLava();
     }
+
+    public boolean isTicking() {
+        return getHandle().isTicking();
+    }
     // Paper end
 }
