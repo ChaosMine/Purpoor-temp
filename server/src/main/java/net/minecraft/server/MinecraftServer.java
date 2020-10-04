@@ -2020,6 +2020,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         if (this.aN()) {
             PlayerList playerlist = commandlistenerwrapper.getServer().getPlayerList();
             WhiteList whitelist = playerlist.getWhitelist();
+            if (!((DedicatedServer)getServer()).getDedicatedServerProperties().whiteList.get()) return; // Paper - white list not enabled
             List<EntityPlayer> list = Lists.newArrayList(playerlist.getPlayers());
             Iterator iterator = list.iterator();
 
