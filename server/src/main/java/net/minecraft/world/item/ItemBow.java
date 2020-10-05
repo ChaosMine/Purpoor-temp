@@ -35,7 +35,7 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
                 float f = a(j);
 
                 if ((double) f >= 0.1D) {
-                    boolean flag1 = flag && itemstack1.getItem() == Items.ARROW;
+                    boolean flag1 = flag && ((itemstack1.getItem() == Items.ARROW && world.purpurConfig.infinityWorksWithNormalArrows) || (itemstack1.getItem() == Items.TIPPED_ARROW && world.purpurConfig.infinityWorksWithTippedArrows) || (itemstack1.getItem() == Items.SPECTRAL_ARROW && world.purpurConfig.infinityWorksWithSpectralArrows)); // Purpur
 
                     if (!world.isClientSide) {
                         ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW));
@@ -96,6 +96,7 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
                             entityhuman.inventory.f(itemstack1);
                         }
                     }
+                    else if (!entityhuman.abilities.canInstantlyBuild) ((org.bukkit.entity.Player) entityhuman.getBukkitEntity()).updateInventory(); // Purpur
 
                     entityhuman.b(StatisticList.ITEM_USED.b(this));
                 }
