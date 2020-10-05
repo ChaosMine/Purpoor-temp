@@ -3187,7 +3187,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public Stream<Entity> recursiveStream() {
-        return Stream.concat(Stream.of(this), this.passengers.stream().flatMap(Entity::recursiveStream));
+        return Stream.concat(Stream.of(this), com.google.common.collect.ImmutableList.copyOf(this.passengers).stream().flatMap(Entity::recursiveStream)); // Paper
     }
 
     public boolean hasSinglePlayerPassenger() {
