@@ -441,6 +441,11 @@ public class PurpurWorldConfig {
         spawnerDeactivateByRedstone = getBoolean("blocks.spawner.deactivate-by-redstone", spawnerDeactivateByRedstone);
     }
 
+    public float stonecutterDamage = 0.0F;
+    private void stonecutterSettings() {
+        stonecutterDamage = (float) getDouble("blocks.stonecutter.damage", stonecutterDamage);
+    }
+
     public boolean turtleEggsBreakFromExpOrbs = true;
     public boolean turtleEggsBreakFromItems = true;
     public boolean turtleEggsBreakFromMinecarts = true;

@@ -94,4 +94,16 @@ public class BlockStonecutter extends Block {
     public boolean a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, PathMode pathmode) {
         return false;
     }
+
+    // Purpur start
+    @Override
+    public void stepOn(World world, BlockPosition pos, net.minecraft.world.entity.Entity entity) {
+        if (world.purpurConfig.stonecutterDamage > 0.0F && entity instanceof net.minecraft.world.entity.EntityLiving) {
+            org.bukkit.craftbukkit.event.CraftEventFactory.blockDamage = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+            entity.damageEntity(net.minecraft.world.damagesource.DamageSource.CACTUS, world.purpurConfig.stonecutterDamage);
+            org.bukkit.craftbukkit.event.CraftEventFactory.blockDamage = null;
+        }
+        super.stepOn(world, pos, entity);
+    }
+    // Purpur end
 }

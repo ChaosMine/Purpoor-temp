@@ -503,7 +503,7 @@ public class PathfinderNormal extends PathfinderAbstract {
                             return iblockdata.neighbourOverridePathType = PathType.DANGER_CACTUS; // Tuinity - reduce pathfinder branching
                         }
 
-                        if (iblockdata.a(Blocks.SWEET_BERRY_BUSH)) {
+                        if (iblockdata.a(Blocks.SWEET_BERRY_BUSH) || iblockdata.a(Blocks.STONECUTTER)) { // Purpur
                             return iblockdata.neighbourOverridePathType = PathType.DANGER_OTHER; // Tuinity - reduce pathfinder branching
                         }
 
