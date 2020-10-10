@@ -150,6 +150,13 @@ public class PurpurWorldConfig {
         }
     }
 
+    public int daytimeTicks = 12000;
+    public int nighttimeTicks = 12000;
+    private void daytimeCycleSettings() {
+        daytimeTicks = getInt("gameplay-mechanics.daylight-cycle-ticks.daytime", daytimeTicks);
+        nighttimeTicks = getInt("gameplay-mechanics.daylight-cycle-ticks.nighttime", nighttimeTicks);
+    }
+
     public int entityLifeSpan = 0;
     private void entitySettings() {
         entityLifeSpan = getInt("gameplay-mechanics.entity-lifespan", entityLifeSpan);

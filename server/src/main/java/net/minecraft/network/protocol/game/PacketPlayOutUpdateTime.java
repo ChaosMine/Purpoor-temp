@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.Packet;
 public class PacketPlayOutUpdateTime implements Packet<PacketListenerPlayOut> {
 
     private long a; private final void setWorldAge(final long age) { this.a = age; } private final long getWorldAge() { return this.a; } // Paper - OBFHELPER
-    private long b;
+    private long b; public void setPlayerTime(long time) { this.b = time; } // Purpur
 
     public PacketPlayOutUpdateTime() {}
 

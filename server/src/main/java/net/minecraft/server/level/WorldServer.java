@@ -64,6 +64,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutExplosion;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnPosition;
+import net.minecraft.network.protocol.game.PacketPlayOutUpdateTime;
 import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
 import net.minecraft.network.protocol.game.PacketPlayOutWorldParticles;
 import net.minecraft.resources.MinecraftKey;
@@ -213,6 +214,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     private final EnderDragonBattle dragonBattle;
     private final StructureManager structureManager;
     private final boolean Q;
+    private double fakeTime; // Purpur
 
 
     // CraftBukkit start
@@ -604,6 +606,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.getServer().addWorld(this.getWorld()); // CraftBukkit
 
         this.asyncChunkTaskManager = new com.destroystokyo.paper.io.chunk.ChunkTaskManager(this); // Paper
+        this.fakeTime = this.worldDataServer.getDayTime(); // Purpur
     }
 
     // Tuinity start - optimise collision
@@ -1190,7 +1193,21 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             this.nextTickListBlock.nextTick(); // Paper
             this.nextTickListFluid.nextTick(); // Paper
             this.worldDataServer.u().a(this.server, i);
-            if (this.worldData.q().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+            // Purpur start
+            WorldServer world = this.worldDataServer.world;
+            if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+                double incrementTimeBy = 12000.0D / (double) (world.isDay() ? world.purpurConfig.daytimeTicks : world.purpurConfig.nighttimeTicks);
+                if (incrementTimeBy != 1.0D) {
+                    this.fakeTime += incrementTimeBy;
+                    this.setDayTime(this.fakeTime);
+                    PacketPlayOutUpdateTime packet = new PacketPlayOutUpdateTime(world.getTime(), world.getDayTime(), true);
+                    for (EntityHuman entityhuman : world.players) {
+                        EntityPlayer player = (EntityPlayer) entityhuman;
+                        packet.setPlayerTime(player.getPlayerTime());
+                        player.playerConnection.sendPacket(packet);
+                    }
+                } else
+                // Purpur end
                 this.setDayTime(this.worldData.getDayTime() + 1L);
             }
 
@@ -1199,6 +1216,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     public void setDayTime(long i) {
         this.worldDataServer.setDayTime(i);
+        // Purpur start
+        this.fakeTime = i;
+    }
+    public void setDayTime(double i) {
+        this.worldDataServer.setDayTime((long) i);
+        // Purpur end
     }
 
     public void doMobSpawning(boolean flag, boolean flag1) {
