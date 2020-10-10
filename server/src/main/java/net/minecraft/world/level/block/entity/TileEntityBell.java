@@ -27,8 +27,8 @@ public class TileEntityBell extends TileEntity implements ITickable {
     public int a;
     public boolean b;
     public EnumDirection c;
-    private List<EntityLiving> h;
-    private boolean i;
+    private List<EntityLiving> h; private List<EntityLiving> getEntitiesAtRing() { return this.h; } // Paper - OBFHELPER
+    private boolean i; private boolean getShouldReveal() { return this.i; } // Paper - OBFHELPER
     private int j;
 
     public TileEntityBell() {
@@ -57,6 +57,11 @@ public class TileEntityBell extends TileEntity implements ITickable {
 
         if (this.a >= 50) {
             this.b = false;
+            // Paper start
+            if (!this.getShouldReveal()) {
+                this.getEntitiesAtRing().clear();
+            }
+            // Paper end
             this.a = 0;
         }
 
@@ -71,6 +76,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
             } else {
                 this.a(this.world);
                 this.b(this.world);
+                this.getEntitiesAtRing().clear(); // Paper
                 this.i = false;
             }
         }
@@ -111,11 +117,12 @@ public class TileEntityBell extends TileEntity implements ITickable {
                 EntityLiving entityliving = (EntityLiving) iterator.next();
 
                 if (entityliving.isAlive() && !entityliving.dead && blockposition.a((IPosition) entityliving.getPositionVector(), 32.0D)) {
-                    entityliving.getBehaviorController().setMemory(MemoryModuleType.HEARD_BELL_TIME, (Object) this.world.getTime());
+                    entityliving.getBehaviorController().setMemory(MemoryModuleType.HEARD_BELL_TIME, this.world.getTime()); // Paper - decompile fix
                 }
             }
         }
 
+        this.getEntitiesAtRing().removeIf(e -> !e.isAlive()); // Paper
     }
 
     private boolean h() {
