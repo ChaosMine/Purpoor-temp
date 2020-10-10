@@ -722,4 +722,9 @@ public class PaperWorldConfig {
     private void fixCuringExploit() {
         fixCuringZombieVillagerDiscountExploit = getBoolean("game-mechanics.fix-curing-zombie-villager-discount-exploit", fixCuringZombieVillagerDiscountExploit);
     }
+
+    public boolean disableMobSpawnerSpawnEggTransformation = false;
+    private void disableMobSpawnerSpawnEggTransformation() {
+        disableMobSpawnerSpawnEggTransformation = getBoolean("game-mechanics.disable-mob-spawner-spawn-egg-transformation", disableMobSpawnerSpawnEggTransformation);
+    }
 }

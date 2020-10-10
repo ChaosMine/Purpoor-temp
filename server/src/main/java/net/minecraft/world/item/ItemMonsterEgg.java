@@ -60,7 +60,7 @@ public class ItemMonsterEgg extends Item {
             EnumDirection enumdirection = itemactioncontext.getClickedFace();
             IBlockData iblockdata = world.getType(blockposition);
 
-            if (iblockdata.a(Blocks.SPAWNER)) {
+            if (!world.paperConfig.disableMobSpawnerSpawnEggTransformation && iblockdata.a(Blocks.SPAWNER)) { // Paper
                 TileEntity tileentity = world.getTileEntity(blockposition);
 
                 if (tileentity instanceof TileEntityMobSpawner) {
