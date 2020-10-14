@@ -198,6 +198,16 @@ public class PurpurConfig {
         cryingObsidianValidForPortalFrame = getBoolean("settings.blocks.crying_obsidian.valid-for-portal-frame", cryingObsidianValidForPortalFrame);
     }
 
+    public static boolean allowInfinityMending = false;
+    private static void enchantmentSettings() {
+        if (version < 5) {
+            boolean oldValue = getBoolean("settings.enchantment.allow-infinite-and-mending-together", false);
+            set("settings.enchantment.allow-infinity-and-mending-together", oldValue);
+            set("settings.enchantment.allow-infinite-and-mending-together", null);
+        }
+        allowInfinityMending = getBoolean("settings.enchantment.allow-infinity-and-mending-together", allowInfinityMending);
+    }
+
     public static boolean endermanShortHeight = false;
     private static void entitySettings() {
         endermanShortHeight = getBoolean("settings.entity.enderman.short-height", endermanShortHeight);

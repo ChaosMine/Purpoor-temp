@@ -25,6 +25,6 @@ public class EnchantmentInfiniteArrows extends Enchantment {
 
     @Override
     public boolean a(Enchantment enchantment) {
-        return enchantment instanceof EnchantmentMending ? false : super.a(enchantment);
+        return enchantment instanceof EnchantmentMending ? net.pl3x.purpur.PurpurConfig.allowInfinityMending : super.a(enchantment); // Purpur
     }
 }
