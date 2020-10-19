@@ -409,6 +409,11 @@ public class PurpurWorldConfig {
         farmlandGetsMoistFromBelow = getBoolean("blocks.farmland.gets-moist-from-below", farmlandGetsMoistFromBelow);
     }
 
+    public boolean furnaceInfiniteFuel = false;
+    private void furnaceSettings() {
+        furnaceInfiniteFuel = getBoolean("blocks.furnace.infinite-fuel", furnaceInfiniteFuel);
+    }
+
     public boolean lavaInfinite = false;
     public int lavaInfiniteRequiredSources = 2;
     public int lavaSpeedNether = 10;

@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemUtils;
+import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockFurnace;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3D;
 
 // CraftBukkit start
@@ -308,6 +310,22 @@ public abstract class TileEntityFurnace extends TileEntityContainer implements I
         if (!this.world.isClientSide) {
             ItemStack itemstack = (ItemStack) this.items.get(1);
 
+            // Purpur start
+            boolean infiniteFuel = false;
+            if (world.purpurConfig.furnaceInfiniteFuel && !isBurning() && itemstack.isEmpty() && !items.get(0).isEmpty() && world.getTime() % 20 == 0) {
+                BlockPosition pos = getPosition().down();
+                IBlockData iblockdata = world.getTypeIfLoaded(pos);
+                if (iblockdata != null && iblockdata.equals(Blocks.LAVA)) {
+                    Fluid fluid = iblockdata.getFluid();
+                    if (fluid != null && fluid.isSource()) {
+                        world.setTypeAndData(pos, Blocks.AIR.getBlockData(), 3);
+                        itemstack = Items.LAVA_BUCKET.createItemStack();
+                        infiniteFuel = true;
+                    }
+                }
+            }
+            // Purpur end
+
             if (!this.isBurning() && (itemstack.isEmpty() || ((ItemStack) this.items.get(0)).isEmpty())) {
                 if (!this.isBurning() && this.cookTime > 0) {
                     this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.cookTimeTotal);
@@ -361,6 +379,8 @@ public abstract class TileEntityFurnace extends TileEntityContainer implements I
                 flag1 = true;
                 this.world.setTypeAndData(this.position, (IBlockData) this.world.getType(this.position).set(BlockFurnace.LIT, this.isBurning()), 3);
             }
+
+            if (infiniteFuel) this.items.set(1, ItemStack.NULL_ITEM); // Purpur
         }
 
         if (flag1) {
