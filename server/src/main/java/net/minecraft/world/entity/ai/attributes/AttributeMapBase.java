@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 public class AttributeMapBase {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private final Map<AttributeBase, AttributeModifiable> b = Maps.newHashMap();
+    private final Map<AttributeBase, AttributeModifiable> b = Maps.newHashMap(); private final Map<AttributeBase, AttributeModifiable> attributeMap = b; // Paper - OBFHELPER
     private final Set<AttributeModifiable> c = Sets.newHashSet();
     private final AttributeProvider d;
 
@@ -135,4 +135,12 @@ public class AttributeMapBase {
         }
 
     }
+
+    // Paper - start
+    public void registerAttribute(AttributeBase attributeBase) {
+        AttributeModifiable attributeModifiable = new AttributeModifiable(attributeBase, AttributeModifiable::getAttribute);
+        attributeMap.put(attributeBase, attributeModifiable);
+    }
+    // Paper - end
+
 }
