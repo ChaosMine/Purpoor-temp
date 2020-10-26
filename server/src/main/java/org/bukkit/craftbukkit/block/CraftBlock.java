@@ -769,5 +769,23 @@ public class CraftBlock implements Block {
     public String getTranslationKey() {
         return org.bukkit.Bukkit.getUnsafe().getTranslationKey(this);
     }
+
+    @Override
+    public float getDestroySpeed(ItemStack itemStack, boolean considerEnchants) {
+        net.minecraft.world.item.ItemStack nmsItemStack;
+        if (itemStack instanceof CraftItemStack) {
+            nmsItemStack = ((CraftItemStack) itemStack).getHandle();
+        } else {
+            nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        }
+        float speed = nmsItemStack.getItem().getDestroySpeed(nmsItemStack, this.getNMSBlock().getBlockData());
+        if (speed > 1.0F && considerEnchants) {
+            int enchantLevel = net.minecraft.world.item.enchantment.EnchantmentManager.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.DIG_SPEED, nmsItemStack);
+            if (enchantLevel > 0) {
+                speed += enchantLevel * enchantLevel + 1;
+            }
+        }
+        return speed;
+    }
     // Paper end
 }
