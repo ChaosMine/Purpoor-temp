@@ -97,6 +97,7 @@ public class AdvancementDataPlayer {
 
     }
 
+    public final void reload(AdvancementDataWorld advancementDataWorld) { this.a(advancementDataWorld); } // Paper - OBFHELPER
     public void a(AdvancementDataWorld advancementdataworld) {
         this.a();
         this.data.clear();
@@ -393,6 +394,7 @@ public class AdvancementDataPlayer {
 
     }
 
+    public final void sendUpdateIfNeeded(EntityPlayer entityPlayer) { this.b(entityPlayer); } // Paper - OBFHELPER
     public void b(EntityPlayer entityplayer) {
         if (this.m || !this.i.isEmpty() || !this.j.isEmpty()) {
             Map<MinecraftKey, AdvancementProgress> map = Maps.newHashMap();
