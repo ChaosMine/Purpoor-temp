@@ -189,6 +189,7 @@ public abstract class JsonList<K, V extends JsonListEntry<K>> {
 
             try {
                 JsonArray jsonarray = (JsonArray) JsonList.b.fromJson(bufferedreader, JsonArray.class);
+                com.google.common.base.Preconditions.checkState(jsonarray != null, "The file \"" + this.c.getName() + "\" is either empty or corrupt"); // Paper
 
                 this.d.clear();
                 Iterator iterator = jsonarray.iterator();
