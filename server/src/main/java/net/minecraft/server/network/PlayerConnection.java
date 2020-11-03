@@ -1224,7 +1224,8 @@ public class PlayerConnection implements PacketListenerPlayIn {
         if (itemstack.getItem() == Items.WRITABLE_BOOK) {
             NBTTagList nbttaglist = new NBTTagList();
 
-            list.stream().map(NBTTagString::a).forEach(nbttaglist::add);
+            boolean hasPerm = getPlayer().hasPermission("purpur.book.color.edit"); // Purpur - edit book
+            list.stream().map(s -> s = color(s, hasPerm, false)).map(NBTTagString::a).forEach(nbttaglist::add); // Purpur - edit book
             ItemStack old = itemstack.cloneItemStack(); // CraftBukkit
             itemstack.a("pages", (NBTBase) nbttaglist);
             this.player.inventory.setItem(i, CraftEventFactory.handleEditBookEvent(player, i, old, itemstack)); // CraftBukkit // Paper - Don't ignore result (see other callsite for handleEditBookEvent)
@@ -1242,13 +1243,14 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 itemstack1.setTag(nbttagcompound.clone());
             }
 
+            boolean hasPerm = getPlayer().hasPermission("purpur.book.color.edit") || getPlayer().hasPermission("purpur.book.color.sign"); // Purpur
             itemstack1.a("author", (NBTBase) NBTTagString.a(this.player.getDisplayName().getString()));
-            itemstack1.a("title", (NBTBase) NBTTagString.a(s));
+            itemstack1.a("title", (NBTBase) NBTTagString.a(color(s, hasPerm))); // Purpur - sign book
             NBTTagList nbttaglist = new NBTTagList();
             Iterator iterator = list.iterator();
 
             while (iterator.hasNext()) {
-                String s1 = (String) iterator.next();
+                String s1 = color((String) iterator.next(), hasPerm);// Purpur - sign book
                 ChatComponentText chatcomponenttext = new ChatComponentText(s1);
                 String s2 = IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) chatcomponenttext);
 
@@ -1259,6 +1261,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
             this.player.inventory.setItem(i, CraftEventFactory.handleEditBookEvent(player, i, itemstack, itemstack1)); // CraftBukkit
         }
     }
+
+    // Purpur start
+    private String color(String str, boolean hasPerm) {
+        return color(str, hasPerm, true);
+    }
+
+    private String color(String str, boolean hasPerm, boolean parseHex) {
+        return hasPerm ? org.bukkit.ChatColor.color(str, parseHex) : str;
+    }
+    // Purpur end
 
     @Override
     public void a(PacketPlayInEntityNBTQuery packetplayinentitynbtquery) {
