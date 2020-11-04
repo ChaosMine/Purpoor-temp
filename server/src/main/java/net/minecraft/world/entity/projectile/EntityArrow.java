@@ -281,7 +281,7 @@ public abstract class EntityArrow extends IProjectile {
         Vec3D vec3d = this.getMot();
 
         this.setMot(vec3d.d((double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
-        this.despawnCounter = 0;
+        // this.despawnCounter = 0; // Purpur - do not reset despawn counter
     }
 
     @Override
