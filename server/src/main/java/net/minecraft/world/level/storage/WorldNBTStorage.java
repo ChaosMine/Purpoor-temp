@@ -32,6 +32,7 @@ public class WorldNBTStorage {
     }
 
     public void save(EntityHuman entityhuman) {
+        if (org.spigotmc.SpigotConfig.disablePlayerDataSaving) return; // Spigot
         try {
             NBTTagCompound nbttagcompound = entityhuman.save(new NBTTagCompound());
             File file = File.createTempFile(entityhuman.getUniqueIDString() + "-", ".dat", this.playerDir);
