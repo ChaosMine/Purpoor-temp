@@ -17,7 +17,12 @@ public class CraftMerchantRecipe extends MerchantRecipe {
     }
 
     public CraftMerchantRecipe(ItemStack result, int uses, int maxUses, boolean experienceReward, int experience, float priceMultiplier) {
-        super(result, uses, maxUses, experienceReward, experience, priceMultiplier);
+        // Paper start - add ignoreDiscounts param
+        this(result, uses, maxUses, experienceReward, experience, priceMultiplier, false);
+    }
+    public CraftMerchantRecipe(ItemStack result, int uses, int maxUses, boolean experienceReward, int experience, float priceMultiplier, boolean ignoreDiscounts) {
+        super(result, uses, maxUses, experienceReward, experience, priceMultiplier, ignoreDiscounts);
+        // Paper end
         this.handle = new net.minecraft.world.item.trading.MerchantRecipe(
                 net.minecraft.world.item.ItemStack.b,
                 net.minecraft.world.item.ItemStack.b,
@@ -26,6 +31,7 @@ public class CraftMerchantRecipe extends MerchantRecipe {
                 maxUses,
                 experience,
                 priceMultiplier,
+                ignoreDiscounts, // Paper - add ignoreDiscounts param
                 this
         );
         this.setExperienceReward(experienceReward);
@@ -81,6 +87,18 @@ public class CraftMerchantRecipe extends MerchantRecipe {
         handle.priceMultiplier = priceMultiplier;
     }
 
+    // Paper start
+    @Override
+    public boolean shouldIgnoreDiscounts() {
+        return this.handle.ignoreDiscounts;
+    }
+
+    @Override
+    public void setIgnoreDiscounts(boolean ignoreDiscounts) {
+        this.handle.ignoreDiscounts = ignoreDiscounts;
+    }
+    // Paper end
+
     public net.minecraft.world.item.trading.MerchantRecipe toMinecraft() {
         List<ItemStack> ingredients = getIngredients();
         Preconditions.checkState(!ingredients.isEmpty(), "No offered ingredients");
@@ -95,7 +113,7 @@ public class CraftMerchantRecipe extends MerchantRecipe {
         if (recipe instanceof CraftMerchantRecipe) {
             return (CraftMerchantRecipe) recipe;
         } else {
-            CraftMerchantRecipe craft = new CraftMerchantRecipe(recipe.getResult(), recipe.getUses(), recipe.getMaxUses(), recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier());
+            CraftMerchantRecipe craft = new CraftMerchantRecipe(recipe.getResult(), recipe.getUses(), recipe.getMaxUses(), recipe.hasExperienceReward(), recipe.getVillagerExperience(), recipe.getPriceMultiplier(), recipe.shouldIgnoreDiscounts()); // Paper - shouldIgnoreDiscounts
             craft.setIngredients(recipe.getIngredients());
 
             return craft;

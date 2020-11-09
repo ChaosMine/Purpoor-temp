@@ -460,6 +460,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
             while (iterator.hasNext()) {
                 MerchantRecipe merchantrecipe = (MerchantRecipe) iterator.next();
+                if (merchantrecipe.ignoreDiscounts) continue; // Paper
 
                 // CraftBukkit start
                 int bonus = -MathHelper.d((float) i * merchantrecipe.getPriceMultiplier());
@@ -479,6 +480,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
             while (iterator1.hasNext()) {
                 MerchantRecipe merchantrecipe1 = (MerchantRecipe) iterator1.next();
+                if (merchantrecipe1.ignoreDiscounts) continue; // Paper
                 double d0 = 0.3D + 0.0625D * (double) j;
                 int k = (int) Math.floor(d0 * (double) merchantrecipe1.a().getCount());
 

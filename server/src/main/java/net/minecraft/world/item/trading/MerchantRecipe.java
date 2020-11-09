@@ -19,6 +19,7 @@ public class MerchantRecipe {
     private int demand;
     public float priceMultiplier;
     public int xp;
+    public boolean ignoreDiscounts; // Paper
     // CraftBukkit start
     private CraftMerchantRecipe bukkitHandle;
 
@@ -27,7 +28,12 @@ public class MerchantRecipe {
     }
 
     public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int uses, int maxUses, int experience, float priceMultiplier, CraftMerchantRecipe bukkit) {
-        this(itemstack, itemstack1, itemstack2, uses, maxUses, experience, priceMultiplier);
+        // Paper start - add ignoreDiscounts param
+        this(itemstack, itemstack1, itemstack2, uses, maxUses, experience, priceMultiplier, false, bukkit);
+    }
+    public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int uses, int maxUses, int experience, float priceMultiplier, boolean ignoreDiscounts, CraftMerchantRecipe bukkit) {
+        this(itemstack, itemstack1, itemstack2, uses, maxUses, experience, priceMultiplier, ignoreDiscounts);
+        // Paper end
         this.bukkitHandle = bukkit;
     }
     // CraftBukkit end
@@ -59,6 +65,7 @@ public class MerchantRecipe {
 
         this.specialPrice = nbttagcompound.getInt("specialPrice");
         this.demand = nbttagcompound.getInt("demand");
+        this.ignoreDiscounts = nbttagcompound.getBoolean("Paper.IgnoreDiscounts"); // Paper
     }
 
     public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, int i, int j, float f) {
@@ -70,10 +77,19 @@ public class MerchantRecipe {
     }
 
     public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int i, int j, int k, float f) {
-        this(itemstack, itemstack1, itemstack2, i, j, k, f, 0);
+        // Paper start - add ignoreDiscounts param
+        this(itemstack, itemstack1, itemstack2, i, j, k, f, false);
+    }
+    public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int i, int j, int k, float f, boolean ignoreDiscounts) {
+        this(itemstack, itemstack1, itemstack2, i, j, k, f, 0, ignoreDiscounts);
     }
 
     public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int i, int j, int k, float f, int l) {
+        this(itemstack, itemstack1, itemstack2, i, j, k, f, l, false);
+    }
+    public MerchantRecipe(ItemStack itemstack, ItemStack itemstack1, ItemStack itemstack2, int i, int j, int k, float f, int l, boolean ignoreDiscounts) {
+        this.ignoreDiscounts = ignoreDiscounts;
+        // Paper end
         this.rewardExp = true;
         this.xp = 1;
         this.buyingItem1 = itemstack;
@@ -189,6 +205,7 @@ public class MerchantRecipe {
         nbttagcompound.setFloat("priceMultiplier", this.priceMultiplier);
         nbttagcompound.setInt("specialPrice", this.specialPrice);
         nbttagcompound.setInt("demand", this.demand);
+        nbttagcompound.setBoolean("Paper.IgnoreDiscounts", this.ignoreDiscounts); // Paper
         return nbttagcompound;
     }
 
