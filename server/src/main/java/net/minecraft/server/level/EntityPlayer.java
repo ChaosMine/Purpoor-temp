@@ -2152,7 +2152,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         }
 
         if (world.purpurConfig.idleTimeoutUpdateTabList) {
-            getBukkitEntity().setPlayerListName((setAfk ? net.pl3x.purpur.PurpurConfig.afkTabListPrefix : "") + getName());
+            if (setAfk) {
+                getBukkitEntity().setPlayerListName(net.pl3x.purpur.PurpurConfig.afkTabListPrefix + getName() + net.pl3x.purpur.PurpurConfig.afkTabListSuffix);
+            } else {
+                getBukkitEntity().setPlayerListName(getName());
+            }
         }
 
         ((WorldServer) world).everyoneSleeping();
