@@ -41,6 +41,7 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
@@ -164,6 +165,48 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     private int tileTickPosition;
     public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
     public java.util.ArrayDeque<BlockRedstoneTorch.RedstoneUpdateInfo> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
+    // Purpur start
+    private com.google.common.cache.Cache<BreedingCooldownPair, Object> playerBreedingCooldowns;
+
+    private com.google.common.cache.Cache<BreedingCooldownPair, Object> getNewBreedingCooldownCache() {
+        return com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(this.purpurConfig.animalBreedingCooldownSeconds, java.util.concurrent.TimeUnit.SECONDS).build();
+    }
+
+    public void resetBreedingCooldowns() {
+        this.playerBreedingCooldowns = this.getNewBreedingCooldownCache();
+    }
+
+    public boolean hasBreedingCooldown(java.util.UUID player, Class<? extends EntityAnimal> animalType) { // Purpur
+        return this.playerBreedingCooldowns.getIfPresent(new BreedingCooldownPair(player, animalType)) != null;
+    }
+
+    public void addBreedingCooldown(java.util.UUID player, Class<? extends EntityAnimal> animalType) {
+        this.playerBreedingCooldowns.put(new BreedingCooldownPair(player, animalType), new Object());
+    }
+
+    private static final class BreedingCooldownPair {
+        private final java.util.UUID playerUUID;
+        private final Class<? extends EntityAnimal> animalType;
+
+        public BreedingCooldownPair(java.util.UUID playerUUID, Class<? extends EntityAnimal> animalType) {
+            this.playerUUID = playerUUID;
+            this.animalType = animalType;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BreedingCooldownPair that = (BreedingCooldownPair) o;
+            return playerUUID.equals(that.playerUUID) && animalType.equals(that.animalType);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(playerUUID, animalType);
+        }
+    }
+    // Purpur end
 
     public CraftWorld getWorld() {
         return this.world;
@@ -256,6 +299,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
         this.tuinityConfig = new com.tuinity.tuinity.config.TuinityConfig.WorldConfig(((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName()); // Tuinity - Server Config
         this.purpurConfig = new net.pl3x.purpur.PurpurWorldConfig((((net.minecraft.world.level.storage.WorldDataServer)worlddatamutable).getName()), env); // Purpur
+        this.playerBreedingCooldowns = this.getNewBreedingCooldownCache(); // Purpur
         this.generator = gen;
         this.world = new CraftWorld((WorldServer) this, gen, env);
         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit

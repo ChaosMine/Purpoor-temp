@@ -145,7 +145,7 @@ public abstract class EntityAnimal extends EntityAgeable {
         if (this.k(itemstack)) {
             int i = this.getAge();
 
-            if (!this.world.isClientSide && i == 0 && this.eP()) {
+            if (!this.world.isClientSide && i == 0 && this.eP() && (this.world.purpurConfig.animalBreedingCooldownSeconds <= 0 || !this.world.hasBreedingCooldown(entityhuman.getUniqueID(), this.getClass()))) { // Purpur
                 this.a(entityhuman, itemstack);
                 this.g(entityhuman);
                 return EnumInteractionResult.SUCCESS;
@@ -237,6 +237,14 @@ public abstract class EntityAnimal extends EntityAgeable {
             if (entityplayer == null && entityanimal.getBreedCause() != null) {
                 entityplayer = entityanimal.getBreedCause();
             }
+            // Purpur start
+            if (entityplayer != null && worldserver.purpurConfig.animalBreedingCooldownSeconds > 0) {
+                if (worldserver.hasBreedingCooldown(entityplayer.getUniqueID(), this.getClass())) {
+                    return;
+                }
+                worldserver.addBreedingCooldown(entityplayer.getUniqueID(), this.getClass());
+            }
+            // Purpur end
             // CraftBukkit start - call EntityBreedEvent
             entityageable.setBaby(true);
             entityageable.setPositionRotation(this.locX(), this.locY(), this.locZ(), 0.0F, 0.0F);

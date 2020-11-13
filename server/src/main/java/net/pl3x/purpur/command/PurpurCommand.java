@@ -49,6 +49,7 @@ public class PurpurCommand extends Command {
             PurpurConfig.init((File) console.options.valueOf("purpur-settings"));
             for (WorldServer world : console.getWorlds()) {
                 world.purpurConfig.init();
+                world.resetBreedingCooldowns();
             }
             console.server.reloadCount++;
 
