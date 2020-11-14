@@ -113,6 +113,14 @@ public class BlockSoil extends Block {
                 return;
             }
 
+            // Purpur start
+            if (world.purpurConfig.farmlandAlpha) {
+                Block block = world.getType(blockposition.down()).getBlock();
+                if (block instanceof BlockFence || block instanceof BlockCobbleWall) {
+                    return;
+                }
+            }
+            // Purpur end
             if (CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, Blocks.DIRT.getBlockData()).isCancelled()) {
                 return;
             }
