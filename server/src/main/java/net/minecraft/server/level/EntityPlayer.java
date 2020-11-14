@@ -261,6 +261,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
 
     boolean needsChunkCenterUpdate; // Paper - no-tick view distance
+    public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 
     public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
         super(worldserver, worldserver.getSpawn(), worldserver.v(), gameprofile);

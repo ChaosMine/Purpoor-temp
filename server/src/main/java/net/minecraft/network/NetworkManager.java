@@ -137,12 +137,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
 
             this.u = true;
             if (this.channel.isOpen()) {
+                EntityPlayer player = this.getPlayer(); // Paper
                 if (throwable instanceof TimeoutException) {
                     NetworkManager.LOGGER.debug("Timeout", throwable);
+                    if (player != null) player.quitReason = org.bukkit.event.player.PlayerQuitEvent.QuitReason.TIMED_OUT; // Paper
                     this.close(new ChatMessage("disconnect.timeout"));
                 } else {
                     ChatMessage chatmessage = new ChatMessage("disconnect.genericReason", new Object[]{"Internal Exception: " + throwable});
 
+                    if (player != null) player.quitReason = org.bukkit.event.player.PlayerQuitEvent.QuitReason.ERRONEOUS_STATE; // Paper
                     if (flag) {
                         NetworkManager.LOGGER.debug("Failed to sent packet", throwable);
                         this.sendPacket(new PacketPlayOutKickDisconnect(chatmessage), (future) -> {

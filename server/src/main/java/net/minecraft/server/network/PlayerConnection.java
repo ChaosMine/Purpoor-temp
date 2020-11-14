@@ -449,6 +449,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         final IChatBaseComponent ichatbasecomponent = PaperAdventure.asVanilla(event.reason()); // Paper - Adventure
         // CraftBukkit end
 
+        this.player.quitReason = org.bukkit.event.player.PlayerQuitEvent.QuitReason.KICKED; // Paper
         this.networkManager.sendPacket(new PacketPlayOutKickDisconnect(ichatbasecomponent), (future) -> {
             this.networkManager.close(ichatbasecomponent);
         });
