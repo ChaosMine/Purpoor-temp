@@ -718,6 +718,18 @@ public class PaperWorldConfig {
         }
     }
 
+    public boolean onlyPlayersCollide = false;
+    public boolean allowVehicleCollisions = true;
+    private void onlyPlayersCollide() {
+        onlyPlayersCollide = getBoolean("only-players-collide", onlyPlayersCollide);
+        allowVehicleCollisions = getBoolean("allow-vehicle-collisions", allowVehicleCollisions);
+        if (onlyPlayersCollide && !allowVehicleCollisions) {
+            log("Collisions will only work if a player is one of the two entities colliding.");
+        } else if (onlyPlayersCollide) {
+            log("Collisions will only work if a player OR a vehicle is one of the two entities colliding.");
+        }
+    }
+
     public int wanderingTraderSpawnMinuteTicks = 1200;
     public int wanderingTraderSpawnDayTicks = 24000;
     public int wanderingTraderSpawnChanceFailureIncrement = 25;

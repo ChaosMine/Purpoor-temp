@@ -21,6 +21,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.util.MathHelper;
@@ -767,6 +768,7 @@ public abstract class EntityMinecartAbstract extends Entity {
     public void collide(Entity entity) {
         if (!this.world.isClientSide) {
             if (!entity.noclip && !this.noclip) {
+                if (!this.world.paperConfig.allowVehicleCollisions && this.world.paperConfig.onlyPlayersCollide && !(entity instanceof EntityPlayer)) return; // Paper
                 if (!this.w(entity)) {
                     // CraftBukkit start
                     VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent((Vehicle) this.getBukkitEntity(), entity.getBukkitEntity());

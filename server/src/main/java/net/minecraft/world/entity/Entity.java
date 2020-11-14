@@ -1468,6 +1468,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public void collide(Entity entity) {
         if (!this.isSameVehicle(entity)) {
             if (!entity.noclip && !this.noclip) {
+                if (this.world.paperConfig.onlyPlayersCollide && !(entity instanceof EntityPlayer || this instanceof EntityPlayer)) return; // Paper
                 double d0 = entity.locX() - this.locX();
                 double d1 = entity.locZ() - this.locZ();
                 double d2 = MathHelper.a(d0, d1);

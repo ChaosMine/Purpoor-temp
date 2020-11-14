@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
@@ -230,6 +231,7 @@ public class EntityBoat extends Entity {
 
     @Override
     public void collide(Entity entity) {
+        if (!this.world.paperConfig.allowVehicleCollisions && this.world.paperConfig.onlyPlayersCollide && !(entity instanceof EntityPlayer)) return; // Paper
         if (entity instanceof EntityBoat) {
             if (entity.getBoundingBox().minY < this.getBoundingBox().maxY) {
                 // CraftBukkit start
