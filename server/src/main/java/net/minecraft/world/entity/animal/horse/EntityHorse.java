@@ -46,6 +46,11 @@ public class EntityHorse extends EntityHorseAbstract {
     public boolean isRidableInWater() {
         return world.purpurConfig.horseRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.horseBreedingTicks;
+    }
     // Purpur end
 
     @Override

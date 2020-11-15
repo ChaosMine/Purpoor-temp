@@ -74,6 +74,11 @@ public class EntityOcelot extends EntityAnimal {
     public boolean isRidableInWater() {
         return world.purpurConfig.ocelotRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.ocelotBreedingTicks;
+    }
     // Purpur end
 
     private boolean isTrusting() {

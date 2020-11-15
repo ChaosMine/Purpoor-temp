@@ -101,6 +101,11 @@ public class EntityTurtle extends EntityAnimal {
     public boolean isRidableInWater() {
         return world.purpurConfig.turtleRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.turtleBreedingTicks;
+    }
     // Purpur end
 
     public void setHomePos(BlockPosition blockposition) {

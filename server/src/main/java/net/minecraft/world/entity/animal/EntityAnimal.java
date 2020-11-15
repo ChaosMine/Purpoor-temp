@@ -38,6 +38,7 @@ public abstract class EntityAnimal extends EntityAgeable {
     public int loveTicks;
     public UUID breedCause;
     public ItemStack breedItem; // CraftBukkit - Add breedItem variable
+    public abstract int getPurpurBreedTime(); // Purpur
 
     protected EntityAnimal(EntityTypes<? extends EntityAnimal> entitytypes, World world) {
         super(entitytypes, world);
@@ -261,8 +262,10 @@ public abstract class EntityAnimal extends EntityAgeable {
                 CriterionTriggers.o.a(entityplayer, this, entityanimal, entityageable);
             }
 
-            this.setAgeRaw(6000);
-            entityanimal.setAgeRaw(6000);
+            // Purpur start
+            this.setAgeRaw(this.getPurpurBreedTime());
+            entityanimal.setAgeRaw(entityanimal.getPurpurBreedTime());
+            // Purpur end
             this.resetLove();
             entityanimal.resetLove();
             worldserver.addAllEntities(entityageable, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING); // CraftBukkit - added SpawnReason

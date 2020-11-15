@@ -121,6 +121,11 @@ public class EntityPanda extends EntityAnimal {
         this.setEating(false);
         this.setLayingOnBack(false);
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.pandaBreedingTicks;
+    }
     // Purpur end
 
     @Override

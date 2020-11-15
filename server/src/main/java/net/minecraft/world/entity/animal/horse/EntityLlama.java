@@ -108,6 +108,11 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     public boolean hasSaddle() {
         return super.hasSaddle() || (isTamed() && getColor() != null);
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.llamaBreedingTicks;
+    }
     // Purpur end
 
     public void setStrength(int i) {

@@ -71,6 +71,11 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     public boolean isRidableInWater() {
         return world.purpurConfig.hoglinRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.hoglinBreedingTicks;
+    }
     // Purpur end
 
     @Override

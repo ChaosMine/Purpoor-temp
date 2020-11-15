@@ -105,6 +105,11 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     public boolean isRidableInWater() {
         return world.purpurConfig.striderRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.striderBreedingTicks;
+    }
     // Purpur end
 
     public static boolean c(EntityTypes<EntityStrider> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {

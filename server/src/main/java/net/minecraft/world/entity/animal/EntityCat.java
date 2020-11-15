@@ -122,6 +122,11 @@ public class EntityCat extends EntityTameableAnimal {
         setSleepingWithOwner(false);
         setHeadDown(false);
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.catBreedingTicks;
+    }
     // Purpur end
 
     public MinecraftKey eU() {

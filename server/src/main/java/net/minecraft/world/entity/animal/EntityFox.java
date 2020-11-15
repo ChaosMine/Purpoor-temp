@@ -157,6 +157,11 @@ public class EntityFox extends EntityAnimal {
         super.onDismount(entityhuman);
         setCanPickupLoot(true);
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.foxBreedingTicks;
+    }
     // Purpur end
 
     @Override
@@ -1373,8 +1378,10 @@ public class EntityFox extends EntityAnimal {
                     CriterionTriggers.o.a(entityplayer2, this.animal, this.partner, (EntityAgeable) entityfox);
                 }
 
-                this.animal.setAgeRaw(6000);
-                this.partner.setAgeRaw(6000);
+                // Purpur start
+                this.animal.setAgeRaw(this.animal.getPurpurBreedTime());
+                this.partner.setAgeRaw(this.partner.getPurpurBreedTime());
+                // Purpur end
                 this.animal.resetLove();
                 this.partner.resetLove();
                 worldserver.addAllEntities(entityfox, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING); // CraftBukkit - added SpawnReason

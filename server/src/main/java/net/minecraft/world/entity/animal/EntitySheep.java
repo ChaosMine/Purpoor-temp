@@ -121,6 +121,11 @@ public class EntitySheep extends EntityAnimal implements IShearable {
     public boolean isRidableInWater() {
         return world.purpurConfig.sheepRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.sheepBreedingTicks;
+    }
     // Purpur end
 
     @Override

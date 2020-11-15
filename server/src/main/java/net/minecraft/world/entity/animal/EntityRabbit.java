@@ -85,6 +85,11 @@ public class EntityRabbit extends EntityAnimal {
     public boolean isRidableInWater() {
         return world.purpurConfig.rabbitRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.rabbitBreedingTicks;
+    }
     // Purpur end
 
     // CraftBukkit start - code from constructor

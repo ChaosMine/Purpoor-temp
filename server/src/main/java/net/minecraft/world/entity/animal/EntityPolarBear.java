@@ -116,6 +116,11 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
             return this.isInLove() && polarbear.isInLove();
         }
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.polarBearBreedingTicks;
+    }
     // Purpur end
 
     @Override

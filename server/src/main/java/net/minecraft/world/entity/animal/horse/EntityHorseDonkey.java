@@ -21,6 +21,11 @@ public class EntityHorseDonkey extends EntityHorseChestedAbstract {
     public boolean isRidableInWater() {
         return world.purpurConfig.donkeyRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.donkeyBreedingTicks;
+    }
     // Purpur end
 
     @Override

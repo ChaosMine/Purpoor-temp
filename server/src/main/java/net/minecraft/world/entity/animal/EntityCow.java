@@ -54,6 +54,11 @@ public class EntityCow extends EntityAnimal {
     public boolean isRidableInWater() {
         return world.purpurConfig.cowRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.cowBreedingTicks;
+    }
     // Purpur end
 
     @Override

@@ -107,6 +107,11 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         super.onMount(entityhuman);
         setSitting(false);
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.wolfBreedingTicks;
+    }
     // Purpur end
 
     @Override

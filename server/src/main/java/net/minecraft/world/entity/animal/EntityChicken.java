@@ -71,6 +71,11 @@ public class EntityChicken extends EntityAnimal {
             this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(2.0D);
         }
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.chickenBreedingTicks;
+    }
     // Purpur end
 
     @Override

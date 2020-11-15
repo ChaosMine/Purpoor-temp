@@ -492,10 +492,12 @@ public class PurpurWorldConfig {
     public boolean beeRidable = false;
     public boolean beeRidableInWater = false;
     public double beeMaxY = 256D;
+    public int beeBreedingTicks = 6000;
     private void beeSettings() {
         beeRidable = getBoolean("mobs.bee.ridable", beeRidable);
         beeRidableInWater = getBoolean("mobs.bee.ridable-in-water", beeRidableInWater);
         beeMaxY = getDouble("mobs.bee.ridable-max-y", beeMaxY);
+        beeBreedingTicks = getInt("mobs.bee.breeding-delay-ticks", beeBreedingTicks);
     }
 
     public boolean blazeRidable = false;
@@ -512,12 +514,14 @@ public class PurpurWorldConfig {
     public int catSpawnDelay = 1200;
     public int catSpawnSwampHutScanRange = 16;
     public int catSpawnVillageScanRange = 48;
+    public int catBreedingTicks = 6000;
     private void catSettings() {
         catRidable = getBoolean("mobs.cat.ridable", catRidable);
         catRidableInWater = getBoolean("mobs.cat.ridable-in-water", catRidableInWater);
         catSpawnDelay = getInt("mobs.cat.spawn-delay", catSpawnDelay);
         catSpawnSwampHutScanRange = getInt("mobs.cat.scan-range-for-other-cats.swamp-hut", catSpawnSwampHutScanRange);
         catSpawnVillageScanRange = getInt("mobs.cat.scan-range-for-other-cats.village", catSpawnVillageScanRange);
+        catBreedingTicks = getInt("mobs.cat.breeding-delay-ticks", catBreedingTicks);
     }
 
     public boolean caveSpiderRidable = false;
@@ -530,10 +534,12 @@ public class PurpurWorldConfig {
     public boolean chickenRidable = false;
     public boolean chickenRidableInWater = false;
     public boolean chickenRetaliate = false;
+    public int chickenBreedingTicks = 6000;
     private void chickenSettings() {
         chickenRidable = getBoolean("mobs.chicken.ridable", chickenRidable);
         chickenRidableInWater = getBoolean("mobs.chicken.ridable-in-water", chickenRidableInWater);
         chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);
+        chickenBreedingTicks = getInt("mobs.chicken.breeding-delay-ticks", chickenBreedingTicks);
     }
 
     public boolean codRidable = false;
@@ -544,10 +550,12 @@ public class PurpurWorldConfig {
     public boolean cowRidable = false;
     public boolean cowRidableInWater = false;
     public int cowFeedMushrooms = 0;
+    public int cowBreedingTicks = 6000;
     private void cowSettings() {
         cowRidable = getBoolean("mobs.cow.ridable", cowRidable);
         cowRidableInWater = getBoolean("mobs.cow.ridable-in-water", cowRidableInWater);
         cowFeedMushrooms = getInt("mobs.cow.feed-mushrooms-for-mooshroom", cowFeedMushrooms);
+        cowBreedingTicks = getInt("mobs.cow.breeding-delay-ticks", cowBreedingTicks);
     }
 
     public boolean creeperRidable = false;
@@ -575,8 +583,10 @@ public class PurpurWorldConfig {
     }
 
     public boolean donkeyRidableInWater = false;
+    public int donkeyBreedingTicks = 6000;
     private void donkeySettings() {
         donkeyRidableInWater = getBoolean("mobs.donkey.ridable-in-water", donkeyRidableInWater);
+        donkeyBreedingTicks = getInt("mobs.donkey.breeding-delay-ticks", donkeyBreedingTicks);
     }
 
     public boolean drownedRidable = false;
@@ -634,10 +644,12 @@ public class PurpurWorldConfig {
     public boolean foxRidable = false;
     public boolean foxRidableInWater = false;
     public boolean foxTypeChangesWithTulips = false;
+    public int foxBreedingTicks = 6000;
     private void foxSettings() {
         foxRidable = getBoolean("mobs.fox.ridable", foxRidable);
         foxRidableInWater = getBoolean("mobs.fox.ridable-in-water", foxRidableInWater);
         foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
+        foxBreedingTicks = getInt("mobs.fox.breeding-delay-ticks", foxBreedingTicks);
     }
 
     public boolean ghastRidable = false;
@@ -682,14 +694,18 @@ public class PurpurWorldConfig {
 
     public boolean hoglinRidable = false;
     public boolean hoglinRidableInWater = false;
+    public int hoglinBreedingTicks = 6000;
     private void hoglinSettings() {
         hoglinRidable = getBoolean("mobs.hoglin.ridable", hoglinRidable);
         hoglinRidableInWater = getBoolean("mobs.hoglin.ridable-in-water", hoglinRidableInWater);
+        hoglinBreedingTicks = getInt("mobs.hoglin.breeding-delay-ticks", hoglinBreedingTicks);
     }
 
     public boolean horseRidableInWater = false;
+    public int horseBreedingTicks = 6000;
     private void horseSettings() {
         horseRidableInWater = getBoolean("mobs.horse.ridable-in-water", horseRidableInWater);
+        horseBreedingTicks = getInt("mobs.horse.breeding-delay-ticks", horseBreedingTicks);
     }
 
     public boolean huskRidable = false;
@@ -734,9 +750,11 @@ public class PurpurWorldConfig {
 
     public boolean llamaRidable = false;
     public boolean llamaRidableInWater = false;
+    public int llamaBreedingTicks = 6000;
     private void llamaSettings() {
         llamaRidable = getBoolean("mobs.llama.ridable", llamaRidable);
         llamaRidableInWater = getBoolean("mobs.llama.ridable-in-water", llamaRidableInWater);
+        llamaBreedingTicks = getInt("mobs.llama.breeding-delay-ticks", llamaBreedingTicks);
     }
 
     public boolean llamaTraderRidable = false;
@@ -755,28 +773,36 @@ public class PurpurWorldConfig {
 
     public boolean mooshroomRidable = false;
     public boolean mooshroomRidableInWater = false;
+    public int mooshroomBreedingTicks = 6000;
     private void mooshroomSettings() {
         mooshroomRidable = getBoolean("mobs.mooshroom.ridable", mooshroomRidable);
         mooshroomRidableInWater = getBoolean("mobs.mooshroom.ridable-in-water", mooshroomRidableInWater);
+        mooshroomBreedingTicks = getInt("mobs.mooshroom.breeding-delay-ticks", mooshroomBreedingTicks);
     }
 
     public boolean muleRidableInWater = false;
+    public int muleBreedingTicks = 6000;
     private void muleSettings() {
         muleRidableInWater = getBoolean("mobs.mule.ridable-in-water", muleRidableInWater);
+        muleBreedingTicks = getInt("mobs.mule.breeding-delay-ticks", muleBreedingTicks);
     }
 
     public boolean ocelotRidable = false;
     public boolean ocelotRidableInWater = false;
+    public int ocelotBreedingTicks = 6000;
     private void ocelotSettings() {
         ocelotRidable = getBoolean("mobs.ocelot.ridable", ocelotRidable);
         ocelotRidableInWater = getBoolean("mobs.ocelot.ridable-in-water", ocelotRidableInWater);
+        ocelotBreedingTicks = getInt("mobs.ocelot.breeding-delay-ticks", ocelotBreedingTicks);
     }
 
     public boolean pandaRidable = false;
     public boolean pandaRidableInWater = false;
+    public int pandaBreedingTicks = 6000;
     private void pandaSettings() {
         pandaRidable = getBoolean("mobs.panda.ridable", pandaRidable);
         pandaRidableInWater = getBoolean("mobs.panda.ridable-in-water", pandaRidableInWater);
+        pandaBreedingTicks = getInt("mobs.panda.breeding-delay-ticks", pandaBreedingTicks);
     }
 
     public boolean parrotRidable = false;
@@ -842,10 +868,12 @@ public class PurpurWorldConfig {
     public boolean pigRidable = false;
     public boolean pigRidableInWater = false;
     public boolean pigGiveSaddleBack = false;
+    public int pigBreedingTicks = 6000;
     private void pigSettings() {
         pigRidable = getBoolean("mobs.pig.ridable", pigRidable);
         pigRidableInWater = getBoolean("mobs.pig.ridable-in-water", pigRidableInWater);
         pigGiveSaddleBack = getBoolean("mobs.pig.give-saddle-back", pigGiveSaddleBack);
+        pigBreedingTicks = getInt("mobs.pig.breeding-delay-ticks", pigBreedingTicks);
     }
 
     public boolean piglinRidable = false;
@@ -873,12 +901,14 @@ public class PurpurWorldConfig {
     public boolean polarBearRidableInWater = false;
     public String polarBearBreedableItemString = "";
     public Item polarBearBreedableItem = null;
+    public int polarBearBreedingTicks = 6000;
     private void polarBearSettings() {
         polarBearRidable = getBoolean("mobs.polar_bear.ridable", polarBearRidable);
         polarBearRidableInWater = getBoolean("mobs.polar_bear.ridable-in-water", polarBearRidableInWater);
         polarBearBreedableItemString = getString("mobs.polar_bear.breedable-item", polarBearBreedableItemString);
         Item item = IRegistry.ITEM.get(new MinecraftKey(polarBearBreedableItemString));
         if (item != Items.AIR) polarBearBreedableItem = item;
+        polarBearBreedingTicks = getInt("mobs.polar_bear.breeding-delay-ticks", polarBearBreedingTicks);
     }
 
     public boolean pufferfishRidable = false;
@@ -890,11 +920,13 @@ public class PurpurWorldConfig {
     public boolean rabbitRidableInWater = false;
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
+    public int rabbitBreedingTicks = 6000;
     private void rabbitSettings() {
         rabbitRidable = getBoolean("mobs.rabbit.ridable", rabbitRidable);
         rabbitRidableInWater = getBoolean("mobs.rabbit.ridable-in-water", rabbitRidableInWater);
         rabbitNaturalToast = getDouble("mobs.rabbit.spawn-toast-chance", rabbitNaturalToast);
         rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
+        rabbitBreedingTicks = getInt("mobs.rabbit.breeding-delay-ticks", rabbitBreedingTicks);
     }
 
     public boolean ravagerRidable = false;
@@ -911,9 +943,11 @@ public class PurpurWorldConfig {
 
     public boolean sheepRidable = false;
     public boolean sheepRidableInWater = false;
+    public int sheepBreedingTicks = 6000;
     private void sheepSettings() {
         sheepRidable = getBoolean("mobs.sheep.ridable", sheepRidable);
         sheepRidableInWater = getBoolean("mobs.sheep.ridable-in-water", sheepRidableInWater);
+        sheepBreedingTicks = getInt("mobs.sheep.breeding-delay-ticks", sheepBreedingTicks);
     }
 
     public boolean shulkerRidable = false;
@@ -991,9 +1025,11 @@ public class PurpurWorldConfig {
 
     public boolean striderRidable = false;
     public boolean striderRidableInWater = false;
+    public int striderBreedingTicks = 6000;
     private void striderSettings() {
         striderRidable = getBoolean("mobs.strider.ridable", striderRidable);
         striderRidableInWater = getBoolean("mobs.strider.ridable-in-water", striderRidableInWater);
+        striderBreedingTicks = getInt("mobs.strider.breeding-delay-ticks", striderBreedingTicks);
     }
 
     public boolean tropicalFishRidable = false;
@@ -1003,9 +1039,11 @@ public class PurpurWorldConfig {
 
     public boolean turtleRidable = false;
     public boolean turtleRidableInWater = false;
+    public int turtleBreedingTicks = 6000;
     private void turtleSettings() {
         turtleRidable = getBoolean("mobs.turtle.ridable", turtleRidable);
         turtleRidableInWater = getBoolean("mobs.turtle.ridable-in-water", turtleRidableInWater);
+        turtleBreedingTicks = getInt("mobs.turtle.breeding-delay-ticks", turtleBreedingTicks);
     }
 
     public boolean vexRidable = false;
@@ -1027,6 +1065,7 @@ public class PurpurWorldConfig {
     public int villagerSpawnIronGolemRadius = 0;
     public int villagerSpawnIronGolemLimit = 0;
     public boolean villagerCanBreed = true;
+    public int villagerBreedingTicks = 6000;
     private void villagerSettings() {
         villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
         villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
@@ -1038,6 +1077,7 @@ public class PurpurWorldConfig {
         villagerSpawnIronGolemRadius = getInt("mobs.villager.spawn-iron-golem.radius", villagerSpawnIronGolemRadius);
         villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
         villagerCanBreed = getBoolean("mobs.villager.can-breed", villagerCanBreed);
+        villagerBreedingTicks = getInt("mobs.villager.breeding-delay-ticks", villagerBreedingTicks);
     }
 
     public boolean villagerTraderRidable = false;
@@ -1098,9 +1138,11 @@ public class PurpurWorldConfig {
 
     public boolean wolfRidable = false;
     public boolean wolfRidableInWater = false;
+    public int wolfBreedingTicks = 6000;
     private void wolfSettings() {
         wolfRidable = getBoolean("mobs.wolf.ridable", wolfRidable);
         wolfRidableInWater = getBoolean("mobs.wolf.ridable-in-water", wolfRidableInWater);
+        wolfBreedingTicks = getInt("mobs.wolf.breeding-delay-ticks", wolfBreedingTicks);
     }
 
     public boolean zoglinRidable = false;

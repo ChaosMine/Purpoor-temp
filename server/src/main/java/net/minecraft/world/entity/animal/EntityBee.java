@@ -175,6 +175,11 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
             setMot(mot.a(0.9D));
         }
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.beeBreedingTicks;
+    }
     // Purpur end
 
     @Override

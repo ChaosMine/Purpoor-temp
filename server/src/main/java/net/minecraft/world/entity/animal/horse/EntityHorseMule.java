@@ -20,6 +20,11 @@ public class EntityHorseMule extends EntityHorseChestedAbstract {
     public boolean isRidableInWater() {
         return world.purpurConfig.muleRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.muleBreedingTicks;
+    }
     // Purpur end
     @Override
     protected SoundEffect getSoundAmbient() {

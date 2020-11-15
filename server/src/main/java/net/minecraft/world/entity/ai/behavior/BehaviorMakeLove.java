@@ -117,8 +117,10 @@ public class BehaviorMakeLove extends Behavior<EntityVillager> {
                 return Optional.empty();
             }
             // CraftBukkit end
-            entityvillager.setAgeRaw(6000);
-            entityvillager1.setAgeRaw(6000);
+            // Purpur start
+            entityvillager.setAgeRaw(worldserver.purpurConfig.villagerBreedingTicks);
+            entityvillager1.setAgeRaw(worldserver.purpurConfig.villagerBreedingTicks);
+            // Purpur end
             worldserver.addAllEntities(entityvillager2, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING); // CraftBukkit - added SpawnReason
             worldserver.broadcastEntityEffect(entityvillager2, (byte) 12);
             return Optional.of(entityvillager2);

@@ -77,6 +77,11 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
     public boolean isRidableInWater() {
         return world.purpurConfig.pigRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.pigBreedingTicks;
+    }
     // Purpur end
 
     @Override

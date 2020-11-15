@@ -67,6 +67,11 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
     public boolean isRidableInWater() {
         return world.purpurConfig.mooshroomRidableInWater;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return this.world.purpurConfig.mooshroomBreedingTicks;
+    }
     // Purpur end
 
     @Override

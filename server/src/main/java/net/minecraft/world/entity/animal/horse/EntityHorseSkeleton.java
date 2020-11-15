@@ -43,6 +43,11 @@ public class EntityHorseSkeleton extends EntityHorseAbstract {
     public boolean isTamed() {
         return true;
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return 6000;
+    }
     // Purpur end
 
     public static AttributeProvider.Builder eL() {

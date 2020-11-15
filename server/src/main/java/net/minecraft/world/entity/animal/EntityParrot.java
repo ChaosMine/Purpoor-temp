@@ -171,6 +171,11 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             setMot(mot.a(0.9D));
         }
     }
+
+    @Override
+    public int getPurpurBreedTime() {
+        return 6000;
+    }
     // Purpur end
 
     @Nullable
