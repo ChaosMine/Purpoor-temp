@@ -5,6 +5,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.player.EntityHuman;
 
 // Paper start
@@ -27,6 +28,11 @@ public class ItemNameTag extends Item {
                 if (!event.callEvent()) return EnumInteractionResult.PASS;
                 EntityLiving newEntityLiving = ((org.bukkit.craftbukkit.entity.CraftLivingEntity) event.getEntity()).getHandle();
                 newEntityLiving.setCustomName(event.getName() != null ? PaperAdventure.asVanilla(event.getName()) : null);
+                // Purpur start
+                if (entityhuman.world.purpurConfig.armorstandFixNametags && entityliving instanceof EntityArmorStand) {
+                    entityliving.setCustomNameVisible(true);
+                }
+                // Purpur end
                 if (event.isPersistent() && newEntityLiving instanceof EntityInsentient) {
                     ((EntityInsentient) newEntityLiving).setPersistent();
                 }

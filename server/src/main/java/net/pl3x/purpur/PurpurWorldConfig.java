@@ -84,9 +84,11 @@ public class PurpurWorldConfig {
     }
 
     public boolean armorstandSetNameVisible = false;
+    public boolean armorstandFixNametags = false;
     public float armorstandStepHeight = 0.0F;
     private void armorstandSettings() {
         armorstandSetNameVisible = getBoolean("gameplay-mechanics.armorstand.set-name-visible-when-placing-with-custom-name", armorstandSetNameVisible);
+        armorstandFixNametags = getBoolean("gameplay-mechanics.armorstand.fix-nametags", armorstandFixNametags);
         armorstandStepHeight = (float) getDouble("gameplay-mechanics.armorstand.step-height", armorstandStepHeight);
     }
 
