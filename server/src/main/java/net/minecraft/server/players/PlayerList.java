@@ -894,7 +894,7 @@ public abstract class PlayerList {
             if (location == null) {
                 worldserver1 = this.server.getWorldServer(World.OVERWORLD);
                 blockposition = entityplayer1.getSpawnPoint(worldserver1);
-                location = new Location(worldserver1.getWorld(), (double) ((float) blockposition.getX() + 0.5F), (double) ((float) blockposition.getY() + 0.1F), (double) ((float) blockposition.getZ() + 0.5F));
+                location = new Location(worldserver1.getWorld(), (double) ((float) blockposition.getX() + 0.5F), (double) ((float) blockposition.getY() + 0.1F), (double) ((float) blockposition.getZ() + 0.5F), worldserver1.worldData.getSpawnAngle(), 0.0F); // Paper - use world spawn angle
             }
 
             Player respawnPlayer = cserver.getPlayer(entityplayer1);

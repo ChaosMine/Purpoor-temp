@@ -380,7 +380,7 @@ public class CraftWorld implements World {
     @Override
     public Location getSpawnLocation() {
         BlockPosition spawn = world.getSpawn();
-        return new Location(this, spawn.getX(), spawn.getY(), spawn.getZ());
+        return new Location(this, spawn.getX(), spawn.getY(), spawn.getZ(), world.worldData.getSpawnAngle(), 0.0F); // Paper - expose world spawn angle
     }
 
     @Override

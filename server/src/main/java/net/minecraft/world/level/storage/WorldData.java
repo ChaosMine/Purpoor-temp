@@ -12,6 +12,7 @@ public interface WorldData {
 
     int c();
 
+    default float getSpawnAngle() { return d(); } // Paper - OBFHELPER
     float d();
 
     long getTime();
