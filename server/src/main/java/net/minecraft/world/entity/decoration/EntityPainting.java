@@ -108,7 +108,13 @@ public class EntityPainting extends EntityHanging {
                 }
             }
 
-            this.a((IMaterial) Items.PAINTING);
+            // Purpur start
+            final ItemStack painting = new ItemStack(Items.PAINTING);
+            if (this.world.purpurConfig.persistentDroppableEntityDisplayNames && this.hasCustomName()) {
+                painting.setName(this.getCustomName());
+            }
+            this.dropItem(painting);
+            // Purpur end
         }
     }
 

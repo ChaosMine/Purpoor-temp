@@ -229,7 +229,13 @@ public class EntityItemFrame extends EntityHanging {
                 }
 
                 if (flag) {
-                    this.a((IMaterial) Items.ITEM_FRAME);
+                    // Purpur start
+                    final ItemStack itemFrame = new ItemStack(Items.ITEM_FRAME);
+                    if (this.world.purpurConfig.persistentDroppableEntityDisplayNames && this.hasCustomName()) {
+                        itemFrame.setName(this.getCustomName());
+                    }
+                    this.dropItem(itemFrame);
+                    // Purpur end
                 }
 
                 if (!itemstack.isEmpty()) {

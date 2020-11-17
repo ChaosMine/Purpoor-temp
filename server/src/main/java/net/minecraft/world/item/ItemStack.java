@@ -788,6 +788,7 @@ public final class ItemStack {
         return this.getItem().h(this);
     }
 
+    public ItemStack setName(@Nullable IChatBaseComponent component) { return this.a(component); } // Purpur - OBFHELPER
     public ItemStack a(@Nullable IChatBaseComponent ichatbasecomponent) {
         NBTTagCompound nbttagcompound = this.a("display");
 

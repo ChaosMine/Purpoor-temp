@@ -65,6 +65,11 @@ public class ItemBoat extends Item {
 
                 entityboat.setType(this.b);
                 entityboat.yaw = entityhuman.yaw;
+                // Purpur start
+                if (world.purpurConfig.persistentDroppableEntityDisplayNames && itemstack.hasName()) {
+                    entityboat.setCustomName(itemstack.getName());
+                }
+                // Purpur end
                 if (!world.getCubes(entityboat, entityboat.getBoundingBox().g(-0.1D))) {
                     return InteractionResultWrapper.fail(itemstack);
                 } else {

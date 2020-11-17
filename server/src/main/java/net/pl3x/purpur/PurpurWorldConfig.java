@@ -83,8 +83,10 @@ public class PurpurWorldConfig {
         return PurpurConfig.config.getString("world-settings." + worldName + "." + path, PurpurConfig.config.getString("world-settings.default." + path));
     }
 
+    public boolean armorstandSetNameVisible = false;
     public float armorstandStepHeight = 0.0F;
     private void armorstandSettings() {
+        armorstandSetNameVisible = getBoolean("gameplay-mechanics.armorstand.set-name-visible-when-placing-with-custom-name", armorstandSetNameVisible);
         armorstandStepHeight = (float) getDouble("gameplay-mechanics.armorstand.step-height", armorstandStepHeight);
     }
 
@@ -261,6 +263,7 @@ public class PurpurWorldConfig {
     public boolean entitiesCanUsePortals = true;
     public boolean milkCuresBadOmen = true;
     public boolean persistentTileEntityDisplayNames = false;
+    public boolean persistentDroppableEntityDisplayNames = false;
     public double tridentLoyaltyVoidReturnHeight = 0.0D;
     public double voidDamageHeight = -64.0D;
     public double voidDamageDealt = 4.0D;
@@ -274,6 +277,7 @@ public class PurpurWorldConfig {
         entitiesCanUsePortals = getBoolean("gameplay-mechanics.entities-can-use-portals", entitiesCanUsePortals);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);
         persistentTileEntityDisplayNames = getBoolean("gameplay-mechanics.persistent-tileentity-display-names-and-lore", persistentTileEntityDisplayNames);
+        persistentDroppableEntityDisplayNames = getBoolean("gameplay-mechanics.persistent-droppable-entity-display-names", persistentDroppableEntityDisplayNames);
         tridentLoyaltyVoidReturnHeight = getDouble("gameplay-mechanics.trident-loyalty-void-return-height", tridentLoyaltyVoidReturnHeight);
         voidDamageHeight = getDouble("gameplay-mechanics.void-damage-height", voidDamageHeight);
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);

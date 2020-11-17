@@ -39,7 +39,7 @@ public class ItemHanging extends Item {
             return EnumInteractionResult.FAIL;
         } else {
             World world = itemactioncontext.getWorld();
-            Object object;
+            Entity object; // Purpur
 
             if (this.a == EntityTypes.PAINTING) {
                 object = new EntityPainting(world, blockposition1, enumdirection);
@@ -55,6 +55,11 @@ public class ItemHanging extends Item {
 
             if (nbttagcompound != null) {
                 EntityTypes.a(world, entityhuman, (Entity) object, nbttagcompound);
+                // Purpur start
+                if (itemactioncontext.getWorld().purpurConfig.persistentDroppableEntityDisplayNames && itemactioncontext.getItemStack().hasName()) {
+                    object.setCustomName(itemactioncontext.getItemStack().getName());
+                }
+                // Purpur end
             }
 
             if (((EntityHanging) object).survives()) {

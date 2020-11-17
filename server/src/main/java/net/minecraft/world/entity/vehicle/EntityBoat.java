@@ -201,7 +201,13 @@ public class EntityBoat extends Entity {
                 }
                 // CraftBukkit end
                 if (!flag && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                    this.a((IMaterial) this.g());
+                    // Purpur start
+                    final ItemStack boat = new ItemStack(this.getBoatItem());
+                    if (this.world.purpurConfig.persistentDroppableEntityDisplayNames && this.hasCustomName()) {
+                        boat.setName(this.getCustomName());
+                    }
+                    this.dropItem(boat);
+                    // Purpur end
                 }
 
                 this.die();

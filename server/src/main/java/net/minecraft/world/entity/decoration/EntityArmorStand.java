@@ -588,7 +588,13 @@ public class EntityArmorStand extends EntityLiving {
     }
 
     private void f(DamageSource damagesource) {
-        drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(new ItemStack(Items.ARMOR_STAND))); // CraftBukkit - add to drops
+        // Purpur start
+        final ItemStack armorStand = new ItemStack(Items.ARMOR_STAND);
+        if (this.world.purpurConfig.persistentDroppableEntityDisplayNames && this.hasCustomName()) {
+            armorStand.setName(this.getCustomName());
+        }
+        drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(armorStand)); // CraftBukkit - add to drops
+        // Purpur end
         this.g(damagesource);
     }
 

@@ -63,6 +63,14 @@ public class ItemArmorStand extends Item {
                         return EnumInteractionResult.FAIL;
                     }
                     // CraftBukkit end
+                    // Purpur start
+                    if (itemactioncontext.getWorld().purpurConfig.persistentDroppableEntityDisplayNames && itemactioncontext.getItemStack().hasName()) {
+                        entityarmorstand.setCustomName(itemactioncontext.getItemStack().getName());
+                        if (itemactioncontext.getWorld().purpurConfig.armorstandSetNameVisible) {
+                            entityarmorstand.setCustomNameVisible(true);
+                        }
+                    }
+                    // Purpur end
                     worldserver.addAllEntities(entityarmorstand); // Paper - moved down
                     world.playSound((EntityHuman) null, entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), SoundEffects.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
                 }
