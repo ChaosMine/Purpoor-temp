@@ -140,10 +140,12 @@ public class EntityZombie extends EntityMonster {
         return (Boolean) this.getDataWatcher().get(EntityZombie.DROWN_CONVERTING);
     }
 
+    public boolean canBreakDoors() { return this.eU(); } // Paper - OBFHELPER
     public boolean eU() {
         return this.bs;
     }
 
+    public void setCanBreakDoors(boolean canBreakDoors) { this.u(canBreakDoors); } // Paper - OBFHELPER
     public void u(boolean flag) {
         if (this.eK() && PathfinderGoalUtil.a(this)) {
             if (this.bs != flag) {

@@ -129,6 +129,16 @@ public class CraftZombie extends CraftMonster implements Zombie {
     public void setShouldBurnInDay(boolean shouldBurnInDay) {
         getHandle().setShouldBurnInDay(shouldBurnInDay);
     }
+
+    @Override
+    public boolean canBreakDoors() {
+        return getHandle().canBreakDoors();
+    }
+
+    @Override
+    public void setCanBreakDoors(boolean canBreakDoors) {
+        getHandle().setCanBreakDoors(canBreakDoors);
+    }
     // Paper end
 
     @Override
