@@ -140,5 +140,19 @@ public interface Zombie extends Monster, Ageable {
      * @param shouldBurnInDay True to burn in sunlight
      */
     void setShouldBurnInDay(boolean shouldBurnInDay);
+
+    /**
+     * Check if this zombie can break doors
+     *
+     * @return True if zombie can break doors
+     */
+    boolean canBreakDoors();
+
+    /**
+     * Sets if this zombie can break doors
+     *
+     * @param canBreakDoors True if zombie can break doors
+     */
+    void setCanBreakDoors(boolean canBreakDoors);
     // Paper end
 }
