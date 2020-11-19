@@ -239,7 +239,7 @@ public class BlockChest extends BlockChestAbstract<TileEntityChest> implements I
     @Override
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
-            TileEntity tileentity = world.getTileEntity(blockposition);
+            TileEntity tileentity = world.getTileEntity(blockposition, !iblockdata1.isSameInstance(Blocks.WATER)); // Paper - Don't validate TE - Fix console spam when removing chests in water
 
             if (tileentity instanceof IInventory) {
                 InventoryUtils.dropInventory(world, blockposition, (IInventory) tileentity);

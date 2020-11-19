@@ -98,7 +98,7 @@ public class BlockCampfire extends BlockTileEntity implements IBlockWaterlogged 
     @Override
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
-            TileEntity tileentity = world.getTileEntity(blockposition);
+            TileEntity tileentity = world.getTileEntity(blockposition, !iblockdata1.isSameInstance(Blocks.WATER)); // Don't validate TE when removing campfire in water
 
             if (tileentity instanceof TileEntityCampfire) {
                 InventoryUtils.a(world, blockposition, ((TileEntityCampfire) tileentity).getItems());
