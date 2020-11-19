@@ -539,11 +539,22 @@ public class ChunkRegionLoader {
 
             chunk.d(false);
 
+            // Paper start
+            final Map<EntityTypes<?>, Integer> savedEntityCounts = Maps.newHashMap();
             for (int j = 0; j < chunk.getEntitySlices().length; ++j) {
                 Iterator iterator1 = chunk.getEntitySlices()[j].iterator();
 
                 while (iterator1.hasNext()) {
                     Entity entity = (Entity) iterator1.next();
+                    final EntityTypes<?> entityType = entity.getEntityType();
+                    final int saveLimit = worldserver.paperConfig.entityPerChunkSaveLimits.getOrDefault(entityType, -1);
+                    if (saveLimit > -1) {
+                        if (savedEntityCounts.getOrDefault(entityType, 0) >= saveLimit) {
+                            continue;
+                        }
+                        savedEntityCounts.merge(entityType, 1, Integer::sum);
+                    }
+                    // Paper end
                     NBTTagCompound nbttagcompound4 = new NBTTagCompound();
                     // Paper start
                     if (asyncsavedata == null && !entity.dead && (int) Math.floor(entity.locX()) >> 4 != chunk.getPos().x || (int) Math.floor(entity.locZ()) >> 4 != chunk.getPos().z) {
@@ -674,10 +685,21 @@ public class ChunkRegionLoader {
         NBTTagList nbttaglist = nbttagcompound.getList("Entities", 10);
         World world = chunk.getWorld();
 
+        // Paper start
+        final Map<EntityTypes<?>, Integer> loadedEntityCounts = Maps.newHashMap();
         for (int i = 0; i < nbttaglist.size(); ++i) {
             NBTTagCompound nbttagcompound1 = nbttaglist.getCompound(i);
 
             EntityTypes.a(nbttagcompound1, world, (entity) -> {
+                final EntityTypes<?> entityType = entity.getEntityType();
+                final int saveLimit = world.paperConfig.entityPerChunkSaveLimits.getOrDefault(entityType, -1);
+                if (saveLimit > -1) {
+                    if (loadedEntityCounts.getOrDefault(entityType, 0) >= saveLimit) {
+                        return null;
+                    }
+                    loadedEntityCounts.merge(entityType, 1, Integer::sum);
+                }
+                // Paper end
                 chunk.a(entity);
                 return entity;
             });

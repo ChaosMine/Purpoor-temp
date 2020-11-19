@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray.EngineMode;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityVindicator;
 import net.minecraft.world.entity.monster.EntityZombie;
 import org.bukkit.Bukkit;
@@ -762,5 +763,19 @@ public class PaperWorldConfig {
                 .collect(Collectors.toList()),
             EnumDifficulty.class
         );
+    }
+
+    public Map<EntityTypes<?>, Integer> entityPerChunkSaveLimits = new HashMap<>();
+    private void entityPerChunkSaveLimits() {
+        getInt("entity-per-chunk-save-limit.experience_orb", -1);
+        getInt("entity-per-chunk-save-limit.snowball", -1);
+        getInt("entity-per-chunk-save-limit.ender_pearl", -1);
+        getInt("entity-per-chunk-save-limit.arrow", -1);
+        EntityTypes.getEntityNameList().forEach(name -> {
+            final EntityTypes<?> type = EntityTypes.getByName(name.getKey()).orElseThrow(() -> new IllegalStateException("Unknown Entity Type: " + name.toString()));
+            final String path = ".entity-per-chunk-save-limit." + name.getKey();
+            final int value = config.getInt("world-settings." + worldName + path, config.getInt("world-settings.default" + path, -1)); // get without setting defaults
+            if (value != -1) entityPerChunkSaveLimits.put(type, value);
+        });
     }
 }
