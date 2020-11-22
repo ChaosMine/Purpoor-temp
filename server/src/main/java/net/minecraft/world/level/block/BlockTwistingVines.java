@@ -2,6 +2,7 @@ package net.minecraft.world.level.block;
 
 import java.util.Random;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -28,4 +29,10 @@ public class BlockTwistingVines extends BlockGrowingTop {
     protected boolean h(IBlockData iblockdata) {
         return BlockNetherVinesUtil.a(iblockdata);
     }
+
+    // Purpur start
+    public double getGrowthModifier(WorldServer worldserver) {
+        return worldserver.purpurConfig.twistingVinesGrowthModifier;
+    }
+    // Purpur end
 }

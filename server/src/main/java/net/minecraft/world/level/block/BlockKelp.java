@@ -4,6 +4,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.item.context.BlockActionContext;
@@ -66,4 +67,10 @@ public class BlockKelp extends BlockGrowingTop implements IFluidContainer {
     public Fluid d(IBlockData iblockdata) {
         return FluidTypes.WATER.a(false);
     }
+
+    // Purpur start
+    public double getGrowthModifier(WorldServer worldserver) {
+        return worldserver.spigotConfig.kelpModifier;
+    }
+    // Purpur end
 }

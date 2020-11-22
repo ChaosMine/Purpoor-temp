@@ -38,9 +38,11 @@ public abstract class BlockGrowingTop extends BlockGrowingAbstract implements IB
         return (Integer) iblockdata.get(BlockGrowingTop.d) < 25;
     }
 
+    public abstract double getGrowthModifier(WorldServer worldserver); // Purpur
+
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Integer) iblockdata.get(BlockGrowingTop.d) < 25 && random.nextDouble() < (100.0D / worldserver.spigotConfig.kelpModifier) * this.e) { // Spigot
+        if ((Integer) iblockdata.get(BlockGrowingTop.d) < 25 && random.nextDouble() < (100.0D / getGrowthModifier(worldserver)) * this.e) { // Spigot // Purpur
             BlockPosition blockposition1 = blockposition.shift(this.a);
 
             if (this.h(worldserver.getType(blockposition1))) {

@@ -477,6 +477,16 @@ public class PurpurWorldConfig {
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
     }
 
+    public double twistingVinesGrowthModifier = 0.10D;
+    private void twistingVinesSettings() {
+        twistingVinesGrowthModifier = getDouble("blocks.twisting_vines.growth-modifier", twistingVinesGrowthModifier);
+    }
+
+    public double weepingVinesGrowthModifier = 0.10D;
+    private void weepingVinesSettings() {
+        weepingVinesGrowthModifier = getDouble("blocks.weeping_vines.growth-modifier", weepingVinesGrowthModifier);
+    }
+
     public boolean babiesAreRidable = true;
     public boolean untamedTamablesAreRidable = true;
     public boolean useNightVisionWhenRiding = false;
