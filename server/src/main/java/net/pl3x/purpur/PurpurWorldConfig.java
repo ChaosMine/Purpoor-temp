@@ -646,10 +646,12 @@ public class PurpurWorldConfig {
     public boolean endermanRidable = false;
     public boolean endermanRidableInWater = false;
     public boolean endermanAllowGriefing = true;
+    public boolean endermanDespawnEvenWithBlock = false;
     private void endermanSettings() {
         endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
         endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
         endermanAllowGriefing = getBoolean("mobs.enderman.allow-griefing", endermanAllowGriefing);
+        endermanDespawnEvenWithBlock = getBoolean("mobs.enderman.can-despawn-with-held-block", endermanDespawnEvenWithBlock);
     }
 
     public boolean endermiteRidable = false;

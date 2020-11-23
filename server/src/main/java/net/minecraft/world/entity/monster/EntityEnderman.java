@@ -427,7 +427,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
     @Override
     public boolean isSpecialPersistence() {
-        return super.isSpecialPersistence() || this.getCarried() != null;
+        return super.isSpecialPersistence() || (!this.world.purpurConfig.endermanDespawnEvenWithBlock && this.getCarried() != null); // Purpur
     }
 
     static class PathfinderGoalEndermanPickupBlock extends PathfinderGoal {
