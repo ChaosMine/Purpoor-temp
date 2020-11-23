@@ -562,6 +562,7 @@ public abstract class Container {
         this.getSlot(i).set(itemstack);
     }
 
+    public void setData(int index, int value) { this.a(index, value); } // Paper - OBFHELPER
     public void a(int i, int j) {
         ((ContainerProperty) this.d.get(i)).set(j);
     }

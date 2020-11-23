@@ -14,6 +14,7 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 // CraftBukkit end
+import io.papermc.paper.event.player.PlayerLecternPageChangeEvent; // Paper
 
 public class ContainerLectern extends Container {
 
@@ -61,6 +62,7 @@ public class ContainerLectern extends Container {
     @Override
     public boolean a(EntityHuman entityhuman, int i) {
         int j;
+        PlayerLecternPageChangeEvent playerLecternPageChangeEvent; CraftInventoryLectern bukkitView; // Paper
 
         if (i >= 100) {
             j = i - 100;
@@ -70,11 +72,25 @@ public class ContainerLectern extends Container {
             switch (i) {
                 case 1:
                     j = this.containerProperties.getProperty(0);
-                    this.a(0, j - 1);
+                    // Paper start
+                    bukkitView = (CraftInventoryLectern) getBukkitView().getTopInventory();
+                    playerLecternPageChangeEvent = new PlayerLecternPageChangeEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), bukkitView.getHolder(), bukkitView.getBook(), PlayerLecternPageChangeEvent.PageChangeDirection.LEFT, j, j - 1);
+                    if (!playerLecternPageChangeEvent.callEvent()) {
+                        return false;
+                    }
+                    this.setData(0, playerLecternPageChangeEvent.getNewPage());
+                    // Paper end
                     return true;
                 case 2:
                     j = this.containerProperties.getProperty(0);
-                    this.a(0, j + 1);
+                    // Paper start
+                    bukkitView = (CraftInventoryLectern) getBukkitView().getTopInventory();
+                    playerLecternPageChangeEvent = new PlayerLecternPageChangeEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), bukkitView.getHolder(), bukkitView.getBook(), PlayerLecternPageChangeEvent.PageChangeDirection.RIGHT, j, j + 1);
+                    if (!playerLecternPageChangeEvent.callEvent()) {
+                        return false;
+                    }
+                    this.setData(0, playerLecternPageChangeEvent.getNewPage());
+                    // Paper end
                     return true;
                 case 3:
                     if (!entityhuman.eK()) {
