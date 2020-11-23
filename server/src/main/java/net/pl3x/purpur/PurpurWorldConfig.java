@@ -424,6 +424,11 @@ public class PurpurWorldConfig {
         furnaceInfiniteFuel = getBoolean("blocks.furnace.infinite-fuel", furnaceInfiniteFuel);
     }
 
+    public int kelpMaxGrowthAge = 25;
+    private void kelpSettings() {
+        kelpMaxGrowthAge = getInt("blocks.kelp.max-growth-age", kelpMaxGrowthAge);
+    }
+
     public boolean lavaInfinite = false;
     public int lavaInfiniteRequiredSources = 2;
     public int lavaSpeedNether = 10;
@@ -478,13 +483,17 @@ public class PurpurWorldConfig {
     }
 
     public double twistingVinesGrowthModifier = 0.10D;
+    public int twistingVinesMaxGrowthAge = 25;
     private void twistingVinesSettings() {
         twistingVinesGrowthModifier = getDouble("blocks.twisting_vines.growth-modifier", twistingVinesGrowthModifier);
+        twistingVinesMaxGrowthAge = getInt("blocks.twisting_vines.max-growth-age", twistingVinesMaxGrowthAge);
     }
 
     public double weepingVinesGrowthModifier = 0.10D;
+    public int weepingVinesMaxGrowthAge = 25;
     private void weepingVinesSettings() {
         weepingVinesGrowthModifier = getDouble("blocks.weeping_vines.growth-modifier", weepingVinesGrowthModifier);
+        weepingVinesMaxGrowthAge = getInt("blocks.weeping_vines.max-growth-age", weepingVinesMaxGrowthAge);
     }
 
     public boolean babiesAreRidable = true;

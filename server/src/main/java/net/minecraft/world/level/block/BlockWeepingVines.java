@@ -34,5 +34,9 @@ public class BlockWeepingVines extends BlockGrowingTop {
     public double getGrowthModifier(WorldServer worldserver) {
         return worldserver.purpurConfig.weepingVinesGrowthModifier;
     }
+
+    public int getMaxGrowthAge(WorldServer worldserver) {
+        return worldserver.purpurConfig.weepingVinesMaxGrowthAge;
+    }
     // Purpur end
 }

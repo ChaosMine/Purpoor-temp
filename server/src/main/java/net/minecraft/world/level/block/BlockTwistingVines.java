@@ -34,5 +34,9 @@ public class BlockTwistingVines extends BlockGrowingTop {
     public double getGrowthModifier(WorldServer worldserver) {
         return worldserver.purpurConfig.twistingVinesGrowthModifier;
     }
+
+    public int getMaxGrowthAge(WorldServer worldserver) {
+        return worldserver.purpurConfig.twistingVinesMaxGrowthAge;
+    }
     // Purpur end
 }

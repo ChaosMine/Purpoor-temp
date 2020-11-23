@@ -72,5 +72,9 @@ public class BlockKelp extends BlockGrowingTop implements IFluidContainer {
     public double getGrowthModifier(WorldServer worldserver) {
         return worldserver.spigotConfig.kelpModifier;
     }
+
+    public int getMaxGrowthAge(WorldServer worldserver) {
+        return worldserver.purpurConfig.kelpMaxGrowthAge;
+    }
     // Purpur end
 }
