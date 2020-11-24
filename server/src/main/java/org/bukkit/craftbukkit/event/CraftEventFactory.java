@@ -962,7 +962,7 @@ public class CraftEventFactory {
                 } else {
                     damageCause = DamageCause.ENTITY_EXPLOSION;
                 }
-                event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), entity.getBukkitEntity(), damageCause, modifiers, modifierFunctions);
+                event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), entity.getBukkitEntity(), damageCause, modifiers, modifierFunctions, damager instanceof HumanEntity && ((EntityHuman)damager).isCritical); // Purpur
                 damager.processClick(EnumHand.MAIN_HAND); // Purpur
             }
             event.setCancelled(cancelled);
@@ -1042,7 +1042,7 @@ public class CraftEventFactory {
             } else {
                 throw new IllegalStateException(String.format("Unhandled damage of %s by %s from %s", entity, damager.getHandle(), source.translationIndex));
             }
-            EntityDamageEvent event = new EntityDamageByEntityEvent(damager, entity.getBukkitEntity(), cause, modifiers, modifierFunctions);
+            EntityDamageEvent event = new EntityDamageByEntityEvent(damager, entity.getBukkitEntity(), cause, modifiers, modifierFunctions, entityDamage instanceof HumanEntity && ((EntityHuman)entityDamage).isCritical); // Purpur
             event.setCancelled(cancelled);
             callEvent(event);
             if (!event.isCancelled()) {
@@ -1097,7 +1097,7 @@ public class CraftEventFactory {
     private static EntityDamageEvent callEntityDamageEvent(Entity damager, Entity damagee, DamageCause cause, Map<DamageModifier, Double> modifiers, Map<DamageModifier, Function<? super Double, Double>> modifierFunctions, boolean cancelled) {
         EntityDamageEvent event;
         if (damager != null) {
-            event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), damagee.getBukkitEntity(), cause, modifiers, modifierFunctions);
+            event = new EntityDamageByEntityEvent(damager.getBukkitEntity(), damagee.getBukkitEntity(), cause, modifiers, modifierFunctions, damager instanceof HumanEntity && ((EntityHuman)damager).isCritical); // Purpur
             damager.processClick(EnumHand.MAIN_HAND); // Purpur
         } else {
             event = new EntityDamageEvent(damagee.getBukkitEntity(), cause, modifiers, modifierFunctions);

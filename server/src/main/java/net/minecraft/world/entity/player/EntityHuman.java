@@ -169,6 +169,7 @@ public abstract class EntityHuman extends EntityLiving {
     // Paper start
     public boolean affectsSpawning = true;
     // Paper end
+    public boolean isCritical = false; // Purpur
 
     // CraftBukkit start
     public boolean fauxSleeping;
@@ -1176,6 +1177,7 @@ public abstract class EntityHuman extends EntityLiving {
                     flag2 = flag2 && !world.paperConfig.disablePlayerCrits; // Paper
                     flag2 = flag2 && !this.isSprinting();
                     if (flag2) {
+                        this.isCritical = true; // Purpur
                         f *= 1.5F;
                     }
 
@@ -1212,6 +1214,7 @@ public abstract class EntityHuman extends EntityLiving {
 
                     Vec3D vec3d = entity.getMot();
                     boolean flag5 = entity.damageEntity(DamageSource.playerAttack(this), f);
+                    this.isCritical = false; // Purpur
 
                     if (flag5) {
                         if (i > 0) {
