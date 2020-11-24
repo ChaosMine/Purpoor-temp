@@ -258,6 +258,11 @@ public class PurpurWorldConfig {
         witherSkullDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.wither_skull", witherSkullDespawnRate);
     }
 
+    public int snowballDamage = -1;
+    private void snowballSettings() {
+        snowballDamage = getInt("gameplay-mechanics.projectile-damage.snowball", snowballDamage);
+    }
+
     public boolean useBetterMending = false;
     public boolean boatEjectPlayersOnLand = false;
     public boolean disableDropsOnCrammingDeath = false;

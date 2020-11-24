@@ -40,7 +40,7 @@ public class EntitySnowball extends EntityProjectileThrowable {
     protected void a(MovingObjectPositionEntity movingobjectpositionentity) {
         super.a(movingobjectpositionentity);
         Entity entity = movingobjectpositionentity.getEntity();
-        int i = entity instanceof EntityBlaze ? 3 : 0;
+        int i = entity.world.purpurConfig.snowballDamage >= 0 ? entity.world.purpurConfig.snowballDamage : entity instanceof EntityBlaze ? 3 : 0; // Purpur
 
         entity.damageEntity(DamageSource.projectile(this, this.getShooter()), (float) i);
     }
