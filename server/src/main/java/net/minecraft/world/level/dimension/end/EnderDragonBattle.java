@@ -400,7 +400,7 @@ public class EnderDragonBattle {
             this.bossBattle.setVisible(false);
             this.generateExitPortal(true);
             this.n();
-            if (!this.previouslyKilled) {
+            if (this.world.paperConfig.enderDragonsDeathAlwaysPlacesDragonEgg || !this.previouslyKilled) { // Paper - always place dragon egg
                 this.world.setTypeUpdate(this.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, WorldGenEndTrophy.a), Blocks.DRAGON_EGG.getBlockData());
             }
 

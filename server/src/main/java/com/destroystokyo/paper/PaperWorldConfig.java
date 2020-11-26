@@ -796,4 +796,9 @@ public class PaperWorldConfig {
             if (value != -1) entityPerChunkSaveLimits.put(type, value);
         });
     }
+
+    public boolean enderDragonsDeathAlwaysPlacesDragonEgg = false;
+    private void enderDragonsDeathAlwaysPlacesDragonEgg() {
+        enderDragonsDeathAlwaysPlacesDragonEgg = getBoolean("ender-dragons-death-always-places-dragon-egg", enderDragonsDeathAlwaysPlacesDragonEgg);
+    }
 }
