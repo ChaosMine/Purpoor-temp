@@ -1,5 +1,6 @@
 package net.minecraft.world.level.block;
 
+import io.papermc.paper.event.block.TargetHitEvent; // Paper - Need to import because 'io' class exists in nms
 import java.util.Random;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
@@ -34,6 +35,10 @@ public class BlockTarget extends Block {
     @Override
     public void a(World world, IBlockData iblockdata, MovingObjectPositionBlock movingobjectpositionblock, IProjectile iprojectile) {
         int i = a((GeneratorAccess) world, iblockdata, movingobjectpositionblock, (Entity) iprojectile);
+        // Paper start
+    }
+    private static void awardTargetHitCriteria(IProjectile iprojectile, MovingObjectPositionBlock movingobjectpositionblock, int i) {
+        // Paper end
         Entity entity = iprojectile.getShooter();
 
         if (entity instanceof EntityPlayer) {
@@ -49,6 +54,20 @@ public class BlockTarget extends Block {
         int i = a(movingobjectpositionblock, movingobjectpositionblock.getPos());
         int j = entity instanceof EntityArrow ? 20 : 8;
 
+        // Paper start
+        if (entity instanceof IProjectile) {
+            final IProjectile projectile = (IProjectile) entity;
+            final org.bukkit.craftbukkit.block.CraftBlock craftBlock = org.bukkit.craftbukkit.block.CraftBlock.at(generatoraccess, movingobjectpositionblock.getBlockPosition());
+            final org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.block.CraftBlock.notchToBlockFace(movingobjectpositionblock.getDirection());
+            final TargetHitEvent targetHitEvent = new TargetHitEvent((org.bukkit.entity.Projectile) projectile.getBukkitEntity(), craftBlock, blockFace, i);
+            if (targetHitEvent.callEvent()) {
+                i = targetHitEvent.getSignalStrength();
+                awardTargetHitCriteria(projectile, movingobjectpositionblock, i);
+            } else {
+                return i;
+            }
+        }
+        // Paper end
         if (!generatoraccess.getBlockTickList().a(movingobjectpositionblock.getBlockPosition(), iblockdata.getBlock())) {
             a(generatoraccess, iblockdata, i, movingobjectpositionblock.getBlockPosition(), j);
         }
