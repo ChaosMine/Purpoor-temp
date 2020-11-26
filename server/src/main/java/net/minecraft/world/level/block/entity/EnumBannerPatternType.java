@@ -33,6 +33,7 @@ public enum EnumBannerPatternType {
         this.T = flag;
     }
 
+    public String getIdentifier() { return this.b(); } // Paper - OBFHELPER
     public String b() {
         return this.V;
     }

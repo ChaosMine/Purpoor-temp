@@ -22,6 +22,7 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryLoom;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 // CraftBukkit end
+import io.papermc.paper.event.player.PlayerLoomPatternSelectEvent; // Paper
 
 public class ContainerLoom extends Container {
 
@@ -41,7 +42,7 @@ public class ContainerLoom extends Container {
     }
     // CraftBukkit end
     private final ContainerAccess containerAccess;
-    private final ContainerProperty d;
+    private final ContainerProperty d; public final ContainerProperty getSelectedBannerPattern() { return this.d; }; // Paper - OBFHELPER
     private Runnable e;
     private final Slot f;
     private final Slot g;
@@ -160,7 +161,22 @@ public class ContainerLoom extends Container {
     @Override
     public boolean a(EntityHuman entityhuman, int i) {
         if (i > 0 && i <= EnumBannerPatternType.R) {
-            this.d.set(i);
+            // Paper start
+            int enumBannerPatternTypeOrdinal = i;
+            PlayerLoomPatternSelectEvent event = new PlayerLoomPatternSelectEvent((Player) entityhuman.getBukkitEntity(), ((CraftInventoryLoom) getBukkitView().getTopInventory()), org.bukkit.block.banner.PatternType.getByIdentifier(EnumBannerPatternType.values()[i].getIdentifier()));
+            if (!event.callEvent()) {
+                ((Player) entityhuman.getBukkitEntity()).updateInventory();
+                return false;
+            }
+            for (EnumBannerPatternType nms : EnumBannerPatternType.values()) {
+                if (event.getPatternType().getIdentifier().equals(nms.getIdentifier())) {
+                    enumBannerPatternTypeOrdinal = nms.ordinal();
+                    break;
+                }
+            }
+            ((Player) entityhuman.getBukkitEntity()).updateInventory();
+            this.getSelectedBannerPattern().set(enumBannerPatternTypeOrdinal);
+            // Paper end
             this.j();
             return true;
         } else {
