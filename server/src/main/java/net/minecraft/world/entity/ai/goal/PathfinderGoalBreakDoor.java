@@ -3,7 +3,9 @@ package net.minecraft.world.entity.ai.goal;
 import java.util.function.Predicate;
 import net.minecraft.core.IPosition;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 
@@ -18,7 +20,7 @@ public class PathfinderGoalBreakDoor extends PathfinderGoalDoorInteract {
         super(entityinsentient);
         this.b = -1;
         this.c = -1;
-        this.g = predicate;
+        this.g = entityinsentient instanceof EntityZombie ? difficulty -> testDifficulty(entity) : predicate; // Purpur
     }
 
     public PathfinderGoalBreakDoor(EntityInsentient entityinsentient, int i, Predicate<EnumDifficulty> predicate) {
@@ -87,4 +89,21 @@ public class PathfinderGoalBreakDoor extends PathfinderGoalDoorInteract {
     private boolean a(EnumDifficulty enumdifficulty) {
         return this.g.test(enumdifficulty);
     }
+
+    // Purpur start
+    private boolean testDifficulty(Entity entity) {
+        EnumDifficulty difficulty = entity.world.getDifficulty();
+        switch (entity.world.purpurConfig.zombieBreakDoorMinDifficulty) {
+            case PEACEFUL:
+                return difficulty == EnumDifficulty.HARD || difficulty == EnumDifficulty.NORMAL || difficulty == EnumDifficulty.EASY || difficulty == EnumDifficulty.PEACEFUL;
+            case EASY:
+                return difficulty == EnumDifficulty.HARD || difficulty == EnumDifficulty.NORMAL || difficulty == EnumDifficulty.EASY;
+            case NORMAL:
+                return difficulty == EnumDifficulty.HARD || difficulty == EnumDifficulty.NORMAL;
+            case HARD:
+            default:
+                return difficulty == EnumDifficulty.HARD;
+        }
+    }
+    // Purpur end
 }
