@@ -118,7 +118,7 @@ public abstract class Container {
         return slot;
     }
 
-    protected ContainerProperty a(ContainerProperty containerproperty) {
+    protected ContainerProperty addDataSlot(ContainerProperty containerproperty) { return a(containerproperty); } protected ContainerProperty a(ContainerProperty containerproperty) { // Paper - OBFHELPER
         this.d.add(containerproperty);
         return containerproperty;
     }

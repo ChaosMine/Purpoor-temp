@@ -20,7 +20,7 @@ public abstract class ContainerProperty {
         };
     }
 
-    public static ContainerProperty a(final int[] aint, final int i) {
+    public static ContainerProperty shared(final int[] aint, final int i) { return a(aint, i); } public static ContainerProperty a(final int[] aint, final int i) { // Paper - OBFHELPER
         return new ContainerProperty() {
             @Override
             public int get() {
@@ -54,7 +54,7 @@ public abstract class ContainerProperty {
 
     public abstract void set(int i);
 
-    public boolean c() {
+    public boolean checkAndClearUpdateFlag() { return c(); } public boolean c() { // Paper - OBFHELPER
         int i = this.get();
         boolean flag = i != this.a;
 

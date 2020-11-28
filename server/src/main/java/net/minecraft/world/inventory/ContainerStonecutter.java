@@ -22,13 +22,14 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryStonecutter;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 // CraftBukkit end
+import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent; // Paper
 
 public class ContainerStonecutter extends Container {
 
     private final ContainerAccess containerAccess;
     private final ContainerProperty containerProperty;
     private final World world;
-    private List<RecipeStonecutting> i;
+    private List<RecipeStonecutting> i; public final List<RecipeStonecutting> getRecipes() { return this.i; } // Paper - OBFHELPER
     private ItemStack j;
     private long k;
     final Slot c;
@@ -58,7 +59,7 @@ public class ContainerStonecutter extends Container {
 
     public ContainerStonecutter(int i, PlayerInventory playerinventory, final ContainerAccess containeraccess) {
         super(Containers.STONECUTTER, i);
-        this.containerProperty = ContainerProperty.a();
+        this.containerProperty = addDataSlot(ContainerProperty.shared(new int[1], 0)); // Paper - allow replication
         this.i = Lists.newArrayList();
         this.j = ItemStack.b;
         this.l = () -> {
@@ -136,13 +137,36 @@ public class ContainerStonecutter extends Container {
     @Override
     public boolean a(EntityHuman entityhuman, int i) {
         if (this.d(i)) {
-            this.containerProperty.set(i);
+            // Paper start
+            int recipeIndex = i;
+            this.containerProperty.set(recipeIndex);
+            this.containerProperty.checkAndClearUpdateFlag(); // mark as changed
+            if (this.isValidRecipeIndex(i)) {
+                PlayerStonecutterRecipeSelectEvent event = new PlayerStonecutterRecipeSelectEvent((Player) entityhuman.getBukkitEntity(), (org.bukkit.inventory.StonecutterInventory) getBukkitView().getTopInventory(), (org.bukkit.inventory.StonecuttingRecipe) this.getRecipes().get(i).toBukkitRecipe());
+                if (!event.callEvent()) {
+                    ((Player) entityhuman.getBukkitEntity()).updateInventory();
+                    return false;
+                }
+                int newRecipeIndex;
+                if (!this.getRecipes().get(recipeIndex).getKey().equals(org.bukkit.craftbukkit.util.CraftNamespacedKey.toMinecraft(event.getStonecuttingRecipe().getKey()))) { // If the recipe did NOT stay the same
+                    for (newRecipeIndex = 0; newRecipeIndex < this.getRecipes().size(); newRecipeIndex++) {
+                        if (this.getRecipes().get(newRecipeIndex).getKey().equals(org.bukkit.craftbukkit.util.CraftNamespacedKey.toMinecraft(event.getStonecuttingRecipe().getKey()))) {
+                            recipeIndex = newRecipeIndex;
+                            break;
+                        }
+                    }
+                }
+            }
+            ((Player) entityhuman.getBukkitEntity()).updateInventory();
+            this.containerProperty.set(recipeIndex); // set new index, so that listeners can read it
+            // Paper end
             this.i();
         }
 
         return true;
     }
 
+    private boolean isValidRecipeIndex(int index) { return this.d(index); } // Paper - OBFHELPER
     private boolean d(int i) {
         return i >= 0 && i < this.i.size();
     }
