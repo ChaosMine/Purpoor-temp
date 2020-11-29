@@ -149,7 +149,7 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
         this.a(difficultydamagescaler);
         this.b(difficultydamagescaler);
         this.eL();
-        this.setCanPickupLoot(this.random.nextFloat() < 0.55F * difficultydamagescaler.d());
+        this.setCanPickupLoot(this.world.paperConfig.skeletonsAlwaysCanPickUpLoot || this.random.nextFloat() < 0.55F * difficultydamagescaler.d()); // Paper
         if (this.getEquipment(EnumItemSlot.HEAD).isEmpty()) {
             LocalDate localdate = LocalDate.now();
             int i = localdate.get(ChronoField.DAY_OF_MONTH);

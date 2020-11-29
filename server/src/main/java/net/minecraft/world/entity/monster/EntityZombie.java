@@ -497,7 +497,7 @@ public class EntityZombie extends EntityMonster {
         Object object = super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
         float f = difficultydamagescaler.d();
 
-        this.setCanPickupLoot(this.random.nextFloat() < 0.55F * f);
+        this.setCanPickupLoot(this.world.paperConfig.zombiesAlwaysCanPickUpLoot || this.random.nextFloat() < 0.55F * f); // Paper
         if (object == null) {
             object = new EntityZombie.GroupDataZombie(a(worldaccess.getRandom()), true);
         }

@@ -363,6 +363,14 @@ public class PaperWorldConfig {
         log("Creeper lingering effect: " + disableCreeperLingeringEffect);
     }
 
+    public boolean zombiesAlwaysCanPickUpLoot;
+    public boolean skeletonsAlwaysCanPickUpLoot;
+    private void setMobsAlwaysCanPickUpLoot() {
+        zombiesAlwaysCanPickUpLoot = getBoolean("mobs-can-always-pick-up-loot.zombies", false);
+        skeletonsAlwaysCanPickUpLoot = getBoolean("mobs-can-always-pick-up-loot.skeletons", false);
+        log("Zombies can always pick up loot: " + zombiesAlwaysCanPickUpLoot + ". Skeletons can always pick up loot: " + skeletonsAlwaysCanPickUpLoot + ".");
+    }
+
     public int expMergeMaxValue;
     private void expMergeMaxValue() {
         expMergeMaxValue = getInt("experience-merge-max-value", -1);
