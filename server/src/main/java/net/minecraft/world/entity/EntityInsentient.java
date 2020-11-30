@@ -1208,7 +1208,7 @@ public abstract class EntityInsentient extends EntityLiving {
     @Nullable
     public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @Nullable GroupDataEntity groupdataentity, @Nullable NBTTagCompound nbttagcompound) {
         this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).addModifier(new AttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05D, AttributeModifier.Operation.MULTIPLY_BASE));
-        if (this.random.nextFloat() < 0.05F) {
+        if (this.random.nextFloat() < this.world.purpurConfig.entityLeftHandedChance) { // Purpur
             this.setLeftHanded(true);
         } else {
             this.setLeftHanded(false);
