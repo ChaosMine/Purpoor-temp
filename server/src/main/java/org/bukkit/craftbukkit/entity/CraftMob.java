@@ -133,4 +133,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
         return getHandle().getMaxHeadXRot();
     }
     // Paper end
+
+    // Purpur start
+    public boolean isLeftHanded() {
+        return getHandle().isLeftHanded();
+    }
+
+    public void setLeftHanded(boolean leftHanded) {
+        getHandle().setLeftHanded(leftHanded);
+    }
+    // Purpur end
 }
