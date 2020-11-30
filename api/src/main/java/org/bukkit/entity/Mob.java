@@ -146,4 +146,20 @@ public interface Mob extends LivingEntity, Lootable {
      * @return whether the mob is aware
      */
     public boolean isAware();
+
+    // Purpur start
+    /**
+     * Check if Mob is left-handed
+     *
+     * @return True if left-handed
+     */
+    public boolean isLeftHanded();
+
+    /**
+     * Set if Mob is left-handed
+     *
+     * @param leftHanded True if left-handed
+     */
+    public void setLeftHanded(boolean leftHanded);
+    // Purpur end
 }
