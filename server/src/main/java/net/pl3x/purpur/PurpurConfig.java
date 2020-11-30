@@ -137,6 +137,7 @@ public class PurpurConfig {
     public static String afkBroadcastBack = "§e§o%s is no longer AFK";
     public static String afkTabListPrefix = "[AFK] ";
     public static String afkTabListSuffix = "";
+    public static String demoCommandOutput = "§a%s has been shown the demo screen";
     public static String pingCommandOutput = "§a%s's ping is %sms";
     public static String cannotRideMob = "§cYou cannot mount that mob";
     private static void messages() {
@@ -144,6 +145,7 @@ public class PurpurConfig {
         afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
         afkTabListSuffix = getString("settings.messages.afk-tab-list-suffix", afkTabListSuffix);
+        demoCommandOutput = getString("settings.messages.demo-command-output", demoCommandOutput);
         pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
         cannotRideMob = getString("settings.messages.cannot-ride-mob", cannotRideMob);
     }
