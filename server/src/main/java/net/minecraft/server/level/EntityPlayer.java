@@ -1149,7 +1149,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         if (this.isInvulnerable(damagesource)) {
             return false;
         } else {
-            if (damagesource == DamageSource.FALL && getRootVehicle() instanceof net.minecraft.world.entity.vehicle.EntityMinecartAbstract && world.purpurConfig.minecartControllable && !world.purpurConfig.minecartControllableFallDamage) return false; // Purpur
+            // Purpur start
+            if (damagesource == DamageSource.FALL) {
+                if (getRootVehicle() instanceof net.minecraft.world.entity.vehicle.EntityMinecartAbstract && world.purpurConfig.minecartControllable && !world.purpurConfig.minecartControllableFallDamage) {
+                    return false;
+                }
+                if (getRootVehicle() instanceof net.minecraft.world.entity.vehicle.EntityBoat && !world.purpurConfig.boatsDoFallDamage) {
+                    return false;
+                }
+            }
+            // Purpur end
             boolean flag = this.server.j() && this.canPvP() && "fall".equals(damagesource.translationIndex);
 
             if (!flag && isSpawnInvulnerable() && damagesource != DamageSource.OUT_OF_WORLD) { // Purpur
