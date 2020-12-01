@@ -1039,12 +1039,20 @@ public class PurpurWorldConfig {
     public boolean snowGolemLeaveTrailWhenRidden = false;
     public boolean snowGolemDropsPumpkin = true;
     public boolean snowGolemPutPumpkinBack = false;
+    public int snowGolemSnowBallMin = 20;
+    public int snowGolemSnowBallMax = 20;
+    public float snowGolemSnowBallModifier = 10.0F;
+    public double snowGolemAttackDistance = 1.25D;
     private void snowGolemSettings() {
         snowGolemRidable = getBoolean("mobs.snow_golem.ridable", snowGolemRidable);
         snowGolemRidableInWater = getBoolean("mobs.snow_golem.ridable-in-water", snowGolemRidableInWater);
         snowGolemLeaveTrailWhenRidden = getBoolean("mobs.snow_golem.leave-trail-when-ridden", snowGolemLeaveTrailWhenRidden);
         snowGolemDropsPumpkin = getBoolean("mobs.snow_golem.drop-pumpkin-when-sheared", snowGolemDropsPumpkin);
         snowGolemPutPumpkinBack = getBoolean("mobs.snow_golem.pumpkin-can-be-added-back", snowGolemPutPumpkinBack);
+        snowGolemSnowBallMin = getInt("mobs.snow_golem.min-shoot-interval-ticks", snowGolemSnowBallMin);
+        snowGolemSnowBallMax = getInt("mobs.snow_golem.max-shoot-interval-ticks", snowGolemSnowBallMax);
+        snowGolemSnowBallModifier = (float) getDouble("mobs.snow_golem.snow-ball-modifier", snowGolemSnowBallModifier);
+        snowGolemAttackDistance = getDouble("mobs.snow_golem.attack-distance", snowGolemAttackDistance);
     }
 
     public boolean squidRidable = false;
