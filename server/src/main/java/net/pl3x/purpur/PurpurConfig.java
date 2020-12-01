@@ -1,6 +1,7 @@
 package net.pl3x.purpur;
 
 import co.aikar.timings.TimingsManager;
+import com.destroystokyo.paper.PaperConfig;
 import com.google.common.base.Throwables;
 import net.minecraft.locale.LocaleLanguage;
 import net.minecraft.server.MinecraftServer;
@@ -131,6 +132,17 @@ public class PurpurConfig {
     private static String getString(String path, String def) {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
+    }
+
+    private static void migrateDisableProjectileSaving() {
+        if (PurpurConfig.version < 6) {
+            final boolean saveProjectilesToDisk = getBoolean("world-settings.default.gameplay-mechanics.save-projectiles-to-disk", true);
+            set("world-settings.default.gameplay-mechanics.save-projectiles-to-disk", null);
+            if (!saveProjectilesToDisk) {
+                PaperConfig.config.set("world-settings.default.projectile-load-save-per-chunk-limit", 0);
+                PaperConfig.saveConfig();
+            }
+        }
     }
 
     public static String afkBroadcastAway = "§e§o%s is now AFK";

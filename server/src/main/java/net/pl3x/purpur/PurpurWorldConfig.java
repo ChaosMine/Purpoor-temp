@@ -1,5 +1,6 @@
 package net.pl3x.purpur;
 
+import com.destroystokyo.paper.PaperConfig;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.level.Explosion;
@@ -82,6 +83,17 @@ public class PurpurWorldConfig {
     private String getString(String path, String def) {
         PurpurConfig.config.addDefault("world-settings.default." + path, def);
         return PurpurConfig.config.getString("world-settings." + worldName + "." + path, PurpurConfig.config.getString("world-settings.default." + path));
+    }
+
+    private void migrateDisableProjectileSaving() {
+        if (PurpurConfig.version < 6) {
+            final boolean saveProjectilesToDisk = PurpurConfig.config.getBoolean("world-settings." + worldName + ".gameplay-mechanics.save-projectiles-to-disk", true);
+            PurpurConfig.config.set("world-settings." + worldName + ".gameplay-mechanics.save-projectiles-to-disk", null);
+            if (!saveProjectilesToDisk) {
+                PaperConfig.config.set("world-settings." + worldName + ".projectile-load-save-per-chunk-limit", 0);
+                PaperConfig.saveConfig();
+            }
+        }
     }
 
     public boolean armorstandSetNameVisible = false;
