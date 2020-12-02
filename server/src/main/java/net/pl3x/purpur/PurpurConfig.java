@@ -145,6 +145,17 @@ public class PurpurConfig {
         }
     }
 
+    private static void migrateClimbingCrammingFix() {
+        if (PurpurConfig.version < 7) {
+            final boolean climbingCrammingFix = getBoolean("world-settings.default.gameplay-mechanics.fix-climbing-bypassing-cramming-rule", false);
+            set("world-settings.default.gameplay-mechanics.fix-climbing-bypassing-cramming-rule", null);
+            if (climbingCrammingFix) {
+                PaperConfig.config.set("world-settings.default.fix-climbing-bypassing-cramming-rule", true);
+                PaperConfig.saveConfig();
+            }
+        }
+    }
+
     public static String afkBroadcastAway = "§e§o%s is now AFK";
     public static String afkBroadcastBack = "§e§o%s is no longer AFK";
     public static String afkTabListPrefix = "[AFK] ";

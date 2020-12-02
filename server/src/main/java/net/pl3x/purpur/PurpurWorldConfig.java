@@ -96,6 +96,17 @@ public class PurpurWorldConfig {
         }
     }
 
+    private void migrateClimbingCrammingFix() {
+        if (PurpurConfig.version < 7) {
+            final boolean climbingCrammingFix = PurpurConfig.config.getBoolean("world-settings." + worldName + ".gameplay-mechanics.fix-climbing-bypassing-cramming-rule", false);
+            PurpurConfig.config.set("world-settings." + worldName + ".gameplay-mechanics.fix-climbing-bypassing-cramming-rule", null);
+            if (climbingCrammingFix) {
+                PaperConfig.config.set("world-settings." + worldName + ".fix-climbing-bypassing-cramming-rule", true);
+                PaperConfig.saveConfig();
+            }
+        }
+    }
+
     public boolean armorstandSetNameVisible = false;
     public boolean armorstandFixNametags = false;
     public float armorstandStepHeight = 0.0F;
