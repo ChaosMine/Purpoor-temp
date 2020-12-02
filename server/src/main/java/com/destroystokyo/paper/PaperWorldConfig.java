@@ -719,6 +719,11 @@ public class PaperWorldConfig {
         zombiesTargetTurtleEggs = getBoolean("zombies-target-turtle-eggs", zombiesTargetTurtleEggs);
     }
 
+    public boolean piglinsGuardChests = true;
+    private void piglinsGuardChests() {
+        piglinsGuardChests = getBoolean("piglins-guard-chests", piglinsGuardChests);
+    }
+
     public boolean useEigencraftRedstone = false;
     private void useEigencraftRedstone() {
         useEigencraftRedstone = this.getBoolean("use-faster-eigencraft-redstone", false);

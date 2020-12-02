@@ -437,6 +437,7 @@ public class PiglinAI {
     }
 
     public static void a(EntityHuman entityhuman, boolean flag) {
+        if (!entityhuman.world.paperConfig.piglinsGuardChests) return; // Paper
         List<EntityPiglinAbstract> list = entityhuman.world.a(EntityPiglin.class, entityhuman.getBoundingBox().g(16.0D)); // CraftBukkit - decompile error
 
         list.stream().filter(PiglinAI::d).filter((entitypiglin) -> {
