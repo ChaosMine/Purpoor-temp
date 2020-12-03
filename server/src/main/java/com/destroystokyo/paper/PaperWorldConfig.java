@@ -653,6 +653,19 @@ public class PaperWorldConfig {
         zombieVillagerInfectionChance = getDouble("zombie-villager-infection-chance", zombieVillagerInfectionChance);
     }
 
+    public int spawnLimitMonsters = -1;
+    public int spawnLimitAnimals = -1;
+    public int spawnLimitWaterAnimals = -1;
+    public int spawnLimitWaterAmbient = -1;
+    public int spawnLimitAmbient = -1;
+    private void perWorldSpawnLimits() {
+        spawnLimitMonsters = getInt("spawn-limits.monsters", spawnLimitMonsters);
+        spawnLimitAnimals = getInt("spawn-limits.animals", spawnLimitAnimals);
+        spawnLimitWaterAnimals = getInt("spawn-limits.water-animals", spawnLimitWaterAnimals);
+        spawnLimitWaterAmbient = getInt("spawn-limits.water-ambient", spawnLimitWaterAmbient);
+        spawnLimitAmbient = getInt("spawn-limits.ambient", spawnLimitAmbient);
+    }
+
     public int lightQueueSize = 20;
     private void lightQueueSize() {
         lightQueueSize = getInt("light-queue-size", lightQueueSize);

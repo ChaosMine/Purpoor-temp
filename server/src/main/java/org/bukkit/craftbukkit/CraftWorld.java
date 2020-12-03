@@ -353,6 +353,13 @@ public class CraftWorld implements World {
         this.generator = gen;
 
         environment = env;
+        // Paper start - per world spawn limits
+        this.monsterSpawn = this.world.paperConfig.spawnLimitMonsters;
+        this.animalSpawn = this.world.paperConfig.spawnLimitAnimals;
+        this.waterAnimalSpawn = this.world.paperConfig.spawnLimitWaterAnimals;
+        this.waterAmbientSpawn = this.world.paperConfig.spawnLimitWaterAmbient;
+        this.ambientSpawn = this.world.paperConfig.spawnLimitAmbient;
+        // Paper end
     }
 
     @Override
