@@ -12,13 +12,14 @@ import net.minecraft.server.packs.repository.ResourcePackRepository;
 import net.minecraft.world.level.storage.SaveData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent; // Paper
 
 public class CommandReload {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void a(Collection<String> collection, CommandListenerWrapper commandlistenerwrapper) {
-        commandlistenerwrapper.getServer().a(collection).exceptionally((throwable) -> {
+        commandlistenerwrapper.getServer().reloadServerResources(collection, ServerResourcesReloadedEvent.Cause.COMMAND).exceptionally((throwable) -> { // Paper
             CommandReload.LOGGER.warn("Failed to execute reload", throwable);
             commandlistenerwrapper.sendFailureMessage(new ChatMessage("commands.reload.failure"));
             return null;
@@ -48,7 +49,7 @@ public class CommandReload {
         SaveData savedata = minecraftserver.getSaveData();
         Collection<String> collection = resourcepackrepository.d();
         Collection<String> collection1 = a(resourcepackrepository, savedata, collection);
-        minecraftserver.a(collection1);
+        minecraftserver.reloadServerResources(collection1, ServerResourcesReloadedEvent.Cause.PLUGIN); // Paper
     }
     // CraftBukkit end
 

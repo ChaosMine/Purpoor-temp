@@ -2,9 +2,6 @@ package net.minecraft.server;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import co.aikar.timings.Timings;
-import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -183,6 +180,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 import co.aikar.timings.MinecraftTimings; // Paper
 import org.spigotmc.SlackActivityAccountant; // Spigot
 import io.papermc.paper.util.PaperJvmChecker; // Paper
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent; // Paper
 
 public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTask> implements IMojangStatistics, ICommandListener, AutoCloseable {
 
@@ -1936,7 +1934,13 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         return this.customFunctionData;
     }
 
+    // Paper start - add cause
+    @Deprecated
     public CompletableFuture<Void> a(Collection<String> collection) {
+        return this.reloadServerResources(collection, ServerResourcesReloadedEvent.Cause.PLUGIN);
+    }
+    public CompletableFuture<Void> reloadServerResources(Collection<String> collection, ServerResourcesReloadedEvent.Cause cause) {
+        // Paper end
         CompletableFuture<Void> completablefuture = CompletableFuture.supplyAsync(() -> {
             Stream<String> stream = collection.stream(); // CraftBukkit - decompile error
             ResourcePackRepository resourcepackrepository = this.resourcePackRepository;
@@ -1952,6 +1956,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             this.resourcePackRepository.a(collection);
             this.saveData.a(a(this.resourcePackRepository));
             datapackresources.i();
+            new ServerResourcesReloadedEvent(cause).callEvent(); // Paper
             if (Thread.currentThread() != this.serverThread) return; // Paper
             //this.getPlayerList().savePlayers(); // Paper - we don't need to do this
             this.getPlayerList().reload();
