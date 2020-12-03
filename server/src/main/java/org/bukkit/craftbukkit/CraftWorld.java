@@ -1470,7 +1470,7 @@ public class CraftWorld implements World {
 
     @Override
     public void setStorm(boolean hasStorm) {
-        world.worldData.setStorm(hasStorm);
+        world.worldDataServer.setStorm(hasStorm, org.bukkit.event.weather.WeatherChangeEvent.Cause.PLUGIN); // Paper
         setWeatherDuration(0); // Reset weather duration (legacy behaviour)
         setClearWeatherDuration(0); // Reset clear weather duration (reset "/weather clear" commands)
     }
@@ -1492,7 +1492,7 @@ public class CraftWorld implements World {
 
     @Override
     public void setThundering(boolean thundering) {
-        world.worldDataServer.setThundering(thundering);
+        world.worldDataServer.setThundering(thundering, org.bukkit.event.weather.ThunderChangeEvent.Cause.PLUGIN); // Paper
         setThunderDuration(0); // Reset weather duration (legacy behaviour)
         setClearWeatherDuration(0); // Reset clear weather duration (reset "/weather clear" commands)
     }

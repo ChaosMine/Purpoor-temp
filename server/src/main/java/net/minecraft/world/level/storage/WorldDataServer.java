@@ -327,6 +327,11 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
 
     @Override
     public void setThundering(boolean flag) {
+        // Paper start
+        this.setThundering(flag, org.bukkit.event.weather.ThunderChangeEvent.Cause.UNKNOWN);
+    }
+    public void setThundering(boolean flag, org.bukkit.event.weather.ThunderChangeEvent.Cause cause) {
+        // Paper end
         // CraftBukkit start
         if (this.thundering == flag) {
             return;
@@ -334,7 +339,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
 
         org.bukkit.World world = Bukkit.getWorld(getName());
         if (world != null) {
-            ThunderChangeEvent thunder = new ThunderChangeEvent(world, flag);
+            ThunderChangeEvent thunder = new ThunderChangeEvent(world, flag, cause); // Paper
             Bukkit.getServer().getPluginManager().callEvent(thunder);
             if (thunder.isCancelled()) {
                 return;
@@ -361,6 +366,12 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
 
     @Override
     public void setStorm(boolean flag) {
+        // Paper start
+        this.setStorm(flag, org.bukkit.event.weather.WeatherChangeEvent.Cause.UNKNOWN);
+    }
+
+    public void setStorm(boolean flag, org.bukkit.event.weather.WeatherChangeEvent.Cause cause) {
+        // Paper end
         // CraftBukkit start
         if (this.raining == flag) {
             return;
@@ -368,7 +379,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
 
         org.bukkit.World world = Bukkit.getWorld(getName());
         if (world != null) {
-            WeatherChangeEvent weather = new WeatherChangeEvent(world, flag);
+            WeatherChangeEvent weather = new WeatherChangeEvent(world, flag, cause); // Paper
             Bukkit.getServer().getPluginManager().callEvent(weather);
             if (weather.isCancelled()) {
                 return;

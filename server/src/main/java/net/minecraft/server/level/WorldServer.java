@@ -419,8 +419,8 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.worldDataServer.setClearWeatherTime(i);
         this.worldDataServer.setWeatherDuration(j);
         this.worldDataServer.setThunderDuration(j);
-        this.worldDataServer.setStorm(flag);
-        this.worldDataServer.setThundering(flag1);
+        this.worldDataServer.setStorm(flag, org.bukkit.event.weather.WeatherChangeEvent.Cause.COMMAND); // Paper
+        this.worldDataServer.setThundering(flag1, org.bukkit.event.weather.ThunderChangeEvent.Cause.COMMAND); // Paper
     }
 
     public BiomeBase getBiomeBySeed(int i, int j, int k) { return a(i, j, k); } // Paper - OBFHELPER
@@ -482,8 +482,8 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 this.worldDataServer.setThunderDuration(j);
                 this.worldDataServer.setWeatherDuration(k);
                 this.worldDataServer.setClearWeatherTime(i);
-                this.worldDataServer.setThundering(flag1);
-                this.worldDataServer.setStorm(flag2);
+                this.worldDataServer.setThundering(flag1, org.bukkit.event.weather.ThunderChangeEvent.Cause.NATURAL); // Paper
+                this.worldDataServer.setStorm(flag2, org.bukkit.event.weather.WeatherChangeEvent.Cause.NATURAL); // Paper
             }
 
             this.lastThunderLevel = this.thunderLevel;
@@ -885,14 +885,14 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     private void clearWeather() {
         // CraftBukkit start
-        this.worldDataServer.setStorm(false);
+        this.worldDataServer.setStorm(false, org.bukkit.event.weather.WeatherChangeEvent.Cause.SLEEP); // Paper - when passing the night
         // If we stop due to everyone sleeping we should reset the weather duration to some other random value.
         // Not that everyone ever manages to get the whole server to sleep at the same time....
         if (!this.worldDataServer.hasStorm()) {
             this.worldDataServer.setWeatherDuration(0);
         }
         // CraftBukkit end
-        this.worldDataServer.setThundering(false);
+        this.worldDataServer.setThundering(false, org.bukkit.event.weather.ThunderChangeEvent.Cause.SLEEP); // Paper - when passing the night
         // CraftBukkit start
         // If we stop due to everyone sleeping we should reset the weather duration to some other random value.
         // Not that everyone ever manages to get the whole server to sleep at the same time....
