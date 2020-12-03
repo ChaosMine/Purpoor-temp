@@ -123,6 +123,7 @@ public abstract class NavigationAbstract {
     }
 
     @Nullable
+    public PathEntity calculateDestination(BlockPosition blockposition, int i) { return a(blockposition, i); } // Purpur - OBFHELPER
     public PathEntity a(BlockPosition blockposition, int i) {
         // Paper start - add target parameter
         return this.a(blockposition, null, i);

@@ -206,7 +206,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public double lastY;
     public double lastZ;
     private Vec3D loc;
-    private BlockPosition locBlock;
+    private BlockPosition locBlock; public BlockPosition getBlockLocation() { return locBlock; } // Purpur
     private Vec3D mot;
     public float yaw;
     public float pitch;

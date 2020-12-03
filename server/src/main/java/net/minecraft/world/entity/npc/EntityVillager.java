@@ -89,6 +89,7 @@ import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.Logger;
 
@@ -258,15 +259,39 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     }
     // Spigot End
 
+    private int behaviorTick = 0;
+
+    // Purpur start
+    boolean lobotomized = false;
+
+    private boolean isLobotomized() {
+        if ((world.getTime() + brainTickOffset) % world.purpurConfig.villagerLobotomizeCheck == 0) {
+            this.lobotomized = !canTravelFrom(getBlockLocation().up());
+        }
+        return this.lobotomized;
+    }
+
+    private boolean canTravelFrom(BlockPosition pos) {
+        return canTravelTo(pos.east()) || canTravelTo(pos.west()) || canTravelTo(pos.north()) || canTravelTo(pos.south());
+    }
+
+    private boolean canTravelTo(BlockPosition pos) {
+        PathEntity to = navigation.calculateDestination(pos, 0);
+        return to != null && to.getPoints().size() > 1;
+    }
+    // Purpur end
+
     @Override
     protected void mobTick() { mobTick(false); }
     protected void mobTick(boolean inactive) {
         this.world.getMethodProfiler().enter("villagerBrain");
         // Purpur start
+        if (world.purpurConfig.villagerLobotomizeEnabled) inactive = inactive || isLobotomized();
         boolean tick = (world.getTime() + brainTickOffset) % world.purpurConfig.villagerBrainTicks == 0;
         if (((WorldServer) world).getMinecraftServer().lagging ? tick : world.purpurConfig.villagerUseBrainTicksOnlyWhenLagging || tick)
         // Purpur end
         if (!inactive) this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
+        else if (shouldRestock()) doRestock(); // Purpur
         this.world.getMethodProfiler().exit();
         if (this.bF) {
             this.bF = false;
@@ -398,6 +423,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         return true;
     }
 
+    public void doRestock() { fb(); } // Purpur - OBFHELPER
     public void fb() {
         this.fp();
         Iterator iterator = this.getOffers().iterator();
@@ -432,6 +458,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         return this.bD == 0 || this.bD < 2 && this.world.getTime() > this.bC + 2400L;
     }
 
+    public boolean shouldRestock() { return fc(); } // Purpur - OBFHELPER
     public boolean fc() {
         long i = this.bC + 12000L;
         long j = this.world.getTime();

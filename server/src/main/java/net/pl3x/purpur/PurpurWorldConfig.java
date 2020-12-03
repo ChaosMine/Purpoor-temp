@@ -1134,6 +1134,8 @@ public class PurpurWorldConfig {
     public int villagerSpawnIronGolemLimit = 0;
     public boolean villagerCanBreed = true;
     public int villagerBreedingTicks = 6000;
+    public boolean villagerLobotomizeEnabled = false;
+    public int villagerLobotomizeCheck = 60;
     private void villagerSettings() {
         villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
         villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
@@ -1146,6 +1148,13 @@ public class PurpurWorldConfig {
         villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
         villagerCanBreed = getBoolean("mobs.villager.can-breed", villagerCanBreed);
         villagerBreedingTicks = getInt("mobs.villager.breeding-delay-ticks", villagerBreedingTicks);
+        if (PurpurConfig.version < 9) {
+            boolean oldValue = getBoolean("mobs.villager.lobotomize-1x1", villagerLobotomizeEnabled);
+            set("mobs.villager.lobotomize.enabled", oldValue);
+            set("mobs.villager.lobotomize-1x1", null);
+        }
+        villagerLobotomizeEnabled = getBoolean("mobs.villager.lobotomize.enabled", villagerLobotomizeEnabled);
+        villagerLobotomizeCheck = getInt("mobs.villager.lobotomize.check-interval", villagerLobotomizeCheck);
     }
 
     public boolean villagerTraderRidable = false;
