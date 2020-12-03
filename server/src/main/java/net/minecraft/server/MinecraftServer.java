@@ -182,6 +182,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 
 import co.aikar.timings.MinecraftTimings; // Paper
 import org.spigotmc.SlackActivityAccountant; // Spigot
+import io.papermc.paper.util.PaperJvmChecker; // Paper
 
 public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTask> implements IMojangStatistics, ICommandListener, AutoCloseable {
 
@@ -1077,6 +1078,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 LOGGER.info("Done ({})! For help, type \"help\"", doneTime);
                 // Paper end
 
+                PaperJvmChecker.checkJvm(); // Paper jvm version nag
                 org.spigotmc.WatchdogThread.tick(); // Paper
                 org.spigotmc.WatchdogThread.hasStarted = true; // Paper
                 Arrays.fill( recentTps, 20 );
