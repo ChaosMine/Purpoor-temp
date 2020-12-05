@@ -130,7 +130,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
             this.eY();
         }
 
-        if (this.isAngry()) {
+        if (this.isAngry() && this.world.purpurConfig.zombifiedPiglinCountAsPlayerKillWhenAngry) { // Purpur
             this.lastDamageByPlayerTime = this.ticksLived;
         }
 
@@ -185,7 +185,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
             this.bt = EntityPigZombie.bs.a(this.random);
         }
 
-        if (entityliving instanceof EntityHuman) {
+        if (entityliving instanceof EntityHuman && this.world.purpurConfig.zombifiedPiglinCountAsPlayerKillWhenAngry) { // Purpur
             this.e((EntityHuman) entityliving);
         }
 
