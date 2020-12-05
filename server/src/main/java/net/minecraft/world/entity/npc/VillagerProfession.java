@@ -18,7 +18,7 @@ public class VillagerProfession {
     public static final VillagerProfession ARMORER = a("armorer", VillagePlaceType.d, SoundEffects.ENTITY_VILLAGER_WORK_ARMORER);
     public static final VillagerProfession BUTCHER = a("butcher", VillagePlaceType.e, SoundEffects.ENTITY_VILLAGER_WORK_BUTCHER);
     public static final VillagerProfession CARTOGRAPHER = a("cartographer", VillagePlaceType.f, SoundEffects.ENTITY_VILLAGER_WORK_CARTOGRAPHER);
-    public static final VillagerProfession CLERIC = a("cleric", VillagePlaceType.g, SoundEffects.ENTITY_VILLAGER_WORK_CLERIC);
+    public static final VillagerProfession CLERIC = a("cleric", VillagePlaceType.g, ImmutableSet.of(Items.NETHER_WART), ImmutableSet.of(Blocks.SOUL_SAND), SoundEffects.ENTITY_VILLAGER_WORK_CLERIC); // Purpur
     public static final VillagerProfession FARMER = a("farmer", VillagePlaceType.h, ImmutableSet.of(Items.WHEAT, Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.BONE_MEAL), ImmutableSet.of(Blocks.FARMLAND), SoundEffects.ENTITY_VILLAGER_WORK_FARMER);
     public static final VillagerProfession FISHERMAN = a("fisherman", VillagePlaceType.i, SoundEffects.ENTITY_VILLAGER_WORK_FISHERMAN);
     public static final VillagerProfession FLETCHER = a("fletcher", VillagePlaceType.j, SoundEffects.ENTITY_VILLAGER_WORK_FLETCHER);

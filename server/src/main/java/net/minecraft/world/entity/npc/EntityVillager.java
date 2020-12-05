@@ -203,7 +203,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
             behaviorcontroller.a(Activity.PLAY, Behaviors.a(0.5F));
         } else {
             behaviorcontroller.setSchedule(Schedule.VILLAGER_DEFAULT);
-            behaviorcontroller.a(Activity.WORK, Behaviors.b(villagerprofession, 0.5F), (Set) ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT)));
+            behaviorcontroller.a(Activity.WORK, Behaviors.createWorkTask(villagerprofession, 0.5F, this.world.purpurConfig.villagerClericsFarmWarts), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT))); // Purpur
         }
 
         behaviorcontroller.a(Activity.CORE, Behaviors.a(villagerprofession, 0.5F));
@@ -951,6 +951,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     }
 
     public boolean canPlant() {
+        // Purpur start
+        if (this.world.purpurConfig.villagerClericsFarmWarts && this.getVillagerData().getProfession() == VillagerProfession.CLERIC) {
+            return this.getInventory().containsAny(ImmutableSet.of(Items.NETHER_WART));
+        }
+        // Purpur end
         return this.getInventory().a((Set) ImmutableSet.of(Items.WHEAT_SEEDS, Items.POTATO, Items.CARROT, Items.BEETROOT_SEEDS));
     }
 

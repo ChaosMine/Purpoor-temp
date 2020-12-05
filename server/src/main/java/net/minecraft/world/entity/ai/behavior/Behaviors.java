@@ -21,10 +21,13 @@ public class Behaviors {
         return ImmutableList.of(Pair.of(0, new BehaviorSwim(0.8F)), Pair.of(0, new BehaviorInteractDoor()), Pair.of(0, new BehaviorLook(45, 90)), Pair.of(0, new BehaviorPanic()), Pair.of(0, new BehaviorWake()), Pair.of(0, new BehaviorBellAlert()), Pair.of(0, new BehaviorRaid()), Pair.of(0, new BehaviorPositionValidate(villagerprofession.b(), MemoryModuleType.JOB_SITE)), Pair.of(0, new BehaviorPositionValidate(villagerprofession.b(), MemoryModuleType.POTENTIAL_JOB_SITE)), Pair.of(1, new BehavorMove()), Pair.of(2, new BehaviorBetterJob(villagerprofession)), Pair.of(3, new BehaviorInteractPlayer(f)), new Pair[]{Pair.of(5, new BehaviorFindAdmirableItem<>(f, false, 4)), Pair.of(6, new BehaviorFindPosition(villagerprofession.b(), MemoryModuleType.JOB_SITE, MemoryModuleType.POTENTIAL_JOB_SITE, true, Optional.empty())), Pair.of(7, new BehaviorPotentialJobSite(f)), Pair.of(8, new BehaviorLeaveJob(f)), Pair.of(10, new BehaviorFindPosition(VillagePlaceType.r, MemoryModuleType.HOME, false, Optional.of((byte) 14))), Pair.of(10, new BehaviorFindPosition(VillagePlaceType.s, MemoryModuleType.MEETING_POINT, true, Optional.of((byte) 14))), Pair.of(10, new BehaviorCareer()), Pair.of(10, new BehaviorProfession())});
     }
 
-    public static ImmutableList<Pair<Integer, ? extends Behavior<? super EntityVillager>>> b(VillagerProfession villagerprofession, float f) {
-        Object object;
+    // Purpur start - OBFHELPER, add clericsFarmWarts param
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super EntityVillager>>> b(VillagerProfession villagerprofession, float f) { return createWorkTask(villagerprofession, f, false); }
+    public static ImmutableList<Pair<Integer, ? extends Behavior<? super EntityVillager>>> createWorkTask(VillagerProfession villagerprofession, float f, boolean clericsFarmWarts) {
+        BehaviorWork object; // Purpur - decompile fix
 
-        if (villagerprofession == VillagerProfession.FARMER) {
+        if (villagerprofession == VillagerProfession.FARMER || (clericsFarmWarts && villagerprofession == VillagerProfession.CLERIC)) {
+            // Purpur end
             object = new BehaviorWorkComposter();
         } else {
             object = new BehaviorWork();

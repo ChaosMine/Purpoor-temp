@@ -53,6 +53,11 @@ public class BehaviorTradeVillager extends Behavior<EntityVillager> {
             if (entityvillager1.getVillagerData().getProfession() == VillagerProfession.FARMER && entityvillager.getInventory().a(Items.WHEAT) > Items.WHEAT.getMaxStackSize() / 2) {
                 a(entityvillager, ImmutableSet.of(Items.WHEAT), entityvillager1);
             }
+            // Purpur start
+            if (worldserver.purpurConfig.villagerClericsFarmWarts && worldserver.purpurConfig.villagerClericFarmersThrowWarts && entityvillager.getVillagerData().getProfession() == VillagerProfession.CLERIC && entityvillager.getInventory().getAmount(Items.NETHER_WART) > Items.NETHER_WART.getMaxStackSize() / 2) {
+                tryThrowingItems(entityvillager, ImmutableSet.of(Items.NETHER_WART), entityvillager1);
+            }
+            // Purpur end
 
             if (!this.b.isEmpty() && entityvillager.getInventory().a(this.b)) {
                 a(entityvillager, this.b, entityvillager1);
@@ -74,6 +79,7 @@ public class BehaviorTradeVillager extends Behavior<EntityVillager> {
         }).collect(Collectors.toSet());
     }
 
+    private static void tryThrowingItems(EntityVillager entityVillager, Set<Item> acceptableItems, EntityLiving targetEntity) { a(entityVillager, acceptableItems, targetEntity); } // Purpur - OBFHELPER
     private static void a(EntityVillager entityvillager, Set<Item> set, EntityLiving entityliving) {
         InventorySubcontainer inventorysubcontainer = entityvillager.getInventory();
         ItemStack itemstack = ItemStack.b;

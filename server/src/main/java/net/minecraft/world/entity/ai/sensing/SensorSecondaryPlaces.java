@@ -20,6 +20,13 @@ public class SensorSecondaryPlaces extends Sensor<EntityVillager> {
     }
 
     protected void a(WorldServer worldserver, EntityVillager entityvillager) {
+        // Purpur start - make sure clerics don't wander to soul sand when the option is off
+        BehaviorController<?> behaviorcontroller = entityvillager.getBehaviorController();
+        if (!worldserver.purpurConfig.villagerClericsFarmWarts && entityvillager.getVillagerData().getProfession() == net.minecraft.world.entity.npc.VillagerProfession.CLERIC) {
+            behaviorcontroller.removeMemory(MemoryModuleType.SECONDARY_JOB_SITE);
+            return;
+        }
+        // Purpur end
         ResourceKey<World> resourcekey = worldserver.getDimensionKey();
         BlockPosition blockposition = entityvillager.getChunkCoordinates();
         List<GlobalPos> list = Lists.newArrayList();
@@ -37,10 +44,10 @@ public class SensorSecondaryPlaces extends Sensor<EntityVillager> {
             }
         }
 
-        BehaviorController<?> behaviorcontroller = entityvillager.getBehaviorController();
+        //BehaviorController<?> behaviorcontroller = entityvillager.getBehaviorController(); // Purpur - move up
 
         if (!list.isEmpty()) {
-            behaviorcontroller.setMemory(MemoryModuleType.SECONDARY_JOB_SITE, (Object) list);
+            behaviorcontroller.setMemory(MemoryModuleType.SECONDARY_JOB_SITE, list); // Purpur - decompile fix
         } else {
             behaviorcontroller.removeMemory(MemoryModuleType.SECONDARY_JOB_SITE);
         }

@@ -38,6 +38,7 @@ public interface IInventory extends Clearable {
         return true;
     }
 
+    default int getAmount(Item item) { return this.a(item); } // Purpur - OBFHELPER
     default int a(Item item) {
         int i = 0;
 
@@ -52,6 +53,7 @@ public interface IInventory extends Clearable {
         return i;
     }
 
+    default boolean containsAny(Set<Item> itemSet) { return a(itemSet); } // Purpur - OBFHELPER
     default boolean a(Set<Item> set) {
         for (int i = 0; i < this.getSize(); ++i) {
             ItemStack itemstack = this.getItem(i);

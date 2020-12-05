@@ -32,6 +32,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
     private long c;
     private int d;
     private final List<BlockPosition> e = Lists.newArrayList();
+    private boolean clericWartFarmer = false; // Purpur
 
     public BehaviorFarm() {
         super(ImmutableMap.of(MemoryModuleType.LOOK_TARGET, MemoryStatus.VALUE_ABSENT, MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT, MemoryModuleType.SECONDARY_JOB_SITE, MemoryStatus.VALUE_PRESENT));
@@ -40,9 +41,14 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
     protected boolean a(WorldServer worldserver, EntityVillager entityvillager) {
         if (!worldserver.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && !worldserver.purpurConfig.villagerFarmingBypassMobGriefing) { // Purpur
             return false;
-        } else if (entityvillager.getVillagerData().getProfession() != VillagerProfession.FARMER) {
+        } else if (entityvillager.getVillagerData().getProfession() != VillagerProfession.FARMER && !(worldserver.purpurConfig.villagerClericsFarmWarts && entityvillager.getVillagerData().getProfession() == VillagerProfession.CLERIC)) { // Purpur
             return false;
         } else {
+            // Purpur start
+            if (!this.clericWartFarmer && entityvillager.getVillagerData().getProfession() == VillagerProfession.CLERIC) {
+                this.clericWartFarmer = true;
+            }
+            // Purpur end
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = entityvillager.getChunkCoordinates().i();
 
             this.e.clear();
@@ -73,6 +79,11 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
         Block block = iblockdata.getBlock();
         Block block1 = worldserver.getType(blockposition.down()).getBlock();
 
+        // Purpur start
+        if (this.clericWartFarmer) {
+            return block == Blocks.NETHER_WART && iblockdata.get(net.minecraft.world.level.block.BlockNetherWart.AGE) == 3 || iblockdata.isAir() && block1 == Blocks.SOUL_SAND;
+        }
+        // Purpur end
         return block instanceof BlockCrops && ((BlockCrops) block).isRipe(iblockdata) || iblockdata.isAir() && block1 instanceof BlockSoil;
     }
 
@@ -98,7 +109,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                 Block block = iblockdata.getBlock();
                 Block block1 = worldserver.getType(this.farmBlock.down()).getBlock();
 
-                if (block instanceof BlockCrops && ((BlockCrops) block).isRipe(iblockdata)) {
+                if (block instanceof BlockCrops && ((BlockCrops) block).isRipe(iblockdata) && !this.clericWartFarmer || this.clericWartFarmer && block == Blocks.NETHER_WART && iblockdata.get(net.minecraft.world.level.block.BlockNetherWart.AGE) == 3) { // Purpur
                     // CraftBukkit start
                     if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(entityvillager, this.farmBlock, Blocks.AIR.getBlockData()).isCancelled()) {
                         worldserver.a(this.farmBlock, true, entityvillager);
@@ -106,7 +117,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                     // CraftBukkit end
                 }
 
-                if (iblockdata.isAir() && block1 instanceof BlockSoil && entityvillager.canPlant()) {
+                if (iblockdata.isAir() && (block1 instanceof BlockSoil && !this.clericWartFarmer || this.clericWartFarmer && block1 == Blocks.SOUL_SAND) && entityvillager.canPlant()) { // Purpur
                     InventorySubcontainer inventorysubcontainer = entityvillager.getInventory();
 
                     for (int j = 0; j < inventorysubcontainer.getSize(); ++j) {
@@ -116,6 +127,14 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                         if (!itemstack.isEmpty()) {
                             // CraftBukkit start
                             Block planted = null;
+                            // Purpur start
+                            if (this.clericWartFarmer) {
+                                if (itemstack.getItem() == Items.NETHER_WART) {
+                                    planted = Blocks.NETHER_WART;
+                                    flag = true;
+                                }
+                            } else
+                            // Purpur end
                             if (itemstack.getItem() == Items.WHEAT_SEEDS) {
                                 planted = Blocks.WHEAT;
                                 flag = true;
@@ -139,7 +158,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                         }
 
                         if (flag) {
-                            worldserver.playSound((EntityHuman) null, (double) this.farmBlock.getX(), (double) this.farmBlock.getY(), (double) this.farmBlock.getZ(), SoundEffects.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            worldserver.playSound((EntityHuman) null, (double) this.farmBlock.getX(), (double) this.farmBlock.getY(), (double) this.farmBlock.getZ(), this.clericWartFarmer ? SoundEffects.ITEM_NETHER_WART_PLANT : SoundEffects.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F); // Purpur
                             itemstack.subtract(1);
                             if (itemstack.isEmpty()) {
                                 inventorysubcontainer.setItem(j, ItemStack.b);

@@ -1136,6 +1136,8 @@ public class PurpurWorldConfig {
     public int villagerBreedingTicks = 6000;
     public boolean villagerLobotomizeEnabled = false;
     public int villagerLobotomizeCheck = 60;
+    public boolean villagerClericsFarmWarts = false;
+    public boolean villagerClericFarmersThrowWarts = true;
     private void villagerSettings() {
         villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
         villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
@@ -1155,6 +1157,8 @@ public class PurpurWorldConfig {
         }
         villagerLobotomizeEnabled = getBoolean("mobs.villager.lobotomize.enabled", villagerLobotomizeEnabled);
         villagerLobotomizeCheck = getInt("mobs.villager.lobotomize.check-interval", villagerLobotomizeCheck);
+        villagerClericsFarmWarts = getBoolean("mobs.villager.clerics-farm-warts", villagerClericsFarmWarts);
+        villagerClericFarmersThrowWarts = getBoolean("mobs.villager.cleric-wart-farmers-throw-warts-at-villagers", villagerClericFarmersThrowWarts);
     }
 
     public boolean villagerTraderRidable = false;
