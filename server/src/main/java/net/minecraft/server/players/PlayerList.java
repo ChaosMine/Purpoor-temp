@@ -151,7 +151,7 @@ public abstract class PlayerList {
     private int viewDistance;
     private EnumGamemode u;
     private boolean v;
-    private int w;
+    private int w; private int getTick() { return this.w; } private int setTick(int i) { return this.w = i; } // Purpur - OBFHELPER
 
     // CraftBukkit start
     private CraftServer cserver;
@@ -1029,22 +1029,23 @@ public abstract class PlayerList {
     }
 
     public void tick() {
-        if (++this.w > 600) {
-            // CraftBukkit start
-            for (int i = 0; i < this.players.size(); ++i) {
-                final EntityPlayer target = (EntityPlayer) this.players.get(i);
-
-                target.playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_LATENCY, Iterables.filter(this.players, new Predicate<EntityPlayer>() {
-                    @Override
-                    public boolean apply(EntityPlayer input) {
-                        return target.getBukkitEntity().canSee(input.getBukkitEntity());
-                    }
-                })));
+        // Purpur start
+        int tick = getTick();
+        if (tick < this.players.size()) {
+            final org.bukkit.craftbukkit.entity.CraftPlayer target = this.players.get(tick).getBukkitEntity();
+            final java.util.List<EntityPlayer> list = new java.util.ArrayList<>();
+            for (EntityPlayer entityplayer : this.players) {
+                if (target.canSee(entityplayer.getUniqueID())) {
+                    list.add(entityplayer);
+                }
             }
-            // CraftBukkit end
-            this.w = 0;
+            target.getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_LATENCY, list));
         }
-
+        if (++tick > 600) {
+            tick = 0;
+        }
+        setTick(tick);
+        // Purpur end
     }
 
     public void sendAll(Packet<?> packet) {

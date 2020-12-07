@@ -1447,7 +1447,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public boolean canSee(Player player) {
-        return !hiddenPlayers.containsKey(player.getUniqueId());
+        // Purpur start
+        return canSee(player.getUniqueId());
+    }
+
+    public boolean canSee(UUID uuid) {
+        return !hiddenPlayers.containsKey(uuid);
+        // Purpur end
     }
 
     @Override
