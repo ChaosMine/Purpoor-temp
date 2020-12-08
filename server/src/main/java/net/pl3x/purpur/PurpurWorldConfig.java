@@ -1219,10 +1219,14 @@ public class PurpurWorldConfig {
 
     public boolean wolfRidable = false;
     public boolean wolfRidableInWater = false;
+    public boolean wolfMilkCuresRabies = true;
+    public double wolfNaturalRabid = 0.0D;
     public int wolfBreedingTicks = 6000;
     private void wolfSettings() {
         wolfRidable = getBoolean("mobs.wolf.ridable", wolfRidable);
         wolfRidableInWater = getBoolean("mobs.wolf.ridable-in-water", wolfRidableInWater);
+        wolfMilkCuresRabies = getBoolean("mobs.wolf.milk-cures-rabid-wolves", wolfMilkCuresRabies);
+        wolfNaturalRabid = getDouble("mobs.wolf.spawn-rabid-chance", wolfNaturalRabid);
         wolfBreedingTicks = getInt("mobs.wolf.breeding-delay-ticks", wolfBreedingTicks);
     }
 

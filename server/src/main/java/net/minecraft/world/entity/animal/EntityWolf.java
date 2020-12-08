@@ -10,15 +10,19 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.PathfinderGoalHasRider;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.IntRange;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.TimeRange;
+import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityAgeable;
 import net.minecraft.world.entity.EntityInsentient;
@@ -27,9 +31,12 @@ import net.minecraft.world.entity.EntityPose;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTameableAnimal;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.IEntityAngerable;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBeg;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
@@ -60,6 +67,7 @@ import net.minecraft.world.item.ItemDye;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
+import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.Vec3D;
 
@@ -73,11 +81,42 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
     private static final DataWatcherObject<Boolean> br = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> bs = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.b);
     private static final DataWatcherObject<Integer> bt = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.b);
-    public static final Predicate<EntityLiving> bq = (entityliving) -> {
+    public static Predicate<EntityLiving> vanillaPredicate() { return bq; } public static final Predicate<EntityLiving> bq = (entityliving) -> { // Purpur - OBFHELPER
         EntityTypes<?> entitytypes = entityliving.getEntityType();
 
         return entitytypes == EntityTypes.SHEEP || entitytypes == EntityTypes.RABBIT || entitytypes == EntityTypes.FOX;
     };
+    // Purpur start - rabid wolf spawn chance
+    private boolean isRabid = false;
+    private static final Predicate<EntityLiving> RABID_PREDICATE = e -> e instanceof EntityPlayer || e instanceof EntityInsentient;
+    private final PathfinderGoal PATHFINDER_VANILLA = new PathfinderGoalRandomTargetNonTamed<>(this, EntityAnimal.class, false, vanillaPredicate());
+    private final PathfinderGoal PATHFINDER_RABID = new PathfinderGoalRandomTargetNonTamed<>(this, EntityLiving.class, false, RABID_PREDICATE);
+    private static final class PathfinderGoalAvoidRabidWolves extends PathfinderGoalAvoidTarget<EntityWolf> {
+        private final EntityWolf wolf;
+
+        public PathfinderGoalAvoidRabidWolves(EntityWolf wolf, float distance, double minSpeed, double maxSpeed) {
+            super(wolf, EntityWolf.class, distance, minSpeed, maxSpeed);
+            this.wolf = wolf;
+        }
+
+        @Override
+        public boolean a() { // shouldExecute
+            return super.a() && !this.wolf.isRabid() && this.getTarget() != null && this.getTarget().isRabid(); // wolves which are not rabid run away from rabid wolves
+        }
+
+        @Override
+        public void c() { // startExecuting
+            this.wolf.setGoalTarget(null);
+            super.c();
+        }
+
+        @Override
+        public void e() { // tick
+            this.wolf.setGoalTarget(null);
+            super.e();
+        }
+    }
+    // Purpur end
     private float bu;
     private float bv;
     private boolean bw;
@@ -112,6 +151,37 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.wolfBreedingTicks;
     }
+
+    public boolean isRabid() {
+        return this.isRabid;
+    }
+
+    public void setRabid(boolean isRabid) {
+        this.isRabid = isRabid;
+        updatePathfinders(true);
+    }
+
+    public void updatePathfinders(boolean modifyEffects) {
+        this.targetSelector.removeGoal(PATHFINDER_VANILLA);
+        this.targetSelector.removeGoal(PATHFINDER_RABID);
+        if (this.isRabid) {
+            setTamed(false);
+            setOwnerUUID(null);
+            this.targetSelector.addGoal(5, PATHFINDER_RABID);
+            if (modifyEffects) this.addEffect(new MobEffect(MobEffects.CONFUSION, 1200));
+        } else {
+            this.targetSelector.addGoal(5, PATHFINDER_VANILLA);
+            this.pacify();
+            if (modifyEffects) this.removeEffect(MobEffects.CONFUSION);
+        }
+    }
+
+    @Override
+    public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @Nullable GroupDataEntity groupdataentity, @Nullable NBTTagCompound nbttagcompound) {
+        this.isRabid = world.purpurConfig.wolfNaturalRabid > 0.0D && random.nextDouble() <= world.purpurConfig.wolfNaturalRabid;
+        this.updatePathfinders(false);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
+    }
     // Purpur end
 
     @Override
@@ -120,6 +190,7 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         this.goalSelector.a(1, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(2, new PathfinderGoalSit(this));
         this.goalSelector.a(3, new EntityWolf.a<>(this, EntityLlama.class, 24.0F, 1.5D, 1.5D));
+        this.goalSelector.addGoal(3, new PathfinderGoalAvoidRabidWolves(this, 24.0F, 1.5D, 1.5D)); // Purpur
         this.goalSelector.a(4, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(5, new PathfinderGoalMeleeAttack(this, 1.0D, true));
         this.goalSelector.a(6, new PathfinderGoalFollowOwner(this, 1.0D, 10.0F, 2.0F, false));
@@ -133,7 +204,7 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(this));
         this.targetSelector.a(3, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(new Class[0])); // CraftBukkit - decompile error
         this.targetSelector.a(4, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, this::a_));
-        this.targetSelector.a(5, new PathfinderGoalRandomTargetNonTamed<>(this, EntityAnimal.class, false, EntityWolf.bq));
+        //this.targetSelector.a(5, new PathfinderGoalRandomTargetNonTamed<>(this, EntityAnimal.class, false, EntityWolf.bq)); // Purpur - moved to updatePathfinders()
         this.targetSelector.a(6, new PathfinderGoalRandomTargetNonTamed<>(this, EntityTurtle.class, false, EntityTurtle.bo));
         this.targetSelector.a(7, new PathfinderGoalNearestAttackableTarget<>(this, EntitySkeletonAbstract.class, false));
         this.targetSelector.a(8, new PathfinderGoalUniversalAngerReset<>(this, true));
@@ -178,6 +249,7 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
         nbttagcompound.setByte("CollarColor", (byte) this.getCollarColor().getColorIndex());
+        nbttagcompound.setBoolean("Purpur.IsRabid", this.isRabid); // Purpur
         this.c(nbttagcompound);
     }
 
@@ -187,6 +259,10 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         if (nbttagcompound.hasKeyOfType("CollarColor", 99)) {
             this.setCollarColor(EnumColor.fromColorIndex(nbttagcompound.getInt("CollarColor")));
         }
+        // Purpur start
+        this.isRabid = nbttagcompound.getBoolean("Purpur.IsRabid");
+        this.updatePathfinders(false);
+        // Purpur end
 
         this.a((WorldServer) this.world, nbttagcompound);
     }
@@ -231,6 +307,11 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
     public void tick() {
         super.tick();
         if (this.isAlive()) {
+            // Purpur start
+            if (this.ticksLived % 300 == 0 && this.isRabid()) {
+                this.addEffect(new MobEffect(MobEffects.CONFUSION, 400));
+            }
+            // Purpur end
             this.bv = this.bu;
             if (this.eY()) {
                 this.bu += (1.0F - this.bu) * 0.4F;
@@ -402,6 +483,20 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
 
                 return EnumInteractionResult.SUCCESS;
             }
+            // Purpur start
+            else if (this.world.purpurConfig.wolfMilkCuresRabies && itemstack.getItem() == Items.MILK_BUCKET && this.isRabid()) {
+                if (!entityhuman.isCreative()) {
+                    entityhuman.setItemInHand(enumhand, new ItemStack(Items.BUCKET));
+                }
+                this.setRabid(false);
+                for (int i = 0; i < 10; ++i) {
+                    ((WorldServer) world).sendParticles(((WorldServer) world).players, null, Particles.HAPPY_VILLAGER,
+                            locX() + random.nextFloat(), locY() + (random.nextFloat() * 1.5), locZ() + random.nextFloat(), 1,
+                            random.nextGaussian() * 0.05D, random.nextGaussian() * 0.05D, random.nextGaussian() * 0.05D, 0, true);
+                }
+                return EnumInteractionResult.SUCCESS;
+            }
+            // Purpur end
 
             return super.b(entityhuman, enumhand);
         }

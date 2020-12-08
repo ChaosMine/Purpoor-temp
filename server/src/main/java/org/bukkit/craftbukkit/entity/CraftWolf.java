@@ -45,4 +45,16 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
     public void setCollarColor(DyeColor color) {
         getHandle().setCollarColor(EnumColor.fromColorIndex(color.getWoolData()));
     }
+
+    // Purpur start
+    @Override
+    public boolean isRabid() {
+        return getHandle().isRabid();
+    }
+
+    @Override
+    public void setRabid(boolean isRabid) {
+        getHandle().setRabid(isRabid);
+    }
+    // Purpur end
 }

@@ -2197,6 +2197,7 @@ public abstract class EntityLiving extends Entity {
         }
     }
 
+    public final void setItemInHand(EnumHand enumHand, ItemStack itemStack) { this.a(enumHand, itemStack); } // Purpur - OBFHELPER
     public void a(EnumHand enumhand, ItemStack itemstack) {
         if (enumhand == EnumHand.MAIN_HAND) {
             this.setSlot(EnumItemSlot.MAINHAND, itemstack);

@@ -17,7 +17,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
     protected final EntityCreature a;
     private final double i;
     private final double j;
-    protected T b;
+    protected T b; protected T getTarget() { return this.b; } // Purpur - OBFHELPER
     protected final float c;
     protected PathEntity d;
     protected final NavigationAbstract e;
@@ -27,12 +27,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
     private final PathfinderTargetCondition k;
 
     public PathfinderGoalAvoidTarget(EntityCreature entitycreature, Class<T> oclass, float f, double d0, double d1) {
-        Predicate predicate = (entityliving) -> {
-            return true;
-        };
-        Predicate predicate1 = IEntitySelector.e;
-
-        this(entitycreature, oclass, predicate, f, d0, d1, predicate1::test);
+        this(entitycreature, oclass, entityliving -> true, f, d0, d1, IEntitySelector.e::test); // Purpur - decompile fix
     }
 
     public PathfinderGoalAvoidTarget(EntityCreature entitycreature, Class<T> oclass, Predicate<EntityLiving> predicate, float f, double d0, double d1, Predicate<EntityLiving> predicate1) {
