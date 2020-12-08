@@ -39,4 +39,20 @@ public interface Wolf extends Tameable, Sittable {
      * @param color the color to apply
      */
     public void setCollarColor(@NotNull DyeColor color);
+
+    // Purpur start
+    /**
+     * Checks if this wolf is rabid
+     *
+     * @return whether the wolf is rabid
+     */
+    public boolean isRabid();
+
+    /**
+     * Sets this wolf to be rabid or not
+     *
+     * @param rabid whether the wolf should be rabid
+     */
+    public void setRabid(boolean rabid);
+    // Purpur end
 }

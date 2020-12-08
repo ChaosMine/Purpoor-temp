@@ -213,5 +213,6 @@ public interface VanillaGoal<T extends Mob> extends Goal<T> {
     GoalKey<AbstractHorse> HORSE_HAS_RIDER = GoalKey.of(AbstractHorse.class, NamespacedKey.minecraft("horse_has_rider"));
     GoalKey<Drowned> DROWNED_ATTACK_VILLAGER = GoalKey.of(Drowned.class, NamespacedKey.minecraft("drowned_attack_villager"));
     GoalKey<Zombie> ZOMBIE_ATTACK_VILLAGER = GoalKey.of(Zombie.class, NamespacedKey.minecraft("zombie_attack_villager"));
+    GoalKey<Wolf> AVOID_RABID_WOLVES = GoalKey.of(Wolf.class, NamespacedKey.minecraft("avoid_rabid_wolves"));
     // Purpur end
 }
