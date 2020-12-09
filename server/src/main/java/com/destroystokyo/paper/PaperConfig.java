@@ -474,4 +474,9 @@ public class PaperConfig {
     private static void trackPluginScoreboards() {
         trackPluginScoreboards = getBoolean("settings.track-plugin-scoreboards", false);
     }
+
+    public static boolean fixEntityPositionDesync = true;
+    private static void fixEntityPositionDesync() {
+        fixEntityPositionDesync = getBoolean("settings.fix-entity-position-desync", fixEntityPositionDesync);
+    }
 }

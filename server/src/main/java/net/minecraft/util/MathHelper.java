@@ -9,7 +9,7 @@ import net.minecraft.core.BaseBlockPosition;
 public class MathHelper {
 
     public static final float a = c(2.0F);
-    private static final float[] b = (float[]) SystemUtils.a((Object) (new float[65536]), (afloat) -> {
+    private static final float[] b = (float[]) SystemUtils.a((new float[65536]), (afloat) -> { // Paper - decompile error
         for (int i = 0; i < afloat.length; ++i) {
             afloat[i] = (float) Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
         }
@@ -49,6 +49,7 @@ public class MathHelper {
         return d0 < (double) i ? i - 1 : i;
     }
 
+    public static long floorLong(double d0) { return d(d0); } // Paper - OBFHELPER
     public static long d(double d0) {
         long i = (long) d0;
 

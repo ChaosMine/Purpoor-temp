@@ -550,4 +550,16 @@ public class EntityItem extends Entity {
     public Packet<?> P() {
         return new PacketPlayOutSpawnEntity(this);
     }
+
+    // Paper start - fix MC-4
+    public void setPositionRaw(double x, double y, double z) {
+        if (com.destroystokyo.paper.PaperConfig.fixEntityPositionDesync) {
+            // encode/decode from PacketPlayOutEntity
+            x = MathHelper.floorLong(x * 4096.0D) * (1 / 4096.0D);
+            y = MathHelper.floorLong(y * 4096.0D) * (1 / 4096.0D);
+            z = MathHelper.floorLong(z * 4096.0D) * (1 / 4096.0D);
+        }
+        super.setPositionRaw(x, y, z);
+    }
+    // Paper end - fix MC-4
 }

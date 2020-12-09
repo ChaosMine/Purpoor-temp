@@ -19,11 +19,11 @@ public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
     protected boolean i;
 
     public static long a(double d0) {
-        return MathHelper.d(d0 * 4096.0D);
+        return MathHelper.d(d0 * 4096.0D); // Paper - check EntityItem#setPositionRaw on update
     }
 
     public static Vec3D a(long i, long j, long k) {
-        return (new Vec3D((double) i, (double) j, (double) k)).a(2.44140625E-4D);
+        return (new Vec3D((double) i, (double) j, (double) k)).a(2.44140625E-4D); // Paper - check EntityItem#setPositionRaw on update
     }
 
     public PacketPlayOutEntity() {}
