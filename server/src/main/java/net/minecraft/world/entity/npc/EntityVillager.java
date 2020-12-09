@@ -1014,6 +1014,15 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     @Override
     public void a(ReputationEvent reputationevent, Entity entity) {
         if (reputationevent == ReputationEvent.a) {
+            // Paper start - fix MC-181190
+            if (world.paperConfig.fixCuringZombieVillagerDiscountExploit) {
+                final Reputation.a playerReputation = this.getReputation().getReputations().get(entity.getUniqueID());
+                if (playerReputation != null) {
+                    playerReputation.removeReputationForType(ReputationType.MAJOR_POSITIVE);
+                    playerReputation.removeReputationForType(ReputationType.MINOR_POSITIVE);
+                }
+            }
+            // Paper end
             this.by.a(entity.getUniqueID(), ReputationType.MAJOR_POSITIVE, 20);
             this.by.a(entity.getUniqueID(), ReputationType.MINOR_POSITIVE, 25);
         } else if (reputationevent == ReputationEvent.e) {

@@ -223,6 +223,7 @@ public class Reputation {
 
         }
 
+        public final void removeReputationForType(ReputationType reputationType) { this.b(reputationType); } // Paper - OBFHELPER
         public void b(ReputationType reputationtype) {
             this.a.removeInt(reputationtype);
         }

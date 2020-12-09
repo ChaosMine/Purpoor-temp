@@ -717,4 +717,9 @@ public class PaperWorldConfig {
     private void fixClimbingBypassingCrammingRule() {
         fixClimbingBypassingCrammingRule = getBoolean("fix-climbing-bypassing-cramming-rule", fixClimbingBypassingCrammingRule);
     }
+
+    public boolean fixCuringZombieVillagerDiscountExploit = true;
+    private void fixCuringExploit() {
+        fixCuringZombieVillagerDiscountExploit = getBoolean("game-mechanics.fix-curing-zombie-villager-discount-exploit", fixCuringZombieVillagerDiscountExploit);
+    }
 }
