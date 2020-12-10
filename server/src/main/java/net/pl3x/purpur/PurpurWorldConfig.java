@@ -3,6 +3,7 @@ package net.pl3x.purpur;
 import com.destroystokyo.paper.PaperConfig;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -1219,12 +1220,18 @@ public class PurpurWorldConfig {
 
     public boolean wolfRidable = false;
     public boolean wolfRidableInWater = false;
+    public EnumColor wolfDefaultCollarColor = EnumColor.RED;
     public boolean wolfMilkCuresRabies = true;
     public double wolfNaturalRabid = 0.0D;
     public int wolfBreedingTicks = 6000;
     private void wolfSettings() {
         wolfRidable = getBoolean("mobs.wolf.ridable", wolfRidable);
         wolfRidableInWater = getBoolean("mobs.wolf.ridable-in-water", wolfRidableInWater);
+        try {
+            wolfDefaultCollarColor = EnumColor.valueOf(getString("mobs.wolf.default-collar-color", wolfDefaultCollarColor.name()));
+        } catch (IllegalArgumentException ignore) {
+            wolfDefaultCollarColor = EnumColor.RED;
+        }
         wolfMilkCuresRabies = getBoolean("mobs.wolf.milk-cures-rabid-wolves", wolfMilkCuresRabies);
         wolfNaturalRabid = getDouble("mobs.wolf.spawn-rabid-chance", wolfNaturalRabid);
         wolfBreedingTicks = getInt("mobs.wolf.breeding-delay-ticks", wolfBreedingTicks);

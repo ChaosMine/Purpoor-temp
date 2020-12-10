@@ -182,6 +182,12 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         this.updatePathfinders(false);
         return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
+
+    @Override
+    public void tame(EntityHuman entityhuman) {
+        setCollarColor(world.purpurConfig.wolfDefaultCollarColor);
+        super.tame(entityhuman);
+    }
     // Purpur end
 
     @Override
