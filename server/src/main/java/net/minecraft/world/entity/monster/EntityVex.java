@@ -92,6 +92,11 @@ public class EntityVex extends EntityMonster {
     public boolean b(float f, float f1) {
         return false; //  no fall damage please
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.vexMaxHealth);
+    }
     // Purpur end
 
     @Override

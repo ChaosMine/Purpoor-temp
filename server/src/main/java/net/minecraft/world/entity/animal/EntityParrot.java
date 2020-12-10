@@ -176,6 +176,11 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
     public int getPurpurBreedTime() {
         return 6000;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.parrotMaxHealth);
+    }
     // Purpur end
 
     @Nullable

@@ -24,6 +24,7 @@ import net.minecraft.world.entity.EntityLightning;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.IShearable;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
@@ -71,6 +72,11 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
     @Override
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.mooshroomBreedingTicks;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.mooshroomMaxHealth);
     }
     // Purpur end
 

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EntityAgeable;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
@@ -113,6 +114,11 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     @Override
     public boolean a(EntityHuman entityhuman) {
         return world.purpurConfig.villagerTraderCanBeLeashed && !this.isLeashed();
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.villagerTraderMaxHealth);
     }
     // Purpur - end
 

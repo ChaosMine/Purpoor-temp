@@ -95,6 +95,11 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
     public boolean isRidableInWater() {
         return world.purpurConfig.endermanRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.endermanMaxHealth);
+    }
     // Purpur end
 
     @Override

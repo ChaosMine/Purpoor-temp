@@ -81,6 +81,18 @@ public class EntityBat extends EntityAmbient {
             setMot(mot.a(0.9D));
         }
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.batMaxHealth);
+        this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(this.world.purpurConfig.batFollowRange);
+        this.getAttributeInstance(GenericAttributes.KNOCKBACK_RESISTANCE).setValue(this.world.purpurConfig.batKnockbackResistance);
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.world.purpurConfig.batMovementSpeed);
+        this.getAttributeInstance(GenericAttributes.FLYING_SPEED).setValue(this.world.purpurConfig.batFlyingSpeed);
+        this.getAttributeInstance(GenericAttributes.ARMOR).setValue(this.world.purpurConfig.batArmor);
+        this.getAttributeInstance(GenericAttributes.ARMOR_TOUGHNESS).setValue(this.world.purpurConfig.batArmorToughness);
+        this.getAttributeInstance(GenericAttributes.ATTACK_KNOCKBACK).setValue(this.world.purpurConfig.batAttackKnockback);
+    }
     // Purpur end
 
     @Override

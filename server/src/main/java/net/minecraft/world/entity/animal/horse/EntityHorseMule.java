@@ -25,7 +25,23 @@ public class EntityHorseMule extends EntityHorseChestedAbstract {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.muleBreedingTicks;
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.muleMaxHealthMin, this.world.purpurConfig.muleMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.muleJumpStrengthMin, this.world.purpurConfig.muleJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.muleMovementSpeedMin, this.world.purpurConfig.muleMovementSpeedMax);
+    }
     // Purpur end
+
     @Override
     protected SoundEffect getSoundAmbient() {
         super.getSoundAmbient();

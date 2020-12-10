@@ -44,6 +44,15 @@ public class EntityMagmaCube extends EntitySlime {
     public float getJumpHeight() {
         return 0.42F * this.getBlockJumpFactor(); // from EntityLiving
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.generateMaxHealth());
+    }
+
+    public String getMaxHealthEquation() {
+        return world.purpurConfig.magmaCubeMaxHealth;
+    }
     // Purpur end
 
     public static AttributeProvider.Builder m() {

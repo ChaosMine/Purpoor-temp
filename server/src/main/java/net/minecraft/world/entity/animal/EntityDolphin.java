@@ -128,6 +128,11 @@ public class EntityDolphin extends EntityWaterAnimal {
         }
         return false;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.dolphinMaxHealth);
+    }
     // Purpur end
 
     @Nullable

@@ -542,30 +542,58 @@ public class PurpurWorldConfig {
     public boolean batRidable = false;
     public boolean batRidableInWater = false;
     public double batMaxY = 256D;
+    public double batMaxHealth = 6.0D;
+    public double batFollowRange = 16.0D;
+    public double batKnockbackResistance = 0.0D;
+    public double batMovementSpeed = 0.6D;
+    public double batFlyingSpeed = 0.6D;
+    public double batArmor = 0.0D;
+    public double batArmorToughness = 0.0D;
+    public double batAttackKnockback = 0.0D;
     private void batSettings() {
         batRidable = getBoolean("mobs.bat.ridable", batRidable);
         batRidableInWater = getBoolean("mobs.bat.ridable-in-water", batRidableInWater);
         batMaxY = getDouble("mobs.bat.ridable-max-y", batMaxY);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.bat.attributes.max-health", batMaxHealth);
+            set("mobs.bat.attributes.max-health", null);
+            set("mobs.bat.attributes.max_health", oldValue);
+        }
+        batMaxHealth = getDouble("mobs.bat.attributes.max_health", batMaxHealth);
     }
 
     public boolean beeRidable = false;
     public boolean beeRidableInWater = false;
     public double beeMaxY = 256D;
     public int beeBreedingTicks = 6000;
+    public double beeMaxHealth = 10.0D;
     private void beeSettings() {
         beeRidable = getBoolean("mobs.bee.ridable", beeRidable);
         beeRidableInWater = getBoolean("mobs.bee.ridable-in-water", beeRidableInWater);
         beeMaxY = getDouble("mobs.bee.ridable-max-y", beeMaxY);
         beeBreedingTicks = getInt("mobs.bee.breeding-delay-ticks", beeBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.bee.attributes.max-health", beeMaxHealth);
+            set("mobs.bee.attributes.max-health", null);
+            set("mobs.bee.attributes.max_health", oldValue);
+        }
+        beeMaxHealth = getDouble("mobs.bee.attributes.max_health", beeMaxHealth);
     }
 
     public boolean blazeRidable = false;
     public boolean blazeRidableInWater = false;
     public double blazeMaxY = 256D;
+    public double blazeMaxHealth = 20.0D;
     private void blazeSettings() {
         blazeRidable = getBoolean("mobs.blaze.ridable", blazeRidable);
         blazeRidableInWater = getBoolean("mobs.blaze.ridable-in-water", blazeRidableInWater);
         blazeMaxY = getDouble("mobs.blaze.ridable-max-y", blazeMaxY);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.blaze.attributes.max-health", blazeMaxHealth);
+            set("mobs.blaze.attributes.max-health", null);
+            set("mobs.blaze.attributes.max_health", oldValue);
+        }
+        blazeMaxHealth = getDouble("mobs.blaze.attributes.max_health", blazeMaxHealth);
     }
 
     public boolean catRidable = false;
@@ -574,6 +602,7 @@ public class PurpurWorldConfig {
     public int catSpawnSwampHutScanRange = 16;
     public int catSpawnVillageScanRange = 48;
     public int catBreedingTicks = 6000;
+    public double catMaxHealth = 10.0D;
     private void catSettings() {
         catRidable = getBoolean("mobs.cat.ridable", catRidable);
         catRidableInWater = getBoolean("mobs.cat.ridable-in-water", catRidableInWater);
@@ -581,51 +610,92 @@ public class PurpurWorldConfig {
         catSpawnSwampHutScanRange = getInt("mobs.cat.scan-range-for-other-cats.swamp-hut", catSpawnSwampHutScanRange);
         catSpawnVillageScanRange = getInt("mobs.cat.scan-range-for-other-cats.village", catSpawnVillageScanRange);
         catBreedingTicks = getInt("mobs.cat.breeding-delay-ticks", catBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.cat.attributes.max-health", catMaxHealth);
+            set("mobs.cat.attributes.max-health", null);
+            set("mobs.cat.attributes.max_health", oldValue);
+        }
+        catMaxHealth = getDouble("mobs.cat.attributes.max_health", catMaxHealth);
     }
 
     public boolean caveSpiderRidable = false;
     public boolean caveSpiderRidableInWater = false;
+    public double caveSpiderMaxHealth = 12.0D;
     private void caveSpiderSettings() {
         caveSpiderRidable = getBoolean("mobs.cave_spider.ridable", caveSpiderRidable);
         caveSpiderRidableInWater = getBoolean("mobs.cave_spider.ridable-in-water", caveSpiderRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.cave_spider.attributes.max-health", caveSpiderMaxHealth);
+            set("mobs.cave_spider.attributes.max-health", null);
+            set("mobs.cave_spider.attributes.max_health", oldValue);
+        }
+        caveSpiderMaxHealth = getDouble("mobs.cave_spider.attributes.max_health", caveSpiderMaxHealth);
     }
 
     public boolean chickenRidable = false;
     public boolean chickenRidableInWater = false;
     public boolean chickenRetaliate = false;
     public int chickenBreedingTicks = 6000;
+    public double chickenMaxHealth = 4.0D;
     private void chickenSettings() {
         chickenRidable = getBoolean("mobs.chicken.ridable", chickenRidable);
         chickenRidableInWater = getBoolean("mobs.chicken.ridable-in-water", chickenRidableInWater);
         chickenRetaliate = getBoolean("mobs.chicken.retaliate", chickenRetaliate);
         chickenBreedingTicks = getInt("mobs.chicken.breeding-delay-ticks", chickenBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.chicken.attributes.max-health", chickenMaxHealth);
+            set("mobs.chicken.attributes.max-health", null);
+            set("mobs.chicken.attributes.max_health", oldValue);
+        }
+        chickenMaxHealth = getDouble("mobs.chicken.attributes.max_health", chickenMaxHealth);
     }
 
     public boolean codRidable = false;
+    public double codMaxHealth = 3.0D;
     private void codSettings() {
         codRidable = getBoolean("mobs.cod.ridable", codRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.cod.attributes.max-health", codMaxHealth);
+            set("mobs.cod.attributes.max-health", null);
+            set("mobs.cod.attributes.max_health", oldValue);
+        }
+        codMaxHealth = getDouble("mobs.cod.attributes.max_health", codMaxHealth);
     }
 
     public boolean cowRidable = false;
     public boolean cowRidableInWater = false;
     public int cowFeedMushrooms = 0;
     public int cowBreedingTicks = 6000;
+    public double cowMaxHealth = 10.0D;
     private void cowSettings() {
         cowRidable = getBoolean("mobs.cow.ridable", cowRidable);
         cowRidableInWater = getBoolean("mobs.cow.ridable-in-water", cowRidableInWater);
         cowFeedMushrooms = getInt("mobs.cow.feed-mushrooms-for-mooshroom", cowFeedMushrooms);
         cowBreedingTicks = getInt("mobs.cow.breeding-delay-ticks", cowBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.cow.attributes.max-health", cowMaxHealth);
+            set("mobs.cow.attributes.max-health", null);
+            set("mobs.cow.attributes.max_health", oldValue);
+        }
+        cowMaxHealth = getDouble("mobs.cow.attributes.max_health", cowMaxHealth);
     }
 
     public boolean creeperRidable = false;
     public boolean creeperRidableInWater = false;
     public boolean creeperAllowGriefing = true;
     public double creeperChargedChance = 0.0D;
+    public double creeperMaxHealth = 20.0D;
     private void creeperSettings() {
         creeperRidable = getBoolean("mobs.creeper.ridable", creeperRidable);
         creeperRidableInWater = getBoolean("mobs.creeper.ridable-in-water", creeperRidableInWater);
         creeperAllowGriefing = getBoolean("mobs.creeper.allow-griefing", creeperAllowGriefing);
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.creeper.attributes.max-health", creeperMaxHealth);
+            set("mobs.creeper.attributes.max-health", null);
+            set("mobs.creeper.attributes.max_health", oldValue);
+        }
+        creeperMaxHealth = getDouble("mobs.creeper.attributes.max_health", creeperMaxHealth);
     }
 
     public boolean dolphinRidable = false;
@@ -633,19 +703,45 @@ public class PurpurWorldConfig {
     public float dolphinSpitSpeed = 1.0F;
     public float dolphinSpitDamage = 2.0F;
     public boolean dolphinDisableTreasureSearching = false;
+    public double dolphinMaxHealth = 10.0D;
     private void dolphinSettings() {
         dolphinRidable = getBoolean("mobs.dolphin.ridable", dolphinRidable);
         dolphinSpitCooldown = getInt("mobs.dolphin.spit.cooldown", dolphinSpitCooldown);
         dolphinSpitSpeed = (float) getDouble("mobs.dolphin.spit.speed", dolphinSpitSpeed);
         dolphinSpitDamage = (float) getDouble("mobs.dolphin.spit.damage", dolphinSpitDamage);
         dolphinDisableTreasureSearching = getBoolean("mobs.dolphin.disable-treasure-searching", dolphinDisableTreasureSearching);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.dolphin.attributes.max-health", dolphinMaxHealth);
+            set("mobs.dolphin.attributes.max-health", null);
+            set("mobs.dolphin.attributes.max_health", oldValue);
+        }
+        dolphinMaxHealth = getDouble("mobs.dolphin.attributes.max_health", dolphinMaxHealth);
     }
 
     public boolean donkeyRidableInWater = false;
     public int donkeyBreedingTicks = 6000;
+    public double donkeyMaxHealthMin = 15.0D;
+    public double donkeyMaxHealthMax = 30.0D;
+    public double donkeyJumpStrengthMin = 0.5D;
+    public double donkeyJumpStrengthMax = 0.5D;
+    public double donkeyMovementSpeedMin = 0.175D;
+    public double donkeyMovementSpeedMax = 0.175D;
     private void donkeySettings() {
         donkeyRidableInWater = getBoolean("mobs.donkey.ridable-in-water", donkeyRidableInWater);
         donkeyBreedingTicks = getInt("mobs.donkey.breeding-delay-ticks", donkeyBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldMin = getDouble("mobs.donkey.attributes.max-health.min", donkeyMaxHealthMin);
+            double oldMax = getDouble("mobs.donkey.attributes.max-health.max", donkeyMaxHealthMax);
+            set("mobs.donkey.attributes.max-health", null);
+            set("mobs.donkey.attributes.max_health.min", oldMin);
+            set("mobs.donkey.attributes.max_health.max", oldMax);
+        }
+        donkeyMaxHealthMin = getDouble("mobs.donkey.attributes.max_health.min", donkeyMaxHealthMin);
+        donkeyMaxHealthMax = getDouble("mobs.donkey.attributes.max_health.max", donkeyMaxHealthMax);
+        donkeyJumpStrengthMin = getDouble("mobs.donkey.attributes.jump_strength.min", donkeyJumpStrengthMin);
+        donkeyJumpStrengthMax = getDouble("mobs.donkey.attributes.jump_strength.max", donkeyJumpStrengthMax);
+        donkeyMovementSpeedMin = getDouble("mobs.donkey.attributes.movement_speed.min", donkeyMovementSpeedMin);
+        donkeyMovementSpeedMax = getDouble("mobs.donkey.attributes.movement_speed.max", donkeyMovementSpeedMax);
     }
 
     public boolean drownedRidable = false;
@@ -653,73 +749,135 @@ public class PurpurWorldConfig {
     public boolean drownedJockeyOnlyBaby = true;
     public double drownedJockeyChance = 0.05D;
     public boolean drownedJockeyTryExistingChickens = true;
+    public double drownedMaxHealth = 20.0D;
+    public double drownedSpawnReinforcements = 0.1D;
     private void drownedSettings() {
         drownedRidable = getBoolean("mobs.drowned.ridable", drownedRidable);
         drownedRidableInWater = getBoolean("mobs.drowned.ridable-in-water", drownedRidableInWater);
         drownedJockeyOnlyBaby = getBoolean("mobs.drowned.jockey.only-babies", drownedJockeyOnlyBaby);
         drownedJockeyChance = getDouble("mobs.drowned.jockey.chance", drownedJockeyChance);
         drownedJockeyTryExistingChickens = getBoolean("mobs.drowned.jockey.try-existing-chickens", drownedJockeyTryExistingChickens);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.drowned.attributes.max-health", drownedMaxHealth);
+            set("mobs.drowned.attributes.max-health", null);
+            set("mobs.drowned.attributes.max_health", oldValue);
+        }
+        drownedMaxHealth = getDouble("mobs.drowned.attributes.max_health", drownedMaxHealth);
+        drownedSpawnReinforcements = getDouble("mobs.drowned.attributes.spawn_reinforcements", drownedSpawnReinforcements);
     }
 
     public boolean elderGuardianRidable = false;
+    public double elderGuardianMaxHealth = 80.0D;
     private void elderGuardianSettings() {
         elderGuardianRidable = getBoolean("mobs.elder_guardian.ridable", elderGuardianRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.elder_guardian.attributes.max-health", elderGuardianMaxHealth);
+            set("mobs.elder_guardian.attributes.max-health", null);
+            set("mobs.elder_guardian.attributes.max_health", oldValue);
+        }
+        elderGuardianMaxHealth = getDouble("mobs.elder_guardian.attributes.max_health", elderGuardianMaxHealth);
     }
 
     public boolean enderDragonRidable = false;
     public boolean enderDragonRidableInWater = false;
     public double enderDragonMaxY = 256D;
     public boolean enderDragonAlwaysDropsFullExp = false;
+    public double enderDragonMaxHealth = 200.0D;
     private void enderDragonSettings() {
         enderDragonRidable = getBoolean("mobs.ender_dragon.ridable", enderDragonRidable);
         enderDragonRidableInWater = getBoolean("mobs.ender_dragon.ridable-in-water", enderDragonRidableInWater);
         enderDragonMaxY = getDouble("mobs.ender_dragon.ridable-max-y", enderDragonMaxY);
         enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
+        if (PurpurConfig.version < 8) {
+            double oldValue = getDouble("mobs.ender_dragon.max-health", enderDragonMaxHealth);
+            set("mobs.ender_dragon.max-health", null);
+            set("mobs.ender_dragon.attributes.max_health", oldValue);
+        } else if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.ender_dragon.attributes.max-health", enderDragonMaxHealth);
+            set("mobs.ender_dragon.attributes.max-health", null);
+            set("mobs.ender_dragon.attributes.max_health", oldValue);
+        }
+        enderDragonMaxHealth = getDouble("mobs.ender_dragon.attributes.max_health", enderDragonMaxHealth);
     }
 
     public boolean endermanRidable = false;
     public boolean endermanRidableInWater = false;
     public boolean endermanAllowGriefing = true;
     public boolean endermanDespawnEvenWithBlock = false;
+    public double endermanMaxHealth = 40.0D;
     private void endermanSettings() {
         endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
         endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
         endermanAllowGriefing = getBoolean("mobs.enderman.allow-griefing", endermanAllowGriefing);
         endermanDespawnEvenWithBlock = getBoolean("mobs.enderman.can-despawn-with-held-block", endermanDespawnEvenWithBlock);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.enderman.attributes.max-health", endermanMaxHealth);
+            set("mobs.enderman.attributes.max-health", null);
+            set("mobs.enderman.attributes.max_health", oldValue);
+        }
+        endermanMaxHealth = getDouble("mobs.enderman.attributes.max_health", endermanMaxHealth);
     }
 
     public boolean endermiteRidable = false;
     public boolean endermiteRidableInWater = false;
+    public double endermiteMaxHealth = 8.0D;
     private void endermiteSettings() {
         endermiteRidable = getBoolean("mobs.endermite.ridable", endermiteRidable);
         endermiteRidableInWater = getBoolean("mobs.endermite.ridable-in-water", endermiteRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.endermite.attributes.max-health", endermiteMaxHealth);
+            set("mobs.endermite.attributes.max-health", null);
+            set("mobs.endermite.attributes.max_health", oldValue);
+        }
+        endermiteMaxHealth = getDouble("mobs.endermite.attributes.max_health", endermiteMaxHealth);
     }
 
     public boolean evokerRidable = false;
     public boolean evokerRidableInWater = false;
+    public double evokerMaxHealth = 24.0D;
     private void evokerSettings() {
         evokerRidable = getBoolean("mobs.evoker.ridable", evokerRidable);
         evokerRidableInWater = getBoolean("mobs.evoker.ridable-in-water", evokerRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.evoker.attributes.max-health", evokerMaxHealth);
+            set("mobs.evoker.attributes.max-health", null);
+            set("mobs.evoker.attributes.max_health", oldValue);
+        }
+        evokerMaxHealth = getDouble("mobs.evoker.attributes.max_health", evokerMaxHealth);
     }
 
     public boolean foxRidable = false;
     public boolean foxRidableInWater = false;
     public boolean foxTypeChangesWithTulips = false;
     public int foxBreedingTicks = 6000;
+    public double foxMaxHealth = 10.0D;
     private void foxSettings() {
         foxRidable = getBoolean("mobs.fox.ridable", foxRidable);
         foxRidableInWater = getBoolean("mobs.fox.ridable-in-water", foxRidableInWater);
         foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
         foxBreedingTicks = getInt("mobs.fox.breeding-delay-ticks", foxBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.fox.attributes.max-health", foxMaxHealth);
+            set("mobs.fox.attributes.max-health", null);
+            set("mobs.fox.attributes.max_health", oldValue);
+        }
+        foxMaxHealth = getDouble("mobs.fox.attributes.max_health", foxMaxHealth);
     }
 
     public boolean ghastRidable = false;
     public boolean ghastRidableInWater = false;
     public double ghastMaxY = 256D;
+    public double ghastMaxHealth = 10.0D;
     private void ghastSettings() {
         ghastRidable = getBoolean("mobs.ghast.ridable", ghastRidable);
         ghastRidableInWater = getBoolean("mobs.ghast.ridable-in-water", ghastRidableInWater);
         ghastMaxY = getDouble("mobs.ghast.ridable-max-y", ghastMaxY);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.ghast.attributes.max-health", ghastMaxHealth);
+            set("mobs.ghast.attributes.max-health", null);
+            set("mobs.ghast.attributes.max_health", oldValue);
+        }
+        ghastMaxHealth = getDouble("mobs.ghast.attributes.max_health", ghastMaxHealth);
     }
 
     public boolean giantRidable = false;
@@ -742,31 +900,68 @@ public class PurpurWorldConfig {
         giantHaveHostileAI = getBoolean("mobs.giant.have-hostile-ai", giantHaveHostileAI);
         if (PurpurConfig.version < 8) {
             double oldValue = getDouble("mobs.giant.max-health", giantMaxHealth);
-            set("mobs.giant.attributes.max-health", oldValue);
             set("mobs.giant.max-health", null);
+            set("mobs.giant.attributes.max_health", oldValue);
+        } else if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
+            set("mobs.giant.attributes.max-health", null);
+            set("mobs.giant.attributes.max_health", oldValue);
         }
-        giantMaxHealth = getDouble("mobs.giant.attributes.max-health", giantMaxHealth);
+        giantMaxHealth = getDouble("mobs.giant.attributes.max_health", giantMaxHealth);
     }
 
     public boolean guardianRidable = false;
+    public double guardianMaxHealth = 30.0D;
     private void guardianSettings() {
         guardianRidable = getBoolean("mobs.guardian.ridable", guardianRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.guardian.attributes.max-health", guardianMaxHealth);
+            set("mobs.guardian.attributes.max-health", null);
+            set("mobs.guardian.attributes.max_health", oldValue);
+        }
+        guardianMaxHealth = getDouble("mobs.guardian.attributes.max_health", guardianMaxHealth);
     }
 
     public boolean hoglinRidable = false;
     public boolean hoglinRidableInWater = false;
     public int hoglinBreedingTicks = 6000;
+    public double hoglinMaxHealth = 40.0D;
     private void hoglinSettings() {
         hoglinRidable = getBoolean("mobs.hoglin.ridable", hoglinRidable);
         hoglinRidableInWater = getBoolean("mobs.hoglin.ridable-in-water", hoglinRidableInWater);
         hoglinBreedingTicks = getInt("mobs.hoglin.breeding-delay-ticks", hoglinBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.hoglin.attributes.max-health", hoglinMaxHealth);
+            set("mobs.hoglin.attributes.max-health", null);
+            set("mobs.hoglin.attributes.max_health", oldValue);
+        }
+        hoglinMaxHealth = getDouble("mobs.hoglin.attributes.max_health", hoglinMaxHealth);
     }
 
     public boolean horseRidableInWater = false;
     public int horseBreedingTicks = 6000;
+    public double horseMaxHealthMin = 15.0D;
+    public double horseMaxHealthMax = 30.0D;
+    public double horseJumpStrengthMin = 0.4D;
+    public double horseJumpStrengthMax = 1.0D;
+    public double horseMovementSpeedMin = 0.1125D;
+    public double horseMovementSpeedMax = 0.3375D;
     private void horseSettings() {
         horseRidableInWater = getBoolean("mobs.horse.ridable-in-water", horseRidableInWater);
         horseBreedingTicks = getInt("mobs.horse.breeding-delay-ticks", horseBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldMin = getDouble("mobs.horse.attributes.max-health.min", horseMaxHealthMin);
+            double oldMax = getDouble("mobs.horse.attributes.max-health.max", horseMaxHealthMax);
+            set("mobs.horse.attributes.max-health", null);
+            set("mobs.horse.attributes.max_health.min", oldMin);
+            set("mobs.horse.attributes.max_health.max", oldMax);
+        }
+        horseMaxHealthMin = getDouble("mobs.horse.attributes.max_health.min", horseMaxHealthMin);
+        horseMaxHealthMax = getDouble("mobs.horse.attributes.max_health.max", horseMaxHealthMax);
+        horseJumpStrengthMin = getDouble("mobs.horse.attributes.jump_strength.min", horseJumpStrengthMin);
+        horseJumpStrengthMax = getDouble("mobs.horse.attributes.jump_strength.max", horseJumpStrengthMax);
+        horseMovementSpeedMin = getDouble("mobs.horse.attributes.movement_speed.min", horseMovementSpeedMin);
+        horseMovementSpeedMax = getDouble("mobs.horse.attributes.movement_speed.max", horseMovementSpeedMax);
     }
 
     public boolean huskRidable = false;
@@ -774,12 +969,21 @@ public class PurpurWorldConfig {
     public boolean huskJockeyOnlyBaby = true;
     public double huskJockeyChance = 0.05D;
     public boolean huskJockeyTryExistingChickens = true;
+    public double huskMaxHealth = 20.0D;
+    public double huskSpawnReinforcements = 0.1D;
     private void huskSettings() {
         huskRidable = getBoolean("mobs.husk.ridable", huskRidable);
         huskRidableInWater = getBoolean("mobs.husk.ridable-in-water", huskRidableInWater);
         huskJockeyOnlyBaby = getBoolean("mobs.husk.jockey.only-babies", huskJockeyOnlyBaby);
         huskJockeyChance = getDouble("mobs.husk.jockey.chance", huskJockeyChance);
         huskJockeyTryExistingChickens = getBoolean("mobs.husk.jockey.try-existing-chickens", huskJockeyTryExistingChickens);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.husk.attributes.max-health", huskMaxHealth);
+            set("mobs.husk.attributes.max-health", null);
+            set("mobs.husk.attributes.max_health", oldValue);
+        }
+        huskMaxHealth = getDouble("mobs.husk.attributes.max_health", huskMaxHealth);
+        huskSpawnReinforcements = getDouble("mobs.husk.attributes.spawn_reinforcements", huskSpawnReinforcements);
     }
 
     public boolean illusionerRidable = false;
@@ -794,85 +998,188 @@ public class PurpurWorldConfig {
         illusionerFollowRange = getDouble("mobs.illusioner.follow-range", illusionerFollowRange);
         if (PurpurConfig.version < 8) {
             double oldValue = getDouble("mobs.illusioner.max-health", illusionerMaxHealth);
-            set("mobs.illusioner.attributes.max-health", oldValue);
             set("mobs.illusioner.max-health", null);
+            set("mobs.illusioner.attributes.max_health", oldValue);
+        } else if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
+            set("mobs.illusioner.attributes.max-health", null);
+            set("mobs.illusioner.attributes.max_health", oldValue);
         }
-        illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max-health", illusionerMaxHealth);
+        illusionerMaxHealth = getDouble("mobs.illusioner.attributes.max_health", illusionerMaxHealth);
     }
 
     public boolean ironGolemRidable = false;
     public boolean ironGolemRidableInWater = false;
     public boolean ironGolemCanSwim = false;
+    public double ironGolemMaxHealth = 100.0D;
     private void ironGolemSettings() {
         ironGolemRidable = getBoolean("mobs.iron_golem.ridable", ironGolemRidable);
         ironGolemRidableInWater = getBoolean("mobs.iron_golem.ridable-in-water", ironGolemRidableInWater);
         ironGolemCanSwim = getBoolean("mobs.iron_golem.can-swim", ironGolemCanSwim);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.iron_golem.attributes.max-health", ironGolemMaxHealth);
+            set("mobs.iron_golem.attributes.max-health", null);
+            set("mobs.iron_golem.attributes.max_health", oldValue);
+        }
+        ironGolemMaxHealth = getDouble("mobs.iron_golem.attributes.max_health", ironGolemMaxHealth);
     }
 
     public boolean llamaRidable = false;
     public boolean llamaRidableInWater = false;
     public int llamaBreedingTicks = 6000;
+    public double llamaMaxHealthMin = 15.0D;
+    public double llamaMaxHealthMax = 30.0D;
+    public double llamaJumpStrengthMin = 0.5D;
+    public double llamaJumpStrengthMax = 0.5D;
+    public double llamaMovementSpeedMin = 0.175D;
+    public double llamaMovementSpeedMax = 0.175D;
     private void llamaSettings() {
         llamaRidable = getBoolean("mobs.llama.ridable", llamaRidable);
         llamaRidableInWater = getBoolean("mobs.llama.ridable-in-water", llamaRidableInWater);
         llamaBreedingTicks = getInt("mobs.llama.breeding-delay-ticks", llamaBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldMin = getDouble("mobs.llama.attributes.max-health.min", llamaMaxHealthMin);
+            double oldMax = getDouble("mobs.llama.attributes.max-health.max", llamaMaxHealthMax);
+            set("mobs.llama.attributes.max-health", null);
+            set("mobs.llama.attributes.max_health.min", oldMin);
+            set("mobs.llama.attributes.max_health.max", oldMax);
+        }
+        llamaMaxHealthMin = getDouble("mobs.llama.attributes.max_health.min", llamaMaxHealthMin);
+        llamaMaxHealthMax = getDouble("mobs.llama.attributes.max_health.max", llamaMaxHealthMax);
+        llamaJumpStrengthMin = getDouble("mobs.llama.attributes.jump_strength.min", llamaJumpStrengthMin);
+        llamaJumpStrengthMax = getDouble("mobs.llama.attributes.jump_strength.max", llamaJumpStrengthMax);
+        llamaMovementSpeedMin = getDouble("mobs.llama.attributes.movement_speed.min", llamaMovementSpeedMin);
+        llamaMovementSpeedMax = getDouble("mobs.llama.attributes.movement_speed.max", llamaMovementSpeedMax);
     }
 
     public boolean llamaTraderRidable = false;
     public boolean llamaTraderRidableInWater = false;
+    public double llamaTraderMaxHealthMin = 15.0D;
+    public double llamaTraderMaxHealthMax = 30.0D;
+    public double llamaTraderJumpStrengthMin = 0.5D;
+    public double llamaTraderJumpStrengthMax = 0.5D;
+    public double llamaTraderMovementSpeedMin = 0.175D;
+    public double llamaTraderMovementSpeedMax = 0.175D;
     private void llamaTraderSettings() {
         llamaTraderRidable = getBoolean("mobs.trader_llama.ridable", llamaTraderRidable);
         llamaTraderRidableInWater = getBoolean("mobs.trader_llama.ridable-in-water", llamaTraderRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldMin = getDouble("mobs.trader_llama.attributes.max-health.min", llamaTraderMaxHealthMin);
+            double oldMax = getDouble("mobs.trader_llama.attributes.max-health.max", llamaTraderMaxHealthMax);
+            set("mobs.trader_llama.attributes.max-health", null);
+            set("mobs.trader_llama.attributes.max_health.min", oldMin);
+            set("mobs.trader_llama.attributes.max_health.max", oldMax);
+        }
+        llamaTraderMaxHealthMin = getDouble("mobs.trader_llama.attributes.max_health.min", llamaTraderMaxHealthMin);
+        llamaTraderMaxHealthMax = getDouble("mobs.trader_llama.attributes.max_health.max", llamaTraderMaxHealthMax);
+        llamaTraderJumpStrengthMin = getDouble("mobs.trader_llama.attributes.jump_strength.min", llamaTraderJumpStrengthMin);
+        llamaTraderJumpStrengthMax = getDouble("mobs.trader_llama.attributes.jump_strength.max", llamaTraderJumpStrengthMax);
+        llamaTraderMovementSpeedMin = getDouble("mobs.trader_llama.attributes.movement_speed.min", llamaTraderMovementSpeedMin);
+        llamaTraderMovementSpeedMax = getDouble("mobs.trader_llama.attributes.movement_speed.max", llamaTraderMovementSpeedMax);
     }
 
     public boolean magmaCubeRidable = false;
     public boolean magmaCubeRidableInWater = false;
+    public String magmaCubeMaxHealth = "size * size";
     private void magmaCubeSettings() {
         magmaCubeRidable = getBoolean("mobs.magma_cube.ridable", magmaCubeRidable);
         magmaCubeRidableInWater = getBoolean("mobs.magma_cube.ridable-in-water", magmaCubeRidableInWater);
+        if (PurpurConfig.version < 10) {
+            String oldValue = getString("mobs.magma_cube.attributes.max-health", magmaCubeMaxHealth);
+            set("mobs.magma_cube.attributes.max-health", null);
+            set("mobs.magma_cube.attributes.max_health", oldValue);
+        }
+        magmaCubeMaxHealth = getString("mobs.magma_cube.attributes.max_health", magmaCubeMaxHealth);
     }
 
     public boolean mooshroomRidable = false;
     public boolean mooshroomRidableInWater = false;
     public int mooshroomBreedingTicks = 6000;
+    public double mooshroomMaxHealth = 10.0D;
     private void mooshroomSettings() {
         mooshroomRidable = getBoolean("mobs.mooshroom.ridable", mooshroomRidable);
         mooshroomRidableInWater = getBoolean("mobs.mooshroom.ridable-in-water", mooshroomRidableInWater);
         mooshroomBreedingTicks = getInt("mobs.mooshroom.breeding-delay-ticks", mooshroomBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.mooshroom.attributes.max-health", mooshroomMaxHealth);
+            set("mobs.mooshroom.attributes.max-health", null);
+            set("mobs.mooshroom.attributes.max_health", oldValue);
+        }
+        mooshroomMaxHealth = getDouble("mobs.mooshroom.attributes.max_health", mooshroomMaxHealth);
     }
 
     public boolean muleRidableInWater = false;
     public int muleBreedingTicks = 6000;
+    public double muleMaxHealthMin = 15.0D;
+    public double muleMaxHealthMax = 30.0D;
+    public double muleJumpStrengthMin = 0.5D;
+    public double muleJumpStrengthMax = 0.5D;
+    public double muleMovementSpeedMin = 0.175D;
+    public double muleMovementSpeedMax = 0.175D;
     private void muleSettings() {
         muleRidableInWater = getBoolean("mobs.mule.ridable-in-water", muleRidableInWater);
         muleBreedingTicks = getInt("mobs.mule.breeding-delay-ticks", muleBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldMin = getDouble("mobs.mule.attributes.max-health.min", muleMaxHealthMin);
+            double oldMax = getDouble("mobs.mule.attributes.max-health.max", muleMaxHealthMax);
+            set("mobs.mule.attributes.max-health", null);
+            set("mobs.mule.attributes.max_health.min", oldMin);
+            set("mobs.mule.attributes.max_health.max", oldMax);
+        }
+        muleMaxHealthMin = getDouble("mobs.mule.attributes.max_health.min", muleMaxHealthMin);
+        muleMaxHealthMax = getDouble("mobs.mule.attributes.max_health.max", muleMaxHealthMax);
+        muleJumpStrengthMin = getDouble("mobs.mule.attributes.jump_strength.min", muleJumpStrengthMin);
+        muleJumpStrengthMax = getDouble("mobs.mule.attributes.jump_strength.max", muleJumpStrengthMax);
+        muleMovementSpeedMin = getDouble("mobs.mule.attributes.movement_speed.min", muleMovementSpeedMin);
+        muleMovementSpeedMax = getDouble("mobs.mule.attributes.movement_speed.max", muleMovementSpeedMax);
     }
 
     public boolean ocelotRidable = false;
     public boolean ocelotRidableInWater = false;
     public int ocelotBreedingTicks = 6000;
+    public double ocelotMaxHealth = 10.0D;
     private void ocelotSettings() {
         ocelotRidable = getBoolean("mobs.ocelot.ridable", ocelotRidable);
         ocelotRidableInWater = getBoolean("mobs.ocelot.ridable-in-water", ocelotRidableInWater);
         ocelotBreedingTicks = getInt("mobs.ocelot.breeding-delay-ticks", ocelotBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.ocelot.attributes.max-health", ocelotMaxHealth);
+            set("mobs.ocelot.attributes.max-health", null);
+            set("mobs.ocelot.attributes.max_health", oldValue);
+        }
+        ocelotMaxHealth = getDouble("mobs.ocelot.attributes.max_health", ocelotMaxHealth);
     }
 
     public boolean pandaRidable = false;
     public boolean pandaRidableInWater = false;
     public int pandaBreedingTicks = 6000;
+    public double pandaMaxHealth = 20.0D;
     private void pandaSettings() {
         pandaRidable = getBoolean("mobs.panda.ridable", pandaRidable);
         pandaRidableInWater = getBoolean("mobs.panda.ridable-in-water", pandaRidableInWater);
         pandaBreedingTicks = getInt("mobs.panda.breeding-delay-ticks", pandaBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.panda.attributes.max-health", pandaMaxHealth);
+            set("mobs.panda.attributes.max-health", null);
+            set("mobs.panda.attributes.max_health", oldValue);
+        }
+        pandaMaxHealth = getDouble("mobs.panda.attributes.max_health", pandaMaxHealth);
     }
 
     public boolean parrotRidable = false;
     public boolean parrotRidableInWater = false;
     public double parrotMaxY = 256D;
+    public double parrotMaxHealth = 6.0D;
     private void parrotSettings() {
         parrotRidable = getBoolean("mobs.parrot.ridable", parrotRidable);
         parrotRidableInWater = getBoolean("mobs.parrot.ridable-in-water", parrotRidableInWater);
         parrotMaxY = getDouble("mobs.parrot.ridable-max-y", parrotMaxY);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.parrot.attributes.max-health", parrotMaxHealth);
+            set("mobs.parrot.attributes.max-health", null);
+            set("mobs.parrot.attributes.max_health", oldValue);
+        }
+        parrotMaxHealth = getDouble("mobs.parrot.attributes.max_health", parrotMaxHealth);
     }
 
     public boolean phantomRidable = false;
@@ -899,6 +1206,7 @@ public class PurpurWorldConfig {
     public boolean phantomIgnorePlayersWithTorch = false;
     public boolean phantomBurnInDaylight = true;
     public boolean phantomAllowGriefing = false;
+    public double phantomMaxHealth = 20.0D;
     private void phantomSettings() {
         phantomRidable = getBoolean("mobs.phantom.ridable", phantomRidable);
         phantomRidableInWater = getBoolean("mobs.phantom.ridable-in-water", phantomRidableInWater);
@@ -924,38 +1232,72 @@ public class PurpurWorldConfig {
         phantomBurnInDaylight = getBoolean("mobs.phantom.burn-in-daylight", phantomBurnInDaylight);
         phantomIgnorePlayersWithTorch = getBoolean("mobs.phantom.ignore-players-with-torch", phantomIgnorePlayersWithTorch);
         phantomAllowGriefing = getBoolean("mobs.phantom.allow-griefing", phantomAllowGriefing);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.phantom.attributes.max-health", phantomMaxHealth);
+            set("mobs.phantom.attributes.max-health", null);
+            set("mobs.phantom.attributes.max_health", oldValue);
+        }
+        phantomMaxHealth = getDouble("mobs.phantom.attributes.max_health", phantomMaxHealth);
     }
 
     public boolean pigRidable = false;
     public boolean pigRidableInWater = false;
     public boolean pigGiveSaddleBack = false;
     public int pigBreedingTicks = 6000;
+    public double pigMaxHealth = 10.0D;
     private void pigSettings() {
         pigRidable = getBoolean("mobs.pig.ridable", pigRidable);
         pigRidableInWater = getBoolean("mobs.pig.ridable-in-water", pigRidableInWater);
         pigGiveSaddleBack = getBoolean("mobs.pig.give-saddle-back", pigGiveSaddleBack);
         pigBreedingTicks = getInt("mobs.pig.breeding-delay-ticks", pigBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.pig.attributes.max-health", pigMaxHealth);
+            set("mobs.pig.attributes.max-health", null);
+            set("mobs.pig.attributes.max_health", oldValue);
+        }
+        pigMaxHealth = getDouble("mobs.pig.attributes.max_health", pigMaxHealth);
     }
 
     public boolean piglinRidable = false;
     public boolean piglinRidableInWater = false;
+    public double piglinMaxHealth = 16.0D;
     private void piglinSettings() {
         piglinRidable = getBoolean("mobs.piglin.ridable", piglinRidable);
         piglinRidableInWater = getBoolean("mobs.piglin.ridable-in-water", piglinRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.piglin.attributes.max-health", piglinMaxHealth);
+            set("mobs.piglin.attributes.max-health", null);
+            set("mobs.piglin.attributes.max_health", oldValue);
+        }
+        piglinMaxHealth = getDouble("mobs.piglin.attributes.max_health", piglinMaxHealth);
     }
 
     public boolean piglinBruteRidable = false;
     public boolean piglinBruteRidableInWater = false;
+    public double piglinBruteMaxHealth = 50.0D;
     private void piglinBruteSettings() {
         piglinBruteRidable = getBoolean("mobs.piglin_brute.ridable", piglinBruteRidable);
         piglinBruteRidableInWater = getBoolean("mobs.piglin_brute.ridable-in-water", piglinBruteRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.piglin_brute.attributes.max-health", piglinBruteMaxHealth);
+            set("mobs.piglin_brute.attributes.max-health", null);
+            set("mobs.piglin_brute.attributes.max_health", oldValue);
+        }
+        piglinBruteMaxHealth = getDouble("mobs.piglin_brute.attributes.max_health", piglinBruteMaxHealth);
     }
 
     public boolean pillagerRidable = false;
     public boolean pillagerRidableInWater = false;
+    public double pillagerMaxHealth = 24.0D;
     private void pillagerSettings() {
         pillagerRidable = getBoolean("mobs.pillager.ridable", pillagerRidable);
         pillagerRidableInWater = getBoolean("mobs.pillager.ridable-in-water", pillagerRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.pillager.attributes.max-health", pillagerMaxHealth);
+            set("mobs.pillager.attributes.max-health", null);
+            set("mobs.pillager.attributes.max_health", oldValue);
+        }
+        pillagerMaxHealth = getDouble("mobs.pillager.attributes.max_health", pillagerMaxHealth);
     }
 
     public boolean polarBearRidable = false;
@@ -963,6 +1305,7 @@ public class PurpurWorldConfig {
     public String polarBearBreedableItemString = "";
     public Item polarBearBreedableItem = null;
     public int polarBearBreedingTicks = 6000;
+    public double polarBearMaxHealth = 30.0D;
     private void polarBearSettings() {
         polarBearRidable = getBoolean("mobs.polar_bear.ridable", polarBearRidable);
         polarBearRidableInWater = getBoolean("mobs.polar_bear.ridable-in-water", polarBearRidableInWater);
@@ -970,11 +1313,24 @@ public class PurpurWorldConfig {
         Item item = IRegistry.ITEM.get(new MinecraftKey(polarBearBreedableItemString));
         if (item != Items.AIR) polarBearBreedableItem = item;
         polarBearBreedingTicks = getInt("mobs.polar_bear.breeding-delay-ticks", polarBearBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.polar_bear.attributes.max-health", polarBearMaxHealth);
+            set("mobs.polar_bear.attributes.max-health", null);
+            set("mobs.polar_bear.attributes.max_health", oldValue);
+        }
+        polarBearMaxHealth = getDouble("mobs.polar_bear.attributes.max_health", polarBearMaxHealth);
     }
 
     public boolean pufferfishRidable = false;
+    public double pufferfishMaxHealth = 3.0D;
     private void pufferfishSettings() {
         pufferfishRidable = getBoolean("mobs.pufferfish.ridable", pufferfishRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.pufferfish.attributes.max-health", pufferfishMaxHealth);
+            set("mobs.pufferfish.attributes.max-health", null);
+            set("mobs.pufferfish.attributes.max_health", oldValue);
+        }
+        pufferfishMaxHealth = getDouble("mobs.pufferfish.attributes.max_health", pufferfishMaxHealth);
     }
 
     public boolean rabbitRidable = false;
@@ -982,68 +1338,144 @@ public class PurpurWorldConfig {
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
     public int rabbitBreedingTicks = 6000;
+    public double rabbitMaxHealth = 3.0D;
     private void rabbitSettings() {
         rabbitRidable = getBoolean("mobs.rabbit.ridable", rabbitRidable);
         rabbitRidableInWater = getBoolean("mobs.rabbit.ridable-in-water", rabbitRidableInWater);
         rabbitNaturalToast = getDouble("mobs.rabbit.spawn-toast-chance", rabbitNaturalToast);
         rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
         rabbitBreedingTicks = getInt("mobs.rabbit.breeding-delay-ticks", rabbitBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.rabbit.attributes.max-health", rabbitMaxHealth);
+            set("mobs.rabbit.attributes.max-health", null);
+            set("mobs.rabbit.attributes.max_health", oldValue);
+        }
+        rabbitMaxHealth = getDouble("mobs.rabbit.attributes.max_health", rabbitMaxHealth);
     }
 
     public boolean ravagerRidable = false;
     public boolean ravagerRidableInWater = false;
+    public double ravagerMaxHealth = 100.0D;
     private void ravagerSettings() {
         ravagerRidable = getBoolean("mobs.ravager.ridable", ravagerRidable);
         ravagerRidableInWater = getBoolean("mobs.ravager.ridable-in-water", ravagerRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.ravager.attributes.max-health", ravagerMaxHealth);
+            set("mobs.ravager.attributes.max-health", null);
+            set("mobs.ravager.attributes.max_health", oldValue);
+        }
+        ravagerMaxHealth = getDouble("mobs.ravager.attributes.max_health", ravagerMaxHealth);
     }
 
     public boolean salmonRidable = false;
+    public double salmonMaxHealth = 3.0D;
     private void salmonSettings() {
         salmonRidable = getBoolean("mobs.salmon.ridable", salmonRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.salmon.attributes.max-health", salmonMaxHealth);
+            set("mobs.salmon.attributes.max-health", null);
+            set("mobs.salmon.attributes.max_health", oldValue);
+        }
+        salmonMaxHealth = getDouble("mobs.salmon.attributes.max_health", salmonMaxHealth);
     }
 
     public boolean sheepRidable = false;
     public boolean sheepRidableInWater = false;
     public int sheepBreedingTicks = 6000;
+    public double sheepMaxHealth = 8.0D;
     private void sheepSettings() {
         sheepRidable = getBoolean("mobs.sheep.ridable", sheepRidable);
         sheepRidableInWater = getBoolean("mobs.sheep.ridable-in-water", sheepRidableInWater);
         sheepBreedingTicks = getInt("mobs.sheep.breeding-delay-ticks", sheepBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.sheep.attributes.max-health", sheepMaxHealth);
+            set("mobs.sheep.attributes.max-health", null);
+            set("mobs.sheep.attributes.max_health", oldValue);
+        }
+        sheepMaxHealth = getDouble("mobs.sheep.attributes.max_health", sheepMaxHealth);
     }
 
     public boolean shulkerRidable = false;
     public boolean shulkerRidableInWater = false;
+    public double shulkerMaxHealth = 30.0D;
     private void shulkerSettings() {
         shulkerRidable = getBoolean("mobs.shulker.ridable", shulkerRidable);
         shulkerRidableInWater = getBoolean("mobs.shulker.ridable-in-water", shulkerRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.shulker.attributes.max-health", shulkerMaxHealth);
+            set("mobs.shulker.attributes.max-health", null);
+            set("mobs.shulker.attributes.max_health", oldValue);
+        }
+        shulkerMaxHealth = getDouble("mobs.shulker.attributes.max_health", shulkerMaxHealth);
     }
 
     public boolean silverfishRidable = false;
     public boolean silverfishRidableInWater = false;
+    public double silverfishMaxHealth = 8.0D;
     private void silverfishSettings() {
         silverfishRidable = getBoolean("mobs.silverfish.ridable", silverfishRidable);
         silverfishRidableInWater = getBoolean("mobs.silverfish.ridable-in-water", silverfishRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.silverfish.attributes.max-health", silverfishMaxHealth);
+            set("mobs.silverfish.attributes.max-health", null);
+            set("mobs.silverfish.attributes.max_health", oldValue);
+        }
+        silverfishMaxHealth = getDouble("mobs.silverfish.attributes.max_health", silverfishMaxHealth);
     }
 
     public boolean skeletonRidable = false;
     public boolean skeletonRidableInWater = false;
+    public double skeletonMaxHealth = 20.0D;
     private void skeletonSettings() {
         skeletonRidable = getBoolean("mobs.skeleton.ridable", skeletonRidable);
         skeletonRidableInWater = getBoolean("mobs.skeleton.ridable-in-water", skeletonRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.skeleton.attributes.max-health", skeletonMaxHealth);
+            set("mobs.skeleton.attributes.max-health", null);
+            set("mobs.skeleton.attributes.max_health", oldValue);
+        }
+        skeletonMaxHealth = getDouble("mobs.skeleton.attributes.max_health", skeletonMaxHealth);
     }
 
     public boolean skeletonHorseCanSwim = false;
     public boolean skeletonHorseRidableInWater = true;
+    public double skeletonHorseMaxHealthMin = 15.0D;
+    public double skeletonHorseMaxHealthMax = 15.0D;
+    public double skeletonHorseJumpStrengthMin = 0.4D;
+    public double skeletonHorseJumpStrengthMax = 1.0D;
+    public double skeletonHorseMovementSpeedMin = 0.2D;
+    public double skeletonHorseMovementSpeedMax = 0.2D;
     private void skeletonHorseSettings() {
         skeletonHorseCanSwim = getBoolean("mobs.skeleton_horse.can-swim", skeletonHorseCanSwim);
         skeletonHorseRidableInWater = getBoolean("mobs.skeleton_horse.ridable-in-water", skeletonHorseRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.skeleton_horse.attributes.max-health", skeletonHorseMaxHealthMin);
+            set("mobs.skeleton_horse.attributes.max-health", null);
+            set("mobs.skeleton_horse.attributes.max_health.min", oldValue);
+            set("mobs.skeleton_horse.attributes.max_health.max", oldValue);
+        }
+        skeletonHorseMaxHealthMin = getDouble("mobs.skeleton_horse.attributes.max_health.min", skeletonHorseMaxHealthMin);
+        skeletonHorseMaxHealthMax = getDouble("mobs.skeleton_horse.attributes.max_health.max", skeletonHorseMaxHealthMax);
+        skeletonHorseJumpStrengthMin = getDouble("mobs.skeleton_horse.attributes.jump_strength.min", skeletonHorseJumpStrengthMin);
+        skeletonHorseJumpStrengthMax = getDouble("mobs.skeleton_horse.attributes.jump_strength.max", skeletonHorseJumpStrengthMax);
+        skeletonHorseMovementSpeedMin = getDouble("mobs.skeleton_horse.attributes.movement_speed.min", skeletonHorseMovementSpeedMin);
+        skeletonHorseMovementSpeedMax = getDouble("mobs.skeleton_horse.attributes.movement_speed.max", skeletonHorseMovementSpeedMax);
     }
 
     public boolean slimeRidable = false;
     public boolean slimeRidableInWater = false;
+    public String slimeMaxHealth = "size * size";
+    public Map<Integer, Double> slimeMaxHealthCache = new HashMap<>();
     private void slimeSettings() {
         slimeRidable = getBoolean("mobs.slime.ridable", slimeRidable);
         slimeRidableInWater = getBoolean("mobs.slime.ridable-in-water", slimeRidableInWater);
+        if (PurpurConfig.version < 10) {
+            String oldValue = getString("mobs.slime.attributes.max-health", slimeMaxHealth);
+            set("mobs.slime.attributes.max-health", null);
+            set("mobs.slime.attributes.max_health", oldValue);
+        }
+        slimeMaxHealth = getString("mobs.slime.attributes.max_health", slimeMaxHealth);
+        slimeMaxHealthCache.clear();
     }
 
     public boolean snowGolemRidable = false;
@@ -1055,6 +1487,7 @@ public class PurpurWorldConfig {
     public int snowGolemSnowBallMax = 20;
     public float snowGolemSnowBallModifier = 10.0F;
     public double snowGolemAttackDistance = 1.25D;
+    public double snowGolemMaxHealth = 4.0D;
     private void snowGolemSettings() {
         snowGolemRidable = getBoolean("mobs.snow_golem.ridable", snowGolemRidable);
         snowGolemRidableInWater = getBoolean("mobs.snow_golem.ridable-in-water", snowGolemRidableInWater);
@@ -1065,63 +1498,118 @@ public class PurpurWorldConfig {
         snowGolemSnowBallMax = getInt("mobs.snow_golem.max-shoot-interval-ticks", snowGolemSnowBallMax);
         snowGolemSnowBallModifier = (float) getDouble("mobs.snow_golem.snow-ball-modifier", snowGolemSnowBallModifier);
         snowGolemAttackDistance = getDouble("mobs.snow_golem.attack-distance", snowGolemAttackDistance);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.snow_golem.attributes.max-health", snowGolemMaxHealth);
+            set("mobs.snow_golem.attributes.max-health", null);
+            set("mobs.snow_golem.attributes.max_health", oldValue);
+        }
+        snowGolemMaxHealth = getDouble("mobs.snow_golem.attributes.max_health", snowGolemMaxHealth);
     }
 
     public boolean squidRidable = false;
     public boolean squidImmuneToEAR = true;
     public double squidOffsetWaterCheck = 0.0D;
     public boolean squidsCanFly = false;
+    public double squidMaxHealth = 10.0D;
     private void squidSettings() {
         squidRidable = getBoolean("mobs.squid.ridable", squidRidable);
         squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
         squidOffsetWaterCheck = getDouble("mobs.squid.water-offset-check", squidOffsetWaterCheck);
         squidsCanFly = getBoolean("mobs.squid.can-fly", squidsCanFly);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.squid.attributes.max-health", squidMaxHealth);
+            set("mobs.squid.attributes.max-health", null);
+            set("mobs.squid.attributes.max_health", oldValue);
+        }
+        squidMaxHealth = getDouble("mobs.squid.attributes.max_health", squidMaxHealth);
     }
 
     public boolean spiderRidable = false;
     public boolean spiderRidableInWater = false;
+    public double spiderMaxHealth = 16.0D;
     private void spiderSettings() {
         spiderRidable = getBoolean("mobs.spider.ridable", spiderRidable);
         spiderRidableInWater = getBoolean("mobs.spider.ridable-in-water", spiderRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.spider.attributes.max-health", spiderMaxHealth);
+            set("mobs.spider.attributes.max-health", null);
+            set("mobs.spider.attributes.max_health", oldValue);
+        }
+        spiderMaxHealth = getDouble("mobs.spider.attributes.max_health", spiderMaxHealth);
     }
 
     public boolean strayRidable = false;
     public boolean strayRidableInWater = false;
+    public double strayMaxHealth = 20.0D;
     private void straySettings() {
         strayRidable = getBoolean("mobs.stray.ridable", strayRidable);
         strayRidableInWater = getBoolean("mobs.stray.ridable-in-water", strayRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.stray.attributes.max-health", strayMaxHealth);
+            set("mobs.stray.attributes.max-health", null);
+            set("mobs.stray.attributes.max_health", oldValue);
+        }
+        strayMaxHealth = getDouble("mobs.stray.attributes.max_health", strayMaxHealth);
     }
 
     public boolean striderRidable = false;
     public boolean striderRidableInWater = false;
     public int striderBreedingTicks = 6000;
+    public double striderMaxHealth = 20.0D;
     private void striderSettings() {
         striderRidable = getBoolean("mobs.strider.ridable", striderRidable);
         striderRidableInWater = getBoolean("mobs.strider.ridable-in-water", striderRidableInWater);
         striderBreedingTicks = getInt("mobs.strider.breeding-delay-ticks", striderBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.strider.attributes.max-health", striderMaxHealth);
+            set("mobs.strider.attributes.max-health", null);
+            set("mobs.strider.attributes.max_health", oldValue);
+        }
+        striderMaxHealth = getDouble("mobs.strider.attributes.max_health", striderMaxHealth);
     }
 
     public boolean tropicalFishRidable = false;
+    public double tropicalFishMaxHealth = 3.0D;
     private void tropicalFishSettings() {
         tropicalFishRidable = getBoolean("mobs.tropical_fish.ridable", tropicalFishRidable);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.tropical_fish.attributes.max-health", tropicalFishMaxHealth);
+            set("mobs.tropical_fish.attributes.max-health", null);
+            set("mobs.tropical_fish.attributes.max_health", oldValue);
+        }
+        tropicalFishMaxHealth = getDouble("mobs.tropical_fish.attributes.max_health", tropicalFishMaxHealth);
     }
 
     public boolean turtleRidable = false;
     public boolean turtleRidableInWater = false;
     public int turtleBreedingTicks = 6000;
+    public double turtleMaxHealth = 30.0D;
     private void turtleSettings() {
         turtleRidable = getBoolean("mobs.turtle.ridable", turtleRidable);
         turtleRidableInWater = getBoolean("mobs.turtle.ridable-in-water", turtleRidableInWater);
         turtleBreedingTicks = getInt("mobs.turtle.breeding-delay-ticks", turtleBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.turtle.attributes.max-health", turtleMaxHealth);
+            set("mobs.turtle.attributes.max-health", null);
+            set("mobs.turtle.attributes.max_health", oldValue);
+        }
+        turtleMaxHealth = getDouble("mobs.turtle.attributes.max_health", turtleMaxHealth);
     }
 
     public boolean vexRidable = false;
     public boolean vexRidableInWater = false;
     public double vexMaxY = 256D;
+    public double vexMaxHealth = 14.0D;
     private void vexSettings() {
         vexRidable = getBoolean("mobs.vex.ridable", vexRidable);
         vexRidableInWater = getBoolean("mobs.vex.ridable-in-water", vexRidableInWater);
         vexMaxY = getDouble("mobs.vex.ridable-max-y", vexMaxY);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.vex.attributes.max-health", vexMaxHealth);
+            set("mobs.vex.attributes.max-health", null);
+            set("mobs.vex.attributes.max_health", oldValue);
+        }
+        vexMaxHealth = getDouble("mobs.vex.attributes.max_health", vexMaxHealth);
     }
 
     public boolean villagerRidable = false;
@@ -1139,6 +1627,7 @@ public class PurpurWorldConfig {
     public int villagerLobotomizeCheck = 60;
     public boolean villagerClericsFarmWarts = false;
     public boolean villagerClericFarmersThrowWarts = true;
+    public double villagerMaxHealth = 20.0D;
     private void villagerSettings() {
         villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
         villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
@@ -1160,33 +1649,60 @@ public class PurpurWorldConfig {
         villagerLobotomizeCheck = getInt("mobs.villager.lobotomize.check-interval", villagerLobotomizeCheck);
         villagerClericsFarmWarts = getBoolean("mobs.villager.clerics-farm-warts", villagerClericsFarmWarts);
         villagerClericFarmersThrowWarts = getBoolean("mobs.villager.cleric-wart-farmers-throw-warts-at-villagers", villagerClericFarmersThrowWarts);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.villager.attributes.max-health", villagerMaxHealth);
+            set("mobs.villager.attributes.max-health", null);
+            set("mobs.villager.attributes.max_health", oldValue);
+        }
+        villagerMaxHealth = getDouble("mobs.villager.attributes.max_health", villagerMaxHealth);
     }
 
     public boolean villagerTraderRidable = false;
     public boolean villagerTraderRidableInWater = false;
     public boolean villagerTraderCanBeLeashed = false;
     public boolean villagerTraderFollowEmeraldBlock = false;
+    public double villagerTraderMaxHealth = 20.0D;
     private void villagerTraderSettings() {
         villagerTraderRidable = getBoolean("mobs.wandering_trader.ridable", villagerTraderRidable);
         villagerTraderRidableInWater = getBoolean("mobs.wandering_trader.ridable-in-water", villagerTraderRidableInWater);
         villagerTraderCanBeLeashed = getBoolean("mobs.wandering_trader.can-be-leashed", villagerTraderCanBeLeashed);
         villagerTraderFollowEmeraldBlock = getBoolean("mobs.wandering_trader.follow-emerald-blocks", villagerTraderFollowEmeraldBlock);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.wandering_trader.attributes.max-health", villagerTraderMaxHealth);
+            set("mobs.wandering_trader.attributes.max-health", null);
+            set("mobs.wandering_trader.attributes.max_health", oldValue);
+        }
+        villagerTraderMaxHealth = getDouble("mobs.wandering_trader.attributes.max_health", villagerTraderMaxHealth);
     }
 
     public boolean vindicatorRidable = false;
     public boolean vindicatorRidableInWater = false;
     public double vindicatorJohnnySpawnChance = 0D;
+    public double vindicatorMaxHealth = 24.0D;
     private void vindicatorSettings() {
         vindicatorRidable = getBoolean("mobs.vindicator.ridable", vindicatorRidable);
         vindicatorRidableInWater = getBoolean("mobs.vindicator.ridable-in-water", vindicatorRidableInWater);
         vindicatorJohnnySpawnChance = getDouble("mobs.vindicator.johnny.spawn-chance", vindicatorJohnnySpawnChance);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.vindicator.attributes.max-health", vindicatorMaxHealth);
+            set("mobs.vindicator.attributes.max-health", null);
+            set("mobs.vindicator.attributes.max_health", oldValue);
+        }
+        vindicatorMaxHealth = getDouble("mobs.vindicator.attributes.max_health", vindicatorMaxHealth);
     }
 
     public boolean witchRidable = false;
     public boolean witchRidableInWater = false;
+    public double witchMaxHealth = 26.0D;
     private void witchSettings() {
         witchRidable = getBoolean("mobs.witch.ridable", witchRidable);
         witchRidableInWater = getBoolean("mobs.witch.ridable-in-water", witchRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.witch.attributes.max-health", witchMaxHealth);
+            set("mobs.witch.attributes.max-health", null);
+            set("mobs.witch.attributes.max_health", oldValue);
+        }
+        witchMaxHealth = getDouble("mobs.witch.attributes.max_health", witchMaxHealth);
     }
 
     public boolean witherRidable = false;
@@ -1203,19 +1719,30 @@ public class PurpurWorldConfig {
         witherHealthRegenDelay = getInt("mobs.wither.health-regen-delay", witherHealthRegenDelay);
         if (PurpurConfig.version < 8) {
             double oldValue = getDouble("mobs.wither.max-health", witherMaxHealth);
+            set("mobs.wither.max_health", null);
             set("mobs.wither.attributes.max-health", oldValue);
-            set("mobs.wither.max-health", null);
+        } else if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.wither.attributes.max-health", witherMaxHealth);
+            set("mobs.wither.attributes.max-health", null);
+            set("mobs.wither.attributes.max_health", oldValue);
         }
-        witherMaxHealth = getDouble("mobs.wither.attributes.max-health", witherMaxHealth);
+        witherMaxHealth = getDouble("mobs.wither.attributes.max_health", witherMaxHealth);
     }
 
     public boolean witherSkeletonRidable = false;
     public boolean witherSkeletonRidableInWater = false;
     public boolean witherSkeletonTakesWitherDamage = false;
+    public double witherSkeletonMaxHealth = 20.0D;
     private void witherSkeletonSettings() {
         witherSkeletonRidable = getBoolean("mobs.wither_skeleton.ridable", witherSkeletonRidable);
         witherSkeletonRidableInWater = getBoolean("mobs.wither_skeleton.ridable-in-water", witherSkeletonRidableInWater);
         witherSkeletonTakesWitherDamage = getBoolean("mobs.wither_skeleton.takes-wither-damage", witherSkeletonTakesWitherDamage);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.wither_skeleton.attributes.max-health", witherSkeletonMaxHealth);
+            set("mobs.wither_skeleton.attributes.max-health", null);
+            set("mobs.wither_skeleton.attributes.max_health", oldValue);
+        }
+        witherSkeletonMaxHealth = getDouble("mobs.wither_skeleton.attributes.max_health", witherSkeletonMaxHealth);
     }
 
     public boolean wolfRidable = false;
@@ -1224,6 +1751,7 @@ public class PurpurWorldConfig {
     public boolean wolfMilkCuresRabies = true;
     public double wolfNaturalRabid = 0.0D;
     public int wolfBreedingTicks = 6000;
+    public double wolfMaxHealth = 8.0D;
     private void wolfSettings() {
         wolfRidable = getBoolean("mobs.wolf.ridable", wolfRidable);
         wolfRidableInWater = getBoolean("mobs.wolf.ridable-in-water", wolfRidableInWater);
@@ -1235,13 +1763,26 @@ public class PurpurWorldConfig {
         wolfMilkCuresRabies = getBoolean("mobs.wolf.milk-cures-rabid-wolves", wolfMilkCuresRabies);
         wolfNaturalRabid = getDouble("mobs.wolf.spawn-rabid-chance", wolfNaturalRabid);
         wolfBreedingTicks = getInt("mobs.wolf.breeding-delay-ticks", wolfBreedingTicks);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.wolf.attributes.max-health", wolfMaxHealth);
+            set("mobs.wolf.attributes.max-health", null);
+            set("mobs.wolf.attributes.max_health", oldValue);
+        }
+        wolfMaxHealth = getDouble("mobs.wolf.attributes.max_health", wolfMaxHealth);
     }
 
     public boolean zoglinRidable = false;
     public boolean zoglinRidableInWater = false;
+    public double zoglinMaxHealth = 40.0D;
     private void zoglinSettings() {
         zoglinRidable = getBoolean("mobs.zoglin.ridable", zoglinRidable);
         zoglinRidableInWater = getBoolean("mobs.zoglin.ridable-in-water", zoglinRidableInWater);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.zoglin.attributes.max-health", zoglinMaxHealth);
+            set("mobs.zoglin.attributes.max-health", null);
+            set("mobs.zoglin.attributes.max_health", oldValue);
+        }
+        zoglinMaxHealth = getDouble("mobs.zoglin.attributes.max_health", zoglinMaxHealth);
     }
 
     public boolean zombieRidable = false;
@@ -1251,6 +1792,8 @@ public class PurpurWorldConfig {
     public boolean zombieJockeyTryExistingChickens = true;
     public boolean zombieAggressiveTowardsVillagerWhenLagging = true;
     public EnumDifficulty zombieBreakDoorMinDifficulty = EnumDifficulty.HARD;
+    public double zombieMaxHealth = 20.0D;
+    public double zombieSpawnReinforcements = 0.1D;
     private void zombieSettings() {
         zombieRidable = getBoolean("mobs.zombie.ridable", zombieRidable);
         zombieRidableInWater = getBoolean("mobs.zombie.ridable-in-water", zombieRidableInWater);
@@ -1263,15 +1806,40 @@ public class PurpurWorldConfig {
         } catch (IllegalArgumentException ignore) {
             zombieBreakDoorMinDifficulty = EnumDifficulty.HARD;
         }
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.zombie.attributes.max-health", zombieMaxHealth);
+            set("mobs.zombie.attributes.max-health", null);
+            set("mobs.zombie.attributes.max_health", oldValue);
+        }
+        zombieMaxHealth = getDouble("mobs.zombie.attributes.max_health", zombieMaxHealth);
+        zombieSpawnReinforcements = getDouble("mobs.zombie.attributes.spawn_reinforcements", zombieSpawnReinforcements);
     }
 
     public boolean zombieHorseCanSwim = false;
     public boolean zombieHorseRidableInWater = false;
     public double zombieHorseSpawnChance = 0.0D;
+    public double zombieHorseMaxHealthMin = 15.0D;
+    public double zombieHorseMaxHealthMax = 15.0D;
+    public double zombieHorseJumpStrengthMin = 0.4D;
+    public double zombieHorseJumpStrengthMax = 1.0D;
+    public double zombieHorseMovementSpeedMin = 0.2D;
+    public double zombieHorseMovementSpeedMax = 0.2D;
     private void zombieHorseSettings() {
         zombieHorseCanSwim = getBoolean("mobs.zombie_horse.can-swim", zombieHorseCanSwim);
         zombieHorseRidableInWater = getBoolean("mobs.zombie_horse.ridable-in-water", zombieHorseRidableInWater);
         zombieHorseSpawnChance = getDouble("mobs.zombie_horse.spawn-chance", zombieHorseSpawnChance);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.zombie_horse.attributes.max-health", zombieHorseMaxHealthMin);
+            set("mobs.zombie_horse.attributes.max-health", null);
+            set("mobs.zombie_horse.attributes.max_health.min", oldValue);
+            set("mobs.zombie_horse.attributes.max_health.max", oldValue);
+        }
+        zombieHorseMaxHealthMin = getDouble("mobs.zombie_horse.attributes.max_health.min", zombieHorseMaxHealthMin);
+        zombieHorseMaxHealthMax = getDouble("mobs.zombie_horse.attributes.max_health.max", zombieHorseMaxHealthMax);
+        zombieHorseJumpStrengthMin = getDouble("mobs.zombie_horse.attributes.jump_strength.min", zombieHorseJumpStrengthMin);
+        zombieHorseJumpStrengthMax = getDouble("mobs.zombie_horse.attributes.jump_strength.max", zombieHorseJumpStrengthMax);
+        zombieHorseMovementSpeedMin = getDouble("mobs.zombie_horse.attributes.movement_speed.min", zombieHorseMovementSpeedMin);
+        zombieHorseMovementSpeedMax = getDouble("mobs.zombie_horse.attributes.movement_speed.max", zombieHorseMovementSpeedMax);
     }
 
     public boolean zombifiedPiglinRidable = false;
@@ -1280,6 +1848,8 @@ public class PurpurWorldConfig {
     public double zombifiedPiglinJockeyChance = 0.05D;
     public boolean zombifiedPiglinJockeyTryExistingChickens = true;
     public boolean zombifiedPiglinCountAsPlayerKillWhenAngry = true;
+    public double zombifiedPiglinMaxHealth = 20.0D;
+    public double zombifiedPiglinSpawnReinforcements = 0.0D;
     private void zombifiedPiglinSettings() {
         zombifiedPiglinRidable = getBoolean("mobs.zombified_piglin.ridable", zombifiedPiglinRidable);
         zombifiedPiglinRidableInWater = getBoolean("mobs.zombified_piglin.ridable-in-water", zombifiedPiglinRidableInWater);
@@ -1287,6 +1857,13 @@ public class PurpurWorldConfig {
         zombifiedPiglinJockeyChance = getDouble("mobs.zombified_piglin.jockey.chance", zombifiedPiglinJockeyChance);
         zombifiedPiglinJockeyTryExistingChickens = getBoolean("mobs.zombified_piglin.jockey.try-existing-chickens", zombifiedPiglinJockeyTryExistingChickens);
         zombifiedPiglinCountAsPlayerKillWhenAngry = getBoolean("mobs.zombified_piglin.count-as-player-kill-when-angry", zombifiedPiglinCountAsPlayerKillWhenAngry);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.zombified_piglin.attributes.max-health", zombifiedPiglinMaxHealth);
+            set("mobs.zombified_piglin.attributes.max-health", null);
+            set("mobs.zombified_piglin.attributes.max_health", oldValue);
+        }
+        zombifiedPiglinMaxHealth = getDouble("mobs.zombified_piglin.attributes.max_health", zombifiedPiglinMaxHealth);
+        zombifiedPiglinSpawnReinforcements = getDouble("mobs.zombified_piglin.attributes.spawn_reinforcements", zombifiedPiglinSpawnReinforcements);
     }
 
     public boolean zombieVillagerRidable = false;
@@ -1294,11 +1871,20 @@ public class PurpurWorldConfig {
     public boolean zombieVillagerJockeyOnlyBaby = true;
     public double zombieVillagerJockeyChance = 0.05D;
     public boolean zombieVillagerJockeyTryExistingChickens = true;
+    public double zombieVillagerMaxHealth = 20.0D;
+    public double zombieVillagerSpawnReinforcements = 0.1D;
     private void zombieVillagerSettings() {
         zombieVillagerRidable = getBoolean("mobs.zombie_villager.ridable", zombieVillagerRidable);
         zombieVillagerRidableInWater = getBoolean("mobs.zombie_villager.ridable-in-water", zombieVillagerRidableInWater);
         zombieVillagerJockeyOnlyBaby = getBoolean("mobs.zombie_villager.jockey.only-babies", zombieVillagerJockeyOnlyBaby);
         zombieVillagerJockeyChance = getDouble("mobs.zombie_villager.jockey.chance", zombieVillagerJockeyChance);
         zombieVillagerJockeyTryExistingChickens = getBoolean("mobs.zombie_villager.jockey.try-existing-chickens", zombieVillagerJockeyTryExistingChickens);
+        if (PurpurConfig.version < 10) {
+            double oldValue = getDouble("mobs.zombie_villager.attributes.max-health", zombieVillagerMaxHealth);
+            set("mobs.zombie_villager.attributes.max-health", null);
+            set("mobs.zombie_villager.attributes.max_health", oldValue);
+        }
+        zombieVillagerMaxHealth = getDouble("mobs.zombie_villager.attributes.max_health", zombieVillagerMaxHealth);
+        zombieVillagerSpawnReinforcements = getDouble("mobs.zombie_villager.attributes.spawn_reinforcements", zombieVillagerSpawnReinforcements);
     }
 }

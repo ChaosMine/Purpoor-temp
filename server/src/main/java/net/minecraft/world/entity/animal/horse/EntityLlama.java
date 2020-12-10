@@ -113,6 +113,21 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.llamaBreedingTicks;
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.llamaMaxHealthMin, this.world.purpurConfig.llamaMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.llamaJumpStrengthMin, this.world.purpurConfig.llamaJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.llamaMovementSpeedMin, this.world.purpurConfig.llamaMovementSpeedMax);
+    }
     // Purpur end
 
     public void setStrength(int i) {

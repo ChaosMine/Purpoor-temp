@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.projectile.EntityArrow;
 import net.minecraft.world.entity.projectile.EntityTippedArrow;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +31,11 @@ public class EntitySkeletonStray extends EntitySkeletonAbstract {
     @Override
     public boolean isRidableInWater() {
         return world.purpurConfig.strayRidableInWater;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.strayMaxHealth);
     }
     // Purpur end
 

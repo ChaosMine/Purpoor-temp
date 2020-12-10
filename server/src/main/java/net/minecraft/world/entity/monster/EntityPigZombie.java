@@ -81,6 +81,15 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
     public boolean jockeyTryExistingChickens() {
         return world.purpurConfig.zombifiedPiglinJockeyTryExistingChickens;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.zombifiedPiglinMaxHealth);
+    }
+
+    protected void generateReinforcementsChance() {
+        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(this.random.nextDouble() * this.world.purpurConfig.zombifiedPiglinSpawnReinforcements);
+    }
     // Purpur end
 
     @Override
@@ -270,7 +279,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
 
     @Override
     protected void eV() {
-        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(0.0D);
+        generateReinforcementsChance(); // Purpur
     }
 
     @Override

@@ -29,6 +29,7 @@ import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ReputationHandler;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.village.ReputationEvent;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.VillagerData;
@@ -94,6 +95,15 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
     @Override
     public boolean jockeyTryExistingChickens() {
         return world.purpurConfig.zombieVillagerJockeyTryExistingChickens;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.zombieVillagerMaxHealth);
+    }
+
+    protected void generateReinforcementsChance() {
+        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(this.random.nextDouble() * this.world.purpurConfig.zombieVillagerSpawnReinforcements);
     }
     // Purpur end
 

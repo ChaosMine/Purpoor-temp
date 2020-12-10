@@ -90,6 +90,11 @@ public class EntityRabbit extends EntityAnimal {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.rabbitBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.rabbitMaxHealth);
+    }
     // Purpur end
 
     // CraftBukkit start - code from constructor

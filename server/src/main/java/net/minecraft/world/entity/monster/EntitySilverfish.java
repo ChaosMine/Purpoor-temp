@@ -49,6 +49,11 @@ public class EntitySilverfish extends EntityMonster {
     public boolean isRidableInWater() {
         return world.purpurConfig.silverfishRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.silverfishMaxHealth);
+    }
     // Purpur end
 
     @Override

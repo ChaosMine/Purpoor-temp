@@ -120,6 +120,11 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         world.addEntity(flames);
         return true;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.phantomMaxHealth);
+    }
     // Purpur end
 
     @Override

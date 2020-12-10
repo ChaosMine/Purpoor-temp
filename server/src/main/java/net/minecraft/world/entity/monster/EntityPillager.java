@@ -72,6 +72,11 @@ public class EntityPillager extends EntityIllagerAbstract implements ICrossbow {
     public boolean isRidableInWater() {
         return world.purpurConfig.pillagerRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.pillagerMaxHealth);
+    }
     // Purpur end
 
     @Override

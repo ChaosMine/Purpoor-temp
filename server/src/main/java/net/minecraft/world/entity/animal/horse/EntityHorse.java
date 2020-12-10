@@ -51,6 +51,21 @@ public class EntityHorse extends EntityHorseAbstract {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.horseBreedingTicks;
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.horseMaxHealthMin, this.world.purpurConfig.horseMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.horseJumpStrengthMin, this.world.purpurConfig.horseJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.horseMovementSpeedMin, this.world.purpurConfig.horseMovementSpeedMax);
+    }
     // Purpur end
 
     @Override

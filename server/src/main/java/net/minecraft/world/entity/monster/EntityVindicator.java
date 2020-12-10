@@ -70,6 +70,11 @@ public class EntityVindicator extends EntityIllagerAbstract {
     public boolean isRidableInWater() {
         return world.purpurConfig.vindicatorRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.vindicatorMaxHealth);
+    }
     // Purpur end
 
     @Override

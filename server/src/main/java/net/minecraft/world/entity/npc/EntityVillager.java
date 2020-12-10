@@ -167,6 +167,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     public boolean a(EntityHuman entityhuman) {
         return world.purpurConfig.villagerCanBeLeashed && !this.isLeashed();
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.villagerMaxHealth);
+    }
     // Purpur end
 
     @Override

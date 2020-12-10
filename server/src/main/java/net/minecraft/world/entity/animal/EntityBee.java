@@ -180,6 +180,11 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.beeBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.beeMaxHealth);
+    }
     // Purpur end
 
     @Override

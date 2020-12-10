@@ -106,6 +106,11 @@ public class EntityTurtle extends EntityAnimal {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.turtleBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.turtleMaxHealth);
+    }
     // Purpur end
 
     public void setHomePos(BlockPosition blockposition) {

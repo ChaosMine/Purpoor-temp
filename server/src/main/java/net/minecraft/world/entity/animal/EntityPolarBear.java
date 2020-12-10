@@ -121,6 +121,11 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.polarBearBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.polarBearMaxHealth);
+    }
     // Purpur end
 
     @Override

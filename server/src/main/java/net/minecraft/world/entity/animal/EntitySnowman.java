@@ -61,6 +61,11 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
     public boolean isRidableInWater() {
         return world.purpurConfig.snowGolemRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.snowGolemMaxHealth);
+    }
     // Purpur end
 
     @Override

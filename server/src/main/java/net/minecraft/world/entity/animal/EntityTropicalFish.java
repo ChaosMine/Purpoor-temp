@@ -14,6 +14,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -46,6 +47,11 @@ public class EntityTropicalFish extends EntityFishSchool {
     @Override
     public boolean isRidableInWater() {
         return true;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.tropicalFishMaxHealth);
     }
     // Purpur end
 

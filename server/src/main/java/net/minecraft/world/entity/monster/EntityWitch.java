@@ -74,6 +74,11 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
     public boolean isRidableInWater() {
         return world.purpurConfig.witchRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.witchMaxHealth);
+    }
     // Purpur end
 
     @Override

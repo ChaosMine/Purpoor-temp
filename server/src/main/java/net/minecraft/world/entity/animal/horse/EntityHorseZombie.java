@@ -40,6 +40,21 @@ public class EntityHorseZombie extends EntityHorseAbstract {
     public int getPurpurBreedTime() {
         return 6000;
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.zombieHorseMaxHealthMin, this.world.purpurConfig.zombieHorseMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.zombieHorseJumpStrengthMin, this.world.purpurConfig.zombieHorseJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.zombieHorseMovementSpeedMin, this.world.purpurConfig.zombieHorseMovementSpeedMax);
+    }
     // Purpur end
 
     public static AttributeProvider.Builder eL() {

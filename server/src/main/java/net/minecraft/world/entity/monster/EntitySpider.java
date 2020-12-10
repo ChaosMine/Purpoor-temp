@@ -61,6 +61,11 @@ public class EntitySpider extends EntityMonster {
     public boolean isRidableInWater() {
         return world.purpurConfig.spiderRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.spiderMaxHealth);
+    }
     // Purpur end
 
     @Override

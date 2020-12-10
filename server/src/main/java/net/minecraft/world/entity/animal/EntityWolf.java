@@ -188,6 +188,11 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
         setCollarColor(world.purpurConfig.wolfDefaultCollarColor);
         super.tame(entityhuman);
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.wolfMaxHealth);
+    }
     // Purpur end
 
     @Override

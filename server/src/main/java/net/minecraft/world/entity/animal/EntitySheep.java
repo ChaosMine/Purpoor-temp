@@ -126,6 +126,11 @@ public class EntitySheep extends EntityAnimal implements IShearable {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.sheepBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.sheepMaxHealth);
+    }
     // Purpur end
 
     @Override

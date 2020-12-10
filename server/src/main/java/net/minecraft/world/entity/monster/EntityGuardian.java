@@ -86,6 +86,11 @@ public class EntityGuardian extends EntityMonster {
     public boolean isRidableInWater() {
         return true;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.guardianMaxHealth);
+    }
     // Purpur end
 
     @Override

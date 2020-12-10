@@ -130,6 +130,15 @@ public class EntityZombie extends EntityMonster {
     public boolean jockeyTryExistingChickens() {
         return world.purpurConfig.zombieJockeyTryExistingChickens;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.zombieMaxHealth);
+    }
+
+    protected void generateReinforcementsChance() {
+        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(this.random.nextDouble() * this.world.purpurConfig.zombieSpawnReinforcements);
+    }
     // Purpur end
 
     @Override
@@ -612,7 +621,7 @@ public class EntityZombie extends EntityMonster {
     }
 
     protected void eV() {
-        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(this.random.nextDouble() * 0.10000000149011612D);
+        generateReinforcementsChance(); // Purpur
     }
 
     @Override

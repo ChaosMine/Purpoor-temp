@@ -73,6 +73,11 @@ public class EntityGhast extends EntityFlying implements IMonster {
             setMot(mot.a(0.9D));
         }
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.ghastMaxHealth);
+    }
     // Purpur end
 
     @Override

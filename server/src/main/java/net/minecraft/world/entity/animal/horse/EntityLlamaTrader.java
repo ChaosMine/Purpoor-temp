@@ -42,6 +42,21 @@ public class EntityLlamaTrader extends EntityLlama {
     public boolean hasSaddle() {
         return super.hasSaddle() || isTamed();
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.llamaTraderMaxHealthMin, this.world.purpurConfig.llamaTraderMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.llamaTraderJumpStrengthMin, this.world.purpurConfig.llamaTraderJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.llamaTraderMovementSpeedMin, this.world.purpurConfig.llamaTraderMovementSpeedMax);
+    }
     // Purpur end
 
     @Override

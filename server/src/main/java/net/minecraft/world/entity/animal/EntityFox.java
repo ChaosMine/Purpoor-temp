@@ -162,6 +162,11 @@ public class EntityFox extends EntityAnimal {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.foxBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.foxMaxHealth);
+    }
     // Purpur end
 
     @Override

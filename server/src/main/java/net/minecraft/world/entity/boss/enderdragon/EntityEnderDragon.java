@@ -147,6 +147,11 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
     public double getMaxY() {
         return world.purpurConfig.enderDragonMaxY;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.enderDragonMaxHealth);
+    }
     // Purpur end
 
     public static AttributeProvider.Builder m() {

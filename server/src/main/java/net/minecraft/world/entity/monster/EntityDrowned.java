@@ -97,6 +97,15 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
     public boolean jockeyTryExistingChickens() {
         return world.purpurConfig.drownedJockeyTryExistingChickens;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.drownedMaxHealth);
+    }
+
+    protected void generateReinforcementsChance() {
+        this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).setValue(this.random.nextDouble() * this.world.purpurConfig.drownedSpawnReinforcements);
+    }
     // Purpur end
 
     @Override

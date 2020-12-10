@@ -96,6 +96,11 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     public boolean isRidableInWater() {
         return world.purpurConfig.piglinRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.piglinMaxHealth);
+    }
     // Purpur end
 
     @Override

@@ -51,6 +51,7 @@ import com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent;
 import com.destroystokyo.paper.event.entity.SlimeSwimEvent;
 import com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent;
 import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
+import javax.script.ScriptException;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
 // Paper end
@@ -65,6 +66,7 @@ import org.bukkit.event.entity.SlimeSplitEvent;
 public class EntitySlime extends EntityInsentient implements IMonster {
 
     private static final DataWatcherObject<Integer> bo = DataWatcher.a(EntitySlime.class, DataWatcherRegistry.b);
+    private static javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino"); // Purpur
     public float b;
     public float c;
     public float d;
@@ -104,6 +106,30 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
         return true; // do not jump() in wasd controller, let vanilla controller handle
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.generateMaxHealth());
+    }
+
+    public String getMaxHealthEquation() {
+        return world.purpurConfig.slimeMaxHealth;
+    }
+
+    public double generateMaxHealth() {
+        int size = getSize();
+        Double maxHealth = world.purpurConfig.slimeMaxHealthCache.get(size);
+        if (maxHealth == null) {
+            try {
+                scriptEngine.eval("size = " + size);
+                maxHealth = (double) scriptEngine.eval(getMaxHealthEquation());
+            } catch (Exception e) {
+                maxHealth = (double) size * size;
+            }
+            world.purpurConfig.slimeMaxHealthCache.put(size, maxHealth);
+        }
+        return maxHealth;
+    }
     // Purpur end
 
     @Override
@@ -130,7 +156,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         this.datawatcher.set(EntitySlime.bo, i);
         this.af();
         this.updateSize();
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue((double) (i * i));
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(generateMaxHealth()); // Purpur
         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((double) (0.2F + 0.1F * (float) i));
         this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) i);
         if (flag) {

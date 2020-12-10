@@ -59,6 +59,11 @@ public class EntityEvoker extends EntityIllagerWizard {
     public boolean isRidableInWater() {
         return world.purpurConfig.evokerRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.evokerMaxHealth);
+    }
     // Purpur end
 
     @Override

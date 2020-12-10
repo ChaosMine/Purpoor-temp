@@ -120,6 +120,32 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
     public boolean isRidableInWater() {
         return false;
     }
+
+    protected double generateMaxHealth(double min, double max) {
+        if (min == max) return min;
+        int diff = MathHelper.floor(max - min);
+        double base = max - diff;
+        int first = MathHelper.floor((double) diff / 2);
+        int rest = diff - first;
+        return base + random.nextInt(first + 1) + random.nextInt(rest + 1);
+    }
+
+    protected double generateJumpStrength(double min, double max) {
+        if (min == max) return min;
+        return min + (max - min) * this.random.nextDouble();
+    }
+
+    protected double generateMovementSpeed(double min, double max) {
+        if (min == max) return min;
+        return min + (max - min) * this.random.nextDouble();
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.generateMaxHealth());
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.generateMovementSpeed());
+        this.getAttributeInstance(GenericAttributes.JUMP_STRENGTH).setValue(this.generateJumpStrength());
+    }
     // Purpur end
 
     @Override
@@ -928,15 +954,15 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
 
     }
 
-    protected float fp() {
+    protected float fp() { return generateMaxHealth(); } public float generateMaxHealth() { // Purpur - OBFHELPER
         return 15.0F + (float) this.random.nextInt(8) + (float) this.random.nextInt(9);
     }
 
-    protected double fq() {
+    protected double fq() { return generateJumpStrength(); } public double generateJumpStrength() { // Purpur - OBFHELPER
         return 0.4000000059604645D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
     }
 
-    protected double fr() {
+    protected double fr() { return generateMovementSpeed(); } public double generateMovementSpeed() { // Purpur - OBFHELPER
         return (0.44999998807907104D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.25D;
     }
 
@@ -1059,7 +1085,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
             groupdataentity = new EntityAgeable.a(0.2F);
         }
 
-        this.eK();
+        //this.eK(); // Purpur
         return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
     }
 }

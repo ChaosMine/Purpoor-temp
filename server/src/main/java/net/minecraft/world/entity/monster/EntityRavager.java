@@ -80,6 +80,11 @@ public class EntityRavager extends EntityRaider {
         double speed = this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getBaseValue();
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.ravagerMaxHealth);
+    }
     // Purpur end
 
     @Override

@@ -82,6 +82,11 @@ public class EntityShulker extends EntityGolem implements IMonster {
     public boolean isRidableInWater() {
         return world.purpurConfig.shulkerRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.shulkerMaxHealth);
+    }
     // Purpur end
 
     @Override

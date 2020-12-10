@@ -80,6 +80,11 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
     public boolean isRidableInWater() {
         return world.purpurConfig.ironGolemRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.ironGolemMaxHealth);
+    }
     // Purpur end
 
     @Override

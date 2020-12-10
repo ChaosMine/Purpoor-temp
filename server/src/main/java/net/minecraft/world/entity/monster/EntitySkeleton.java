@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.World;
@@ -24,6 +25,11 @@ public class EntitySkeleton extends EntitySkeletonAbstract {
     @Override
     public boolean isRidableInWater() {
         return world.purpurConfig.skeletonRidableInWater;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.skeletonMaxHealth);
     }
     // Purpur end
 

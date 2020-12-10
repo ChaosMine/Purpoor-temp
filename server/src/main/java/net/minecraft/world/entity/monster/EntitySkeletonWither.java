@@ -44,6 +44,11 @@ public class EntitySkeletonWither extends EntitySkeletonAbstract {
     public boolean isRidableInWater() {
         return world.purpurConfig.witherSkeletonRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.witherSkeletonMaxHealth);
+    }
     // Purpur end
 
     @Override

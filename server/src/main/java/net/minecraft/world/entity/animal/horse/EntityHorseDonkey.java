@@ -26,6 +26,21 @@ public class EntityHorseDonkey extends EntityHorseChestedAbstract {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.donkeyBreedingTicks;
     }
+
+    @Override
+    public float generateMaxHealth() {
+        return (float) generateMaxHealth(this.world.purpurConfig.donkeyMaxHealthMin, this.world.purpurConfig.donkeyMaxHealthMax);
+    }
+
+    @Override
+    public double generateJumpStrength() {
+        return generateJumpStrength(this.world.purpurConfig.donkeyJumpStrengthMin, this.world.purpurConfig.donkeyJumpStrengthMax);
+    }
+
+    @Override
+    public double generateMovementSpeed() {
+        return generateMovementSpeed(this.world.purpurConfig.donkeyMovementSpeedMin, this.world.purpurConfig.donkeyMovementSpeedMax);
+    }
     // Purpur end
 
     @Override

@@ -79,6 +79,11 @@ public class EntityOcelot extends EntityAnimal {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.ocelotBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.ocelotMaxHealth);
+    }
     // Purpur end
 
     private boolean isTrusting() {

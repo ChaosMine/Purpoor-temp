@@ -86,6 +86,11 @@ public class EntitySquid extends EntityWaterAnimal {
     public boolean isInWater() {
         return this.inWater || world.purpurConfig.squidsCanFly;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.squidMaxHealth);
+    }
     // Purpur end
 
     @Override

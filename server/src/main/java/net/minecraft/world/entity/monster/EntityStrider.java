@@ -110,6 +110,11 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.striderBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.striderMaxHealth);
+    }
     // Purpur end
 
     public static boolean c(EntityTypes<EntityStrider> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {

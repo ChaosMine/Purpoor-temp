@@ -137,6 +137,11 @@ public class EntityCreeper extends EntityMonster {
         }
         return getForward() == 0 && getStrafe() == 0; // do not jump if standing still
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.creeperMaxHealth);
+    }
     // Purpur end
 
     @Override

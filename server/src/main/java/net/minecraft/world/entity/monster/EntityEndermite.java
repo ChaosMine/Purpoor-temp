@@ -47,6 +47,11 @@ public class EntityEndermite extends EntityMonster {
     public boolean isRidableInWater() {
         return world.purpurConfig.endermiteRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.endermiteMaxHealth);
+    }
     // Purpur end
 
     @Override

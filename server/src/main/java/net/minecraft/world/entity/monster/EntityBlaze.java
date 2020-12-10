@@ -72,6 +72,11 @@ public class EntityBlaze extends EntityMonster {
             setMot(mot.a(0.9D));
         }
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.blazeMaxHealth);
+    }
     // Purpur end
 
     @Override

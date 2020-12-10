@@ -76,6 +76,11 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.hoglinBreedingTicks;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.hoglinMaxHealth);
+    }
     // Purpur end
 
     @Override

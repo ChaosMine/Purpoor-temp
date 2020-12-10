@@ -70,6 +70,7 @@ public class EntityChicken extends EntityAnimal {
         if (world.purpurConfig.chickenRetaliate) {
             this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(2.0D);
         }
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.chickenMaxHealth);
     }
 
     @Override

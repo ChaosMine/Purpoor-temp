@@ -34,6 +34,7 @@ import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMove;
@@ -125,6 +126,12 @@ public class EntityPanda extends EntityAnimal {
     @Override
     public int getPurpurBreedTime() {
         return this.world.purpurConfig.pandaBreedingTicks;
+    }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.pandaMaxHealth);
+        updateAttributes();
     }
     // Purpur end
 
@@ -598,9 +605,12 @@ public class EntityPanda extends EntityAnimal {
         return this.random.nextBoolean() ? this.getMainGene() : this.getHiddenGene();
     }
 
-    public void fg() {
+    public void fg() { updateAttributes(); } public void updateAttributes() { // Purpur - OBFHELPER
         if (this.isWeak()) {
-            this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(10.0D);
+            // Purpur start
+            AttributeModifiable maxHealth = this.getAttributeInstance(GenericAttributes.MAX_HEALTH);
+            maxHealth.setValue(maxHealth.getValue() / 2);
+            // Purpur end
         }
 
         if (this.isLazy()) {

@@ -72,6 +72,11 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
     public boolean isRidableInWater() {
         return world.purpurConfig.zoglinRidableInWater;
     }
+
+    @Override
+    public void initAttributes() {
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.zoglinMaxHealth);
+    }
     // Purpur end
 
     @Override
