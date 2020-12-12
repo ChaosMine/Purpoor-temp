@@ -306,6 +306,7 @@ public class BlockChest extends BlockChestAbstract<TileEntityChest> implements I
     }
 
     private static boolean a(IBlockAccess iblockaccess, BlockPosition blockposition) {
+        if (iblockaccess instanceof World && ((World) iblockaccess).purpurConfig.chestOpenWithBlockOnTop) return false; // Purpur
         BlockPosition blockposition1 = blockposition.up();
 
         return iblockaccess.getType(blockposition1).isOccluding(iblockaccess, blockposition1);
