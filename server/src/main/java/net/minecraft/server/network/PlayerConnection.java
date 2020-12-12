@@ -1,5 +1,6 @@
 package net.minecraft.server.network;
 
+import com.destroystokyo.paper.PaperConfig;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
@@ -176,6 +177,7 @@ import net.minecraft.world.inventory.InventoryClickType;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.phys.MovingObjectPosition;
+import org.bukkit.Bukkit; // Paper
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
@@ -234,6 +236,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     private volatile int chatThrottle;
     private static final AtomicIntegerFieldUpdater chatSpamField = AtomicIntegerFieldUpdater.newUpdater(PlayerConnection.class, "chatThrottle");
     private final java.util.concurrent.atomic.AtomicInteger tabSpamLimiter = new java.util.concurrent.atomic.AtomicInteger(); // Paper - configurable tab spam limits
+    private final java.util.concurrent.atomic.AtomicInteger recipeSpamPackets =  new java.util.concurrent.atomic.AtomicInteger(); // Paper - auto recipe limit
     // CraftBukkit end
     private int j;
     private final Int2ShortMap k = new Int2ShortOpenHashMap();
@@ -382,6 +385,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // CraftBukkit start
         for (int spam; (spam = this.chatThrottle) > 0 && !chatSpamField.compareAndSet(this, spam, spam - 1); ) ;
         if (tabSpamLimiter.get() > 0) tabSpamLimiter.getAndDecrement(); // Paper - split to seperate variable
+        if (recipeSpamPackets.get() > 0) recipeSpamPackets.getAndDecrement(); // Paper
         /* Use thread-safe field access instead
         if (this.chatThrottle > 0) {
             --this.chatThrottle;
@@ -2788,6 +2792,14 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
     @Override
     public void a(PacketPlayInAutoRecipe packetplayinautorecipe) {
+        // Paper start
+        if (!Bukkit.isPrimaryThread()) {
+            if (recipeSpamPackets.addAndGet(PaperConfig.autoRecipeIncrement) > PaperConfig.autoRecipeLimit) {
+                minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]))); // Paper
+                return;
+            }
+        }
+        // Paper end
         PlayerConnectionUtils.ensureMainThread(packetplayinautorecipe, this, this.player.getWorldServer());
         this.player.resetIdleTimer();
         if (!this.player.isSpectator() && this.player.activeContainer.windowId == packetplayinautorecipe.b() && this.player.activeContainer.c(this.player) && this.player.activeContainer instanceof ContainerRecipeBook) {

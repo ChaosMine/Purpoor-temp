@@ -334,6 +334,13 @@ public class PaperConfig {
         tabSpamLimit = getInt("settings.spam-limiter.tab-spam-limit", tabSpamLimit);
     }
 
+    public static int autoRecipeIncrement = 1;
+    public static int autoRecipeLimit = 20;
+    private static void autoRecipieLimiters() {
+        autoRecipeIncrement = getInt("settings.spam-limiter.recipe-spam-increment", autoRecipeIncrement);
+        autoRecipeLimit = getInt("settings.spam-limiter.recipe-spam-limit", autoRecipeLimit);
+    }
+
     public static boolean velocitySupport;
     public static boolean velocityOnlineMode;
     public static byte[] velocitySecretKey;
