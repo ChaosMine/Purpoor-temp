@@ -226,6 +226,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
             this.world.addParticle(Particles.MYCELIUM, this.locX() - (double) f2, this.locY() + (double) f4, this.locZ() - (double) f3, 0.0D, 0.0D, 0.0D);
         }
 
+        if (world.purpurConfig.phantomFlamesOnSwoop && getAttackPhase() == AttackPhase.SWOOP) shoot(); // Purpur
     }
 
     @Override

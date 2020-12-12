@@ -1206,6 +1206,7 @@ public class PurpurWorldConfig {
     public boolean phantomIgnorePlayersWithTorch = false;
     public boolean phantomBurnInDaylight = true;
     public boolean phantomAllowGriefing = false;
+    public boolean phantomFlamesOnSwoop = false;
     public double phantomMaxHealth = 20.0D;
     private void phantomSettings() {
         phantomRidable = getBoolean("mobs.phantom.ridable", phantomRidable);
@@ -1232,6 +1233,7 @@ public class PurpurWorldConfig {
         phantomBurnInDaylight = getBoolean("mobs.phantom.burn-in-daylight", phantomBurnInDaylight);
         phantomIgnorePlayersWithTorch = getBoolean("mobs.phantom.ignore-players-with-torch", phantomIgnorePlayersWithTorch);
         phantomAllowGriefing = getBoolean("mobs.phantom.allow-griefing", phantomAllowGriefing);
+        phantomFlamesOnSwoop = getBoolean("mobs.phantom.flames-on-swoop", phantomFlamesOnSwoop);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.phantom.attributes.max-health", phantomMaxHealth);
             set("mobs.phantom.attributes.max-health", null);
