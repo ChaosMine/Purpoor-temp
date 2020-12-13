@@ -52,7 +52,7 @@ public class PathfinderGoalTame extends PathfinderGoal {
     @Override
     public void e() {
         if (!this.entity.isTamed() && this.entity.getRandom().nextInt(50) == 0) {
-            Entity entity = (Entity) this.entity.getPassengers().get(0);
+            Entity entity = this.entity.passengers.isEmpty() ? null : this.entity.passengers.get(0); // Paper - do not copy list, fixed array out of bounds exception as well
 
             if (entity == null) {
                 return;

@@ -561,7 +561,7 @@ public abstract class EntityMinecartAbstract extends Entity {
 
         vec3d1 = new Vec3D(d8 * d4 / d6, vec3d1.y, d8 * d5 / d6);
         this.setMot(vec3d1);
-        Entity entity = this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
+        Entity entity = this.passengers.isEmpty() ? null : (Entity) this.passengers.get(0); // Paper - do not copy list
 
         if (entity instanceof EntityHuman) {
             Vec3D vec3d2 = entity.getMot();

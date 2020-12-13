@@ -972,7 +972,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
     @Nullable
     @Override
     public Entity getRidingPassenger() {
-        return this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
+        return this.passengers.isEmpty() ? null : (Entity) this.passengers.get(0); // Paper - do not copy list
     }
 
     @Nullable

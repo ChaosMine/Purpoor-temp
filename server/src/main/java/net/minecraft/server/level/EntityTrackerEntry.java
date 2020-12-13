@@ -103,10 +103,10 @@ public class EntityTrackerEntry {
 
     public final void tick() { this.a(); } // Paper - OBFHELPER
     public void a() {
-        List<Entity> list = this.tracker.getPassengers();
+        List<Entity> list = this.tracker.passengers; // Paper - do not copy list
 
         if (!list.equals(this.p)) {
-            this.p = list;
+            this.p = com.google.common.collect.ImmutableList.copyOf(list); // Paper - only copy list if something has changed
             this.broadcastIncludingSelf(new PacketPlayOutMount(this.tracker)); // CraftBukkit
         }
 
@@ -376,7 +376,7 @@ public class EntityTrackerEntry {
             }
         }
 
-        if (!this.tracker.getPassengers().isEmpty()) {
+        if (!this.tracker.passengers.isEmpty()) { // Paper - do not create copy of list
             consumer.accept(new PacketPlayOutMount(this.tracker));
         }
 

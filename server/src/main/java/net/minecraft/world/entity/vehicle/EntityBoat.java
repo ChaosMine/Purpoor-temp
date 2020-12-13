@@ -317,7 +317,7 @@ public class EntityBoat extends Entity {
         super.tick();
         this.r();
         if (this.cs()) {
-            if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityHuman)) {
+            if (this.passengers.isEmpty() || !(this.passengers.get(0) instanceof EntityHuman)) { // Paper - do not copy list
                 this.a(false, false);
             }
 
@@ -380,7 +380,7 @@ public class EntityBoat extends Entity {
                 Entity entity = (Entity) list.get(j);
 
                 if (!entity.w(this)) {
-                    if (flag && this.getPassengers().size() < 2 && !entity.isPassenger() && entity.getWidth() < this.getWidth() && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) {
+                    if (flag && this.passengers.size() < 2 && !entity.isPassenger() && entity.getWidth() < this.getWidth() && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) { // Paper - do not copy passenger list
                         entity.startRiding(this);
                     } else {
                         this.collide(entity);
@@ -727,8 +727,8 @@ public class EntityBoat extends Entity {
             float f = 0.0F;
             float f1 = (float) ((this.dead ? 0.009999999776482582D : this.bc()) + entity.bb());
 
-            if (this.getPassengers().size() > 1) {
-                int i = this.getPassengers().indexOf(entity);
+            if (this.passengers.size() > 1) { // Paper - do not copy list
+                int i = this.passengers.indexOf(entity); // Paper - do not copy list
 
                 if (i == 0) {
                     f = 0.2F;
@@ -747,7 +747,7 @@ public class EntityBoat extends Entity {
             entity.yaw += this.ak;
             entity.setHeadRotation(entity.getHeadRotation() + this.ak);
             this.a(entity);
-            if (entity instanceof EntityAnimal && this.getPassengers().size() > 1) {
+            if (entity instanceof EntityAnimal && this.passengers.size() > 1) { // Paper - do not copy list
                 int j = entity.getId() % 2 == 0 ? 90 : 270;
 
                 entity.n(((EntityAnimal) entity).aA + (float) j);
@@ -907,13 +907,13 @@ public class EntityBoat extends Entity {
 
     @Override
     protected boolean q(Entity entity) {
-        return this.getPassengers().size() < 2 && !this.a((Tag) TagsFluid.WATER);
+        return this.passengers.size() < 2 && !this.a((Tag) TagsFluid.WATER); // Paper - do not copy list
     }
 
     @Nullable
     @Override
     public Entity getRidingPassenger() {
-        List<Entity> list = this.getPassengers();
+        List<Entity> list = this.passengers; // Paper - do not copy list
 
         return list.isEmpty() ? null : (Entity) list.get(0);
     }

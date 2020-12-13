@@ -2315,7 +2315,7 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
                 list.add(entity);
             }
 
-            if (!entity.getPassengers().isEmpty()) {
+            if (!entity.passengers.isEmpty()) { // Paper - do not copy list
                 list1.add(entity);
             }
         }

@@ -2240,7 +2240,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     protected boolean q(Entity entity) {
-        return this.getPassengers().size() < 1;
+        return this.passengers.size() < 1; // Paper - do not copy list
     }
 
     public final float getCollisionBorderSize() { return bg(); } // Paper - OBFHELPER
@@ -2336,7 +2336,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean isVehicle() {
-        return !this.getPassengers().isEmpty();
+        return !this.passengers.isEmpty(); // Paper - do not copy list
     }
 
     public boolean bt() {
@@ -3148,7 +3148,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean w(Entity entity) {
-        Iterator iterator = this.getPassengers().iterator();
+        Iterator iterator = this.passengers.iterator(); // Paper - do not copy list
 
         Entity entity1;
 
@@ -3164,7 +3164,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean a(Class<? extends Entity> oclass) {
-        Iterator iterator = this.getPassengers().iterator();
+        Iterator iterator = this.passengers.iterator(); // Paper - do not copy list
 
         Entity entity;
 
@@ -3181,7 +3181,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
 
     public Collection<Entity> getAllPassengers() {
         Set<Entity> set = Sets.newHashSet();
-        Iterator iterator = this.getPassengers().iterator();
+        Iterator iterator = this.passengers.iterator(); // Paper - do not copy list
 
         while (iterator.hasNext()) {
             Entity entity = (Entity) iterator.next();
@@ -3207,7 +3207,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     private void a(boolean flag, Set<Entity> set) {
         Entity entity;
 
-        for (Iterator iterator = this.getPassengers().iterator(); iterator.hasNext(); entity.a(flag, set)) {
+        for (Iterator iterator = this.passengers.iterator(); iterator.hasNext(); entity.a(flag, set)) { // Paper - do not copy list
             entity = (Entity) iterator.next();
             if (!flag || EntityPlayer.class.isAssignableFrom(entity.getClass())) {
                 set.add(entity);
