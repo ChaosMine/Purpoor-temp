@@ -163,7 +163,7 @@ public abstract class EntityLiving extends Entity {
     public int am;
     public int hurtTicks;
     public int hurtDuration;
-    public float ap;
+    public float ap; public final float getHurtDirection() { return ap; } public final void setHurtDirection(float hurtDirection) { this.ap = hurtDirection; } // Paper - OBFHELPER
     public int deathTicks;
     public float ar;
     public float as;
