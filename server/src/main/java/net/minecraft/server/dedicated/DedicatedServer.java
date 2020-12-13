@@ -340,6 +340,8 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
                 MinecraftServerBeans.a((MinecraftServer) this);
             }
 
+            net.pl3x.purpur.task.TPSBarTask.start(); // Purpur
+
             return true;
         }
     }

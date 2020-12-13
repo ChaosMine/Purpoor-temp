@@ -998,6 +998,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         this.safeShutdown(flag, false);
     }
     public void safeShutdown(boolean flag, boolean isRestarting) {
+        net.pl3x.purpur.task.TPSBarTask.stop(); // Purpur
         this.isRunning = false;
         this.isRestarting = isRestarting;
         this.hasLoggedStop = true; // Paper

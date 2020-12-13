@@ -193,6 +193,7 @@ public class CommandDispatcher {
             CommandWhitelist.a(this.b);
             net.pl3x.purpur.command.DemoCommand.register(getDispatcher()); // Purpur
             net.pl3x.purpur.command.PingCommand.register(getDispatcher()); // Purpur
+            net.pl3x.purpur.command.TPSBarCommand.register(getDispatcher()); // Purpur
         }
 
         if (commanddispatcher_servertype.d) {

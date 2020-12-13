@@ -598,6 +598,8 @@ public abstract class PlayerList {
         if (entityplayer.didPlayerJoinEvent) cserver.getPluginManager().callEvent(playerQuitEvent); // Paper - if we disconnected before join ever fired, don't fire quit
         entityplayer.getBukkitEntity().disconnect(playerQuitEvent.getQuitMessage());
 
+        net.pl3x.purpur.task.TPSBarTask.removePlayer(cserver.getPlayer(entityplayer)); // Purpur
+
         if (server.isMainThread()) entityplayer.playerTick(); // SPIGOT-924 // Paper - don't tick during emergency shutdowns (Watchdog)
         // CraftBukkit end
 
