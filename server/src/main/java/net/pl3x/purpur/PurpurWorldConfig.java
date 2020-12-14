@@ -1562,11 +1562,13 @@ public class PurpurWorldConfig {
     public boolean striderRidable = false;
     public boolean striderRidableInWater = false;
     public int striderBreedingTicks = 6000;
+    public boolean striderGiveSaddleBack = false;
     public double striderMaxHealth = 20.0D;
     private void striderSettings() {
         striderRidable = getBoolean("mobs.strider.ridable", striderRidable);
         striderRidableInWater = getBoolean("mobs.strider.ridable-in-water", striderRidableInWater);
         striderBreedingTicks = getInt("mobs.strider.breeding-delay-ticks", striderBreedingTicks);
+        striderGiveSaddleBack = getBoolean("mobs.strider.give-saddle-back", striderGiveSaddleBack);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.strider.attributes.max-health", striderMaxHealth);
             set("mobs.strider.attributes.max-health", null);

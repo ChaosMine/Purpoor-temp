@@ -448,6 +448,18 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
         if (!flag && this.hasSaddle() && !this.isVehicle() && !entityhuman.eq()) {
             if (!this.world.isClientSide) {
+                // Purpur start
+                if (world.purpurConfig.striderGiveSaddleBack && entityhuman.isSneaking()) {
+                    this.saddleStorage.setSaddle(false);
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        ItemStack saddle = new ItemStack(Items.SADDLE);
+                        if (!entityhuman.inventory.pickup(saddle)) {
+                            entityhuman.drop(saddle, false);
+                        }
+                    }
+                    return EnumInteractionResult.SUCCESS;
+                }
+                // Purpur end
                 entityhuman.startRiding(this);
             }
 
