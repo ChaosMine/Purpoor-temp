@@ -31,6 +31,9 @@ public final class HelpTopicComparator implements Comparator<HelpTopic> {
         return tnc.compare(lhs.getName(), rhs.getName());
     }
 
+    /**
+     * Topic name comparator
+     */
     public static final class TopicNameComparator implements Comparator<String> {
         private TopicNameComparator(){}
 

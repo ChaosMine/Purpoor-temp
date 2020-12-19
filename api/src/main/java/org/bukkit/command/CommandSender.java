@@ -62,6 +62,9 @@ public interface CommandSender extends net.kyori.adventure.audience.Audience, Pe
     public String getName();
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot {
 
         /**

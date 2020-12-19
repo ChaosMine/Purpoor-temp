@@ -66,6 +66,9 @@ public class EntityUnleashEvent extends EntityEvent {
         return handlers;
     }
 
+    /**
+     * Entity unleash reason
+     */
     public enum UnleashReason {
         /**
          * When the entity's leashholder has died or logged out, and so is

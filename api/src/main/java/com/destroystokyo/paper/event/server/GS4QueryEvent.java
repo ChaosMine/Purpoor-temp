@@ -105,6 +105,9 @@ public final class GS4QueryEvent extends Event {
         ;
     }
 
+    /**
+     * Query response
+     */
     public final static class QueryResponse {
         private final String motd;
         private final String gameVersion;

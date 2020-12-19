@@ -3,6 +3,9 @@ package org.bukkit.advancement;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an advancement's display's frame type
+ */
 public enum FrameType {
     TASK(ChatColor.GREEN),
     CHALLENGE(ChatColor.DARK_PURPLE),

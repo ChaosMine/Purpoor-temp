@@ -3,6 +3,9 @@ package org.bukkit;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a fluid
+ */
 public enum Fluid implements Keyed {
 
     WATER,

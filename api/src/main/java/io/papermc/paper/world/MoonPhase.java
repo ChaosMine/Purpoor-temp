@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Moon phase
+ */
 public enum MoonPhase {
     FULL_MOON(0L),
     WANING_GIBBOUS(1L),

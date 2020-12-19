@@ -79,6 +79,9 @@ public class EntityTransformEvent extends EntityEvent implements Cancellable {
         return handlers;
     }
 
+    /**
+     * Entity transform reason
+     */
     public enum TransformReason {
         /**
          * When a zombie gets cured and a villager is spawned.

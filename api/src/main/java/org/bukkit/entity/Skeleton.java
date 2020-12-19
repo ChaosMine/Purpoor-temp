@@ -27,7 +27,9 @@ public interface Skeleton extends Monster, RangedEntity { // Paper
     @Contract("_ -> fail")
     public void setSkeletonType(SkeletonType type);
 
-    /*
+    /**
+     * Skeleton type
+     *
      * @deprecated classes are different types
      */
     @Deprecated

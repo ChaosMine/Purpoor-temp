@@ -83,6 +83,9 @@ public class TNTPrimeEvent extends BlockEvent implements Cancellable {
         return handlers;
     }
 
+    /**
+     * TnT prime reason
+     */
     public enum PrimeReason {
         /**
          * When TNT prime was caused by other explosion (chain reaction)

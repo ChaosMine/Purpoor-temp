@@ -1,5 +1,8 @@
 package org.bukkit.boss;
 
+/**
+ * Boss bar style
+ */
 public enum BarStyle {
     /**
      * Makes the boss bar solid (no segments)

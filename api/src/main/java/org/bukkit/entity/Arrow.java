@@ -8,6 +8,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an arrow
+ */
 public interface Arrow extends AbstractArrow {
 
     /**

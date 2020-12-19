@@ -66,6 +66,9 @@ public class EntityTransformedEvent extends EntityEvent implements Cancellable {
         cancelled = cancel;
     }
 
+    /**
+     * Transformed reason
+     */
     public enum TransformedReason {
         /**
          * When a zombie drowns

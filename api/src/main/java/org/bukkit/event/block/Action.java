@@ -1,5 +1,8 @@
 package org.bukkit.event.block;
 
+/**
+ * Block action
+ */
 public enum Action {
 
     /**

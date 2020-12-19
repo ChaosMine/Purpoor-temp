@@ -4,6 +4,9 @@ import org.bukkit.entity.Minecart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a minecart with command block
+ */
 public interface CommandMinecart extends Minecart {
 
     /**

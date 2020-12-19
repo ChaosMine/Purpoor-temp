@@ -2,6 +2,9 @@ package com.destroystokyo.paper.inventory.meta;
 
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Armor stand meta
+ */
 public interface ArmorStandMeta extends ItemMeta {
 
     /**

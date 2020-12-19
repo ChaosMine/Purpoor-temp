@@ -3,6 +3,9 @@ package org.bukkit.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a tameable entity
+ */
 public interface Tameable extends Animals {
 
     /**

@@ -33,6 +33,9 @@ public class PlayerTeleportEvent extends PlayerMoveEvent {
         return cause;
     }
 
+    /**
+     * Player teleport cause
+     */
     public enum TeleportCause {
         /**
          * Indicates the teleporation was caused by a player throwing an Ender

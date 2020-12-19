@@ -6,6 +6,9 @@ import org.bukkit.block.banner.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents metadata on a banner
+ */
 public interface BannerMeta extends ItemMeta {
 
     /**

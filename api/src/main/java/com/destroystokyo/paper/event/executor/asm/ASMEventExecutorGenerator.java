@@ -11,6 +11,9 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 
 import static org.objectweb.asm.Opcodes.*;
 
+/**
+ * ASM event executor generator
+ */
 public class ASMEventExecutorGenerator {
     @NotNull
     public static byte[] generateEventExecutor(@NotNull Method m, @NotNull String name) {

@@ -1579,6 +1579,9 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     UnsafeValues getUnsafe();
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot {
 
         @NotNull

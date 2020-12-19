@@ -40,6 +40,9 @@ public class RaidStopEvent extends RaidEvent {
         return handlers;
     }
 
+    /**
+     * Raid stop reason
+     */
     public enum Reason {
 
         /**

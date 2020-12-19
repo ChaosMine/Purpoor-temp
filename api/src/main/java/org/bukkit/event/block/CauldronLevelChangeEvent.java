@@ -8,6 +8,9 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Called when a cauldron changes fluid level
+ */
 public class CauldronLevelChangeEvent extends BlockEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
@@ -75,6 +78,9 @@ public class CauldronLevelChangeEvent extends BlockEvent implements Cancellable 
         return handlers;
     }
 
+    /**
+     * Cauldron level change reason
+     */
     public enum ChangeReason {
         /**
          * Player emptying the cauldron by filling their bucket.

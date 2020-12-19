@@ -3,6 +3,9 @@ package org.bukkit.entity;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a firework
+ */
 public interface Firework extends Projectile {
 
     /**

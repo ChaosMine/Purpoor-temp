@@ -148,6 +148,7 @@ public interface ItemFactory {
      * Creates a hover event for the given item.
      *
      * @param item The item
+     * @param op Unary operator
      * @return A hover event
      */
     @NotNull
@@ -188,7 +189,7 @@ public interface ItemFactory {
     /**
      * Creates a {@link net.md_5.bungee.api.chat.hover.content.Content} of that ItemStack for displaying.
      *
-     * @param itemStack
+     * @param itemStack ItemStack to check
      * @return the {@link net.md_5.bungee.api.chat.hover.content.Content} of that ItemStack
      */
     @NotNull

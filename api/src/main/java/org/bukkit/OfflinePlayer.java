@@ -9,6 +9,9 @@ import org.bukkit.permissions.ServerOperator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an offline player
+ */
 public interface OfflinePlayer extends ServerOperator, AnimalTamer, ConfigurationSerializable {
 
     /**

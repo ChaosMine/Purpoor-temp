@@ -176,6 +176,9 @@ public interface AbstractArrow extends Projectile {
         this.setPickupStatus(PickupStatus.valueOf(rule.name()));
     }
 
+    /**
+     * Pickup rule
+     */
     @Deprecated
     enum PickupRule {
         DISALLOWED,

@@ -20,6 +20,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Entity type
+ */
 public enum EntityType implements Keyed {
 
     // These strings MUST match the strings in nms.EntityTypes and are case sensitive.

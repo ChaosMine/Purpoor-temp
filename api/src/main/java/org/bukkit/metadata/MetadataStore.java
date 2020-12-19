@@ -4,6 +4,11 @@ import java.util.List;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Metadata store
+ *
+ * @param <T> Type
+ */
 public interface MetadataStore<T> {
     /**
      * Adds a metadata value to an object.

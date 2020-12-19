@@ -315,6 +315,9 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
     BookMeta clone();
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot {
 
         /**

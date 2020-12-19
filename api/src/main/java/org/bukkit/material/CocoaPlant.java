@@ -12,6 +12,9 @@ import org.bukkit.block.BlockFace;
 @Deprecated
 public class CocoaPlant extends MaterialData implements Directional, Attachable {
 
+    /**
+     * Cocoa plant size
+     */
     public enum CocoaPlantSize {
         SMALL,
         MEDIUM,

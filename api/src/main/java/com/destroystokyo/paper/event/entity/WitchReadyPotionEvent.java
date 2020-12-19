@@ -9,6 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Called when a witch prepares a potion
+ */
 public class WitchReadyPotionEvent extends EntityEvent implements Cancellable {
     private ItemStack potion;
 

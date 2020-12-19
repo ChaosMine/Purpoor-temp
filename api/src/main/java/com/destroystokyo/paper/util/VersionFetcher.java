@@ -5,6 +5,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Version fetcher
+ */
 public interface VersionFetcher {
     /**
      * Amount of time to cache results for in milliseconds
@@ -26,6 +29,9 @@ public interface VersionFetcher {
     @NotNull
     Component getVersionMessage(@NotNull String serverVersion);
 
+    /**
+     * Dummy version fetcher
+     */
     class DummyVersionFetcher implements VersionFetcher {
 
         @Override

@@ -50,6 +50,10 @@ public final class ChatEvent extends AbstractChatEvent {
     }
 
     /**
+     * @param player Player
+     * @param recipients Recipients
+     * @param formatter Formatter
+     * @param message Message
      * @deprecated for removal with 1.17, use {@link #ChatEvent(Player, Set, ChatRenderer, Component, Component)}
      */
     @Deprecated

@@ -6,6 +6,9 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called when a player uses (interacts with) an unknown entity
+ */
 public class PlayerUseUnknownEntityEvent extends PlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();

@@ -4,6 +4,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an entity with ranged attacks
+ */
 public interface RangedEntity extends Mob {
     /**
      * Attack the specified entity using a ranged attack.

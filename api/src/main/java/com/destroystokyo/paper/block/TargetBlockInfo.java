@@ -46,6 +46,9 @@ public class TargetBlockInfo {
         return block.getRelative(blockFace);
     }
 
+    /**
+     * Fluid mode
+     */
     public enum FluidMode {
         NEVER,
         SOURCE_ONLY,

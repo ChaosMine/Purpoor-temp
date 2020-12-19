@@ -3,6 +3,9 @@ package org.bukkit.entity;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a raider entity
+ */
 public interface Raider extends Monster {
 
     /**

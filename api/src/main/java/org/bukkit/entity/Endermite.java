@@ -1,5 +1,8 @@
 package org.bukkit.entity;
 
+/**
+ * Represents an endermite
+ */
 public interface Endermite extends Monster {
 
     /**

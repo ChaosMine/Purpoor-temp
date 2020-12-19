@@ -3,6 +3,9 @@ package org.bukkit.entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a throwable projectile
+ */
 public interface ThrowableProjectile extends Projectile {
 
     /**

@@ -183,6 +183,9 @@ public interface Block extends Metadatable {
      * {@code int z = (int) ((packed << 10) >> 37);}
      * </p>
      *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
      * @return This block's x, y, and z coordinates packed into a long value
      */
     public static long getBlockKey(int x, int y, int z) {

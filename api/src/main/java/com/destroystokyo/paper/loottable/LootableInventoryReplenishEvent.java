@@ -6,6 +6,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called when a lootable inventory replenishes it's contents
+ */
 public class LootableInventoryReplenishEvent extends PlayerEvent implements Cancellable {
     @NotNull private final LootableInventory inventory;
 

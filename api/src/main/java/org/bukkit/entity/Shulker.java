@@ -4,6 +4,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.material.Colorable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a shulker
+ */
 public interface Shulker extends Golem, Colorable {
 
     /**

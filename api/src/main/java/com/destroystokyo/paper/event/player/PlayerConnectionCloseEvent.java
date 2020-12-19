@@ -59,7 +59,9 @@ public class PlayerConnectionCloseEvent extends Event {
     }
 
     /**
-     * Returns the {@code UUID} of the player disconnecting.
+     * Get the {@code UUID} of the player disconnecting.
+     *
+     * @return the {@code UUID} of the player disconnecting
      */
     @NotNull
     public UUID getPlayerUniqueId() {
@@ -67,7 +69,9 @@ public class PlayerConnectionCloseEvent extends Event {
     }
 
     /**
-     * Returns the name of the player disconnecting.
+     * Get the name of the player disconnecting.
+     *
+     * @return the name of the player disconnecting
      */
     @NotNull
     public String getPlayerName() {
@@ -75,7 +79,9 @@ public class PlayerConnectionCloseEvent extends Event {
     }
 
     /**
-     * Returns the player's IP address.
+     * Get the player's IP address.
+     *
+     * @return the player's IP address
      */
     @NotNull
     public InetAddress getIpAddress() {

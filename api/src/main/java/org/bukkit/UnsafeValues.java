@@ -87,6 +87,8 @@ public interface UnsafeValues {
 
     /**
      * Called once by the version command on first use, then cached.
+     *
+     * @return Paper's VersionFetcher
      */
     default com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
         return new com.destroystokyo.paper.util.VersionFetcher.DummyVersionFetcher();
@@ -105,6 +107,8 @@ public interface UnsafeValues {
     /**
      * Return the translation key for the Material, so the client can translate it into the active
      * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.
+     *
+     * @param mat Material to check
      * @return the translation key
      */
     String getTranslationKey(Material mat);
@@ -112,6 +116,8 @@ public interface UnsafeValues {
     /**
      * Return the translation key for the Block, so the client can translate it into the active
      * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.
+     *
+     * @param block Block to check
      * @return the translation key
      */
     String getTranslationKey(org.bukkit.block.Block block);
@@ -120,6 +126,8 @@ public interface UnsafeValues {
      * Return the translation key for the EntityType, so the client can translate it into the active
      * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.<br>
      * This is <code>null</code>, when the EntityType isn't known to NMS (custom entities)
+     *
+     * @param type EntityType to check
      * @return the translation key
      */
     String getTranslationKey(org.bukkit.entity.EntityType type);
@@ -135,6 +143,8 @@ public interface UnsafeValues {
      * Creates and returns the next EntityId available.
      * <p>
      * Use this when sending custom packets, so that there are no collisions on the client or server.
+     *
+     * @return the next available entity id
      */
     public int nextEntityId();
 

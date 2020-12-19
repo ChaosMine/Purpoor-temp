@@ -2,6 +2,9 @@ package org.bukkit.entity;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a rabbit
+ */
 public interface Rabbit extends Animals {
 
     /**

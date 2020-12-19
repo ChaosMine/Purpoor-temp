@@ -4,6 +4,9 @@ package org.bukkit.inventory.meta;
 import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents metadata on a blockstate
+ */
 public interface BlockStateMeta extends ItemMeta {
 
     /**

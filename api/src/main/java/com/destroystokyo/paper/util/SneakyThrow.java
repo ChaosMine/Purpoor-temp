@@ -2,6 +2,9 @@ package com.destroystokyo.paper.util;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Sneaky sneaky
+ */
 public class SneakyThrow {
 
     public static void sneaky(@NotNull Throwable exception) {

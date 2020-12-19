@@ -15,6 +15,9 @@ public interface LightningStrike extends Entity {
     public boolean isEffect();
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot extends Entity.Spigot {
 
         /*

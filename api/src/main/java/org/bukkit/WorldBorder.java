@@ -2,6 +2,9 @@ package org.bukkit;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a world border
+ */
 public interface WorldBorder {
 
     /**

@@ -67,6 +67,9 @@ public class LightningStrikeEvent extends WeatherEvent implements Cancellable {
         return handlers;
     }
 
+    /**
+     * Lightning strike cause
+     */
     public enum Cause {
         /**
          * Triggered by the /summon command.

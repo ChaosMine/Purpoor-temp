@@ -1961,6 +1961,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     void resetCooldown();
 
     /**
+     * @param <T> ClientOption type
+     * @param option ClientOption
      * @return the client option value of the player
      */
     @NotNull
@@ -2000,6 +2002,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     // Paper end
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot extends Entity.Spigot {
 
         /**

@@ -1,5 +1,8 @@
 package org.bukkit.boss;
 
+/**
+ * Bar flag
+ */
 public enum BarFlag {
 
     /**

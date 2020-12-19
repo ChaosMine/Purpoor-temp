@@ -2,6 +2,9 @@ package org.bukkit.entity;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a shulker bullet
+ */
 public interface ShulkerBullet extends Projectile {
 
     /**

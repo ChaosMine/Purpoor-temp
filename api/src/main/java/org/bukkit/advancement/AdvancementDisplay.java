@@ -2,6 +2,9 @@ package org.bukkit.advancement;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an advancement's display
+ */
 public interface AdvancementDisplay {
     /**
      * Get the title of this advancement

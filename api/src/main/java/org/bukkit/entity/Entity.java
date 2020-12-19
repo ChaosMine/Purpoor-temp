@@ -622,6 +622,9 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
     Pose getPose();
 
     // Spigot start
+    /**
+     * Spigot stuffs
+     */
     public class Spigot extends CommandSender.Spigot {
 
     }
@@ -671,36 +674,50 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
 
     /**
      * Check if entity is in rain
+     *
+     * @return True if entity is in rain
      */
     public boolean isInRain();
 
     /**
      * Check if entity is in bubble column
+     *
+     * @return True if entity is in bubble column
      */
     public boolean isInBubbleColumn();
 
     /**
      * Check if entity is in water or rain
+     *
+     * @return True if entity is in water or rain
      */
     public boolean isInWaterOrRain();
 
     /**
      * Check if entity is in water or bubble column
+     *
+     * @return True if entity is in water or bubble column
      */
     public boolean isInWaterOrBubbleColumn();
 
     /**
      * Check if entity is in water or rain or bubble column
+     *
+     * @return True if entity is in water or rain or bubble column
      */
     public boolean isInWaterOrRainOrBubbleColumn();
 
     /**
      * Check if entity is in lava
+     *
+     * @return True if entity is in lava
      */
     public boolean isInLava();
 
     /**
      * Check if entity is inside a ticking chunk
+     *
+     * @return True if entity is ticking
      */
     public boolean isTicking();
     // Paper end

@@ -37,6 +37,9 @@ public interface Panda extends Animals {
      */
     void setHiddenGene(@NotNull Gene gene);
 
+    /**
+     * Panda gene type
+     */
     public enum Gene {
 
         NORMAL(false),

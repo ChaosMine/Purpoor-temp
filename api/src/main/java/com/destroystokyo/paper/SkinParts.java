@@ -1,5 +1,8 @@
 package com.destroystokyo.paper;
 
+/**
+ * Skin parts
+ */
 public interface SkinParts {
 
     boolean hasCapeEnabled();

@@ -11,6 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Method handle event executor
+ */
 public class MethodHandleEventExecutor implements EventExecutor {
     private final Class<? extends Event> eventClass;
     private final MethodHandle handle;

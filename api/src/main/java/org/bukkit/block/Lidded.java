@@ -1,5 +1,8 @@
 package org.bukkit.block;
 
+/**
+ * Represents something that has a lid
+ */
 public interface Lidded {
 
     /**

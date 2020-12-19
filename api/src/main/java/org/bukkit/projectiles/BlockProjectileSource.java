@@ -3,6 +3,9 @@ package org.bukkit.projectiles;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a block projectile source
+ */
 public interface BlockProjectileSource extends ProjectileSource {
 
     /**

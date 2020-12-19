@@ -4,6 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.inventory.MainHand;
 
+/**
+ * Represents a client option
+ *
+ * @param <T> Client option type
+ */
 public final class ClientOption<T> {
 
     public static final ClientOption<SkinParts> SKIN_PARTS = new ClientOption<>(SkinParts.class);
@@ -19,6 +24,11 @@ public final class ClientOption<T> {
         this.type = type;
     }
 
+    /**
+     * Get the option's type
+     *
+     * @return Option's type
+     */
     @NotNull
     public Class<T> getType() {
         return type;

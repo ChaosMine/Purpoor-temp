@@ -19,7 +19,7 @@ public enum ItemRarity {
 
     /**
      * Gets the color formatting associated with the rarity.
-     * @return
+     * @return TextColor
      */
     @NotNull
     public TextColor getColor() {

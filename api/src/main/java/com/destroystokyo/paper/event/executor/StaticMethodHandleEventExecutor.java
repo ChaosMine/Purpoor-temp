@@ -15,6 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Static method handle event executor
+ */
 public class StaticMethodHandleEventExecutor implements EventExecutor {
     private final Class<? extends Event> eventClass;
     private final MethodHandle handle;

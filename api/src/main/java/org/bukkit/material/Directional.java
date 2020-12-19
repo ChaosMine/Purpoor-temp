@@ -3,6 +3,9 @@ package org.bukkit.material;
 import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents something that can face a direction
+ */
 public interface Directional {
 
     /**

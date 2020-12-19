@@ -1,5 +1,8 @@
 package org.bukkit.event;
 
+/**
+ * Represents a cancellable event
+ */
 public interface Cancellable {
 
     /**

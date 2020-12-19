@@ -12,6 +12,11 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Metadata store base
+ *
+ * @param <T> Type
+ */
 public abstract class MetadataStoreBase<T> {
     private Map<String, Map<Plugin, MetadataValue>> metadataMap = new java.util.concurrent.ConcurrentHashMap<String, Map<Plugin, MetadataValue>>(); // Paper
 

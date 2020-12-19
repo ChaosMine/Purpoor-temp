@@ -2,6 +2,9 @@ package org.bukkit.inventory;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an armored horse's inventory
+ */
 public interface ArmoredHorseInventory extends AbstractHorseInventory {
 
     /**

@@ -7,6 +7,9 @@ import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an armor stand
+ */
 public interface ArmorStand extends LivingEntity {
 
     /**

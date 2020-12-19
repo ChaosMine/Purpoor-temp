@@ -185,6 +185,9 @@ public enum InventoryType {
         return isCreatable;
     }
 
+    /**
+     * Inventory slot type
+     */
     public enum SlotType {
         /**
          * A result slot in a furnace or crafting inventory.

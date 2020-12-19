@@ -2,6 +2,9 @@ package com.destroystokyo.paper.event.executor.asm;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class definer
+ */
 public interface ClassDefiner {
 
     /**

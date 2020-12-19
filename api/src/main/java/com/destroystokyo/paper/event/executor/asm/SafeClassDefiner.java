@@ -9,6 +9,9 @@ import com.google.common.collect.MapMaker;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;
 
+/**
+ * Safe class definer
+ */
 public class SafeClassDefiner implements ClassDefiner {
     /* default */ static final SafeClassDefiner INSTANCE = new SafeClassDefiner();
 

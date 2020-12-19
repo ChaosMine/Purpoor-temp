@@ -21,10 +21,14 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Material set tag
+ */
 public class MaterialSetTag extends BaseTag<Material, MaterialSetTag> {
 
     /**
      * @deprecated Use NamespacedKey version of constructor
+     * @param filter Filter predicate
      */
     @Deprecated
     public MaterialSetTag(@NotNull Predicate<Material> filter) {
@@ -33,6 +37,7 @@ public class MaterialSetTag extends BaseTag<Material, MaterialSetTag> {
 
     /**
      * @deprecated Use NamespacedKey version of constructor
+     * @param materials Materials to include
      */
     @Deprecated
     public MaterialSetTag(@NotNull Collection<Material> materials) {
@@ -41,6 +46,7 @@ public class MaterialSetTag extends BaseTag<Material, MaterialSetTag> {
 
     /**
      * @deprecated Use NamespacedKey version of constructor
+     * @param materials Materials to include
      */
     @Deprecated
     public MaterialSetTag(@NotNull Material... materials) {

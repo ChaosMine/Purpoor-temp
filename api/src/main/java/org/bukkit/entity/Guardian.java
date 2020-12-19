@@ -1,5 +1,8 @@
 package org.bukkit.entity;
 
+/**
+ * Represents a guardian
+ */
 public interface Guardian extends Monster {
 
     /**

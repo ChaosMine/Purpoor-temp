@@ -295,6 +295,9 @@ public class Conversation {
         }
     }
 
+    /**
+     * Conversation state
+     */
     public enum ConversationState {
         UNSTARTED,
         STARTED,

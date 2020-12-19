@@ -1,5 +1,8 @@
 package org.bukkit.material;
 
+/**
+ * Represents something that can be opened
+ */
 public interface Openable {
 
     /**

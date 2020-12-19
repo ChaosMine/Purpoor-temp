@@ -8,6 +8,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called when an enderman tries to teleport to escape
+ */
 public class EndermanEscapeEvent extends EntityEvent implements Cancellable {
     @NotNull private final Reason reason;
 
@@ -62,6 +65,9 @@ public class EndermanEscapeEvent extends EntityEvent implements Cancellable {
         cancelled = cancel;
     }
 
+    /**
+     * Escape reason
+     */
     public enum Reason {
         /**
          * The enderman has stopped attacking and ran away

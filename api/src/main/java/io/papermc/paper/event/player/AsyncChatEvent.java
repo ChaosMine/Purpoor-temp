@@ -53,6 +53,11 @@ public final class AsyncChatEvent extends AbstractChatEvent {
     }
 
     /**
+     * @param async Async
+     * @param player Player
+     * @param recipients Recipients
+     * @param formatter Formatter
+     * @param message Message
      * @deprecated for removal with 1.17, use {@link #AsyncChatEvent(boolean, Player, Set, ChatRenderer, Component, Component)}
      */
     @Deprecated

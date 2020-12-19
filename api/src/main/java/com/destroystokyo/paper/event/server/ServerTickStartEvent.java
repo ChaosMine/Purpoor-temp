@@ -4,6 +4,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called at the beginning of the server tick
+ */
 public class ServerTickStartEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();

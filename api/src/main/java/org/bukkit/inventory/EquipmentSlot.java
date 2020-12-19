@@ -1,5 +1,8 @@
 package org.bukkit.inventory;
 
+/**
+ * Equipment slot
+ */
 public enum EquipmentSlot {
 
     HAND,

@@ -4,6 +4,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an animal tamer
+ */
 public interface AnimalTamer {
 
     /**

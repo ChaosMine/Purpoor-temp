@@ -95,6 +95,9 @@ public abstract class Event {
         return async;
     }
 
+    /**
+     * Event result
+     */
     public enum Result {
 
         /**

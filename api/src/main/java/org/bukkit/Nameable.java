@@ -2,6 +2,9 @@ package org.bukkit;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents something that can be named
+ */
 public interface Nameable {
 
     // Paper start

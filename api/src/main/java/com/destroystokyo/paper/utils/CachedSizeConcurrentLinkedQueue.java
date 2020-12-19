@@ -5,6 +5,11 @@ import java.util.concurrent.atomic.LongAdder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Cached size concurrent linked queue
+ *
+ * @param <E> Element type
+ */
 public class CachedSizeConcurrentLinkedQueue<E> extends ConcurrentLinkedQueue<E> {
     private final LongAdder cachedSize = new LongAdder();
 
