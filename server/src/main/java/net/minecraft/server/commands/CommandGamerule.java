@@ -31,7 +31,7 @@ public class CommandGamerule {
         CommandListenerWrapper commandlistenerwrapper = (CommandListenerWrapper) commandcontext.getSource();
         T t0 = commandlistenerwrapper.getWorld().getGameRules().get(gamerules_gamerulekey); // CraftBukkit
 
-        t0.b(commandcontext, "value");
+        t0.setValue(commandcontext, "value", gamerules_gamerulekey); // Paper
         commandlistenerwrapper.sendMessage(new ChatMessage("commands.gamerule.set", new Object[]{gamerules_gamerulekey.a(), t0.toString()}), true);
         return t0.getIntValue();
     }

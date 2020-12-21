@@ -25,6 +25,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.papermc.paper.event.world.WorldGameRuleChangeEvent; // Paper
 
 public class GameRules {
 
@@ -177,8 +178,11 @@ public class GameRules {
         }
 
         @Override
-        protected void a(CommandContext<CommandListenerWrapper> commandcontext, String s) {
-            this.b = BoolArgumentType.getBool(commandcontext, s);
+        protected void a(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<GameRuleBoolean> gameRuleKey) { // Paper start
+            WorldGameRuleChangeEvent event = new WorldGameRuleChangeEvent(commandcontext.getSource().getBukkitWorld(), commandcontext.getSource().getBukkitSender(), (org.bukkit.GameRule<Boolean>) org.bukkit.GameRule.getByName(gameRuleKey.toString()), String.valueOf(BoolArgumentType.getBool(commandcontext, s)));
+            if (!event.callEvent()) return;
+            this.b = Boolean.parseBoolean(event.getValue());
+            // Paper end
         }
 
         public boolean a() {
@@ -237,8 +241,11 @@ public class GameRules {
         }
 
         @Override
-        protected void a(CommandContext<CommandListenerWrapper> commandcontext, String s) {
-            this.b = IntegerArgumentType.getInteger(commandcontext, s);
+        protected void a(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<GameRuleInt> gameRuleKey) { // Paper start
+            WorldGameRuleChangeEvent event = new WorldGameRuleChangeEvent(commandcontext.getSource().getBukkitWorld(), commandcontext.getSource().getBukkitSender(), (org.bukkit.GameRule<Integer>) org.bukkit.GameRule.getByName(gameRuleKey.toString()), String.valueOf(IntegerArgumentType.getInteger(commandcontext, s)));
+            if (!event.callEvent()) return;
+            this.b = Integer.parseInt(event.getValue());
+            // Paper end
         }
 
         public int a() {
@@ -291,10 +298,12 @@ public class GameRules {
             this.a = gamerules_gameruledefinition;
         }
 
-        protected abstract void a(CommandContext<CommandListenerWrapper> commandcontext, String s);
+        protected void updateValue(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<T> gameRuleKey) { this.a(commandcontext, s, gameRuleKey); } // Paper - OBFHELPER
+        protected abstract void a(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<T> gameRuleKey); // Paper
 
-        public void b(CommandContext<CommandListenerWrapper> commandcontext, String s) {
-            this.a(commandcontext, s);
+        public void setValue(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<T> gameRuleKey) { this.b(commandcontext, s, gameRuleKey); } // Paper - OBFHELPER
+        public void b(CommandContext<CommandListenerWrapper> commandcontext, String s, GameRules.GameRuleKey<T> gameRuleKey) { // Paper
+            this.updateValue(commandcontext, s, gameRuleKey); // Paper
             this.onChange(((CommandListenerWrapper) commandcontext.getSource()).getServer());
         }
 

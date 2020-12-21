@@ -2363,8 +2363,13 @@ public class CraftWorld implements World {
 
         if (!isGameRule(rule)) return false;
 
+        // Paper start
+        GameRule<?> gameRule = GameRule.getByName(rule);
+        io.papermc.paper.event.world.WorldGameRuleChangeEvent event = new io.papermc.paper.event.world.WorldGameRuleChangeEvent(this, null, gameRule, value);
+        if (!event.callEvent()) return false;
+        // Paper end
         GameRules.GameRuleValue<?> handle = getHandle().getGameRules().get(getGameRulesNMS().get(rule));
-        handle.setValue(value);
+        handle.setValue(event.getValue().toString()); // Paper
         handle.onChange(getHandle().getMinecraftServer());
         return true;
     }
@@ -2399,8 +2404,12 @@ public class CraftWorld implements World {
 
         if (!isGameRule(rule.getName())) return false;
 
+        // Paper start
+        io.papermc.paper.event.world.WorldGameRuleChangeEvent event = new io.papermc.paper.event.world.WorldGameRuleChangeEvent(this, null, rule, String.valueOf(newValue));
+        if (!event.callEvent()) return false;
+        // Paper end
         GameRules.GameRuleValue<?> handle = getHandle().getGameRules().get(getGameRulesNMS().get(rule.getName()));
-        handle.setValue(newValue.toString());
+        handle.setValue(event.getValue().toString()); // Paper
         handle.onChange(getHandle().getMinecraftServer());
         return true;
     }
