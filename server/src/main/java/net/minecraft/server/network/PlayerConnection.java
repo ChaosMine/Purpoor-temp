@@ -1136,6 +1136,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             NBTTagList pageList = testStack.getTag().getList("pages", 8);
             if (pageList.size() > 100) {
                 PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with too many pages");
+                net.pl3x.purpur.event.player.PlayerBookTooLargeEvent event = new net.pl3x.purpur.event.player.PlayerBookTooLargeEvent(player.getBukkitEntity(), testStack.asBukkitCopy()); if (event.shouldKickPlayer()) // Purpur
                 minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                 return;
             }
@@ -1148,6 +1149,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 int byteLength = testString.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
                 if (byteLength > 256 * 4) {
                     PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with with a page too large!");
+                    net.pl3x.purpur.event.player.PlayerBookTooLargeEvent event = new net.pl3x.purpur.event.player.PlayerBookTooLargeEvent(player.getBukkitEntity(), testStack.asBukkitCopy()); if (event.shouldKickPlayer()) // Purpur
                     minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                     return;
                 }
@@ -1171,6 +1173,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
             if (byteTotal > byteAllowed) {
                 PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send too large of a book. Book Size: " + byteTotal + " - Allowed:  "+ byteAllowed + " - Pages: " + pageList.size());
+                net.pl3x.purpur.event.player.PlayerBookTooLargeEvent event = new net.pl3x.purpur.event.player.PlayerBookTooLargeEvent(player.getBukkitEntity(), testStack.asBukkitCopy()); if (event.shouldKickPlayer()) // Purpur
                 minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                 return;
             }
