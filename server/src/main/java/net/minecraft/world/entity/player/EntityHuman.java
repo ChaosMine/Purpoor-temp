@@ -339,6 +339,16 @@ public abstract class EntityHuman extends EntityLiving {
             this.addEffect(new MobEffect(MobEffects.WATER_BREATHING, 200, 0, false, false, true), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.TURTLE_HELMET); // CraftBukkit
         }
 
+        // Purpur start
+        if (this.world.purpurConfig.playerNetheriteFireResistanceDuration > 0 && this.world.getTime() % 20 == 0) {
+            if (itemstack.getItem() == Items.NETHERITE_HELMET
+                    && this.getEquipment(EnumItemSlot.CHEST).getItem() == Items.NETHERITE_CHESTPLATE
+                    && this.getEquipment(EnumItemSlot.LEGS).getItem() == Items.NETHERITE_LEGGINGS
+                    && this.getEquipment(EnumItemSlot.FEET).getItem() == Items.NETHERITE_BOOTS) {
+                this.addEffect(new MobEffect(MobEffects.FIRE_RESISTANCE, this.world.purpurConfig.playerNetheriteFireResistanceDuration, this.world.purpurConfig.playerNetheriteFireResistanceAmplifier, this.world.purpurConfig.playerNetheriteFireResistanceAmbient, this.world.purpurConfig.playerNetheriteFireResistanceShowParticles, this.world.purpurConfig.playerNetheriteFireResistanceShowIcon), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.NETHERITE_ARMOR);
+            }
+        }
+        // Purpur end
     }
 
     protected ItemCooldown i() {
