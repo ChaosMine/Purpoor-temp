@@ -43,6 +43,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 import org.apache.commons.lang3.ArrayUtils;
+import io.papermc.paper.event.player.PlayerBedFailEnterEvent; // Paper
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 
 public class BlockBed extends BlockFacingHorizontal implements ITileEntity {
 
@@ -101,14 +103,23 @@ public class BlockBed extends BlockFacingHorizontal implements ITileEntity {
                 BlockPosition finalblockposition = blockposition;
                 // CraftBukkit end
                 entityhuman.sleep(blockposition).ifLeft((entityhuman_enumbedresult) -> {
+                    // Paper start - PlayerBedFailEnterEvent
+                    if (entityhuman_enumbedresult != null) {
+                        PlayerBedFailEnterEvent event = new PlayerBedFailEnterEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), PlayerBedFailEnterEvent.FailReason.VALUES[entityhuman_enumbedresult.ordinal()], org.bukkit.craftbukkit.block.CraftBlock.at(world, finalblockposition), entityhuman_enumbedresult == EntityHuman.EnumBedResult.NOT_POSSIBLE_HERE, PaperAdventure.asAdventure(entityhuman_enumbedresult.getChatComponent()));
+                        if (!event.callEvent()) {
+                            return;
+                        }
+                        // Paper end
                     // CraftBukkit start - handling bed explosion from below here
-                    if (entityhuman_enumbedresult == EntityHuman.EnumBedResult.NOT_POSSIBLE_HERE) {
+                    if (event.getWillExplode()) { // Paper
                         this.explodeBed(finaliblockdata, world, finalblockposition);
                     } else
                     // CraftBukkit end
                     if (entityhuman_enumbedresult != null) {
-                        entityhuman.a(entityhuman_enumbedresult.a(), true);
+                        final net.kyori.adventure.text.Component message = event.getMessage(); // Paper
+                        if(message != null) entityhuman.a(PaperAdventure.asVanilla(message), true); // Paper
                     }
+                    } // Paper
 
                 });
                 return EnumInteractionResult.SUCCESS;

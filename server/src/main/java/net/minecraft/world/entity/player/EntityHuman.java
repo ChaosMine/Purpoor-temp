@@ -2233,6 +2233,7 @@ public abstract class EntityHuman extends EntityLiving {
             this.g = ichatbasecomponent;
         }
 
+        public @Nullable IChatBaseComponent getChatComponent() { return this.a(); }; // Paper - OBFHELPER
         @Nullable
         public IChatBaseComponent a() {
             return this.g;
