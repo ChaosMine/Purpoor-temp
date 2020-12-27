@@ -273,7 +273,11 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
                     Bukkit.getPluginManager().callEvent(event);
                 }
                 if (!event.isCancelled()) {
-                    merchantrecipelist.add(CraftMerchantRecipe.fromBukkit(event.getRecipe()).toMinecraft());
+                    // Paper start
+                    final CraftMerchantRecipe craftMerchantRecipe = CraftMerchantRecipe.fromBukkit(event.getRecipe());
+                    if (craftMerchantRecipe.getIngredients().isEmpty()) return;
+                    merchantrecipelist.add(craftMerchantRecipe.toMinecraft());
+                    // Paper end
                 }
                 // CraftBukkit end
             }
