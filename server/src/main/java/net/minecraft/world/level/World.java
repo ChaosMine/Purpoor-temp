@@ -854,13 +854,13 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             if (!tileentity.isRemoved() && tileentity.hasWorld()) {
                 BlockPosition blockposition = tileentity.getPosition();
 
-                if (this.getChunkProvider().a(blockposition) && this.getWorldBorder().a(blockposition)) {
+                Chunk chunk; PlayerChunk playerChunk; if ((chunk = tileentity.getCurrentChunk()) != null && (playerChunk = chunk.playerChunk) != null && playerChunk.isTickingReady() && this.getWorldBorder().isInBounds(blockposition)) { // Paper - optimized tick ready check by inlining ChunkProviderServer.a(BlockPosition). Chunk lookup is no longer required and we can use the PlayerChunk directly available through the tile entity
                     try {
                         gameprofilerfiller.a(() -> {
                             return String.valueOf(TileEntityTypes.a(tileentity.getTileType()));
                         });
                         tileentity.tickTimer.startTiming(); // Spigot
-                        if (tileentity.getTileType().isValidBlock(this.getType(blockposition).getBlock())) {
+                        if (tileentity.getTileType().isValidBlock(chunk.getType(blockposition).getBlock())) { // Paper - reuse the chunk from above, do not look it up again
                             ((ITickable) tileentity).tick();
                         } else {
                             tileentity.w();
@@ -893,9 +893,11 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 this.tileEntityListTick.remove(tileTickPosition--);
                 // Spigot end
                 //this.tileEntityList.remove(tileentity); // Paper - remove unused list
-                if (this.isLoaded(tileentity.getPosition())) {
-                    this.getChunkAtWorldCoords(tileentity.getPosition()).removeTileEntity(tileentity.getPosition());
+                // Paper - prevent double chunk lookups
+                Chunk chunk; if ((chunk = this.getChunkIfLoaded(tileentity.getPosition())) != null) { // inlined contents of this.isLoaded(BlockPosition). Reuse the returned chunk instead of looking it up again
+                    chunk.removeTileEntity(tileentity.getPosition());
                 }
+                // Paper end
             }
         }
 
@@ -914,8 +916,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                     }
                     // CraftBukkit end */
 
-                    if (this.isLoaded(tileentity1.getPosition())) {
-                        Chunk chunk = this.getChunkAtWorldCoords(tileentity1.getPosition());
+                    Chunk chunk; if ((chunk = this.getChunkIfLoaded(tileentity1.getPosition())) != null) {  // Paper - inlined contents of this.isLoaded(BlockPosition). Reuse the returned chunk instead of looking it up again
+                        // Chunk chunk = this.getChunkAtWorldCoords(tileentity1.getPosition()); // Paper - already computed above
                         IBlockData iblockdata = chunk.getType(tileentity1.getPosition());
 
                         chunk.setTileEntity(tileentity1.getPosition(), tileentity1);
