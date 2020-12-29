@@ -1138,6 +1138,11 @@ public abstract class PlayerList {
     }
 
     private void a(EntityPlayer entityplayer, int i) {
+        // Paper start - add recalculatePermissions parameter
+        this.sendPlayerOperatorStatus(entityplayer, i, true);
+    }
+    public void sendPlayerOperatorStatus(EntityPlayer entityplayer, int i, boolean recalculatePermissions) {
+        // Paper end
         if (entityplayer.playerConnection != null) {
             byte b0;
 
@@ -1152,8 +1157,10 @@ public abstract class PlayerList {
             entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityStatus(entityplayer, b0));
         }
 
+        if (recalculatePermissions) { // Paper
         entityplayer.getBukkitEntity().recalculatePermissions(); // CraftBukkit
         this.server.getCommandDispatcher().a(entityplayer);
+        } // Paper
     }
 
     // Paper start
