@@ -260,6 +260,7 @@ public class EntityBoat extends Entity {
 
     }
 
+    public final Item getBoatItem() { return this.g(); } // Paper - OBFHELPER
     public Item g() {
         switch (this.getType()) {
             case OAK:

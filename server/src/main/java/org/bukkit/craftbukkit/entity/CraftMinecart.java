@@ -1,8 +1,10 @@
 package org.bukkit.craftbukkit.entity;
 
 import net.minecraft.world.entity.vehicle.EntityMinecartAbstract;
+import net.minecraft.world.item.Items; // Paper
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+import org.bukkit.Material; // Paper
 import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
@@ -67,6 +69,38 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
     public void setDerailedVelocityMod(Vector derailed) {
         getHandle().setDerailedVelocityMod(derailed);
     }
+
+    // Paper start
+    @Override
+    public Material getMinecartMaterial() {
+        net.minecraft.world.item.Item minecartItem;
+        switch (getHandle().getMinecartType()) {
+            case CHEST:
+                minecartItem = Items.CHEST_MINECART;
+                break;
+            case FURNACE:
+                minecartItem = Items.FURNACE_MINECART;
+                break;
+            case TNT:
+                minecartItem = Items.TNT_MINECART;
+                break;
+            case HOPPER:
+                minecartItem = Items.HOPPER_MINECART;
+                break;
+            case COMMAND_BLOCK:
+                minecartItem = Items.COMMAND_BLOCK_MINECART;
+                break;
+            case RIDEABLE:
+            case SPAWNER:
+                minecartItem = Items.MINECART;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + getHandle().getMinecartType());
+        }
+
+        return CraftMagicNumbers.getMaterial(minecartItem);
+    }
+    // Paper end
 
     @Override
     public EntityMinecartAbstract getHandle() {

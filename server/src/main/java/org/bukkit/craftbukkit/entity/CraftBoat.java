@@ -1,8 +1,10 @@
 package org.bukkit.craftbukkit.entity;
 
 import net.minecraft.world.entity.vehicle.EntityBoat;
+import org.bukkit.Material; // Paper
 import org.bukkit.TreeSpecies;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers; // Paper
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.EntityType;
 
@@ -65,6 +67,13 @@ public class CraftBoat extends CraftVehicle implements Boat {
     public void setWorkOnLand(boolean workOnLand) {
         getHandle().landBoats = workOnLand;
     }
+
+    // Paper start
+    @Override
+    public Material getBoatMaterial() {
+        return CraftMagicNumbers.getMaterial(getHandle().getBoatItem());
+    }
+    // Paper end
 
     @Override
     public EntityBoat getHandle() {
