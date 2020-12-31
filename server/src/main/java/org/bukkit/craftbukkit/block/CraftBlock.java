@@ -621,6 +621,25 @@ public class CraftBlock implements Block {
         return getNMS().getMaterial().isLiquid();
     }
 
+    // Paper start
+    @Override
+    public boolean isBuildable() {
+        return getNMS().getMaterial().isBuildable();
+    }
+    @Override
+    public boolean isBurnable() {
+        return getNMS().getMaterial().isBurnable();
+    }
+    @Override
+    public boolean isReplaceable() {
+        return getNMS().getMaterial().isReplaceable();
+    }
+    @Override
+    public boolean isSolid() {
+        return getNMS().getMaterial().isSolid();
+    }
+    // Paper end
+
     @Override
     public PistonMoveReaction getPistonMoveReaction() {
         return PistonMoveReaction.getById(getNMS().getPushReaction().ordinal());
