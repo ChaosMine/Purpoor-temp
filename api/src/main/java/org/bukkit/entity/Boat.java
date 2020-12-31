@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.jetbrains.annotations.NotNull;
 
@@ -103,4 +104,14 @@ public interface Boat extends Vehicle {
      */
     @Deprecated
     public void setWorkOnLand(boolean workOnLand);
+
+    // Paper start
+    /**
+     * Gets the {@link Material} that represents this Boat type.
+     *
+     * @return the boat material.
+     */
+    @NotNull
+    public Material getBoatMaterial();
+    // Paper end
 }
