@@ -425,6 +425,32 @@ public interface Tag<T extends Keyed> extends Keyed {
      * Vanilla fluid tag representing water and flowing water.
      */
     Tag<Fluid> FLUIDS_WATER = Bukkit.getTag(REGISTRY_FLUIDS, NamespacedKey.minecraft("water"), Fluid.class);
+    // Paper start
+    /**
+     * Key for the build in entity registry
+     */
+    String REGISTRY_ENTITIES = "entities";
+    /**
+     * Vanilla entity tag representing arrow entities.
+     */
+    Tag<org.bukkit.entity.EntityType> ARROWS = Bukkit.getTag(REGISTRY_ENTITIES, NamespacedKey.minecraft("arrows"), org.bukkit.entity.EntityType.class);
+    /**
+     * Vanilla entity tag representing entities that live in beehives
+     */
+    Tag<org.bukkit.entity.EntityType> BEEHIVE_INHABITORS = Bukkit.getTag(REGISTRY_ENTITIES, NamespacedKey.minecraft("beehive_inhabitors"), org.bukkit.entity.EntityType.class);
+    /**
+     * Vanilla entity tag representing projectiles that impact
+     */
+    Tag<org.bukkit.entity.EntityType> IMPACT_PROJECTILES = Bukkit.getTag(REGISTRY_ENTITIES, NamespacedKey.minecraft("impact_projectiles"), org.bukkit.entity.EntityType.class);
+    /**
+     * Vanilla entity tag for village raiders
+     */
+    Tag<org.bukkit.entity.EntityType> RAIDERS = Bukkit.getTag(REGISTRY_ENTITIES, NamespacedKey.minecraft("raiders"), org.bukkit.entity.EntityType.class);
+    /**
+     * Vanilla entity tag for skeleton types
+     */
+    Tag<org.bukkit.entity.EntityType> SKELETONS = Bukkit.getTag(REGISTRY_ENTITIES, NamespacedKey.minecraft("skeletons"), org.bukkit.entity.EntityType.class);
+    // Paper end
 
     /**
      * Returns whether or not this tag has an entry for the specified item.
