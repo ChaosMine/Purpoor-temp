@@ -48,6 +48,7 @@ import net.minecraft.world.level.WorldAccess;
 
 public class EntityVindicator extends EntityIllagerAbstract {
 
+    public static final Predicate<EnumDifficulty> getDoorBreakingPredicate() { return b; } // Paper - OBFHELPER
     private static final Predicate<EnumDifficulty> b = (enumdifficulty) -> {
         return enumdifficulty == EnumDifficulty.NORMAL || enumdifficulty == EnumDifficulty.HARD;
     };
@@ -204,7 +205,7 @@ public class EntityVindicator extends EntityIllagerAbstract {
     static class a extends PathfinderGoalBreakDoor {
 
         public a(EntityInsentient entityinsentient) {
-            super(entityinsentient, 6, EntityVindicator.b);
+            super(entityinsentient, 6, com.google.common.base.Predicates.in(entityinsentient.world.paperConfig.vindicatorBreakDoors)); // Paper
             this.a(EnumSet.of(PathfinderGoal.Type.MOVE));
         }
 

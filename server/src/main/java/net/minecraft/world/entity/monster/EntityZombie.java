@@ -86,6 +86,7 @@ public class EntityZombie extends EntityMonster {
     private static final DataWatcherObject<Boolean> d = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> bo = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.b);
     public static final DataWatcherObject<Boolean> DROWN_CONVERTING = DataWatcher.a(EntityZombie.class, DataWatcherRegistry.i);
+    public static final Predicate<EnumDifficulty> getDoorBreakingPredicate() { return bq; } // Paper - OBFHELPER
     private static final Predicate<EnumDifficulty> bq = (enumdifficulty) -> {
         return enumdifficulty == EnumDifficulty.HARD;
     };
@@ -98,7 +99,7 @@ public class EntityZombie extends EntityMonster {
 
     public EntityZombie(EntityTypes<? extends EntityZombie> entitytypes, World world) {
         super(entitytypes, world);
-        this.br = new PathfinderGoalBreakDoor(this, EntityZombie.bq);
+        this.br = new PathfinderGoalBreakDoor(this, com.google.common.base.Predicates.in(world.paperConfig.zombieBreakDoors)); // Paper
     }
 
     public EntityZombie(World world) {

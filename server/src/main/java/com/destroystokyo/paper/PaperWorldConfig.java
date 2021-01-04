@@ -5,8 +5,12 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray.EngineMode;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.entity.monster.EntityVindicator;
+import net.minecraft.world.entity.monster.EntityZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -71,6 +75,11 @@ public class PaperWorldConfig {
     private String getString(String path, String def) {
         config.addDefault("world-settings.default." + path, def);
         return config.getString("world-settings." + worldName + "." + path, config.getString("world-settings.default." + path));
+    }
+
+    private <T extends Enum<T>> List<T> getEnumList(String path, List<T> def, Class<T> type) {
+        config.addDefault("world-settings.default." + path, def.stream().map(Enum::name).collect(Collectors.toList()));
+        return ((List<String>) (config.getList("world-settings." + worldName + "." + path, config.getList("world-settings.default." + path)))).stream().map(s -> Enum.valueOf(type, s)).collect(Collectors.toList());
     }
 
     public int cactusMaxHeight;
@@ -734,5 +743,24 @@ public class PaperWorldConfig {
     public boolean disableMobSpawnerSpawnEggTransformation = false;
     private void disableMobSpawnerSpawnEggTransformation() {
         disableMobSpawnerSpawnEggTransformation = getBoolean("game-mechanics.disable-mob-spawner-spawn-egg-transformation", disableMobSpawnerSpawnEggTransformation);
+    }
+
+    public List<EnumDifficulty> zombieBreakDoors;
+    public List<EnumDifficulty> vindicatorBreakDoors;
+    private void setupEntityBreakingDoors() {
+        zombieBreakDoors = getEnumList(
+            "door-breaking-difficulty.zombie",
+            Arrays.stream(EnumDifficulty.values())
+                .filter(EntityZombie.getDoorBreakingPredicate())
+                .collect(Collectors.toList()),
+            EnumDifficulty.class
+        );
+        vindicatorBreakDoors = getEnumList(
+            "door-breaking-difficulty.vindicator",
+            Arrays.stream(EnumDifficulty.values())
+                .filter(EntityVindicator.getDoorBreakingPredicate())
+                .collect(Collectors.toList()),
+            EnumDifficulty.class
+        );
     }
 }
