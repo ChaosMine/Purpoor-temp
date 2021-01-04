@@ -167,6 +167,12 @@ public class PaperWorldConfig {
         }
     }
 
+    public float maxLeashDistance = 10f;
+    private void maxLeashDistance() {
+        maxLeashDistance = getFloat("max-leash-distance", maxLeashDistance);
+        log("Max leash distance: " + maxLeashDistance);
+    }
+
     public boolean disableEndCredits;
     private void disableEndCredits() {
         disableEndCredits = getBoolean("game-mechanics.disable-end-credits", false);
