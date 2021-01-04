@@ -2222,6 +2222,11 @@ public final class CraftServer implements Server {
                 Preconditions.checkArgument(clazz == org.bukkit.Fluid.class, "Fluid namespace must have fluid type");
 
                 return (org.bukkit.Tag<T>) new CraftFluidTag(console.getTagRegistry().getFluidTags(), key);
+            // Paper start
+            case org.bukkit.Tag.REGISTRY_ENTITIES:
+                Preconditions.checkArgument(clazz == org.bukkit.entity.EntityType.class, "Entity namespace must have entitytype type");
+                return (org.bukkit.Tag<T>) new io.papermc.paper.CraftEntityTag(console.getTagRegistry().getEntityTags(), key);
+            // Paper end
             default:
                 throw new IllegalArgumentException();
         }
