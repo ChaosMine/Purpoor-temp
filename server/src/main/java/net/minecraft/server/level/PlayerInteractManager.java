@@ -496,7 +496,7 @@ public class PlayerInteractManager {
             cancelledBlock = true;
         }
 
-        PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK, blockposition, movingobjectpositionblock.getDirection(), itemstack, cancelledBlock, enumhand);
+        PlayerInteractEvent event = CraftEventFactory.callPlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK, blockposition, movingobjectpositionblock.getDirection(), itemstack, cancelledBlock, enumhand, movingobjectpositionblock.getPos()); // Paper
         firedInteract = true;
         interactResult = event.useItemInHand() == Event.Result.DENY;
         interactPosition = blockposition.immutableCopy();
