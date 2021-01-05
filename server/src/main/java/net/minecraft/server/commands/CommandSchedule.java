@@ -32,7 +32,7 @@ public class CommandSchedule {
         return new ChatMessage("commands.schedule.cleared.failure", new Object[]{object});
     });
     private static final SuggestionProvider<CommandListenerWrapper> c = (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.b((Iterable) ((CommandListenerWrapper) commandcontext.getSource()).getServer().getSaveData().H().u().a(), suggestionsbuilder);
+        return ICompletionProvider.b((Iterable) ((CommandListenerWrapper) commandcontext.getSource()).getWorld().worldDataServer.H().u().a(), suggestionsbuilder); // Paper
     };
 
     public static void a(CommandDispatcher<CommandListenerWrapper> commanddispatcher) {
@@ -55,7 +55,7 @@ public class CommandSchedule {
         } else {
             long j = commandlistenerwrapper.getWorld().getTime() + (long) i;
             MinecraftKey minecraftkey = (MinecraftKey) pair.getFirst();
-            CustomFunctionCallbackTimerQueue<MinecraftServer> customfunctioncallbacktimerqueue = commandlistenerwrapper.getServer().getSaveData().H().u();
+            CustomFunctionCallbackTimerQueue<MinecraftServer> customfunctioncallbacktimerqueue = commandlistenerwrapper.getWorld().worldDataServer.H().u(); // Paper
 
             ((Either) pair.getSecond()).ifLeft((customfunction) -> {
                 String s = minecraftkey.toString();
@@ -81,7 +81,7 @@ public class CommandSchedule {
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, String s) throws CommandSyntaxException {
-        int i = commandlistenerwrapper.getServer().getSaveData().H().u().a(s);
+        int i = commandlistenerwrapper.getWorld().worldDataServer.H().u().a(s); // Paper
 
         if (i == 0) {
             throw CommandSchedule.b.create(s);
