@@ -201,6 +201,65 @@ public enum Effect {
      * The sound of an enderdragon growling
      */
     ENDERDRAGON_GROWL(3001, Type.SOUND),
+    // Paper start - add missing effects
+    /**
+     * The sound of a wither spawning
+     */
+    WITHER_SPAWNED(1023, Type.SOUND),
+    /**
+     * The sound of an ender dragon dying
+     */
+    ENDER_DRAGON_DEATH(1028, Type.SOUND),
+    /**
+     * The sound of an ender portal being created in the overworld
+     */
+    END_PORTAL_CREATED_IN_OVERWORLD(1038, Type.SOUND),
+    /**
+     * The sound of phantom's bites
+     */
+    PHANTOM_BITES(1039, Type.SOUND),
+    /**
+     * The sound of zombie converting to drowned zombie
+     */
+    ZOMBIE_CONVERTS_TO_DROWNED(1040, Type.SOUND),
+    /**
+     * The sound of a husk converting to zombie by drowning
+     */
+    HUSK_CONVERTS_TO_ZOMBIE(1041, Type.SOUND),
+    /**
+     * The sound of a grindstone being used
+     */
+    GRINDSTONE_USED(1042, Type.SOUND),
+    /**
+     * The sound of a book page being turned
+     */
+    BOOK_PAGE_TURNED(1043, Type.SOUND),
+    /**
+     * Particles displayed when a composter composts
+     */
+    COMPOSTER_COMPOSTS(1500, Type.VISUAL),
+    /**
+     * Particles displayed when lava converts a block (either water to stone, or
+     * removing existing blocks such as torches)
+     */
+    LAVA_CONVERTS_BLOCK(1501, Type.VISUAL),
+    /**
+     * Particles displayd when a redstone torch burns out
+     */
+    REDSTONE_TORCH_BURNS_OUT(1502, Type.VISUAL),
+    /**
+     * Particles displayed when an ender eye is placed
+     */
+    ENDER_EYE_PLACED(1503, Type.VISUAL),
+    /**
+     * Particles displayed when an ender dragon destroys block
+     */
+    ENDER_DRAGON_DESTROYS_BLOCK(2008, Type.VISUAL),
+    /**
+     * Particles displayed when a wet sponge vaporizes in nether.
+     */
+    WET_SPONGE_VAPORIZES_IN_NETHER(2009, Type.VISUAL)
+    // Paper end
     ;
 
     private final int id;
