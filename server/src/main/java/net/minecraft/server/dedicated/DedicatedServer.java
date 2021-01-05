@@ -198,6 +198,12 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         org.spigotmc.SpigotConfig.init((java.io.File) options.valueOf("spigot-settings"));
         org.spigotmc.SpigotConfig.registerCommands();
         // Spigot end
+        // Paper start - moved up to right after PlayerList creation but before file load/save
+        if (this.convertNames()) {
+            this.getUserCache().save(false); // Paper
+        }
+        this.getPlayerList().loadAndSaveFiles(); // Must be after convertNames
+        // Paper end
         // Paper start
         try {
             com.destroystokyo.paper.PaperConfig.init((java.io.File) options.valueOf("paper-settings"));
@@ -258,10 +264,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             }
             // Spigot end
             DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
-        }
-
-        if (this.convertNames()) {
-            this.getUserCache().b(false); // Paper
         }
 
         if (!NameReferencingFileConverter.e(this)) {

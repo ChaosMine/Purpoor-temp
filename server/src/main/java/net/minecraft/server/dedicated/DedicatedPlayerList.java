@@ -18,6 +18,11 @@ public class DedicatedPlayerList extends PlayerList {
 
         this.a(dedicatedserverproperties.viewDistance);
         super.setHasWhitelist((Boolean) dedicatedserverproperties.whiteList.get());
+        // Paper start - moved from constructor
+    }
+    @Override
+    public void loadAndSaveFiles() {
+        // Paper end
         this.y();
         this.w();
         this.x();

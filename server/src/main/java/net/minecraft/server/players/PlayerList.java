@@ -175,6 +175,7 @@ public abstract class PlayerList {
         this.maxPlayers = i;
         this.playerFileData = worldnbtstorage;
     }
+    abstract public void loadAndSaveFiles(); // Paper - moved from DedicatedPlayerList constructor
 
     public void a(NetworkManager networkmanager, EntityPlayer entityplayer) {
         EntityPlayer prev = pendingPlayers.put(entityplayer.getUniqueID(), entityplayer);// Paper

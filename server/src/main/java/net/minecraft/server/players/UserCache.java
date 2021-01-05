@@ -243,6 +243,7 @@ public class UserCache {
         return arraylist;
     }
 
+    public void save(boolean asyncSave) { b(asyncSave); } // Paper - OBFHELPER
     public void b(boolean asyncSave) { // Paper
         JsonArray jsonarray = new JsonArray();
         DateFormat dateformat = e();
