@@ -74,7 +74,10 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
 
                 if (this.cookingTimes[i] >= this.cookingTotalTimes[i]) {
                     InventorySubcontainer inventorysubcontainer = new InventorySubcontainer(new ItemStack[]{itemstack});
-                    ItemStack itemstack1 = (ItemStack) this.world.getCraftingManager().craft(Recipes.CAMPFIRE_COOKING, inventorysubcontainer, this.world).map((recipecampfire) -> {
+                    // Paper start
+                    Optional<RecipeCampfire> recipe = this.world.getCraftingManager().craft(Recipes.CAMPFIRE_COOKING, inventorysubcontainer, this.world);
+                    ItemStack itemstack1 = (ItemStack) recipe.map((recipecampfire) -> {
+                        // Paper end
                         return recipecampfire.a(inventorysubcontainer);
                     }).orElse(itemstack);
                     BlockPosition blockposition = this.getPosition();
@@ -83,7 +86,7 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
                     CraftItemStack source = CraftItemStack.asCraftMirror(itemstack);
                     org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitCopy(itemstack1);
 
-                    BlockCookEvent blockCookEvent = new BlockCookEvent(CraftBlock.at(this.world, this.position), source, result);
+                    BlockCookEvent blockCookEvent = new BlockCookEvent(CraftBlock.at(this.world, this.position), source, result, (org.bukkit.inventory.CookingRecipe<?>) recipe.map(RecipeCampfire::toBukkitRecipe).orElse(null)); // Paper
                     this.world.getServer().getPluginManager().callEvent(blockCookEvent);
 
                     if (blockCookEvent.isCancelled()) {
