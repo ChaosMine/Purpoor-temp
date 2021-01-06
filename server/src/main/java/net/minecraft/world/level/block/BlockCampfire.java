@@ -182,7 +182,7 @@ public class BlockCampfire extends BlockTileEntity implements IBlockWaterlogged 
     public void a(World world, IBlockData iblockdata, MovingObjectPositionBlock movingobjectpositionblock, IProjectile iprojectile) {
         if (!world.isClientSide && iprojectile.isBurning()) {
             Entity entity = iprojectile.getShooter();
-            boolean flag = entity == null || entity instanceof EntityHuman || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+            boolean flag = entity == null || entity instanceof EntityHuman || world.purpurConfig.fireballsBypassMobGriefing || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // Purpur
 
             if (flag && !(Boolean) iblockdata.get(BlockCampfire.LIT) && !(Boolean) iblockdata.get(BlockCampfire.d)) {
                 BlockPosition blockposition = movingobjectpositionblock.getBlockPosition();

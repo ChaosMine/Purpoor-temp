@@ -1568,7 +1568,7 @@ public abstract class EntityLiving extends Entity {
             boolean flag = false;
 
             if (this.killed && entityliving instanceof EntityWither) { // Paper
-                if (this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+                if (this.world.purpurConfig.witherBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                     BlockPosition blockposition = this.getChunkCoordinates();
                     IBlockData iblockdata = Blocks.WITHER_ROSE.getBlockData();
 

@@ -517,7 +517,7 @@ public class EntityRabbit extends EntityAnimal {
         @Override
         public boolean a() {
             if (this.c <= 0) {
-                if (!this.entity.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+                if (!this.entity.world.purpurConfig.rabbitBypassMobGriefing && !this.entity.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                     return false;
                 }
 

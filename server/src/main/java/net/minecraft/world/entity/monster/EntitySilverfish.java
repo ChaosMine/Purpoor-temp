@@ -172,7 +172,7 @@ public class EntitySilverfish extends EntityMonster {
             } else {
                 Random random = this.a.getRandom();
 
-                if (this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && random.nextInt(10) == 0) {
+                if ((this.a.world.purpurConfig.silverfishBypassMobGriefing || this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) && random.nextInt(10) == 0) { // Purpur
                     this.h = EnumDirection.a(random);
                     BlockPosition blockposition = (new BlockPosition(this.a.locX(), this.a.locY() + 0.5D, this.a.locZ())).shift(this.h);
                     IBlockData iblockdata = this.a.world.getType(blockposition);
@@ -260,7 +260,7 @@ public class EntitySilverfish extends EntityMonster {
                                     continue;
                                 }
                                 // CraftBukkit end
-                                if (world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+                                if (world.purpurConfig.silverfishBypassMobGriefing || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                                     world.a(blockposition1, true, this.silverfish);
                                 } else {
                                     world.setTypeAndData(blockposition1, ((BlockMonsterEggs) block).c().getBlockData(), 3);

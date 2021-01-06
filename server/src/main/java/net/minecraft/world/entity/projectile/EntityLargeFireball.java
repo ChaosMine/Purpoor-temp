@@ -19,19 +19,19 @@ public class EntityLargeFireball extends EntityFireballFireball {
 
     public EntityLargeFireball(EntityTypes<? extends EntityLargeFireball> entitytypes, World world) {
         super(entitytypes, world);
-        isIncendiary = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // CraftBukkit
+        isIncendiary = this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // CraftBukkit // Purpur
     }
 
     public EntityLargeFireball(World world, EntityLiving entityliving, double d0, double d1, double d2) {
         super(EntityTypes.FIREBALL, entityliving, d0, d1, d2, world);
-        isIncendiary = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // CraftBukkit
+        isIncendiary = this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // CraftBukkit // Purpur
     }
 
     @Override
     protected void a(MovingObjectPosition movingobjectposition) {
         super.a(movingobjectposition);
         if (!this.world.isClientSide) {
-            boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+            boolean flag = this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // Purpur
 
             // CraftBukkit start - fire ExplosionPrimeEvent
             ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) this.getBukkitEntity());

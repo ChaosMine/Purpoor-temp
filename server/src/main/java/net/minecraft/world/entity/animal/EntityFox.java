@@ -1073,7 +1073,7 @@ public class EntityFox extends EntityAnimal {
         }
 
         protected void n() {
-            if (EntityFox.this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+            if (EntityFox.this.world.purpurConfig.foxBypassMobGriefing || EntityFox.this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                 IBlockData iblockdata = EntityFox.this.world.getType(this.e);
 
                 if (iblockdata.a(Blocks.SWEET_BERRY_BUSH)) {

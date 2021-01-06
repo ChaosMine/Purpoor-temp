@@ -532,7 +532,7 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
 
         @Override
         public boolean a() {
-            if (!getRaider().world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || !getRaider().canPickupLoot()) return false; // Paper - respect game and entity rules for picking up items
+            if ((!getRaider().world.purpurConfig.pillagerBypassMobGriefing && !getRaider().world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) || !getRaider().canPickupLoot()) return false; // Paper - respect game and entity rules for picking up items // Purpur
             Raid raid = this.b.fa();
 
             if (this.b.fb() && !this.b.fa().a() && this.b.eN() && !ItemStack.matches(this.b.getEquipment(EnumItemSlot.HEAD), Raid.s())) {

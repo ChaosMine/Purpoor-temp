@@ -539,7 +539,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                     Block block = iblockdata.getBlock();
 
                     if (!iblockdata.isAir() && iblockdata.getMaterial() != Material.FIRE) {
-                        if (this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && !TagsBlock.DRAGON_IMMUNE.isTagged(block)) {
+                        if ((this.world.purpurConfig.enderDragonBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) && !TagsBlock.DRAGON_IMMUNE.isTagged(block)) { // Purpur
                             // CraftBukkit start - Add blocks to list rather than destroying them
                             // flag1 = this.world.a(blockposition, false) || flag1;
                             flag1 = true;

@@ -41,7 +41,7 @@ public class PathfinderGoalRemoveBlock extends PathfinderGoalGotoTarget {
 
     @Override
     public boolean a() {
-        if (!this.entity.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+        if (!this.entity.world.purpurConfig.zombieBypassMobGriefing && !this.entity.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
             return false;
         } else if (this.c > 0) {
             --this.c;

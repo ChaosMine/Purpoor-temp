@@ -447,7 +447,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         @Override
         public boolean a() {
             if (!enderman.world.purpurConfig.endermanAllowGriefing) return false; // Purpur
-            return this.enderman.getCarried() != null ? false : (!this.enderman.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.enderman.getRandom().nextInt(20) == 0);
+            return this.enderman.getCarried() != null ? false : (!this.enderman.world.purpurConfig.endermanBypassMobGriefing && !this.enderman.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.enderman.getRandom().nextInt(20) == 0); // Purpur
         }
 
         @Override
@@ -490,7 +490,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         @Override
         public boolean a() {
             if (!getEnderman().world.purpurConfig.endermanAllowGriefing) return false; // Purpur
-            return this.a.getCarried() == null ? false : (!this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.a.getRandom().nextInt(2000) == 0);
+            return this.a.getCarried() == null ? false : (!this.a.world.purpurConfig.endermanBypassMobGriefing && !this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? false : this.a.getRandom().nextInt(2000) == 0); // Purpur
         }
 
         @Override

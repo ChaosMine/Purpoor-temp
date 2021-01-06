@@ -296,6 +296,7 @@ public class PurpurWorldConfig {
     public boolean disableDropsOnCrammingDeath = false;
     public boolean entitiesPickUpLootBypassMobGriefing = false;
     public boolean entitiesCanUsePortals = true;
+    public boolean fireballsBypassMobGriefing = false;
     public boolean milkCuresBadOmen = true;
     public boolean persistentTileEntityDisplayNames = false;
     public boolean persistentDroppableEntityDisplayNames = false;
@@ -311,6 +312,7 @@ public class PurpurWorldConfig {
         disableDropsOnCrammingDeath = getBoolean("gameplay-mechanics.disable-drops-on-cramming-death", disableDropsOnCrammingDeath);
         entitiesPickUpLootBypassMobGriefing = getBoolean("gameplay-mechanics.entities-pick-up-loot-bypass-mob-griefing", entitiesPickUpLootBypassMobGriefing);
         entitiesCanUsePortals = getBoolean("gameplay-mechanics.entities-can-use-portals", entitiesCanUsePortals);
+        fireballsBypassMobGriefing = getBoolean("gameplay-mechanics.fireballs-bypass-mob-griefing", fireballsBypassMobGriefing);
         milkCuresBadOmen = getBoolean("gameplay-mechanics.milk-cures-bad-omen", milkCuresBadOmen);
         persistentTileEntityDisplayNames = getBoolean("gameplay-mechanics.persistent-tileentity-display-names-and-lore", persistentTileEntityDisplayNames);
         persistentDroppableEntityDisplayNames = getBoolean("gameplay-mechanics.persistent-droppable-entity-display-names", persistentDroppableEntityDisplayNames);
@@ -464,9 +466,11 @@ public class PurpurWorldConfig {
         dispenserPlaceAnvils = getBoolean("blocks.dispenser.place-anvils", dispenserPlaceAnvils);
     }
 
+    public boolean farmlandBypassMobGriefing = false;
     public boolean farmlandGetsMoistFromBelow = false;
     public boolean farmlandAlpha = false;
     private void farmlandSettings() {
+        farmlandBypassMobGriefing = getBoolean("blocks.farmland.bypass-mob-griefing", farmlandBypassMobGriefing);
         farmlandGetsMoistFromBelow = getBoolean("blocks.farmland.gets-moist-from-below", farmlandGetsMoistFromBelow);
         farmlandAlpha = getBoolean("blocks.farmland.use-alpha-farmland", farmlandAlpha);
     }
@@ -525,10 +529,12 @@ public class PurpurWorldConfig {
         stonecutterDamage = (float) getDouble("blocks.stonecutter.damage", stonecutterDamage);
     }
 
+    public boolean turtleEggsBypassMobGriefing = false;
     public boolean turtleEggsBreakFromExpOrbs = true;
     public boolean turtleEggsBreakFromItems = true;
     public boolean turtleEggsBreakFromMinecarts = true;
     private void turtleEggSettings() {
+        turtleEggsBypassMobGriefing = getBoolean("blocks.turtle_egg.bypass-mob-griefing", turtleEggsBypassMobGriefing);
         turtleEggsBreakFromExpOrbs = getBoolean("blocks.turtle_egg.break-from-exp-orbs", turtleEggsBreakFromExpOrbs);
         turtleEggsBreakFromItems = getBoolean("blocks.turtle_egg.break-from-items", turtleEggsBreakFromItems);
         turtleEggsBreakFromMinecarts = getBoolean("blocks.turtle_egg.break-from-minecarts", turtleEggsBreakFromMinecarts);
@@ -800,12 +806,14 @@ public class PurpurWorldConfig {
     public boolean enderDragonRidableInWater = false;
     public double enderDragonMaxY = 256D;
     public boolean enderDragonAlwaysDropsFullExp = false;
+    public boolean enderDragonBypassMobGriefing = false;
     public double enderDragonMaxHealth = 200.0D;
     private void enderDragonSettings() {
         enderDragonRidable = getBoolean("mobs.ender_dragon.ridable", enderDragonRidable);
         enderDragonRidableInWater = getBoolean("mobs.ender_dragon.ridable-in-water", enderDragonRidableInWater);
         enderDragonMaxY = getDouble("mobs.ender_dragon.ridable-max-y", enderDragonMaxY);
         enderDragonAlwaysDropsFullExp = getBoolean("mobs.ender_dragon.always-drop-full-exp", enderDragonAlwaysDropsFullExp);
+        enderDragonBypassMobGriefing = getBoolean("mobs.ender_dragon.bypass-mob-griefing", enderDragonBypassMobGriefing);
         if (PurpurConfig.version < 8) {
             double oldValue = getDouble("mobs.ender_dragon.max-health", enderDragonMaxHealth);
             set("mobs.ender_dragon.max-health", null);
@@ -821,12 +829,14 @@ public class PurpurWorldConfig {
     public boolean endermanRidable = false;
     public boolean endermanRidableInWater = false;
     public boolean endermanAllowGriefing = true;
+    public boolean endermanBypassMobGriefing = false;
     public boolean endermanDespawnEvenWithBlock = false;
     public double endermanMaxHealth = 40.0D;
     private void endermanSettings() {
         endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
         endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
         endermanAllowGriefing = getBoolean("mobs.enderman.allow-griefing", endermanAllowGriefing);
+        endermanBypassMobGriefing = getBoolean("mobs.enderman.bypass-mob-griefing", endermanBypassMobGriefing);
         endermanDespawnEvenWithBlock = getBoolean("mobs.enderman.can-despawn-with-held-block", endermanDespawnEvenWithBlock);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.enderman.attributes.max-health", endermanMaxHealth);
@@ -852,10 +862,12 @@ public class PurpurWorldConfig {
 
     public boolean evokerRidable = false;
     public boolean evokerRidableInWater = false;
+    public boolean evokerBypassMobGriefing = false;
     public double evokerMaxHealth = 24.0D;
     private void evokerSettings() {
         evokerRidable = getBoolean("mobs.evoker.ridable", evokerRidable);
         evokerRidableInWater = getBoolean("mobs.evoker.ridable-in-water", evokerRidableInWater);
+        evokerBypassMobGriefing = getBoolean("mobs.evoker.bypass-mob-griefing", evokerBypassMobGriefing);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.evoker.attributes.max-health", evokerMaxHealth);
             set("mobs.evoker.attributes.max-health", null);
@@ -866,12 +878,14 @@ public class PurpurWorldConfig {
 
     public boolean foxRidable = false;
     public boolean foxRidableInWater = false;
+    public boolean foxBypassMobGriefing = false;
     public boolean foxTypeChangesWithTulips = false;
     public int foxBreedingTicks = 6000;
     public double foxMaxHealth = 10.0D;
     private void foxSettings() {
         foxRidable = getBoolean("mobs.fox.ridable", foxRidable);
         foxRidableInWater = getBoolean("mobs.fox.ridable-in-water", foxRidableInWater);
+        foxBypassMobGriefing = getBoolean("mobs.fox.bypass-mob-griefing", foxBypassMobGriefing);
         foxTypeChangesWithTulips = getBoolean("mobs.fox.tulips-change-type", foxTypeChangesWithTulips);
         foxBreedingTicks = getInt("mobs.fox.breeding-delay-ticks", foxBreedingTicks);
         if (PurpurConfig.version < 10) {
@@ -1308,10 +1322,12 @@ public class PurpurWorldConfig {
 
     public boolean pillagerRidable = false;
     public boolean pillagerRidableInWater = false;
+    public boolean pillagerBypassMobGriefing = false;
     public double pillagerMaxHealth = 24.0D;
     private void pillagerSettings() {
         pillagerRidable = getBoolean("mobs.pillager.ridable", pillagerRidable);
         pillagerRidableInWater = getBoolean("mobs.pillager.ridable-in-water", pillagerRidableInWater);
+        pillagerBypassMobGriefing = getBoolean("mobs.pillager.bypass-mob-griefing", pillagerBypassMobGriefing);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.pillager.attributes.max-health", pillagerMaxHealth);
             set("mobs.pillager.attributes.max-health", null);
@@ -1355,6 +1371,7 @@ public class PurpurWorldConfig {
 
     public boolean rabbitRidable = false;
     public boolean rabbitRidableInWater = false;
+    public boolean rabbitBypassMobGriefing = false;
     public double rabbitNaturalToast = 0.0D;
     public double rabbitNaturalKiller = 0.0D;
     public int rabbitBreedingTicks = 6000;
@@ -1362,6 +1379,7 @@ public class PurpurWorldConfig {
     private void rabbitSettings() {
         rabbitRidable = getBoolean("mobs.rabbit.ridable", rabbitRidable);
         rabbitRidableInWater = getBoolean("mobs.rabbit.ridable-in-water", rabbitRidableInWater);
+        rabbitBypassMobGriefing = getBoolean("mobs.rabbit.bypass-mob-griefing", rabbitBypassMobGriefing);
         rabbitNaturalToast = getDouble("mobs.rabbit.spawn-toast-chance", rabbitNaturalToast);
         rabbitNaturalKiller = getDouble("mobs.rabbit.spawn-killer-rabbit-chance", rabbitNaturalKiller);
         rabbitBreedingTicks = getInt("mobs.rabbit.breeding-delay-ticks", rabbitBreedingTicks);
@@ -1375,10 +1393,12 @@ public class PurpurWorldConfig {
 
     public boolean ravagerRidable = false;
     public boolean ravagerRidableInWater = false;
+    public boolean ravagerBypassMobGriefing = false;
     public double ravagerMaxHealth = 100.0D;
     private void ravagerSettings() {
         ravagerRidable = getBoolean("mobs.ravager.ridable", ravagerRidable);
         ravagerRidableInWater = getBoolean("mobs.ravager.ridable-in-water", ravagerRidableInWater);
+        ravagerBypassMobGriefing = getBoolean("mobs.ravager.bypass-mob-griefing", ravagerBypassMobGriefing);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.ravager.attributes.max-health", ravagerMaxHealth);
             set("mobs.ravager.attributes.max-health", null);
@@ -1402,11 +1422,13 @@ public class PurpurWorldConfig {
     public boolean sheepRidable = false;
     public boolean sheepRidableInWater = false;
     public int sheepBreedingTicks = 6000;
+    public boolean sheepBypassMobGriefing = false;
     public double sheepMaxHealth = 8.0D;
     private void sheepSettings() {
         sheepRidable = getBoolean("mobs.sheep.ridable", sheepRidable);
         sheepRidableInWater = getBoolean("mobs.sheep.ridable-in-water", sheepRidableInWater);
         sheepBreedingTicks = getInt("mobs.sheep.breeding-delay-ticks", sheepBreedingTicks);
+        sheepBypassMobGriefing = getBoolean("mobs.sheep.bypass-mob-griefing", sheepBypassMobGriefing);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.sheep.attributes.max-health", sheepMaxHealth);
             set("mobs.sheep.attributes.max-health", null);
@@ -1431,10 +1453,12 @@ public class PurpurWorldConfig {
 
     public boolean silverfishRidable = false;
     public boolean silverfishRidableInWater = false;
+    public boolean silverfishBypassMobGriefing = false;
     public double silverfishMaxHealth = 8.0D;
     private void silverfishSettings() {
         silverfishRidable = getBoolean("mobs.silverfish.ridable", silverfishRidable);
         silverfishRidableInWater = getBoolean("mobs.silverfish.ridable-in-water", silverfishRidableInWater);
+        silverfishBypassMobGriefing = getBoolean("mobs.silverfish.bypass-mob-griefing", silverfishBypassMobGriefing);
         if (PurpurConfig.version < 10) {
             double oldValue = getDouble("mobs.silverfish.attributes.max-health", silverfishMaxHealth);
             set("mobs.silverfish.attributes.max-health", null);
@@ -1501,6 +1525,7 @@ public class PurpurWorldConfig {
     public boolean snowGolemRidable = false;
     public boolean snowGolemRidableInWater = false;
     public boolean snowGolemLeaveTrailWhenRidden = false;
+    public boolean snowGolemBypassMobGriefing = false;
     public boolean snowGolemDropsPumpkin = true;
     public boolean snowGolemPutPumpkinBack = false;
     public int snowGolemSnowBallMin = 20;
@@ -1512,6 +1537,7 @@ public class PurpurWorldConfig {
         snowGolemRidable = getBoolean("mobs.snow_golem.ridable", snowGolemRidable);
         snowGolemRidableInWater = getBoolean("mobs.snow_golem.ridable-in-water", snowGolemRidableInWater);
         snowGolemLeaveTrailWhenRidden = getBoolean("mobs.snow_golem.leave-trail-when-ridden", snowGolemLeaveTrailWhenRidden);
+        snowGolemBypassMobGriefing = getBoolean("mobs.snow_golem.bypass-mob-griefing", snowGolemBypassMobGriefing);
         snowGolemDropsPumpkin = getBoolean("mobs.snow_golem.drop-pumpkin-when-sheared", snowGolemDropsPumpkin);
         snowGolemPutPumpkinBack = getBoolean("mobs.snow_golem.pumpkin-can-be-added-back", snowGolemPutPumpkinBack);
         snowGolemSnowBallMin = getInt("mobs.snow_golem.min-shoot-interval-ticks", snowGolemSnowBallMin);
@@ -1730,6 +1756,7 @@ public class PurpurWorldConfig {
     public boolean witherRidable = false;
     public boolean witherRidableInWater = false;
     public double witherMaxY = 256D;
+    public boolean witherBypassMobGriefing = false;
     public float witherHealthRegenAmount = 1.0f;
     public int witherHealthRegenDelay = 20;
     public double witherMaxHealth = 300.0D;
@@ -1737,6 +1764,7 @@ public class PurpurWorldConfig {
         witherRidable = getBoolean("mobs.wither.ridable", witherRidable);
         witherRidableInWater = getBoolean("mobs.wither.ridable-in-water", witherRidableInWater);
         witherMaxY = getDouble("mobs.wither.ridable-max-y", witherMaxY);
+        witherBypassMobGriefing = getBoolean("mobs.wither.bypass-mob-griefing", witherBypassMobGriefing);
         witherHealthRegenAmount = (float) getDouble("mobs.wither.health-regen-amount", witherHealthRegenAmount);
         witherHealthRegenDelay = getInt("mobs.wither.health-regen-delay", witherHealthRegenDelay);
         if (PurpurConfig.version < 8) {
@@ -1809,6 +1837,7 @@ public class PurpurWorldConfig {
 
     public boolean zombieRidable = false;
     public boolean zombieRidableInWater = false;
+    public boolean zombieBypassMobGriefing = false;
     public boolean zombieJockeyOnlyBaby = true;
     public double zombieJockeyChance = 0.05D;
     public boolean zombieJockeyTryExistingChickens = true;
@@ -1819,6 +1848,7 @@ public class PurpurWorldConfig {
     private void zombieSettings() {
         zombieRidable = getBoolean("mobs.zombie.ridable", zombieRidable);
         zombieRidableInWater = getBoolean("mobs.zombie.ridable-in-water", zombieRidableInWater);
+        zombieBypassMobGriefing = getBoolean("mobs.zombie.bypass-mob-griefing", zombieBypassMobGriefing);
         zombieJockeyOnlyBaby = getBoolean("mobs.zombie.jockey.only-babies", zombieJockeyOnlyBaby);
         zombieJockeyChance = getDouble("mobs.zombie.jockey.chance", zombieJockeyChance);
         zombieJockeyTryExistingChickens = getBoolean("mobs.zombie.jockey.try-existing-chickens", zombieJockeyTryExistingChickens);

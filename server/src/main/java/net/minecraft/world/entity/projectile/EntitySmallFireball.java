@@ -26,7 +26,7 @@ public class EntitySmallFireball extends EntityFireballFireball {
         super(EntityTypes.SMALL_FIREBALL, entityliving, d0, d1, d2, world);
         // CraftBukkit start
         if (this.getShooter() != null && this.getShooter() instanceof EntityInsentient) {
-            isIncendiary = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+            isIncendiary = this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // Purpur
         }
         // CraftBukkit end
     }

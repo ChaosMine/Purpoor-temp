@@ -19,7 +19,7 @@ public class PathfinderGoalEatTile extends PathfinderGoal {
 
     private static final Predicate<IBlockData> a = BlockStatePredicate.a(Blocks.GRASS);
     private final EntityInsentient b;
-    private final World c;
+    private final World c; private final World getWorld() { return c; } // Purpur - OBFHELPER
     private int d;
 
     public PathfinderGoalEatTile(EntityInsentient entityinsentient) {
@@ -68,7 +68,7 @@ public class PathfinderGoalEatTile extends PathfinderGoal {
 
             if (PathfinderGoalEatTile.a.test(this.c.getType(blockposition))) {
                 // CraftBukkit
-                if (!CraftEventFactory.callEntityChangeBlockEvent(this.b, blockposition, Blocks.AIR.getBlockData(), !this.c.getGameRules().getBoolean(GameRules.MOB_GRIEFING)).isCancelled()) {
+                if (!CraftEventFactory.callEntityChangeBlockEvent(this.b, blockposition, Blocks.AIR.getBlockData(), !this.getWorld().purpurConfig.sheepBypassMobGriefing && !this.c.getGameRules().getBoolean(GameRules.MOB_GRIEFING)).isCancelled()) { // Purpur
                     this.c.b(blockposition, false);
                 }
 
@@ -78,7 +78,7 @@ public class PathfinderGoalEatTile extends PathfinderGoal {
 
                 if (this.c.getType(blockposition1).a(Blocks.GRASS_BLOCK)) {
                     // CraftBukkit
-                    if (!CraftEventFactory.callEntityChangeBlockEvent(this.b, blockposition, Blocks.AIR.getBlockData(), !this.c.getGameRules().getBoolean(GameRules.MOB_GRIEFING)).isCancelled()) {
+                    if (!CraftEventFactory.callEntityChangeBlockEvent(this.b, blockposition, Blocks.AIR.getBlockData(), !this.getWorld().purpurConfig.sheepBypassMobGriefing && !this.c.getGameRules().getBoolean(GameRules.MOB_GRIEFING)).isCancelled()) { // Purpur
                         this.c.triggerEffect(2001, blockposition1, Block.getCombinedId(Blocks.GRASS_BLOCK.getBlockData()));
                         this.c.setTypeAndData(blockposition1, Blocks.DIRT.getBlockData(), 2);
                     }

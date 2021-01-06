@@ -123,7 +123,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
                 this.damageEntity(CraftEventFactory.MELTING, 1.0F); // CraftBukkit - DamageSource.BURN -> CraftEventFactory.MELTING
             }
 
-            if (!this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+            if (!this.world.purpurConfig.snowGolemBypassMobGriefing && !this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                 return;
             }
 

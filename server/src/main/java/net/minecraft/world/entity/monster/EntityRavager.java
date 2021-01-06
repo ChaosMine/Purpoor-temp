@@ -178,7 +178,7 @@ public class EntityRavager extends EntityRaider {
                 this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(MathHelper.d(0.1D, d1, d0));
             }
 
-            if (this.positionChanged && this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+            if (this.positionChanged && (this.world.purpurConfig.ravagerBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))) { // Purpur
                 boolean flag = false;
                 AxisAlignedBB axisalignedbb = this.getBoundingBox().g(0.2D);
                 Iterator iterator = BlockPosition.b(MathHelper.floor(axisalignedbb.minX), MathHelper.floor(axisalignedbb.minY), MathHelper.floor(axisalignedbb.minZ), MathHelper.floor(axisalignedbb.maxX), MathHelper.floor(axisalignedbb.maxY), MathHelper.floor(axisalignedbb.maxZ)).iterator();

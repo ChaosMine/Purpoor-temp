@@ -99,7 +99,7 @@ public class BlockSoil extends Block {
     @Override
     public void fallOn(World world, BlockPosition blockposition, Entity entity, float f) {
         super.fallOn(world, blockposition, entity, f); // CraftBukkit - moved here as game rules / events shouldn't affect fall damage.
-        if (!world.isClientSide && world.random.nextFloat() < f - 0.5F && entity instanceof EntityLiving && (entity instanceof EntityHuman || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F) {
+        if (!world.isClientSide && world.random.nextFloat() < f - 0.5F && entity instanceof EntityLiving && (entity instanceof EntityHuman || world.purpurConfig.farmlandBypassMobGriefing || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F) { // Purpur
             // CraftBukkit start - Interact soil
             org.bukkit.event.Cancellable cancellable;
             if (entity instanceof EntityHuman) {

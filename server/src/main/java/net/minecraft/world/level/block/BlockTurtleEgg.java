@@ -206,7 +206,7 @@ public class BlockTurtleEgg extends Block {
             return false;
         }
         if (entity instanceof EntityLiving && !(entity instanceof EntityHuman)) {
-            return world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+            return world.purpurConfig.turtleEggsBypassMobGriefing || world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // Purpur
         }
         return true;
         // Purpur end

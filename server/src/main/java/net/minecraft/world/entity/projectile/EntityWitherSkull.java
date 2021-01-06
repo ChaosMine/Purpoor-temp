@@ -94,7 +94,7 @@ public class EntityWitherSkull extends EntityFireball {
     protected void a(MovingObjectPosition movingobjectposition) {
         super.a(movingobjectposition);
         if (!this.world.isClientSide) {
-            Explosion.Effect explosion_effect = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? Explosion.Effect.DESTROY : Explosion.Effect.NONE;
+            Explosion.Effect explosion_effect = (this.world.purpurConfig.witherBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) ? Explosion.Effect.DESTROY : Explosion.Effect.NONE; // Purpur
 
             // CraftBukkit start
             // this.world.createExplosion(this, this.locX(), this.locY(), this.locZ(), 1.0F, false, explosion_effect);

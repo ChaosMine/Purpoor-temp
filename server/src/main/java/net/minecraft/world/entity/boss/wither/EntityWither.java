@@ -378,7 +378,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
         if (this.getInvul() > 0) {
             i = this.getInvul() - 1;
             if (i <= 0) {
-                Explosion.Effect explosion_effect = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? Explosion.Effect.DESTROY : Explosion.Effect.NONE;
+                Explosion.Effect explosion_effect = (this.world.purpurConfig.witherBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) ? Explosion.Effect.DESTROY : Explosion.Effect.NONE; // Purpur
                 // CraftBukkit start
                 // this.world.createExplosion(this, this.locX(), this.getHeadY(), this.locZ(), 7.0F, false, explosion_effect);
                 ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 7.0F, false);
@@ -490,7 +490,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
             if (this.bw > 0) {
                 --this.bw;
-                if (this.bw == 0 && this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+                if (this.bw == 0 && (this.world.purpurConfig.witherBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))) { // Purpur
                     i = MathHelper.floor(this.locY());
                     j = MathHelper.floor(this.locX());
                     int j1 = MathHelper.floor(this.locZ());

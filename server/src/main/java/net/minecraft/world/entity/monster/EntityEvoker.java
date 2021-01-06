@@ -171,7 +171,7 @@ public class EntityEvoker extends EntityIllagerWizard {
                 return false;
             } else if (EntityEvoker.this.ticksLived < this.c) {
                 return false;
-            } else if (!EntityEvoker.this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) {
+            } else if (!EntityEvoker.this.world.purpurConfig.evokerBypassMobGriefing && !EntityEvoker.this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)) { // Purpur
                 return false;
             } else {
                 List<EntitySheep> list = EntityEvoker.this.world.a(EntitySheep.class, this.e, EntityEvoker.this, EntityEvoker.this.getBoundingBox().grow(16.0D, 4.0D, 16.0D));
