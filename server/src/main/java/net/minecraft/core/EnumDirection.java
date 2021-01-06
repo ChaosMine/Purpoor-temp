@@ -127,6 +127,12 @@ public enum EnumDirection implements INamable {
                 return EnumDirection.NORTH;
             case EAST:
                 return EnumDirection.SOUTH;
+            // Purpur start
+            case UP:
+                return EnumDirection.UP;
+            case DOWN:
+                return EnumDirection.DOWN;
+            // Purpur end
             default:
                 throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
         }
@@ -143,6 +149,12 @@ public enum EnumDirection implements INamable {
                 return EnumDirection.SOUTH;
             case EAST:
                 return EnumDirection.NORTH;
+            // Purpur start
+            case UP:
+                return EnumDirection.UP;
+            case DOWN:
+                return EnumDirection.DOWN;
+            // Purpur end
             default:
                 throw new IllegalStateException("Unable to get CCW facing of " + this);
         }
