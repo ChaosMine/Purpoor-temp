@@ -1158,7 +1158,7 @@ public final class CraftServer implements Server {
         } else if (name.equals(levelName + "_the_end")) {
             worldKey = net.minecraft.world.level.World.THE_END;
         } else {
-            worldKey = ResourceKey.a(IRegistry.L, new MinecraftKey(name.toLowerCase(java.util.Locale.ENGLISH)));
+            worldKey = ResourceKey.newResourceKey(IRegistry.getWorldRegistry(), new net.minecraft.resources.MinecraftKey(creator.key().getNamespace().toLowerCase(java.util.Locale.ENGLISH), creator.key().getKey().toLowerCase(java.util.Locale.ENGLISH))); // Paper
         }
 
         WorldServer internal = (WorldServer) new WorldServer(console, console.executorService, worldSession, worlddata, worldKey, dimensionmanager, getServer().worldLoadListenerFactory.create(11),
@@ -1247,6 +1247,15 @@ public final class CraftServer implements Server {
         }
         return null;
     }
+
+    // Paper start
+    @Override
+    public World getWorld(NamespacedKey worldKey) {
+        WorldServer worldServer = console.getWorldServer(ResourceKey.newResourceKey(IRegistry.getWorldRegistry(), CraftNamespacedKey.toMinecraft(worldKey)));
+        if (worldServer == null) return null;
+        return worldServer.getWorld();
+    }
+    // Paper end
 
     public void addWorld(World world) {
         // Check if a World already exists with the UID.

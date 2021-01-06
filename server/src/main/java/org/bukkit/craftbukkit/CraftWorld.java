@@ -2584,6 +2584,11 @@ public class CraftWorld implements World {
             return CompletableFuture.completedFuture(chunk == null ? null : chunk.getBukkitChunk());
         }, net.minecraft.server.MinecraftServer.getServer());
     }
+
+    @Override
+    public org.bukkit.NamespacedKey getKey() {
+        return org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(world.getDimensionKey().getLocation());
+    }
     // Paper end
 
     // Spigot start

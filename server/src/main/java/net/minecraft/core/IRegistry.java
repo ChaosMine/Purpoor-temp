@@ -130,7 +130,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     public static final ResourceKey<IRegistry<LootItemFunctionType>> I = a("loot_function_type");
     public static final ResourceKey<IRegistry<LootItemConditionType>> J = a("loot_condition_type");
     public static final ResourceKey<IRegistry<DimensionManager>> K = a("dimension_type");
-    public static final ResourceKey<IRegistry<World>> L = a("dimension");
+    public static final ResourceKey<IRegistry<World>> L = a("dimension"); public static final ResourceKey<IRegistry<World>> getWorldRegistry() { return L; } // Paper - OBFHELPER
     public static final ResourceKey<IRegistry<WorldDimension>> M = a("dimension");
     public static final IRegistry<SoundEffect> SOUND_EVENT = a(IRegistry.g, () -> {
         return SoundEffects.ENTITY_ITEM_PICKUP;
@@ -339,9 +339,9 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
         MinecraftKey minecraftkey = resourcekey.a();
 
         IRegistry.a.put(minecraftkey, supplier);
-        IRegistryWritable<R> iregistrywritable = IRegistry.e;
+        IRegistryWritable iregistrywritable = IRegistry.e; // Paper - decompile fix
 
-        return (IRegistryWritable) iregistrywritable.a(resourcekey, (Object) r0, lifecycle);
+        return (R) iregistrywritable.a(resourcekey, (Object) r0, lifecycle); // Paper - decompile fix
     }
 
     protected IRegistry(ResourceKey<? extends IRegistry<T>> resourcekey, Lifecycle lifecycle) {
@@ -428,11 +428,11 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     }
 
     public static <V, T extends V> T a(IRegistry<V> iregistry, MinecraftKey minecraftkey, T t0) {
-        return ((IRegistryWritable) iregistry).a(ResourceKey.a(iregistry.b, minecraftkey), t0, Lifecycle.stable());
+        return ((IRegistryWritable<V>) iregistry).a(ResourceKey.a(iregistry.b, minecraftkey), t0, Lifecycle.stable()); // Paper - decompile fix
     }
 
     public static <V, T extends V> T a(IRegistry<V> iregistry, int i, String s, T t0) {
-        return ((IRegistryWritable) iregistry).a(i, ResourceKey.a(iregistry.b, new MinecraftKey(s)), t0, Lifecycle.stable());
+        return ((IRegistryWritable<V>) iregistry).a(i, ResourceKey.a(iregistry.b, new MinecraftKey(s)), t0, Lifecycle.stable()); // Paper - decompile fix
     }
 
     static {

@@ -12,6 +12,7 @@ public class ResourceKey<T> {
     private final MinecraftKey b;
     private final MinecraftKey c;
 
+    public static <T> ResourceKey<T> newResourceKey(ResourceKey<? extends IRegistry<T>> registryKey, MinecraftKey minecraftKey) { return a(registryKey, minecraftKey); } // Paper - OBFHELPER
     public static <T> ResourceKey<T> a(ResourceKey<? extends IRegistry<T>> resourcekey, MinecraftKey minecraftkey) {
         return a(resourcekey.c, minecraftkey);
     }
@@ -41,6 +42,7 @@ public class ResourceKey<T> {
         return this.b.equals(resourcekey.a());
     }
 
+    public MinecraftKey getLocation() { return a(); } // Paper - OBFHELPER
     public MinecraftKey a() {
         return this.c;
     }
