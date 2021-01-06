@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a world, which may contain entities, chunks and blocks
  */
-public interface World extends PluginMessageRecipient, Metadatable, net.kyori.adventure.audience.ForwardingAudience { // Paper
+public interface World extends PluginMessageRecipient, Metadatable, net.kyori.adventure.audience.ForwardingAudience, Keyed { // Paper
 
     // Paper start
     /**
@@ -829,6 +829,15 @@ public interface World extends PluginMessageRecipient, Metadatable, net.kyori.ad
 
     @NotNull
     java.util.concurrent.CompletableFuture<Chunk> getChunkAtAsync(int x, int z, boolean gen, boolean urgent);
+
+    /**
+     * Get the world's key
+     *
+     * @return the world's key
+     */
+    @NotNull
+    @Override
+    NamespacedKey getKey();
     // Paper end
 
     /**
