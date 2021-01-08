@@ -51,6 +51,7 @@ import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 
 public class AdvancementDataPlayer {
 
@@ -313,10 +314,18 @@ public class AdvancementDataPlayer {
             this.j.add(advancement);
             flag = true;
             if (!flag1 && advancementprogress.isDone()) {
-                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit)); // CraftBukkit
+                // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
+                boolean announceToChat = advancement.getAdvancementDisplay() != null && advancement.getAdvancementDisplay().shouldAnnounceToChat();
+                net.kyori.adventure.text.Component message = announceToChat ? PaperAdventure.asAdventure(new ChatMessage("chat.type.advancement." + advancement.getAdvancementDisplay().getFrameType().getId(), this.player.getScoreboardDisplayName(), advancement.getChatComponent())) : null;
+                org.bukkit.event.player.PlayerAdvancementDoneEvent event = new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), advancement.bukkit, message);
+                this.player.world.getServer().getPluginManager().callEvent(event);
+                message = event.message();
+                // Paper end
                 advancement.d().a(this.player);
-                if (advancement.c() != null && advancement.c().i() && this.player.world.getGameRules().getBoolean(GameRules.ANNOUNCE_ADVANCEMENTS)) {
-                    this.e.sendMessage(new ChatMessage("chat.type.advancement." + advancement.c().e().a(), new Object[]{this.player.getScoreboardDisplayName(), advancement.j()}), ChatMessageType.SYSTEM, SystemUtils.b);
+                // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
+                if (message != null && this.player.world.getGameRules().getBoolean(GameRules.ANNOUNCE_ADVANCEMENTS)) {
+                    this.e.sendMessage(PaperAdventure.asVanilla(message), ChatMessageType.SYSTEM, SystemUtils.getNullUUID());
+                    // Paper end
                 }
             }
         }

@@ -20,6 +20,7 @@ public enum AdvancementFrameType {
         this.g = new ChatMessage("advancements.toast." + s);
     }
 
+    public final String getId() { return this.a(); } // Paper - OBFHELPER
     public String a() {
         return this.d;
     }

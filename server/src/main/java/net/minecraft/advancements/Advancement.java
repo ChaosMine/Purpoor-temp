@@ -76,6 +76,7 @@ public class Advancement {
         return this.parent;
     }
 
+    public final @Nullable AdvancementDisplay getAdvancementDisplay() { return this.c(); } // Paper - OBFHELPER
     @Nullable
     public AdvancementDisplay c() {
         return this.display;
@@ -125,6 +126,7 @@ public class Advancement {
         return this.requirements;
     }
 
+    public final IChatBaseComponent getChatComponent() { return this.j(); } // Paper - OBFHELPER
     public IChatBaseComponent j() {
         return this.chatComponent;
     }

@@ -54,10 +54,12 @@ public class AdvancementDisplay {
         return this.b;
     }
 
+    public final AdvancementFrameType getFrameType() { return this.e(); } // Paper - OBFHELPER
     public AdvancementFrameType e() {
         return this.e;
     }
 
+    public final boolean shouldAnnounceToChat() { return this.i(); } // Paper - OBFHELPER
     public boolean i() {
         return this.g;
     }
