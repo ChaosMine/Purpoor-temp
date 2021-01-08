@@ -61,7 +61,7 @@ public class BlockNote extends Block {
     }
 
     private void play(World world, BlockPosition blockposition, IBlockData data) { // CraftBukkit
-        if (world.getType(blockposition.up()).isAir()) {
+        if (world.purpurConfig.noteBlockIgnoreAbove || world.getType(blockposition.up()).isAir()) {
             // CraftBukkit start
             org.bukkit.event.block.NotePlayEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callNotePlayEvent(world, blockposition, data.get(BlockNote.INSTRUMENT), data.get(BlockNote.NOTE));
             if (!event.isCancelled()) {
