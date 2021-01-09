@@ -23,7 +23,7 @@ public class StructureFeature<FC extends WorldGenFeatureConfiguration, F extends
     }, StructureGenerator::h);
     public static final Codec<Supplier<StructureFeature<?, ?>>> b = RegistryFileCodec.a(IRegistry.av, StructureFeature.a);
     public static final Codec<List<Supplier<StructureFeature<?, ?>>>> c = RegistryFileCodec.b(IRegistry.av, StructureFeature.a);
-    public final F d;
+    public final F d; public final F getFeature() { return this.d; } // Purpur - OBFHELPER
     public final FC e;
 
     public StructureFeature(F f0, FC fc) {

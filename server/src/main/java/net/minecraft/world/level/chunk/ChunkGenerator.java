@@ -287,6 +287,14 @@ public abstract class ChunkGenerator {
         if (structuresettingsfeature != null) {
             StructureStart<?> structurestart1 = structurefeature.a(iregistrycustom, this, this.b, definedstructuremanager, i, chunkcoordintpair, biomebase, j, structuresettingsfeature);
 
+            // Purpur start
+            if (new net.pl3x.purpur.event.world.StructureGenerateEvent(
+                    structuremanager.getWorld().getWorld(),
+                    org.bukkit.StructureType.getStructureTypes().get(structurefeature.getFeature().getRegistryKey().toLowerCase()),
+                    chunkcoordintpair.x,
+                    chunkcoordintpair.z
+            ).callEvent())
+            // Purpur end
             structuremanager.a(SectionPosition.a(ichunkaccess.getPos(), 0), structurefeature.d, structurestart1, ichunkaccess);
         }
 

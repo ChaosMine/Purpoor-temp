@@ -277,6 +277,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
 
     public abstract StructureGenerator.a<C> a();
 
+    public final String getRegistryKey() { return this.i(); } // Purpur - OBFHELPER
     public String i() {
         return (String) StructureGenerator.a.inverse().get(this);
     }
