@@ -550,6 +550,10 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         location.checkFinite();
 
         if (entity.isVehicle() || entity.dead) {
+            // Purpur start
+            if (!entity.dead && new net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent(entity.getBukkitEntity(), net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_VEHICLE, cause).callEvent())
+                return teleport(location, cause);
+            // Purpur end
             return false;
         }
 

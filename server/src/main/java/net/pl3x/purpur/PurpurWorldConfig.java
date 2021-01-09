@@ -1941,4 +1941,9 @@ public class PurpurWorldConfig {
         zombieVillagerMaxHealth = getDouble("mobs.zombie_villager.attributes.max_health", zombieVillagerMaxHealth);
         zombieVillagerSpawnReinforcements = getDouble("mobs.zombie_villager.attributes.spawn_reinforcements", zombieVillagerSpawnReinforcements);
     }
+
+    public boolean imposeTeleportRestrictionsOnGateways = false;
+    private void imposeTeleportRestrictionsOnGateways() {
+        imposeTeleportRestrictionsOnGateways = getBoolean("gameplay-mechanics.impose-teleport-restrictions-on-gateways", imposeTeleportRestrictionsOnGateways);
+    }
 }

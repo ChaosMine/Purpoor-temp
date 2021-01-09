@@ -83,7 +83,15 @@ public class BlockPortal extends Block {
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
-        if (!entity.isPassenger() && !entity.isVehicle() && entity.canPortal()) {
+        // Purpur start
+        if (/*!entity.isPassenger() && !entity.isVehicle() &&*/ entity.canPortal()) {
+            if (entity.isPassenger() || entity.isVehicle()) {
+                if (new net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent(entity.getBukkitEntity(), entity.isPassenger() ? net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_PASSENGER : net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_VEHICLE, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.NETHER_PORTAL).callEvent()) {
+                    this.collideWithBlock(iblockdata, world, blockposition, entity);
+                }
+                return;
+            }
+            // Purpur end
             // CraftBukkit start - Entity in portal
             EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
             world.getServer().getPluginManager().callEvent(event);

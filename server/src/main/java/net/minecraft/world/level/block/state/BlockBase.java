@@ -303,6 +303,7 @@ public abstract class BlockBase {
         return 0;
     }
 
+    @Deprecated public final void collideWithBlock(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) { this.a(iblockdata, world, blockposition, entity); } // Purpur - OBFHELPER
     @Deprecated
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {}
 

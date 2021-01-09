@@ -151,9 +151,18 @@ public class TileEntityEndGateway extends TileEntityEnderPortal implements ITick
         }
     }
 
+    public final void teleportEntity(Entity entity) { this.b(entity); } // Purpur - OBFHELPER
     public void b(Entity entity) {
         if (this.world instanceof WorldServer && !this.f()) {
             if (!entity.canPortal()) return; // Purpur
+            // Purpur start
+            if (this.world.purpurConfig.imposeTeleportRestrictionsOnGateways && (entity.isVehicle() || entity.isPassenger())) {
+                if (new net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent(entity.getBukkitEntity(), entity.isPassenger() ? net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_PASSENGER : net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_VEHICLE, PlayerTeleportEvent.TeleportCause.END_GATEWAY).callEvent()) {
+                    this.teleportEntity(entity);
+                }
+                return;
+            }
+            // Purpur end
             this.c = 100;
             if (this.exitPortal == null && this.world.getTypeKey() == DimensionManager.THE_END) { // CraftBukkit - work in alternate worlds
                 this.a((WorldServer) this.world);

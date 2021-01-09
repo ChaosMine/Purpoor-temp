@@ -44,7 +44,15 @@ public class BlockEnderPortal extends BlockTileEntity {
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
-        if (world instanceof WorldServer && !entity.isPassenger() && !entity.isVehicle() && entity.canPortal() && VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), iblockdata.getShape(world, blockposition), OperatorBoolean.AND)) {
+        // Purpur start
+        if (world instanceof WorldServer && /*!entity.isPassenger() && !entity.isVehicle() &&*/ entity.canPortal() && VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), iblockdata.getShape(world, blockposition), OperatorBoolean.AND)) {
+            if (entity.isPassenger() || entity.isVehicle()) {
+                if (new net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent(entity.getBukkitEntity(), entity.isPassenger() ? net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_PASSENGER : net.pl3x.purpur.event.entity.EntityTeleportHinderedEvent.Reason.IS_VEHICLE, PlayerTeleportEvent.TeleportCause.END_PORTAL).callEvent()) {
+                    this.collideWithBlock(iblockdata, world, blockposition, entity);
+                }
+                return;
+            }
+            // Purpur end
             ResourceKey<World> resourcekey = world.getTypeKey() == DimensionManager.THE_END ? World.OVERWORLD : World.THE_END; // CraftBukkit - SPIGOT-6152: send back to main overworld in custom ends
             WorldServer worldserver = ((WorldServer) world).getMinecraftServer().getWorldServer(resourcekey);
 
