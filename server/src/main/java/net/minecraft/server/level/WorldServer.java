@@ -2077,6 +2077,11 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             });
             optional1.ifPresent((villageplacetype) -> {
                 this.getMinecraftServer().execute(() -> {
+                    // Paper start
+                    if (!optional.isPresent() && this.getPoiStorage().test(blockposition1, com.google.common.base.Predicates.alwaysTrue())) {
+                        this.getPoiStorage().remove(blockposition1);
+                    }
+                    // Paper end
                     this.y().a(blockposition1, villageplacetype);
                     PacketDebug.a(this, blockposition1);
                 });
@@ -2084,6 +2089,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
     }
 
+    public final VillagePlace getPoiStorage() { return this.y(); } // Paper - OBFHELPER
     public VillagePlace y() {
         return this.getChunkProvider().j();
     }

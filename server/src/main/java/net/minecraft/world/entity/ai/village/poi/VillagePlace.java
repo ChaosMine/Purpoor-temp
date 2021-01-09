@@ -54,6 +54,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
         ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition, villageplacetype);
     }
 
+    public void remove(BlockPosition blockposition) { this.a(blockposition); } // Paper - OBFHELPER
     public void a(BlockPosition blockposition) {
         ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition);
     }
@@ -138,6 +139,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
         return ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).c(blockposition);
     }
 
+    public final boolean test(BlockPosition blockposition, Predicate<VillagePlaceType> predicate) { return this.a(blockposition, predicate); } // Paper - OBFHELPER
     public boolean a(BlockPosition blockposition, Predicate<VillagePlaceType> predicate) {
         return (Boolean) this.d(SectionPosition.a(blockposition).s()).map((villageplacesection) -> {
             return villageplacesection.a(blockposition, predicate);
