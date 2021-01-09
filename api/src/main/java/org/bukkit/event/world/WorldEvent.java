@@ -10,6 +10,13 @@ import org.jetbrains.annotations.NotNull;
 public abstract class WorldEvent extends Event {
     private final World world;
 
+    // Purpur start
+    public WorldEvent(boolean isAsync, @NotNull final World world) {
+        super(isAsync);
+        this.world = world;
+    }
+    // Purpur end
+
     public WorldEvent(@NotNull final World world) {
         this.world = world;
     }
