@@ -194,4 +194,28 @@ public interface UnsafeValues {
      */
     int getProtocolVersion();
     // Paper end
+
+    // Purpur start
+
+    /**
+     * Serialize entity to byte array
+     *
+     * @param entity entity to serialize
+     * @return serialized entity
+     */
+    byte[] serializeEntity(org.bukkit.entity.Entity entity);
+
+    /**
+     * Deserialize an entity from byte array
+     * <p>
+     * The entity is not automatically spawned in the world. You will have to spawn
+     * the entity yourself with {@link org.bukkit.entity.Entity#spawnAt(Location)} or
+     * {@link org.bukkit.entity.Entity#spawnAt(Location, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason)}
+     *
+     * @param data serialized entity
+     * @param world world entity belongs in
+     * @return deserialized entity
+     */
+    org.bukkit.entity.Entity deserializeEntity(byte[] data, org.bukkit.World world);
+    // Purpur end
 }

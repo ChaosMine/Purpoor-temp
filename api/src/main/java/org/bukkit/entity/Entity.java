@@ -751,5 +751,24 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      * @return True if ridable in water
      */
     boolean isRidableInWater();
+
+    /**
+     * Spawn this entity in the world at the given {@link Location} with the default spawn reason.
+     *
+     * @param location The location at which to spawn the entity.
+     * @return Whether the entity was successfully spawned.
+     */
+    default boolean spawnAt(@NotNull Location location) {
+        return spawnAt(location, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT);
+    }
+
+    /**
+     * Spawn this entity in the world at the given {@link Location} with the reason given.
+     *
+     * @param location The location at which to spawn the entity.
+     * @param spawnReason The reason for which the entity was spawned.
+     * @return Whether the entity was successfully spawned.
+     */
+    boolean spawnAt(@NotNull Location location, @NotNull org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason);
     // Purpur end
 }
