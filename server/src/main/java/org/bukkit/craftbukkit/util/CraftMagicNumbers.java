@@ -410,9 +410,14 @@ public final class CraftMagicNumbers implements UnsafeValues {
         Preconditions.checkNotNull(item, "null cannot be serialized");
         Preconditions.checkArgument(item.getType() != Material.AIR, "air cannot be serialized");
 
+        // Purpur start - rework NBT <-> bytes
+        return serializeNbtToBytes(CraftItemStack.asNMSCopy(item).save(new NBTTagCompound()), true);
+    }
+
+    public byte[] serializeNbtToBytes(NBTTagCompound compound, boolean addDataVersion) {
+        if (addDataVersion) compound.setInt("DataVersion", getDataVersion());
         java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
-        NBTTagCompound compound = (item instanceof CraftItemStack ? ((CraftItemStack) item).getHandle() : CraftItemStack.asNMSCopy(item)).save(new NBTTagCompound());
-        compound.setInt("DataVersion", getDataVersion());
+        // Purpur end
         try {
             net.minecraft.nbt.NBTCompressedStreamTools.writeNBT(
                 compound,
@@ -425,25 +430,57 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return outputStream.toByteArray();
     }
 
+    public static DynamicOpsNBT getDynamicOpsNbtInstance() { return DynamicOpsNBT.a; } // Purpur - OBFHELPER - keeping out of the class because it's FULL of decompile errors
     @Override
     public ItemStack deserializeItem(byte[] data) {
         Preconditions.checkNotNull(data, "null cannot be deserialized");
         Preconditions.checkArgument(data.length > 0, "cannot deserialize nothing");
 
+        // Purpur start - rework NBT <-> bytes
+        NBTTagCompound compound = deserializeNbtFromBytes(data, true);
+        Dynamic<NBTBase> converted = DataConverterRegistry.getDataFixer().update(DataConverterTypes.ITEM_STACK, new Dynamic<>(getDynamicOpsNbtInstance(), compound), compound.getInt("DataVersion"), getDataVersion()); // TODO: obfhelper
+        return net.minecraft.world.item.ItemStack.fromCompound((NBTTagCompound) converted.getValue()).asBukkitMirror();
+    }
+
+    public NBTTagCompound deserializeNbtFromBytes(byte[] data, boolean verifyDataVersion) {
+        // Purpur end
         try {
             NBTTagCompound compound = net.minecraft.nbt.NBTCompressedStreamTools.readNBT(
                 new java.io.ByteArrayInputStream(data)
             );
+            if (verifyDataVersion) { // Purpur
             int dataVersion = compound.getInt("DataVersion");
 
             Preconditions.checkArgument(dataVersion <= getDataVersion(), "Newer version! Server downgrades are not supported!");
-            Dynamic<NBTBase> converted = DataConverterRegistry.getDataFixer().update(DataConverterTypes.ITEM_STACK, new Dynamic<NBTBase>(DynamicOpsNBT.a, compound), dataVersion, getDataVersion());
-            return CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.fromCompound((NBTTagCompound) converted.getValue()));
+            } // Purpur
+            return compound; // Purpur
         } catch (IOException ex) {
             com.destroystokyo.paper.util.SneakyThrow.sneaky(ex);
             throw new RuntimeException();
         }
     }
+
+    // Purpur start
+    @Override
+    public byte[] serializeEntity(org.bukkit.entity.Entity entity) {
+        Preconditions.checkNotNull(entity, "null cannot be serialized");
+        Preconditions.checkArgument(entity instanceof org.bukkit.craftbukkit.entity.CraftEntity, "non-CraftEntity cannot be serialized");
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setString("id", ((org.bukkit.craftbukkit.entity.CraftEntity) entity).getHandle().getMinecraftKeyString());
+        return serializeNbtToBytes(((org.bukkit.craftbukkit.entity.CraftEntity) entity).getHandle().save(compound), true);
+    }
+
+    @Override
+    public org.bukkit.entity.Entity deserializeEntity(byte[] data, org.bukkit.World world) {
+        NBTTagCompound compound = deserializeNbtFromBytes(data, true);
+        Dynamic<NBTBase> converted = DataConverterRegistry.getDataFixer().update(DataConverterTypes.ENTITY, new Dynamic<>(getDynamicOpsNbtInstance(), compound), compound.getInt("DataVersion"), getDataVersion());
+        compound = (NBTTagCompound) converted.getValue();
+        compound.remove("UUID"); // Make the server make a new UUID for this entity; makes entities always spawnable.
+        return net.minecraft.world.entity.EntityTypes.loadEntityFixedData(compound, ((org.bukkit.craftbukkit.CraftWorld) world).getHandle())
+            .orElseThrow(() -> new IllegalArgumentException("unknown ID was found for the data; did you downgrade?"))
+            .getBukkitEntity();
+    }
+    // Pupur end
 
     @Override
     public String getTranslationKey(Material mat) {

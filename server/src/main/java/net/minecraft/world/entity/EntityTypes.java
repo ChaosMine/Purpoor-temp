@@ -532,6 +532,7 @@ public class EntityTypes<T extends Entity> {
         return this.bf.create(this, world);
     }
 
+    public static Optional<Entity> loadEntityFixedData(NBTTagCompound nbtTagCompound, World world) { return a(nbtTagCompound, world); } // Purpur - OBFHELPER
     public static Optional<Entity> a(NBTTagCompound nbttagcompound, World world) {
         return SystemUtils.a(a(nbttagcompound).map((entitytypes) -> {
             return entitytypes.a(world);

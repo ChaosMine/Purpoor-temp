@@ -1196,5 +1196,12 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public boolean isRidableInWater() {
         return getHandle().isRidableInWater();
     }
+
+    @Override
+    public boolean spawnAt(Location location, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
+        entity.world = ((CraftWorld) location.getWorld()).getHandle();
+        entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        return !entity.valid && entity.world.addEntity(entity, spawnReason);
+    }
     // Purpur end
 }
