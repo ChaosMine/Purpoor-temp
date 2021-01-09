@@ -1497,7 +1497,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return this.isInWater() || flag;
     }
 
-    void aL() {
+    public void aL() { updateInWaterStateAndDoWaterCurrentPushing(); } public void updateInWaterStateAndDoWaterCurrentPushing() { // Purpur
         if (this.getVehicle() instanceof EntityBoat) {
             this.inWater = false;
         } else if (this.a((Tag) TagsFluid.WATER, 0.014D)) {

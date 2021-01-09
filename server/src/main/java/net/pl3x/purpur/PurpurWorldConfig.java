@@ -111,10 +111,16 @@ public class PurpurWorldConfig {
     public boolean armorstandSetNameVisible = false;
     public boolean armorstandFixNametags = false;
     public float armorstandStepHeight = 0.0F;
+    public boolean armorstandMovement = true;
+    public boolean armorstandWaterMovement = true;
+    public boolean armorstandWaterFence = true;
     private void armorstandSettings() {
         armorstandSetNameVisible = getBoolean("gameplay-mechanics.armorstand.set-name-visible-when-placing-with-custom-name", armorstandSetNameVisible);
         armorstandFixNametags = getBoolean("gameplay-mechanics.armorstand.fix-nametags", armorstandFixNametags);
         armorstandStepHeight = (float) getDouble("gameplay-mechanics.armorstand.step-height", armorstandStepHeight);
+        armorstandMovement = getBoolean("gameplay-mechanics.armorstand.can-movement-tick", armorstandMovement);
+        armorstandWaterMovement = getBoolean("gameplay-mechanics.armorstand.can-move-in-water", armorstandWaterMovement);
+        armorstandWaterFence = getBoolean("gameplay-mechanics.armorstand.can-move-in-water-over-fence", armorstandWaterFence);
     }
 
     public double minecartMaxSpeed = 0.4D;

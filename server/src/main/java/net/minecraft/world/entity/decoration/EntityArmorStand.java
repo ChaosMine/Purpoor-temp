@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BlockFence;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.EnumPistonReaction;
 import net.minecraft.world.phys.Vec3D;
@@ -87,10 +88,12 @@ public class EntityArmorStand extends EntityLiving {
     private boolean noTickPoseDirty = false;
     private boolean noTickEquipmentDirty = false;
     // Paper end
+    public boolean canMovementTick = true; // Purpur
 
     public EntityArmorStand(EntityTypes<? extends EntityArmorStand> entitytypes, World world) {
         super(entitytypes, world);
         if (world != null) this.canTick = world.paperConfig.armorStandTick; // Paper - armour stand ticking
+        if (world != null) this.canMovementTick = world.purpurConfig.armorstandMovement; // Purpur
         this.handItems = NonNullList.a(2, ItemStack.b);
         this.armorItems = NonNullList.a(4, ItemStack.b);
         this.headPose = EntityArmorStand.bj;
@@ -932,4 +935,18 @@ public class EntityArmorStand extends EntityLiving {
         return true;
     }
     // Paper end
+
+    // Purpur start
+    @Override
+    public void updateInWaterStateAndDoWaterCurrentPushing() {
+        if (this.world.purpurConfig.armorstandWaterMovement &&
+            (this.world.purpurConfig.armorstandWaterFence || !(world.getType(getBlockLocation().down()).getBlock() instanceof BlockFence)))
+            super.updateInWaterStateAndDoWaterCurrentPushing();
+    }
+
+    @Override
+    public void movementTick() {
+        if (this.canMovementTick && this.canMove) super.movementTick();
+    }
+    // Purpur end
 }
