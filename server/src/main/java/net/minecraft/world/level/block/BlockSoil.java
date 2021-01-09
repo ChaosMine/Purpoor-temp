@@ -4,13 +4,17 @@ import java.util.Iterator;
 import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
+import net.minecraft.world.item.enchantment.EnchantmentManager;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
@@ -114,11 +118,18 @@ public class BlockSoil extends Block {
             }
 
             // Purpur start
+            if (world.purpurConfig.farmlandTramplingDisabled) return;
+            if (world.purpurConfig.farmlandTramplingOnlyPlayers && !(entity instanceof EntityPlayer)) return;
             if (world.purpurConfig.farmlandAlpha) {
                 Block block = world.getType(blockposition.down()).getBlock();
                 if (block instanceof BlockFence || block instanceof BlockCobbleWall) {
                     return;
                 }
+            }
+            if (world.purpurConfig.farmlandTramplingFeatherFalling) {
+                Iterator<ItemStack> armor = entity.getArmorItems().iterator();
+                if (armor.hasNext() && EnchantmentManager.getEnchantmentLevel(Enchantments.PROTECTION_FALL, armor.next()) >= (int) entity.fallDistance)
+                    return;
             }
             // Purpur end
             if (CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, Blocks.DIRT.getBlockData()).isCancelled()) {
