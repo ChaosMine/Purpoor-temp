@@ -77,6 +77,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumGamemode;
@@ -621,6 +622,15 @@ public abstract class PlayerList {
 
                 for (Iterator iterator = entity.getAllPassengers().iterator(); iterator.hasNext(); entity1.dead = true) {
                     entity1 = (Entity) iterator.next();
+                    // Paper start
+                    if (entity1 instanceof EntityVillagerAbstract) {
+                        final EntityVillagerAbstract villager = (EntityVillagerAbstract) entity1;
+                        final EntityHuman human = villager.getTrader();
+                        if (human != null) {
+                            villager.setTradingPlayer(null);
+                        }
+                    }
+                    // Paper end
                     worldserver.removeEntity(entity1);
                 }
 
