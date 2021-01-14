@@ -2557,12 +2557,15 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         return new Vec2F(this.pitch, this.yaw);
     }
 
+    public BlockPosition portalPos = BlockPosition.ZERO; // Purpur
     public void d(BlockPosition blockposition) {
         if (this.ai()) {
+            if (!(world.purpurConfig.playerFixStuckPortal && this instanceof EntityPlayer && !blockposition.equals(portalPos))) // Purpur
             this.resetPortalCooldown();
         } else if (world.purpurConfig.entitiesCanUsePortals || this instanceof EntityPlayer) { // Purpur
             if (!this.world.isClientSide && !blockposition.equals(this.ac)) {
                 this.ac = blockposition.immutableCopy();
+                portalPos = BlockPosition.ZERO; // Purpur
             }
 
             this.inPortal = true;

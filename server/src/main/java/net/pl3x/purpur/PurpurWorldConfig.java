@@ -408,6 +408,11 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean playerFixStuckPortal = false;
+    private void playerFixStuckPortal() {
+        playerFixStuckPortal = getBoolean("gameplay-mechanics.player.fix-stuck-in-portal", playerFixStuckPortal);
+    }
+
     public boolean teleportIfOutsideBorder = false;
     private void teleportIfOutsideBorder() {
         teleportIfOutsideBorder = getBoolean("gameplay-mechanics.player.teleport-if-outside-border", teleportIfOutsideBorder);

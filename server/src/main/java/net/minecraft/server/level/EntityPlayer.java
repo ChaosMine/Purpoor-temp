@@ -1300,6 +1300,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 playerlist.d(this);
                 worldserver1.removePlayer(this);
                 this.dead = false;
+                this.portalPos = MCUtil.toBlockPosition(exit); // Purpur
 
                 // CraftBukkit end
                 this.spawnIn(worldserver);
