@@ -87,7 +87,7 @@ public abstract class EntityFireball extends IProjectile {
 
                 // CraftBukkit start - Fire ProjectileHitEvent
                 if (this.dead) {
-                    CraftEventFactory.callProjectileHitEvent(this, movingobjectposition);
+                    // CraftEventFactory.callProjectileHitEvent(this, movingobjectposition); // Paper - this is an undesired duplicate event
                 }
                 // CraftBukkit end
             }
