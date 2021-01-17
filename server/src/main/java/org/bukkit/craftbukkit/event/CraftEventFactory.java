@@ -71,6 +71,7 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
+import io.papermc.paper.event.block.BlockPreDispenseEvent; // Paper
 import org.bukkit.Bukkit;
 import org.bukkit.Location; // Paper
 import org.bukkit.Material;
@@ -1812,6 +1813,12 @@ public class CraftEventFactory {
     public static boolean handleBlockFailedDispenseEvent(WorldServer worldserver, BlockPosition blockposition) {
         org.bukkit.block.Block block = worldserver.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
         BlockFailedDispenseEvent event = new BlockFailedDispenseEvent(block);
+        return event.callEvent();
+    }
+
+    public static boolean handleBlockPreDispenseEvent(WorldServer worldserver, BlockPosition blockposition, ItemStack itemStack, int slot) {
+        org.bukkit.block.Block block = worldserver.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+        BlockPreDispenseEvent event = new BlockPreDispenseEvent(block, org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemStack), slot);
         return event.callEvent();
     }
     // Paper end
