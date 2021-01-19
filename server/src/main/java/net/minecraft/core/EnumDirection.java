@@ -53,6 +53,11 @@ public enum EnumDirection implements INamable {
     }, (enumdirection, enumdirection1) -> {
         throw new IllegalArgumentException("Duplicate keys");
     }, Long2ObjectOpenHashMap::new));
+    // Paper start
+    private final int adjX;
+    private final int adjY;
+    private final int adjZ;
+    // Paper end
 
     private EnumDirection(int i, int j, int k, String s, EnumDirection.EnumAxisDirection enumdirection_enumaxisdirection, EnumDirection.EnumAxis enumdirection_enumaxis, BaseBlockPosition baseblockposition) {
         this.g = i;
@@ -62,6 +67,11 @@ public enum EnumDirection implements INamable {
         this.k = enumdirection_enumaxis;
         this.l = enumdirection_enumaxisdirection;
         this.m = baseblockposition;
+        // Paper start
+        this.adjX = baseblockposition.getX();
+        this.adjY = baseblockposition.getY();
+        this.adjZ = baseblockposition.getZ();
+        // Paper end
     }
 
     public static EnumDirection[] a(Entity entity) {
@@ -137,15 +147,15 @@ public enum EnumDirection implements INamable {
     }
 
     public int getAdjacentX() {
-        return this.m.getX();
+        return this.adjX; // Paper
     }
 
     public int getAdjacentY() {
-        return this.m.getY();
+        return this.adjY; // Paper
     }
 
     public int getAdjacentZ() {
-        return this.m.getZ();
+        return this.adjZ; // Paper
     }
 
     public String m() {
