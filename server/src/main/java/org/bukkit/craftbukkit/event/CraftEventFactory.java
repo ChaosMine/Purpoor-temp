@@ -401,13 +401,30 @@ public class CraftEventFactory {
     }
 
     public static void handleBlockDropItemEvent(Block block, BlockState state, EntityPlayer player, List<EntityItem> items) {
-        BlockDropItemEvent event = new BlockDropItemEvent(block, state, player.getBukkitEntity(), Lists.transform(items, (item) -> (org.bukkit.entity.Item) item.getBukkitEntity()));
+        // Paper start
+        List<Item> list = new ArrayList<>();
+        for (EntityItem item : items) {
+            list.add((Item) item.getBukkitEntity());
+        }
+        BlockDropItemEvent event = new BlockDropItemEvent(block, state, player.getBukkitEntity(), list);
+        // Paper end
         Bukkit.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
-            for (EntityItem item : items) {
-                item.world.addEntity(item);
+            // Paper start
+            for (Item bukkit : list) {
+                if (!bukkit.isValid()) {
+                    Entity item = ((org.bukkit.craftbukkit.entity.CraftItem) bukkit).getHandle();
+                    item.world.addEntity(item);
+                }
             }
+        } else {
+            for (Item bukkit : list) {
+                if (bukkit.isValid()) {
+                    bukkit.remove();
+                }
+            }
+            // Paper end
         }
     }
 
