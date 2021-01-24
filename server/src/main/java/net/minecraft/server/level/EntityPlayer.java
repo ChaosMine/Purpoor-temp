@@ -1118,6 +1118,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 this.world.getServer().getPluginManager().callEvent(changeEvent);
                 // CraftBukkit end
             }
+            // Paper start
+            if (this.isBlocking()) {
+                this.clearActiveItem();
+            }
+            // Paper end
 
             return this;
         }
