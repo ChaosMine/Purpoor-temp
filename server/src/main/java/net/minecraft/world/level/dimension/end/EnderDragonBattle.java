@@ -57,6 +57,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeature
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.papermc.paper.event.block.DragonEggFormEvent; // Paper - DragonEggFormEvent
 
 public class EnderDragonBattle {
 
@@ -400,9 +401,24 @@ public class EnderDragonBattle {
             this.bossBattle.setVisible(false);
             this.generateExitPortal(true);
             this.n();
+            // Paper start - DragonEggFormEvent
+            BlockPosition eggPosition = this.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, WorldGenEndTrophy.getPosition());
+            org.bukkit.craftbukkit.block.CraftBlock eggBlock = org.bukkit.craftbukkit.block.CraftBlock.at(this.world, eggPosition);
+            org.bukkit.craftbukkit.block.CraftBlockState eggState = new org.bukkit.craftbukkit.block.CraftBlockState(eggBlock);
+            eggState.setData(Blocks.DRAGON_EGG.getBlockData());
+            DragonEggFormEvent eggEvent = new DragonEggFormEvent(eggBlock, eggState,
+                    new org.bukkit.craftbukkit.boss.CraftDragonBattle(this));
+            // Paper end - DragonEggFormEvent
             if (this.world.paperConfig.enderDragonsDeathAlwaysPlacesDragonEgg || !this.previouslyKilled) { // Paper - always place dragon egg
-                this.world.setTypeUpdate(this.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, WorldGenEndTrophy.a), Blocks.DRAGON_EGG.getBlockData());
+                // Paper start - DragonEggFormEvent
+                //this.world.setTypeUpdate(this.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, WorldGenEndTrophy.a), Blocks.DRAGON_EGG.getBlockData());
+            } else {
+                eggEvent.setCancelled(true);
             }
+            if (eggEvent.callEvent()) {
+                eggEvent.getNewState().update(true);
+            }
+            // Paper end - DragonEggFormEvent
 
             this.previouslyKilled = true;
             this.dragonKilled = true;

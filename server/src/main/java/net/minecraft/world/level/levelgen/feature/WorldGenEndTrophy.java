@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeature
 
 public class WorldGenEndTrophy extends WorldGenerator<WorldGenFeatureEmptyConfiguration> {
 
-    public static final BlockPosition a = BlockPosition.ZERO;
+    public static final BlockPosition a = BlockPosition.ZERO; public static BlockPosition getPosition() { return a; } // Paper - OBFHELPER
     private final boolean ab;
 
     public WorldGenEndTrophy(boolean flag) {
@@ -22,7 +22,7 @@ public class WorldGenEndTrophy extends WorldGenerator<WorldGenFeatureEmptyConfig
         this.ab = flag;
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) { // Paper - decompile fix
         Iterator iterator = BlockPosition.a(new BlockPosition(blockposition.getX() - 4, blockposition.getY() - 1, blockposition.getZ() - 4), new BlockPosition(blockposition.getX() + 4, blockposition.getY() + 32, blockposition.getZ() + 4)).iterator();
 
         while (iterator.hasNext()) {
