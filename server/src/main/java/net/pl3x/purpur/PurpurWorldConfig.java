@@ -253,10 +253,12 @@ public class PurpurWorldConfig {
         idleTimeoutUpdateTabList = getBoolean("gameplay-mechanics.player.idle-timeout.update-tab-list", idleTimeoutUpdateTabList);
     }
 
+    public boolean infinityWorksWithoutArrows = false;
     public boolean infinityWorksWithNormalArrows = true;
     public boolean infinityWorksWithSpectralArrows = false;
     public boolean infinityWorksWithTippedArrows = false;
     private void infinityArrowsSettings() {
+        infinityWorksWithoutArrows = getBoolean("gameplay-mechanics.infinity-bow.works-without-arrows", infinityWorksWithoutArrows);
         infinityWorksWithNormalArrows = getBoolean("gameplay-mechanics.infinity-bow.normal-arrows", infinityWorksWithNormalArrows);
         infinityWorksWithSpectralArrows = getBoolean("gameplay-mechanics.infinity-bow.spectral-arrows", infinityWorksWithSpectralArrows);
         infinityWorksWithTippedArrows = getBoolean("gameplay-mechanics.infinity-bow.tipped-arrows", infinityWorksWithTippedArrows);

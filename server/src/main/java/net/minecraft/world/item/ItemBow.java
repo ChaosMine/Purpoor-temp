@@ -130,7 +130,7 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
         ItemStack itemstack = entityhuman.b(enumhand);
         boolean flag = !entityhuman.f(itemstack).isEmpty();
 
-        if (!entityhuman.abilities.canInstantlyBuild && !flag) {
+        if (!(world.purpurConfig.infinityWorksWithoutArrows && EnchantmentManager.getEnchantmentLevel(Enchantments.ARROW_INFINITE, itemstack) > 0) && !entityhuman.abilities.canInstantlyBuild && !flag) { // Purpur
             return InteractionResultWrapper.fail(itemstack);
         } else {
             entityhuman.c(enumhand);
