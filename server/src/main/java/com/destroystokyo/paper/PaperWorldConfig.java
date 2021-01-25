@@ -801,4 +801,9 @@ public class PaperWorldConfig {
     private void enderDragonsDeathAlwaysPlacesDragonEgg() {
         enderDragonsDeathAlwaysPlacesDragonEgg = getBoolean("ender-dragons-death-always-places-dragon-egg", enderDragonsDeathAlwaysPlacesDragonEgg);
     }
+
+    public boolean updatePathfindingOnBlockUpdate = true;
+    private void setUpdatePathfindingOnBlockUpdate() {
+        updatePathfindingOnBlockUpdate = getBoolean("update-pathfinding-on-block-update", this.updatePathfindingOnBlockUpdate);
+    }
 }

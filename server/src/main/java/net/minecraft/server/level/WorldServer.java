@@ -1684,6 +1684,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     @Override
     public void notify(BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, int i) {
         this.getChunkProvider().flagDirty(blockposition);
+        if(this.paperConfig.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
         VoxelShape voxelshape = iblockdata.getCollisionShape(this, blockposition);
         VoxelShape voxelshape1 = iblockdata1.getCollisionShape(this, blockposition);
 
@@ -1712,6 +1713,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
             this.tickingEntities = wasTicking; // Paper
         }
+        } // Paper
     }
 
     @Override
