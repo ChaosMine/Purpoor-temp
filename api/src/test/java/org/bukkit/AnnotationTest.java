@@ -26,6 +26,12 @@ import org.objectweb.asm.tree.ParameterNode;
 public class AnnotationTest {
 
     private static final String[] ACCEPTED_ANNOTATIONS = {
+        // Paper start
+        "Lorg/checkerframework/checker/nullness/qual/Nullable;",
+        "Lorg/checkerframework/checker/nullness/qual/NonNull;",
+        "Lorg/checkerframework/checker/nullness/qual/PolyNull;",
+        "Lorg/checkerframework/checker/nullness/qual/MonotonicNonNull;",
+        // Paper end
         "Lorg/jetbrains/annotations/Nullable;",
         "Lorg/jetbrains/annotations/NotNull;",
         "Lorg/jetbrains/annotations/Contract;",
@@ -66,7 +72,7 @@ public class AnnotationTest {
                     continue;
                 }
 
-                if (mustBeAnnotated(Type.getReturnType(method.desc)) && !isWellAnnotated(method.invisibleAnnotations)) {
+                if (mustBeAnnotated(Type.getReturnType(method.desc)) && !isWellAnnotated(method.invisibleAnnotations) && !isWellAnnotated(method.visibleTypeAnnotations)) { // Paper - also check visible type annotations
                     warn(errors, clazz, method, "return value");
                 }
 
@@ -174,7 +180,7 @@ public class AnnotationTest {
         return true;
     }
 
-    private static boolean isWellAnnotated(@Nullable List<AnnotationNode> annotations) {
+    private static boolean isWellAnnotated(@Nullable List<? extends AnnotationNode> annotations) { // Paper - allow children of AnnotationNode
         if (annotations == null) {
             return false;
         }
