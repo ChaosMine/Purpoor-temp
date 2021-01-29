@@ -88,6 +88,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
+import org.bukkit.event.player.PlayerUnleashEntityEvent; // Paper
 // CraftBukkit end
 
 public abstract class EntityInsentient extends EntityLiving {
@@ -1207,12 +1208,15 @@ public abstract class EntityInsentient extends EntityLiving {
             return EnumInteractionResult.PASS;
         } else if (this.getLeashHolder() == entityhuman) {
             // CraftBukkit start - fire PlayerUnleashEntityEvent
-            if (CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman).isCancelled()) {
+            // Paper start - drop leash variable
+            PlayerUnleashEntityEvent event = CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman, !entityhuman.abilities.canInstantlyBuild);
+            if (event.isCancelled()) {
+                // Paper end
                 ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(this, this.getLeashHolder()));
                 return EnumInteractionResult.PASS;
             }
             // CraftBukkit end
-            this.unleash(true, !entityhuman.abilities.canInstantlyBuild);
+            this.unleash(true, event.isDropLeash()); // Paper - drop leash variable
             return EnumInteractionResult.a(this.world.isClientSide);
         } else {
             EnumInteractionResult enuminteractionresult = this.c(entityhuman, enumhand);
@@ -1366,8 +1370,11 @@ public abstract class EntityInsentient extends EntityLiving {
 
         if (this.leashHolder != null) {
             if (!this.isAlive() || !this.leashHolder.isAlive()) {
-                this.world.getServer().getPluginManager().callEvent(new EntityUnleashEvent(this.getBukkitEntity(), (!this.isAlive()) ? UnleashReason.PLAYER_UNLEASH : UnleashReason.HOLDER_GONE)); // CraftBukkit
-                this.unleash(true, true);
+                // Paper start - drop leash variable
+                EntityUnleashEvent event = new EntityUnleashEvent(this.getBukkitEntity(), (!this.isAlive()) ? UnleashReason.PLAYER_UNLEASH : UnleashReason.HOLDER_GONE, true);
+                this.world.getServer().getPluginManager().callEvent(event); // CraftBukkit
+                this.unleash(true, event.isDropLeash());
+                // Paper end
             }
 
         }
@@ -1435,8 +1442,11 @@ public abstract class EntityInsentient extends EntityLiving {
         boolean flag1 = super.a(entity, flag);
 
         if (flag1 && this.isLeashed()) {
-            this.world.getServer().getPluginManager().callEvent(new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.UNKNOWN)); // CraftBukkit
-            this.unleash(true, true);
+            // Paper start - drop leash variable
+            EntityUnleashEvent event = new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.UNKNOWN, true);
+            this.world.getServer().getPluginManager().callEvent(event); // CraftBukkit
+            this.unleash(true, event.isDropLeash());
+            // Paper end
         }
 
         return flag1;
@@ -1638,7 +1648,10 @@ public abstract class EntityInsentient extends EntityLiving {
     @Override
     protected void bN() {
         super.bN();
-        this.world.getServer().getPluginManager().callEvent(new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.UNKNOWN)); // CraftBukkit
-        this.unleash(true, false);
+        // Paper start - drop leash variable
+        EntityUnleashEvent event = new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.UNKNOWN, false);
+        this.world.getServer().getPluginManager().callEvent(event); // CraftBukkit
+        this.unleash(true, event.isDropLeash());
+        // Paper end
     }
 }

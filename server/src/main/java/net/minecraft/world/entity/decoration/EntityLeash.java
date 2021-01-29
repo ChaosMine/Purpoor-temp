@@ -30,6 +30,8 @@ import net.minecraft.server.level.WorldServer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 // CraftBukkit end
 
+import org.bukkit.event.player.PlayerUnleashEntityEvent; // Paper
+
 public class EntityLeash extends EntityHanging {
 
     public EntityLeash(EntityTypes<? extends EntityLeash> entitytypes, World world) {
@@ -125,11 +127,14 @@ public class EntityLeash extends EntityHanging {
                         entityinsentient = (EntityInsentient) iterator.next();
                         if (entityinsentient.isLeashed() && entityinsentient.getLeashHolder() == this) {
                             // CraftBukkit start
-                            if (CraftEventFactory.callPlayerUnleashEntityEvent(entityinsentient, entityhuman).isCancelled()) {
+                            // Paper start - drop leash variable
+                            PlayerUnleashEntityEvent event = CraftEventFactory.callPlayerUnleashEntityEvent(entityinsentient, entityhuman, !entityhuman.abilities.canInstantlyBuild);
+                            if (event.isCancelled()) {
+                                // Paper end
                                 die = false;
                                 continue;
                             }
-                            entityinsentient.unleash(true, !entityhuman.abilities.canInstantlyBuild); // false -> survival mode boolean
+                            entityinsentient.unleash(true, event.isDropLeash()); // false -> survival mode boolean // Paper - drop leash variable
                             // CraftBukkit end
                         }
                     }
