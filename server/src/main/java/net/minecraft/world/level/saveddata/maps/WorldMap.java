@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // CraftBukkit start
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import java.util.UUID;
 
 import org.bukkit.craftbukkit.CraftServer;
@@ -473,7 +474,7 @@ public class WorldMap extends PersistentBase {
             for ( org.bukkit.map.MapCursor cursor : render.cursors) {
 
                 if (cursor.isVisible()) {
-                    icons.add(new MapIcon(MapIcon.Type.a(cursor.getRawType()), cursor.getX(), cursor.getY(), cursor.getDirection(), CraftChatMessage.fromStringOrNull(cursor.getCaption())));
+                    icons.add(new MapIcon(MapIcon.Type.a(cursor.getRawType()), cursor.getX(), cursor.getY(), cursor.getDirection(), PaperAdventure.asVanilla(cursor.caption()))); // Paper - Adventure
                 }
             }
 

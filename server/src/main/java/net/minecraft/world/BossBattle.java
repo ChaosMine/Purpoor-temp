@@ -1,5 +1,6 @@
 package net.minecraft.world;
 
+import io.papermc.paper.adventure.PaperAdventure;
 import java.util.UUID;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -14,6 +15,7 @@ public abstract class BossBattle {
     protected boolean e;
     protected boolean f;
     protected boolean g;
+    public net.kyori.adventure.bossbar.BossBar adventure; // Paper
 
     public BossBattle(UUID uuid, IChatBaseComponent ichatbasecomponent, BossBattle.BarColor bossbattle_barcolor, BossBattle.BarStyle bossbattle_barstyle) {
         this.h = uuid;
@@ -28,61 +30,75 @@ public abstract class BossBattle {
     }
 
     public IChatBaseComponent j() {
+        if(this.adventure != null) return PaperAdventure.asVanilla(this.adventure.name()); // Paper
         return this.title;
     }
 
     public void a(IChatBaseComponent ichatbasecomponent) {
+        if (this.adventure != null) this.adventure.name(PaperAdventure.asAdventure(ichatbasecomponent)); // Paper
         this.title = ichatbasecomponent;
     }
 
     public float getProgress() {
+        if (this.adventure != null) return this.adventure.progress(); // Paper
         return this.b;
     }
 
     public void a(float f) {
+        if (this.adventure != null) this.adventure.progress(f); // Paper
         this.b = f;
     }
 
     public BossBattle.BarColor l() {
+        if (this.adventure != null) return PaperAdventure.asVanilla(this.adventure.color()); // Paper
         return this.color;
     }
 
     public void a(BossBattle.BarColor bossbattle_barcolor) {
+        if(this.adventure != null) this.adventure.color(PaperAdventure.asAdventure(bossbattle_barcolor)); // Paper
         this.color = bossbattle_barcolor;
     }
 
     public BossBattle.BarStyle m() {
+        if(this.adventure != null) return PaperAdventure.asVanilla(this.adventure.overlay()); // Paper
         return this.style;
     }
 
     public void a(BossBattle.BarStyle bossbattle_barstyle) {
+        if(this.adventure != null) this.adventure.overlay(PaperAdventure.asAdventure(bossbattle_barstyle)); // Paper
         this.style = bossbattle_barstyle;
     }
 
     public boolean isDarkenSky() {
+        if(this.adventure != null) return this.adventure.hasFlag(net.kyori.adventure.bossbar.BossBar.Flag.DARKEN_SCREEN); // Paper
         return this.e;
     }
 
     public BossBattle a(boolean flag) {
+        if(this.adventure != null) PaperAdventure.setFlag(this.adventure, net.kyori.adventure.bossbar.BossBar.Flag.DARKEN_SCREEN, flag); // Paper
         this.e = flag;
         return this;
     }
 
     public boolean isPlayMusic() {
+        if(this.adventure != null) return this.adventure.hasFlag(net.kyori.adventure.bossbar.BossBar.Flag.PLAY_BOSS_MUSIC); // Paper
         return this.f;
     }
 
     public BossBattle b(boolean flag) {
+        if(this.adventure != null) PaperAdventure.setFlag(this.adventure, net.kyori.adventure.bossbar.BossBar.Flag.PLAY_BOSS_MUSIC, flag); // Paper
         this.f = flag;
         return this;
     }
 
     public BossBattle c(boolean flag) {
+        if(this.adventure != null) PaperAdventure.setFlag(this.adventure, net.kyori.adventure.bossbar.BossBar.Flag.CREATE_WORLD_FOG, flag); // Paper
         this.g = flag;
         return this;
     }
 
     public boolean isCreateFog() {
+        if(this.adventure != null) return this.adventure.hasFlag(net.kyori.adventure.bossbar.BossBar.Flag.CREATE_WORLD_FOG); // Paper
         return this.g;
     }
 

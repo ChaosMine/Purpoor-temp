@@ -10,6 +10,7 @@ public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
 
     private PacketPlayOutTitle.EnumTitleAction a;
     private IChatBaseComponent b;
+    public net.kyori.adventure.text.Component adventure$text; // Paper
     private int c;
     private int d;
     private int e;
@@ -51,6 +52,11 @@ public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.a((Enum) this.a);
         if (this.a == PacketPlayOutTitle.EnumTitleAction.TITLE || this.a == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || this.a == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
+            // Paper start
+            if (this.adventure$text != null) {
+                packetdataserializer.writeComponent(this.adventure$text);
+            } else
+            // Paper end
             packetdataserializer.a(this.b);
         }
 

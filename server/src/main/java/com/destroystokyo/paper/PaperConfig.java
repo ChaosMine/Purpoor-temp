@@ -217,4 +217,9 @@ public class PaperConfig {
                 " - Length: " + timeSummary(Timings.getHistoryLength() / 20) +
                 " - Server Name: " + timingsServerName);
     }
+
+    public static boolean useDisplayNameInQuit = false;
+    private static void useDisplayNameInQuit() {
+        useDisplayNameInQuit = getBoolean("use-display-name-in-quit-message", useDisplayNameInQuit);
+    }
 }

@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack; // CraftBukkit
 public class PacketDataSerializer extends ByteBuf {
 
     private final ByteBuf a;
+    public java.util.Locale adventure$locale; // Paper
 
     public PacketDataSerializer(ByteBuf bytebuf) {
         this.a = bytebuf;
@@ -165,8 +167,15 @@ public class PacketDataSerializer extends ByteBuf {
         return IChatBaseComponent.ChatSerializer.a(this.e(262144));
     }
 
+    // Paper start
+    public PacketDataSerializer writeComponent(final net.kyori.adventure.text.Component component) {
+        return this.writeUtf(PaperAdventure.asJsonString(component, this.adventure$locale), 262144);
+    }
+    // Paper end
+
     public PacketDataSerializer a(IChatBaseComponent ichatbasecomponent) {
-        return this.a(IChatBaseComponent.ChatSerializer.a(ichatbasecomponent), 262144);
+        //return this.a(IChatBaseComponent.ChatSerializer.a(ichatbasecomponent), 262144); // Paper - comment
+        return this.writeUtf(PaperAdventure.asJsonString(ichatbasecomponent, this.adventure$locale), 262144); // Paper
     }
 
     public <T extends Enum<T>> T a(Class<T> oclass) {
@@ -349,6 +358,7 @@ public class PacketDataSerializer extends ByteBuf {
         return this.a(s, 32767);
     }
 
+    public PacketDataSerializer writeUtf(final String string, final int maxLength) { return this.a(string, maxLength); } // Paper - OBFHELPER
     public PacketDataSerializer a(String s, int i) {
         byte[] abyte = s.getBytes(StandardCharsets.UTF_8);
 

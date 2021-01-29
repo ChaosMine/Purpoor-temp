@@ -867,6 +867,7 @@ public final class ItemStack {
     }
     // CraftBukkit end
 
+    public IChatBaseComponent displayName() { return this.C(); } // Paper - OBFHELPER
     public IChatBaseComponent C() {
         IChatMutableComponent ichatmutablecomponent = (new ChatComponentText("")).addSibling(this.getName());
 

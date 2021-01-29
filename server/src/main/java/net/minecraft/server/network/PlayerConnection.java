@@ -159,6 +159,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // CraftBukkit start
+import io.papermc.paper.adventure.ChatProcessor; // Paper
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity;
@@ -390,21 +392,24 @@ public class PlayerConnection implements PacketListenerPlayIn {
         return this.minecraftServer.a(this.player.getProfile());
     }
 
-    // CraftBukkit start
-    @Deprecated
-    public void disconnect(IChatBaseComponent ichatbasecomponent) {
-        disconnect(CraftChatMessage.fromComponent(ichatbasecomponent));
-    }
-    // CraftBukkit end
-
     public void disconnect(String s) {
+        // Paper start
+        this.disconnect(PaperAdventure.LEGACY_SECTION_UXRC.deserialize(s));
+    }
+
+    public void disconnect(final IChatBaseComponent reason) {
+        this.disconnect(PaperAdventure.asAdventure(reason));
+    }
+
+    public void disconnect(net.kyori.adventure.text.Component reason) {
+        // Paper end
         // CraftBukkit start - fire PlayerKickEvent
         if (this.processedDisconnect) {
             return;
         }
-        String leaveMessage = EnumChatFormat.YELLOW + this.player.getName() + " left the game.";
+        net.kyori.adventure.text.Component leaveMessage = net.kyori.adventure.text.Component.translatable("multiplayer.player.left", net.kyori.adventure.text.format.NamedTextColor.YELLOW, this.player.getBukkitEntity().displayName()); // Paper - Adventure
 
-        PlayerKickEvent event = new PlayerKickEvent(this.server.getPlayer(this.player), s, leaveMessage);
+        PlayerKickEvent event = new PlayerKickEvent(this.server.getPlayer(this.player), reason, leaveMessage); // Paper - Adventure
 
         if (this.server.getServer().isRunning()) {
             this.server.getPluginManager().callEvent(event);
@@ -415,8 +420,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             return;
         }
         // Send the possibly modified leave message
-        s = event.getReason();
-        final IChatBaseComponent ichatbasecomponent = CraftChatMessage.fromString(s, true)[0];
+        final IChatBaseComponent ichatbasecomponent = PaperAdventure.asVanilla(event.reason()); // Paper - Adventure
         // CraftBukkit end
 
         this.networkManager.sendPacket(new PacketPlayOutKickDisconnect(ichatbasecomponent), (future) -> {
@@ -1633,9 +1637,11 @@ public class PlayerConnection implements PacketListenerPlayIn {
         */
 
         this.player.p();
-        String quitMessage = this.minecraftServer.getPlayerList().disconnect(this.player);
-        if ((quitMessage != null) && (quitMessage.length() > 0)) {
-            this.minecraftServer.getPlayerList().sendMessage(CraftChatMessage.fromString(quitMessage));
+        // Paper start - Adventure
+        net.kyori.adventure.text.Component quitMessage = this.minecraftServer.getPlayerList().disconnect(this.player);
+        if ((quitMessage != null) && !quitMessage.equals(net.kyori.adventure.text.Component.empty())) {
+            this.minecraftServer.getPlayerList().sendMessage(PaperAdventure.asVanilla(quitMessage));
+            // Paper end
         }
         // CraftBukkit end
         ITextFilter itextfilter = this.player.Q();
@@ -1851,8 +1857,13 @@ public class PlayerConnection implements PacketListenerPlayIn {
             this.handleCommand(s);
         } else if (this.player.getChatFlags() == EnumChatVisibility.SYSTEM) {
             // Do nothing, this is coming from a plugin
-        } else {
-            Player player = this.getPlayer();
+        // Paper start
+        } else if (true) {
+            final ChatProcessor cp = new ChatProcessor(this.minecraftServer, this.player, s, async);
+            cp.process();
+        // Paper end
+        } else if (false) { // Paper
+            Player player = this.getPlayer(); // Paper
             AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async, player, s, new LazyPlayerSet(minecraftServer));
             this.server.getPluginManager().callEvent(event);
 
@@ -2670,21 +2681,20 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 return;
             }
 
-            // CraftBukkit start
-            Player player = this.server.getPlayer(this.player);
-            int x = packetplayinupdatesign.b().getX();
-            int y = packetplayinupdatesign.b().getY();
-            int z = packetplayinupdatesign.b().getZ();
-            String[] lines = new String[4];
+            // CraftBukkit start // Paper start - Adventure
+            List<net.kyori.adventure.text.Component> lines = new java.util.ArrayList<>();
 
             for (int i = 0; i < list.size(); ++i) {
-                lines[i] = EnumChatFormat.a(new ChatComponentText(EnumChatFormat.a((String) list.get(i))).getString());
+                lines.add(net.kyori.adventure.text.Component.text(list.get(i)));
             }
-            SignChangeEvent event = new SignChangeEvent((org.bukkit.craftbukkit.block.CraftBlock) player.getWorld().getBlockAt(x, y, z), this.server.getPlayer(this.player), lines);
+            SignChangeEvent event = new SignChangeEvent(org.bukkit.craftbukkit.block.CraftBlock.at(worldserver, blockposition), this.getPlayer(), lines);
             this.server.getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                System.arraycopy(org.bukkit.craftbukkit.block.CraftSign.sanitizeLines(event.getLines()), 0, tileentitysign.lines, 0, 4);
+                for (int i = 0; i < 4; i++) {
+                    tileentitysign.a(i, PaperAdventure.asVanilla(event.line(i)));
+                }
+                // Paper end
                 tileentitysign.isEditable = false;
              }
             // CraftBukkit end

@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
+import io.papermc.paper.adventure.PaperAdventure;
 import java.io.File;
 import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
@@ -92,6 +93,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // CraftBukkit start
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -255,7 +257,7 @@ public abstract class PlayerList {
         }
         // CraftBukkit start
         chatmessage.a(EnumChatFormat.YELLOW);
-        String joinMessage = CraftChatMessage.fromComponent(chatmessage);
+        IChatBaseComponent joinMessage = chatmessage; // Paper - Adventure
 
         playerconnection.a(entityplayer.locX(), entityplayer.locY(), entityplayer.locZ(), entityplayer.yaw, entityplayer.pitch);
         this.players.add(entityplayer);
@@ -264,19 +266,18 @@ public abstract class PlayerList {
         // this.sendAll(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, new EntityPlayer[]{entityplayer})); // CraftBukkit - replaced with loop below
 
         // CraftBukkit start
-        PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(cserver.getPlayer(entityplayer), joinMessage);
+        PlayerJoinEvent playerJoinEvent = new org.bukkit.event.player.PlayerJoinEvent(cserver.getPlayer(entityplayer), PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
         cserver.getPluginManager().callEvent(playerJoinEvent);
 
         if (!entityplayer.playerConnection.networkManager.isConnected()) {
             return;
         }
 
-        joinMessage = playerJoinEvent.getJoinMessage();
+        final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
 
-        if (joinMessage != null && joinMessage.length() > 0) {
-            for (IChatBaseComponent line : org.bukkit.craftbukkit.util.CraftChatMessage.fromString(joinMessage)) {
-                server.getPlayerList().sendAll(new PacketPlayOutChat(line, ChatMessageType.SYSTEM, SystemUtils.b));
-            }
+        if (jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure
+            joinMessage = PaperAdventure.asVanilla(jm); // Paper - Adventure
+            server.getPlayerList().sendAll(new PacketPlayOutChat(joinMessage, ChatMessageType.SYSTEM, SystemUtils.b)); // Paper - Adventure
         }
         // CraftBukkit end
 
@@ -473,7 +474,7 @@ public abstract class PlayerList {
 
     }
 
-    public String disconnect(EntityPlayer entityplayer) { // CraftBukkit - return string
+    public net.kyori.adventure.text.Component disconnect(EntityPlayer entityplayer) { // Paper - return Component
         WorldServer worldserver = entityplayer.getWorldServer();
 
         entityplayer.a(StatisticList.LEAVE_GAME);
@@ -484,7 +485,7 @@ public abstract class PlayerList {
             entityplayer.closeInventory();
         }
 
-        PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(cserver.getPlayer(entityplayer), "\u00A7e" + entityplayer.getName() + " left the game");
+        PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(cserver.getPlayer(entityplayer), net.kyori.adventure.text.Component.translatable("multiplayer.player.left", net.kyori.adventure.text.format.NamedTextColor.YELLOW, com.destroystokyo.paper.PaperConfig.useDisplayNameInQuit ? entityplayer.getBukkitEntity().displayName() : net.kyori.adventure.text.Component.text(entityplayer.getName())));
         cserver.getPluginManager().callEvent(playerQuitEvent);
         entityplayer.getBukkitEntity().disconnect(playerQuitEvent.getQuitMessage());
 
@@ -545,7 +546,7 @@ public abstract class PlayerList {
         cserver.getScoreboardManager().removePlayer(entityplayer.getBukkitEntity());
         // CraftBukkit end
 
-        return playerQuitEvent.getQuitMessage(); // CraftBukkit
+        return playerQuitEvent.quitMessage(); // Paper - Adventure
     }
 
     // CraftBukkit start - Whole method, SocketAddress to LoginListener, added hostname to signature, return EntityPlayer
@@ -591,10 +592,10 @@ public abstract class PlayerList {
             }
 
             // return chatmessage;
-            if (!gameprofilebanentry.hasExpired()) event.disallow(PlayerLoginEvent.Result.KICK_BANNED, CraftChatMessage.fromComponent(chatmessage)); // Spigot
+            if (!gameprofilebanentry.hasExpired()) event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Spigot // Paper - Adventure
         } else if (!this.isWhitelisted(gameprofile)) {
             chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted");
-            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot
+            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, PaperAdventure.LEGACY_SECTION_UXRC.deserialize(org.spigotmc.SpigotConfig.whitelistMessage)); // Spigot // Paper - Adventure
         } else if (getIPBans().isBanned(socketaddress) && !getIPBans().get(socketaddress).hasExpired()) {
             IpBanEntry ipbanentry = this.l.get(socketaddress);
 
@@ -604,17 +605,17 @@ public abstract class PlayerList {
             }
 
             // return chatmessage;
-            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, CraftChatMessage.fromComponent(chatmessage));
+            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(chatmessage)); // Paper - Adventure
         } else {
             // return this.players.size() >= this.maxPlayers && !this.f(gameprofile) ? new ChatMessage("multiplayer.disconnect.server_full") : null;
             if (this.players.size() >= this.maxPlayers && !this.f(gameprofile)) {
-                event.disallow(PlayerLoginEvent.Result.KICK_FULL, org.spigotmc.SpigotConfig.serverFullMessage); // Spigot
+                event.disallow(PlayerLoginEvent.Result.KICK_FULL, PaperAdventure.LEGACY_SECTION_UXRC.deserialize(org.spigotmc.SpigotConfig.serverFullMessage)); // Spigot // Paper - Adventure
             }
         }
 
         cserver.getPluginManager().callEvent(event);
         if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
-            loginlistener.disconnect(event.getKickMessage());
+            loginlistener.disconnect(PaperAdventure.asVanilla(event.kickMessage())); // Paper - Adventure
             return null;
         }
         return entity;
@@ -1135,7 +1136,7 @@ public abstract class PlayerList {
     public void shutdown() {
         // CraftBukkit start - disconnect safely
         for (EntityPlayer player : this.players) {
-            player.playerConnection.disconnect(this.server.server.getShutdownMessage()); // CraftBukkit - add custom shutdown message
+            player.playerConnection.disconnect(this.server.server.shutdownMessage()); // CraftBukkit - add custom shutdown message // Paper - Adventure
         }
         // CraftBukkit end
 

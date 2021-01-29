@@ -1,5 +1,6 @@
 package net.minecraft.network.chat;
 
+import io.papermc.paper.adventure.AdventureComponent; // Paper
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -111,6 +112,7 @@ public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IC
             GsonBuilder gsonbuilder = new GsonBuilder();
 
             gsonbuilder.disableHtmlEscaping();
+            gsonbuilder.registerTypeAdapter(AdventureComponent.class, new AdventureComponent.Serializer()); // Paper
             gsonbuilder.registerTypeHierarchyAdapter(IChatBaseComponent.class, new IChatBaseComponent.ChatSerializer());
             gsonbuilder.registerTypeHierarchyAdapter(ChatModifier.class, new ChatModifier.ChatModifierSerializer());
             gsonbuilder.registerTypeAdapterFactory(new ChatTypeAdapterFactory());
@@ -263,6 +265,7 @@ public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IC
         }
 
         public JsonElement serialize(IChatBaseComponent ichatbasecomponent, Type type, JsonSerializationContext jsonserializationcontext) {
+            if (ichatbasecomponent instanceof AdventureComponent) return jsonserializationcontext.serialize(ichatbasecomponent); // Paper
             JsonObject jsonobject = new JsonObject();
 
             if (!ichatbasecomponent.getChatModifier().g()) {
@@ -351,10 +354,12 @@ public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IC
             return jsonobject;
         }
 
+        public static String componentToJson(final IChatBaseComponent component) { return a(component); } // Paper - OBFHELPER
         public static String a(IChatBaseComponent ichatbasecomponent) {
             return IChatBaseComponent.ChatSerializer.a.toJson(ichatbasecomponent);
         }
 
+        public static JsonElement toJsonTree(final IChatBaseComponent component) { return b(component); } // Paper - OBFHELPER
         public static JsonElement b(IChatBaseComponent ichatbasecomponent) {
             return IChatBaseComponent.ChatSerializer.a.toJsonTree(ichatbasecomponent);
         }
@@ -364,6 +369,7 @@ public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IC
             return (IChatMutableComponent) ChatDeserializer.a(IChatBaseComponent.ChatSerializer.a, s, IChatMutableComponent.class, false);
         }
 
+        public static @Nullable IChatBaseComponent fromJsonTree(final JsonElement json) { return a(json); } // Paper - OBFHELPER
         @Nullable
         public static IChatMutableComponent a(JsonElement jsonelement) {
             return (IChatMutableComponent) IChatBaseComponent.ChatSerializer.a.fromJson(jsonelement, IChatMutableComponent.class);

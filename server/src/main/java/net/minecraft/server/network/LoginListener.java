@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 // CraftBukkit start
 import net.minecraft.network.chat.ChatComponentText;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import org.bukkit.craftbukkit.util.Waitable;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
@@ -301,7 +302,7 @@ public class LoginListener implements PacketLoginInListener {
                         if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
                             final PlayerPreLoginEvent event = new PlayerPreLoginEvent(playerName, address, uniqueId);
                             if (asyncEvent.getResult() != PlayerPreLoginEvent.Result.ALLOWED) {
-                                event.disallow(asyncEvent.getResult(), asyncEvent.getKickMessage());
+                                event.disallow(asyncEvent.getResult(), asyncEvent.kickMessage()); // Paper - Adventure
                             }
                             Waitable<PlayerPreLoginEvent.Result> waitable = new Waitable<PlayerPreLoginEvent.Result>() {
                                 @Override
@@ -312,12 +313,12 @@ public class LoginListener implements PacketLoginInListener {
 
                             LoginListener.this.server.processQueue.add(waitable);
                             if (waitable.get() != PlayerPreLoginEvent.Result.ALLOWED) {
-                                disconnect(event.getKickMessage());
+                                disconnect(PaperAdventure.asVanilla(event.kickMessage())); // Paper - Adventure
                                 return;
                             }
                         } else {
                             if (asyncEvent.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-                                disconnect(asyncEvent.getKickMessage());
+                                disconnect(PaperAdventure.asVanilla(asyncEvent.kickMessage())); // Paper - Adventure
                                 return;
                             }
                         }

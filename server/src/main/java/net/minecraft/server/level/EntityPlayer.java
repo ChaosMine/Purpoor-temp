@@ -143,6 +143,7 @@ import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.block.BlockChest;
 import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.scores.Scoreboard;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -212,6 +213,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     // CraftBukkit start
     public String displayName;
+    public net.kyori.adventure.text.Component adventure$displayName; // Paper
     public IChatBaseComponent listName;
     public org.bukkit.Location compassTarget;
     public int newExp = 0;
@@ -242,6 +244,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
         // CraftBukkit start
         this.displayName = this.getName();
+        this.adventure$displayName = net.kyori.adventure.text.Component.text(this.getName()); // Paper
         this.canPickUpLoot = true;
         this.maxHealthCache = this.getMaxHealth();
     }
@@ -695,23 +698,17 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
         IChatBaseComponent defaultMessage = this.getCombatTracker().getDeathMessage();
 
-        String deathmessage = defaultMessage.getString();
-        org.bukkit.event.entity.PlayerDeathEvent event = CraftEventFactory.callPlayerDeathEvent(this, loot, deathmessage, keepInventory);
+        org.bukkit.event.entity.PlayerDeathEvent event = CraftEventFactory.callPlayerDeathEvent(this, loot, PaperAdventure.asAdventure(defaultMessage), defaultMessage.getString(), keepInventory); // Paper - Adventure
 
         // SPIGOT-943 - only call if they have an inventory open
         if (this.activeContainer != this.defaultContainer) {
             this.closeInventory();
         }
 
-        String deathMessage = event.getDeathMessage();
+        net.kyori.adventure.text.Component deathMessage = event.deathMessage() != null ? event.deathMessage() : net.kyori.adventure.text.Component.empty(); // Paper - Adventure
 
-        if (deathMessage != null && deathMessage.length() > 0 && flag) { // TODO: allow plugins to override?
-            IChatBaseComponent ichatbasecomponent;
-            if (deathMessage.equals(deathmessage)) {
-                ichatbasecomponent = this.getCombatTracker().getDeathMessage();
-            } else {
-                ichatbasecomponent = org.bukkit.craftbukkit.util.CraftChatMessage.fromStringOrNull(deathMessage);
-            }
+        if (deathMessage != null && deathMessage != net.kyori.adventure.text.Component.empty() && flag) { // Paper - Adventure // TODO: allow plugins to override?
+            IChatBaseComponent ichatbasecomponent = PaperAdventure.asVanilla(deathMessage); // Paper - Adventure
 
             this.playerConnection.a((Packet) (new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTITY_DIED, ichatbasecomponent)), (future) -> {
                 if (!future.isSuccess()) {
@@ -1669,6 +1666,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         this.a(ichatbasecomponent, ChatMessageType.SYSTEM, uuid);
     }
 
+    public void sendMessage(final IChatBaseComponent message, final ChatMessageType type, final UUID sender) { this.a(message, type, sender); } // Paper - OBFHELPER
     public void a(IChatBaseComponent ichatbasecomponent, ChatMessageType chatmessagetype, UUID uuid) {
         this.playerConnection.a((Packet) (new PacketPlayOutChat(ichatbasecomponent, chatmessagetype, uuid)), (future) -> {
             if (!future.isSuccess() && (chatmessagetype == ChatMessageType.GAME_INFO || chatmessagetype == ChatMessageType.SYSTEM)) {
@@ -1691,6 +1689,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     }
 
     public String locale = "en_us"; // CraftBukkit - add, lowercase
+    public java.util.Locale adventure$locale = java.util.Locale.US; // Paper
     public void a(PacketPlayInSettings packetplayinsettings) {
         // CraftBukkit start
         if (getMainHand() != packetplayinsettings.getMainHand()) {
@@ -1702,6 +1701,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             this.server.server.getPluginManager().callEvent(event);
         }
         this.locale = packetplayinsettings.locale;
+        // Paper start
+        this.adventure$locale = net.kyori.adventure.translation.Translator.parseLocale(this.locale);
+        this.playerConnection.networkManager.channel.attr(PaperAdventure.LOCALE_ATTRIBUTE).set(this.adventure$locale);
+        // Paper end
         this.clientViewDistance = packetplayinsettings.viewDistance;
         // CraftBukkit end
         this.bY = packetplayinsettings.d();

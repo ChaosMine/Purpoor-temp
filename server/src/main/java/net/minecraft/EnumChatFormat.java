@@ -61,6 +61,7 @@ public enum EnumChatFormat {
         return !this.A && this != EnumChatFormat.RESET;
     }
 
+    @Nullable public Integer getHexValue() { return this.e(); } // Paper - OBFHELPER
     @Nullable
     public Integer e() {
         return this.D;
@@ -83,6 +84,18 @@ public enum EnumChatFormat {
     public static EnumChatFormat b(@Nullable String s) {
         return s == null ? null : (EnumChatFormat) EnumChatFormat.w.get(c(s));
     }
+
+    // Paper start
+    @Nullable public static EnumChatFormat getByHexValue(int i) {
+        for (EnumChatFormat value : values()) {
+            if (value.getHexValue() != null && value.getHexValue() == i) {
+                return value;
+            }
+        }
+
+        return null;
+    }
+    // Paper end
 
     @Nullable
     public static EnumChatFormat a(int i) {

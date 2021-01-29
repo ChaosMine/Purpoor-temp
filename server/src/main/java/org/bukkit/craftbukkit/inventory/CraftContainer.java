@@ -39,6 +39,7 @@ public class CraftContainer extends Container {
 
     private final InventoryView view;
     private InventoryType cachedType;
+    private net.kyori.adventure.text.Component adventure$title; // Paper
     private String cachedTitle;
     private Container delegate;
     private final int cachedSize;
@@ -50,7 +51,9 @@ public class CraftContainer extends Container {
         IInventory top = ((CraftInventory) view.getTopInventory()).getInventory();
         PlayerInventory bottom = (PlayerInventory) ((CraftInventory) view.getBottomInventory()).getInventory();
         cachedType = view.getType();
-        cachedTitle = view.getTitle();
+        this.adventure$title = view.title(); // Paper
+        if (this.adventure$title == null) this.adventure$title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(view.getTitle()); // Paper
+        //cachedTitle = view.getTitle(); // Paper - comment
         cachedSize = getSize();
         setupSlots(top, bottom, player);
     }
@@ -77,6 +80,13 @@ public class CraftContainer extends Container {
                 return inventory.getType();
             }
 
+            // Paper start
+            @Override
+            public net.kyori.adventure.text.Component title() {
+                return inventory instanceof CraftInventoryCustom ? ((CraftInventoryCustom.MinecraftInventory) ((CraftInventory) inventory).getInventory()).title() : net.kyori.adventure.text.Component.text(inventory.getType().getDefaultTitle());
+            }
+            // Paper end
+
             @Override
             public String getTitle() {
                 return inventory instanceof CraftInventoryCustom ? ((CraftInventoryCustom.MinecraftInventory) ((CraftInventory) inventory).getInventory()).getTitle() : inventory.getType().getDefaultTitle();
@@ -95,7 +105,8 @@ public class CraftContainer extends Container {
 
     @Override
     public boolean c(EntityHuman entityhuman) {
-        if (cachedType == view.getType() && cachedSize == getSize() && cachedTitle.equals(view.getTitle())) {
+        if (cachedType == view.getType() && cachedSize == getSize() && this.adventure$title.equals(view.title())) { // Paper
+        //if (cachedType == view.getType() && cachedSize == getSize() && cachedTitle.equals(view.getTitle())) { // Paper - comment
             return true;
         }
         // If the window type has changed for some reason, update the player
@@ -103,7 +114,9 @@ public class CraftContainer extends Container {
         // as good a place as any to put something like this.
         boolean typeChanged = (cachedType != view.getType());
         cachedType = view.getType();
-        cachedTitle = view.getTitle();
+        this.adventure$title = view.title(); // Paper
+        if (this.adventure$title == null) this.adventure$title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(view.getTitle()); // Paper
+        //cachedTitle = view.getTitle(); // Paper - comment
         if (view.getPlayer() instanceof CraftPlayer) {
             CraftPlayer player = (CraftPlayer) view.getPlayer();
             Containers<?> type = getNotchInventoryType(view.getTopInventory());
@@ -115,7 +128,8 @@ public class CraftContainer extends Container {
                 setupSlots(top, bottom, player.getHandle());
             }
             int size = getSize();
-            player.getHandle().playerConnection.sendPacket(new PacketPlayOutOpenWindow(this.windowId, type, new ChatComponentText(cachedTitle)));
+            player.getHandle().playerConnection.sendPacket(new PacketPlayOutOpenWindow(this.windowId, type, io.papermc.paper.adventure.PaperAdventure.asVanilla(this.adventure$title))); // Paper
+            //player.getHandle().playerConnection.sendPacket(new PacketPlayOutOpenWindow(this.windowId, type, new ChatComponentText(cachedTitle))); // Paper - comment
             player.updateInventory();
         }
         return true;

@@ -56,7 +56,7 @@ public class PacketStatusListener implements PacketStatusInListener {
                 CraftIconCache icon = minecraftServer.server.getServerIcon();
 
                 ServerListPingEvent() {
-                    super(((InetSocketAddress) networkManager.getSocketAddress()).getAddress(), minecraftServer.getMotd(), minecraftServer.getPlayerList().getMaxPlayers());
+                    super(((InetSocketAddress) networkManager.getSocketAddress()).getAddress(), minecraftServer.server.motd(), minecraftServer.getPlayerList().getMaxPlayers()); // Paper - Adventure
                 }
 
                 @Override

@@ -94,6 +94,7 @@ public abstract class Enchantment {
         return this.f();
     }
 
+    public final IChatBaseComponent getTranslationComponentForLevel(int level) { return this.d(level); } // Paper - OBFHELPER
     public IChatBaseComponent d(int i) {
         ChatMessage chatmessage = new ChatMessage(this.g());
 

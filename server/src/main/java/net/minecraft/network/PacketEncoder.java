@@ -3,6 +3,7 @@ package net.minecraft.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import io.papermc.paper.adventure.PaperAdventure; // Paper
 import java.io.IOException;
 import net.minecraft.network.protocol.EnumProtocolDirection;
 import net.minecraft.network.protocol.Packet;
@@ -37,6 +38,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                 throw new IOException("Can't serialize unregistered packet");
             } else {
                 PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
+                packetdataserializer.adventure$locale = channelhandlercontext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
 
                 packetdataserializer.d(integer);
 

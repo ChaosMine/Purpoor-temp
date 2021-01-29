@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.Packet;
 public class PacketPlayOutChat implements Packet<PacketListenerPlayOut> {
 
     private IChatBaseComponent a;
+    public net.kyori.adventure.text.Component adventure$message; // Paper
     public net.md_5.bungee.api.chat.BaseComponent[] components; // Spigot
     private ChatMessageType b;
     private UUID c;
@@ -32,6 +33,11 @@ public class PacketPlayOutChat implements Packet<PacketListenerPlayOut> {
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
+        // Paper start
+        if (this.adventure$message != null) {
+            packetdataserializer.writeComponent(this.adventure$message);
+        } else
+        // Paper end
         // Spigot start
         if (components != null) {
             packetdataserializer.a(net.md_5.bungee.chat.ComponentSerializer.toString(components));
