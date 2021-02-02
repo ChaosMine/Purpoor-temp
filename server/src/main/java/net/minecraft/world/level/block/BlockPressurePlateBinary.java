@@ -82,6 +82,7 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 
             while (iterator.hasNext()) {
                 Entity entity = (Entity) iterator.next();
+                if (entity.isIgnoreBlockTrigger()) continue; // Paper - don't call event for ignored entities
 
                 // CraftBukkit start - Call interact event when turning on a pressure plate
                 if (this.getPower(world.getType(blockposition)) == 0) {
