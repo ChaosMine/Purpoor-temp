@@ -79,6 +79,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.GameRules;
@@ -606,6 +607,14 @@ public abstract class PlayerList {
             if (entityplayer.getScoreboardTeam() == team && team != null) {
                 scoreBoard.removePlayerFromTeam(entityplayer.getName(), team);
             }
+        }
+        // Paper end
+
+        // Paper - Drop carried item when player has disconnected
+        if (!entityplayer.inventory.getCarried().isEmpty()) {
+            ItemStack carried = entityplayer.inventory.getCarried();
+            entityplayer.inventory.setCarried(ItemStack.NULL_ITEM);
+            entityplayer.drop(carried, false);
         }
         // Paper end
 
