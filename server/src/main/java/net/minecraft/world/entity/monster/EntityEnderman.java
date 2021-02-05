@@ -289,7 +289,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
     @Override
     public boolean dO() {
-        return true;
+        return world.purpurConfig.endermanTakeDamageFromWater; // Purpur - Toggle for water sensitive mob damage
     }
 
     @Override

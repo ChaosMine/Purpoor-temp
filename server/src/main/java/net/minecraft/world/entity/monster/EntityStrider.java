@@ -405,7 +405,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     @Override
     public boolean dO() {
-        return true;
+        return world.purpurConfig.striderTakeDamageFromWater; // Purpur - Toggle for water sensitive mob damage
     }
 
     @Override

@@ -108,7 +108,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
 
     @Override
     public boolean dO() {
-        return true;
+        return world.purpurConfig.snowGolemTakeDamageFromWater; // Purpur - Toggle for water sensitive mob damage
     }
 
     @Override

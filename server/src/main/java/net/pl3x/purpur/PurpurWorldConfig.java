@@ -629,6 +629,7 @@ public class PurpurWorldConfig {
     public boolean blazeRidableInWater = false;
     public double blazeMaxY = 256D;
     public double blazeMaxHealth = 20.0D;
+    public boolean blazeTakeDamageFromWater = true;
     private void blazeSettings() {
         blazeRidable = getBoolean("mobs.blaze.ridable", blazeRidable);
         blazeRidableInWater = getBoolean("mobs.blaze.ridable-in-water", blazeRidableInWater);
@@ -639,6 +640,7 @@ public class PurpurWorldConfig {
             set("mobs.blaze.attributes.max_health", oldValue);
         }
         blazeMaxHealth = getDouble("mobs.blaze.attributes.max_health", blazeMaxHealth);
+        blazeTakeDamageFromWater = getBoolean("mobs.blaze.takes-damage-from-water", blazeTakeDamageFromWater);
     }
 
     public boolean catRidable = false;
@@ -853,6 +855,7 @@ public class PurpurWorldConfig {
     public boolean endermanBypassMobGriefing = false;
     public boolean endermanDespawnEvenWithBlock = false;
     public double endermanMaxHealth = 40.0D;
+    public boolean endermanTakeDamageFromWater = true;
     private void endermanSettings() {
         endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
         endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
@@ -865,6 +868,7 @@ public class PurpurWorldConfig {
             set("mobs.enderman.attributes.max_health", oldValue);
         }
         endermanMaxHealth = getDouble("mobs.enderman.attributes.max_health", endermanMaxHealth);
+        endermanTakeDamageFromWater = getBoolean("mobs.enderman.takes-damage-from-water", endermanTakeDamageFromWater);
     }
 
     public boolean endermiteRidable = false;
@@ -1554,6 +1558,7 @@ public class PurpurWorldConfig {
     public float snowGolemSnowBallModifier = 10.0F;
     public double snowGolemAttackDistance = 1.25D;
     public double snowGolemMaxHealth = 4.0D;
+    public boolean snowGolemTakeDamageFromWater = true;
     private void snowGolemSettings() {
         snowGolemRidable = getBoolean("mobs.snow_golem.ridable", snowGolemRidable);
         snowGolemRidableInWater = getBoolean("mobs.snow_golem.ridable-in-water", snowGolemRidableInWater);
@@ -1571,6 +1576,7 @@ public class PurpurWorldConfig {
             set("mobs.snow_golem.attributes.max_health", oldValue);
         }
         snowGolemMaxHealth = getDouble("mobs.snow_golem.attributes.max_health", snowGolemMaxHealth);
+        snowGolemTakeDamageFromWater = getBoolean("mobs.snow_golem.takes-damage-from-water", snowGolemTakeDamageFromWater);
     }
 
     public boolean squidRidable = false;
@@ -1624,6 +1630,7 @@ public class PurpurWorldConfig {
     public int striderBreedingTicks = 6000;
     public boolean striderGiveSaddleBack = false;
     public double striderMaxHealth = 20.0D;
+    public boolean striderTakeDamageFromWater = true;
     private void striderSettings() {
         striderRidable = getBoolean("mobs.strider.ridable", striderRidable);
         striderRidableInWater = getBoolean("mobs.strider.ridable-in-water", striderRidableInWater);
@@ -1635,6 +1642,7 @@ public class PurpurWorldConfig {
             set("mobs.strider.attributes.max_health", oldValue);
         }
         striderMaxHealth = getDouble("mobs.strider.attributes.max_health", striderMaxHealth);
+        striderTakeDamageFromWater = getBoolean("mobs.strider.takes-damage-from-water", striderTakeDamageFromWater);
     }
 
     public boolean tropicalFishRidable = false;

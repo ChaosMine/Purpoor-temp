@@ -2974,6 +2974,7 @@ public abstract class EntityLiving extends Entity {
 
     }
 
+    public boolean isSensitiveToWater() { return dO(); } // Purpur - OBFHELPER
     public boolean dO() {
         return false;
     }

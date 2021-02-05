@@ -143,7 +143,7 @@ public class EntityBlaze extends EntityMonster {
 
     @Override
     public boolean dO() {
-        return true;
+        return world.purpurConfig.blazeTakeDamageFromWater; // Purpur - Toggle for water sensitive mob damage
     }
 
     @Override

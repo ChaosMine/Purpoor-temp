@@ -854,7 +854,8 @@ public abstract class EntityInsentient extends EntityLiving {
                 if (goalFloat.validConditions()) goalFloat.update();
                 this.getControllerJump().jumpIfSet();
             }
-            if ((this instanceof EntityBlaze || this instanceof EntityEnderman) && isInWaterOrRainOrBubble()) {
+
+            if (isSensitiveToWater() && isInWaterOrRainOrBubble()) { // Purpur - Toggle for water sensitive mob damage
                 damageEntity(DamageSource.DROWN, 1.0F);
             }
             return;
