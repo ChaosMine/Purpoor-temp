@@ -482,7 +482,7 @@ public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable
                 }
 
                 // CraftBukkit - added event call and isCancelled check.
-                if (this.random.nextInt(3) == 0 && !CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) {
+                if ((this.world.purpurConfig.alwaysTameInCreative && entityhuman.abilities.canInstantlyBuild) || (this.random.nextInt(3) == 0 && !CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled())) { // Purpur
                     this.tame(entityhuman);
                     this.navigation.o();
                     this.setGoalTarget((EntityLiving) null);

@@ -439,7 +439,7 @@ public class EntityCat extends EntityTameableAnimal {
                 }
             } else if (this.k(itemstack)) {
                 this.a(entityhuman, itemstack);
-                if (this.random.nextInt(3) == 0 && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) { // CraftBukkit
+                if ((this.world.purpurConfig.alwaysTameInCreative && entityhuman.abilities.canInstantlyBuild) || (this.random.nextInt(3) == 0 && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled())) { // CraftBukkit // Purpur
                     this.tame(entityhuman);
                     this.setWillSit(true);
                     this.world.broadcastEntityEffect(this, (byte) 7);

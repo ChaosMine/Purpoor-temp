@@ -301,7 +301,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             }
 
             if (!this.world.isClientSide) {
-                if (this.random.nextInt(10) == 0 && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) { // CraftBukkit
+                if ((this.world.purpurConfig.alwaysTameInCreative && entityhuman.abilities.canInstantlyBuild) || (this.random.nextInt(10) == 0 && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled())) { // CraftBukkit // Purpur
                     this.tame(entityhuman);
                     this.world.broadcastEntityEffect(this, (byte) 7);
                 } else {
