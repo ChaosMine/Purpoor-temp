@@ -25,7 +25,7 @@ public class CraftMerchant implements Merchant {
 
     @Override
     public List<MerchantRecipe> getRecipes() {
-        return Collections.unmodifiableList(Lists.transform(merchant.getOffers(), new Function<net.minecraft.world.item.trading.MerchantRecipe, MerchantRecipe>() {
+        return com.google.common.collect.ImmutableList.copyOf(Lists.transform(merchant.getOffers(), new Function<net.minecraft.world.item.trading.MerchantRecipe, MerchantRecipe>() { // Paper - javadoc says 'an immutable list of trades' - not 'an unmodifiable view of a list of trades'. fixes issue with setRecipes(getRecipes())
             @Override
             public MerchantRecipe apply(net.minecraft.world.item.trading.MerchantRecipe recipe) {
                 return recipe.asBukkit();
