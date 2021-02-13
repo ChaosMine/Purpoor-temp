@@ -130,6 +130,22 @@ public class EntityEnderCrystal extends Entity {
         phantomDamageCooldown = 0;
         idleCooldown = 60;
     }
+
+    public boolean shouldExplode() {
+        return isShowingBottom() ? world.purpurConfig.baseCrystalExplode : world.purpurConfig.baselessCrystalExplode;
+    }
+
+    public float getExplosionPower() {
+        return (float) (isShowingBottom() ? world.purpurConfig.baseCrystalExplosionPower : world.purpurConfig.baselessCrystalExplosionPower);
+    }
+
+    public boolean hasExplosionFire() {
+        return isShowingBottom() ? world.purpurConfig.baseCrystalExplosionFire : world.purpurConfig.baselessCrystalExplosionFire;
+    }
+
+    public Explosion.Effect getExplosionEffect() {
+        return isShowingBottom() ? world.purpurConfig.baseCrystalExplosionEffect : world.purpurConfig.baselessCrystalExplosionEffect;
+    }
     // Purpur end
 
     @Override
@@ -175,15 +191,17 @@ public class EntityEnderCrystal extends Entity {
                 // CraftBukkit end
                 this.die();
                 if (!damagesource.isExplosion()) {
+                    if (shouldExplode()) { // Purpur
                     // CraftBukkit start
-                    ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 6.0F, false);
+                    ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), getExplosionPower(), hasExplosionFire()); // Purpur
                     this.world.getServer().getPluginManager().callEvent(event);
                     if (event.isCancelled()) {
                         this.dead = false;
                         return false;
                     }
-                    this.world.createExplosion(this, this.locX(), this.locY(), this.locZ(), event.getRadius(), event.getFire(), Explosion.Effect.DESTROY);
+                    this.world.createExplosion(this, this.locX(), this.locY(), this.locZ(), event.getRadius(), event.getFire(), getExplosionEffect()); // Purpur
                     // CraftBukkit end
+                    } else this.dead = false; // Purpur
                 }
 
                 this.a(damagesource);

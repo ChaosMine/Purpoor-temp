@@ -1975,4 +1975,33 @@ public class PurpurWorldConfig {
     private void imposeTeleportRestrictionsOnGateways() {
         imposeTeleportRestrictionsOnGateways = getBoolean("gameplay-mechanics.impose-teleport-restrictions-on-gateways", imposeTeleportRestrictionsOnGateways);
     }
+
+    public boolean baselessCrystalExplode = true;
+    public double baselessCrystalExplosionPower = 6.0D;
+    public boolean baselessCrystalExplosionFire = false;
+    public Explosion.Effect baselessCrystalExplosionEffect = Explosion.Effect.DESTROY;
+    public boolean baseCrystalExplode = true;
+    public double baseCrystalExplosionPower = 6.0D;
+    public boolean baseCrystalExplosionFire = false;
+    public Explosion.Effect baseCrystalExplosionEffect = Explosion.Effect.DESTROY;
+    private void crystalSettings() {
+        baselessCrystalExplode = getBoolean("blocks.end-crystal.baseless.explode", baselessCrystalExplode);
+        baselessCrystalExplosionPower = getDouble("blocks.end-crystal.baseless.explosion-power", baselessCrystalExplosionPower);
+        baselessCrystalExplosionFire = getBoolean("blocks.end-crystal.baseless.explosion-fire", baselessCrystalExplosionFire);
+        try {
+            baselessCrystalExplosionEffect = Explosion.Effect.valueOf(getString("blocks.end-crystal.baseless.explosion-effect", baselessCrystalExplosionEffect.name()));
+        } catch (IllegalArgumentException e) {
+            log(Level.SEVERE, "Unknown value for `blocks.end-crystal.baseless.explosion-effect`! Using default of `DESTROY`");
+            baselessCrystalExplosionEffect = Explosion.Effect.DESTROY;
+        }
+        baseCrystalExplode = getBoolean("blocks.end-crystal.base.explode", baseCrystalExplode);
+        baseCrystalExplosionPower = getDouble("blocks.end-crystal.base.explosion-power", baseCrystalExplosionPower);
+        baseCrystalExplosionFire = getBoolean("blocks.end-crystal.base.explosion-fire", baseCrystalExplosionFire);
+        try {
+            baseCrystalExplosionEffect = Explosion.Effect.valueOf(getString("blocks.end-crystal.base.explosion-effect", baseCrystalExplosionEffect.name()));
+        } catch (IllegalArgumentException e) {
+            log(Level.SEVERE, "Unknown value for `blocks.end-crystal.base.explosion-effect`! Using default of `DESTROY`");
+            baseCrystalExplosionEffect = Explosion.Effect.DESTROY;
+        }
+    }
 }
