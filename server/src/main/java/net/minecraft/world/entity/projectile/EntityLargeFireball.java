@@ -16,6 +16,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
 public class EntityLargeFireball extends EntityFireballFireball {
 
     public int yield = 1;
+    public boolean canCauseGrief = true; // Purpur
 
     public EntityLargeFireball(EntityTypes<? extends EntityLargeFireball> entitytypes, World world) {
         super(entitytypes, world);
@@ -31,7 +32,7 @@ public class EntityLargeFireball extends EntityFireballFireball {
     protected void a(MovingObjectPosition movingobjectposition) {
         super.a(movingobjectposition);
         if (!this.world.isClientSide) {
-            boolean flag = this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING); // Purpur
+            boolean flag = isIncendiary = canCauseGrief && (this.world.purpurConfig.fireballsBypassMobGriefing || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)); // Purpur
 
             // CraftBukkit start - fire ExplosionPrimeEvent
             ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) this.getBukkitEntity());

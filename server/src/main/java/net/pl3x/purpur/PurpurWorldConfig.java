@@ -926,6 +926,7 @@ public class PurpurWorldConfig {
     public boolean ghastRidable = false;
     public boolean ghastRidableInWater = false;
     public double ghastMaxY = 256D;
+    public boolean ghastAllowGriefing = true;
     public double ghastMaxHealth = 10.0D;
     private void ghastSettings() {
         ghastRidable = getBoolean("mobs.ghast.ridable", ghastRidable);
@@ -936,6 +937,7 @@ public class PurpurWorldConfig {
             set("mobs.ghast.attributes.max-health", null);
             set("mobs.ghast.attributes.max_health", oldValue);
         }
+        ghastAllowGriefing = getBoolean("mobs.ghast.allow-griefing", ghastAllowGriefing);
         ghastMaxHealth = getDouble("mobs.ghast.attributes.max_health", ghastMaxHealth);
     }
 

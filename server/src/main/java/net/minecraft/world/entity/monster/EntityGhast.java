@@ -230,6 +230,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
                     }
 
                     EntityLargeFireball entitylargefireball = new EntityLargeFireball(world, this.ghast, d2, d3, d4);
+                    entitylargefireball.canCauseGrief = world.purpurConfig.ghastAllowGriefing; // Purpur
 
                     // CraftBukkit - set bukkitYield when setting explosionpower
                     entitylargefireball.bukkitYield = entitylargefireball.yield = this.ghast.getPower();
