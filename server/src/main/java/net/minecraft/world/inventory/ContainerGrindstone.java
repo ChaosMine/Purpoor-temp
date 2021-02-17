@@ -196,13 +196,13 @@ public class ContainerGrindstone extends Container {
                 i = Math.max(item.getMaxDurability() - l, 0);
                 itemstack2 = this.b(itemstack, itemstack1);
                 if (!itemstack2.e()) {
-                    if (!ItemStack.matches(itemstack, itemstack1)) {
+                    if (!ItemStack.matches(itemstack, itemstack1) || itemstack2.getMaxStackSize() == 1) { // Paper - add max stack size check
                         this.resultInventory.setItem(0, ItemStack.b);
                         this.c();
                         return;
                     }
 
-                    b0 = 2;
+                    b0 = 2; // Paper - the problem line for above change, causing over-stacking
                 }
             } else {
                 boolean flag3 = !itemstack.isEmpty();
