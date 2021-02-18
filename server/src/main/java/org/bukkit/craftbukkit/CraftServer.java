@@ -18,6 +18,7 @@ import com.mojang.serialization.Lifecycle;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import io.papermc.paper.util.TraceUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -937,6 +938,7 @@ public final class CraftServer implements Server {
                 plugin.getDescription().getName(),
                 "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
             ));
+            if (console.isDebugging()) TraceUtil.dumpTraceForThread(worker.getThread(), "still running"); // Paper
         }
         loadPlugins();
         enablePlugins(PluginLoadOrder.STARTUP);
@@ -970,6 +972,7 @@ public final class CraftServer implements Server {
                 plugin.getDescription().getName(),
                 "This plugin is not properly shutting down its async tasks when it is being shut down. This task may throw errors during the final shutdown logs and might not complete before process dies."
             ));
+            if (console.isDebugging()) TraceUtil.dumpTraceForThread(worker.getThread(), "still running");
         }
     }
     // Paper end

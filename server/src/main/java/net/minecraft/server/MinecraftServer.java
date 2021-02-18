@@ -14,6 +14,7 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.papermc.paper.adventure.PaperAdventure; // Paper
 import io.papermc.paper.event.entity.EntityMoveEvent;
+import io.papermc.paper.util.TraceUtil;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -857,6 +858,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     // CraftBukkit start
     private boolean hasStopped = false;
     public volatile boolean hasFullyShutdown = false; // Paper
+    private boolean hasLoggedStop = false; // Paper
     private final Object stopLock = new Object();
     public final boolean hasStopped() {
         synchronized (stopLock) {
@@ -871,6 +873,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             if (hasStopped) return;
             hasStopped = true;
         }
+        if (!hasLoggedStop && isDebugging()) TraceUtil.dumpTraceForThread("Server stopped"); // Paper
         // Paper start - kill main thread, and kill it hard
         shutdownThread = Thread.currentThread();
         org.spigotmc.WatchdogThread.doStop(); // Paper
@@ -987,6 +990,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public void safeShutdown(boolean flag, boolean isRestarting) {
         this.isRunning = false;
         this.isRestarting = isRestarting;
+        this.hasLoggedStop = true; // Paper
+        if (isDebugging()) TraceUtil.dumpTraceForThread("Server stopped"); // Paper
         if (flag) {
             try {
                 this.serverThread.join();
