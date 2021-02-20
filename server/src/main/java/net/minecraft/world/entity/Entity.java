@@ -2407,7 +2407,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         }
     }
 
-    protected boolean n(Entity entity) {
+    protected boolean n(Entity entity) { // Purpur - canRide
         return !this.isSneaking() && this.j <= 0;
     }
 

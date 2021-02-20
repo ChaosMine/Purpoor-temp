@@ -728,6 +728,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
     @Override
     protected boolean n(Entity entity) {
+        if (this.world.purpurConfig.witherCanRideVehicles) return this.getRideCooldown() <= 0; // Purpur
         return false;
     }
 

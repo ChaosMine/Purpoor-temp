@@ -1073,6 +1073,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
     @Override
     protected boolean n(Entity entity) {
+        if (this.world.purpurConfig.enderDragonCanRideVehicles) return this.getRideCooldown() <= 0; // Purpur
         return false;
     }
 

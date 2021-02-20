@@ -833,6 +833,7 @@ public class PurpurWorldConfig {
     public boolean enderDragonAlwaysDropsFullExp = false;
     public boolean enderDragonBypassMobGriefing = false;
     public double enderDragonMaxHealth = 200.0D;
+    public boolean enderDragonCanRideVehicles = false;
     private void enderDragonSettings() {
         enderDragonRidable = getBoolean("mobs.ender_dragon.ridable", enderDragonRidable);
         enderDragonRidableInWater = getBoolean("mobs.ender_dragon.ridable-in-water", enderDragonRidableInWater);
@@ -849,6 +850,7 @@ public class PurpurWorldConfig {
             set("mobs.ender_dragon.attributes.max_health", oldValue);
         }
         enderDragonMaxHealth = getDouble("mobs.ender_dragon.attributes.max_health", enderDragonMaxHealth);
+        enderDragonCanRideVehicles = getBoolean("mobs.ender_dragon.can-ride-vehicles", enderDragonCanRideVehicles);
     }
 
     public boolean endermanRidable = false;
@@ -1793,6 +1795,7 @@ public class PurpurWorldConfig {
     public float witherHealthRegenAmount = 1.0f;
     public int witherHealthRegenDelay = 20;
     public double witherMaxHealth = 300.0D;
+    public boolean witherCanRideVehicles = false;
     private void witherSettings() {
         witherRidable = getBoolean("mobs.wither.ridable", witherRidable);
         witherRidableInWater = getBoolean("mobs.wither.ridable-in-water", witherRidableInWater);
@@ -1810,6 +1813,7 @@ public class PurpurWorldConfig {
             set("mobs.wither.attributes.max_health", oldValue);
         }
         witherMaxHealth = getDouble("mobs.wither.attributes.max_health", witherMaxHealth);
+        witherCanRideVehicles = getBoolean("mobs.wither.can-ride-vehicles", witherCanRideVehicles);
     }
 
     public boolean witherSkeletonRidable = false;
