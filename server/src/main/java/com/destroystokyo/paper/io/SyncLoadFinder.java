@@ -26,6 +26,10 @@ public class SyncLoadFinder {
         public final Long2IntOpenHashMap coordinateTimes = new Long2IntOpenHashMap();
     }
 
+    public static void clear() {
+        SYNC_LOADS.clear();
+    }
+
     public static void logSyncLoad(final World world, final int chunkX, final int chunkZ) {
         if (!ENABLED) {
             return;

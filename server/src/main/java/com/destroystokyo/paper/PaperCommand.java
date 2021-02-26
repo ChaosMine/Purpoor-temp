@@ -295,6 +295,13 @@ public class PaperCommand extends Command {
             sender.sendMessage(ChatColor.RED + "This command requires the server startup flag '-Dpaper.debug-sync-loads=true' to be set.");
             return;
         }
+
+        if (args.length > 1 && args[1].equals("clear")) {
+            SyncLoadFinder.clear();
+            sender.sendMessage(ChatColor.GRAY + "Sync load data cleared.");
+            return;
+        }
+
         File file = new File(new File(new File("."), "debug"),
             "sync-load-info" + DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss").format(LocalDateTime.now()) + ".txt");
         file.getParentFile().mkdirs();
