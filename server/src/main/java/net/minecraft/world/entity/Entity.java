@@ -172,7 +172,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     public com.destroystokyo.paper.loottable.PaperLootableInventoryData lootableData; // Paper
     private CraftEntity bukkitEntity;
 
-    PlayerChunkMap.EntityTracker tracker; // Paper
+    public PlayerChunkMap.EntityTracker tracker; // Paper package private -> public
     public boolean collisionLoadChunks = false; // Paper
     public Throwable addedToWorldStack; // Paper - entity debug
     public CraftEntity getBukkitEntity() {

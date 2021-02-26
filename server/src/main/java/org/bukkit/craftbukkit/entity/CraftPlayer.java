@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections; // Paper
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -2307,6 +2308,21 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Preconditions.checkArgument(level >= 0 && level <= 4, "Level must be within [0, 4]");
 
         this.getHandle().getMinecraftServer().getPlayerList().sendPlayerOperatorStatus(this.getHandle(), level, false);
+    }
+    // Paper end
+
+    // Paper start
+    @Override
+    public Set<Player> getTrackedPlayers() {
+        if (entity.tracker == null) {
+            return Collections.emptySet();
+        }
+
+        Set<Player> set = new HashSet<>(entity.tracker.trackedPlayers.size());
+        for (EntityPlayer entityPlayer : entity.tracker.trackedPlayers) {
+            set.add(entityPlayer.getBukkitEntity().getPlayer());
+        }
+        return set;
     }
     // Paper end
 
