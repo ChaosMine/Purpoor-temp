@@ -1,6 +1,7 @@
 package org.bukkit.entity;
 
 import java.net.InetSocketAddress;
+import java.util.Set; // Paper
 import java.util.UUID;
 import com.destroystokyo.paper.ClientOption; // Paper
 import com.destroystokyo.paper.Title; // Paper
@@ -1940,6 +1941,14 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @throws IllegalArgumentException If the level is negative or greater than {@code 4} (i.e. not within {@code [0, 4]}).
      */
     void sendOpLevel(byte level);
+    // Paper end
+
+    // Paper start
+    /**
+     * @return Returns a set of Players within this player's tracking range (that the player's client can "see")
+     */
+    @NotNull
+    Set<Player> getTrackedPlayers();
     // Paper end
 
     // Spigot start
