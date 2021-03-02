@@ -3522,6 +3522,7 @@ public enum Material implements Keyed {
     public final Class<?> data;
     private final boolean legacy;
     private final NamespacedKey key;
+    private boolean isBlock; // Paper
 
     private Material(final int id) {
         this(id, 64);
@@ -3719,6 +3720,11 @@ public enum Material implements Keyed {
      * @return true if this material is a block
      */
     public boolean isBlock() {
+    // Paper start - cache isBlock
+        return this.isBlock;
+    }
+    private boolean isBlock0() {
+    // Paper end
         switch (this) {
             //<editor-fold defaultstate="collapsed" desc="isBlock">
             case ACACIA_BUTTON:
@@ -4664,6 +4670,7 @@ public enum Material implements Keyed {
     static {
         for (Material material : values()) {
             BY_NAME.put(material.name(), material);
+            material.isBlock = material.isBlock0(); // Paper
         }
     }
 
