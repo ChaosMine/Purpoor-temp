@@ -26,22 +26,26 @@ public class SensorNearestPlayers extends Sensor<EntityLiving> {
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving) {
-        Stream stream = worldserver.getPlayers().stream().filter(IEntitySelector.g).filter((entityplayer) -> {
-            return entityliving.a((Entity) entityplayer, 16.0D);
-        });
+        // Paper start - remove streams in favour of lists
+        List<EntityHuman> players = new java.util.ArrayList<>(worldserver.getPlayers());
+        players.removeIf(player -> !IEntitySelector.notSpectator().test(player) || !entityliving.a(player, 16.0D)); // Paper - removeIf only re-allocates once compared to iterator
+        players.sort(Comparator.comparingDouble(entityliving::h));
 
-        entityliving.getClass();
-        List<EntityHuman> list = (List) stream.sorted(Comparator.comparingDouble(entityliving::h)).collect(Collectors.toList());
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_PLAYERS, players);
 
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_PLAYERS, (Object) list);
-        List<EntityHuman> list1 = (List) list.stream().filter((entityhuman) -> {
-            return a(entityliving, (EntityLiving) entityhuman);
-        }).collect(Collectors.toList());
-
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, (Object) (list1.isEmpty() ? null : (EntityHuman) list1.get(0)));
-        Optional<EntityHuman> optional = list1.stream().filter(IEntitySelector.f).findFirst();
-
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, optional);
+        EntityHuman nearest = null, nearestTargetable = null;
+        for (EntityHuman player : players) {
+            if (Sensor.a(entityliving, player)) {
+                if (nearest == null) nearest = player;
+                if (IEntitySelector.canAITarget().test(player)) {
+                    nearestTargetable = player;
+                    break; // Both variables are assigned, no reason to loop further
+                }
+            }
+        }
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER, nearest);
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestTargetable);
+        // Paper end
     }
 }

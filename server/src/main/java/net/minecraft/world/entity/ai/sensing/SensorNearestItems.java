@@ -27,18 +27,16 @@ public class SensorNearestItems extends Sensor<EntityInsentient> {
         List<EntityItem> list = worldserver.a(EntityItem.class, entityinsentient.getBoundingBox().grow(8.0D, 4.0D, 8.0D), (entityitem) -> {
             return true;
         });
-
-        entityinsentient.getClass();
+        // Paper start - remove streams in favour of lists
         list.sort(Comparator.comparingDouble(entityinsentient::h));
-        Stream stream = list.stream().filter((entityitem) -> {
-            return entityinsentient.i(entityitem.getItemStack());
-        }).filter((entityitem) -> {
-            return entityitem.a((Entity) entityinsentient, 9.0D);
-        });
-
-        entityinsentient.getClass();
-        Optional<EntityItem> optional = stream.filter(entityinsentient::hasLineOfSight).findFirst();
-
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, optional);
+        EntityItem nearest = null;
+        for (EntityItem entityItem : list) {
+            if (entityinsentient.i(entityItem.getItemStack()) && entityItem.a(entityinsentient, 9.0D) && entityinsentient.hasLineOfSight(entityItem)) {
+                nearest = entityItem;
+                break;
+            }
+        }
+        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, Optional.ofNullable(nearest));
+        // Paper end
     }
 }

@@ -26,10 +26,12 @@ public class SensorNearestLivingEntities extends Sensor<EntityLiving> {
         list.sort(Comparator.comparingDouble(entityliving::h));
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
 
-        behaviorcontroller.setMemory(MemoryModuleType.MOBS, (Object) list);
-        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_MOBS, list.stream().filter((entityliving1) -> {
-            return a(entityliving, entityliving1);
-        }).collect(Collectors.toList()));
+        behaviorcontroller.setMemory(MemoryModuleType.MOBS, list); // Paper - decompile error
+        // Paper start - remove streams in favour of lists
+        List<EntityLiving> visibleMobs = new java.util.ArrayList<>(list);
+        visibleMobs.removeIf(otherEntityLiving -> !Sensor.a(entityliving, otherEntityLiving));
+        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_MOBS, visibleMobs);
+        // Paper end
     }
 
     @Override
