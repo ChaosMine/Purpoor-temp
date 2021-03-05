@@ -74,7 +74,18 @@ public class BlockSnow extends Block {
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
         IBlockData iblockdata1 = iworldreader.getType(blockposition.down());
 
-        return !iblockdata1.a(Blocks.ICE) && !iblockdata1.a(Blocks.PACKED_ICE) && !iblockdata1.a(Blocks.BARRIER) ? (!iblockdata1.a(Blocks.HONEY_BLOCK) && !iblockdata1.a(Blocks.SOUL_SAND) ? Block.a(iblockdata1.getCollisionShape(iworldreader, blockposition.down()), EnumDirection.UP) || iblockdata1.getBlock() == this && (Integer) iblockdata1.get(BlockSnow.LAYERS) == 8 : true) : false;
+        // Purpur start - rewrite this whole return to make more sense
+        if (iblockdata1.equals(Blocks.ICE) || iblockdata1.equals(Blocks.PACKED_ICE) || iblockdata1.equals(Blocks.BARRIER)) {
+            return false;
+        }
+        if (iblockdata1.equals(Blocks.BLUE_ICE) && !iworldreader.getWorldBorder().world.purpurConfig.snowOnBlueIce) {
+            return false;
+        }
+        if (iblockdata1.equals(Blocks.HONEY_BLOCK) || iblockdata1.equals(Blocks.SOUL_SAND)) {
+            return true;
+        }
+        return Block.a(iblockdata1.getCollisionShape(iworldreader, blockposition.down()), EnumDirection.UP) || iblockdata1.equals(this) && iblockdata1.get(LAYERS) == 8;
+        // Purpur end
     }
 
     @Override

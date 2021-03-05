@@ -477,6 +477,11 @@ public class PurpurWorldConfig {
         }
     }
 
+    public boolean snowOnBlueIce = true;
+    private void iceSettings() {
+        snowOnBlueIce = getBoolean("blocks.blue_ice.allow-snow-formation", snowOnBlueIce);
+    }
+
     public boolean chestOpenWithBlockOnTop = false;
     private void chestSettings() {
         chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
