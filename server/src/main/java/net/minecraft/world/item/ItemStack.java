@@ -897,6 +897,7 @@ public final class ItemStack {
         this.getOrCreateTag().setInt("RepairCost", i);
     }
 
+    public Multimap<AttributeBase, AttributeModifier> getAttributeModifiers(EnumItemSlot enumitemslot) { return this.a(enumitemslot); } // Purpur - OBFHELPER
     public Multimap<AttributeBase, AttributeModifier> a(EnumItemSlot enumitemslot) {
         Object object;
 

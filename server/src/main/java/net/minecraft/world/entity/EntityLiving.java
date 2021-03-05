@@ -2016,6 +2016,23 @@ public abstract class EntityLiving extends Entity {
                 ((EntityPlayer) damagesource.getEntity()).a(StatisticList.DAMAGE_DEALT_ABSORBED, Math.round(f2 * 10.0F));
             }
 
+           // Purpur start
+           if (damagesource.getEntity() instanceof EntityHuman && damagesource.getEntity().world.purpurConfig.creativeOnePunch) {
+               EntityHuman entityHuman = (EntityHuman) damagesource.getEntity();
+               if (entityHuman.isCreative()) {
+                   double attackDamage = 0;
+
+                   for (AttributeModifier modifier : entityHuman.getItemInMainHand().getAttributeModifiers(EnumItemSlot.MAINHAND).get(GenericAttributes.ATTACK_DAMAGE)) {
+                       attackDamage += modifier.getAmount();
+                   }
+
+                   if (attackDamage == 0) {
+                       this.setHealth(0);
+                   }
+               }
+           }
+           // Purpur end
+
             if (f > 0 || !human) {
                 if (human) {
                     // PAIL: Be sure to drag all this code from the EntityHuman subclass each update.

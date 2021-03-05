@@ -319,6 +319,7 @@ public class PurpurWorldConfig {
     public double voidDamageDealt = 4.0D;
     public int raidCooldownSeconds = 0;
     public int animalBreedingCooldownSeconds = 0;
+    public boolean creativeOnePunch = false;
     private void miscGameplayMechanicsSettings() {
         useBetterMending = getBoolean("gameplay-mechanics.use-better-mending", useBetterMending);
         alwaysTameInCreative = getBoolean("gameplay-mechanics.always-tame-in-creative", alwaysTameInCreative);
@@ -337,6 +338,7 @@ public class PurpurWorldConfig {
         voidDamageDealt = getDouble("gameplay-mechanics.void-damage-dealt", voidDamageDealt);
         raidCooldownSeconds = getInt("gameplay-mechanics.raid-cooldown-seconds", raidCooldownSeconds);
         animalBreedingCooldownSeconds = getInt("gameplay-mechanics.animal-breeding-cooldown-seconds", animalBreedingCooldownSeconds);
+        creativeOnePunch = getBoolean("gameplay-mechanics.player.one-punch-in-creative", creativeOnePunch);
     }
 
     public boolean catSpawning;
