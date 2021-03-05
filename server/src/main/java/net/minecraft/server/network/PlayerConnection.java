@@ -1560,6 +1560,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
                                     this.player.fallDistance = 0.0F;
                                 }
 
+                                // Purpur Start
+                                if (this.player.isSprinting() && this.player.getWorldServer().purpurConfig.dontRunWithScissors && (this.player.getItemInHand(EnumHand.MAIN_HAND).getItem() == Items.SHEARS || this.player.getItemInHand(EnumHand.OFF_HAND).getItem() == Items.SHEARS) && (int) (Math.random() * 10) == 0) {
+                                    this.player.damageEntity(net.minecraft.world.damagesource.DamageSource.MAGIC, (float) this.player.getWorldServer().purpurConfig.scissorsRunningDamage);
+                                }
+                                // Purpur End
+
                                 this.player.checkMovement(this.player.locX() - d0, this.player.locY() - d1, this.player.locZ() - d2);
                                 this.o = this.player.locX();
                                 this.p = this.player.locY();
