@@ -1464,7 +1464,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                             return entitymonster.f((EntityHuman) this);
                         });
 
-                        if (!list.isEmpty()) {
+                        if (!this.world.purpurConfig.playerSleepNearMonsters && !list.isEmpty()) { // Purpur
                             return Either.left(EntityHuman.EnumBedResult.NOT_SAFE);
                         }
                     }
