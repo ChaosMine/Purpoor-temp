@@ -36,7 +36,7 @@ public class ItemEnderPearl extends Item {
 
                 world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_ENDER_PEARL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (net.minecraft.world.entity.Entity.SHARED_RANDOM.nextFloat() * 0.4F + 0.8F));
                 entityhuman.b(StatisticList.ITEM_USED.b(this));
-                entityhuman.getCooldownTracker().setCooldown(this, 20);
+                entityhuman.getCooldownTracker().setCooldown(this, entityhuman.abilities.canInstantlyBuild ? world.purpurConfig.enderPearlCooldownCreative : world.purpurConfig.enderPearlCooldown); // Purpur
             } else {
                 // Paper end
                 if (entityhuman instanceof net.minecraft.server.level.EntityPlayer) {

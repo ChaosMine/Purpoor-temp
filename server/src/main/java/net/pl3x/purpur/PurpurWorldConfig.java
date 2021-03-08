@@ -205,6 +205,10 @@ public class PurpurWorldConfig {
     public List<Item> itemImmuneToLightning = new ArrayList<>();
     public boolean dontRunWithScissors = false;
     public double scissorsRunningDamage = 1D;
+    public float enderPearlDamage = 5.0F;
+    public int enderPearlCooldown = 20;
+    public int enderPearlCooldownCreative = 20;
+    public float enderPearlEndermiteChance = 0.05F;
     private void itemSettings() {
         itemImmuneToCactus.clear();
         getList("gameplay-mechanics.item.immune.cactus", new ArrayList<>()).forEach(key -> {
@@ -244,6 +248,10 @@ public class PurpurWorldConfig {
         });
         dontRunWithScissors = getBoolean("gameplay-mechanics.item.shears.damage-if-sprinting", dontRunWithScissors);
         scissorsRunningDamage = getDouble("gameplay-mechanics.item.shears.sprinting-damage", scissorsRunningDamage);
+        enderPearlDamage = (float) getDouble("gameplay-mechanics.item.ender-pearl.damage", enderPearlDamage);
+        enderPearlCooldown = getInt("gameplay-mechanics.item.ender-pearl.cooldown", enderPearlCooldown);
+        enderPearlCooldownCreative = getInt("gameplay-mechanics.item.ender-pearl.creative-cooldown", enderPearlCooldownCreative);
+        enderPearlEndermiteChance = (float) getDouble("gameplay-mechanics.item.ender-pearl.endermite-spawn-chance", enderPearlEndermiteChance);
     }
 
     public boolean idleTimeoutKick = true;

@@ -69,7 +69,7 @@ public class EntityEnderPearl extends EntityProjectileThrowable {
                     Bukkit.getPluginManager().callEvent(teleEvent);
 
                     if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
-                        if (this.random.nextFloat() < 0.05F && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
+                        if (this.random.nextFloat() < this.world.purpurConfig.enderPearlEndermiteChance && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) { // Purpur
                             EntityEndermite entityendermite = (EntityEndermite) EntityTypes.ENDERMITE.a(this.world);
 
                             entityendermite.setPlayerSpawned(true);
@@ -84,7 +84,7 @@ public class EntityEnderPearl extends EntityProjectileThrowable {
                         entityplayer.playerConnection.teleport(teleEvent.getTo());
                         entity.fallDistance = 0.0F;
                         CraftEventFactory.entityDamage = this;
-                        entity.damageEntity(DamageSource.FALL, 5.0F);
+                        entity.damageEntity(DamageSource.FALL, this.world.purpurConfig.enderPearlDamage); // Purpur
                         CraftEventFactory.entityDamage = null;
                     }
                     // CraftBukkit end
