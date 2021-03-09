@@ -50,6 +50,7 @@ import net.minecraft.world.entity.ai.goal.target.PathfinderGoalUniversalAngerRes
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IMaterial;
@@ -252,7 +253,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         // Paper end
         ItemStack itemstack = (ItemStack) entityhuman.inventory.armor.get(3);
 
-        if (itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem()) {
+        if (world.purpurConfig.endermanDisableStareAggro || itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem() || (world.purpurConfig.endermanIgnorePlayerDragonHead && itemstack.getItem() == Items.DRAGON_HEAD)) { // Purpur
             return false;
         } else {
             Vec3D vec3d = entityhuman.f(1.0F).d();

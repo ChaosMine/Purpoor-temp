@@ -882,6 +882,8 @@ public class PurpurWorldConfig {
     public double endermanMaxHealth = 40.0D;
     public boolean endermanTakeDamageFromWater = true;
     public boolean endermanAggroSpawnedEndermites = false;
+    public boolean endermanIgnorePlayerDragonHead = false;
+    public boolean endermanDisableStareAggro = false;
     private void endermanSettings() {
         endermanRidable = getBoolean("mobs.enderman.ridable", endermanRidable);
         endermanRidableInWater = getBoolean("mobs.enderman.ridable-in-water", endermanRidableInWater);
@@ -896,6 +898,8 @@ public class PurpurWorldConfig {
         endermanMaxHealth = getDouble("mobs.enderman.attributes.max_health", endermanMaxHealth);
         endermanTakeDamageFromWater = getBoolean("mobs.enderman.takes-damage-from-water", endermanTakeDamageFromWater);
         endermanAggroSpawnedEndermites = getBoolean("mobs.enderman.aggressive-towards-spawned-endermites", endermanAggroSpawnedEndermites);
+        endermanIgnorePlayerDragonHead = getBoolean("mobs.enderman.ignore-players-wearing-dragon-head", endermanIgnorePlayerDragonHead);
+        endermanDisableStareAggro = getBoolean("mobs.enderman.disable-player-stare-aggression", endermanDisableStareAggro);
     }
 
     public boolean endermiteRidable = false;
