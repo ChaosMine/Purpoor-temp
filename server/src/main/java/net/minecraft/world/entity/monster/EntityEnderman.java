@@ -71,7 +71,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
     private static final DataWatcherObject<Boolean> bo = DataWatcher.a(EntityEnderman.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> bp = DataWatcher.a(EntityEnderman.class, DataWatcherRegistry.i);
     private static final Predicate<EntityLiving> bq = (entityliving) -> {
-        return entityliving instanceof EntityEndermite && ((EntityEndermite) entityliving).isPlayerSpawned();
+        return entityliving instanceof EntityEndermite && (((EntityEndermite) entityliving).isPlayerSpawned() || entityliving.world.purpurConfig.endermanAggroSpawnedEndermites); // Purpur
     };
     private int br = Integer.MIN_VALUE;
     private int bs;
