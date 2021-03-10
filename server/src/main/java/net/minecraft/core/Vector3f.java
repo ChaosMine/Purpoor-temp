@@ -19,6 +19,18 @@ public class Vector3f {
         this(nbttaglist.i(0), nbttaglist.i(1), nbttaglist.i(2));
     }
 
+    // Paper start - faster alternative constructor
+    private Vector3f(float x, float y, float z, Void dummy_var) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public static Vector3f createWithoutValidityChecks(float x, float y, float z) {
+        return new Vector3f(x, y, z, null);
+    }
+    // Paper end
+
     public NBTTagList a() {
         NBTTagList nbttaglist = new NBTTagList();
 
