@@ -822,4 +822,9 @@ public class PaperWorldConfig {
     private void mapItemFrameCursorLimit() {
         mapItemFrameCursorLimit = getInt("map-item-frame-cursor-limit", mapItemFrameCursorLimit);
     }
+
+    public boolean fixItemsMergingThroughWalls;
+    private void fixItemsMergingThroughWalls() {
+        fixItemsMergingThroughWalls = getBoolean("fix-items-merging-through-walls", fixItemsMergingThroughWalls);
+    }
 }

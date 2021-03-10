@@ -228,6 +228,14 @@ public class EntityItem extends Entity {
                 EntityItem entityitem = (EntityItem) iterator.next();
 
                 if (entityitem.z()) {
+                    // Paper Start - Fix items merging through walls
+                        if (this.world.paperConfig.fixItemsMergingThroughWalls) {
+                            net.minecraft.world.level.RayTrace rayTrace = new net.minecraft.world.level.RayTrace(this.getPositionVector(), entityitem.getPositionVector(),
+                                net.minecraft.world.level.RayTrace.BlockCollisionOption.COLLIDER, net.minecraft.world.level.RayTrace.FluidCollisionOption.NONE, this);
+                            net.minecraft.world.phys.MovingObjectPositionBlock rayTraceResult = world.rayTrace(rayTrace);
+                            if (rayTraceResult.getType() == net.minecraft.world.phys.MovingObjectPosition.EnumMovingObjectType.BLOCK) continue;
+                        }
+                    // Paper End
                     this.a(entityitem);
                     if (this.dead) {
                         break;
