@@ -158,9 +158,8 @@ public interface Inventory extends Iterable<ItemStack> {
      *
      * @return An array of ItemStacks from the inventory. Individual items may be null.
      */
-    @NotNull
-    public ItemStack[] getContents();
-
+    public @org.checkerframework.checker.nullness.qual.Nullable ItemStack @org.checkerframework.checker.nullness.qual.NonNull [] getContents(); // Paper - make array elements nullable instead array
+    
     /**
      * Completely replaces the inventory's contents. Removes all existing
      * contents and replaces it with the ItemStacks given in the array.
