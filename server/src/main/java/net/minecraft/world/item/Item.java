@@ -45,7 +45,7 @@ public class Item implements IMaterial {
     protected static final UUID g = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
     protected static final Random RANDOM = new Random();
     protected final CreativeModeTab i;
-    private final EnumItemRarity a;
+    private final EnumItemRarity a; public final EnumItemRarity getItemRarity() { return a; } // Paper - OBFHELPER
     private final int maxStackSize;
     private final int durability;
     private final boolean d;
@@ -209,6 +209,7 @@ public class Item implements IMaterial {
         return itemstack.hasEnchantments();
     }
 
+    public EnumItemRarity getItemStackRarity(ItemStack itemStack) { return i(itemStack); } // Paper - OBFHELPER
     public EnumItemRarity i(ItemStack itemstack) {
         if (!itemstack.hasEnchantments()) {
             return this.a;
