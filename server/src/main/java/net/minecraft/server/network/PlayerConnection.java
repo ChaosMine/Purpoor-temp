@@ -2224,7 +2224,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         }
 
         // Arm swing animation
-        PlayerAnimationEvent event = new PlayerAnimationEvent(this.getPlayer());
+        io.papermc.paper.event.player.PlayerArmSwingEvent event = new io.papermc.paper.event.player.PlayerArmSwingEvent(this.getPlayer(), packetplayinarmanimation.getHand() == EnumHand.MAIN_HAND ? org.bukkit.inventory.EquipmentSlot.HAND : org.bukkit.inventory.EquipmentSlot.OFF_HAND); // Paper
         this.server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) return;
