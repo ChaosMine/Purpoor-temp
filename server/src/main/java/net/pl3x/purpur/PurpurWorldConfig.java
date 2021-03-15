@@ -305,6 +305,11 @@ public class PurpurWorldConfig {
         witherSkullDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.wither_skull", witherSkullDespawnRate);
     }
 
+    public boolean tickFluids = true;
+    private void fluidSettings() {
+        tickFluids = getBoolean("gameplay-mechanics.tick-fluids", tickFluids);
+    }
+
     public int snowballDamage = -1;
     private void snowballSettings() {
         snowballDamage = getInt("gameplay-mechanics.projectile-damage.snowball", snowballDamage);

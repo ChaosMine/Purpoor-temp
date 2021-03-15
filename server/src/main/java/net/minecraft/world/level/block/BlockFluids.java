@@ -100,7 +100,7 @@ public class BlockFluids extends Block implements IFluidSource {
 
     @Override
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        if (this.a(world, blockposition, iblockdata)) {
+        if (world.purpurConfig.tickFluids && this.a(world, blockposition, iblockdata)) { // Purpur
             world.getFluidTickList().a(blockposition, iblockdata.getFluid().getType(), this.getFlowSpeed(world, blockposition)); // Paper
         }
 
@@ -125,7 +125,7 @@ public class BlockFluids extends Block implements IFluidSource {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if (iblockdata.getFluid().isSource() || iblockdata1.getFluid().isSource()) {
+        if (generatoraccess.getMinecraftWorld().purpurConfig.tickFluids && iblockdata.getFluid().isSource() || iblockdata1.getFluid().isSource()) { // Purpur
             generatoraccess.getFluidTickList().a(blockposition, iblockdata.getFluid().getType(), this.b.a((IWorldReader) generatoraccess));
         }
 
@@ -134,7 +134,7 @@ public class BlockFluids extends Block implements IFluidSource {
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
-        if (this.a(world, blockposition, iblockdata)) {
+        if (world.purpurConfig.tickFluids && this.a(world, blockposition, iblockdata)) { // Purpur
             world.getFluidTickList().a(blockposition, iblockdata.getFluid().getType(), this.getFlowSpeed(world, blockposition)); // Paper
         }
 
