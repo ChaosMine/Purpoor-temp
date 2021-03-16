@@ -757,12 +757,14 @@ public class PurpurWorldConfig {
 
     public boolean creeperRidable = false;
     public boolean creeperRidableInWater = false;
+    public boolean creeperExplodeWhenKilled = false;
     public boolean creeperAllowGriefing = true;
     public double creeperChargedChance = 0.0D;
     public double creeperMaxHealth = 20.0D;
     private void creeperSettings() {
         creeperRidable = getBoolean("mobs.creeper.ridable", creeperRidable);
         creeperRidableInWater = getBoolean("mobs.creeper.ridable-in-water", creeperRidableInWater);
+        creeperExplodeWhenKilled = getBoolean("mobs.creeper.explode-when-killed", creeperExplodeWhenKilled);
         creeperAllowGriefing = getBoolean("mobs.creeper.allow-griefing", creeperAllowGriefing);
         creeperChargedChance = getDouble("mobs.creeper.naturally-charged-chance", creeperChargedChance);
         if (PurpurConfig.version < 10) {

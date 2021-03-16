@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.PathfinderGoalHasRider;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -63,6 +64,7 @@ public class EntityCreeper extends EntityMonster {
     private int spacebarCharge = 0;
     private int prevSpacebarCharge = 0;
     private int powerToggleDelay = 0;
+    private boolean exploding = false;
     // Purpur end
 
     public EntityCreeper(EntityTypes<? extends EntityCreeper> entitytypes, World world) {
@@ -141,6 +143,14 @@ public class EntityCreeper extends EntityMonster {
     @Override
     public void initAttributes() {
         this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.world.purpurConfig.creeperMaxHealth);
+    }
+
+    protected org.bukkit.event.entity.EntityDeathEvent d(DamageSource damagesource) {
+        if (!exploding && this.world.purpurConfig.creeperExplodeWhenKilled && damagesource.getEntity() instanceof EntityPlayer) {
+            this.explode();
+        }
+
+        return super.d(damagesource);
     }
     // Purpur end
 
@@ -327,6 +337,7 @@ public class EntityCreeper extends EntityMonster {
     }
 
     public void explode() {
+        this.exploding = true; // Purpur
         if (!this.world.isClientSide) {
             Explosion.Effect explosion_effect = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && world.purpurConfig.creeperAllowGriefing ? Explosion.Effect.DESTROY : Explosion.Effect.NONE; // Purpur
             float f = this.isPowered() ? 2.0F : 1.0F;
@@ -346,6 +357,7 @@ public class EntityCreeper extends EntityMonster {
             // CraftBukkit end
         }
 
+        this.exploding = false; // Purpur
     }
 
     private void createEffectCloud() {
