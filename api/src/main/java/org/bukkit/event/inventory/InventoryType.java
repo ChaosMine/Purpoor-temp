@@ -170,7 +170,7 @@ public enum InventoryType {
     }
 
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getDefaultTitle() {
         return title;
     }

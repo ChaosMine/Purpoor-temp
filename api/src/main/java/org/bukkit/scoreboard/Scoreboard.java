@@ -89,7 +89,7 @@ public interface Scoreboard {
      * @deprecated in favour of {@link #registerNewObjective(String, String, net.kyori.adventure.text.Component)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName) throws IllegalArgumentException;
 
     /**
@@ -113,7 +113,7 @@ public interface Scoreboard {
      * @deprecated in favour of {@link #registerNewObjective(String, String, net.kyori.adventure.text.Component, RenderType)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName, @NotNull RenderType renderType) throws IllegalArgumentException;
 
     /**

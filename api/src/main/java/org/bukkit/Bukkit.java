@@ -303,7 +303,7 @@ public final class Bukkit {
      * @return the number of players
      * @deprecated in favour of {@link Server#broadcast(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public static int broadcastMessage(@NotNull String message) {
         return server.broadcastMessage(message);
     }
@@ -947,7 +947,7 @@ public final class Bukkit {
      * @return number of message recipients
      * @deprecated in favour of {@link #broadcast(net.kyori.adventure.text.Component, String)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public static int broadcast(@NotNull String message, @NotNull String permission) {
         return server.broadcast(message, permission);
     }
@@ -1224,7 +1224,7 @@ public final class Bukkit {
      *
      * @see InventoryType#isCreatable()
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     public static Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type, @NotNull String title) {
         return server.createInventory(owner, type, title);
@@ -1274,7 +1274,7 @@ public final class Bukkit {
      * @throws IllegalArgumentException if the size is not a multiple of 9
      * @deprecated in favour of {@link #createInventory(InventoryHolder, InventoryType, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     public static Inventory createInventory(@Nullable InventoryHolder owner, int size, @NotNull String title) throws IllegalArgumentException {
         return server.createInventory(owner, size, title);
@@ -1301,7 +1301,7 @@ public final class Bukkit {
      * @deprecated in favour of {@link #createMerchant(net.kyori.adventure.text.Component)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public static Merchant createMerchant(@Nullable String title) {
         return server.createMerchant(title);
     }
@@ -1390,7 +1390,7 @@ public final class Bukkit {
      * @deprecated in favour of {@link #motd()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public static String getMotd() {
         return server.getMotd();
     }
@@ -1412,7 +1412,7 @@ public final class Bukkit {
      * @deprecated in favour of {@link #shutdownMessage()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public static String getShutdownMessage() {
         return server.getShutdownMessage();
     }

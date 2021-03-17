@@ -151,7 +151,7 @@ public class PlayerDeathEvent extends EntityDeathEvent {
      * @param deathMessage Message to appear to other players on the server.
      * @deprecated in favour of {@link #deathMessage(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setDeathMessage(@Nullable String deathMessage) {
         this.deathMessage = deathMessage;
         this.adventure$deathMessage = deathMessage != null ? org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(deathMessage) : net.kyori.adventure.text.Component.empty(); // Paper
@@ -164,7 +164,7 @@ public class PlayerDeathEvent extends EntityDeathEvent {
      * @deprecated in favour of {@link #deathMessage()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getDeathMessage() {
         return this.deathMessage != null ? this.deathMessage : (this.adventure$deathMessage != null ? getDeathMessageString(this.adventure$deathMessage) : null); // Paper
     }

@@ -59,7 +59,7 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable, Persiste
      * @return the display name that is set
      * @deprecated in favour of {@link #displayName()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     String getDisplayName();
 
@@ -83,7 +83,7 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable, Persiste
      * @param name the name to set
      * @deprecated in favour of {@link #displayName(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setDisplayName(@Nullable String name);
 
     // Paper start
@@ -155,7 +155,7 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable, Persiste
      * @return a list of lore that is set
      * @deprecated in favour of {@link #lore()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @Nullable
     List<String> getLore();
 
@@ -179,7 +179,7 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable, Persiste
      * @param lore the lore that will be set
      * @deprecated in favour of {@link #lore(List)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setLore(@Nullable List<String> lore);
 
     /**

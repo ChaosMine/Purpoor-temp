@@ -464,7 +464,7 @@ public abstract class InventoryView {
      * @return The title.
      * @deprecated in favour of {@link #title()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     public abstract String getTitle();
 }

@@ -37,7 +37,7 @@ public class PlayerLocaleChangeEvent extends PlayerEvent {
      * @deprecated in favour of {@link #locale()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getLocale() {
         return locale;
     }

@@ -259,7 +259,7 @@ public final class MapCursor {
      * @deprecated in favour of {@link #caption()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getCaption() {
         return this.caption == null ? null : org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.caption); // Paper
     }
@@ -270,7 +270,7 @@ public final class MapCursor {
      * @param caption new caption
      * @deprecated in favour of {@link #caption(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setCaption(@Nullable String caption) {
         this.caption = caption == null ? null : org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(caption); // Paper
     }

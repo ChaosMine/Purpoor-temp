@@ -47,7 +47,7 @@ public interface Objective {
      * @deprecated in favour of {@link #displayName()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getDisplayName() throws IllegalStateException;
 
     /**
@@ -60,7 +60,7 @@ public interface Objective {
      *     characters.
      * @deprecated in favour of {@link #displayName(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setDisplayName(@NotNull String displayName) throws IllegalStateException, IllegalArgumentException;
 
     /**

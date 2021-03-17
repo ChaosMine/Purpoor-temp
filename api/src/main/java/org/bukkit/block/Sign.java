@@ -48,7 +48,7 @@ public interface Sign extends TileState, Colorable {
      * @deprecated in favour of {@link #lines()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String[] getLines();
 
     /**
@@ -62,7 +62,7 @@ public interface Sign extends TileState, Colorable {
      * @deprecated in favour of {@link #line(int)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getLine(int index) throws IndexOutOfBoundsException;
 
     /**
@@ -76,7 +76,7 @@ public interface Sign extends TileState, Colorable {
      * @throws IndexOutOfBoundsException If the index is out of the range 0..3
      * @deprecated in favour of {@link #line(int, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setLine(int index, @NotNull String line) throws IndexOutOfBoundsException;
 
     /**

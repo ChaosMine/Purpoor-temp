@@ -110,7 +110,7 @@ public interface Team {
      * @deprecated in favour of {@link #displayName()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getDisplayName() throws IllegalStateException;
 
     /**
@@ -122,7 +122,7 @@ public interface Team {
      * @throws IllegalStateException if this team has been unregistered
      * @deprecated in favour of {@link #displayName(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setDisplayName(@NotNull String displayName) throws IllegalStateException, IllegalArgumentException;
 
     /**
@@ -133,7 +133,7 @@ public interface Team {
      * @deprecated in favour of {@link #prefix()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getPrefix() throws IllegalStateException;
 
     /**
@@ -146,7 +146,7 @@ public interface Team {
      * @throws IllegalStateException if this team has been unregistered
      * @deprecated in favour of {@link #prefix(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setPrefix(@NotNull String prefix) throws IllegalStateException, IllegalArgumentException;
 
     /**
@@ -157,7 +157,7 @@ public interface Team {
      * @deprecated in favour of {@link #suffix()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getSuffix() throws IllegalStateException;
 
     /**
@@ -170,7 +170,7 @@ public interface Team {
      * @throws IllegalStateException if this team has been unregistered
      * @deprecated in favour of {@link #suffix(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setSuffix(@NotNull String suffix) throws IllegalStateException, IllegalArgumentException;
 
     /**
@@ -184,7 +184,7 @@ public interface Team {
      * @deprecated in favour of {@link #color()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     ChatColor getColor() throws IllegalStateException;
 
     /**
@@ -197,7 +197,7 @@ public interface Team {
      * no color
      * @deprecated in favour of {@link #color(net.kyori.adventure.text.format.NamedTextColor)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setColor(@NotNull ChatColor color);
 
     /**

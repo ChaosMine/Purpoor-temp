@@ -17,7 +17,7 @@ public class PlayerJoinEvent extends PlayerEvent {
         this.joinMessage = joinMessage;
     }
 
-    @Deprecated // Paper end
+    @Deprecated // Paper end // Purpur - conflict on change
     public PlayerJoinEvent(@NotNull final Player playerJoined, @Nullable final String joinMessage) {
         super(playerJoined);
         this.joinMessage = joinMessage != null ? org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(joinMessage) : null; // Paper end
@@ -50,7 +50,7 @@ public class PlayerJoinEvent extends PlayerEvent {
      * @deprecated in favour of {@link #joinMessage()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getJoinMessage() {
         return this.joinMessage == null ? null : org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.joinMessage); // Paper
     }
@@ -61,7 +61,7 @@ public class PlayerJoinEvent extends PlayerEvent {
      * @param joinMessage join message. If null, no message will be sent
      * @deprecated in favour of {@link #joinMessage(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setJoinMessage(@Nullable String joinMessage) {
         this.joinMessage = joinMessage != null ? org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(joinMessage) : null; // Paper
     }

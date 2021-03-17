@@ -61,7 +61,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      * @deprecated in favour of {@link #quitMessage()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getQuitMessage() {
         return this.quitMessage == null ? null : org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.quitMessage); // Paper
     }
@@ -72,7 +72,7 @@ public class PlayerQuitEvent extends PlayerEvent {
      * @param quitMessage quit message
      * @deprecated in favour of {@link #quitMessage(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setQuitMessage(@Nullable String quitMessage) {
         this.quitMessage = quitMessage != null ? org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(quitMessage) : null; // Paper
     }

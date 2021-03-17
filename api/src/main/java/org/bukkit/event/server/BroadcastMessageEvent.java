@@ -73,7 +73,7 @@ public class BroadcastMessageEvent extends ServerEvent implements Cancellable {
      * @deprecated in favour of {@link #message()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getMessage() {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.message); // Paper
     }
@@ -84,7 +84,7 @@ public class BroadcastMessageEvent extends ServerEvent implements Cancellable {
      * @param message New message to broadcast
      * @deprecated in favour of {@link #message(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setMessage(@NotNull String message) {
         this.message = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(message); // Paper
     }

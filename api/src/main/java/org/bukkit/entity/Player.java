@@ -72,7 +72,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @return the friendly name
      * @deprecated in favour of {@link #displayName()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     public String getDisplayName();
 
@@ -86,7 +86,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param name The new display name.
      * @deprecated in favour of {@link #displayName(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setDisplayName(@Nullable String name);
 
     // Paper start
@@ -127,7 +127,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @deprecated in favour of {@link #playerListName()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getPlayerListName();
 
     /**
@@ -138,7 +138,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param name new player list name
      * @deprecated in favour of {@link #playerListName(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setPlayerListName(@Nullable String name);
 
     /**
@@ -147,7 +147,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @return player list header or null
      * @deprecated in favour of {@link #playerListHeader()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @Nullable
     public String getPlayerListHeader();
 
@@ -157,7 +157,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @return player list header or null
      * @deprecated in favour of {@link #playerListFooter()}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @Nullable
     public String getPlayerListFooter();
 
@@ -167,7 +167,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param header player list header, null for empty
      * @deprecated in favour of {@link #sendPlayerListHeader(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setPlayerListHeader(@Nullable String header);
 
     /**
@@ -176,7 +176,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param footer player list footer, null for empty
      * @deprecated in favour of {@link #sendPlayerListFooter(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setPlayerListFooter(@Nullable String footer);
 
     /**
@@ -187,7 +187,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param footer player list footer, null for empty
      * @deprecated in favour of {@link #sendPlayerListHeaderAndFooter(net.kyori.adventure.text.Component, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setPlayerListHeaderFooter(@Nullable String header, @Nullable String footer);
 
     /**
@@ -227,7 +227,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param message kick message
      * @deprecated in favour of {@link #kick(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void kickPlayer(@Nullable String message);
 
     // Paper start
@@ -598,7 +598,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @throws IllegalArgumentException if lines is non-null and has a length less than 4
      * @deprecated in favour of {@link #sendSignChange(org.bukkit.Location, java.util.List)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void sendSignChange(@NotNull Location loc, @Nullable String[] lines) throws IllegalArgumentException;
 
 
@@ -620,7 +620,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @throws IllegalArgumentException if lines is non-null and has a length less than 4
      * @deprecated in favour of {@link #sendSignChange(org.bukkit.Location, java.util.List, org.bukkit.DyeColor)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void sendSignChange(@NotNull Location loc, @Nullable String[] lines, @NotNull DyeColor dyeColor) throws IllegalArgumentException;
 
     /**
@@ -1769,7 +1769,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @deprecated in favour of {@link #locale()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getLocale();
 
     // Paper start

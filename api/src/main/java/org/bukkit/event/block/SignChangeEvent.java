@@ -90,7 +90,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable {
      * @deprecated in favour of {@link #lines()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String[] getLines() {
         return adventure$lines.stream().map(org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer()::serialize).toArray(String[]::new); // Paper
     }
@@ -106,7 +106,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable {
      * @deprecated in favour of {@link #line(int)}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getLine(int index) throws IndexOutOfBoundsException {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.adventure$lines.get(index)); // Paper
     }
@@ -120,7 +120,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable {
      *     or < 0}
      * @deprecated in favour of {@link #line(int, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setLine(int index, @Nullable String line) throws IndexOutOfBoundsException {
         adventure$lines.set(index, line != null ? org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(line) : null); // Paper
     }

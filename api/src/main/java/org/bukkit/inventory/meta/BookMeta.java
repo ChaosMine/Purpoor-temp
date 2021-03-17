@@ -244,7 +244,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @deprecated in favour of {@link #page(int)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getPage(int page);
 
     /**
@@ -260,7 +260,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @param data the data to set for that page
      * @deprecated in favour of {@link #page(int, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setPage(int page, @NotNull String data);
 
     /**
@@ -270,7 +270,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @deprecated in favour of {@link #pages()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     List<String> getPages();
 
     /**
@@ -280,7 +280,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @param pages A list of pages to set the book to use
      * @deprecated in favour of {@link #pages(List)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setPages(@NotNull List<String> pages);
 
     /**
@@ -290,7 +290,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @param pages A list of strings, each being a page
      * @deprecated in favour of {@link #pages(net.kyori.adventure.text.Component...)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void setPages(@NotNull String... pages);
 
     /**
@@ -300,7 +300,7 @@ public interface BookMeta extends ItemMeta, net.kyori.adventure.inventory.Book {
      * @param pages A list of strings, each being a page
      * @deprecated in favour of {@link #addPages(net.kyori.adventure.text.Component...)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     void addPage(@NotNull String... pages);
 
     /**

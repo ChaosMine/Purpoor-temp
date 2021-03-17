@@ -85,7 +85,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      * @deprecated in favour of {@link #reason()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getReason() {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.kickReason); // Paper
     }
@@ -97,7 +97,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      * @deprecated in favour of {@link #leaveMessage()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getLeaveMessage() {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.leaveMessage); // Paper
     }
@@ -118,7 +118,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      * @param kickReason kick reason
      * @deprecated in favour of {@link #reason(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setReason(@NotNull String kickReason) {
         this.kickReason = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(kickReason); // Paper
     }
@@ -129,7 +129,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
      * @param leaveMessage leave message
      * @deprecated in favour of {@link #leaveMessage(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setLeaveMessage(@NotNull String leaveMessage) {
         this.leaveMessage = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(leaveMessage); // Paper
     }

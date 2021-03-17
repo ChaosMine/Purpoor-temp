@@ -109,7 +109,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @deprecated in favour of {@link #motd()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getMotd() {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.motd); // Paper
     }
@@ -120,7 +120,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @param motd the message of the day
      * @deprecated in favour of {@link #motd(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setMotd(@NotNull String motd) {
         this.motd = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(motd); // Paper
     }

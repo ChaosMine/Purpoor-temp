@@ -179,7 +179,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      * @deprecated in favour of {@link #kickMessage()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public String getKickMessage() {
         return org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().serialize(this.message); // Paper
     }
@@ -190,7 +190,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      * @param message New kick message
      * @deprecated in favour of {@link #kickMessage(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void setKickMessage(@NotNull final String message) {
         this.message = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(message); // Paper
     }
@@ -210,7 +210,7 @@ public class AsyncPlayerPreLoginEvent extends Event {
      * @param message Kick message to display to the user
      * @deprecated in favour of {@link #disallow(org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public void disallow(@NotNull final Result result, @NotNull final String message) {
         this.result = result;
         this.message = org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(message); // Paper

@@ -250,7 +250,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @return the number of players
      * @deprecated use {@link #broadcast(net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public int broadcastMessage(@NotNull String message);
 
     // Paper start
@@ -773,7 +773,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @return number of message recipients
      * @deprecated in favour of {@link #broadcast(net.kyori.adventure.text.Component, String)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     public int broadcast(@NotNull String message, @NotNull String permission);
     // Paper start
     /**
@@ -1035,7 +1035,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      *
      * @see InventoryType#isCreatable()
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type, @NotNull String title);
 
@@ -1079,7 +1079,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @throws IllegalArgumentException if the size is not a multiple of 9
      * @deprecated in favour of {@link #createInventory(InventoryHolder, int, net.kyori.adventure.text.Component)}
      */
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     @NotNull
     Inventory createInventory(@Nullable InventoryHolder owner, int size, @NotNull String title) throws IllegalArgumentException;
 
@@ -1102,7 +1102,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @deprecated in favour of {@link #createMerchant(net.kyori.adventure.text.Component)}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     Merchant createMerchant(@Nullable String title);
 
     /**
@@ -1175,7 +1175,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @deprecated in favour of {@link #motd()}
      */
     @NotNull
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getMotd();
 
     // Paper start
@@ -1193,7 +1193,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @deprecated in favour of {@link #shutdownMessage()}
      */
     @Nullable
-    @Deprecated // Paper
+    @Deprecated // Paper // Purpur - conflict on change
     String getShutdownMessage();
 
     /**
