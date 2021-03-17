@@ -1462,6 +1462,7 @@ public class PurpurWorldConfig {
     public boolean ravagerRidableInWater = false;
     public boolean ravagerBypassMobGriefing = false;
     public double ravagerMaxHealth = 100.0D;
+    public List<Block> ravagerGriefableBlocks = new ArrayList<>();
     private void ravagerSettings() {
         ravagerRidable = getBoolean("mobs.ravager.ridable", ravagerRidable);
         ravagerRidableInWater = getBoolean("mobs.ravager.ridable-in-water", ravagerRidableInWater);
@@ -1472,6 +1473,23 @@ public class PurpurWorldConfig {
             set("mobs.ravager.attributes.max_health", oldValue);
         }
         ravagerMaxHealth = getDouble("mobs.ravager.attributes.max_health", ravagerMaxHealth);
+        getList("mobs.ravager.griefable-blocks", new ArrayList<String>(){{
+            add("minecraft:oak_leaves");
+            add("minecraft:spruce_leaves");
+            add("minecraft:birch_leaves");
+            add("minecraft:jungle_leaves");
+            add("minecraft:acacia_leaves");
+            add("minecraft:dark_oak_leaves");
+            add("minecraft:beetroots");
+            add("minecraft:carrots");
+            add("minecraft:potatoes");
+            add("minecraft:wheat");
+        }}).forEach(key -> {
+            Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
+            if (!block.getBlockData().isAir()) {
+                ravagerGriefableBlocks.add(block);
+            }
+        });
     }
 
     public boolean salmonRidable = false;

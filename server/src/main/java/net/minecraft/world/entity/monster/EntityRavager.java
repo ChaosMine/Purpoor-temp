@@ -188,7 +188,7 @@ public class EntityRavager extends EntityRaider {
                     IBlockData iblockdata = this.world.getType(blockposition);
                     Block block = iblockdata.getBlock();
 
-                    if (block instanceof BlockLeaves && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, net.minecraft.world.level.block.Blocks.AIR.getBlockData()).isCancelled()) { // CraftBukkit
+                    if (world.purpurConfig.ravagerGriefableBlocks.contains(block) && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, net.minecraft.world.level.block.Blocks.AIR.getBlockData()).isCancelled()) { // CraftBukkit // Purpur
                         flag = this.world.a(blockposition, true, this) || flag;
                     }
                 }

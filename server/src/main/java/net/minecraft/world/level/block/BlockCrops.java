@@ -161,7 +161,7 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
-        if (entity instanceof EntityRavager && !CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, Blocks.AIR.getBlockData(), (!world.purpurConfig.ravagerBypassMobGriefing && !world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))).isCancelled()) { // CraftBukkit // Purpur
+        if (entity instanceof EntityRavager && world.purpurConfig.ravagerGriefableBlocks.contains(world.getType(blockposition).getBlock()) && !CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, Blocks.AIR.getBlockData(), (!world.purpurConfig.ravagerBypassMobGriefing && !world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))).isCancelled()) { // CraftBukkit // Purpur
             world.a(blockposition, true, entity);
         }
 
