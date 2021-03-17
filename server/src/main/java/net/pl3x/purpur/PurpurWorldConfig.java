@@ -1121,6 +1121,7 @@ public class PurpurWorldConfig {
 
     public boolean llamaRidable = false;
     public boolean llamaRidableInWater = false;
+    public boolean llamaCaravans = true;
     public int llamaBreedingTicks = 6000;
     public double llamaMaxHealthMin = 15.0D;
     public double llamaMaxHealthMax = 30.0D;
@@ -1131,6 +1132,7 @@ public class PurpurWorldConfig {
     private void llamaSettings() {
         llamaRidable = getBoolean("mobs.llama.ridable", llamaRidable);
         llamaRidableInWater = getBoolean("mobs.llama.ridable-in-water", llamaRidableInWater);
+        llamaCaravans = getBoolean("mobs.llama.join-caravans", llamaCaravans);
         llamaBreedingTicks = getInt("mobs.llama.breeding-delay-ticks", llamaBreedingTicks);
         if (PurpurConfig.version < 10) {
             double oldMin = getDouble("mobs.llama.attributes.max-health.min", llamaMaxHealthMin);

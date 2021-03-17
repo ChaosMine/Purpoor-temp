@@ -518,7 +518,7 @@ public class EntityLlama extends EntityHorseChestedAbstract implements IRangedEn
 
     public void joinCaravan(EntityLlama entitiyllama) { a(entitiyllama); } // Purpur - OBFHELPER
     public void a(EntityLlama entityllama) {
-        if (!shouldJoinCaravan || !new net.pl3x.purpur.event.entity.LlamaJoinCaravanEvent((org.bukkit.entity.Llama) getBukkitEntity(), (org.bukkit.entity.Llama) entityllama.getBukkitEntity()).callEvent()) return; // Purpur
+        if (!this.world.purpurConfig.llamaCaravans || !shouldJoinCaravan || !new net.pl3x.purpur.event.entity.LlamaJoinCaravanEvent((org.bukkit.entity.Llama) getBukkitEntity(), (org.bukkit.entity.Llama) entityllama.getBukkitEntity()).callEvent()) return; // Purpur
         this.bB = entityllama;
         this.bB.bC = this;
     }

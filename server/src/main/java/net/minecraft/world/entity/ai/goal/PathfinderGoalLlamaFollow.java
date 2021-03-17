@@ -23,7 +23,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
 
     @Override
     public boolean a() {
-        if (!getLlama().shouldJoinCaravan) return false; // Purpur
+        if (!getLlama().world.purpurConfig.llamaCaravans || !getLlama().shouldJoinCaravan) return false; // Purpur
         if (!this.a.isLeashed() && !this.a.fC()) {
             List<Entity> list = this.a.world.getEntities(this.a, this.a.getBoundingBox().grow(9.0D, 4.0D, 9.0D), (entity) -> {
                 EntityTypes<?> entitytypes = entity.getEntityType();
