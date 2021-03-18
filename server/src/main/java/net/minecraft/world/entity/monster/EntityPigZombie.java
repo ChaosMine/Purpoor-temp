@@ -49,6 +49,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
     private UUID br;
     private static final IntRange bs = TimeRange.a(4, 6);
     private int bt;
+    private PathfinderGoalHurtByTarget pathfinderGoalHurtByTarget; // Paper
 
     public EntityPigZombie(EntityTypes<? extends EntityPigZombie> entitytypes, World world) {
         super(entitytypes, world);
@@ -69,7 +70,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
     protected void m() {
         this.goalSelector.a(2, new PathfinderGoalZombieAttack(this, 1.0D, false));
         this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D));
-        this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this).a(new Class[0])); // CraftBukkit - decompile error
+        this.targetSelector.a(1, pathfinderGoalHurtByTarget = new PathfinderGoalHurtByTarget(this).a(new Class[0])); // CraftBukkit - decompile error // Paper - assign field
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, 10, true, false, this::a_));
         this.targetSelector.a(3, new PathfinderGoalUniversalAngerReset<>(this, true));
     }
@@ -172,6 +173,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
         this.world.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             this.setAngerTarget(null);
+            pathfinderGoalHurtByTarget.onTaskResetObfHelper(); // Paper - clear goalTargets to fix cancellation
             return;
         }
         this.setAnger(event.getNewAnger());

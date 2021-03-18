@@ -28,6 +28,7 @@ public abstract class PathfinderGoal {
 
     public void c() { this.start(); } public void start() {} // Paper - OBFHELPER
 
+    public final void onTaskResetObfHelper() { d(); } // Paper - OBFHELPER
     public void d() {
         onTaskReset(); // Paper
     }
