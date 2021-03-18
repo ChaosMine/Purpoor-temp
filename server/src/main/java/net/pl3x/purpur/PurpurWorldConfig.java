@@ -1772,6 +1772,7 @@ public class PurpurWorldConfig {
     public boolean villagerClericsFarmWarts = false;
     public boolean villagerClericFarmersThrowWarts = true;
     public double villagerMaxHealth = 20.0D;
+    public boolean villagerAllowTrading = true;
     private void villagerSettings() {
         villagerRidable = getBoolean("mobs.villager.ridable", villagerRidable);
         villagerRidableInWater = getBoolean("mobs.villager.ridable-in-water", villagerRidableInWater);
@@ -1799,6 +1800,7 @@ public class PurpurWorldConfig {
             set("mobs.villager.attributes.max_health", oldValue);
         }
         villagerMaxHealth = getDouble("mobs.villager.attributes.max_health", villagerMaxHealth);
+        villagerAllowTrading = getBoolean("mobs.villager.allow-trading", villagerAllowTrading);
     }
 
     public boolean villagerTraderRidable = false;
@@ -1806,6 +1808,7 @@ public class PurpurWorldConfig {
     public boolean villagerTraderCanBeLeashed = false;
     public boolean villagerTraderFollowEmeraldBlock = false;
     public double villagerTraderMaxHealth = 20.0D;
+    public boolean villagerTraderAllowTrading = true;
     private void villagerTraderSettings() {
         villagerTraderRidable = getBoolean("mobs.wandering_trader.ridable", villagerTraderRidable);
         villagerTraderRidableInWater = getBoolean("mobs.wandering_trader.ridable-in-water", villagerTraderRidableInWater);
@@ -1817,6 +1820,7 @@ public class PurpurWorldConfig {
             set("mobs.wandering_trader.attributes.max_health", oldValue);
         }
         villagerTraderMaxHealth = getDouble("mobs.wandering_trader.attributes.max_health", villagerTraderMaxHealth);
+        villagerTraderAllowTrading = getBoolean("mobs.wandering_trader.allow-trading", villagerTraderAllowTrading);
     }
 
     public boolean vindicatorRidable = false;

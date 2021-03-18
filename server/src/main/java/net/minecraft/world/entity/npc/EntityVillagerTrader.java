@@ -146,7 +146,7 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
                 return tryRide(entityhuman, enumhand); // Purpur
             } else {
                 if (world.purpurConfig.villagerTraderRidable && itemstack.isEmpty()) return tryRide(entityhuman, enumhand); // Purpur
-                if (!this.world.isClientSide) {
+                if (!this.world.isClientSide && this.world.purpurConfig.villagerTraderAllowTrading) {
                     this.setTradingPlayer(entityhuman);
                     this.openTrade(entityhuman, this.getScoreboardDisplayName(), 1);
                 }

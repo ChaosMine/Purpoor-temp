@@ -369,7 +369,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                     return tryRide(entityhuman, enumhand); // Purpur
                 } else {
                     if (world.purpurConfig.villagerRidable && itemstack.isEmpty()) return tryRide(entityhuman, enumhand); // Purpur
-                    if (!this.world.isClientSide && !this.trades.isEmpty()) {
+                    if (!this.world.isClientSide && this.world.purpurConfig.villagerAllowTrading && !this.trades.isEmpty()) { // Purpur
                         this.h(entityhuman);
                     }
 
