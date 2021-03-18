@@ -94,7 +94,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
     private static boolean a(EntityLiving entityliving, ItemStack itemstack, boolean consume) { // Paper - add consume
         int i = EnchantmentManager.getEnchantmentLevel(Enchantments.MULTISHOT, itemstack);
         int j = i == 0 ? 1 : 3;
-        boolean flag = !consume || entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.canInstantlyBuild; // Paper - add consme
+        boolean flag = !consume || entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.canInstantlyBuild || (net.pl3x.purpur.PurpurConfig.allowCrossbowInfinity && EnchantmentManager.getEnchantmentLevel(Enchantments.ARROW_INFINITE, itemstack) > 0); // Paper - add consme // Purpur
         ItemStack itemstack1 = entityliving.f(itemstack);
         ItemStack itemstack2 = itemstack1.cloneItemStack();
 
@@ -285,7 +285,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
 
         for (int i = 0; i < list.size(); ++i) {
             ItemStack itemstack1 = (ItemStack) list.get(i);
-            boolean flag = entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.canInstantlyBuild;
+            boolean flag = entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.canInstantlyBuild || (net.pl3x.purpur.PurpurConfig.allowCrossbowInfinity && EnchantmentManager.getEnchantmentLevel(Enchantments.ARROW_INFINITE, itemstack) > 0); // Purpur
 
             if (!itemstack1.isEmpty()) {
                 if (i == 0) {

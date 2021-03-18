@@ -5,7 +5,7 @@ import net.minecraft.world.entity.EnumItemSlot;
 public class EnchantmentInfiniteArrows extends Enchantment {
 
     public EnchantmentInfiniteArrows(Enchantment.Rarity enchantment_rarity, EnumItemSlot... aenumitemslot) {
-        super(enchantment_rarity, EnchantmentSlotType.BOW, aenumitemslot);
+        super(enchantment_rarity, net.pl3x.purpur.PurpurConfig.allowCrossbowInfinity ? EnchantmentSlotType.BOW_AND_CROSSBOW : EnchantmentSlotType.BOW, aenumitemslot); // Purpur
     }
 
     @Override

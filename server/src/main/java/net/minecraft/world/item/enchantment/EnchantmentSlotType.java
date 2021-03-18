@@ -96,9 +96,17 @@ public enum EnchantmentSlotType {
     VANISHABLE {
         @Override
         public boolean canEnchant(Item item) {
-            return item instanceof ItemVanishable || Block.asBlock(item) instanceof ItemVanishable || null.BREAKABLE.canEnchant(item);
+            return item instanceof ItemVanishable || Block.asBlock(item) instanceof ItemVanishable || BREAKABLE.canEnchant(item); // Purpur - decompile fix
+        }
+    // Purpur start
+    },
+    BOW_AND_CROSSBOW {
+        @Override
+        public boolean canEnchant(Item item) {
+            return item instanceof ItemBow || item instanceof ItemCrossbow;
         }
     };
+    // Purpur end
 
     private EnchantmentSlotType() {}
 
