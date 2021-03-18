@@ -334,6 +334,7 @@ public class PurpurWorldConfig {
     public int animalBreedingCooldownSeconds = 0;
     public boolean creativeOnePunch = false;
     public boolean playerSleepNearMonsters = false;
+    public boolean playersSkipNight = true;
     private void miscGameplayMechanicsSettings() {
         useBetterMending = getBoolean("gameplay-mechanics.use-better-mending", useBetterMending);
         alwaysTameInCreative = getBoolean("gameplay-mechanics.always-tame-in-creative", alwaysTameInCreative);
@@ -354,6 +355,7 @@ public class PurpurWorldConfig {
         animalBreedingCooldownSeconds = getInt("gameplay-mechanics.animal-breeding-cooldown-seconds", animalBreedingCooldownSeconds);
         creativeOnePunch = getBoolean("gameplay-mechanics.player.one-punch-in-creative", creativeOnePunch);
         playerSleepNearMonsters = getBoolean("gameplay-mechanics.player.sleep-ignore-nearby-mobs", playerSleepNearMonsters);
+        playersSkipNight = getBoolean("gameplay-mechanics.player.can-skip-night", playersSkipNight);
     }
 
     public boolean catSpawning;

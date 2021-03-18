@@ -1028,7 +1028,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
         // CraftBukkit end
 
-        if (this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> {
+        if (this.purpurConfig.playersSkipNight && this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> { // Purpur
             return !entityplayer.isSpectator() && !entityplayer.isDeeplySleeping() && !entityplayer.fauxSleeping && !(purpurConfig.idleTimeoutCountAsSleeping && entityplayer.isAfk()); // CraftBukkit // Purpur
         })) {
             // CraftBukkit start
