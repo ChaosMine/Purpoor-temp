@@ -3351,6 +3351,7 @@ public abstract class EntityLiving extends Entity {
                     world.getServer().getPluginManager().callEvent(event);
 
                     if (event.isCancelled()) {
+                        this.clearActiveItem(); // Paper - event is using an item, clear active item to reset its use
                         // Update client
                         ((EntityPlayer) this).getBukkitEntity().updateInventory();
                         ((EntityPlayer) this).getBukkitEntity().updateScaledHealth();
