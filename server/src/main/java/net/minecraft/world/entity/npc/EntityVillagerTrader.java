@@ -62,7 +62,7 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     public EntityVillagerTrader(EntityTypes<? extends EntityVillagerTrader> entitytypes, World world) {
         super(entitytypes, world);
         this.attachedToPlayer = true;
-        this.setDespawnDelay(48000); // CraftBukkit - set default from MobSpawnerTrader
+        //this.setDespawnDelay(48000); // CraftBukkit - set default from MobSpawnerTrader // Paper - move back to MobSpawnerTrader - Vanilla behavior is that only traders spawned by it have this value set.
     }
 
     @Override

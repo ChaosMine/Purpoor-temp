@@ -114,7 +114,7 @@ public class MobSpawnerTrader implements MobSpawner {
                     return false;
                 }
 
-                EntityVillagerTrader entityvillagertrader = (EntityVillagerTrader) EntityTypes.WANDERING_TRADER.spawnCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition2, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
+                EntityVillagerTrader entityvillagertrader = EntityTypes.WANDERING_TRADER.spawnCreature(worldserver, null, null, null, blockposition2, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL, trader -> trader.setDespawnDelay(48000)); // CraftBukkit // Paper - set despawnTimer before spawn events called
 
                 if (entityvillagertrader != null) {
                     for (int i = 0; i < 2; ++i) {

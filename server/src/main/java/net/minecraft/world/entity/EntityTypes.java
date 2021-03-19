@@ -319,6 +319,12 @@ public class EntityTypes<T extends Entity> {
 
     @Nullable
     public T spawnCreature(WorldServer worldserver, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
+        // Paper start - add consumer to modify entity before spawn
+        return this.spawnCreature(worldserver, nbttagcompound, ichatbasecomponent, entityhuman, blockposition, enummobspawn, flag, flag1, spawnReason, null);
+    }
+    @Nullable
+    public T spawnCreature(WorldServer worldserver, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason, @Nullable java.util.function.Consumer<T> op) {
+        // Paper end
         // Paper start - Call PreCreatureSpawnEvent
         org.bukkit.entity.EntityType type = org.bukkit.entity.EntityType.fromName(EntityTypes.getName(this).getKey());
         if (type != null) {
@@ -334,6 +340,7 @@ public class EntityTypes<T extends Entity> {
         }
         // Paper end
         T t0 = this.createCreature(worldserver, nbttagcompound, ichatbasecomponent, entityhuman, blockposition, enummobspawn, flag, flag1);
+        if (t0 != null && op != null) op.accept(t0); // Paper
 
         if (t0 != null) {
             worldserver.addAllEntities(t0, spawnReason);
