@@ -77,10 +77,12 @@ public class EntityGuardianElder extends EntityGuardian {
             while (iterator.hasNext()) {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
+                if (new io.papermc.paper.event.entity.ElderGuardianAppearanceEvent(getBukkitEntity(), entityplayer.getBukkitEntity()).callEvent()) { // Paper - Add Guardian Appearance Event
                 if (!entityplayer.hasEffect(mobeffectlist) || entityplayer.getEffect(mobeffectlist).getAmplifier() < 2 || entityplayer.getEffect(mobeffectlist).getDuration() < 1200) {
                     entityplayer.playerConnection.sendPacket(new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.k, this.isSilent() ? 0.0F : 1.0F));
                     entityplayer.addEffect(new MobEffect(mobeffectlist, 6000, 2), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.ATTACK); // CraftBukkit
                 }
+            } // Paper - Add Guardian Appearance Event
             }
         }
 
