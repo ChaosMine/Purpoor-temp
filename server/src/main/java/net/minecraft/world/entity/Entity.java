@@ -2613,7 +2613,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public int getDefaultPortalCooldown() {
-        return 300;
+        return this.world.purpurConfig.drowningAirTicks; // Purpur
     }
 
     public Iterable<ItemStack> bn() {

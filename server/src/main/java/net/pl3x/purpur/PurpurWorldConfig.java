@@ -2047,6 +2047,15 @@ public class PurpurWorldConfig {
         imposeTeleportRestrictionsOnGateways = getBoolean("gameplay-mechanics.impose-teleport-restrictions-on-gateways", imposeTeleportRestrictionsOnGateways);
     }
 
+    public int drowningAirTicks = 300;
+    public int drowningDamageInterval = 20;
+    public double damageFromDrowning = 2.0F;
+    private void drowningSettings() {
+        drowningAirTicks = getInt("gameplay-mechanics.drowning.air-ticks", drowningAirTicks);
+        drowningDamageInterval = getInt("gameplay-mechanics.drowning.ticks-per-damage", drowningDamageInterval);
+        damageFromDrowning = getDouble("gameplay-mechanics.drowning.damage-from-drowning", damageFromDrowning);
+    }
+
     public boolean baselessCrystalExplode = true;
     public double baselessCrystalExplosionPower = 6.0D;
     public boolean baselessCrystalExplosionFire = false;

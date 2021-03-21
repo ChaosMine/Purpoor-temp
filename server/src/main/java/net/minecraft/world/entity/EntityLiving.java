@@ -393,7 +393,7 @@ public abstract class EntityLiving extends Entity {
             if (this.a((Tag) TagsFluid.WATER) && !this.world.getType(new BlockPosition(this.locX(), this.getHeadY(), this.locZ())).a(Blocks.BUBBLE_COLUMN)) {
                 if (!this.canBreatheUnderwater() && !MobEffectUtil.c(this) && !flag1) {  // Paper - use OBFHELPER so it can be overridden
                     this.setAirTicks(this.l(this.getAirTicks()));
-                    if (this.getAirTicks() == -20) {
+                    if (this.getAirTicks() == -this.world.purpurConfig.drowningDamageInterval) { // Purpur
                         this.setAirTicks(0);
                         Vec3D vec3d = this.getMot();
 
@@ -405,7 +405,7 @@ public abstract class EntityLiving extends Entity {
                             this.world.addParticle(Particles.BUBBLE, this.locX() + d2, this.locY() + d3, this.locZ() + d4, vec3d.x, vec3d.y, vec3d.z);
                         }
 
-                        this.damageEntity(DamageSource.DROWN, 2.0F);
+                        this.damageEntity(DamageSource.DROWN, (float) this.world.purpurConfig.damageFromDrowning); // Purpur
                     }
                 }
 
