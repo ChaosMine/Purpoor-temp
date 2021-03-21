@@ -44,7 +44,7 @@ import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
 
 public class BlockComposter extends Block implements IInventoryHolder {
 
-    public static final BlockStateInteger a = BlockProperties.as;
+    public static final BlockStateInteger a = BlockProperties.as; public static BlockStateInteger level() { return BlockComposter.a; } // Purpur - OBFHELPER
     public static final Object2FloatMap<IMaterial> b = new Object2FloatOpenHashMap();
     private static final VoxelShape c = VoxelShapes.b();
     private static final VoxelShape[] d = (VoxelShape[]) SystemUtils.a((new VoxelShape[9]), (avoxelshape) -> { // CraftBukkit - decompile error
@@ -203,6 +203,25 @@ public class BlockComposter extends Block implements IInventoryHolder {
     public static IBlockData a(IBlockData iblockdata, WorldServer worldserver, ItemStack itemstack, BlockPosition blockposition, Entity entity) { // CraftBukkit
         int i = (Integer) iblockdata.get(BlockComposter.a);
 
+        // Purpur start
+        IBlockData newState = process(i, iblockdata, worldserver, itemstack, blockposition, entity);
+
+        if (worldserver.purpurConfig.composterBulkProcess && entity.isSneaking()) {
+            IBlockData oldState;
+            int oldCount, newCount, oldLevel, newLevel;
+            do {
+                oldState = newState;
+                oldCount = itemstack.getCount();
+                oldLevel = oldState.get(BlockComposter.level());
+                newState = process(oldLevel, oldState, worldserver, itemstack, blockposition, entity);
+                newCount = itemstack.getCount();
+                newLevel = newState.get(BlockComposter.level());
+            } while (newCount > 0 && (newCount != oldCount || newLevel != oldLevel || newState != oldState));
+        }
+        return newState;
+    }
+    private static IBlockData process(int i, IBlockData iblockdata, WorldServer worldserver, ItemStack itemstack, BlockPosition blockposition, Entity entity) {
+        // Purpur end
         if (i < 7 && BlockComposter.b.containsKey(itemstack.getItem())) {
             // CraftBukkit start
             double rand = worldserver.getRandom().nextDouble();
