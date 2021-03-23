@@ -95,6 +95,12 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
     }
 
     public static boolean a(WorldAccess worldaccess, BlockPosition blockposition, Random random) {
+        // Purpur start
+        net.minecraft.world.level.block.state.IBlockData spawnBlock = worldaccess.getType(blockposition.down());
+        if ((!worldaccess.getMinecraftWorld().purpurConfig.mobsSpawnOnPackedIce && spawnBlock.equals(net.minecraft.world.level.block.Blocks.PACKED_ICE)) || (!worldaccess.getMinecraftWorld().purpurConfig.mobsSpawnOnBlueIce && spawnBlock.equals(net.minecraft.world.level.block.Blocks.BLUE_ICE))) {
+            return false;
+        }
+        // Purpur end
         if (worldaccess.getBrightness(EnumSkyBlock.SKY, blockposition) > random.nextInt(32)) {
             return false;
         } else {

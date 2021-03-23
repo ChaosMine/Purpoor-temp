@@ -495,8 +495,12 @@ public class PurpurWorldConfig {
     }
 
     public boolean snowOnBlueIce = true;
+    public boolean mobsSpawnOnPackedIce = true;
+    public boolean mobsSpawnOnBlueIce = true;
     private void iceSettings() {
         snowOnBlueIce = getBoolean("blocks.blue_ice.allow-snow-formation", snowOnBlueIce);
+        mobsSpawnOnPackedIce = getBoolean("blocks.packed_ice.allow-mob-spawns", mobsSpawnOnPackedIce);
+        mobsSpawnOnBlueIce = getBoolean("blocks.blue_ice.allow-mob-spawns", mobsSpawnOnBlueIce);
     }
 
     public boolean chestOpenWithBlockOnTop = false;
