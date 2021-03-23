@@ -110,6 +110,7 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
             }
             // Paper end
         }
+        sign.isEditable = getSnapshot().isEditable; // Paper - copy manually
     }
 
     // Paper start
