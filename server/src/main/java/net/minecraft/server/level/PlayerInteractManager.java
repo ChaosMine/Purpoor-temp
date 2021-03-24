@@ -410,6 +410,8 @@ public class PlayerInteractManager {
                 }
                 return false;
             }
+
+            if (this.player.world.purpurConfig.slabHalfBreak && this.player.isSneaking() && iblockdata.getBlock() instanceof net.minecraft.world.level.block.BlockStepAbstract && ((net.minecraft.world.level.block.BlockStepAbstract) iblockdata.getBlock()).halfBreak(iblockdata, blockposition, this.player)) return true; // Purpur
         }
         // CraftBukkit end
 

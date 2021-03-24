@@ -27,7 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShapes;
 
 public class BlockStepAbstract extends Block implements IBlockWaterlogged {
 
-    public static final BlockStateEnum<BlockPropertySlabType> a = BlockProperties.aK;
+    public static final BlockStateEnum<BlockPropertySlabType> a = BlockProperties.aK; public static BlockStateEnum<BlockPropertySlabType> slabType() { return a; } // Purpur - OBFHELPER
     public static final BlockStateBoolean b = BlockProperties.C;
     protected static final VoxelShape c = Block.a(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     protected static final VoxelShape d = Block.a(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -134,4 +134,25 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
                 return false;
         }
     }
+
+    // Purpur start
+    public boolean halfBreak(IBlockData iblockdata, BlockPosition pos, net.minecraft.server.level.EntityPlayer player) {
+        if (iblockdata.get(BlockStepAbstract.slabType()) != BlockPropertySlabType.DOUBLE) {
+            return false;
+        }
+        net.minecraft.world.phys.MovingObjectPosition result = player.getRayTrace(16);
+        if (result == null) {
+            return false;
+        }
+        double hitY = result.getPos().getY();
+        int blockY = org.bukkit.util.NumberConversions.floor(hitY);
+        player.world.setTypeAndData(pos, iblockdata.set(BlockStepAbstract.slabType(), (hitY - blockY > 0.5 || blockY - pos.getY() == 1) ? BlockPropertySlabType.BOTTOM : BlockPropertySlabType.TOP), 3);
+        if (!player.abilities.canInstantlyBuild) {
+            net.minecraft.world.entity.item.EntityItem item = new net.minecraft.world.entity.item.EntityItem(player.world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(getItem()));
+            item.defaultPickupDelay();
+            player.world.addEntity(item);
+        }
+        return true;
+    }
+    // Purpur end
 }

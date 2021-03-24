@@ -575,6 +575,11 @@ public class PurpurWorldConfig {
         signRightClickEdit = getBoolean("blocks.sign.right-click-edit", signRightClickEdit);
     }
 
+    public boolean slabHalfBreak = false;
+    private void slabSettings() {
+        slabHalfBreak = getBoolean("blocks.slab.break-individual-slabs-when-sneaking", slabHalfBreak);
+    }
+
     public boolean spawnerDeactivateByRedstone = false;
     private void spawnerSettings() {
         spawnerDeactivateByRedstone = getBoolean("blocks.spawner.deactivate-by-redstone", spawnerDeactivateByRedstone);
