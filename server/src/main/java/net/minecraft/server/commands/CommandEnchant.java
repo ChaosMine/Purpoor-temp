@@ -48,7 +48,7 @@ public class CommandEnchant {
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, Collection<? extends Entity> collection, Enchantment enchantment, int i) throws CommandSyntaxException {
-        if (i > enchantment.getMaxLevel()) {
+        if (!net.pl3x.purpur.PurpurConfig.allowUnsafeEnchants && i > enchantment.getMaxLevel()) { // Purpur
             throw CommandEnchant.d.create(i, enchantment.getMaxLevel());
         } else {
             int j = 0;
@@ -62,7 +62,7 @@ public class CommandEnchant {
                     ItemStack itemstack = entityliving.getItemInMainHand();
 
                     if (!itemstack.isEmpty()) {
-                        if (enchantment.canEnchant(itemstack) && EnchantmentManager.a((Collection) EnchantmentManager.a(itemstack).keySet(), enchantment)) {
+                        if ((enchantment.canEnchant(itemstack) && EnchantmentManager.a((Collection) EnchantmentManager.a(itemstack).keySet(), enchantment)) || (net.pl3x.purpur.PurpurConfig.allowUnsafeEnchants && !itemstack.hasEnchantment(enchantment))) { // Purpur
                             itemstack.addEnchantment(enchantment, i);
                             ++j;
                         } else if (collection.size() == 1) {

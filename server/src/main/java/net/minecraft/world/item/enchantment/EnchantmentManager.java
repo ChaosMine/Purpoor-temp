@@ -59,6 +59,7 @@ public class EnchantmentManager {
         return a(nbttaglist);
     }
 
+    public static Map<Enchantment, Integer> getEnchantmentMap(NBTTagList nbttaglist) { return a(nbttaglist); } // Purpur - OBFHELPER
     public static Map<Enchantment, Integer> a(NBTTagList nbttaglist) {
         Map<Enchantment, Integer> map = Maps.newLinkedHashMap();
 

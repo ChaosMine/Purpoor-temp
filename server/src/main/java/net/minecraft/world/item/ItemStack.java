@@ -860,6 +860,12 @@ public final class ItemStack {
         return this.tag != null && this.tag.hasKeyOfType("Enchantments", 9) ? !this.tag.getList("Enchantments", 10).isEmpty() : false;
     }
 
+    // Purpur start
+    public boolean hasEnchantment(Enchantment enchantment) {
+        return hasEnchantments() && EnchantmentManager.getEnchantmentMap(getEnchantments()).containsKey(enchantment);
+    }
+    // Purpur end
+
     public void getOrCreateTagAndSet(String s, NBTBase nbtbase) { a(s, nbtbase);} // Paper - OBFHELPER
     public void a(String s, NBTBase nbtbase) {
         this.getOrCreateTag().set(s, nbtbase);

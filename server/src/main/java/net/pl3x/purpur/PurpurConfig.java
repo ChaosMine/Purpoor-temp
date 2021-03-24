@@ -232,6 +232,7 @@ public class PurpurConfig {
 
     public static boolean allowInfinityMending = false;
     public static boolean allowCrossbowInfinity = false;
+    public static boolean allowUnsafeEnchants = false;
     private static void enchantmentSettings() {
         if (version < 5) {
             boolean oldValue = getBoolean("settings.enchantment.allow-infinite-and-mending-together", false);
@@ -240,6 +241,7 @@ public class PurpurConfig {
         }
         allowInfinityMending = getBoolean("settings.enchantment.allow-infinity-and-mending-together", allowInfinityMending);
         allowCrossbowInfinity = getBoolean("settings.enchantment.allow-infinity-on-crossbow", allowCrossbowInfinity);
+        allowUnsafeEnchants = getBoolean("settings.enchantment.allow-unsafe-enchants", allowUnsafeEnchants);
     }
 
     public static boolean endermanShortHeight = false;
