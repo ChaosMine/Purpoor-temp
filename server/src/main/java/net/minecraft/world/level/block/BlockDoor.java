@@ -167,6 +167,10 @@ public class BlockDoor extends Block {
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
         if (this.material == Material.ORE) {
             return EnumInteractionResult.PASS;
+            // Purpur start
+        } else if (requiresRedstone(world, iblockdata, blockposition)) {
+            return EnumInteractionResult.CONSUME;
+            // Purpur end
         } else {
             iblockdata = (IBlockData) iblockdata.a((IBlockState) BlockDoor.OPEN);
             world.setTypeAndData(blockposition, iblockdata, 10);
@@ -254,4 +258,18 @@ public class BlockDoor extends Block {
     public static boolean l(IBlockData iblockdata) {
         return iblockdata.getBlock() instanceof BlockDoor && (iblockdata.getMaterial() == Material.WOOD || iblockdata.getMaterial() == Material.NETHER_WOOD);
     }
+
+    // Purpur start
+    public static boolean requiresRedstone(World world, IBlockData iblockdata, BlockPosition blockposition) {
+        if (world.purpurConfig.doorRequiresRedstone.contains(iblockdata.getBlock())) {
+            // force update client
+            BlockPosition otherBlockPosition = blockposition.shift(iblockdata.get(BlockDoor.HALF) == BlockPropertyDoubleBlockHalf.LOWER ? EnumDirection.UP : EnumDirection.DOWN);
+            IBlockData otherIBlockData = world.getType(otherBlockPosition);
+            world.notify(blockposition, iblockdata, iblockdata, 3);
+            world.notify(otherBlockPosition, otherIBlockData, otherIBlockData, 3);
+            return true;
+        }
+        return false;
+    }
+    // Purpur end
 }

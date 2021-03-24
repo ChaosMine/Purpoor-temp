@@ -62,7 +62,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         BlockPosition blockposition = pathpoint.a();
         IBlockData iblockdata = worldserver.getType(blockposition);
 
-        if (iblockdata.a((Tag) TagsBlock.WOODEN_DOORS)) {
+        if (iblockdata.a((Tag) TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
             BlockDoor blockdoor = (BlockDoor) iblockdata.getBlock();
 
             if (!blockdoor.h(iblockdata)) {
@@ -82,7 +82,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         BlockPosition blockposition1 = pathpoint1.a();
         IBlockData iblockdata1 = worldserver.getType(blockposition1);
 
-        if (iblockdata1.a((Tag) TagsBlock.WOODEN_DOORS)) {
+        if (iblockdata1.a((Tag) TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition1)) { // Purpur
             BlockDoor blockdoor1 = (BlockDoor) iblockdata1.getBlock();
 
             if (!blockdoor1.h(iblockdata1)) {
@@ -117,7 +117,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
                     } else {
                         IBlockData iblockdata = worldserver.getType(blockposition);
 
-                        if (!iblockdata.a((Tag) TagsBlock.WOODEN_DOORS)) {
+                        if (!iblockdata.a((Tag) TagsBlock.WOODEN_DOORS) || BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
                             iterator.remove();
                         } else {
                             BlockDoor blockdoor = (BlockDoor) iblockdata.getBlock();

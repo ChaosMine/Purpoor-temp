@@ -496,6 +496,16 @@ public class PurpurWorldConfig {
         }
     }
 
+    public List<Block> doorRequiresRedstone = new ArrayList<>();
+    private void doorSettings() {
+        getList("blocks.door.requires-redstone", new ArrayList<String>()).forEach(key -> {
+            Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
+            if (!block.getBlockData().isAir()) {
+                doorRequiresRedstone.add(block);
+            }
+        });
+    }
+
     public boolean snowOnBlueIce = true;
     public boolean mobsSpawnOnPackedIce = true;
     public boolean mobsSpawnOnBlueIce = true;
