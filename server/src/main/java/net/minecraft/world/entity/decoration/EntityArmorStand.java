@@ -103,6 +103,7 @@ public class EntityArmorStand extends EntityLiving {
         this.leftLegPose = EntityArmorStand.bn;
         this.rightLegPose = EntityArmorStand.bo;
         this.G = 0.0F;
+        this.setArms(world != null && world.purpurConfig.armorstandPlaceWithArms); // Purpur
     }
 
     public EntityArmorStand(World world, double d0, double d1, double d2) {
