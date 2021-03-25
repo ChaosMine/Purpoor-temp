@@ -24,7 +24,7 @@ public class BlockPoweredRail extends BlockMinecartTrackAbstract {
     }
 
     protected boolean a(World world, BlockPosition blockposition, IBlockData iblockdata, boolean flag, int i) {
-        if (i >= 8) {
+        if (i >= world.purpurConfig.railActivationRange) { // Purpur
             return false;
         } else {
             int j = blockposition.getX();
