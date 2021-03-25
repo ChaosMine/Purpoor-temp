@@ -201,6 +201,15 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
                 this.a(SoundEffects.BLOCK_BEACON_AMBIENT);
             }
         }
+        // Paper start - beacon activation/deactivation events
+        if (!(i1 > 0) && this.levels > 0) {
+            org.bukkit.block.Block block = org.bukkit.craftbukkit.block.CraftBlock.at(world, position);
+            new io.papermc.paper.event.block.BeaconActivatedEvent(block).callEvent();
+        } else if (i1 > 0 && !(this.levels > 0)) {
+            org.bukkit.block.Block block = org.bukkit.craftbukkit.block.CraftBlock.at(world, position);
+            new io.papermc.paper.event.block.BeaconDeactivatedEvent(block).callEvent();
+        }
+        // Paper end
 
         if (this.i >= l) {
             this.i = -1;
@@ -257,6 +266,10 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
     @Override
     public void al_() {
+        // Paper start - BeaconDeactivatedEvent
+        org.bukkit.block.Block block = org.bukkit.craftbukkit.block.CraftBlock.at(world, position);
+        new io.papermc.paper.event.block.BeaconDeactivatedEvent(block).callEvent();
+        // Paper end
         this.a(SoundEffects.BLOCK_BEACON_DEACTIVATE);
         super.al_();
     }
