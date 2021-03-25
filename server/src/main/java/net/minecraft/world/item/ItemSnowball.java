@@ -25,7 +25,7 @@ public class ItemSnowball extends Item {
             EntitySnowball entitysnowball = new EntitySnowball(world, entityhuman);
 
             entitysnowball.setItem(itemstack);
-            entitysnowball.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 1.5F, 1.0F);
+            entitysnowball.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 1.5F, (float) world.purpurConfig.snowballProjectileOffset); // Purpur - Projectile offset config
             // Paper start
             com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (org.bukkit.entity.Projectile) entitysnowball.getBukkitEntity());
             if (event.callEvent() && world.addEntity(entitysnowball)) {

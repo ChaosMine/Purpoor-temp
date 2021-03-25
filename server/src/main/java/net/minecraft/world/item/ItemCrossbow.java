@@ -54,7 +54,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
         ItemStack itemstack = entityhuman.b(enumhand);
 
         if (d(itemstack)) {
-            a(world, entityhuman, enumhand, itemstack, m(itemstack), 1.0F);
+            a(world, entityhuman, enumhand, itemstack, m(itemstack), (float) world.purpurConfig.crossbowProjectileOffset); // Purpur - Projectile offset config
             a(itemstack, false);
             return InteractionResultWrapper.consume(itemstack);
         } else if (!entityhuman.f(itemstack).isEmpty()) {

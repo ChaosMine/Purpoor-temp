@@ -24,7 +24,7 @@ public class ItemEgg extends Item {
             EntityEgg entityegg = new EntityEgg(world, entityhuman);
 
             entityegg.setItem(itemstack);
-            entityegg.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 1.5F, 1.0F);
+            entityegg.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 1.5F, (float) world.purpurConfig.eggProjectileOffset); // Purpur - Projectile offset config
             // Paper start
             com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (org.bukkit.entity.Projectile) entityegg.getBukkitEntity());
             if (event.callEvent() && world.addEntity(entityegg)) {

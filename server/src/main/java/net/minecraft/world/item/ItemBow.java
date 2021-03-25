@@ -41,7 +41,7 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
                         ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW));
                         EntityArrow entityarrow = itemarrow.a(world, itemstack1, (EntityLiving) entityhuman);
 
-                        entityarrow.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, f * 3.0F, 1.0F);
+                        entityarrow.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, f * 3.0F, (float) world.purpurConfig.bowProjectileOffset); // Purpur - Projectile offset config
                         if (f == 1.0F) {
                             entityarrow.setCritical(true);
                         }

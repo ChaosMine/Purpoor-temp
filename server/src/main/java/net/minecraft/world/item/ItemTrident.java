@@ -74,7 +74,7 @@ public class ItemTrident extends Item implements ItemVanishable {
                         if (k == 0) {
                             EntityThrownTrident entitythrowntrident = new EntityThrownTrident(world, entityhuman, itemstack);
 
-                            entitythrowntrident.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 2.5F + (float) k * 0.5F, 1.0F);
+                            entitythrowntrident.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, 2.5F + (float) k * 0.5F, (float) world.purpurConfig.tridentProjectileOffset);  // Purpur - Projectile offset config
                             if (entityhuman.abilities.canInstantlyBuild) {
                                 entitythrowntrident.fromPlayer = EntityArrow.PickupStatus.CREATIVE_ONLY;
                             }

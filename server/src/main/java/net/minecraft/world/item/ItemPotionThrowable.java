@@ -23,7 +23,7 @@ public class ItemPotionThrowable extends ItemPotion {
             EntityPotion entitypotion = new EntityPotion(world, entityhuman);
 
             entitypotion.setItem(itemstack);
-            entitypotion.a(entityhuman, entityhuman.pitch, entityhuman.yaw, -20.0F, 0.5F, 1.0F);
+            entitypotion.a(entityhuman, entityhuman.pitch, entityhuman.yaw, -20.0F, 0.5F, (float) world.purpurConfig.throwablePotionProjectileOffset); // Purpur - Projectile offset config
             // Paper start
             com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent event = new com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (org.bukkit.entity.Projectile) entitypotion.getBukkitEntity());
             if (event.callEvent() && world.addEntity(entitypotion)) {
