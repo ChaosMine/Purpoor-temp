@@ -601,6 +601,13 @@ public class PurpurWorldConfig {
         spawnerDeactivateByRedstone = getBoolean("blocks.spawner.deactivate-by-redstone", spawnerDeactivateByRedstone);
     }
 
+    public int spongeAbsorptionArea = 64;
+    public int spongeAbsorptionRadius = 6;
+    private void spongeSettings() {
+        spongeAbsorptionArea = getInt("blocks.sponge.absorption.area", spongeAbsorptionArea);
+        spongeAbsorptionRadius = getInt("blocks.sponge.absorption.radius", spongeAbsorptionRadius);
+    }
+
     public float stonecutterDamage = 0.0F;
     private void stonecutterSettings() {
         stonecutterDamage = (float) getDouble("blocks.stonecutter.damage", stonecutterDamage);

@@ -76,13 +76,13 @@ public class BlockSponge extends Block {
                 if (fluid.a((Tag) TagsFluid.WATER)) {
                     if (iblockdata.getBlock() instanceof IFluidSource && ((IFluidSource) iblockdata.getBlock()).removeFluid(blockList, blockposition2, iblockdata) != FluidTypes.EMPTY) { // CraftBukkit
                         ++i;
-                        if (j < 6) {
+                        if (j < world.purpurConfig.spongeAbsorptionRadius) { // Purpur
                             queue.add(new Tuple<>(blockposition2, j + 1));
                         }
                     } else if (iblockdata.getBlock() instanceof BlockFluids) {
                         blockList.setTypeAndData(blockposition2, Blocks.AIR.getBlockData(), 3); // CraftBukkit
                         ++i;
-                        if (j < 6) {
+                        if (j < world.purpurConfig.spongeAbsorptionRadius) { // Purpur
                             queue.add(new Tuple<>(blockposition2, j + 1));
                         }
                     } else if (material == Material.WATER_PLANT || material == Material.REPLACEABLE_WATER_PLANT) {
@@ -93,14 +93,14 @@ public class BlockSponge extends Block {
                         blockList.setTypeAndData(blockposition2, Blocks.AIR.getBlockData(), 3);
                         // CraftBukkit end
                         ++i;
-                        if (j < 6) {
+                        if (j < world.purpurConfig.spongeAbsorptionRadius) { // Purpur
                             queue.add(new Tuple<>(blockposition2, j + 1));
                         }
                     }
                 }
             }
 
-            if (i > 64) {
+            if (i > world.purpurConfig.spongeAbsorptionArea) { // Purpur
                 break;
             }
         }
