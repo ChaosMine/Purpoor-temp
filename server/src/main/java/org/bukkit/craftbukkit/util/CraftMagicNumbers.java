@@ -486,6 +486,11 @@ public final class CraftMagicNumbers implements UnsafeValues {
     public io.papermc.paper.inventory.ItemRarity getItemStackRarity(org.bukkit.inventory.ItemStack itemStack) {
         return io.papermc.paper.inventory.ItemRarity.values()[getItem(itemStack.getType()).getItemStackRarity(CraftItemStack.asNMSCopy(itemStack)).ordinal()];
     }
+
+    @Override
+    public int getProtocolVersion() {
+        return net.minecraft.SharedConstants.getGameVersion().getProtocolVersion();
+    }
     // Paper end
 
     /**
