@@ -154,5 +154,12 @@ public interface UnsafeValues {
      * @return the itemstack rarity
      */
     public io.papermc.paper.inventory.ItemRarity getItemStackRarity(ItemStack itemStack);
+
+    /**
+     * Returns the server's protocol version.
+     *
+     * @return the server's protocol version
+     */
+    int getProtocolVersion();
     // Paper end
 }
