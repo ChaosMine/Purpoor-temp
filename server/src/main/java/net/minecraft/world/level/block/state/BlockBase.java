@@ -683,6 +683,7 @@ public abstract class BlockBase {
             return this.getBlock().a(tag) && predicate.test(this);
         }
 
+        public final boolean isSameInstance(Block block) { return a(block); } // Paper - OBFHELPER
         public boolean a(Block block) {
             return this.getBlock().a(block);
         }

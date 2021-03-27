@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.tags.TagsFluid;
@@ -43,6 +44,7 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
 
+import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 
 public class EntityFallingBlock extends Entity {
@@ -116,8 +118,18 @@ public class EntityFallingBlock extends Entity {
 
             if (this.ticksLived++ == 0) {
                 blockposition = this.getChunkCoordinates();
-                if (this.world.getType(blockposition).a(block) && !CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, Blocks.AIR.getBlockData()).isCancelled()) {
-                    this.world.a(blockposition, false);
+                // Paper start - fix cancelling block falling causing client desync
+                if (this.world.getType(blockposition).isSameInstance(block)) {
+                    if (CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, Blocks.AIR.getBlockData()).isCancelled()) {
+                        if (this.world.getType(blockposition).isSameInstance(block)) { //if listener didn't update the block
+                            ((WorldServer) world).getChunkProvider().flagDirty(blockposition);
+                        }
+                        this.die();
+                        return;
+                    } else {
+                        this.world.setAir(blockposition, false);
+                    }
+                    // Paper end - fix cancelling block falling causing client desync
                 } else if (!this.world.isClientSide) {
                     this.die();
                     return;
