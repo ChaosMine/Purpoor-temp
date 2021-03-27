@@ -2042,7 +2042,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
                 if (!whitelist.isWhitelisted(entityplayer.getProfile())) {
-                    entityplayer.playerConnection.disconnect(new ChatMessage("multiplayer.disconnect.not_whitelisted"));
+                    entityplayer.playerConnection.disconnect(org.spigotmc.SpigotConfig.whitelistMessage); // Paper - use configurable message
                 }
             }
 
