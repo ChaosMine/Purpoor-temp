@@ -819,10 +819,18 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public void removeTileEntity(BlockPosition blockposition) {
+        // Paper start - remove correct TE
+        removeTileEntity(blockposition, null);
+    }
+    public void removeTileEntity(BlockPosition blockposition, TileEntity match) {
+        // Paper end
         if (this.loaded || this.world.s_()) {
-            TileEntity tileentity = (TileEntity) this.tileEntities.remove(blockposition);
+            // Paper start
+            TileEntity tileentity = (TileEntity) this.tileEntities.get(blockposition);
 
-            if (tileentity != null) {
+            if (tileentity != null && (match == null || match == tileentity)) {
+                this.tileEntities.remove(blockposition);
+                // Paper end
                 tileentity.al_();
             }
         }

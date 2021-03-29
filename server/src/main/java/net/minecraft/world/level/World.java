@@ -895,7 +895,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 //this.tileEntityList.remove(tileentity); // Paper - remove unused list
                 // Paper - prevent double chunk lookups
                 Chunk chunk; if ((chunk = this.getChunkIfLoaded(tileentity.getPosition())) != null) { // inlined contents of this.isLoaded(BlockPosition). Reuse the returned chunk instead of looking it up again
-                    chunk.removeTileEntity(tileentity.getPosition());
+                    chunk.removeTileEntity(tileentity.getPosition(), tileentity); // Paper - remove correct TE
                 }
                 // Paper end
             }
