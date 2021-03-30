@@ -440,7 +440,7 @@ public class CommandDispatcher {
         };
     }
 
-    public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> a() {
+    public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> a() { return this.dispatcher(); } public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> dispatcher() { // Paper - OBFHELPER
         return this.b;
     }
 

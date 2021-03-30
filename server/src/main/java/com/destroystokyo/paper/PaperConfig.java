@@ -479,4 +479,11 @@ public class PaperConfig {
     private static void fixEntityPositionDesync() {
         fixEntityPositionDesync = getBoolean("settings.fix-entity-position-desync", fixEntityPositionDesync);
     }
+
+    public static boolean enableBrigadierConsoleHighlighting = true;
+    public static boolean enableBrigadierConsoleCompletions = true;
+    private static void consoleSettings() {
+        enableBrigadierConsoleHighlighting = getBoolean("settings.console.enable-brigadier-highlighting", enableBrigadierConsoleHighlighting);
+        enableBrigadierConsoleCompletions = getBoolean("settings.console.enable-brigadier-completions", enableBrigadierConsoleCompletions);
+    }
 }

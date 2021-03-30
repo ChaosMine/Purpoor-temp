@@ -90,7 +90,7 @@ public class ChatComponentUtils {
             ChatComponentText chatcomponenttext = new ChatComponentText("");
             boolean flag = true;
 
-            for (Iterator iterator = collection.iterator(); iterator.hasNext(); flag = false) {
+            for (Iterator<T> iterator = collection.iterator(); iterator.hasNext(); flag = false) { // Paper - decompile fix
                 T t0 = iterator.next();
 
                 if (!flag) {
@@ -108,7 +108,7 @@ public class ChatComponentUtils {
         return new ChatMessage("chat.square_brackets", new Object[]{ichatbasecomponent});
     }
 
-    public static IChatBaseComponent a(Message message) {
+    public static IChatBaseComponent a(Message message) { return fromMessage(message); } public static IChatBaseComponent fromMessage(final @org.checkerframework.checker.nullness.qual.NonNull Message message) { // Paper - OBFHELPER
         return (IChatBaseComponent) (message instanceof IChatBaseComponent ? (IChatBaseComponent) message : new ChatComponentText(message.getString()));
     }
 }
