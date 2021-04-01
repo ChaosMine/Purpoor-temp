@@ -771,12 +771,11 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
         // Paper start - async tab completion
         com.destroystokyo.paper.event.server.AsyncTabCompleteEvent event;
-        java.util.List<String> completions = new java.util.ArrayList<>();
         String buffer = packetplayintabcomplete.c();
-        event = new com.destroystokyo.paper.event.server.AsyncTabCompleteEvent(this.getPlayer(), completions,
+        event = new com.destroystokyo.paper.event.server.AsyncTabCompleteEvent(this.getPlayer(),
                 buffer, true, null);
         event.callEvent();
-        completions = event.isCancelled() ? com.google.common.collect.ImmutableList.of() : event.getCompletions();
+        java.util.List<com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion> completions = event.isCancelled() ? com.google.common.collect.ImmutableList.of() : event.completions();
         // If the event isn't handled, we can assume that we have no completions, and so we'll ask the server
         if (!event.isHandled()) {
             if (!event.isCancelled()) {
@@ -795,10 +794,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 });
             }
         } else if (!completions.isEmpty()) {
-            com.mojang.brigadier.suggestion.SuggestionsBuilder builder = new com.mojang.brigadier.suggestion.SuggestionsBuilder(packetplayintabcomplete.c(), stringreader.getTotalLength());
+            com.mojang.brigadier.suggestion.SuggestionsBuilder builder0 = new com.mojang.brigadier.suggestion.SuggestionsBuilder(packetplayintabcomplete.c(), stringreader.getTotalLength());
 
-            builder = builder.createOffset(builder.getInput().lastIndexOf(' ') + 1);
-            completions.forEach(builder::suggest);
+            final com.mojang.brigadier.suggestion.SuggestionsBuilder builder = builder0.createOffset(builder0.getInput().lastIndexOf(' ') + 1);
+            completions.forEach(completion -> {
+                if (completion.tooltip() == null) {
+                    builder.suggest(completion.suggestion());
+                } else {
+                    builder.suggest(completion.suggestion(), PaperAdventure.asVanilla(completion.tooltip()));
+                }
+            });
             com.mojang.brigadier.suggestion.Suggestions suggestions = builder.buildFuture().join();
             com.destroystokyo.paper.event.brigadier.AsyncPlayerSendSuggestionsEvent suggestEvent = new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendSuggestionsEvent(this.getPlayer(), suggestions, buffer);
             suggestEvent.setCancelled(suggestions.isEmpty());
