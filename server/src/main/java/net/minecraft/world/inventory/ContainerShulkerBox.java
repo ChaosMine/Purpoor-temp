@@ -65,6 +65,7 @@ public class ContainerShulkerBox extends Container {
 
     @Override
     public boolean canUse(EntityHuman entityhuman) {
+        if (!this.checkReachable) return true; // Paper - Add reachable override for ContainerShulkerBox
         return this.c.a(entityhuman);
     }
 
