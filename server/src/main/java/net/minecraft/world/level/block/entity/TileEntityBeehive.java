@@ -120,6 +120,11 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
         return this.bees.size();
     }
 
+    // Paper start - Add EntityBlockStorage clearEntities
+    public void clearBees() {
+        this.bees.clear();
+    }
+    // Paper end
     public static int a(IBlockData iblockdata) {
         return (Integer) iblockdata.get(BlockBeehive.b);
     }
