@@ -1977,6 +1977,7 @@ public class CraftWorld implements World {
             entity = EntityTypes.LIGHTNING_BOLT.a(world);
         } else if (AreaEffectCloud.class.isAssignableFrom(clazz)) {
             entity = new EntityAreaEffectCloud(world, x, y, z);
+            entity.setPositionRotation(x, y, z, yaw, pitch); // Paper - Set area effect cloud Rotation
         } else if (EvokerFangs.class.isAssignableFrom(clazz)) {
             entity = new EntityEvokerFangs(world, x, y, z, (float) Math.toRadians(yaw), 0, null);
         }
