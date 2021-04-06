@@ -1146,7 +1146,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             list.stream().map(NBTTagString::a).forEach(nbttaglist::add);
             ItemStack old = itemstack.cloneItemStack(); // CraftBukkit
             itemstack.a("pages", (NBTBase) nbttaglist);
-            CraftEventFactory.handleEditBookEvent(player, i, old, itemstack); // CraftBukkit
+            this.player.inventory.setItem(i, CraftEventFactory.handleEditBookEvent(player, i, old, itemstack)); // CraftBukkit // Paper - Don't ignore result (see other callsite for handleEditBookEvent)
         }
     }
 
