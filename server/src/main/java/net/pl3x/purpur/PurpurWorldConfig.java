@@ -1419,6 +1419,7 @@ public class PurpurWorldConfig {
     public boolean piglinRidable = false;
     public boolean piglinRidableInWater = false;
     public double piglinMaxHealth = 16.0D;
+    public int piglinPortalSpawnModifier = 2000;
     private void piglinSettings() {
         piglinRidable = getBoolean("mobs.piglin.ridable", piglinRidable);
         piglinRidableInWater = getBoolean("mobs.piglin.ridable-in-water", piglinRidableInWater);
@@ -1428,6 +1429,7 @@ public class PurpurWorldConfig {
             set("mobs.piglin.attributes.max_health", oldValue);
         }
         piglinMaxHealth = getDouble("mobs.piglin.attributes.max_health", piglinMaxHealth);
+        piglinPortalSpawnModifier = getInt("mobs.piglin.portal-spawn-modifier", piglinPortalSpawnModifier);
     }
 
     public boolean piglinBruteRidable = false;
