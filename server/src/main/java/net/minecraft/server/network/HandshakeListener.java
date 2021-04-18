@@ -30,6 +30,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
     private static final IChatBaseComponent a = new ChatComponentText("Ignoring status request");
     private final MinecraftServer b;
     private final NetworkManager c; final NetworkManager getNetworkManager() { return this.c; } // Paper - OBFHELPER
+    private static final boolean BYPASS_HOSTCHECK = Boolean.getBoolean("Paper.bypassHostCheck"); // Paper
 
     public HandshakeListener(MinecraftServer minecraftserver, NetworkManager networkmanager) {
         this.b = minecraftserver;
@@ -118,7 +119,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                     // Spigot Start
                 //if (org.spigotmc.SpigotConfig.bungee) { // Paper - comment out, we check above!
                         String[] split = packethandshakinginsetprotocol.hostname.split("\00");
-                        if ( ( split.length == 3 || split.length == 4 ) && ( HOST_PATTERN.matcher( split[1] ).matches() ) ) {
+                        if ( ( split.length == 3 || split.length == 4 ) && ( BYPASS_HOSTCHECK || HOST_PATTERN.matcher( split[1] ).matches() ) ) { // Paper
                             packethandshakinginsetprotocol.hostname = split[0];
                             c.socketAddress = new java.net.InetSocketAddress(split[1], ((java.net.InetSocketAddress) c.getSocketAddress()).getPort());
                             c.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
