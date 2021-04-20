@@ -2,6 +2,7 @@ package net.minecraft.world.level.block.entity;
 
 import javax.annotation.Nullable;
 import net.minecraft.CrashReportSystemDetails;
+import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -133,7 +134,13 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /
     public static TileEntity create(IBlockData iblockdata, NBTTagCompound nbttagcompound) {
         String s = nbttagcompound.getString("id");
 
-        return (TileEntity) IRegistry.BLOCK_ENTITY_TYPE.getOptional(new MinecraftKey(s)).map((tileentitytypes) -> {
+        // Paper
+        MinecraftKey minecraftKey = null;
+        try {
+            minecraftKey = new MinecraftKey(s);
+        } catch (ResourceKeyInvalidException ex) {}
+        // Paper end
+        return (TileEntity) IRegistry.BLOCK_ENTITY_TYPE.getOptional(minecraftKey).map((tileentitytypes) -> {
             try {
                 return tileentitytypes.a();
             } catch (Throwable throwable) {
