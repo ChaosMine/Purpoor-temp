@@ -235,6 +235,11 @@ public abstract class EntityHuman extends EntityLiving {
 
         if (this.isSleeping()) {
             ++this.sleepTicks;
+            // Paper start
+            if (this.sleepTicks == 100) {
+                if (!new io.papermc.paper.event.player.PlayerDeepSleepEvent((Player) getBukkitEntity()).callEvent()) { this.sleepTicks = Integer.MIN_VALUE; }
+            }
+            // Paper end
             if (this.sleepTicks > 100) {
                 this.sleepTicks = 100;
             }
