@@ -642,6 +642,13 @@ public abstract class EntityHuman extends EntityLiving {
 
     @Nullable
     public EntityItem a(ItemStack itemstack, boolean flag, boolean flag1) {
+        // Paper start - Fix duplicating /give items on item drop cancel
+        return this.drop(itemstack, flag, flag1, false);
+    }
+
+    @Nullable
+    public EntityItem drop(ItemStack itemstack, boolean flag, boolean flag1, boolean alwaysSucceed) {
+        // Paper end
         if (itemstack.isEmpty()) {
             return null;
         } else {
@@ -683,7 +690,7 @@ public abstract class EntityHuman extends EntityLiving {
             PlayerDropItemEvent event = new PlayerDropItemEvent(player, drop);
             this.world.getServer().getPluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
+            if (event.isCancelled() && !alwaysSucceed) { // Paper - Fix duplicating /give items on item drop cancel
                 org.bukkit.inventory.ItemStack cur = player.getInventory().getItemInHand();
                 if (flag1 && (cur == null || cur.getAmount() == 0)) {
                     // The complete stack was dropped

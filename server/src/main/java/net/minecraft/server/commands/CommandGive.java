@@ -49,7 +49,7 @@ public class CommandGive {
 
                 if (flag && itemstack.isEmpty()) {
                     itemstack.setCount(1);
-                    entityitem = entityplayer.drop(itemstack, false);
+                    entityitem = entityplayer.drop(itemstack, false, false, true); // Paper - Fix duplicating /give items on item drop cancel
                     if (entityitem != null) {
                         entityitem.s();
                     }
