@@ -331,7 +331,7 @@ public abstract class TileEntityFurnace extends TileEntityContainer implements I
                     if (this.isBurning() && furnaceBurnEvent.isBurning()) {
                         // CraftBukkit end
                         flag1 = true;
-                        if (!itemstack.isEmpty()) {
+                        if (!itemstack.isEmpty() && furnaceBurnEvent.willConsumeFuel()) { // Paper
                             Item item = itemstack.getItem();
 
                             itemstack.subtract(1);
