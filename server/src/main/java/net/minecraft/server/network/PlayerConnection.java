@@ -1909,6 +1909,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         PlayerConnectionUtils.ensureMainThread(packetplayinhelditemslot, this, this.player.getWorldServer());
         if (this.player.isFrozen()) return; // CraftBukkit
         if (packetplayinhelditemslot.b() >= 0 && packetplayinhelditemslot.b() < PlayerInventory.getHotbarSize()) {
+            if (packetplayinhelditemslot.getItemInHandIndex() == this.player.inventory.itemInHandIndex) { return; } // Paper - don't fire itemheldevent when there wasn't a slot change
             PlayerItemHeldEvent event = new PlayerItemHeldEvent(this.getPlayer(), this.player.inventory.itemInHandIndex, packetplayinhelditemslot.b());
             this.server.getPluginManager().callEvent(event);
             if (event.isCancelled()) {

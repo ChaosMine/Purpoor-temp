@@ -24,6 +24,7 @@ public class PacketPlayInHeldItemSlot implements Packet<PacketListenerPlayIn> {
         packetlistenerplayin.a(this);
     }
 
+    public int getItemInHandIndex() { return b(); } // Paper - OBFHELPER
     public int b() {
         return this.itemInHandIndex;
     }
