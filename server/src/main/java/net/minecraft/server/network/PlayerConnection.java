@@ -2442,7 +2442,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             case PERFORM_RESPAWN:
                 if (this.player.viewingCredits) {
                     this.player.viewingCredits = false;
-                    this.player = this.minecraftServer.getPlayerList().moveToWorld(this.player, true);
+                    this.player = this.minecraftServer.getPlayerList().moveToWorld(this.player, this.minecraftServer.getWorldServer(this.player.getSpawnDimension()), true, null, true, org.bukkit.event.player.PlayerRespawnEvent.RespawnFlag.END_PORTAL); // Paper - add isEndCreditsRespawn argument
                     CriterionTriggers.v.a(this.player, World.THE_END, World.OVERWORLD);
                 } else {
                     if (this.player.getHealth() > 0.0F) {
