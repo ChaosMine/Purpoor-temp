@@ -213,6 +213,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         }
         com.destroystokyo.paper.PaperConfig.registerCommands();
         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+        io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
         // Paper end
 
         this.setPVP(dedicatedserverproperties.pvp);
