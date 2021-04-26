@@ -327,7 +327,12 @@ public class CommandDispatcher {
     }
 
     public void a(EntityPlayer entityplayer) {
-        if ( org.spigotmc.SpigotConfig.tabComplete < 0 ) return; // Spigot
+        // Paper start - Send empty commands if tab completion is disabled
+        if ( org.spigotmc.SpigotConfig.tabComplete < 0 ) { //return; // Spigot
+            entityplayer.playerConnection.sendPacket(new PacketPlayOutCommands(new RootCommandNode<>()));
+            return;
+        }
+        // Paper end
         // CraftBukkit start
         // Register Vanilla commands into builtRoot as before
         // Paper start - Async command map building
