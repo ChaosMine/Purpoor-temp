@@ -43,7 +43,7 @@ public class ItemSpade extends ItemTool {
             return EnumInteractionResult.PASS;
         } else {
             EntityHuman entityhuman = itemactioncontext.getEntity();
-            IBlockData iblockdata1 = (IBlockData) ItemSpade.a.get(iblockdata.getBlock());
+            IBlockData iblockdata1 = world.purpurConfig.shovelTurnsBlockToGrassPath.contains(iblockdata.getBlock()) ? Blocks.GRASS_PATH.getBlockData() : ItemSpade.a.get(iblockdata.getBlock()); // Purpur
             IBlockData iblockdata2 = null;
 
             if (iblockdata1 != null && world.getType(blockposition.up()).isAir()) {

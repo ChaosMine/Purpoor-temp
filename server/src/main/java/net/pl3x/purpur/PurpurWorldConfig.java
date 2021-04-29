@@ -469,6 +469,16 @@ public class PurpurWorldConfig {
         totemOfUndyingWorksInInventory = getBoolean("gameplay-mechanics.player.totem-of-undying-works-in-inventory", totemOfUndyingWorksInInventory);
     }
 
+    public List<Block> shovelTurnsBlockToGrassPath = new ArrayList<>();
+    private void shovelSettings() {
+        getList("gameplay-mechanics.shovel-turns-block-to-grass-path", new ArrayList<String>(){{
+            add("minecraft:grass_block");
+        }}).forEach(key -> {
+            Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
+            if (block != Blocks.AIR) shovelTurnsBlockToGrassPath.add(block);
+        });
+    }
+
     public boolean silkTouchEnabled = false;
     public String silkTouchSpawnerName = "Spawner";
     public List<String> silkTouchSpawnerLore = new ArrayList<>();
