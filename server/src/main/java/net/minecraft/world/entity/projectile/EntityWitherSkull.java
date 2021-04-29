@@ -98,7 +98,7 @@ public class EntityWitherSkull extends EntityFireball {
 
             // CraftBukkit start
             // this.world.createExplosion(this, this.locX(), this.locY(), this.locZ(), 1.0F, false, explosion_effect);
-            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 1.0F, false);
+            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), world.purpurConfig.witherExplosionRadius, false); // Purpur
             this.world.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {

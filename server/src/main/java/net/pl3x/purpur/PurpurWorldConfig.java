@@ -1913,6 +1913,7 @@ public class PurpurWorldConfig {
     public int witherHealthRegenDelay = 20;
     public double witherMaxHealth = 300.0D;
     public boolean witherCanRideVehicles = false;
+    public float witherExplosionRadius = 1.0F;
     private void witherSettings() {
         witherRidable = getBoolean("mobs.wither.ridable", witherRidable);
         witherRidableInWater = getBoolean("mobs.wither.ridable-in-water", witherRidableInWater);
@@ -1931,6 +1932,7 @@ public class PurpurWorldConfig {
         }
         witherMaxHealth = getDouble("mobs.wither.attributes.max_health", witherMaxHealth);
         witherCanRideVehicles = getBoolean("mobs.wither.can-ride-vehicles", witherCanRideVehicles);
+        witherExplosionRadius = (float) getDouble("mobs.wither.explosion-radius", witherExplosionRadius);
     }
 
     public boolean witherSkeletonRidable = false;
