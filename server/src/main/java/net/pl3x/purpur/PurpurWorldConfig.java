@@ -2136,4 +2136,11 @@ public class PurpurWorldConfig {
             baseCrystalExplosionEffect = Explosion.Effect.DESTROY;
         }
     }
+
+    public boolean magmaBlockDamageWhenSneaking = false;
+    public boolean magmaBlockDamageWithFrostWalker = false;
+    private void magmaBlockSettings() {
+        magmaBlockDamageWhenSneaking = getBoolean("blocks.magma-block.damage-when-sneaking", magmaBlockDamageWhenSneaking);
+        magmaBlockDamageWithFrostWalker = getBoolean("blocks.magma-block.damage-with-frost-walker", magmaBlockDamageWithFrostWalker);
+    }
 }

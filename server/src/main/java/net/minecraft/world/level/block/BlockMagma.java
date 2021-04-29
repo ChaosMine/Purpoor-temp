@@ -27,7 +27,7 @@ public class BlockMagma extends Block {
 
     @Override
     public void stepOn(World world, BlockPosition blockposition, Entity entity) {
-        if (!entity.isFireProof() && entity instanceof EntityLiving && !EnchantmentManager.i((EntityLiving) entity)) {
+        if (!entity.isFireProof() && entity instanceof EntityLiving && (world.purpurConfig.magmaBlockDamageWithFrostWalker || !EnchantmentManager.hasFrostWalker((EntityLiving) entity))) { // Purpur
             org.bukkit.craftbukkit.event.CraftEventFactory.blockDamage = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()); // CraftBukkit
             entity.damageEntity(DamageSource.HOT_FLOOR, 1.0F);
             org.bukkit.craftbukkit.event.CraftEventFactory.blockDamage = null; // CraftBukkit

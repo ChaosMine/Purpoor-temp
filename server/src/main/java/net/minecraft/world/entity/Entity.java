@@ -891,7 +891,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             }
             // CraftBukkit end
 
-            if (this.onGround && (!this.bv() || (block == Blocks.STONECUTTER && world.purpurConfig.stonecutterDamage > 0.0F))) { // Purpur
+            if (this.onGround && (!this.bv() || (block == Blocks.STONECUTTER && world.purpurConfig.stonecutterDamage > 0.0F) || (block == Blocks.MAGMA_BLOCK && world.purpurConfig.magmaBlockDamageWhenSneaking))) { // Purpur
                 block.stepOn(this.world, blockposition, this);
             }
 

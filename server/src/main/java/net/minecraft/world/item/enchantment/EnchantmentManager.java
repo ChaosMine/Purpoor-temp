@@ -242,7 +242,7 @@ public class EnchantmentManager {
         return a(Enchantments.WATER_WORKER, entityliving) > 0;
     }
 
-    public static boolean i(EntityLiving entityliving) {
+    public static boolean hasFrostWalker(EntityLiving entityLiving) { return i(entityLiving);} public static boolean i(EntityLiving entityliving) { // Purpur - OBFHELPER
         return a(Enchantments.FROST_WALKER, entityliving) > 0;
     }
 
