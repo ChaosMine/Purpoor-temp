@@ -29,7 +29,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
     private final List<TileEntityBeehive.HiveBee> bees = Lists.newArrayList();
     @Nullable
     public BlockPosition flowerPos = null;
-    public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
+    public int maxBees = net.pl3x.purpur.PurpurConfig.beeInsideBeeHive; // CraftBukkit - allow setting max amount of bees a hive can hold // Purpur - Change max bees inside beehive and bee_nest
 
     public TileEntityBeehive() {
         super(TileEntityTypes.BEEHIVE);
