@@ -341,9 +341,10 @@ public class EntityCreeper extends EntityMonster {
         if (!this.world.isClientSide) {
             Explosion.Effect explosion_effect = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && world.purpurConfig.creeperAllowGriefing ? Explosion.Effect.DESTROY : Explosion.Effect.NONE; // Purpur
             float f = this.isPowered() ? 2.0F : 1.0F;
+            float multiplier = this.world.purpurConfig.creeperHealthRadius ? this.getHealth() / this.getMaxHealth() : 1; // Purpur
 
             // CraftBukkit start
-            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), this.explosionRadius * f, false);
+            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), multiplier * (this.explosionRadius * f), false); // Purpur
             this.world.getServer().getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 this.killed = true;
