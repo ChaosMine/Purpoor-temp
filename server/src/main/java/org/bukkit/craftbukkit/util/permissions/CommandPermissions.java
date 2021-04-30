@@ -23,7 +23,15 @@ public final class CommandPermissions {
         DefaultPermissions.registerPermission(PREFIX + "kick", "Allows the user to kick players", PermissionDefault.OP, commands);
         DefaultPermissions.registerPermission(PREFIX + "stop", "Allows the user to stop the server", PermissionDefault.OP, commands);
         DefaultPermissions.registerPermission(PREFIX + "list", "Allows the user to list all online players", PermissionDefault.OP, commands);
-        DefaultPermissions.registerPermission(PREFIX + "gamemode", "Allows the user to change the gamemode of another player", PermissionDefault.OP, commands);
+        // Purpur start
+        Permission gamemodeVanilla = DefaultPermissions.registerPermission(PREFIX + "gamemode", "Allows the user to change the gamemode", PermissionDefault.OP, commands);
+        for (net.minecraft.world.level.EnumGamemode enumgamemode : net.minecraft.world.level.EnumGamemode.values()) {
+            Permission gamemodeSelf = DefaultPermissions.registerPermission(PREFIX + "gamemode." + enumgamemode.getName(), "Allows the user to set " + enumgamemode.getName() + " gamemode for self", PermissionDefault.OP);
+            Permission gamemodeOther = DefaultPermissions.registerPermission(PREFIX + "gamemode." + enumgamemode.getName() + ".other", "Allows the user to set " + enumgamemode.getName() + " gamemode for other players", PermissionDefault.OP);
+            gamemodeSelf.addParent(gamemodeOther, true);
+            gamemodeVanilla.addParent(gamemodeSelf, true);
+        }
+        // Purpur end
         DefaultPermissions.registerPermission(PREFIX + "xp", "Allows the user to give themselves or others arbitrary values of experience", PermissionDefault.OP, commands);
         DefaultPermissions.registerPermission(PREFIX + "toggledownfall", "Allows the user to toggle rain on/off for a given world", PermissionDefault.OP, commands);
         DefaultPermissions.registerPermission(PREFIX + "defaultgamemode", "Allows the user to change the default gamemode of the server", PermissionDefault.OP, commands);

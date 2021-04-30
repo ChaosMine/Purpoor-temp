@@ -20,6 +20,7 @@ public enum EnumGamemode {
         return this.f;
     }
 
+    public String getName() { return b(); } // Purpur - OBFHELPER
     public String b() {
         return this.g;
     }

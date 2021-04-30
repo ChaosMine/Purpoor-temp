@@ -190,6 +190,21 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
     }
     // CraftBukkit end
 
+    // Purpur start
+    public boolean testPermission(int i, String bukkitPermission) {
+        if (hasPermission(i, bukkitPermission)) {
+            return true;
+        }
+        String permissionMessage = getWorld().getServer().getPermissionMessage();
+        if (permissionMessage.length() != 0) {
+            for (String line : permissionMessage.replace("<permission>", bukkitPermission).split("\n")) {
+                sendFailureMessage(new ChatComponentText(line));
+            }
+        }
+        return false;
+    }
+    // Purpur end
+
     public Vec3D getPosition() {
         return this.d;
     }

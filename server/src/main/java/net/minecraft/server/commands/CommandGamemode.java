@@ -55,6 +55,21 @@ public class CommandGamemode {
     }
 
     private static int a(CommandContext<CommandListenerWrapper> commandcontext, Collection<EntityPlayer> collection, EnumGamemode enumgamemode) {
+        // Purpur start
+        if (net.pl3x.purpur.PurpurConfig.commandGamemodeRequiresPermission) {
+            String gamemode = enumgamemode.getName();
+            CommandListenerWrapper sender = commandcontext.getSource();
+            if (!sender.testPermission(2, "minecraft.command.gamemode." + gamemode)) {
+                return 0;
+            }
+            if (sender.getEntity() instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) sender.getEntity();
+                if ((collection.size() > 1 || !collection.contains(player)) && !sender.testPermission(2, "minecraft.command.gamemode." + gamemode + ".other")) {
+                    return 0;
+                }
+            }
+        }
+        // Purpur end
         int i = 0;
         Iterator iterator = collection.iterator();
 

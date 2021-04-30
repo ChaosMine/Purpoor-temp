@@ -211,6 +211,11 @@ public class PurpurConfig {
         disableGiveCommandDrops = getBoolean("settings.disable-give-dropping", disableGiveCommandDrops);
     }
 
+    public static boolean commandGamemodeRequiresPermission = false;
+    private static void commandSettings() {
+        commandGamemodeRequiresPermission = getBoolean("settings.command.gamemode.requires-specific-permission", commandGamemodeRequiresPermission);
+    }
+
     public static boolean barrelSixRows = false;
     public static boolean enderChestSixRows = false;
     public static boolean enderChestPermissionRows = false;
