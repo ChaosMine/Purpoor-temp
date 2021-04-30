@@ -161,6 +161,7 @@ public class PurpurConfig {
     public static String afkTabListPrefix = "[AFK] ";
     public static String afkTabListSuffix = "";
     public static String demoCommandOutput = "§a%s has been shown the demo screen";
+    public static String creditsCommandOutput = "§a%s has been shown the end credits";
     public static String pingCommandOutput = "§a%s's ping is %sms";
     public static String cannotRideMob = "§cYou cannot mount that mob";
     private static void messages() {
@@ -169,6 +170,7 @@ public class PurpurConfig {
         afkTabListPrefix = getString("settings.messages.afk-tab-list-prefix", afkTabListPrefix);
         afkTabListSuffix = getString("settings.messages.afk-tab-list-suffix", afkTabListSuffix);
         demoCommandOutput = getString("settings.messages.demo-command-output", demoCommandOutput);
+        creditsCommandOutput = getString("settings.messages.credits-command-output", creditsCommandOutput);
         pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
         cannotRideMob = getString("settings.messages.cannot-ride-mob", cannotRideMob);
     }

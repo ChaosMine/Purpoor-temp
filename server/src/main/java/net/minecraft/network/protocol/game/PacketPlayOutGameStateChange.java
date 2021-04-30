@@ -12,7 +12,7 @@ public class PacketPlayOutGameStateChange implements Packet<PacketListenerPlayOu
     public static final PacketPlayOutGameStateChange.a b = new PacketPlayOutGameStateChange.a(1);
     public static final PacketPlayOutGameStateChange.a c = new PacketPlayOutGameStateChange.a(2);
     public static final PacketPlayOutGameStateChange.a d = new PacketPlayOutGameStateChange.a(3);
-    public static final PacketPlayOutGameStateChange.a e = new PacketPlayOutGameStateChange.a(4);
+    public static final PacketPlayOutGameStateChange.a e = new PacketPlayOutGameStateChange.a(4); public static PacketPlayOutGameStateChange.a credits() { return e; } // Purpur - OBFHELPER
     public static final PacketPlayOutGameStateChange.a f = new PacketPlayOutGameStateChange.a(5); public static PacketPlayOutGameStateChange.a demo() { return f; } // Purpur - OBFHELPER
     public static final PacketPlayOutGameStateChange.a g = new PacketPlayOutGameStateChange.a(6);
     public static final PacketPlayOutGameStateChange.a h = new PacketPlayOutGameStateChange.a(7);

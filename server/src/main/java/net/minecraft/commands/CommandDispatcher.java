@@ -191,6 +191,7 @@ public class CommandDispatcher {
             CommandIdleTimeout.a(this.b);
             CommandStop.a(this.b);
             CommandWhitelist.a(this.b);
+            net.pl3x.purpur.command.CreditsCommand.register(getDispatcher()); // Purpur
             net.pl3x.purpur.command.DemoCommand.register(getDispatcher()); // Purpur
             net.pl3x.purpur.command.PingCommand.register(getDispatcher()); // Purpur
             net.pl3x.purpur.command.TPSBarCommand.register(getDispatcher()); // Purpur
