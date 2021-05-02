@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.EnumPistonReaction;
 
 public class PistonExtendsChecker {
 
-    private final World a;
+    private final World a; public World getWorld() { return a; } // Purpur - OBFHELPER
     private final BlockPosition b;
     private final boolean c;
     private final BlockPosition d;
@@ -86,7 +86,7 @@ public class PistonExtendsChecker {
         } else {
             int i = 1;
 
-            if (i + this.f.size() > 12) {
+            if (i + this.f.size() > this.getWorld().purpurConfig.pistonBlockPushLimit) { // Purpur
                 return false;
             } else {
                 while (a(block)) {
@@ -100,7 +100,7 @@ public class PistonExtendsChecker {
                     }
 
                     ++i;
-                    if (i + this.f.size() > 12) {
+                    if (i + this.f.size() > this.getWorld().purpurConfig.pistonBlockPushLimit) { // Purpur
                         return false;
                     }
                 }
@@ -148,7 +148,7 @@ public class PistonExtendsChecker {
                         return true;
                     }
 
-                    if (this.f.size() >= 12) {
+                    if (this.f.size() >= this.getWorld().purpurConfig.pistonBlockPushLimit) { // Purpur
                         return false;
                     }
 

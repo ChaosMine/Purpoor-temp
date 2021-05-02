@@ -2155,4 +2155,9 @@ public class PurpurWorldConfig {
         magmaBlockDamageWhenSneaking = getBoolean("blocks.magma-block.damage-when-sneaking", magmaBlockDamageWhenSneaking);
         magmaBlockDamageWithFrostWalker = getBoolean("blocks.magma-block.damage-with-frost-walker", magmaBlockDamageWithFrostWalker);
     }
+
+    public int pistonBlockPushLimit = 12;
+    private void pistonSettings() {
+        pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
+    }
 }
