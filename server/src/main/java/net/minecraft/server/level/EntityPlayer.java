@@ -1038,7 +1038,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
             });
             ScoreboardTeamBase scoreboardteambase = this.getScoreboardTeam();
-
+            if (net.pl3x.purpur.PurpurConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendMessage(ichatbasecomponent); else // Purpur
             if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS) {
                 if (scoreboardteambase.getDeathMessageVisibility() == ScoreboardTeamBase.EnumNameTagVisibility.HIDE_FOR_OTHER_TEAMS) {
                     this.server.getPlayerList().a((EntityHuman) this, ichatbasecomponent);

@@ -289,4 +289,16 @@ public class PurpurConfig {
     private static void tpsCatchup() {
         tpsCatchup = getBoolean("settings.tps-catchup", tpsCatchup);
     }
+
+    public static boolean advancementOnlyBroadcastToAffectedPlayer = false;
+    public static boolean deathMessageOnlyBroadcastToAffectedPlayer = false;
+    private static void broadcastSettings() {
+        if (version < 13) {
+            boolean oldValue = getBoolean("settings.advancement.only-broadcast-to-affected-player", false);
+            set("settings.broadcasts.advancement.only-broadcast-to-affected-player", oldValue);
+            set("settings.advancement.only-broadcast-to-affected-player", null);
+        }
+        advancementOnlyBroadcastToAffectedPlayer  = getBoolean("settings.broadcasts.advancement.only-broadcast-to-affected-player", advancementOnlyBroadcastToAffectedPlayer);
+        deathMessageOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.death.only-broadcast-to-affected-player", deathMessageOnlyBroadcastToAffectedPlayer);
+    }
 }

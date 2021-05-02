@@ -60,7 +60,7 @@ public class AdvancementDataPlayer {
     private static final TypeToken<Map<MinecraftKey, AdvancementProgress>> c = new TypeToken<Map<MinecraftKey, AdvancementProgress>>() {
     };
     private final DataFixer d;
-    private final PlayerList e;
+    private final PlayerList e; public PlayerList getPlayerList() { return e; } // Purpur - OBFHELPER
     private final File f;
     public final Map<Advancement, AdvancementProgress> data = Maps.newLinkedHashMap();
     private final Set<Advancement> h = Sets.newLinkedHashSet();
@@ -325,7 +325,13 @@ public class AdvancementDataPlayer {
                 advancement.d().a(this.player);
                 // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
                 if (message != null && this.player.world.getGameRules().getBoolean(GameRules.ANNOUNCE_ADVANCEMENTS)) {
-                    this.e.sendMessage(PaperAdventure.asVanilla(message), ChatMessageType.SYSTEM, SystemUtils.getNullUUID());
+                    // Purpur Start - AdvancementMessage By Player
+                    if (net.pl3x.purpur.PurpurConfig.advancementOnlyBroadcastToAffectedPlayer) {
+                        this.player.sendMessage(PaperAdventure.asVanilla(message), SystemUtils.getNullUUID());
+                    } else {
+                        getPlayerList().sendMessage(PaperAdventure.asVanilla(message), ChatMessageType.SYSTEM, SystemUtils.getNullUUID());
+                    }
+                    // Purpur End
                     // Paper end
                 }
             }
