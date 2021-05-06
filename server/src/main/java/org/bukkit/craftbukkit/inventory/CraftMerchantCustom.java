@@ -81,6 +81,35 @@ public class CraftMerchantCustom extends CraftMerchant {
 
         @Override
         public void a(MerchantRecipe merchantrecipe) {
+            // Paper start
+            /** Based on {@link net.minecraft.world.entity.npc.EntityVillagerAbstract#b(MerchantRecipe)} */
+            if (getTrader() instanceof net.minecraft.server.level.EntityPlayer) {
+                final net.minecraft.server.level.EntityPlayer trader = (net.minecraft.server.level.EntityPlayer) getTrader();
+                final io.papermc.paper.event.player.PlayerPurchaseEvent event = new io.papermc.paper.event.player.PlayerPurchaseEvent(
+                    trader.getBukkitEntity(),
+                    merchantrecipe.asBukkit(),
+                    false, // reward xp?
+                    true); // should increase uses?
+                event.callEvent();
+                if (event.isCancelled()) {
+                    return;
+                }
+                final org.bukkit.inventory.MerchantRecipe eventTrade = event.getTrade();
+                if (event.willIncreaseTradeUses()) {
+                    eventTrade.setUses(eventTrade.getUses() + 1);
+                }
+                if (event.isRewardingExp() && eventTrade.hasExperienceReward()) {
+                    /** Based on {@link net.minecraft.world.entity.npc.EntityVillagerTrader#b(MerchantRecipe)} */
+                    final int xp = 3 + net.minecraft.world.entity.Entity.SHARED_RANDOM.nextInt(4);
+                    final World world = trader.getWorld();
+                    world.addEntity(new net.minecraft.world.entity.EntityExperienceOrb(
+                        world, trader.locX(), trader.locY() + 0.5d, trader.locZ(), xp,
+                        org.bukkit.entity.ExperienceOrb.SpawnReason.VILLAGER_TRADE, trader, null));
+                }
+                return;
+            }
+            // Paper end
+
             // increase recipe's uses
             merchantrecipe.increaseUses();
         }

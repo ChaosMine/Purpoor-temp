@@ -19,7 +19,7 @@ public interface IMerchant {
 
     MerchantRecipeList getOffers();
 
-    void a(MerchantRecipe merchantrecipe);
+    void a(MerchantRecipe merchantrecipe); default void handlePurchase(MerchantRecipe merchantRecipe) { a(merchantRecipe); } // Paper - OBFHELPER
 
     void k(ItemStack itemstack);
 
