@@ -58,6 +58,10 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     @Nullable
     private BlockPosition bp;
     private int despawnDelay;
+    // Paper start - Add more WanderingTrader API
+    public boolean canDrinkPotion = true;
+    public boolean canDrinkMilk = true;
+    // Paper end
 
     public EntityVillagerTrader(EntityTypes<? extends EntityVillagerTrader> entitytypes, World world) {
         super(entitytypes, world);
@@ -69,10 +73,10 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
     protected void initPathfinder() {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
         this.goalSelector.a(0, new PathfinderGoalUseItem<>(this, PotionUtil.a(new ItemStack(Items.POTION), Potions.INVISIBILITY), SoundEffects.ENTITY_WANDERING_TRADER_DISAPPEARED, (entityvillagertrader) -> {
-            return this.world.isNight() && !entityvillagertrader.isInvisible();
+            return canDrinkPotion && this.world.isNight() && !entityvillagertrader.isInvisible(); // Paper - Add more WanderingTrader API
         }));
         this.goalSelector.a(0, new PathfinderGoalUseItem<>(this, new ItemStack(Items.MILK_BUCKET), SoundEffects.ENTITY_WANDERING_TRADER_REAPPEARED, (entityvillagertrader) -> {
-            return this.world.isDay() && entityvillagertrader.isInvisible();
+            return canDrinkMilk && this.world.isDay() && entityvillagertrader.isInvisible(); // Paper - Add more WanderingTrader API
         }));
         this.goalSelector.a(1, new PathfinderGoalTradeWithPlayer(this));
         this.goalSelector.a(1, new PathfinderGoalAvoidTarget<>(this, EntityZombie.class, 8.0F, 0.5D, 0.5D));
