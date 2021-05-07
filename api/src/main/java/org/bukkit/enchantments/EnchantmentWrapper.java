@@ -69,5 +69,32 @@ public class EnchantmentWrapper extends Enchantment {
     public net.kyori.adventure.text.Component displayName(int level) {
         return getEnchantment().displayName(level);
     }
+
+    @Override
+    public boolean isTradeable() {
+        return getEnchantment().isTradeable();
+    }
+
+    @Override
+    public boolean isDiscoverable() {
+        return getEnchantment().isDiscoverable();
+    }
+
+    @NotNull
+    @Override
+    public io.papermc.paper.enchantments.EnchantmentRarity getRarity() {
+        return getEnchantment().getRarity();
+    }
+
+    @Override
+    public float getDamageIncrease(int level, @NotNull org.bukkit.entity.EntityCategory entityCategory) {
+        return getEnchantment().getDamageIncrease(level, entityCategory);
+    }
+
+    @NotNull
+    @Override
+    public java.util.Set<org.bukkit.inventory.EquipmentSlot> getActiveSlots() {
+        return getEnchantment().getActiveSlots();
+    }
     // Paper end
 }
