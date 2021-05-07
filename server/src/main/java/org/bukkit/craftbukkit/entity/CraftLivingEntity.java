@@ -847,5 +847,21 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     public void setHurtDirection(float hurtDirection) {
         getHandle().setHurtDirection(hurtDirection);
     }
+
+    public static EnumMonsterType fromBukkitEntityCategory(EntityCategory entityCategory) {
+        switch (entityCategory) {
+            case NONE:
+                return EnumMonsterType.UNDEFINED;
+            case UNDEAD:
+                return EnumMonsterType.UNDEAD;
+            case ARTHROPOD:
+                return EnumMonsterType.ARTHROPOD;
+            case ILLAGER:
+                return EnumMonsterType.ILLAGER;
+            case WATER:
+                return EnumMonsterType.WATER_MOB;
+        }
+        throw new IllegalArgumentException(entityCategory + " is an unrecognized entity category");
+    }
     // Paper end
 }

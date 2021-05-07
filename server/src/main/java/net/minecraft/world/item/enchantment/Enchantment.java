@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class Enchantment {
 
-    private final EnumItemSlot[] a;
+    private final EnumItemSlot[] a; public final EnumItemSlot[] getSlots() { return this.a; } // Paper - OBFHELPER
     private final Enchantment.Rarity d;
     public final EnchantmentSlotType itemTarget;
     @Nullable
@@ -46,6 +46,7 @@ public abstract class Enchantment {
         return map;
     }
 
+    public Enchantment.Rarity getRarity() { return d(); } // Paper - OBFHELPER
     public Enchantment.Rarity d() {
         return this.d;
     }
@@ -70,6 +71,7 @@ public abstract class Enchantment {
         return 0;
     }
 
+    public float getDamageIncrease(int level, EnumMonsterType enumMonsterType) { return a(level, enumMonsterType); } // Paper - OBFHELPER
     public float a(int i, EnumMonsterType enummonstertype) {
         return 0.0F;
     }
@@ -123,14 +125,17 @@ public abstract class Enchantment {
         return false;
     }
 
+    public boolean isCursed() { return c(); } // Paper - OBFHELPER
     public boolean c() {
         return false;
     }
 
+    public boolean isTradeable() { return h(); } // Paper - OBFHELPER
     public boolean h() {
         return true;
     }
 
+    public boolean isDiscoverable() { return i(); } // Paper - OBFHELPER
     public boolean i() {
         return true;
     }
