@@ -274,6 +274,7 @@ public class Item implements IMaterial {
         return false;
     }
 
+    public Multimap<AttributeBase, AttributeModifier> getAttributesForSlot(EnumItemSlot enumItemSlot) { return a(enumItemSlot); } // Paper - OBFHELPER
     public Multimap<AttributeBase, AttributeModifier> a(EnumItemSlot enumitemslot) {
         return ImmutableMultimap.of();
     }

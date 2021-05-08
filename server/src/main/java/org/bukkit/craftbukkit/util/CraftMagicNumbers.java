@@ -496,6 +496,19 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     @Override
+    public com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getItemAttributes(org.bukkit.Material material, org.bukkit.inventory.EquipmentSlot equipmentSlot) {
+        Item item = this.getItem(material);
+        if (item == null) {
+            throw new IllegalArgumentException(material + " is not an item and therefore does not have attributes");
+        }
+        com.google.common.collect.ImmutableMultimap.Builder<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> attributeMapBuilder = com.google.common.collect.ImmutableMultimap.builder();
+        item.getAttributesForSlot(org.bukkit.craftbukkit.CraftEquipmentSlot.getNMS(equipmentSlot)).forEach((attributeBase, attributeModifier) -> {
+            attributeMapBuilder.put(org.bukkit.Registry.ATTRIBUTE.get(CraftNamespacedKey.fromMinecraft(net.minecraft.core.IRegistry.ATTRIBUTE.getKey(attributeBase))), org.bukkit.craftbukkit.attribute.CraftAttributeInstance.convert(attributeModifier));
+        });
+        return attributeMapBuilder.build();
+    }
+
+    @Override
     public int getProtocolVersion() {
         return net.minecraft.SharedConstants.getGameVersion().getProtocolVersion();
     }
