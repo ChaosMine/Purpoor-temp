@@ -3600,6 +3600,19 @@ public enum Material implements Keyed {
     public io.papermc.paper.inventory.ItemRarity getItemRarity() {
         return Bukkit.getUnsafe().getItemRarity(this);
     }
+
+    /**
+     * Returns an immutable multimap of attributes for the slot.
+     * {@link #isItem()} must be true for this material.
+     *
+     * @param equipmentSlot the slot to get the attributes for
+     * @throws IllegalArgumentException if {@link #isItem()} is false
+     * @return an immutable multimap of attributes
+     */
+    @NotNull
+    public com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getItemAttributes(@NotNull EquipmentSlot equipmentSlot) {
+        return Bukkit.getUnsafe().getItemAttributes(this, equipmentSlot);
+    }
     // Paper end
 
     /**
