@@ -67,6 +67,7 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         if (entity instanceof EntityLiving && entity.getEntityType() != EntityTypes.FOX && entity.getEntityType() != EntityTypes.BEE) {
             entity.a(iblockdata, new Vec3D(0.800000011920929D, 0.75D, 0.800000011920929D));
             if (!world.isClientSide && (Integer) iblockdata.get(BlockSweetBerryBush.a) > 0 && (entity.D != entity.locX() || entity.F != entity.locZ())) {

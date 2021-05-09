@@ -45,6 +45,7 @@ public class BlockMinecartDetector extends BlockMinecartTrackAbstract {
 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         if (!world.isClientSide) {
             if (!(Boolean) iblockdata.get(BlockMinecartDetector.POWERED)) {
                 this.a(world, blockposition, iblockdata);

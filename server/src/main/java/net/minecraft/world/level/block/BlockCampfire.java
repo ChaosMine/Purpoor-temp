@@ -88,6 +88,7 @@ public class BlockCampfire extends BlockTileEntity implements IBlockWaterlogged 
 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         if (!entity.isFireProof() && (Boolean) iblockdata.get(BlockCampfire.LIT) && entity instanceof EntityLiving && !EnchantmentManager.i((EntityLiving) entity)) {
             entity.damageEntity(DamageSource.FIRE, (float) this.h);
         }

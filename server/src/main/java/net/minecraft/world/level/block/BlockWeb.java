@@ -15,6 +15,7 @@ public class BlockWeb extends Block {
 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         entity.a(iblockdata, new Vec3D(0.25D, 0.05000000074505806D, 0.25D));
     }
 }

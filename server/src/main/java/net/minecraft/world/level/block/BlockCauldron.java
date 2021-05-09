@@ -59,6 +59,7 @@ public class BlockCauldron extends Block {
 
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         int i = (Integer) iblockdata.get(BlockCauldron.LEVEL);
         float f = (float) blockposition.getY() + (6.0F + (float) (3 * i)) / 16.0F;
 

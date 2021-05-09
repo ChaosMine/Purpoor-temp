@@ -25,6 +25,7 @@ public class BlockWaterLily extends BlockPlant {
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
         super.a(iblockdata, world, blockposition, entity);
+        if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         if (world instanceof WorldServer && entity instanceof EntityBoat && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, Blocks.AIR.getBlockData()).isCancelled()) { // CraftBukkit
             world.a(new BlockPosition(blockposition), true, entity);
         }
