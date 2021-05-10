@@ -43,13 +43,21 @@ public class DataConverterProtoChunk extends DataFix {
                     return dynamic.asStreamOpt().result();
                 });
                 Dynamic<?> dynamic = (Dynamic) typed1.get(DSL.remainderFinder());
-                boolean flag = dynamic.get("TerrainPopulated").asBoolean(false) && (!dynamic.get("LightPopulated").asNumber().result().isPresent() || dynamic.get("LightPopulated").asBoolean(false));
+                // Paper start - fix incorrect status conversion
+                // Vanilla is setting chunks to incorrect status here, they should be using at minimum carved.
+                // for populated chunks, it should be at minimum decorated
+                // and for lit and populated, mobs_spawned is correct (technically mobs_spawned should be for populated,
+                // but if it's not lit then it can't be set above lit)
+                final boolean terrainPopulated = dynamic.get("TerrainPopulated").asBoolean(false);
+                final boolean lightPopulated = dynamic.get("LightPopulated").asBoolean(false) || dynamic.get("LightPopulated").asNumber().result().isPresent();
+                final String newStatus = !terrainPopulated ? "carved" : (lightPopulated ? "mobs_spawned" : "decorated");
 
-                dynamic = dynamic.set("Status", dynamic.createString(flag ? "mobs_spawned" : "empty"));
+                dynamic = dynamic.set("Status", dynamic.createString(newStatus));
                 dynamic = dynamic.set("hasLegacyStructureData", dynamic.createBoolean(true));
-                Dynamic dynamic1;
+                // Paper end - fix incorrect status conversion
+                Dynamic<?> dynamic1; // Paper - decompile fix
 
-                if (flag) {
+                if (true) { // Paper - fix incorrect status conversion
                     Optional<ByteBuffer> optional1 = dynamic.get("Biomes").asByteBufferOpt().result();
 
                     if (optional1.isPresent()) {
@@ -70,7 +78,7 @@ public class DataConverterProtoChunk extends DataFix {
                     }).collect(Collectors.toList());
 
                     if (optional.isPresent()) {
-                        ((Stream) optional.get()).forEach((dynamic2) -> {
+                        optional.get().forEach((dynamic2) -> { // Paper - decompile fix
                             int j = dynamic2.get("x").asInt(0);
                             int k = dynamic2.get("y").asInt(0);
                             int l = dynamic2.get("z").asInt(0);
@@ -78,11 +86,11 @@ public class DataConverterProtoChunk extends DataFix {
 
                             ((ShortList) list.get(k >> 4)).add(short0);
                         });
+                        Dynamic<?> finalDynamic = dynamic; // Paper - decompile fix
                         dynamic = dynamic.set("ToBeTicked", dynamic.createList(list.stream().map((shortlist) -> {
-                            Stream stream = shortlist.stream();
+                            Stream<Short> stream = shortlist.stream(); // Paper - decompile fix
 
-                            dynamic.getClass();
-                            return dynamic.createList(stream.map(dynamic::createShort));
+                            return finalDynamic.createList(stream.map(finalDynamic::createShort));
                         })));
                     }
 
