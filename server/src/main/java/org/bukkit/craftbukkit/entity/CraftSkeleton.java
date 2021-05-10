@@ -36,4 +36,16 @@ public class CraftSkeleton extends CraftMonster implements Skeleton, com.destroy
     public void setSkeletonType(SkeletonType type) {
         throw new UnsupportedOperationException("Not supported.");
     }
+
+    // Paper start
+    @Override
+    public boolean shouldBurnInDay() {
+        return getHandle().shouldBurnInDay();
+    }
+
+    @Override
+    public void setShouldBurnInDay(boolean shouldBurnInDay) {
+        getHandle().setShouldBurnInDay(shouldBurnInDay);
+    }
+    // Paper end
 }

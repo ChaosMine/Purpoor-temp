@@ -134,7 +134,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
     @Override
     public void movementTick() {
-        if (this.isAlive() && this.eG()) {
+        if (this.isAlive() && shouldBurnInDay && this.eG()) { // Paper - Configurable Burning
             this.setOnFire(8);
         }
 
@@ -165,6 +165,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         if (nbttagcompound.hasUUID("Paper.SpawningEntity")) {
             this.spawningEntity = nbttagcompound.getUUID("Paper.SpawningEntity");
         }
+        this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay");
         // Paper end
     }
 
@@ -179,6 +180,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         if (this.spawningEntity != null) {
             nbttagcompound.setUUID("Paper.SpawningEntity", this.spawningEntity);
         }
+        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay);
         // Paper end
     }
 
@@ -233,6 +235,10 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         return spawningEntity;
     }
     public void setSpawningEntity(java.util.UUID entity) { this.spawningEntity = entity; }
+
+    private boolean shouldBurnInDay = true;
+    public boolean shouldBurnInDay() { return shouldBurnInDay; }
+    public void setShouldBurnInDay(boolean shouldBurnInDay) { this.shouldBurnInDay = shouldBurnInDay; }
     // Paper end
 
     class b extends PathfinderGoal {

@@ -98,9 +98,15 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
         return EnumMonsterType.UNDEAD;
     }
 
+    // Paper start
+    private boolean shouldBurnInDay = true;
+    public boolean shouldBurnInDay() { return shouldBurnInDay; }
+    public void setShouldBurnInDay(boolean shouldBurnInDay) { this.shouldBurnInDay = shouldBurnInDay; }
+    // Paper end
+
     @Override
     public void movementTick() {
-        boolean flag = this.eG();
+        boolean flag = shouldBurnInDay && this.eG(); // Paper - Configurable Burning
 
         if (flag) {
             ItemStack itemstack = this.getEquipment(EnumItemSlot.HEAD);
@@ -224,7 +230,16 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
     public void loadData(NBTTagCompound nbttagcompound) {
         super.loadData(nbttagcompound);
         this.eL();
+        this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay"); // Paper
     }
+
+    // Paper start
+    @Override
+    public void saveData(NBTTagCompound nbttagcompound) {
+        super.saveData(nbttagcompound);
+        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay);
+    }
+    // Paper end
 
     @Override
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) {
