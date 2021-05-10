@@ -60,16 +60,10 @@ public class ChunkCache implements IBlockAccess, ICollisionAccess {
             }
         }
 
-        int minBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.minX - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
-        int maxBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.maxX + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
-
+        // Purpur Rebase - Calculate when needed only
         int minBlockY = net.minecraft.util.MathHelper.floor(axisalignedbb.minY - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
         int maxBlockY = net.minecraft.util.MathHelper.floor(axisalignedbb.maxY + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
-
-        int minBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.minZ - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
-        int maxBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.maxZ + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
-
-
+        
         BlockPosition.MutableBlockPosition mutablePos = new BlockPosition.MutableBlockPosition();
         net.minecraft.world.phys.shapes.VoxelShapeCollision collisionShape = null;
 
@@ -78,6 +72,13 @@ public class ChunkCache implements IBlockAccess, ICollisionAccess {
             // no point in checking
             return ret;
         }
+
+        int minBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.minX - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockX = net.minecraft.util.MathHelper.floor(axisalignedbb.maxX + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.minZ - net.minecraft.server.MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockZ = net.minecraft.util.MathHelper.floor(axisalignedbb.maxZ + net.minecraft.server.MCUtil.COLLISION_EPSILON) + 1;
+        // Purpur End
 
         int minYIterate = Math.max(0, minBlockY);
         int maxYIterate = Math.min(255, maxBlockY);

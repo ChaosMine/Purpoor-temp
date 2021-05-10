@@ -678,15 +678,9 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
         }
 
-        int minBlockX = MathHelper.floor(axisalignedbb.minX - MCUtil.COLLISION_EPSILON) - 1;
-        int maxBlockX = MathHelper.floor(axisalignedbb.maxX + MCUtil.COLLISION_EPSILON) + 1;
-
+        // Purpur Start Rebase - Calculate when needed only
         int minBlockY = MathHelper.floor(axisalignedbb.minY - MCUtil.COLLISION_EPSILON) - 1;
         int maxBlockY = MathHelper.floor(axisalignedbb.maxY + MCUtil.COLLISION_EPSILON) + 1;
-
-        int minBlockZ = MathHelper.floor(axisalignedbb.minZ - MCUtil.COLLISION_EPSILON) - 1;
-        int maxBlockZ = MathHelper.floor(axisalignedbb.maxZ + MCUtil.COLLISION_EPSILON) + 1;
-
 
         BlockPosition.MutableBlockPosition mutablePos = new BlockPosition.MutableBlockPosition();
         net.minecraft.world.phys.shapes.VoxelShapeCollision collisionShape = null;
@@ -696,6 +690,13 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             // no point in checking
             return ret;
         }
+
+        int minBlockX = MathHelper.floor(axisalignedbb.minX - MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockX = MathHelper.floor(axisalignedbb.maxX + MCUtil.COLLISION_EPSILON) + 1;
+
+        int minBlockZ = MathHelper.floor(axisalignedbb.minZ - MCUtil.COLLISION_EPSILON) - 1;
+        int maxBlockZ = MathHelper.floor(axisalignedbb.maxZ + MCUtil.COLLISION_EPSILON) + 1;
+        // Purpur End
 
         int minYIterate = Math.max(0, minBlockY);
         int maxYIterate = Math.min(255, maxBlockY);
