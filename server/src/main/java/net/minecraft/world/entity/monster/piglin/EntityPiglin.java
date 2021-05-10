@@ -200,7 +200,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
 
     @Override
     public boolean isTypeNotPersistent(double d0) {
-        return !this.isPersistent();
+        return true || !this.isPersistent(); // Purpur - fix SPIGOT-6278
     }
 
     @Override
