@@ -46,4 +46,19 @@ public interface Skeleton extends Monster, RangedEntity { // Paper
          */
         STRAY;
     }
+    // Paper start
+    /**
+     * Check if this skeleton will burn in the sunlight
+     *
+     * @return True if skeleton will burn in sunlight
+     */
+    boolean shouldBurnInDay();
+
+    /**
+     * Set if this skeleton should burn in the sunlight
+     *
+     * @param shouldBurnInDay True to burn in sunlight
+     */
+    void setShouldBurnInDay(boolean shouldBurnInDay);
+    // Paper end
 }
