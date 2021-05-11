@@ -44,6 +44,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 this.c.setProtocol(EnumProtocol.LOGIN);
                 // CraftBukkit start - Connection throttle
                 try {
+                    if (!(this.c.channel.localAddress() instanceof io.netty.channel.unix.DomainSocketAddress)) { // Paper - the connection throttle is useless when you have a Unix domain socket
                     long currentTime = System.currentTimeMillis();
                     long connectionThrottle = this.b.server.getConnectionThrottle();
                     InetAddress address = ((java.net.InetSocketAddress) this.c.getSocketAddress()).getAddress();
@@ -72,6 +73,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                             }
                         }
                     }
+                    } // Paper - add closing bracket for if check above
                 } catch (Throwable t) {
                     org.apache.logging.log4j.LogManager.getLogger().debug("Failed to check connection throttle", t);
                 }
@@ -120,8 +122,11 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 //if (org.spigotmc.SpigotConfig.bungee) { // Paper - comment out, we check above!
                         String[] split = packethandshakinginsetprotocol.hostname.split("\00");
                         if ( ( split.length == 3 || split.length == 4 ) && ( BYPASS_HOSTCHECK || HOST_PATTERN.matcher( split[1] ).matches() ) ) { // Paper
+                            // Paper start - Unix domain socket support
+                            java.net.SocketAddress socketAddress = c.getSocketAddress();
                             packethandshakinginsetprotocol.hostname = split[0];
-                            c.socketAddress = new java.net.InetSocketAddress(split[1], ((java.net.InetSocketAddress) c.getSocketAddress()).getPort());
+                            c.socketAddress = new java.net.InetSocketAddress(split[1], socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getPort() : 0);
+                            // Paper end
                             c.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
                         } else
                         {

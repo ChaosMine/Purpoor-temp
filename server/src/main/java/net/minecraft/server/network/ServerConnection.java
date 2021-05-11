@@ -70,7 +70,12 @@ public class ServerConnection {
         this.c = true;
     }
 
+    // Paper start
     public void a(@Nullable InetAddress inetaddress, int i) throws IOException {
+        bind(new java.net.InetSocketAddress(inetaddress, i));
+    }
+    public void bind(java.net.SocketAddress address) throws IOException {
+    // Paper end
         List list = this.listeningChannels;
 
         synchronized (this.listeningChannels) {
@@ -78,7 +83,11 @@ public class ServerConnection {
             LazyInitVar lazyinitvar;
 
             if (Epoll.isAvailable() && this.e.l()) {
+                if (address instanceof io.netty.channel.unix.DomainSocketAddress) {
+                    oclass = io.netty.channel.epoll.EpollServerDomainSocketChannel.class;
+                } else {
                 oclass = EpollServerSocketChannel.class;
+                }
                 lazyinitvar = ServerConnection.b;
                 ServerConnection.LOGGER.info("Using epoll channel type");
             } else {
@@ -106,7 +115,7 @@ public class ServerConnection {
                     ((NetworkManager) object).setPacketListener(new HandshakeListener(ServerConnection.this.e, (NetworkManager) object));
                     io.papermc.paper.network.ChannelInitializeListenerHolder.callListeners(channel); // Paper
                 }
-            }).group((EventLoopGroup) lazyinitvar.a()).localAddress(inetaddress, i)).option(ChannelOption.AUTO_READ, false).bind().syncUninterruptibly()); // CraftBukkit
+            }).group((EventLoopGroup) lazyinitvar.a()).localAddress(address)).option(ChannelOption.AUTO_READ, false).bind().syncUninterruptibly()); // CraftBukkit // Paper
         }
     }
 
