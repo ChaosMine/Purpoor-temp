@@ -496,6 +496,7 @@ public class BlockPosition extends BaseBlockPosition {
             return this.d(this.getX() + enumdirection.getAdjacentX() * i, this.getY() + enumdirection.getAdjacentY() * i, this.getZ() + enumdirection.getAdjacentZ() * i);
         }
 
+        public BlockPosition.MutableBlockPosition withOffset(int x, int y, int z) { return e(x, y, z); } // Paper - OBFHELPER
         public BlockPosition.MutableBlockPosition e(int i, int j, int k) {
             return this.d(this.getX() + i, this.getY() + j, this.getZ() + k);
         }

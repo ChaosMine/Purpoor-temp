@@ -1145,15 +1145,21 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     private void a(WorldServer worldserver, BlockPosition blockposition) {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
 
+        org.bukkit.craftbukkit.util.BlockStateListPopulator blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(worldserver); // Paper
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 for (int k = -1; k < 3; ++k) {
                     IBlockData iblockdata = k == -1 ? Blocks.OBSIDIAN.getBlockData() : Blocks.AIR.getBlockData();
 
-                    worldserver.setTypeUpdate(blockposition_mutableblockposition.g(blockposition).e(j, k, i), iblockdata);
+                    blockList.setTypeAndData(blockposition_mutableblockposition.setValues(blockposition).withOffset(j, k, i), iblockdata, 3); // Paper
                 }
             }
         }
+        // Paper start
+        if (new org.bukkit.event.world.PortalCreateEvent((List< org.bukkit.block.BlockState>) (List) blockList.getList(), worldserver.getWorld(), this.getBukkitEntity(), org.bukkit.event.world.PortalCreateEvent.CreateReason.END_PLATFORM).callEvent()) {
+            blockList.updateList();
+        }
+        // Paper end
 
     }
 
