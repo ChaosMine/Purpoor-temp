@@ -922,6 +922,18 @@ public abstract class EntityLiving extends Entity {
             if (entitytypes == EntityTypes.SKELETON && item == Items.SKELETON_SKULL || entitytypes == EntityTypes.ZOMBIE && item == Items.ZOMBIE_HEAD || entitytypes == EntityTypes.CREEPER && item == Items.CREEPER_HEAD) {
                 d0 *= 0.5D;
             }
+
+            // Purpur start
+            if (entity instanceof EntityLiving) {
+                EntityLiving livingEntity = (EntityLiving) entity;
+                if (livingEntity.hasEffect(MobEffects.BLINDNESS)) {
+                    int amplifier = livingEntity.getEffect(MobEffects.BLINDNESS).getAmplifier();
+                    for (int i = 0; i < amplifier; i++) {
+                        d0 *= world.purpurConfig.mobsBlindnessMultiplier;
+                    }
+                }
+            }
+            // Purpur end
         }
 
         return d0;

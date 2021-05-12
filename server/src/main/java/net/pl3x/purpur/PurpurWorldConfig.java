@@ -542,6 +542,11 @@ public class PurpurWorldConfig {
         mobsSpawnOnBlueIce = getBoolean("blocks.blue_ice.allow-mob-spawns", mobsSpawnOnBlueIce);
     }
 
+    public double mobsBlindnessMultiplier = 1;
+    private void blindnessSettings() {
+        mobsBlindnessMultiplier = getDouble("gameplay-mechanics.entity-blindness-multiplier", mobsBlindnessMultiplier);
+    }
+
     public boolean chestOpenWithBlockOnTop = false;
     private void chestSettings() {
         chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
