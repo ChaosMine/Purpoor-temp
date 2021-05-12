@@ -327,12 +327,13 @@ public class LoginListener implements PacketLoginInListener {
                         // Paper end
                         String playerName = i.getName();
                         java.net.InetAddress address = ((java.net.InetSocketAddress) networkManager.getSocketAddress()).getAddress();
+                        java.net.InetAddress rawAddress = ((java.net.InetSocketAddress) networkManager.getRawAddress()).getAddress(); // Paper
                         java.util.UUID uniqueId = i.getId();
                         final org.bukkit.craftbukkit.CraftServer server = LoginListener.this.server.server;
 
                             // Paper start
                             PlayerProfile profile = CraftPlayerProfile.asBukkitMirror(getGameProfile());
-                            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, profile);
+                            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, rawAddress, uniqueId, profile);
                         server.getPluginManager().callEvent(asyncEvent);
                             profile = asyncEvent.getPlayerProfile();
                             profile.complete(true);
