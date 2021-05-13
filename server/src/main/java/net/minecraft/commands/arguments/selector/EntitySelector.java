@@ -169,10 +169,10 @@ public class EntitySelector {
 
         if (this.j != null) {
             entityplayer = commandlistenerwrapper.getServer().getPlayerList().getPlayer(this.j);
-            return (List) (entityplayer == null ? Collections.emptyList() : Lists.newArrayList(new EntityPlayer[]{entityplayer}));
+            return entityplayer == null || !canSee(commandlistenerwrapper, entityplayer) ? Collections.emptyList() : Lists.newArrayList(entityplayer); // Purpur
         } else if (this.k != null) {
             entityplayer = commandlistenerwrapper.getServer().getPlayerList().getPlayer(this.k);
-            return (List) (entityplayer == null ? Collections.emptyList() : Lists.newArrayList(new EntityPlayer[]{entityplayer}));
+            return entityplayer == null || !canSee(commandlistenerwrapper, entityplayer) ? Collections.emptyList() : Lists.newArrayList(entityplayer); // Purpur
         } else {
             Vec3D vec3d = (Vec3D) this.f.apply(commandlistenerwrapper.getPosition());
             Predicate<Entity> predicate = this.a(vec3d);
@@ -182,7 +182,7 @@ public class EntitySelector {
                     EntityPlayer entityplayer1 = (EntityPlayer) commandlistenerwrapper.getEntity();
 
                     if (predicate.test(entityplayer1)) {
-                        return Lists.newArrayList(new EntityPlayer[]{entityplayer1});
+                        return !canSee(commandlistenerwrapper, entityplayer1) ? Collections.emptyList() : Lists.newArrayList(entityplayer1); // Purpur
                     }
                 }
 
@@ -195,6 +195,7 @@ public class EntitySelector {
 
                     predicate.getClass();
                     object = worldserver.a(predicate::test);
+                    ((List) object).removeIf(entityplayer3 -> !canSee(commandlistenerwrapper, (EntityPlayer) entityplayer3)); // Purpur
                 } else {
                     object = Lists.newArrayList();
                     Iterator iterator = commandlistenerwrapper.getServer().getPlayerList().getPlayers().iterator();
@@ -202,7 +203,7 @@ public class EntitySelector {
                     while (iterator.hasNext()) {
                         EntityPlayer entityplayer2 = (EntityPlayer) iterator.next();
 
-                        if (predicate.test(entityplayer2)) {
+                        if (predicate.test(entityplayer2) && canSee(commandlistenerwrapper, entityplayer2)) { // Purpur
                             ((List) object).add(entityplayer2);
                         }
                     }
@@ -244,4 +245,11 @@ public class EntitySelector {
     public static IChatMutableComponent a(List<? extends Entity> list) {
         return ChatComponentUtils.b(list, Entity::getScoreboardDisplayName);
     }
+
+    // Purpur start
+    private boolean canSee(CommandListenerWrapper commandlistenerwrapper, EntityPlayer target) {
+        Entity entity = commandlistenerwrapper.getEntity();
+        return !net.pl3x.purpur.PurpurConfig.hideHiddenPlayersFromEntitySelector || !(entity instanceof EntityPlayer) || ((EntityPlayer) entity).getBukkitEntity().canSee(target.getBukkitEntity());
+    }
+    // Purpur end
 }

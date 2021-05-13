@@ -212,8 +212,10 @@ public class PurpurConfig {
     }
 
     public static boolean commandGamemodeRequiresPermission = false;
+    public static boolean hideHiddenPlayersFromEntitySelector = false;
     private static void commandSettings() {
         commandGamemodeRequiresPermission = getBoolean("settings.command.gamemode.requires-specific-permission", commandGamemodeRequiresPermission);
+        hideHiddenPlayersFromEntitySelector = getBoolean("settings.command.hide-hidden-players-from-entity-selector", hideHiddenPlayersFromEntitySelector);
     }
 
     public static boolean barrelSixRows = false;
