@@ -705,7 +705,7 @@ public abstract class EntityMinecartAbstract extends Entity {
             if (d18 > 0.01D) {
                 double d20 = 0.06D;
 
-                this.setMot(vec3d4.add(vec3d4.x / d18 * 0.06D, 0.0D, vec3d4.z / d18 * 0.06D));
+                this.setMot(vec3d4.add(vec3d4.x / d18 * world.purpurConfig.poweredRailBoostModifier, 0.0D, vec3d4.z / d18 * world.purpurConfig.poweredRailBoostModifier)); // Purpur
             } else {
                 Vec3D vec3d5 = this.getMot();
                 double d21 = vec3d5.x;
