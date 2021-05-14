@@ -852,14 +852,17 @@ public abstract class EntityInsentient extends EntityLiving {
 
     protected void mobTick() {}
 
+    public int getMaxHeadXRot() { return O(); } // Paper - OBFHELPER
     public int O() {
         return 40;
     }
 
+    public int getMaxHeadYRot() { return Q(); } // Paper - OBFHELPER
     public int Q() {
         return 75;
     }
 
+    public int getHeadRotSpeed() { return ep(); } // Paper - OBFHELPER
     public int ep() {
         return 10;
     }

@@ -20,18 +20,28 @@ public class ControllerLook {
         this.a = entityinsentient;
     }
 
+    public void lookAt(Vec3D vec3d) { a(vec3d); } // Paper - OBFHELPER
     public void a(Vec3D vec3d) {
         this.a(vec3d.x, vec3d.y, vec3d.z);
     }
 
+    // Paper start
+    public void lookAt(Entity entity) {
+        this.lookAt(entity.locX(), getWantedY(entity), entity.locZ());
+    }
+    // Paper end
+
+    public void lookAt(Entity entity, float f, float f1) { a(entity, f, f1); } // Paper - OBFHELPER
     public void a(Entity entity, float f, float f1) {
         this.a(entity.locX(), b(entity), entity.locZ(), f, f1);
     }
 
+    public void lookAt(double d0, double d1, double d2) { a(d0, d1, d2); } // Paper - OBFHELPER
     public void a(double d0, double d1, double d2) {
         this.a(d0, d1, d2, (float) this.a.ep(), (float) this.a.O());
     }
 
+    public void lookAt(double d0, double d1, double d2, float f, float f1) { a(d0, d1, d2, f, f1); } // Paper - OBFHELPER
     public void a(double d0, double d1, double d2, float f, float f1) {
         this.e = d0;
         this.f = d1;
@@ -103,6 +113,7 @@ public class ControllerLook {
         return f + f4;
     }
 
+    public static double getWantedY(Entity entity) { return b(entity); } // Paper - OBFHELPER
     private static double b(Entity entity) {
         return entity instanceof EntityLiving ? entity.getHeadY() : (entity.getBoundingBox().minY + entity.getBoundingBox().maxY) / 2.0D;
     }
