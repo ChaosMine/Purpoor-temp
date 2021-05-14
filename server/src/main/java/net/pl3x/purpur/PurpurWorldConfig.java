@@ -1345,6 +1345,7 @@ public class PurpurWorldConfig {
     public boolean parrotRidableInWater = false;
     public double parrotMaxY = 256D;
     public double parrotMaxHealth = 6.0D;
+    public boolean parrotBreedable = false;
     private void parrotSettings() {
         parrotRidable = getBoolean("mobs.parrot.ridable", parrotRidable);
         parrotRidableInWater = getBoolean("mobs.parrot.ridable-in-water", parrotRidableInWater);
@@ -1355,6 +1356,7 @@ public class PurpurWorldConfig {
             set("mobs.parrot.attributes.max_health", oldValue);
         }
         parrotMaxHealth = getDouble("mobs.parrot.attributes.max_health", parrotMaxHealth);
+        parrotBreedable = getBoolean("mobs.parrot.can-breed", parrotBreedable);
     }
 
     public boolean phantomRidable = false;

@@ -44,6 +44,7 @@ import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMoveFlying;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowEntity;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowOwner;
@@ -75,7 +76,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
         }
     };
     private static final Item bw = Items.COOKIE;
-    private static final Set<Item> bx = Sets.newHashSet(new Item[]{Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS});
+    private static final Set<Item> bx = Sets.newHashSet(new Item[]{Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS}); public static Set<Item> temptItems() { return bx; } // Purpur - OBFHELPER
     private static final Map<EntityTypes<?>, SoundEffect> by = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
         hashmap.put(EntityTypes.BLAZE, SoundEffects.ENTITY_PARROT_IMITATE_BLAZE);
         hashmap.put(EntityTypes.CAVE_SPIDER, SoundEffects.ENTITY_PARROT_IMITATE_SPIDER);
@@ -205,6 +206,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
         this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.25D)); // Purpur
+        if (world.purpurConfig.parrotBreedable) this.goalSelector.addGoal(1, new PathfinderGoalBreed(this, 1.0D)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(2, new PathfinderGoalSit(this));
         this.goalSelector.a(2, new PathfinderGoalFollowOwner(this, 1.0D, 5.0F, 1.0F, true));
@@ -309,6 +311,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
                 }
             }
 
+            if (world.purpurConfig.parrotBreedable) return super.b(entityhuman, enumhand); // Purpur
             return EnumInteractionResult.a(this.world.isClientSide);
         } else if (itemstack.getItem() == EntityParrot.bw) {
             if (!entityhuman.abilities.canInstantlyBuild) {
@@ -334,7 +337,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
 
     @Override
     public boolean k(ItemStack itemstack) {
-        return false;
+        return world.purpurConfig.parrotBreedable && temptItems().contains(itemstack.getItem()); // Purpur
     }
 
     public static boolean c(EntityTypes<EntityParrot> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
@@ -353,13 +356,13 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
 
     @Override
     public boolean mate(EntityAnimal entityanimal) {
-        return false;
+        return super.mate(entityanimal); // Purpur
     }
 
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return null;
+        return worldserver.purpurConfig.parrotBreedable ? EntityTypes.PARROT.create(worldserver) : null; // Purpur
     }
 
     @Override
