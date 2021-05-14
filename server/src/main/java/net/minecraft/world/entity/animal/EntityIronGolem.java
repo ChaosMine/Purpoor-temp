@@ -42,6 +42,7 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalStrollVillageGolem;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalDefendVillage;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.world.entity.ai.goal.target.PathfinderGoalReceiveFlower;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalUniversalAngerReset;
 import net.minecraft.world.entity.monster.EntityCreeper;
 import net.minecraft.world.entity.monster.IMonster;
@@ -60,7 +61,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
 
     protected static final DataWatcherObject<Byte> b = DataWatcher.a(EntityIronGolem.class, DataWatcherRegistry.a);
     private int c;
-    private int d;
+    private int d; public int getHoldingFlowerTick() { return d; } // Purpur - OBFHELPER
     private static final IntRange bo = TimeRange.a(20, 39);
     private int bp;
     private UUID bq;
@@ -91,6 +92,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
     protected void initPathfinder() {
         if (world.purpurConfig.ironGolemCanSwim) this.goalSelector.a(0, new PathfinderGoalFloat(this)); // Purpur
         this.goalSelector.a(0, new PathfinderGoalHasRider(this)); // Purpur
+        if (world.purpurConfig.ironGolemPoppyCalm) this.goalSelector.addGoal(0, new PathfinderGoalReceiveFlower(this)); // Purpur
         this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 1.0D, true));
         this.goalSelector.a(2, new PathfinderGoalMoveTowardsTarget(this, 0.9D, 32.0F));
         this.goalSelector.a(2, new PathfinderGoalStrollVillage(this, 0.6D, false));
@@ -241,6 +243,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
         return EntityIronGolem.CrackLevel.a(this.getHealth() / this.getMaxHealth());
     }
 
+    public void holdFlower(boolean flag) { t(flag); } // Purpur - OBFHELPER
     public void t(boolean flag) {
         if (flag) {
             this.d = 400;

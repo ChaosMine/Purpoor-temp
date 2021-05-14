@@ -1183,6 +1183,7 @@ public class PurpurWorldConfig {
     public boolean ironGolemRidableInWater = false;
     public boolean ironGolemCanSwim = false;
     public double ironGolemMaxHealth = 100.0D;
+    public boolean ironGolemPoppyCalm = false;
     private void ironGolemSettings() {
         ironGolemRidable = getBoolean("mobs.iron_golem.ridable", ironGolemRidable);
         ironGolemRidableInWater = getBoolean("mobs.iron_golem.ridable-in-water", ironGolemRidableInWater);
@@ -1193,6 +1194,7 @@ public class PurpurWorldConfig {
             set("mobs.iron_golem.attributes.max_health", oldValue);
         }
         ironGolemMaxHealth = getDouble("mobs.iron_golem.attributes.max_health", ironGolemMaxHealth);
+        ironGolemPoppyCalm = getBoolean("mobs.iron_golem.poppy-calms-anger", ironGolemPoppyCalm);
     }
 
     public boolean llamaRidable = false;
