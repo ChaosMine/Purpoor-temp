@@ -62,13 +62,13 @@ public class CommandGamemode {
             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
             if (entityplayer.playerInteractManager.getGameMode() != enumgamemode) {
-                entityplayer.a(enumgamemode);
-                // CraftBukkit start - handle event cancelling the change
-                if (entityplayer.playerInteractManager.getGameMode() != enumgamemode) {
-                    commandcontext.getSource().sendFailureMessage(new net.minecraft.network.chat.ChatComponentText("Failed to set the gamemode of '" + entityplayer.getName() + "'"));
+                // Paper start - handle event cancelling the change
+                org.bukkit.event.player.PlayerGameModeChangeEvent event = entityplayer.setGamemode(enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.COMMAND, net.kyori.adventure.text.Component.text("Failed to set the gamemode of '" + entityplayer.getName() + "'", net.kyori.adventure.text.format.NamedTextColor.RED));
+                if (event != null && event.isCancelled()) {
+                    commandcontext.getSource().sendMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.cancelMessage()), false);
                     continue;
                 }
-                // CraftBukkit end
+                // Paper end
                 a((CommandListenerWrapper) commandcontext.getSource(), entityplayer, enumgamemode);
                 ++i;
             }

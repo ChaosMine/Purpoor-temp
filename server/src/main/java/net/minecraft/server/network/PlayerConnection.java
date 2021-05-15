@@ -2451,7 +2451,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
                     this.player = this.minecraftServer.getPlayerList().moveToWorld(this.player, false);
                     if (this.minecraftServer.isHardcore()) {
-                        this.player.a(EnumGamemode.SPECTATOR);
+                        this.player.setGamemode(EnumGamemode.SPECTATOR, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.HARDCORE_DEATH, null); // Paper
                         ((GameRules.GameRuleBoolean) this.player.getWorldServer().getGameRules().get(GameRules.SPECTATORS_GENERATE_CHUNKS)).a(false, this.minecraftServer);
                     }
                 }

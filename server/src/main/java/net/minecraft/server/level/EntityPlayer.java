@@ -396,7 +396,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         if (this.locY() > 300) this.setPositionRaw(locX(), 257, locZ()); // Paper - bring down to a saner Y level if out of world
         if (nbttagcompound.hasKeyOfType("playerGameType", 99)) {
             if (this.getMinecraftServer().getForceGamemode()) {
+                // Paper start - call PlayerGameModeChangeEvent on join for players that do not have the correct gamemode
+                if (this.getMinecraftServer().getGamemode() != EnumGamemode.getById(nbttagcompound.getInt("playerGameType"))) {
+                    if (new org.bukkit.event.player.PlayerGameModeChangeEvent(this.getBukkitEntity(), GameMode.getByValue(this.getMinecraftServer().getGamemode().getId()), org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.DEFAULT_GAMEMODE, null).callEvent()) {
                 this.playerInteractManager.a(this.getMinecraftServer().getGamemode(), EnumGamemode.NOT_SET);
+                    } else {
+                        this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET); // copied from below; if cancelled, set gamemode normally
+                    }
+                } else {
+                    this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET); // copied from below; if no change needed, set gamemode normally
+                } // Paper end
             } else {
                 this.playerInteractManager.a(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")), nbttagcompound.hasKeyOfType("previousPlayerGameType", 3) ? EnumGamemode.getById(nbttagcompound.getInt("previousPlayerGameType")) : EnumGamemode.NOT_SET);
             }
@@ -1792,15 +1801,21 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
     @Override
     public void a(EnumGamemode enumgamemode) {
+        // Paper start - Add cause and nullable message to event
+        setGamemode(enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.UNKNOWN, null);
+    }
+
+    public PlayerGameModeChangeEvent setGamemode(EnumGamemode enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause cause, net.kyori.adventure.text.Component message) {
+        // Paper end
         // CraftBukkit start
         if (enumgamemode == this.playerInteractManager.getGameMode()) {
-            return;
+            return null; // Paper
         }
 
-        PlayerGameModeChangeEvent event = new PlayerGameModeChangeEvent(getBukkitEntity(), GameMode.getByValue(enumgamemode.getId()));
+        PlayerGameModeChangeEvent event = new PlayerGameModeChangeEvent(getBukkitEntity(), GameMode.getByValue(enumgamemode.getId()), cause, message); // Paper
         world.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
-            return;
+            return event; // Paper
         }
         // CraftBukkit end
 
@@ -1815,6 +1830,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
 
         this.updateAbilities();
         this.dU();
+        return event; // Paper
     }
 
     @Override

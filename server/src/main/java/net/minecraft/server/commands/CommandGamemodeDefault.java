@@ -43,7 +43,13 @@ public class CommandGamemodeDefault {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
                 if (entityplayer.playerInteractManager.getGameMode() != enumgamemode) {
-                    entityplayer.a(enumgamemode);
+                    // Paper start - handle event cancelling the change
+                    org.bukkit.event.player.PlayerGameModeChangeEvent event = entityplayer.setGamemode(enumgamemode, org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.DEFAULT_GAMEMODE, net.kyori.adventure.text.Component.text("Failed to set the gamemode of '" + entityplayer.getName() + "'", net.kyori.adventure.text.format.NamedTextColor.RED));
+                    if (event != null && event.isCancelled()) {
+                        commandlistenerwrapper.sendMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.cancelMessage()), false);
+                        continue;
+                    }
+                    // Paper end
                     ++i;
                 }
             }
