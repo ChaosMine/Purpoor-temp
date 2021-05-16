@@ -329,7 +329,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         if (this.B && !this.player.isSleeping()) {
             if (++this.C > 80) {
                 PlayerConnection.LOGGER.warn("{} was kicked for floating too long!", this.player.getDisplayName().getString());
-                this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage); // Paper - use configurable kick message
+                this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickPlayerMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_PLAYER); // Paper - use configurable kick message & kick event cause
                 return;
             }
         } else {
@@ -348,7 +348,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             if (this.D && this.player.getRootVehicle().getRidingPassenger() == this.player) {
                 if (++this.E > 80) {
                     PlayerConnection.LOGGER.warn("{} was kicked for floating a vehicle too long!", this.player.getDisplayName().getString());
-                    this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage); // Paper - use configurable kick message
+                    this.disconnect(com.destroystokyo.paper.PaperConfig.flyingKickVehicleMessage, org.bukkit.event.player.PlayerKickEvent.Cause.FLYING_VEHICLE); // Paper - use configurable kick message & kick event cause
                     return;
                 }
             } else {
@@ -370,7 +370,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         if (this.isPendingPing()) {
             if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
                 PlayerConnection.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getName()); // more info
-                this.disconnect(new ChatMessage("disconnect.timeout", new Object[0]));
+                this.disconnect(new ChatMessage("disconnect.timeout", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
             }
         } else {
             if (elapsedTime >= 15000L) { // 15 seconds
@@ -400,7 +400,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
         if (this.player.F() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.F() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
             this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
-            this.disconnect(new ChatMessage("multiplayer.disconnect.idling"));
+            this.disconnect(new ChatMessage("multiplayer.disconnect.idling"), org.bukkit.event.player.PlayerKickEvent.Cause.IDLING); // Paper - kick event cause
         }
 
     }
@@ -425,14 +425,22 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
     public void disconnect(String s) {
         // Paper start
-        this.disconnect(PaperAdventure.LEGACY_SECTION_UXRC.deserialize(s));
+        this.disconnect(PaperAdventure.LEGACY_SECTION_UXRC.deserialize(s), org.bukkit.event.player.PlayerKickEvent.Cause.UNKNOWN);
+    }
+
+    public void disconnect(String s, PlayerKickEvent.Cause cause) {
+        this.disconnect(PaperAdventure.LEGACY_SECTION_UXRC.deserialize(s), cause);
     }
 
     public void disconnect(final IChatBaseComponent reason) {
-        this.disconnect(PaperAdventure.asAdventure(reason));
+        this.disconnect(PaperAdventure.asAdventure(reason), org.bukkit.event.player.PlayerKickEvent.Cause.UNKNOWN);
     }
 
-    public void disconnect(net.kyori.adventure.text.Component reason) {
+    public void disconnect(final IChatBaseComponent reason, PlayerKickEvent.Cause cause) {
+        this.disconnect(PaperAdventure.asAdventure(reason), cause);
+    }
+
+    public void disconnect(net.kyori.adventure.text.Component reason, org.bukkit.event.player.PlayerKickEvent.Cause cause) {
         // Paper end
         // CraftBukkit start - fire PlayerKickEvent
         if (this.processedDisconnect) {
@@ -440,7 +448,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         }
         net.kyori.adventure.text.Component leaveMessage = net.kyori.adventure.text.Component.translatable("multiplayer.player.left", net.kyori.adventure.text.format.NamedTextColor.YELLOW, this.player.getBukkitEntity().displayName()); // Paper - Adventure
 
-        PlayerKickEvent event = new PlayerKickEvent(this.server.getPlayer(this.player), reason, leaveMessage); // Paper - Adventure
+        PlayerKickEvent event = new PlayerKickEvent(this.server.getPlayer(this.player), reason, leaveMessage, cause); // Paper - Adventure & kick event reason
 
         if (this.server.getServer().isRunning()) {
             this.server.getPluginManager().callEvent(event);
@@ -518,7 +526,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     public void a(PacketPlayInVehicleMove packetplayinvehiclemove) {
         PlayerConnectionUtils.ensureMainThread(packetplayinvehiclemove, this, this.player.getWorldServer());
         if (b(packetplayinvehiclemove)) {
-            this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_vehicle_movement"));
+            this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_vehicle_movement"), org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_VEHICLE_MOVEMENT); // Paper - kick event cause
         } else {
             Entity entity = this.player.getRootVehicle();
 
@@ -752,13 +760,13 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.getWorldServer()); // Paper - run this async
         // CraftBukkit start
         if (tabSpamLimiter.addAndGet(com.destroystokyo.paper.PaperConfig.tabSpamIncrement) > com.destroystokyo.paper.PaperConfig.tabSpamLimit && !this.minecraftServer.getPlayerList().isOp(this.player.getProfile())) { // Paper start - split and make configurable
-            minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]))); // Paper
+            minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.SPAM)); // Paper - kick event cause
             return;
         }
         // Paper start
         String str = packetplayintabcomplete.c(); int index = -1;
         if (str.length() > 64 && ((index = str.indexOf(' ')) == -1 || index >= 64)) {
-            minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]))); // Paper
+            minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.SPAM)); // Paper - kick event cause
             return;
         }
         // Paper end
@@ -906,7 +914,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // Paper start - validate pick item position
         if (!(packetplayinpickitem.b() >= 0 && packetplayinpickitem.b() < this.player.inventory.items.size())) {
             PlayerConnection.LOGGER.warn("{} tried to set an invalid carried item", this.player.getDisplayName().getString());
-            this.disconnect("Invalid hotbar selection (Hacking?)");
+            this.disconnect("Invalid hotbar selection (Hacking?)", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION); // Paper - kick event cause
             return;
         }
         this.player.inventory.c(packetplayinpickitem.b()); // Paper - Diff above if changed
@@ -1060,7 +1068,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             NBTTagList pageList = testStack.getTag().getList("pages", 8);
             if (pageList.size() > 100) {
                 PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with too many pages");
-                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                 return;
             }
             long byteTotal = 0;
@@ -1072,7 +1080,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 int byteLength = testString.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
                 if (byteLength > 256 * 4) {
                     PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send a book with with a page too large!");
-                    minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                    minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                     return;
                 }
                 byteTotal += byteLength;
@@ -1095,14 +1103,14 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
             if (byteTotal > byteAllowed) {
                 PlayerConnection.LOGGER.warn(this.player.getName() + " tried to send too large of a book. Book Size: " + byteTotal + " - Allowed:  "+ byteAllowed + " - Pages: " + pageList.size());
-                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!"));
+                minecraftServer.scheduleOnMain(() -> this.disconnect("Book too large!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION)); // Paper - kick event cause
                 return;
             }
         }
         // Paper end
         // CraftBukkit start
         if (this.lastBookTick + 20 > MinecraftServer.currentTick) {
-            this.disconnect("Book edited too quickly!");
+            this.disconnect("Book edited too quickly!", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION); // Paper - kick event cause
             return;
         }
         this.lastBookTick = MinecraftServer.currentTick;
@@ -1214,7 +1222,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
     public void a(PacketPlayInFlying packetplayinflying) {
         PlayerConnectionUtils.ensureMainThread(packetplayinflying, this, this.player.getWorldServer());
         if (b(packetplayinflying)) {
-            this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_player_movement"));
+            this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_player_movement"), org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_PLAYER_MOVEMENT); // Paper - kick event cause
         } else {
             WorldServer worldserver = this.player.getWorldServer();
 
@@ -1613,7 +1621,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                         this.dropCount++;
                         if (this.dropCount >= 20) {
                             LOGGER.warn(this.player.getName() + " dropped their items too quickly!");
-                            this.disconnect("You dropped your items too quickly (Hacking?)");
+                            this.disconnect("You dropped your items too quickly (Hacking?)", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION); // Paper - kick event cause
                             return;
                         }
                     }
@@ -1926,7 +1934,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
             this.player.resetIdleTimer();
         } else {
             PlayerConnection.LOGGER.warn("{} tried to set an invalid carried item", this.player.getDisplayName().getString());
-            this.disconnect("Invalid hotbar selection (Hacking?)"); // CraftBukkit
+            this.disconnect("Invalid hotbar selection (Hacking?)", org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_ACTION); // CraftBukkit // Paper - kick event cause
         }
     }
 
@@ -1963,7 +1971,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                         Waitable waitable = new Waitable() {
                             @Override
                             protected Object evaluate() {
-                                PlayerConnection.this.disconnect(new ChatMessage("multiplayer.disconnect.illegal_characters"));
+                                PlayerConnection.this.disconnect(new ChatMessage("multiplayer.disconnect.illegal_characters"), org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_CHARACTERS); // Paper - kick event cause
                                 return null;
                             }
                         };
@@ -1978,7 +1986,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                             throw new RuntimeException(e);
                         }
                     } else {
-                        this.disconnect(new ChatMessage("multiplayer.disconnect.illegal_characters"));
+                        this.disconnect(new ChatMessage("multiplayer.disconnect.illegal_characters"), org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_CHARACTERS); // Paper - kick event cause
                     }
                     // CraftBukkit end
                     return;
@@ -2032,7 +2040,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     Waitable waitable = new Waitable() {
                         @Override
                         protected Object evaluate() {
-                            PlayerConnection.this.disconnect(new ChatMessage("disconnect.spam"));
+                            PlayerConnection.this.disconnect(new ChatMessage("disconnect.spam"), org.bukkit.event.player.PlayerKickEvent.Cause.SPAM); // Paper - kick event cause
                             return null;
                         }
                     };
@@ -2047,7 +2055,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    this.disconnect(new ChatMessage("disconnect.spam"));
+                    this.disconnect(new ChatMessage("disconnect.spam"), org.bukkit.event.player.PlayerKickEvent.Cause.SPAM); // Paper - kick event cause
                 }
                 // CraftBukkit end
             }
@@ -2320,7 +2328,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // Spigot Start
         if ( entity == player && !player.isSpectator() )
         {
-            disconnect( "Cannot interact with self!" );
+            disconnect( "Cannot interact with self!", org.bukkit.event.player.PlayerKickEvent.Cause.SELF_INTERACTION ); // Paper - kick event cause
             return;
         }
         // Spigot End
@@ -2397,7 +2405,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                     // CraftBukkit end
                 } else if (packetplayinuseentity.b() == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK) {
                     if (entity instanceof EntityItem || entity instanceof EntityExperienceOrb || entity instanceof EntityArrow || (entity == this.player && !player.isSpectator())) { // CraftBukkit
-                        this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_entity_attacked"));
+                        this.disconnect(new ChatMessage("multiplayer.disconnect.invalid_entity_attacked"), org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_ENTITY_ATTACKED); // Paper - kick event cause
                         PlayerConnection.LOGGER.warn("Player {} tried to attack an invalid entity", this.player.getDisplayName().getString());
                         return;
                     }
@@ -2802,7 +2810,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         // Paper start
         if (!Bukkit.isPrimaryThread()) {
             if (recipeSpamPackets.addAndGet(PaperConfig.autoRecipeIncrement) > PaperConfig.autoRecipeLimit) {
-                minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]))); // Paper
+                minecraftServer.scheduleOnMain(() -> this.disconnect(new ChatMessage("disconnect.spam", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.SPAM)); // Paper - kick event cause
                 return;
             }
         }
@@ -3001,7 +3009,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
         } else if (!this.isExemptPlayer()) {
             // Paper start - This needs to be handled on the main thread for plugins
             minecraftServer.scheduleOnMain(() -> {
-            this.disconnect(new ChatMessage("disconnect.timeout"));
+            this.disconnect(new ChatMessage("disconnect.timeout"), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
             });
             // Paper end
         }
@@ -3047,7 +3055,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 }
             } catch (Exception ex) {
                 PlayerConnection.LOGGER.error("Couldn\'t register custom payload", ex);
-                this.disconnect("Invalid payload REGISTER!");
+                this.disconnect("Invalid payload REGISTER!", org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_PAYLOAD); // Paper - kick event cause
             }
         } else if (packetplayincustompayload.tag.equals(CUSTOM_UNREGISTER)) {
             try {
@@ -3057,7 +3065,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 }
             } catch (Exception ex) {
                 PlayerConnection.LOGGER.error("Couldn\'t unregister custom payload", ex);
-                this.disconnect("Invalid payload UNREGISTER!");
+                this.disconnect("Invalid payload UNREGISTER!", org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_PAYLOAD); // Paper - kick event cause
             }
         } else {
             try {
@@ -3076,7 +3084,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
                 server.getMessenger().dispatchIncomingMessage(player.getBukkitEntity(), packetplayincustompayload.tag.toString(), data);
             } catch (Exception ex) {
                 PlayerConnection.LOGGER.error("Couldn\'t dispatch custom payload", ex);
-                this.disconnect("Invalid custom payload!");
+                this.disconnect("Invalid custom payload!", org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_PAYLOAD); // Paper - kick event cause
             }
         }
 

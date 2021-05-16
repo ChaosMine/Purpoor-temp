@@ -31,7 +31,7 @@ public class CommandKick {
         while (iterator.hasNext()) {
             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-            entityplayer.playerConnection.disconnect(ichatbasecomponent);
+            entityplayer.playerConnection.disconnect(ichatbasecomponent, org.bukkit.event.player.PlayerKickEvent.Cause.KICK_COMMAND); // Paper - kick event cause
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.kick.success", new Object[]{entityplayer.getScoreboardDisplayName(), ichatbasecomponent}), true);
         }
 

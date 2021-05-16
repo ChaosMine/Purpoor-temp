@@ -52,7 +52,7 @@ public class CommandBan {
                 EntityPlayer entityplayer = commandlistenerwrapper.getServer().getPlayerList().getPlayer(gameprofile.getId());
 
                 if (entityplayer != null) {
-                    entityplayer.playerConnection.disconnect(new ChatMessage("multiplayer.disconnect.banned"));
+                    entityplayer.playerConnection.disconnect(new ChatMessage("multiplayer.disconnect.banned"), org.bukkit.event.player.PlayerKickEvent.Cause.BANNED); // Paper - kick event cause
                 }
             }
         }

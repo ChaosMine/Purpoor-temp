@@ -74,7 +74,7 @@ public class CommandBanIp {
             while (iterator.hasNext()) {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                entityplayer.playerConnection.disconnect(new ChatMessage("multiplayer.disconnect.ip_banned"));
+                entityplayer.playerConnection.disconnect(new ChatMessage("multiplayer.disconnect.ip_banned"), org.bukkit.event.player.PlayerKickEvent.Cause.IP_BANNED); // Paper - kick event cause
             }
 
             return list.size();

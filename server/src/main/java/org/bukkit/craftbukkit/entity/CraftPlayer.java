@@ -499,16 +499,21 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         org.spigotmc.AsyncCatcher.catchOp("player kick"); // Spigot
         if (getHandle().playerConnection == null) return;
 
-        getHandle().playerConnection.disconnect(message == null ? "" : message);
+        getHandle().playerConnection.disconnect(message == null ? "" : message, org.bukkit.event.player.PlayerKickEvent.Cause.PLUGIN); // Paper - kick event cause
     }
 
     // Paper start
     @Override
     public void kick(final net.kyori.adventure.text.Component message) {
+        kick(message, org.bukkit.event.player.PlayerKickEvent.Cause.PLUGIN);
+    }
+
+    @Override
+    public void kick(net.kyori.adventure.text.Component message, org.bukkit.event.player.PlayerKickEvent.Cause cause) {
         org.spigotmc.AsyncCatcher.catchOp("player kick");
         final PlayerConnection connection = this.getHandle().playerConnection;
         if (connection != null) {
-            connection.disconnect(message == null ? net.kyori.adventure.text.Component.empty() : message);
+            connection.disconnect(message == null ? net.kyori.adventure.text.Component.empty() : message, cause);
         }
     }
     // Paper end

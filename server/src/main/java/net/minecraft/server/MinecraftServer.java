@@ -2044,7 +2044,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
                 if (!whitelist.isWhitelisted(entityplayer.getProfile())) {
-                    entityplayer.playerConnection.disconnect(org.spigotmc.SpigotConfig.whitelistMessage); // Paper - use configurable message
+                    entityplayer.playerConnection.disconnect(org.spigotmc.SpigotConfig.whitelistMessage, org.bukkit.event.player.PlayerKickEvent.Cause.WHITELIST); // Paper - use configurable message
                 }
             }
 
