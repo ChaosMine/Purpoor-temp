@@ -269,6 +269,7 @@ public class Item implements IMaterial {
         return this.i;
     }
 
+    public boolean canRepair(ItemStack toBeRepaired, ItemStack repairMaterial) { return a(toBeRepaired, repairMaterial); } // Paper - OBFHELPER
     public boolean a(ItemStack itemstack, ItemStack itemstack1) {
         return false;
     }
