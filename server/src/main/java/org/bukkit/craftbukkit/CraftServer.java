@@ -18,6 +18,7 @@ import com.mojang.serialization.Lifecycle;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import io.papermc.paper.datapack.PaperDatapackManager; // Paper
 import io.papermc.paper.util.TraceUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.awt.image.BufferedImage;
@@ -265,6 +266,7 @@ public final class CraftServer implements Server {
     public boolean ignoreVanillaPermissions = false;
     private final List<CraftPlayer> playerView;
     public int reloadCount;
+    private final PaperDatapackManager datapackManager; // Paper
     public static Exception excessiveVelEx; // Paper - Velocity warnings
 
     static {
@@ -347,6 +349,7 @@ public final class CraftServer implements Server {
         TicketType.PLUGIN.loadPeriod = Math.min(20, configuration.getInt("chunk-gc.period-in-ticks")); // Paper - cap plugin loads to 1 second
         minimumAPI = configuration.getString("settings.minimum-api");
         loadIcon();
+        datapackManager = new PaperDatapackManager(console.getResourcePackRepository()); // Paper
     }
 
     public boolean getCommandBlockOverride(String command) {
@@ -2498,5 +2501,11 @@ public final class CraftServer implements Server {
     public com.destroystokyo.paper.entity.ai.MobGoals getMobGoals() {
         return mobGoals;
     }
+
+    @Override
+    public PaperDatapackManager getDatapackManager() {
+        return datapackManager;
+    }
+
     // Paper end
 }

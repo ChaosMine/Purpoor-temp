@@ -88,6 +88,7 @@ public class ResourcePackRepository implements AutoCloseable {
         return this.b.keySet();
     }
 
+    public final Collection<ResourcePackLoader> getPacks() { return this.c(); } // Paper - OBFHELPER
     public Collection<ResourcePackLoader> c() {
         return this.b.values();
     }
@@ -96,6 +97,7 @@ public class ResourcePackRepository implements AutoCloseable {
         return (Collection) this.c.stream().map(ResourcePackLoader::e).collect(ImmutableSet.toImmutableSet());
     }
 
+    public final Collection<ResourcePackLoader> getEnabledPacks() { return this.e(); } // Paper - OBFHELPER
     public Collection<ResourcePackLoader> e() {
         return this.c;
     }

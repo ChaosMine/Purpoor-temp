@@ -102,6 +102,7 @@ public class ResourcePackLoader implements AutoCloseable {
         });
     }
 
+    public final EnumResourcePackVersion getVersion() { return this.c(); } // Paper - OBFHELPER
     public EnumResourcePackVersion c() {
         return this.g;
     }
@@ -110,6 +111,7 @@ public class ResourcePackLoader implements AutoCloseable {
         return (IResourcePack) this.d.get();
     }
 
+    public final String getName() { return this.e(); } // Paper - OBFHELPER
     public String e() {
         return this.c;
     }
