@@ -537,6 +537,11 @@ public class PurpurWorldConfig {
         });
     }
 
+    public boolean dragonEggTeleport = true;
+    private void dragonEggSettings() {
+        dragonEggTeleport = getBoolean("blocks.dragon_egg.teleport", dragonEggTeleport);
+    }
+
     public boolean snowOnBlueIce = true;
     public boolean mobsSpawnOnPackedIce = true;
     public boolean mobsSpawnOnBlueIce = true;

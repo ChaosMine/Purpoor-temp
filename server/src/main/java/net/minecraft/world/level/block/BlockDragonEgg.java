@@ -42,6 +42,7 @@ public class BlockDragonEgg extends BlockFalling {
     }
 
     private void d(IBlockData iblockdata, World world, BlockPosition blockposition) {
+        if (!world.purpurConfig.dragonEggTeleport) return; // Purpur
         for (int i = 0; i < 1000; ++i) {
             BlockPosition blockposition1 = blockposition.b(world.random.nextInt(16) - world.random.nextInt(16), world.random.nextInt(8) - world.random.nextInt(8), world.random.nextInt(16) - world.random.nextInt(16));
 
