@@ -356,6 +356,7 @@ public class PurpurWorldConfig {
     public boolean creativeOnePunch = false;
     public boolean playerSleepNearMonsters = false;
     public boolean playersSkipNight = true;
+    public double playerCriticalDamageMultiplier = 1.5D;
     private void miscGameplayMechanicsSettings() {
         useBetterMending = getBoolean("gameplay-mechanics.use-better-mending", useBetterMending);
         alwaysTameInCreative = getBoolean("gameplay-mechanics.always-tame-in-creative", alwaysTameInCreative);
@@ -377,6 +378,7 @@ public class PurpurWorldConfig {
         creativeOnePunch = getBoolean("gameplay-mechanics.player.one-punch-in-creative", creativeOnePunch);
         playerSleepNearMonsters = getBoolean("gameplay-mechanics.player.sleep-ignore-nearby-mobs", playerSleepNearMonsters);
         playersSkipNight = getBoolean("gameplay-mechanics.player.can-skip-night", playersSkipNight);
+        playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
     }
 
     public boolean catSpawning;

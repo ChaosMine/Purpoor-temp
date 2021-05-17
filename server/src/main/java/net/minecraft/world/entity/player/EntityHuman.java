@@ -1188,7 +1188,7 @@ public abstract class EntityHuman extends EntityLiving {
                     flag2 = flag2 && !this.isSprinting();
                     if (flag2) {
                         this.isCritical = true; // Purpur
-                        f *= 1.5F;
+                        f *= this.world.purpurConfig.playerCriticalDamageMultiplier; // Purpur
                     }
 
                     f += f1;
