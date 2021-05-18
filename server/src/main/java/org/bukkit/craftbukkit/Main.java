@@ -153,6 +153,12 @@ public class Main {
                         .ofType(String.class)
                         .defaultsTo("Unknown Server")
                         .describedAs("Name");
+
+                acceptsAll(asList("add-plugin", "add-extra-plugin-jar"))
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File[] {})
+                        .describedAs("Specify paths to extra plugin jars to be loaded in addition to those in the plugins folder. This argument can be specified multiple times, once for each extra plugin jar path.");
                 // Paper end
             }
         };

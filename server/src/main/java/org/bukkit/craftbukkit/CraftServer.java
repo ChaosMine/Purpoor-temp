@@ -385,8 +385,13 @@ public final class CraftServer implements Server {
 
         File pluginFolder = (File) console.options.valueOf("plugins");
 
-        if (pluginFolder.exists()) {
-            Plugin[] plugins = pluginManager.loadPlugins(pluginFolder);
+        // Paper start
+        if (true || pluginFolder.exists()) {
+            if (!pluginFolder.exists()) {
+                pluginFolder.mkdirs();
+            }
+            Plugin[] plugins = pluginManager.loadPlugins(pluginFolder, this.extraPluginJars());
+            // Paper end
             for (Plugin plugin : plugins) {
                 try {
                     String message = String.format("Loading %s", plugin.getDescription().getFullName());
@@ -400,6 +405,18 @@ public final class CraftServer implements Server {
             pluginFolder.mkdir();
         }
     }
+
+    // Paper start
+    private List<File> extraPluginJars() {
+        @SuppressWarnings("unchecked")
+        final List<File> jars = (List<File>) this.console.options.valuesOf("add-plugin");
+        return jars.stream()
+            .filter(File::exists)
+            .filter(File::isFile)
+            .filter(file -> file.getName().endsWith(".jar"))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    // Paper end
 
     public void enablePlugins(PluginLoadOrder type) {
         if (type == PluginLoadOrder.STARTUP) {
