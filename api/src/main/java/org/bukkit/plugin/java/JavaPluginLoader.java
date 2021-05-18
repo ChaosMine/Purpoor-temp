@@ -94,7 +94,7 @@ public final class JavaPluginLoader implements PluginLoader {
             throw new InvalidPluginException(ex);
         }
 
-        final File parentFile = file.getParentFile();
+        final File parentFile = ((SimplePluginManager) this.server.getPluginManager()).pluginsDirectory(); // Paper
         final File dataFolder = new File(parentFile, description.getName());
         @SuppressWarnings("deprecation")
         final File oldDataFolder = new File(parentFile, description.getRawName());
