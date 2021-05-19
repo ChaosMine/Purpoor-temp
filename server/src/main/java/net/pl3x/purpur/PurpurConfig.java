@@ -164,6 +164,7 @@ public class PurpurConfig {
     public static String creditsCommandOutput = "§a%s has been shown the end credits";
     public static String pingCommandOutput = "§a%s's ping is %sms";
     public static String cannotRideMob = "§cYou cannot mount that mob";
+    public static String unverifiedUsername = "default";
     private static void messages() {
         afkBroadcastAway = getString("settings.messages.afk-broadcast-away", afkBroadcastAway);
         afkBroadcastBack = getString("settings.messages.afk-broadcast-back", afkBroadcastBack);
@@ -173,6 +174,7 @@ public class PurpurConfig {
         creditsCommandOutput = getString("settings.messages.credits-command-output", creditsCommandOutput);
         pingCommandOutput = getString("settings.messages.ping-command-output", pingCommandOutput);
         cannotRideMob = getString("settings.messages.cannot-ride-mob", cannotRideMob);
+        unverifiedUsername = getString("settings.messages.unverified-username", unverifiedUsername);
     }
 
     public static int dungeonSeed = -1;

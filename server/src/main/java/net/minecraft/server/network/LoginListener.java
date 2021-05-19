@@ -280,7 +280,7 @@ public class LoginListener implements PacketLoginInListener {
                         LoginListener.this.i = LoginListener.this.a(gameprofile);
                         LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
                     } else {
-                        LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.unverified_username"));
+                        LoginListener.this.disconnect(net.pl3x.purpur.PurpurConfig.unverifiedUsername.equals("default") ? new ChatMessage("multiplayer.disconnect.unverified_username") : PaperAdventure.asVanilla(PaperAdventure.LEGACY_SECTION_UXRC.deserialize(net.pl3x.purpur.PurpurConfig.unverifiedUsername))); // Purpur
                         LoginListener.LOGGER.error("Username '{}' tried to join with an invalid session", gameprofile.getName());
                     }
                 } catch (AuthenticationUnavailableException authenticationunavailableexception) {
