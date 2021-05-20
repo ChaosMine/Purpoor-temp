@@ -43,7 +43,7 @@ public class PacketPlayInStruct implements Packet<PacketListenerPlayIn> {
         this.f = new BlockPosition(MathHelper.clamp(packetdataserializer.readByte(), 0, 48), MathHelper.clamp(packetdataserializer.readByte(), 0, 48), MathHelper.clamp(packetdataserializer.readByte(), 0, 48));
         this.g = (EnumBlockMirror) packetdataserializer.a(EnumBlockMirror.class);
         this.h = (EnumBlockRotation) packetdataserializer.a(EnumBlockRotation.class);
-        this.i = packetdataserializer.e(12);
+        this.i = packetdataserializer.e(128); // Paper - Fix MC-148809, increase max character input to 128
         this.m = MathHelper.a(packetdataserializer.readFloat(), 0.0F, 1.0F);
         this.n = packetdataserializer.j();
         byte b0 = packetdataserializer.readByte();
