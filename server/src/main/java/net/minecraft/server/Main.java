@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
+import io.papermc.paper.world.ThreadedWorldUpgrader;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -276,6 +277,15 @@ public class Main {
         return config;
     }
     // Paper end
+
+    // Paper start - fix and optimise world upgrading
+    public static void convertWorldButItWorks(ResourceKey<WorldDimension> dimensionType, ResourceKey<DimensionManager> worldKey, String worldName,
+                                              DataFixer dataFixer, boolean removeCaches) {
+        int threads = Runtime.getRuntime().availableProcessors() * 3 / 8;
+        final ThreadedWorldUpgrader worldUpgrader = new ThreadedWorldUpgrader(dimensionType, worldKey, worldName, threads, dataFixer, removeCaches);
+        worldUpgrader.convert();
+    }
+    // Paper end - fix and optimise world upgrading
 
     public static void convertWorld(Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, boolean flag, BooleanSupplier booleansupplier, ImmutableSet<ResourceKey<DimensionManager>> immutableset) { // CraftBukkit
         Main.LOGGER.info("Forcing world upgrade! {}", convertable_conversionsession.getLevelName()); // CraftBukkit

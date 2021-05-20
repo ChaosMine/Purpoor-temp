@@ -515,13 +515,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 worlddata = new WorldDataServer(worldsettings, generatorsettings, Lifecycle.stable());
             }
             worlddata.checkName(name); // CraftBukkit - Migration did not rewrite the level.dat; This forces 1.8 to take the last loaded world as respawn (in this case the end)
-            if (options.has("forceUpgrade")) {
-                net.minecraft.server.Main.convertWorld(worldSession, DataConverterRegistry.a(), options.has("eraseCache"), () -> {
-                    return true;
-                }, worlddata.getGeneratorSettings().d().d().stream().map((entry1) -> {
-                    return ResourceKey.a(IRegistry.K, ((ResourceKey) entry1.getKey()).a());
-                }).collect(ImmutableSet.toImmutableSet()));
-            }
+            // Paper - move down
 
             IWorldDataServer iworlddataserver = worlddata;
             GeneratorSettings generatorsettings = worlddata.getGeneratorSettings();
@@ -540,6 +534,14 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 dimensionmanager = worlddimension.b();
                 chunkgenerator = worlddimension.c();
             }
+
+            // Paper start - fix and optimise world upgrading
+            if (options.has("forceUpgrade")) {
+                net.minecraft.server.Main.convertWorldButItWorks(
+                        dimensionKey, World.getDimensionKey(dimensionmanager), worldSession.getLevelName(), DataConverterRegistry.getDataFixer(), options.has("eraseCache")
+                );
+            }
+            // Paper end - fix and optimise world upgrading
 
             ResourceKey<World> worldKey = ResourceKey.a(IRegistry.L, dimensionKey.a());
 

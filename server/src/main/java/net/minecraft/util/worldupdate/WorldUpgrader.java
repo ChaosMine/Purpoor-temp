@@ -55,7 +55,7 @@ public class WorldUpgrader {
     private volatile int m;
     private final Object2FloatMap<ResourceKey<DimensionManager>> n = Object2FloatMaps.synchronize(new Object2FloatOpenCustomHashMap(SystemUtils.k())); // CraftBukkit
     private volatile IChatBaseComponent o = new ChatMessage("optimizeWorld.stage.counting");
-    private static final Pattern p = Pattern.compile("^r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$");
+    private static final Pattern p = Pattern.compile("^r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$"); public static final Pattern getRegionfileRegex() { return p; } // Paper - OBFHELPER
     private final WorldPersistentData q;
 
     public WorldUpgrader(Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, ImmutableSet<ResourceKey<DimensionManager>> immutableset, boolean flag) { // CraftBukkit

@@ -113,6 +113,7 @@ public class IChunkLoader implements AutoCloseable {
         return nbttagcompound;
     }
 
+    public static int getVersion(NBTTagCompound nbttagcompound) { return a(nbttagcompound); } // Paper - OBFHELPER
     public static int a(NBTTagCompound nbttagcompound) {
         return nbttagcompound.hasKeyOfType("DataVersion", 99) ? nbttagcompound.getInt("DataVersion") : -1;
     }

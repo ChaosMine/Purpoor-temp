@@ -1147,14 +1147,7 @@ public final class CraftServer implements Server {
         }
         worlddata.checkName(name);
         worlddata.a(console.getServerModName(), console.getModded().isPresent());
-
-        if (console.options.has("forceUpgrade")) {
-            net.minecraft.server.Main.convertWorld(worldSession, DataConverterRegistry.a(), console.options.has("eraseCache"), () -> {
-                return true;
-            }, worlddata.getGeneratorSettings().d().d().stream().map((entry) -> {
-                return ResourceKey.a(IRegistry.K, ((ResourceKey) entry.getKey()).a());
-            }).collect(ImmutableSet.toImmutableSet()));
-        }
+        // Paper - move down
 
         long j = BiomeManager.a(creator.seed());
         List<MobSpawner> list = ImmutableList.of(new MobSpawnerPhantom(), new MobSpawnerPatrol(), new MobSpawnerCat(), new VillageSiege(), new MobSpawnerTrader(worlddata));
@@ -1170,6 +1163,14 @@ public final class CraftServer implements Server {
             dimensionmanager = worlddimension.b();
             chunkgenerator = worlddimension.c();
         }
+
+        // Paper start - fix and optimise world upgrading
+        if (console.options.has("forceUpgrade")) {
+            net.minecraft.server.Main.convertWorldButItWorks(
+                actualDimension, net.minecraft.world.level.World.getDimensionKey(dimensionmanager), worldSession.getLevelName(), DataConverterRegistry.getDataFixer(), console.options.has("eraseCache")
+            );
+        }
+        // Paper end - fix and optimise world upgrading
 
         ResourceKey<net.minecraft.world.level.World> worldKey;
         String levelName = this.getServer().getDedicatedServerProperties().levelName;

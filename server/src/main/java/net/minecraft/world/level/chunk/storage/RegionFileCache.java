@@ -30,6 +30,28 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
 
 
     // Paper start
+    public static ChunkCoordIntPair getRegionFileCoordinates(File file) {
+        String fileName = file.getName();
+        if (!fileName.startsWith("r.") || !fileName.endsWith(".mca")) {
+            return null;
+        }
+
+        String[] split = fileName.split("\\.");
+
+        if (split.length != 4) {
+            return null;
+        }
+
+        try {
+            int x = Integer.parseInt(split[1]);
+            int z = Integer.parseInt(split[2]);
+
+            return new ChunkCoordIntPair(x << 5, z << 5);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     public synchronized RegionFile getRegionFileIfLoaded(ChunkCoordIntPair chunkcoordintpair) { // Paper - synchronize for async io
         return this.cache.getAndMoveToFirst(ChunkCoordIntPair.pair(chunkcoordintpair.getRegionX(), chunkcoordintpair.getRegionZ()));
     }

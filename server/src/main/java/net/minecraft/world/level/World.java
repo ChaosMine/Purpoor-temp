@@ -181,6 +181,15 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         return typeKey;
     }
 
+    // Paper start - fix and optimise world upgrading
+    // copied from below
+    public static ResourceKey<DimensionManager> getDimensionKey(DimensionManager manager) {
+        return ((org.bukkit.craftbukkit.CraftServer)org.bukkit.Bukkit.getServer()).getHandle().getServer().customRegistry.a().c(manager).orElseThrow(() -> {
+            return new IllegalStateException("Unregistered dimension type: " + manager);
+        });
+    }
+    // Paper end - fix and optimise world upgrading
+
     protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, final DimensionManager dimensionmanager, Supplier<GameProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper
         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName()); // Spigot
         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName(), this.spigotConfig); // Paper
