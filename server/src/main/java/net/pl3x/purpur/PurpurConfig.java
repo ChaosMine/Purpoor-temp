@@ -225,6 +225,7 @@ public class PurpurConfig {
     public static boolean enderChestPermissionRows = false;
     public static boolean cryingObsidianValidForPortalFrame = false;
     public static int beeInsideBeeHive = 3;
+    public static boolean anvilCumulativeCost = true;
     private static void blockSettings() {
         if (version < 3) {
             boolean oldValue = getBoolean("settings.barrel.packed-barrels", true);
@@ -234,6 +235,7 @@ public class PurpurConfig {
             set("settings.blocks.ender_chest.six-rows", oldValue);
             set("settings.large-ender-chests", null);
         }
+        anvilCumulativeCost = getBoolean("settings.blocks.anvil.cumulative-cost", anvilCumulativeCost);
         barrelSixRows = getBoolean("settings.blocks.barrel.six-rows", barrelSixRows);
         InventoryType.BARREL.setDefaultSize(barrelSixRows ? 54 : 27);
         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);

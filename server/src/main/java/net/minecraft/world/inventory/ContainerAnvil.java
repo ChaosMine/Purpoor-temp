@@ -337,7 +337,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
     }
 
     public static int d(int i) {
-        return i * 2 + 1;
+        return net.pl3x.purpur.PurpurConfig.anvilCumulativeCost ? i * 2 + 1 : 0;
     }
 
     public void a(String s) {
