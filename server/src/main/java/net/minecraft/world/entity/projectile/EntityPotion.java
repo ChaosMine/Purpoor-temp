@@ -124,6 +124,7 @@ public class EntityPotion extends EntityProjectileThrowable {
     private void splash() {
         AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
         List<EntityLiving> list = this.world.a(EntityLiving.class, axisalignedbb, EntityPotion.b);
+        Map<LivingEntity, Double> affected = new HashMap<>(); // Paper
 
         if (!list.isEmpty()) {
             Iterator iterator = list.iterator();
@@ -133,11 +134,22 @@ public class EntityPotion extends EntityProjectileThrowable {
                 double d0 = this.h(entityliving);
 
                 if (d0 < 16.0D && entityliving.dO()) {
-                    entityliving.damageEntity(DamageSource.c(entityliving, this.getShooter()), 1.0F);
+                    // Paper start
+                    double intensity = 1.0D - Math.sqrt(d0) / 4.0D;
+                    affected.put(entityliving.getBukkitLivingEntity(), intensity);
+                    // entityliving.damageEntity(DamageSource.c(entityliving, this.getShooter()), 1.0F); // Paper - moved down
                 }
             }
         }
 
+        org.bukkit.event.entity.PotionSplashEvent event = CraftEventFactory.callPotionSplashEvent(this, affected);
+        if (!event.isCancelled()) {
+            for (LivingEntity affectedEntity : event.getAffectedEntities()) {
+                EntityLiving entityliving = ((CraftLivingEntity) affectedEntity).getHandle();
+                entityliving.damageEntity(DamageSource.indirectMagic(entityliving, this.getShooter()), 1.0F);
+            }
+        }
+        // Paper end
     }
 
     private void a(List<MobEffect> list, @Nullable Entity entity) {
@@ -155,6 +167,7 @@ public class EntityPotion extends EntityProjectileThrowable {
                     double d0 = this.h(entityliving);
 
                     if (d0 < 16.0D) {
+                        // Paper - diff on change, used when calling the splash event for water splash potions
                         double d1 = 1.0D - Math.sqrt(d0) / 4.0D;
 
                         if (entityliving == entity) {

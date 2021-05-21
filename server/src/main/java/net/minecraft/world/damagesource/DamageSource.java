@@ -99,6 +99,7 @@ public class DamageSource {
         return (new EntityDamageSourceIndirect("thrown", entity, entity1)).c();
     }
 
+    public static DamageSource indirectMagic(Entity target, Entity cause) { return c(target, cause); } // Paper - OBFHELPER
     public static DamageSource c(Entity entity, @Nullable Entity entity1) {
         return (new EntityDamageSourceIndirect("indirectMagic", entity, entity1)).setIgnoreArmor().setMagic();
     }
