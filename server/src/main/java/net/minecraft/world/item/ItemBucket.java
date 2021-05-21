@@ -118,6 +118,13 @@ public class ItemBucket extends Item {
     }
 
     protected ItemStack a(ItemStack itemstack, EntityHuman entityhuman) {
+        // Paper
+        if (itemLeftInHandAfterPlayerBucketEmptyEvent != null) {
+            ItemStack itemInHand = itemLeftInHandAfterPlayerBucketEmptyEvent;
+            itemLeftInHandAfterPlayerBucketEmptyEvent = null;
+            return itemInHand;
+        }
+        // Paper
         return !entityhuman.abilities.canInstantlyBuild ? new ItemStack(Items.BUCKET) : itemstack;
     }
 
@@ -128,6 +135,7 @@ public class ItemBucket extends Item {
         return a(entityhuman, world, blockposition, movingobjectpositionblock, null, null, null, null);
     }
 
+    private ItemStack itemLeftInHandAfterPlayerBucketEmptyEvent = null; // Paper
     public boolean a(EntityHuman entityhuman, World world, BlockPosition blockposition, @Nullable MovingObjectPositionBlock movingobjectpositionblock, EnumDirection enumdirection, BlockPosition clicked, ItemStack itemstack, EnumHand enumhand) {
         // Paper end
         // CraftBukkit end
@@ -148,6 +156,9 @@ public class ItemBucket extends Item {
                     ((EntityPlayer) entityhuman).getBukkitEntity().updateInventory(); // SPIGOT-4541
                     return false;
                 }
+                // Paper start
+                itemLeftInHandAfterPlayerBucketEmptyEvent = event.getItemStack().equals(CraftItemStack.asNewCraftStack(net.minecraft.world.item.Items.BUCKET)) ? null : CraftItemStack.asNMSCopy(event.getItemStack());
+                // Paper end
             }
             // CraftBukkit end
             if (!flag1) {
