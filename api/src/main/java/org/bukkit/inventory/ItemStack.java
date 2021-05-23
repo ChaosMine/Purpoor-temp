@@ -542,6 +542,31 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor
         return result.ensureServerConversions(); // Paper
     }
 
+    // Paper start
+    /**
+     * Edits the {@link ItemMeta} of this stack.
+     * <p>
+     * The {@link java.util.function.Consumer} must only interact
+     * with this stack's {@link ItemMeta} through the provided {@link ItemMeta} instance.
+     * Calling this method or any other meta-related method of the {@link ItemStack} class
+     * (such as {@link #getItemMeta()}, {@link #addItemFlags(ItemFlag...)}, {@link #lore()}, etc.)
+     * from inside the consumer is disallowed and will produce undefined results or exceptions.
+     * </p>
+     *
+     * @param consumer the meta consumer
+     * @return {@code true} if the edit was successful, {@code false} otherwise
+     */
+    public boolean editMeta(final @NotNull java.util.function.Consumer<? super ItemMeta> consumer) {
+        final ItemMeta meta = this.getItemMeta();
+        if (meta != null) {
+            consumer.accept(meta);
+            this.setItemMeta(meta);
+            return true;
+        }
+        return false;
+    }
+    // Paper end
+
     /**
      * Get a copy of this ItemStack's {@link ItemMeta}.
      *
