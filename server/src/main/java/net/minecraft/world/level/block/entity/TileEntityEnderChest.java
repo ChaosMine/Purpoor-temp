@@ -10,8 +10,9 @@ public class TileEntityEnderChest extends TileEntity { // Paper - Remove ITickab
 
     public float a;
     public float b;
-    public int c;
+    public int c; public int getViewerCount() { return c; } // Paper - OBFHELPER
     private int g;
+    public boolean opened; // Paper - More Lidded Block API
 
     public TileEntityEnderChest() {
         super(TileEntityTypes.ENDER_CHEST);
@@ -106,12 +107,14 @@ public class TileEntityEnderChest extends TileEntity { // Paper - Remove ITickab
 
     public void d() {
         ++this.c;
+        if (opened) return; // Paper - More Lidded Block API
         this.world.playBlockAction(this.position, Blocks.ENDER_CHEST, 1, this.c);
         doOpenLogic(); // Paper
     }
 
     public void f() {
         --this.c;
+        if (opened) return; // Paper - More Lidded Block API
         this.world.playBlockAction(this.position, Blocks.ENDER_CHEST, 1, this.c);
         doCloseLogic(); // Paper
     }
