@@ -21,6 +21,7 @@ public class EntityZombieHusk extends EntityZombie {
 
     public EntityZombieHusk(EntityTypes<? extends EntityZombieHusk> entitytypes, World world) {
         super(entitytypes, world);
+        this.setShouldBurnInDay(false); // Purpur
     }
 
     // Purpur start
@@ -65,7 +66,7 @@ public class EntityZombieHusk extends EntityZombie {
 
     @Override
     protected boolean T_() {
-        return false;
+        return this.shouldBurnInDay; // Purpur - moved to EntityLiving - keep methods for ABI compatibility
     }
 
     @Override

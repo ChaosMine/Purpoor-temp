@@ -458,7 +458,7 @@ public final class ItemStack {
         return this.getMaxStackSize() > 1 && (!this.e() || !this.f());
     }
 
-    public boolean e() {
+    public boolean isDamageableItem() { return e(); } public boolean e() { // Purpur - OBFHELPER
         if (!this.j && this.getItem().getMaxDurability() > 0) {
             NBTTagCompound nbttagcompound = this.getTag();
 
@@ -489,7 +489,7 @@ public final class ItemStack {
         this.getOrCreateTag().setInt("Damage", Math.max(0, i));
     }
 
-    public int h() {
+    public int getMaxDamage() { return h(); } public int h() { // Purpur - OBFHELPER
         return this.getItem().getMaxDurability();
     }
 

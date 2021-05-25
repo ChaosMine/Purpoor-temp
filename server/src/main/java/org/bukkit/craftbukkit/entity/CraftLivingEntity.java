@@ -892,5 +892,15 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (slot == null) return;
         getHandle().broadcastItemBreak(org.bukkit.craftbukkit.CraftEquipmentSlot.getNMS(slot));
     }
+
+    @Override
+    public boolean shouldBurnInDay() {
+        return getHandle().shouldBurnInDay();
+    }
+
+    @Override
+    public void setShouldBurnInDay(boolean shouldBurnInDay) {
+        getHandle().setShouldBurnInDay(shouldBurnInDay);
+    }
     // Purpur end
 }

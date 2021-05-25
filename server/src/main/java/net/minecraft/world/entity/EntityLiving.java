@@ -237,6 +237,7 @@ public abstract class EntityLiving extends Entity {
     public boolean canPickUpLoot;
     public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
     public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
+    protected boolean shouldBurnInDay; public boolean shouldBurnInDay() { return this.shouldBurnInDay; } public void setShouldBurnInDay(boolean shouldBurnInDay) { this.shouldBurnInDay = shouldBurnInDay; } // Purpur
 
     @Override
     public float getBukkitYaw() {
@@ -275,6 +276,8 @@ public abstract class EntityLiving extends Entity {
         DynamicOpsNBT dynamicopsnbt = DynamicOpsNBT.a;
 
         this.bg = this.a(new Dynamic(dynamicopsnbt, dynamicopsnbt.createMap((Map) ImmutableMap.of(dynamicopsnbt.createString("memories"), dynamicopsnbt.emptyMap()))));
+
+        this.shouldBurnInDay = false; // Purpur
     }
 
     protected void initAttributes() {} // Purpur
@@ -708,6 +711,7 @@ public abstract class EntityLiving extends Entity {
         dataresult.resultOrPartial(logger::error).ifPresent((nbtbase) -> {
             nbttagcompound.set("Brain", nbtbase);
         });
+        nbttagcompound.setBoolean("Purpur.ShouldBurnInDay", shouldBurnInDay); // Purpur
     }
 
     @Override
@@ -783,6 +787,11 @@ public abstract class EntityLiving extends Entity {
             this.bg = this.a(new Dynamic(DynamicOpsNBT.a, nbttagcompound.get("Brain")));
         }
 
+        // Purpur start
+        if (nbttagcompound.hasKey("Purpur.ShouldBurnInDay")) {
+            shouldBurnInDay = nbttagcompound.getBoolean("Purpur.ShouldBurnInDay");
+        }
+        // Purpur end
     }
 
     // CraftBukkit start
@@ -3001,6 +3010,31 @@ public abstract class EntityLiving extends Entity {
             this.damageEntity(DamageSource.DROWN, 1.0F);
         }
 
+        // Purpur start - copied from EntityZombie
+        if (this.isAlive()) {
+            boolean flag = this.shouldBurnInDay() && this.isInDaylight();
+
+            if (flag) {
+                ItemStack itemstack = this.getEquipment(EnumItemSlot.HEAD);
+
+                if (!itemstack.isEmpty()) {
+                    if (itemstack.isDamageableItem()) {
+                        itemstack.setDamage(itemstack.getDamage() + this.random.nextInt(2));
+                        if (itemstack.getDamage() >= itemstack.getMaxDamage()) {
+                            this.broadcastItemBreak(EnumItemSlot.HEAD);
+                            this.setSlot(EnumItemSlot.HEAD, ItemStack.NULL_ITEM);
+                        }
+                    }
+
+                    flag = false;
+                }
+
+                if (flag) {
+                    this.setOnFire(8);
+                }
+            }
+        }
+        // Purpur end
     }
 
     public boolean isSensitiveToWater() { return dO(); } // Purpur - OBFHELPER

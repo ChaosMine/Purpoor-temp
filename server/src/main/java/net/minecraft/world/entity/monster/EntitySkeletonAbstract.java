@@ -67,6 +67,7 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
     protected EntitySkeletonAbstract(EntityTypes<? extends EntitySkeletonAbstract> entitytypes, World world) {
         super(entitytypes, world);
         this.eL();
+        this.setShouldBurnInDay(true); // Purpur
     }
 
     @Override
@@ -102,13 +103,14 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
     }
 
     // Paper start
-    private boolean shouldBurnInDay = true;
+    // private boolean shouldBurnInDay = true; // Purpur - moved to EntityLiving - keep methods for ABI compatibility
     public boolean shouldBurnInDay() { return shouldBurnInDay; }
     public void setShouldBurnInDay(boolean shouldBurnInDay) { this.shouldBurnInDay = shouldBurnInDay; }
     // Paper end
 
     @Override
     public void movementTick() {
+        /* // Purpur start - implemented in EntityLiving
         boolean flag = shouldBurnInDay && this.eG(); // Paper - Configurable Burning
 
         if (flag) {
@@ -130,6 +132,7 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
                 this.setOnFire(8);
             }
         }
+         */ // Purpur end
 
         super.movementTick();
     }
@@ -233,14 +236,14 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
     public void loadData(NBTTagCompound nbttagcompound) {
         super.loadData(nbttagcompound);
         this.eL();
-        this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay"); // Paper
+        // this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay"); // Paper // Purpur - implemented in EntityLiving
     }
 
     // Paper start
     @Override
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
-        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay);
+        // nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay); // Purpur - implemented in EntityLiving
     }
     // Paper end
 

@@ -67,6 +67,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         this.f = 5;
         this.moveController = new EntityPhantom.g(this);
         this.lookController = new EntityPhantom.f(this);
+        this.setShouldBurnInDay(true); // Purpur
     }
 
     // Purpur start
@@ -231,7 +232,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
     @Override
     public void movementTick() {
-        if (this.isAlive() && !hasPurpurRider() && (((shouldBurnInDay || world.purpurConfig.phantomBurnInDaylight) && this.isInDaylight()) || (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(this)) >= world.purpurConfig.phantomBurnInLight))) { // Paper - Configurable Burning // Purpur
+        if (this.isAlive() && !hasPurpurRider() && (((this.shouldBurnInDay() || world.purpurConfig.phantomBurnInDaylight) && this.isInDaylight()) || (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(this)) >= world.purpurConfig.phantomBurnInLight))) { // Paper - Configurable Burning // Purpur
             this.setOnFire(8);
         }
 
@@ -262,7 +263,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         if (nbttagcompound.hasUUID("Paper.SpawningEntity")) {
             this.spawningEntity = nbttagcompound.getUUID("Paper.SpawningEntity");
         }
-        this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay");
+        // this.shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay"); // Purpur - implemented in EntityLiving
         // Paper end
     }
 
@@ -277,7 +278,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
         if (this.spawningEntity != null) {
             nbttagcompound.setUUID("Paper.SpawningEntity", this.spawningEntity);
         }
-        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay);
+        // nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay); // Purpur - implemented in EntityLiving
         // Paper end
     }
 
@@ -333,7 +334,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
     }
     public void setSpawningEntity(java.util.UUID entity) { this.spawningEntity = entity; }
 
-    private boolean shouldBurnInDay = true;
+    // private boolean shouldBurnInDay = true; // Purpur - moved to EntityLiving - keep methods for ABI compatibility
     public boolean shouldBurnInDay() { return shouldBurnInDay; }
     public void setShouldBurnInDay(boolean shouldBurnInDay) { this.shouldBurnInDay = shouldBurnInDay; }
     // Paper end

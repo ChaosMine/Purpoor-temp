@@ -1678,6 +1678,7 @@ public abstract class EntityInsentient extends EntityLiving {
 
     public boolean isInDaylight() { return this.eG(); } // Paper - OBFHELPER
     protected boolean eG() {
+        /* // Purpur start - moved to Entity
         if (this.world.isDay() && !this.world.isClientSide) {
             float f = this.aR();
             BlockPosition blockposition = this.getVehicle() instanceof EntityBoat ? (new BlockPosition(this.locX(), (double) Math.round(this.locY()), this.locZ())).up() : new BlockPosition(this.locX(), (double) Math.round(this.locY()), this.locZ());
@@ -1688,6 +1689,9 @@ public abstract class EntityInsentient extends EntityLiving {
         }
 
         return false;
+        */
+        return super.isInDaylight();
+        // Purpur end
     }
 
     @Override

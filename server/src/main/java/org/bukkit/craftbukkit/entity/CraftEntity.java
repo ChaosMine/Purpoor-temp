@@ -1203,5 +1203,10 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         entity.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         return !entity.valid && entity.world.addEntity(entity, spawnReason);
     }
+
+    @Override
+    public boolean isInDaylight() {
+        return getHandle().isInDaylight();
+    }
     // Purpur end
 }

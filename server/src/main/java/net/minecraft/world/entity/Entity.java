@@ -1640,7 +1640,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         }
     }
 
-    public float aR() {
+    public float getBrightness() { return this.aR(); } public float aR() { // Purpur - OBFHELPER
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(this.locX(), 0.0D, this.locZ());
 
         if (this.world.isLoaded(blockposition_mutableblockposition)) {
@@ -3872,6 +3872,18 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
 
     public boolean processClick(EnumHand hand) {
+        return false;
+    }
+
+    // Purpur start - copied from EntityInsentient
+    public boolean isInDaylight() {
+        if (this.world.isDay() && !this.world.isClientSide) {
+            float brightness = this.getBrightness();
+            BlockPosition blockposition = this.getVehicle() instanceof EntityBoat ? (new BlockPosition(this.locX(), (double) Math.round(this.locY()), this.locZ())).up() : new BlockPosition(this.locX(), (double) Math.round(this.locY()), this.locZ());
+
+            return brightness > 0.5F && this.random.nextFloat() * 30.0F < (brightness - 0.4F) * 2.0F && this.world.isSkyVisible(blockposition);
+        }
+
         return false;
     }
     // Purpur end

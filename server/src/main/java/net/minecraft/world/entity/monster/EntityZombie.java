@@ -97,11 +97,12 @@ public class EntityZombie extends EntityMonster {
     private int bt;
     public int drownedConversionTime;
     private int lastTick = MinecraftServer.currentTick; // CraftBukkit - add field
-    private boolean shouldBurnInDay = true; // Paper
+    // private boolean shouldBurnInDay = true; // Paper // Purpur - implemented in EntityLiving
 
     public EntityZombie(EntityTypes<? extends EntityZombie> entitytypes, World world) {
         super(entitytypes, world);
         this.br = new PathfinderGoalBreakDoor(this, com.google.common.base.Predicates.in(world.paperConfig.zombieBreakDoors)); // Paper
+        this.setShouldBurnInDay(true); // Purpur
     }
 
     public EntityZombie(World world) {
@@ -288,6 +289,7 @@ public class EntityZombie extends EntityMonster {
 
     @Override
     public void movementTick() {
+        /* // Purpur start - implemented in EntityLiving
         if (this.isAlive()) {
             boolean flag = this.T_() && this.eG();
 
@@ -311,6 +313,7 @@ public class EntityZombie extends EntityMonster {
                 }
             }
         }
+        */ // Purpur end
 
         super.movementTick();
     }
@@ -479,7 +482,7 @@ public class EntityZombie extends EntityMonster {
         nbttagcompound.setBoolean("CanBreakDoors", this.eU());
         nbttagcompound.setInt("InWaterTime", this.isInWater() ? this.bt : -1);
         nbttagcompound.setInt("DrownedConversionTime", this.isDrownConverting() ? this.drownedConversionTime : -1);
-        nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay); // Paper
+        // nbttagcompound.setBoolean("Paper.ShouldBurnInDay", shouldBurnInDay); // Paper // Purpur - implemented in EntityLiving
     }
 
     @Override
@@ -491,11 +494,13 @@ public class EntityZombie extends EntityMonster {
         if (nbttagcompound.hasKeyOfType("DrownedConversionTime", 99) && nbttagcompound.getInt("DrownedConversionTime") > -1) {
             this.startDrownedConversion(nbttagcompound.getInt("DrownedConversionTime"));
         }
+        /* // Purpur start - implemented in EntityLiving
         // Paper start
         if (nbttagcompound.hasKey("Paper.ShouldBurnInDay")) {
             shouldBurnInDay = nbttagcompound.getBoolean("Paper.ShouldBurnInDay");
         }
         // Paper end
+         */ // Purpur end - implemented in EntityLiving
     }
 
     @Override
