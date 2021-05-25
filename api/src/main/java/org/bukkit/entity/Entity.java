@@ -770,5 +770,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      * @return Whether the entity was successfully spawned.
      */
     boolean spawnAt(@NotNull Location location, @NotNull org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason);
+
+    /**
+     * Checks if the entity is in daylight
+     *
+     * @return True if in daylight
+     */
+    boolean isInDaylight();
     // Purpur end
 }

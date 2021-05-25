@@ -895,5 +895,19 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      * @param slot Equipment slot to play break animation for
      */
     void broadcastItemBreak(@NotNull org.bukkit.inventory.EquipmentSlot slot);
+
+    /**
+     * If this mob will burn in the sunlight
+     *
+     * @return True if mob will burn in sunlight
+     */
+    boolean shouldBurnInDay();
+
+    /**
+     * Set if this mob should burn in the sunlight
+     *
+     * @param shouldBurnInDay True to burn in sunlight
+     */
+    void setShouldBurnInDay(boolean shouldBurnInDay);
     // Purpur end
 }
