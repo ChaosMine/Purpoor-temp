@@ -817,4 +817,9 @@ public class PaperWorldConfig {
     private void allowUsingSignsInsideSpawnProtection() {
         allowUsingSignsInsideSpawnProtection = getBoolean("allow-using-signs-inside-spawn-protection", allowUsingSignsInsideSpawnProtection);
     }
+
+    public int mapItemFrameCursorLimit = 128;
+    private void mapItemFrameCursorLimit() {
+        mapItemFrameCursorLimit = getInt("map-item-frame-cursor-limit", mapItemFrameCursorLimit);
+    }
 }

@@ -279,8 +279,12 @@ public class WorldMap extends PersistentBase {
 
             WorldMapFrame worldmapframe1 = new WorldMapFrame(blockposition, entityitemframe.getDirection().get2DRotationValue() * 90, entityitemframe.getId());
 
+            // Paper start
+            if (this.decorations.size() < entityhuman.world.paperConfig.mapItemFrameCursorLimit) {
             this.a(MapIcon.Type.FRAME, entityhuman.world, "frame-" + entityitemframe.getId(), (double) blockposition.getX(), (double) blockposition.getZ(), (double) (entityitemframe.getDirection().get2DRotationValue() * 90), (IChatBaseComponent) null);
             this.n.put(worldmapframe1.e(), worldmapframe1);
+            }
+            // Paper end
         }
 
         NBTTagCompound nbttagcompound = itemstack.getTag();
