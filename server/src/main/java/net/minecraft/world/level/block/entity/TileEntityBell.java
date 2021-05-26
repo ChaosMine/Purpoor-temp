@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
 import net.minecraft.core.particles.Particles;
+import net.minecraft.server.MCUtil;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
@@ -181,6 +182,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
     }
 
     private void b(EntityLiving entityliving) {
+        if (!new io.papermc.paper.event.block.BellRevealRaiderEvent(world.getWorld().getBlockAt(MCUtil.toLocation(world, position)), entityliving.getBukkitEntity()).callEvent()) return; // Paper - BellRevealRaiderEvent
         entityliving.addEffect(new MobEffect(MobEffects.GLOWING, 60));
     }
 }
