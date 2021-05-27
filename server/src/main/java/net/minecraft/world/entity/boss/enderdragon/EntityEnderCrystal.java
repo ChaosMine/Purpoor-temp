@@ -30,6 +30,7 @@ public class EntityEnderCrystal extends Entity {
     private static final DataWatcherObject<Optional<BlockPosition>> c = DataWatcher.a(EntityEnderCrystal.class, DataWatcherRegistry.m);
     private static final DataWatcherObject<Boolean> d = DataWatcher.a(EntityEnderCrystal.class, DataWatcherRegistry.i);
     public int b;
+    public boolean generatedByDragonFight = false; // Paper - Fix invulnerable end crystals
 
     public EntityEnderCrystal(EntityTypes<? extends EntityEnderCrystal> entitytypes, World world) {
         super(entitytypes, world);
@@ -66,6 +67,17 @@ public class EntityEnderCrystal extends Entity {
                 }
                 // CraftBukkit end
             }
+            // Paper start - Fix invulnerable end crystals
+            if (this.world.paperConfig.fixInvulnerableEndCrystalExploit && this.generatedByDragonFight && this.isInvulnerable()) {
+                if ((this.origin.getWorld() != null && !((WorldServer) this.world).uuid.equals(this.origin.getWorld().getUID()))
+                    || ((WorldServer) this.world).getDragonBattle() == null
+                    || ((WorldServer) this.world).getDragonBattle().respawnPhase == null
+                    || ((WorldServer) this.world).getDragonBattle().respawnPhase.ordinal() > net.minecraft.world.level.dimension.end.EnumDragonRespawn.SUMMONING_DRAGON.ordinal()) {
+                    this.setInvulnerable(false);
+                    this.setBeamTarget(null);
+                }
+            }
+            // Paper end
         }
 
     }
@@ -77,6 +89,7 @@ public class EntityEnderCrystal extends Entity {
         }
 
         nbttagcompound.setBoolean("ShowBottom", this.isShowingBottom());
+        if (this.generatedByDragonFight) nbttagcompound.setBoolean("Paper.GeneratedByDragonFight", this.generatedByDragonFight); // Paper - Fix invulnerable end crystals
     }
 
     @Override
@@ -88,6 +101,7 @@ public class EntityEnderCrystal extends Entity {
         if (nbttagcompound.hasKeyOfType("ShowBottom", 1)) {
             this.setShowingBottom(nbttagcompound.getBoolean("ShowBottom"));
         }
+        if (nbttagcompound.hasKeyOfType("Paper.GeneratedByDragonFight", 1)) this.generatedByDragonFight = nbttagcompound.getBoolean("Paper.GeneratedByDragonFight"); // Paper - Fix invulnerable end crystals
 
     }
 

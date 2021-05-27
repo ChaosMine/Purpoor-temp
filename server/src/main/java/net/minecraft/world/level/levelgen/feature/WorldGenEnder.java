@@ -42,7 +42,7 @@ public class WorldGenEnder extends WorldGenerator<WorldGenFeatureEndSpikeConfigu
         return (List) WorldGenEnder.a.getUnchecked(i);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEndSpikeConfiguration worldgenfeatureendspikeconfiguration) {
+    public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEndSpikeConfiguration worldgenfeatureendspikeconfiguration) { // Paper - decompile fix
         List<WorldGenEnder.Spike> list = worldgenfeatureendspikeconfiguration.c();
 
         if (list.isEmpty()) {
@@ -106,6 +106,7 @@ public class WorldGenEnder extends WorldGenerator<WorldGenFeatureEndSpikeConfigu
         entityendercrystal.setBeamTarget(worldgenfeatureendspikeconfiguration.d());
         entityendercrystal.setInvulnerable(worldgenfeatureendspikeconfiguration.b());
         entityendercrystal.setPositionRotation((double) worldgenender_spike.a() + 0.5D, (double) (worldgenender_spike.d() + 1), (double) worldgenender_spike.b() + 0.5D, random.nextFloat() * 360.0F, 0.0F);
+        entityendercrystal.generatedByDragonFight = true;
         worldaccess.addEntity(entityendercrystal);
         this.a(worldaccess, new BlockPosition(worldgenender_spike.a(), worldgenender_spike.d(), worldgenender_spike.b()), Blocks.BEDROCK.getBlockData());
     }

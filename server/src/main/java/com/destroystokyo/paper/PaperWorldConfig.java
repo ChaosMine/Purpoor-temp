@@ -827,4 +827,9 @@ public class PaperWorldConfig {
     private void fixItemsMergingThroughWalls() {
         fixItemsMergingThroughWalls = getBoolean("fix-items-merging-through-walls", fixItemsMergingThroughWalls);
     }
+
+    public boolean fixInvulnerableEndCrystalExploit = true;
+    private void fixInvulnerableEndCrystalExploit() {
+        fixInvulnerableEndCrystalExploit = getBoolean("unsupported-settings.fix-invulnerable-end-crystal-exploit", fixInvulnerableEndCrystalExploit);
+    }
 }
