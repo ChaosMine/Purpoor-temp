@@ -181,7 +181,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
     }
 
     private boolean releaseBee(IBlockData iblockdata, TileEntityBeehive.HiveBee tileentitybeehive_hivebee, @Nullable List<Entity> list, TileEntityBeehive.ReleaseStatus tileentitybeehive_releasestatus, boolean force) {
-        if (!force && (this.world.isNight() || this.world.isRaining()) && tileentitybeehive_releasestatus != TileEntityBeehive.ReleaseStatus.EMERGENCY) {
+        if (!force && ((this.world.isNight() && !this.world.purpurConfig.beeCanWorkAtNight) || (this.world.isRaining() && !this.world.purpurConfig.beeCanWorkInRain)) && tileentitybeehive_releasestatus != TileEntityBeehive.ReleaseStatus.EMERGENCY) { // Purpur
             // CraftBukkit end
             return false;
         } else {

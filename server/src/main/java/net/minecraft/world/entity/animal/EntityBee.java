@@ -356,7 +356,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     private boolean fd() {
         if (this.cannotEnterHiveTicks <= 0 && !this.bC.k() && !this.hasStung() && this.getGoalTarget() == null) {
-            boolean flag = this.canPollinate() || this.world.isRaining() || this.world.isNight() || this.hasNectar();
+            boolean flag = this.canPollinate() || (this.world.isRaining() && !this.world.purpurConfig.beeCanWorkInRain) || (this.world.isNight() && !this.world.purpurConfig.beeCanWorkAtNight) || this.hasNectar(); // Purpur
 
             return flag && !this.ff();
         } else {

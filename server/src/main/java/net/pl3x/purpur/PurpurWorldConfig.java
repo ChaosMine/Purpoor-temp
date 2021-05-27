@@ -726,6 +726,8 @@ public class PurpurWorldConfig {
     public double beeMaxY = 256D;
     public int beeBreedingTicks = 6000;
     public double beeMaxHealth = 10.0D;
+    public boolean beeCanWorkAtNight = false;
+    public boolean beeCanWorkInRain = false;
     private void beeSettings() {
         beeRidable = getBoolean("mobs.bee.ridable", beeRidable);
         beeRidableInWater = getBoolean("mobs.bee.ridable-in-water", beeRidableInWater);
@@ -737,6 +739,8 @@ public class PurpurWorldConfig {
             set("mobs.bee.attributes.max_health", oldValue);
         }
         beeMaxHealth = getDouble("mobs.bee.attributes.max_health", beeMaxHealth);
+        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
+        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
     }
 
     public boolean blazeRidable = false;
