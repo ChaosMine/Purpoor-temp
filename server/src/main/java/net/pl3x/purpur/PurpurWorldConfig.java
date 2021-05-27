@@ -630,6 +630,11 @@ public class PurpurWorldConfig {
         }
     }
 
+    public boolean shulkerBoxAllowOversizedStacks = false;
+    private void shulkerBoxSettings() {
+        shulkerBoxAllowOversizedStacks = getBoolean("blocks.shulker_box.allow-oversized-stacks", shulkerBoxAllowOversizedStacks);
+    }
+
     public boolean signAllowColors = false;
     public boolean signRightClickEdit = false;
     private void signSettings() {

@@ -440,7 +440,7 @@ public class PlayerInteractManager {
                     block.postBreak(this.world, blockposition, iblockdata);
                 }
 
-                if (this.isCreative()) {
+                if (this.isCreative() || (world.purpurConfig.shulkerBoxAllowOversizedStacks && block instanceof net.minecraft.world.level.block.BlockShulkerBox)) { // Purpur
                     // return true; // CraftBukkit
                 } else {
                     ItemStack itemstack = this.player.getItemInMainHand();
