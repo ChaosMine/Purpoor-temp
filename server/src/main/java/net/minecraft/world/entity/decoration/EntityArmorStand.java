@@ -171,6 +171,41 @@ public class EntityArmorStand extends EntityLiving {
         }
     }
 
+    // Purpur start
+    public List<List<ItemStack>> cloneEquipment() {
+        List<List<ItemStack>> list = new java.util.ArrayList<>();
+        List<ItemStack> handItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.handItems) {
+            handItems.add(item.cloneItemStack());
+        }
+        list.add(handItems);
+        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.armorItems) {
+            armorItems.add(item.cloneItemStack());
+        }
+        list.add(armorItems);
+        return list;
+    }
+
+    public void restoreEquipment(List<List<ItemStack>> list) {
+        this.handItems.clear();
+        List<ItemStack> handItems = list.get(0);
+        for (int i = 0; i < handItems.size(); i++) {
+            this.handItems.set(i, handItems.get(1));
+        }
+        this.armorItems.clear();
+        List<ItemStack> armorItems = list.get(1);
+        for (int i = 0; i < armorItems.size(); i++) {
+            this.armorItems.set(i, armorItems.get(1));
+        }
+    }
+
+    public void clearEquipment() {
+        this.handItems.clear();
+        this.armorItems.clear();
+    }
+    // Purpur end
+
     @Override
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) {
         // CraftBukkit start

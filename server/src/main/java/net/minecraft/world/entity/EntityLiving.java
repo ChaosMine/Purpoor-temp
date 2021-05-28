@@ -1557,10 +1557,13 @@ public abstract class EntityLiving extends Entity {
                 }
 
                 // Paper start
+                List<List<ItemStack>> equipmentSnapshotBefore = this.cloneEquipment(); // Purpur
                 org.bukkit.event.entity.EntityDeathEvent deathEvent = this.d(damagesource);
                 if (deathEvent == null || !deathEvent.isCancelled()) {
                     if (this.getKillCount() >= 0 && entityliving != null) {
+                        this.restoreEquipment(equipmentSnapshotBefore); // Purpur
                         entityliving.runKillTrigger(this, this.getKillCount(), damagesource);
+                        this.clearEquipment(); // Purpur
                     }
                     if (this.isSleeping()) {
                         this.entityWakeup();
@@ -2257,6 +2260,12 @@ public abstract class EntityLiving extends Entity {
     public abstract Iterable<ItemStack> getArmorItems();
 
     public abstract ItemStack getEquipment(EnumItemSlot enumitemslot);
+
+    // Purpur start
+    public abstract List<List<ItemStack>> cloneEquipment();
+    public abstract void restoreEquipment(List<List<ItemStack>> list);
+    public abstract void clearEquipment();
+    // Purpur end
 
     // CraftBukkit start
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack, boolean silent) {

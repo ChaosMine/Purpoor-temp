@@ -106,9 +106,9 @@ public abstract class EntityInsentient extends EntityLiving {
     public PathfinderGoalSelector targetSelector;
     private EntityLiving goalTarget;
     private final EntitySenses bo;
-    private final NonNullList<ItemStack> bp;
+    private final NonNullList<ItemStack> bp; public List<ItemStack> getHandEquipment() { return this.bp; } // Purpur - OBFHELPER
     public final float[] dropChanceHand;
-    private final NonNullList<ItemStack> bq;
+    private final NonNullList<ItemStack> bq; public List<ItemStack> getArmorEquipment() { return this.bq; } // Purpur - OBFHELPER
     public final float[] dropChanceArmor;
     // private boolean canPickUpLoot; // CraftBukkit - moved up to EntityLiving
     public boolean persistent;
@@ -1003,6 +1003,41 @@ public abstract class EntityInsentient extends EntityLiving {
                 return ItemStack.b;
         }
     }
+
+    // Purpur start
+    public List<List<ItemStack>> cloneEquipment() {
+        List<List<ItemStack>> list = new java.util.ArrayList<>();
+        List<ItemStack> handItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.getHandEquipment()) {
+            handItems.add(item.cloneItemStack());
+        }
+        list.add(handItems);
+        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.getArmorEquipment()) {
+            armorItems.add(item.cloneItemStack());
+        }
+        list.add(armorItems);
+        return list;
+    }
+
+    public void restoreEquipment(List<List<ItemStack>> list) {
+        this.getHandEquipment().clear();
+        List<ItemStack> handItems = list.get(0);
+        for (int i = 0; i < handItems.size(); i++) {
+            this.getHandEquipment().set(i, handItems.get(1));
+        }
+        this.getArmorEquipment().clear();
+        List<ItemStack> armorItems = list.get(1);
+        for (int i = 0; i < armorItems.size(); i++) {
+            this.getArmorEquipment().set(i, armorItems.get(i));
+        }
+    }
+
+    public void clearEquipment() {
+        this.getHandEquipment().clear();
+        this.getArmorEquipment().clear();
+    }
+    // Purpur end
 
     @Override
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) {

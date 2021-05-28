@@ -1886,6 +1886,52 @@ public abstract class EntityHuman extends EntityLiving {
         return enumitemslot == EnumItemSlot.MAINHAND ? this.inventory.getItemInHand() : (enumitemslot == EnumItemSlot.OFFHAND ? (ItemStack) this.inventory.extraSlots.get(0) : (enumitemslot.a() == EnumItemSlot.Function.ARMOR ? (ItemStack) this.inventory.armor.get(enumitemslot.b()) : ItemStack.b));
     }
 
+    // Purpur start
+    public List<List<ItemStack>> cloneEquipment() {
+        List<List<ItemStack>> list = new java.util.ArrayList<>();
+        List<ItemStack> invItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.inventory.items) {
+            invItems.add(item.cloneItemStack());
+        }
+        list.add(invItems);
+        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.inventory.armor) {
+            armorItems.add(item.cloneItemStack());
+        }
+        list.add(armorItems);
+        List<ItemStack> extraItems = new java.util.ArrayList<>();
+        for (ItemStack item : this.inventory.extraSlots) {
+            extraItems.add(item.cloneItemStack());
+        }
+        list.add(extraItems);
+        return list;
+    }
+
+    public void restoreEquipment(List<List<ItemStack>> list) {
+        this.inventory.items.clear();
+        List<ItemStack> invItems = list.get(0);
+        for (int i = 0; i < invItems.size(); i++) {
+            this.inventory.items.set(i, invItems.get(1));
+        }
+        this.inventory.armor.clear();
+        List<ItemStack> armorItems = list.get(1);
+        for (int i = 0; i < armorItems.size(); i++) {
+            this.inventory.armor.set(i, armorItems.get(1));
+        }
+        this.inventory.extraSlots.clear();
+        List<ItemStack> extraItems = list.get(2);
+        for (int i = 0; i < extraItems.size(); i++) {
+            this.inventory.extraSlots.set(i, extraItems.get(1));
+        }
+    }
+
+    public void clearEquipment() {
+        this.inventory.items.clear();
+        this.inventory.armor.clear();
+        this.inventory.extraSlots.clear();
+    }
+    // Purpur end
+
     @Override
     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) {
         // CraftBukkit start
