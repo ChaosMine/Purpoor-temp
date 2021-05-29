@@ -333,6 +333,17 @@ public class CraftWorld implements World {
     public io.papermc.paper.world.MoonPhase getMoonPhase() {
         return io.papermc.paper.world.MoonPhase.getPhase(getFullTime() / 24000L);
     }
+
+    @Override
+    public boolean lineOfSightExists(Location from, Location to) {
+        Validate.notNull(from, "from parameter in lineOfSightExists cannot be null");
+        Validate.notNull(to, "to parameter in lineOfSightExists cannot be null");
+        if (from.getWorld() != to.getWorld()) return false;
+        Vec3D vec3d = new Vec3D(from.getX(), from.getY(), from.getZ());
+        Vec3D vec3d1 = new Vec3D(to.getX(), to.getY(), to.getZ());
+
+        return this.getHandle().rayTrace(new RayTrace(vec3d, vec3d1, RayTrace.BlockCollisionOption.COLLIDER, RayTrace.FluidCollisionOption.NONE, null)).getType() == MovingObjectPosition.EnumMovingObjectType.MISS;
+    }
     // Paper end
 
     private static final Random rand = new Random();

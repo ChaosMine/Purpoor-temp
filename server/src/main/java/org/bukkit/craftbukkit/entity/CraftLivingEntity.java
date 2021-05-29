@@ -561,6 +561,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return getHandle().hasLineOfSight(((CraftEntity) other).getHandle());
     }
 
+    // Paper start
+    @Override
+    public boolean hasLineOfSight(Location loc) {
+        if (this.getHandle().world != ((CraftWorld) loc.getWorld()).getHandle()) return false;
+        Vec3D vec3d = new Vec3D(this.getHandle().locX(), this.getHandle().getHeadY(), this.getHandle().locZ());
+        Vec3D vec3d1 = new Vec3D(loc.getX(), loc.getY(), loc.getZ());
+
+        return this.getHandle().world.rayTrace(new RayTrace(vec3d, vec3d1, RayTrace.BlockCollisionOption.COLLIDER, RayTrace.FluidCollisionOption.NONE, this.getHandle())).getType() == MovingObjectPosition.EnumMovingObjectType.MISS;
+    }
+    // Paper end
+
     @Override
     public boolean getRemoveWhenFarAway() {
         return getHandle() instanceof EntityInsentient && !((EntityInsentient) getHandle()).persistent;

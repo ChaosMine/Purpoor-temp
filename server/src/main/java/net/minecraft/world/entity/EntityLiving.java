@@ -3094,6 +3094,7 @@ public abstract class EntityLiving extends Entity {
         Vec3D vec3d = new Vec3D(this.locX(), this.getHeadY(), this.locZ());
         Vec3D vec3d1 = new Vec3D(entity.locX(), entity.getHeadY(), entity.locZ());
 
+        // Paper - diff on change - used in CraftLivingEntity#hasLineOfSight(Location) and CraftWorld#lineOfSightExists
         return this.world.rayTrace(new RayTrace(vec3d, vec3d1, RayTrace.BlockCollisionOption.COLLIDER, RayTrace.FluidCollisionOption.NONE, this)).getType() == MovingObjectPosition.EnumMovingObjectType.MISS;
     }
 
