@@ -51,16 +51,16 @@ public class MobEffectList {
     public void tick(EntityLiving entityliving, int i) {
         if (this == MobEffects.REGENERATION) {
             if (entityliving.getHealth() < entityliving.getMaxHealth()) {
-                entityliving.heal(1.0F, RegainReason.MAGIC_REGEN); // CraftBukkit
+                entityliving.heal(entityliving.getWorld().purpurConfig.entityHealthRegenAmount, RegainReason.MAGIC_REGEN); // CraftBukkit // Purpur
             }
         } else if (this == MobEffects.POISON) {
-            if (entityliving.getHealth() > 1.0F) {
-                entityliving.damageEntity(CraftEventFactory.POISON, 1.0F);  // CraftBukkit - DamageSource.MAGIC -> CraftEventFactory.POISON
+            if (entityliving.getHealth() > entityliving.getWorld().purpurConfig.entityMinimalHealthPoison) { // Purpur
+                entityliving.damageEntity(CraftEventFactory.POISON, entityliving.getWorld().purpurConfig.entityPoisonDegenerationAmount);  // CraftBukkit - DamageSource.MAGIC -> CraftEventFactory.POISON // Purpur
             }
         } else if (this == MobEffects.WITHER) {
-            entityliving.damageEntity(DamageSource.WITHER, 1.0F);
+            entityliving.damageEntity(DamageSource.WITHER, entityliving.getWorld().purpurConfig.entityWitherDegenerationAmount);
         } else if (this == MobEffects.HUNGER && entityliving instanceof EntityHuman) {
-            ((EntityHuman) entityliving).applyExhaustion(0.005F * (float) (i + 1), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.HUNGER_EFFECT); // CraftBukkit - EntityExhaustionEvent
+            ((EntityHuman) entityliving).applyExhaustion(entityliving.getWorld().purpurConfig.humanHungerExhaustionAmount * (float) (i + 1), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.HUNGER_EFFECT); // CraftBukkit - EntityExhaustionEvent // Purpur
         } else if (this == MobEffects.SATURATION && entityliving instanceof EntityHuman) {
             if (!entityliving.world.isClientSide) {
                 // CraftBukkit start
@@ -70,7 +70,7 @@ public class MobEffectList {
                 org.bukkit.event.entity.FoodLevelChangeEvent event = CraftEventFactory.callFoodLevelChangeEvent(entityhuman, i + 1 + oldFoodLevel);
 
                 if (!event.isCancelled()) {
-                    entityhuman.getFoodData().eat(event.getFoodLevel() - oldFoodLevel, 1.0F);
+                    entityhuman.getFoodData().eat(event.getFoodLevel() - oldFoodLevel, entityliving.getWorld().purpurConfig.humanSaturationRegenAmount); // Purpur
                 }
 
                 ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutUpdateHealth(((EntityPlayer) entityhuman).getBukkitEntity().getScaledHealth(), entityhuman.getFoodData().foodLevel, entityhuman.getFoodData().saturationLevel));
