@@ -79,6 +79,16 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
     public double getEffectRange() {
         if (this.effectRange < 0) {
+            // Purpur Start
+            if (this.world != null) {
+                switch (this.levels) {
+                    case 1: return this.world.purpurConfig.beaconLevelOne;
+                    case 2: return this.world.purpurConfig.beaconLevelTwo;
+                    case 3: return this.world.purpurConfig.beaconLevelThree;
+                    case 4: return this.world.purpurConfig.beaconLevelFour;
+                }
+            }
+            // Purpur End
             return this.levels * 10 + 10;
         } else {
             return effectRange;
