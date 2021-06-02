@@ -845,15 +845,19 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
             }
 
             // CraftBukkit start
-            ItemStack remaining = new InventorySubcontainer(inventorysubcontainer).a(itemstack);
-            if (CraftEventFactory.callEntityPickupItemEvent(this, entityitem, remaining.getCount(), false).isCancelled()) {
+            // Paper start
+            List<ItemStack> contentsSnapshot = new java.util.ArrayList<>(inventorysubcontainer.getContents());
+            ItemStack itemstack1 = inventorysubcontainer.addItem(itemstack);
+            if (CraftEventFactory.callEntityPickupItemEvent(this, entityitem, itemstack1.getCount(), false).isCancelled()) {
+                inventorysubcontainer.setContents(contentsSnapshot);
+                // Paper end
                 return;
             }
             // CraftBukkit end
 
             this.a(entityitem);
             this.receive(entityitem, itemstack.getCount());
-            ItemStack itemstack1 = inventorysubcontainer.a(itemstack);
+            // ItemStack itemstack1 = inventorysubcontainer.a(itemstack); // Paper - moved up
 
             if (itemstack1.isEmpty()) {
                 entityitem.die();

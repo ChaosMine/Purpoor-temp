@@ -34,6 +34,16 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
         return this.items;
     }
 
+    // Paper start
+    public void setContents(List<ItemStack> items) {
+        this.items.clear();
+        for(int i = 0; i < items.size(); i++) {
+            this.items.set(i, items.get(i));
+        }
+        this.update();
+    }
+    // Paper end
+
     public void onOpen(CraftHumanEntity who) {
         transaction.add(who);
     }
@@ -148,6 +158,7 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
         return itemstack;
     }
 
+    public ItemStack addItem(ItemStack itemstack) { return a(itemstack); } // Paper - OBFHELPER
     public ItemStack a(ItemStack itemstack) {
         ItemStack itemstack1 = itemstack.cloneItemStack();
 
