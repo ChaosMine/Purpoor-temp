@@ -92,11 +92,11 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
         super(tag);
 
         if (tag.hasKey(BOOK_TITLE.NBT)) {
-            this.title = limit( tag.getString(BOOK_TITLE.NBT), 8192 ); // Spigot
+            this.title = limit( tag.getString(BOOK_TITLE.NBT), com.destroystokyo.paper.PaperConfig.itemValidationBookTitleLength); // Spigot // Paper - make configurable
         }
 
         if (tag.hasKey(BOOK_AUTHOR.NBT)) {
-            this.author = limit( tag.getString(BOOK_AUTHOR.NBT), 8192 ); // Spigot
+            this.author = limit( tag.getString(BOOK_AUTHOR.NBT), com.destroystokyo.paper.PaperConfig.itemValidationBookAuthorLength ); // Spigot // Paper - make configurable
         }
 
         if (tag.hasKey(RESOLVED.NBT)) {
@@ -124,7 +124,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
                 } else {
                     page = validatePage(page);
                 }
-                this.pages.add( limit( page, 16384 ) ); // Spigot
+                this.pages.add( limit( page, com.destroystokyo.paper.PaperConfig.itemValidationBookPageLength ) ); // Spigot // Paper - make configurable
             }
         }
     }

@@ -358,18 +358,18 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             NBTTagCompound display = tag.getCompound(DISPLAY.NBT);
 
             if (display.hasKey(NAME.NBT)) {
-                displayName = limit( display.getString(NAME.NBT), 8192 ); // Spigot
+                displayName = limit( display.getString(NAME.NBT), com.destroystokyo.paper.PaperConfig.itemValidationDisplayNameLength); // Spigot // Paper - make configurable
             }
 
             if (display.hasKey(LOCNAME.NBT)) {
-                locName = limit( display.getString(LOCNAME.NBT), 8192 ); // Spigot
+                locName = limit( display.getString(LOCNAME.NBT), com.destroystokyo.paper.PaperConfig.itemValidationLocNameLength ); // Spigot // Paper - make configurable
             }
 
             if (display.hasKey(LORE.NBT)) {
                 NBTTagList list = display.getList(LORE.NBT, CraftMagicNumbers.NBT.TAG_STRING);
                 lore = new ArrayList<String>(list.size());
                 for (int index = 0; index < list.size(); index++) {
-                    String line = limit( list.getString(index), 8192 ); // Spigot
+                    String line = limit( list.getString(index), com.destroystokyo.paper.PaperConfig.itemValidationLoreLineLength ); // Spigot // Paper - make configurable
                     lore.add(line);
                 }
             }

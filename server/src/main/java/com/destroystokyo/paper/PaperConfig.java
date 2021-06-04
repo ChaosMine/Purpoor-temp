@@ -486,4 +486,19 @@ public class PaperConfig {
         enableBrigadierConsoleHighlighting = getBoolean("settings.console.enable-brigadier-highlighting", enableBrigadierConsoleHighlighting);
         enableBrigadierConsoleCompletions = getBoolean("settings.console.enable-brigadier-completions", enableBrigadierConsoleCompletions);
     }
+
+    public static int itemValidationDisplayNameLength = 8192;
+    public static int itemValidationLocNameLength = 8192;
+    public static int itemValidationLoreLineLength = 8192;
+    public static int itemValidationBookTitleLength = 8192;
+    public static int itemValidationBookAuthorLength = 8192;
+    public static int itemValidationBookPageLength = 16384;
+    private static void itemValidationSettings() {
+        itemValidationDisplayNameLength = getInt("settings.item-validation.display-name", itemValidationDisplayNameLength);
+        itemValidationLocNameLength = getInt("settings.item-validation.loc-name", itemValidationLocNameLength);
+        itemValidationLoreLineLength = getInt("settings.item-validation.lore-line", itemValidationLoreLineLength);
+        itemValidationBookTitleLength = getInt("settings.item-validation.book.title", itemValidationBookTitleLength);
+        itemValidationBookAuthorLength = getInt("settings.item-validation.book.author", itemValidationBookAuthorLength);
+        itemValidationBookPageLength = getInt("settings.item-validation.book.page", itemValidationBookPageLength);
+    }
 }
