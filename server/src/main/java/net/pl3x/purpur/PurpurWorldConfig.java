@@ -641,6 +641,11 @@ public class PurpurWorldConfig {
         }
     }
 
+    public boolean fixSandDuping = true;
+    private void sandSettings() {
+        fixSandDuping = getBoolean("blocks.sand.fix-duping", fixSandDuping);
+    }
+
     public boolean shulkerBoxAllowOversizedStacks = false;
     private void shulkerBoxSettings() {
         shulkerBoxAllowOversizedStacks = getBoolean("blocks.shulker_box.allow-oversized-stacks", shulkerBoxAllowOversizedStacks);

@@ -106,7 +106,7 @@ public class EntityFallingBlock extends Entity {
     @Override
     public void tick() {
         // Paper start - fix sand duping
-        if (this.dead) {
+        if (this.world.purpurConfig.fixSandDuping && this.dead) { // Purpur
             return;
         }
         // Paper end - fix sand duping
@@ -143,7 +143,7 @@ public class EntityFallingBlock extends Entity {
             this.move(EnumMoveType.SELF, this.getMot());
 
             // Paper start - fix sand duping
-            if (this.dead) {
+            if (this.world.purpurConfig.fixSandDuping && this.dead) { // Purpur
                 return;
             }
             // Paper end - fix sand duping
