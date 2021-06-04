@@ -1023,6 +1023,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
         return b(worldserver, TeleportCause.UNKNOWN);
     }
 
+    @Nullable public final Entity changeDimension(WorldServer worldserver, PlayerTeleportEvent.TeleportCause cause) { return this.b(worldserver, cause); } // Paper - OBFHELPER
     @Nullable
     public Entity b(WorldServer worldserver, PlayerTeleportEvent.TeleportCause cause) {
         // CraftBukkit end

@@ -315,6 +315,37 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     }
     // Paper end - optimise entity tracking
 
+    // Paper start - make end portalling safe
+    public BlockPosition portalBlock;
+    public WorldServer portalWorld;
+    public void tickEndPortal() {
+        BlockPosition pos = this.portalBlock;
+        WorldServer world = this.portalWorld;
+        this.portalBlock = null;
+        this.portalWorld = null;
+
+        if (pos == null || world == null || world != this.world) {
+            return;
+        }
+
+        if (this.isPassenger() || this.isVehicle() || !this.canPortal() || this.dead || !this.valid || !this.isAlive()) {
+            return;
+        }
+
+        ResourceKey<World> resourcekey = world.getTypeKey() == DimensionManager.THE_END ? World.OVERWORLD : World.THE_END; // CraftBukkit - SPIGOT-6152: send back to main overworld in custom ends
+        WorldServer worldserver = world.getMinecraftServer().getWorldServer(resourcekey);
+
+        org.bukkit.event.entity.EntityPortalEnterEvent event = new org.bukkit.event.entity.EntityPortalEnterEvent(this.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
+        event.callEvent();
+
+        if (this instanceof EntityPlayer) {
+            ((EntityPlayer)this).changeDimension(worldserver, PlayerTeleportEvent.TeleportCause.END_PORTAL);
+            return;
+        }
+        this.teleportTo(worldserver, null);
+    }
+    // Paper end - make end portalling safe
+
     public Entity(EntityTypes<?> entitytypes, World world) {
         this.id = Entity.entityCount.incrementAndGet();
         this.passengers = Lists.newArrayList();
@@ -2304,6 +2335,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             }
 
             this.E();
+            this.tickEndPortal(); // Paper - make end portalling safe
         }
     }
 
