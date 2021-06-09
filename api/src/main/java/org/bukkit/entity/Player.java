@@ -2185,5 +2185,19 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param invulnerableTicks Invulnerable ticks remaining
      */
     void setSpawnInvulnerableTicks(int invulnerableTicks);
+
+    /**
+     * Allows you to enable fall damage while {@link #getAllowFlight()} is {@code true}
+     *
+     * @param flyingFallDamage Enables fall damage when {@link #getAllowFlight()} is true
+     */
+    public void setFlyingFallDamage(boolean flyingFallDamage);
+
+    /**
+     * Allows you get if fall damage is enabled while {@link #getAllowFlight()} is {@code true}
+     *
+     * @return True if fall damage is enabled when {@link #getAllowFlight()} is true
+     */
+    public boolean hasFlyingFallDamage();
     // Purpur end
 }
