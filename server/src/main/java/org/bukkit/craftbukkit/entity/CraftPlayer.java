@@ -2542,5 +2542,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     public void setSpawnInvulnerableTicks(int invulnerableTicks) {
         getHandle().invulnerableTicks = invulnerableTicks;
     }
+
+    @Override
+    public void setFlyingFallDamage(boolean flyingFallDamage) {
+        getHandle().flyingFallDamage = flyingFallDamage;
+    }
+
+    @Override
+    public boolean hasFlyingFallDamage() {
+        return getHandle().flyingFallDamage;
+    }
     // Purpur end
 }

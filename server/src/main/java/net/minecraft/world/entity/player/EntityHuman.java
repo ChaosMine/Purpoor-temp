@@ -169,7 +169,10 @@ public abstract class EntityHuman extends EntityLiving {
     // Paper start
     public boolean affectsSpawning = true;
     // Paper end
-    public boolean isCritical = false; // Purpur
+    // Purpur start
+    public boolean flyingFallDamage = false;
+    public boolean isCritical = false;
+    // Purpur end
 
     // CraftBukkit start
     public boolean fauxSleeping;
@@ -1651,7 +1654,7 @@ public abstract class EntityHuman extends EntityLiving {
 
     @Override
     public boolean b(float f, float f1) {
-        if (this.abilities.canFly) {
+        if (this.abilities.canFly && !flyingFallDamage) { // Purpur - allow fall damage with can fly attribute
             return false;
         } else {
             if (f >= 2.0F) {
