@@ -60,6 +60,22 @@ public class BlockEnderPortal extends BlockTileEntity {
                 // return; // CraftBukkit - always fire event in case plugins wish to change it
             }
 
+            // Purpur start
+            if (!world.purpurConfig.endPortalSafeTeleporting) {
+                // CraftBukkit start - Entity in portal
+                EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
+                world.getServer().getPluginManager().callEvent(event);
+
+                if (entity instanceof EntityPlayer) {
+                    ((EntityPlayer) entity).changeDimension(worldserver, PlayerTeleportEvent.TeleportCause.END_PORTAL);
+                    return;
+                }
+                // CraftBukkit end
+                entity.teleportTo(worldserver, null);
+                return;
+            }
+            // Purpur end
+
             // Paper start - move all of this logic into portal tick
             entity.portalWorld = ((WorldServer)world);
             entity.portalBlock = blockposition.immutableCopy();

@@ -553,6 +553,11 @@ public class PurpurWorldConfig {
         dragonEggTeleport = getBoolean("blocks.dragon_egg.teleport", dragonEggTeleport);
     }
 
+    public boolean endPortalSafeTeleporting = true;
+    private void endPortalSettings() {
+        endPortalSafeTeleporting = getBoolean("blocks.end_portal.safe-teleporting", endPortalSafeTeleporting);
+    }
+
     public boolean snowOnBlueIce = true;
     public boolean mobsSpawnOnPackedIce = true;
     public boolean mobsSpawnOnBlueIce = true;

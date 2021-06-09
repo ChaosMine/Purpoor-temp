@@ -2608,7 +2608,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             }
 
             this.E();
-            this.tickEndPortal(); // Paper - make end portalling safe
+            if (world.purpurConfig.endPortalSafeTeleporting) this.tickEndPortal(); // Paper - make end portalling safe // Purpur
         }
     }
 
