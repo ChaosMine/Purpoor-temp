@@ -50,7 +50,7 @@ public class BukkitCommandWrapper implements com.mojang.brigadier.Command<Comman
 
     @Override
     public int run(CommandContext<CommandListenerWrapper> context) throws CommandSyntaxException {
-        return server.dispatchCommand(context.getSource().getBukkitSender(), context.getInput()) ? 1 : 0;
+        return server.dispatchCommand(context.getSource().getBukkitSender(), context.getRange().get(context.getInput())) ? 1 : 0; // Paper - actually use the StringRange from context
     }
 
     @Override

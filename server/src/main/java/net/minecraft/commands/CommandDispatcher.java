@@ -245,6 +245,7 @@ public class CommandDispatcher {
         return this.a(sender, newCommand, newCommand, false);
     }
 
+    public int performCommand(CommandListenerWrapper commandlistenerwrapper, String s) { return this.a(commandlistenerwrapper, s); } // Paper - OBFHELPER
     public int a(CommandListenerWrapper commandlistenerwrapper, String s) {
         return this.a(commandlistenerwrapper, s, s, true);
     }

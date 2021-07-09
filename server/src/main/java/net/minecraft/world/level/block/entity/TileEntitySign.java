@@ -32,6 +32,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
     private EnumColor color;
     public java.util.UUID signEditor; // Paper
     private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns"); // Paper
+    private static final org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(); // Paper
 
     public TileEntitySign() {
         super(TileEntityTypes.SIGN);
@@ -155,7 +156,18 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
                 ChatClickable chatclickable = chatmodifier.getClickEvent();
 
                 if (chatclickable.a() == ChatClickable.EnumClickAction.RUN_COMMAND) {
-                    entityhuman.getMinecraftServer().getCommandDispatcher().a(this.a((EntityPlayer) entityhuman), chatclickable.b());
+                    // Paper start
+                    EntityPlayer player = (EntityPlayer) entityhuman;
+                    String command = chatclickable.b().startsWith("/") ? chatclickable.b() : "/" + chatclickable.b();
+                    if (org.spigotmc.SpigotConfig.logCommands)  {
+                        LOGGER.info("{} issued server command: {}", entityhuman.getName(), command);
+                    }
+                    io.papermc.paper.event.player.PlayerSignCommandPreprocessEvent event = new io.papermc.paper.event.player.PlayerSignCommandPreprocessEvent(player.getBukkitEntity(), command, new org.bukkit.craftbukkit.util.LazyPlayerSet(player.server), (org.bukkit.block.Sign) net.minecraft.server.MCUtil.toBukkitBlock(this.world, this.position).getState());
+                    if (!event.callEvent()) {
+                        return false;
+                    }
+                    player.server.getCommandDispatcher().performCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle()), event.getMessage());
+                    // Paper end
                 }
             }
         }
@@ -188,12 +200,26 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
     }
     // CraftBukkit end
 
+    public CommandListenerWrapper createCommandSourceStack(@Nullable EntityPlayer entityplayer) { return this.a(entityplayer); } // Paper - OBFHELPER
     public CommandListenerWrapper a(@Nullable EntityPlayer entityplayer) {
         String s = entityplayer == null ? "Sign" : entityplayer.getDisplayName().getString();
         Object object = entityplayer == null ? new ChatComponentText("Sign") : entityplayer.getScoreboardDisplayName();
 
+        // Paper start - send messages back to the player
+        ICommandListener commandSource = this.world.paperConfig.showSignClickCommandFailureMessagesToPlayer ? new io.papermc.paper.commands.DelegatingCommandSource(this) {
+            @Override
+            public void sendMessage(net.minecraft.network.chat.IChatBaseComponent message, java.util.UUID sender) {
+                entityplayer.sendMessage(message, sender);
+            }
+
+            @Override
+            public boolean shouldSendFailure() {
+                return true;
+            }
+        } : this;
+        // Paper end
         // CraftBukkit - this
-        return new CommandListenerWrapper(this, Vec3D.a((BaseBlockPosition) this.position), Vec2F.a, (WorldServer) this.world, 2, s, (IChatBaseComponent) object, this.world.getMinecraftServer(), entityplayer);
+        return new CommandListenerWrapper(commandSource, Vec3D.a((BaseBlockPosition) this.position), Vec2F.a, (WorldServer) this.world, 2, s, (IChatBaseComponent) object, this.world.getMinecraftServer(), entityplayer); // Paper
     }
 
     public EnumColor getColor() {

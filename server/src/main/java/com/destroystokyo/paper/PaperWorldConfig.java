@@ -845,4 +845,9 @@ public class PaperWorldConfig {
     private void fixInvulnerableEndCrystalExploit() {
         fixInvulnerableEndCrystalExploit = getBoolean("unsupported-settings.fix-invulnerable-end-crystal-exploit", fixInvulnerableEndCrystalExploit);
     }
+
+    public boolean showSignClickCommandFailureMessagesToPlayer = false;
+    private void showSignClickCommandFailureMessagesToPlayer() {
+        showSignClickCommandFailureMessagesToPlayer = getBoolean("show-sign-click-command-failure-msgs-to-player", showSignClickCommandFailureMessagesToPlayer);
+    }
 }
