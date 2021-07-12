@@ -837,7 +837,7 @@ public class DefinedStructure {
         private final Map<Block, List<DefinedStructure.BlockInfo>> b;
 
         private a(List<DefinedStructure.BlockInfo> list) {
-            this.b = Maps.newHashMap();
+            this.b = Maps.newConcurrentMap(); // Paper - Use CHM
             this.a = list;
         }
 
