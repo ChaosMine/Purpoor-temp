@@ -34,6 +34,7 @@ public class CraftTask implements BukkitTask, Runnable { // Spigot
     public Timing timings; // Paper
     private final Plugin plugin;
     private final int id;
+    private final long createdAt = System.nanoTime(); // Paper - Backport Spigot-#891
 
     CraftTask() {
         this(null, null, CraftTask.NO_REPEATING, CraftTask.NO_REPEATING);
@@ -103,6 +104,12 @@ public class CraftTask implements BukkitTask, Runnable { // Spigot
         }
         } // Paper
     }
+
+    // Paper start - Backport Spigot-#891
+    long getCreatedAt() {
+        return createdAt;
+    }
+    // paper end
 
     long getPeriod() {
         return period;

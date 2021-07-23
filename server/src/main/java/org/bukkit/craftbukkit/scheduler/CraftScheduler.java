@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator; // Paper - Backport Spigot-#891
 import java.util.logging.Level;
 import com.destroystokyo.paper.ServerSchedulerReportingWrapper;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
@@ -48,10 +49,26 @@ import org.bukkit.scheduler.BukkitWorker;
 public class CraftScheduler implements BukkitScheduler {
 
     static Plugin MINECRAFT = new MinecraftInternalPlugin();
+    // Paper start - Backport Spigot-#891
+    /**
+     * The start ID for the counter.
+     */
+    private static final int START_ID = 1;
+    /**
+     * Increment the {@link #ids} field and reset it to the {@link #START_ID} if it reaches {@link Integer#MAX_VALUE}
+     */
+    private static final IntUnaryOperator INCREMENT_IDS = previous -> {
+        // We reached the end, go back to the start!
+        if (previous == Integer.MAX_VALUE) {
+            return START_ID;
+        }
+        return previous + 1;
+    };
+    // Paper end
     /**
      * Counter for IDs. Order doesn't matter, only uniqueness.
      */
-    private final AtomicInteger ids = new AtomicInteger(1);
+    private final AtomicInteger ids = new AtomicInteger(START_ID); // Paper - Backport Spigot-#891
     /**
      * Current head of linked-list. This reference is always stale, {@link CraftTask#next} is the live reference.
      */
@@ -70,7 +87,7 @@ public class CraftScheduler implements BukkitScheduler {
                     int value = Long.compare(o1.getNextRun(), o2.getNextRun());
 
                     // If the tasks should run on the same tick they should be run FIFO
-                    return value != 0 ? value : Integer.compare(o1.getTaskId(), o2.getTaskId());
+                    return value != 0 ? value : Long.compare(o1.getCreatedAt(), o2.getCreatedAt()); // Paper - Backport Spigot-#891
                 }
             });
     /**
@@ -539,7 +556,14 @@ public class CraftScheduler implements BukkitScheduler {
     }
 
     private int nextId() {
-        return ids.incrementAndGet();
+        // Paper start - Backport Spigot-#891
+        Validate.isTrue(runners.size() < Integer.MAX_VALUE, "There are already " + Integer.MAX_VALUE + " tasks scheduled! Cannot schedule more.");
+        int id;
+        do {
+            id = ids.updateAndGet(INCREMENT_IDS);
+        } while (runners.containsKey(id)); // Avoid generating duplicate IDs
+        return id;
+        // Paper end
     }
 
     void parsePending() { // Paper
