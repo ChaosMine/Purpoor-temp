@@ -30,7 +30,7 @@ public abstract class CommandNode<S> implements Comparable<CommandNode<S>> {
     private Map<String, CommandNode<S>> children = Maps.newTreeMap(); //Paper - Switch to tree map for automatic sorting
     private Map<String, LiteralCommandNode<S>> literals = Maps.newLinkedHashMap();
     private Map<String, ArgumentCommandNode<S, ?>> arguments = Maps.newLinkedHashMap();
-    private final Predicate<S> requirement;
+    public Predicate<S> requirement; // Paper - Vanilla command permission fixes (private final -> public)
     private final CommandNode<S> redirect;
     private final RedirectModifier<S> modifier;
     private final boolean forks;

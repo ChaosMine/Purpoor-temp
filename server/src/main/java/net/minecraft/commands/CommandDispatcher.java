@@ -197,6 +197,13 @@ public class CommandDispatcher {
             CommandPublish.a(this.b);
         }
 
+        // Paper start
+        for (final CommandNode<CommandListenerWrapper> node : this.dispatcher().getRoot().getChildren()) {
+            if (node.getRequirement() == com.mojang.brigadier.builder.ArgumentBuilder.<CommandListenerWrapper>defaultRequirement()) {
+                node.requirement = stack -> stack.base == ICommandListener.DUMMY || stack.getBukkitSender().hasPermission(org.bukkit.craftbukkit.command.VanillaCommandWrapper.getPermission(node));
+            }
+        }
+        // Paper end
         this.b.findAmbiguities((commandnode, commandnode1, commandnode2, collection) -> {
             // CommandDispatcher.LOGGER.warn("Ambiguity between arguments {} and {} with inputs: {}", this.b.getPath(commandnode1), this.b.getPath(commandnode2), collection); // CraftBukkit
         });
