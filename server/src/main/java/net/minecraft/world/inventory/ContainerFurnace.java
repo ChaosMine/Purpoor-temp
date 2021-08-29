@@ -90,11 +90,6 @@ public abstract class ContainerFurnace extends ContainerRecipeBook<IInventory> {
     }
 
     @Override
-    public void a(boolean flag, IRecipe<?> irecipe, EntityPlayer entityplayer) {
-        (new AutoRecipeFurnace(this)).a(entityplayer, irecipe, flag); // CraftBukkit - decompile error
-    }
-
-    @Override
     public boolean a(IRecipe<? super IInventory> irecipe) {
         return irecipe.a(this.furnace, this.c);
     }
