@@ -523,7 +523,12 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             long i = generatorsettings.getSeed();
             long j = BiomeManager.a(i);
             List<MobSpawner> list = ImmutableList.of(new MobSpawnerPhantom(), new MobSpawnerPatrol(), new MobSpawnerCat(), new VillageSiege(), new MobSpawnerTrader(iworlddataserver));
-            WorldDimension worlddimension = (WorldDimension) registrymaterials.a(dimensionKey);
+            // Paper start - Use correct WorldDimension registry
+            WorldDimension worlddimension = generatorsettings.dimensions().get(dimensionKey);
+            if (worlddimension == null) {
+                worlddimension = registrymaterials.get(dimensionKey);
+            }
+            // Paper end
             DimensionManager dimensionmanager;
             ChunkGenerator chunkgenerator;
 

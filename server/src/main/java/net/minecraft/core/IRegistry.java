@@ -391,6 +391,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     @Override
     public abstract int a(@Nullable T t0);
 
+    @Nullable public final T get(@Nullable ResourceKey<T> resourcekey) { return this.a(resourcekey); } // Paper - OBFHELPER
     @Nullable
     public abstract T a(@Nullable ResourceKey<T> resourcekey);
 

@@ -140,6 +140,7 @@ public class GeneratorSettings {
         return registrymaterials1;
     }
 
+    public final RegistryMaterials<WorldDimension> dimensions() { return this.d(); } // Paper - OBFHELPER
     public RegistryMaterials<WorldDimension> d() {
         return this.f;
     }
