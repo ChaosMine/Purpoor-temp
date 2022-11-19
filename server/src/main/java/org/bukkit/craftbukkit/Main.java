@@ -231,13 +231,13 @@ public class Main {
                 System.err.println("Cannot run server in a directory with ! or + in the pathname. Please rename the affected folders and try again.");
                 return;
             }
-
+            /*
             float javaVersion = Float.parseFloat(System.getProperty("java.class.version"));
             if (javaVersion > 60.0) {
                 System.err.println("Unsupported Java detected (" + javaVersion + "). Only up to Java 16 is supported.");
                 if (!Boolean.getBoolean("Paper.IgnoreJavaVersion")) return; // Paper
             }
-
+            */
             try {
                 // Paper start - Handled by TerminalConsoleAppender
                 /*
