@@ -12,6 +12,8 @@ import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import java.util.regex.Pattern;
+
 public final class BrigadierCommandHighlighter implements Highlighter {
     private static final int[] COLORS = {AttributedStyle.CYAN, AttributedStyle.YELLOW, AttributedStyle.GREEN, AttributedStyle.MAGENTA, /* Client uses GOLD here, not BLUE, however there is no GOLD AttributedStyle. */ AttributedStyle.BLUE};
     private final CommandListenerWrapper commandSourceStack;
@@ -54,4 +56,9 @@ public final class BrigadierCommandHighlighter implements Highlighter {
         }
         return builder.toAttributedString();
     }
+
+    @Override
+    public void setErrorPattern(Pattern errorPattern) {}
+    @Override
+    public void setErrorIndex(int errorIndex) {}
 }

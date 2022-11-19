@@ -1,3 +1,4 @@
+/*
 package net.minecraft.server.gui;
 
 import com.google.common.collect.Lists;
@@ -202,3 +203,4 @@ public class ServerGUI extends JComponent {
         }
     }
 }
+*/

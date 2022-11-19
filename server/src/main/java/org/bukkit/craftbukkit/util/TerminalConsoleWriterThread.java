@@ -1,3 +1,4 @@
+/*
 package org.bukkit.craftbukkit.util;
 
 import com.mojang.util.QueueLogAppender;
@@ -10,7 +11,10 @@ import org.bukkit.craftbukkit.Main;
 //import org.fusesource.jansi.Ansi;
 //import org.fusesource.jansi.Ansi.Erase;
 
-public class TerminalConsoleWriterThread /*extends Thread*/ {/* // Paper - disable
+public class TerminalConsoleWriterThread */
+/*extends Thread*//*
+ {*/
+/* // Paper - disable
     private final ConsoleReader reader;
     private final OutputStream output;
 
@@ -54,5 +58,7 @@ public class TerminalConsoleWriterThread /*extends Thread*/ {/* // Paper - disab
                 Logger.getLogger(TerminalConsoleWriterThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }*/
+    }*//*
+
 }
+*/

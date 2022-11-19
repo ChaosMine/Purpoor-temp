@@ -1,3 +1,4 @@
+/*
 package net.minecraft.server.gui;
 
 import java.awt.Color;
@@ -102,3 +103,4 @@ public class GuiStatsComponent extends JComponent {
     }
     // Paper end
 }
+*/

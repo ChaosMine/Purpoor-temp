@@ -32,7 +32,6 @@ import net.minecraft.server.DataPackResources;
 import net.minecraft.server.IMinecraftServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerCommand;
-import net.minecraft.server.gui.ServerGUI;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.level.progress.WorldLoadListenerFactory;
@@ -80,8 +79,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     public final RemoteControlCommandListener remoteControlCommandListener;
     private RemoteControlListener remoteControlListener;
     public DedicatedServerSettings propertyManager;
-    @Nullable
-    private ServerGUI q;
     @Nullable
     private final TextFilter r;
 
@@ -428,10 +425,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
             this.r.close();
         }
 
-        if (this.q != null) {
-            //this.q.b(); // Tuinity - do not wait for AWT, causes deadlock with sigint handler (AWT shutdown will properly clear our resources anyways)
-        }
-
         if (this.remoteControlListener != null) {
             //this.remoteControlListener.b(); // Paper - don't wait for remote connections
         }
@@ -528,15 +521,11 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     }
 
     public void bd() {
-        if (this.q == null) {
-            this.q = ServerGUI.a(this);
-        }
-
     }
 
     @Override
     public boolean ah() {
-        return this.q != null;
+        return false;
     }
 
     @Override

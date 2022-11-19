@@ -25,6 +25,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>kamillaova</id>
+            <name>Kamillaova's repo</name>
+            <url>https://codeberg.org/Kamillaova/maven-repo/media/branch/main/</url>
+        </repository>
+
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -53,15 +62,64 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.papermc</groupId>
+            <groupId>dev.kamillaova.paper</groupId>
             <artifactId>minecraft-server</artifactId>
             <version>${minecraft.version}-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>datafixerupper</artifactId>
+            <version>5.0.28</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>2.3.31</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>8.5.9</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>6.0-alpha-3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>net.minecrell</groupId>
             <artifactId>terminalconsoleappender</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jline</groupId>
@@ -159,13 +217,6 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <!--<version>2.8.1</version>--> <!--handled by bom-->
             <scope>runtime</scope>
-            <exclusions>
-                <!-- included in minecraft-server -->
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- testing -->
         <dependency>
@@ -312,11 +363,6 @@
                                     <pattern>jline</pattern>
                                     <shadedPattern>org.bukkit.craftbukkit.libs.jline</shadedPattern>
                                 </relocation>
-                                <!-- Paper - Don't relocate fastutil in order to prevent api breakage -->
-                                <!--<relocation>-->
-                                    <!--<pattern>it.unimi</pattern>-->
-                                    <!--<shadedPattern>org.bukkit.craftbukkit.libs.it.unimi</shadedPattern>-->
-                                <!--</relocation>-->
                                 <relocation>
                                     <pattern>org.apache.commons.codec</pattern>
                                     <shadedPattern>org.bukkit.craftbukkit.libs.org.apache.commons.codec</shadedPattern>
