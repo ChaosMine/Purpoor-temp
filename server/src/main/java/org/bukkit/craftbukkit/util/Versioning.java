@@ -11,7 +11,7 @@ public final class Versioning {
     public static String getBukkitVersion() {
         String result = "Unknown-Version";
 
-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.pl3x.purpur/purpur-api/pom.properties"); // Tuinity // Purpur
+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.kamillaova.purpur/purpur-api/pom.properties"); // Tuinity // Purpur
         Properties properties = new Properties();
 
         if (stream != null) {

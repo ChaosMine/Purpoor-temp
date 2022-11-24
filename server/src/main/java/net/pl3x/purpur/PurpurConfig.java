@@ -192,7 +192,7 @@ public class PurpurConfig {
         serverModName = getString("settings.server-mod-name", serverModName);
     }
 
-    public static String timingsUrl = "https://timings.pl3x.net";
+    public static String timingsUrl = "https://timings.aikar.co/";
     private static void timingsSettings() {
         timingsUrl = getString("settings.timings.url", timingsUrl);
         if (!TimingsManager.hiddenConfigs.contains("server-ip")) TimingsManager.hiddenConfigs.add("server-ip");

@@ -41,6 +41,8 @@ public class PurpurVersionFetcher implements VersionFetcher {
 
     private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
         int distance;
+        distance = 0;
+        /*
         try {
             int jenkinsBuild = Integer.parseInt(versionInfo);
             distance = fetchDistanceFromJenkins(jenkinsBuild);
@@ -48,8 +50,9 @@ public class PurpurVersionFetcher implements VersionFetcher {
             versionInfo = versionInfo.replace("\"", "");
             distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
         }
+         */
 
-        switch (distance) {
+        switch (0) {
             case -1:
                 return Component.text("Error obtaining version information", NamedTextColor.YELLOW);
             case 0:
