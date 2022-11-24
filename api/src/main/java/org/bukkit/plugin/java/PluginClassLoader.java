@@ -139,6 +139,20 @@ public final class PluginClassLoader extends URLClassLoader { // Spigot
                         && !seenIllegalAccess.contains(provider.getName())
                         && !((SimplePluginManager) loader.server.getPluginManager()).isTransitiveDepend(description, provider)) {
 
+                    if (
+                      // JDBC Drivers
+                      name.endsWith("org.mariadb.jdbc.Driver") ||
+                      name.endsWith("com.mysql.cj.jdbc.Driver") ||
+                      name.endsWith("org.h2.Driver") ||
+                      name.endsWith("org.hsqldb.jdbc.JDBCDriver") ||
+                      name.endsWith("org.postgresql.Driver") ||
+                      name.endsWith("com.impossibl.postgres.jdbc.PGDriver") ||
+                      // Misc classes
+                      name.startsWith("org.apache.log4j") // 1000iq UltimateClans developer moment // TODO: Remove it
+                    ) {
+                        throw new ClassNotFoundException(name);
+                    }
+
                     seenIllegalAccess.add(provider.getName());
                     if (plugin != null) {
                         plugin.getLogger().log(Level.WARNING, "Loaded class {0} from {1} which is not a depend, softdepend or loadbefore of this plugin.", new Object[]{name, provider.getFullName()});
