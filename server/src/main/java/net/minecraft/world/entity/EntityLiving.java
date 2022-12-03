@@ -3886,7 +3886,7 @@ public abstract class EntityLiving extends Entity {
         return result;
     }
 
-    public int shieldBlockingDelay = world.paperConfig.shieldBlockingDelay;
+    public int shieldBlockingDelay = world == null ? 0 : world.paperConfig.shieldBlockingDelay;
 
     public int getShieldBlockingDelay() {
         return shieldBlockingDelay;
