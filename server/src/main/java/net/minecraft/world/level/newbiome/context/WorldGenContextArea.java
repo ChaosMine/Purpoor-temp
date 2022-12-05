@@ -2,7 +2,10 @@ package net.minecraft.world.level.newbiome.context;
 
 import it.unimi.dsi.fastutil.longs.Long2IntLinkedOpenHashMap;
 import java.util.Random;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.util.LinearCongruentialGenerator;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.synth.NoiseGeneratorPerlin;
 import net.minecraft.world.level.newbiome.area.AreaLazy;
 import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer8;
@@ -15,12 +18,18 @@ public class WorldGenContextArea implements AreaContextTransformed<AreaLazy> {
     private final long d;
     private long e;
 
+    private final SeededRandom rand = new SeededRandom(0);
+    private long salt;
+
     public WorldGenContextArea(int i, long j, long k) {
         this.d = b(j, k);
-        this.c = new NoiseGeneratorPerlin(new Random(j));
+        var rand = new SeededRandom(0);
+        rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.BIOME_NOISE_SALT, 0);
+        this.c = new NoiseGeneratorPerlin(rand);
         this.a = new Long2IntLinkedOpenHashMap(16, 0.25F);
         this.a.defaultReturnValue(Integer.MIN_VALUE);
         this.b = i;
+        this.salt = k;
     }
 
     @Override
@@ -38,21 +47,12 @@ public class WorldGenContextArea implements AreaContextTransformed<AreaLazy> {
 
     @Override
     public void a(long i, long j) {
-        long k = this.d;
-
-        k = LinearCongruentialGenerator.a(k, i);
-        k = LinearCongruentialGenerator.a(k, j);
-        k = LinearCongruentialGenerator.a(k, i);
-        k = LinearCongruentialGenerator.a(k, j);
-        this.e = k;
+        rand.secureseed_setSeed(Globals.worldSeed, (int) i, (int) j, Globals.dimension.get(), Globals.BIOME_SALT, salt);
     }
 
     @Override
     public int a(int i) {
-        int j = (int) Math.floorMod(this.e >> 24, (long) i);
-
-        this.e = LinearCongruentialGenerator.a(this.e, this.d);
-        return j;
+        return rand.nextInt(i);
     }
 
     @Override

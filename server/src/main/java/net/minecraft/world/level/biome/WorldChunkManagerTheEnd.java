@@ -5,6 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.HashCommon; // Paper
 import java.util.List;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.RegistryLookupCodec;
 import net.minecraft.util.MathHelper;
@@ -54,7 +56,7 @@ public class WorldChunkManagerTheEnd extends WorldChunkManager {
         this.l = biomebase3;
         this.m = biomebase4;
         SeededRandom seededrandom = new SeededRandom(i);
-
+        seededrandom.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.END_BIOME_NOISE_SALT, 0);
         seededrandom.a(17292);
         this.f = new NoiseGenerator3Handler(seededrandom);
     }

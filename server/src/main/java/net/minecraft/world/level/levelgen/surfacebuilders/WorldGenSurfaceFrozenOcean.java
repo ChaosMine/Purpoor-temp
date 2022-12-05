@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import java.util.Random;
 import java.util.stream.IntStream;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.block.Blocks;
@@ -130,8 +132,8 @@ public class WorldGenSurfaceFrozenOcean extends WorldGenSurface<WorldGenSurfaceC
     @Override
     public void a(long i) {
         if (this.M != i || this.K == null || this.L == null) {
-            SeededRandom seededrandom = new SeededRandom(i);
-
+            SeededRandom seededrandom = new SeededRandom(0);
+            seededrandom.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, 0);
             this.K = new NoiseGenerator3(seededrandom, IntStream.rangeClosed(-3, 0));
             this.L = new NoiseGenerator3(seededrandom, ImmutableList.of(0));
         }

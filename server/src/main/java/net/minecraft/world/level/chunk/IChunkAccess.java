@@ -191,4 +191,6 @@ public interface IChunkAccess extends IBlockAccess, IStructureAccess {
 
     default void setLit(boolean lit) { this.b(lit); } // Tuinity - OBFHELPER
     void b(boolean flag);
+
+    boolean secureseed_isSlimeChunk();
 }

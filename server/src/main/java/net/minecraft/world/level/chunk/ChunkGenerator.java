@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
@@ -88,9 +90,9 @@ public abstract class ChunkGenerator {
                 int i = structuresettingsstronghold.a();
                 int j = structuresettingsstronghold.c();
                 int k = structuresettingsstronghold.b();
-                Random random = new Random();
-
-                random.setSeed(this.e);
+                var random = new SeededRandom(0);
+                random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.STRONGHOLD_LOCATION_SALT, 0);
+                //random.setSeed(this.e);
                 double d0 = random.nextDouble() * 3.141592653589793D * 2.0D;
                 int l = 0;
                 int i1 = 0;

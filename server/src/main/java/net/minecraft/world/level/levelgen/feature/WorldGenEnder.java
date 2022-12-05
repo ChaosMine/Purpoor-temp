@@ -13,7 +13,10 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderCrystal;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.BlockIronBars;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureEndSpikeConfiguration;
 import net.minecraft.world.phys.AxisAlignedBB;
 
@@ -35,12 +39,13 @@ public class WorldGenEnder extends WorldGenerator<WorldGenFeatureEndSpikeConfigu
         super(codec);
     }
 
-    public static List<WorldGenEnder.Spike> a(GeneratorAccessSeed generatoraccessseed) {
-        int seed = net.pl3x.purpur.PurpurConfig.endSpikeSeed; // Purpur
-        Random random = new Random(seed == -1 ? generatoraccessseed.getSeed() : seed); // Purpur
-        long i = random.nextLong() & 65535L;
-
-        return (List) WorldGenEnder.a.getUnchecked(i);
+    public static List<WorldGenEnder.Spike> a(GeneratorAccessSeed world) {
+        if (world instanceof WorldServer worldServer) {
+            Globals.setupGlobals(worldServer);
+        }
+        var rand = new SeededRandom(0);
+        rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.END_PILLAR_SALT, 0);
+        return a.getUnchecked(rand.nextLong());
     }
 
     public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEndSpikeConfiguration worldgenfeatureendspikeconfiguration) { // Paper - decompile fix

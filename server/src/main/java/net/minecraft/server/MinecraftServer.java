@@ -55,6 +55,8 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
 import net.minecraft.SharedConstants;
@@ -137,6 +139,7 @@ import net.minecraft.world.level.dimension.WorldDimension;
 import net.minecraft.world.level.levelgen.GeneratorSettings;
 import net.minecraft.world.level.levelgen.MobSpawnerPatrol;
 import net.minecraft.world.level.levelgen.MobSpawnerPhantom;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import net.minecraft.world.level.saveddata.RunnableSaveScoreboard;
@@ -652,7 +655,9 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             // Paper start - moved down
             // CraftBukkit start
             if (worldserver.generator != null) {
-                Random rand = new Random(worldserver.getSeed());
+                Globals.setupGlobals(worldserver);
+                var rand = new SeededRandom(0);
+                rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
                 org.bukkit.Location spawn = worldserver.generator.getFixedSpawnLocation(worldserver.getWorld(), rand);
 
                 if (spawn != null) {
@@ -668,7 +673,9 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             // Paper start - if the generator created a spawn for us, then there is no need for us to also create a spawn -
             // only do it if the generator did not
             WorldChunkManager worldchunkmanager = chunkgenerator.getWorldChunkManager();
-            Random random = new Random(worldserver.getSeed());
+            Globals.setupGlobals(worldserver);
+            var random = new SeededRandom(0);
+            random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
             BlockPosition blockposition = worldchunkmanager.a(0, worldserver.getSeaLevel(), 0, 256, (biomebase) -> {
                 return biomebase.b().b();
             }, random);

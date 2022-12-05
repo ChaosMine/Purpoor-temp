@@ -178,10 +178,8 @@ public class PurpurConfig {
     }
 
     public static int dungeonSeed = -1;
-    public static int endSpikeSeed = -1;
     private static void seedSettings() {
         dungeonSeed = getInt("settings.seed.dungeon", dungeonSeed);
-        endSpikeSeed = getInt("settings.seed.end-spike", endSpikeSeed);
         if (!TimingsManager.hiddenConfigs.contains("settings.seed")) TimingsManager.hiddenConfigs.add("settings.seed");
         if (!TimingsManager.hiddenConfigs.contains("settings.seed.dungeon")) TimingsManager.hiddenConfigs.add("settings.seed.dungeon");
         if (!TimingsManager.hiddenConfigs.contains("settings.seed.end-spike")) TimingsManager.hiddenConfigs.add("settings.seed.end-spike");

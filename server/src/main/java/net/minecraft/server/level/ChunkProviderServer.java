@@ -17,6 +17,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
@@ -1122,6 +1124,7 @@ public class ChunkProviderServer extends IChunkProvider {
     }
 
     public ChunkGenerator getChunkGenerator() {
+        Globals.setupGlobals(world);
         return this.chunkGenerator;
     }
 

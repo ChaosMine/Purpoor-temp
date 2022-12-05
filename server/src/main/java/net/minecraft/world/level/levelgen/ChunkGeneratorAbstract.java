@@ -12,6 +12,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import javax.annotation.Nullable;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
@@ -119,7 +121,8 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         this.n = 16 / this.m;
         this.o = noisesettings.a() / this.l;
         this.p = 16 / this.m;
-        this.e = new SeededRandom(i);
+        this.e = new SeededRandom(0);
+        this.e.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.TERRAIN_NOISE_SALT, 0);
         this.q = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         this.r = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         this.s = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-7, 0));
@@ -127,8 +130,8 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         this.e.a(2620);
         this.u = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         if (noisesettings.k()) {
-            SeededRandom seededrandom = new SeededRandom(i);
-
+            SeededRandom seededrandom = new SeededRandom(0);
+            seededrandom.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.TERRAIN_NOISE_SALT, 1);
             seededrandom.a(17292);
             this.v = new NoiseGenerator3Handler(seededrandom);
         } else {

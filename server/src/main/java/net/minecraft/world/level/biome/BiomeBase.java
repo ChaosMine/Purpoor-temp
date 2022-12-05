@@ -94,9 +94,24 @@ public final class BiomeBase {
     public static final Codec<Supplier<BiomeBase>> d = RegistryFileCodec.a(IRegistry.ay, BiomeBase.b);
     public static final Codec<List<Supplier<BiomeBase>>> e = RegistryFileCodec.b(IRegistry.ay, BiomeBase.b);
     private final Map<Integer, List<StructureGenerator<?>>> g;
-    private static final NoiseGenerator3 h = new NoiseGenerator3(new SeededRandom(1234L), ImmutableList.of(0));
-    private static final NoiseGenerator3 i = new NoiseGenerator3(new SeededRandom(3456L), ImmutableList.of(-2, -1, 0));
-    public static final NoiseGenerator3 f = new NoiseGenerator3(new SeededRandom(2345L), ImmutableList.of(0));
+    private static final NoiseGenerator3 h;
+    static {
+        var rand = new SeededRandom(1234L);
+        rand.secureseed_setInsecure();
+        h = new NoiseGenerator3(rand, ImmutableList.of(0));
+    }
+    private static final NoiseGenerator3 i;
+    static {
+        var rand = new SeededRandom(3456L);
+        rand.secureseed_setInsecure();
+        i = new NoiseGenerator3(rand, ImmutableList.of(-2, -1, 0));
+    }
+    public static final NoiseGenerator3 f;
+    static {
+        var rand = new SeededRandom(2345L);
+        rand.secureseed_setInsecure();
+        f = new NoiseGenerator3(rand, ImmutableList.of(0));
+    }
     private final BiomeBase.d j;
     private final BiomeSettingsGeneration k;
     private final BiomeSettingsMobs l;

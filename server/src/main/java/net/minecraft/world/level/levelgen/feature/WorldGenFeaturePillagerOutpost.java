@@ -3,6 +3,8 @@ package net.minecraft.world.level.levelgen.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import java.util.List;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.biome.BiomeBase;
@@ -30,7 +32,7 @@ public class WorldGenFeaturePillagerOutpost extends WorldGenFeatureJigsaw {
         int l = j >> 4;
         int i1 = k >> 4;
 
-        seededrandom.setSeed((long) (l ^ i1 << 4) ^ i);
+        seededrandom.secureseed_setSeed(Globals.worldSeed, j >> 4, k >> 4, Globals.dimension.get(), Globals.PILLAGER_OUTPOST_SALT, 0);
         seededrandom.nextInt();
         return seededrandom.nextInt(5) != 0 ? false : !this.a(chunkgenerator, i, seededrandom, j, k);
     }

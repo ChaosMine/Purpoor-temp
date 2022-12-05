@@ -4,10 +4,13 @@ import com.mojang.serialization.Codec;
 import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.chunk.IChunkAccess;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfigurationChance;
 
 public class WorldGenCaves extends WorldGenCarverAbstract<WorldGenFeatureConfigurationChance> {
@@ -84,7 +87,8 @@ public class WorldGenCaves extends WorldGenCarverAbstract<WorldGenFeatureConfigu
     }
 
     protected void a(IChunkAccess ichunkaccess, Function<BlockPosition, BiomeBase> function, long i, int j, int k, int l, double d0, double d1, double d2, float f, float f1, float f2, int i1, int j1, double d3, BitSet bitset) {
-        Random random = new Random(i);
+        var random = new SeededRandom(0);
+        random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.CAVE_CARVER_SALT, i);
         int k1 = random.nextInt(j1 / 2) + j1 / 4;
         boolean flag = random.nextInt(6) == 0;
         float f3 = 0.0F;

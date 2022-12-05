@@ -59,6 +59,7 @@ import net.minecraft.world.level.block.entity.TileEntityMobSpawner;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.ChunkProviderDebug;
 import net.minecraft.world.level.levelgen.HeightMap;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.lighting.LightEngine;
@@ -98,6 +99,9 @@ public class Chunk implements IChunkAccess {
     private Consumer<Chunk> v;
     private final ChunkCoordIntPair loc; public final long coordinateKey; public final int locX; public final int locZ; // Paper - cache coordinate key
     private volatile boolean x;
+
+    private boolean hasComputedSlimeChunk = false;
+    private boolean isSlimeChunk;
 
     public Chunk(World world, ChunkCoordIntPair chunkcoordintpair, BiomeStorage biomestorage) {
         this(world, chunkcoordintpair, biomestorage, ChunkConverter.a, TickListEmpty.b(), TickListEmpty.b(), 0L, (ChunkSection[]) null, (Consumer) null);
@@ -1363,5 +1367,14 @@ public class Chunk implements IChunkAccess {
         IMMEDIATE, QUEUED, CHECK;
 
         private EnumTileEntityState() {}
+    }
+
+    @Override
+    public boolean secureseed_isSlimeChunk() {
+        if (!hasComputedSlimeChunk) {
+            hasComputedSlimeChunk = true;
+            isSlimeChunk = SeededRandom.a(loc.x, loc.z, 0L, 0L).nextInt(10) == 0;
+        }
+        return isSlimeChunk;
     }
 }

@@ -10,6 +10,8 @@ import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import java.util.List;
 import java.util.stream.IntStream;
 import javax.annotation.Nullable;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.levelgen.SeededRandom;
 
@@ -95,6 +97,7 @@ public class NoiseGeneratorOctaves implements NoiseGenerator {
         if (k < j - 1) {
             long i1 = (long) (noisegeneratorperlin.a(0.0D, 0.0D, 0.0D, 0.0D, 0.0D) * 9.223372036854776E18D);
             SeededRandom seededrandom1 = new SeededRandom(i1);
+            seededrandom1.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.OCTAVE_NOISE_SALT, seededrandom1.secureseed_getInsecureSeed());
 
             for (int j1 = k + 1; j1 < j; ++j1) {
                 if (j1 >= 0) {

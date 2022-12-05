@@ -3,6 +3,8 @@ package net.minecraft.world.level.levelgen.surfacebuilders;
 import com.mojang.serialization.Codec;
 import java.util.Random;
 import java.util.stream.IntStream;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.block.Blocks;
@@ -85,7 +87,9 @@ public class WorldGenSurfaceNether extends WorldGenSurface<WorldGenSurfaceConfig
     @Override
     public void a(long i) {
         if (this.a != i || this.b == null) {
-            this.b = new NoiseGeneratorOctaves(new SeededRandom(i), IntStream.rangeClosed(-3, 0));
+            var rand = new SeededRandom(0);
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, 0);
+            this.b = new NoiseGeneratorOctaves(rand, IntStream.rangeClosed(-3, 0));
         }
 
         this.a = i;

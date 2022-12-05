@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.CrashReport;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BaseBlockPosition;
@@ -594,6 +596,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             return new PersistentRaid(this);
         }, PersistentRaid.a(this.getDimensionManager()));
         if (!minecraftserver.isEmbeddedServer()) {
+            Globals.setupGlobals(this);
             iworlddataserver.setGameType(minecraftserver.getGamemode());
         }
 

@@ -5,6 +5,8 @@ import com.mojang.serialization.Codec;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.block.Block;
@@ -122,6 +124,7 @@ public class WorldGenSurfaceMesa extends WorldGenSurface<WorldGenSurfaceConfigur
 
         if (this.b != i || this.c == null || this.d == null) {
             SeededRandom seededrandom = new SeededRandom(i);
+            seededrandom.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, 0);
 
             this.c = new NoiseGenerator3(seededrandom, IntStream.rangeClosed(-3, 0));
             this.d = new NoiseGenerator3(seededrandom, ImmutableList.of(0));
@@ -134,7 +137,7 @@ public class WorldGenSurfaceMesa extends WorldGenSurface<WorldGenSurfaceConfigur
         this.a = new IBlockData[64];
         Arrays.fill(this.a, WorldGenSurfaceMesa.M);
         SeededRandom seededrandom = new SeededRandom(i);
-
+        seededrandom.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, 1);
         this.e = new NoiseGenerator3(seededrandom, ImmutableList.of(0));
 
         int j;

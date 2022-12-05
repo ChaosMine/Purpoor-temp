@@ -4,10 +4,13 @@ import com.mojang.serialization.Codec;
 import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.chunk.IChunkAccess;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfigurationChance;
 
 public class WorldGenCanyon extends WorldGenCarverAbstract<WorldGenFeatureConfigurationChance> {
@@ -39,7 +42,8 @@ public class WorldGenCanyon extends WorldGenCarverAbstract<WorldGenFeatureConfig
     }
 
     private void a(IChunkAccess ichunkaccess, Function<BlockPosition, BiomeBase> function, long i, int j, int k, int l, double d0, double d1, double d2, float f, float f1, float f2, int i1, int j1, double d3, BitSet bitset) {
-        Random random = new Random(i);
+        var random = new SeededRandom(i);
+        random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.RAVINE_CARVER_SALT, i);
         float f3 = 1.0F;
 
         for (int k1 = 0; k1 < 256; ++k1) {

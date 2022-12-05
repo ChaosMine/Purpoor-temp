@@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.world.level.levelgen.SeededRandom;
 
 public class NoiseGenerator3 implements NoiseGenerator {
@@ -51,7 +53,7 @@ public class NoiseGenerator3 implements NoiseGenerator {
                 if (j > 0) {
                     long j1 = (long) (noisegenerator3handler.a(noisegenerator3handler.b, noisegenerator3handler.c, noisegenerator3handler.d) * 9.223372036854776E18D);
                     SeededRandom seededrandom1 = new SeededRandom(j1);
-
+                    seededrandom1.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.OCTAVE_SIMPLEX_NOISE_SALT, seededrandom1.secureseed_getInsecureSeed());
                     for (int k1 = l - 1; k1 >= 0; --k1) {
                         if (k1 < k && intsortedset.contains(l - k1)) {
                             this.a[k1] = new NoiseGenerator3Handler(seededrandom1);

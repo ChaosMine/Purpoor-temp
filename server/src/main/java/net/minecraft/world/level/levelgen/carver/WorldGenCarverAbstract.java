@@ -6,6 +6,8 @@ import java.util.BitSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.IChunkAccess;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfigurationChance;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
@@ -64,7 +67,8 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
     }
 
     protected boolean a(IChunkAccess ichunkaccess, Function<BlockPosition, BiomeBase> function, long i, int j, int k, int l, double d0, double d1, double d2, double d3, double d4, BitSet bitset) {
-        Random random = new Random(i + (long) k + (long) l);
+        var random = new SeededRandom(0);
+        random.secureseed_setSeed(Globals.worldSeed, k, l, Globals.dimension.get(), Globals.REGION_CARVER_SALT, i);
         double d5 = (double) (k * 16 + 8);
         double d6 = (double) (l * 16 + 8);
 

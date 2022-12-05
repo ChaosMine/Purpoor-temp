@@ -8,6 +8,8 @@ import com.mojang.serialization.Codec;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.level.biome.BiomeBase;
@@ -82,9 +84,11 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
     @Override
     public void a(long i) {
         if (this.a != i || this.d == null || this.b.isEmpty() || this.c.isEmpty()) {
-            this.b = a(this.a(), i);
+            this.b = a(this.a(), 0);
             this.c = a(this.b(), i + (long) this.b.size());
-            this.d = new NoiseGeneratorOctaves(new SeededRandom(i + (long) this.b.size() + (long) this.c.size()), ImmutableList.of(0));
+            var rand = new SeededRandom(0);
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, i + (long) this.b.size() + (long) this.c.size());
+            this.d = new NoiseGeneratorOctaves(rand, ImmutableList.of(0));
         }
 
         this.a = i;
@@ -96,7 +100,9 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
         for (UnmodifiableIterator unmodifiableiterator = immutablelist.iterator(); unmodifiableiterator.hasNext(); ++i) {
             IBlockData iblockdata = (IBlockData) unmodifiableiterator.next();
 
-            builder.put(iblockdata, new NoiseGeneratorOctaves(new SeededRandom(i), ImmutableList.of(-4)));
+            var rand = new SeededRandom(0);
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SURFACE_BUILDER_SALT, i);
+            builder.put(iblockdata, new NoiseGeneratorOctaves(rand, ImmutableList.of(-4)));
         }
 
         return builder.build();

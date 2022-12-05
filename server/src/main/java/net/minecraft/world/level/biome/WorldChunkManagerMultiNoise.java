@@ -18,6 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.IRegistry;
 import net.minecraft.data.worldgen.biome.BiomeRegistry;
 import net.minecraft.resources.MinecraftKey;
@@ -81,10 +83,30 @@ public class WorldChunkManagerMultiNoise extends WorldChunkManager {
         this.i = worldchunkmanagermultinoise_a1;
         this.j = worldchunkmanagermultinoise_a2;
         this.k = worldchunkmanagermultinoise_a3;
-        this.l = NoiseGeneratorNormal.a(new SeededRandom(i), worldchunkmanagermultinoise_a.a(), worldchunkmanagermultinoise_a.b());
-        this.m = NoiseGeneratorNormal.a(new SeededRandom(i + 1L), worldchunkmanagermultinoise_a1.a(), worldchunkmanagermultinoise_a1.b());
-        this.n = NoiseGeneratorNormal.a(new SeededRandom(i + 2L), worldchunkmanagermultinoise_a2.a(), worldchunkmanagermultinoise_a2.b());
-        this.o = NoiseGeneratorNormal.a(new SeededRandom(i + 3L), worldchunkmanagermultinoise_a3.a(), worldchunkmanagermultinoise_a3.b());
+        {
+            var rand = new SeededRandom(i);
+            var salt = rand.secureseed_getInsecureSeed() - r;
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.MULTI_NOISE_BIOME_SALT, salt);
+            this.l = NoiseGeneratorNormal.a(rand, worldchunkmanagermultinoise_a.a(), worldchunkmanagermultinoise_a.b());
+        }
+        {
+            var rand = new SeededRandom(i + 1L);
+            var salt = rand.secureseed_getInsecureSeed() - r;
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.MULTI_NOISE_BIOME_SALT, salt);
+            this.m = NoiseGeneratorNormal.a(rand, worldchunkmanagermultinoise_a1.a(), worldchunkmanagermultinoise_a1.b());
+        }
+        {
+            var rand = new SeededRandom(i + 2L);
+            var salt = rand.secureseed_getInsecureSeed() - r;
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.MULTI_NOISE_BIOME_SALT, salt);
+            this.n = NoiseGeneratorNormal.a(rand, worldchunkmanagermultinoise_a2.a(), worldchunkmanagermultinoise_a2.b());
+        }
+        {
+            var rand = new SeededRandom(i + 3L);
+            var salt = rand.secureseed_getInsecureSeed() - r;
+            rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.MULTI_NOISE_BIOME_SALT, salt);
+            this.o = NoiseGeneratorNormal.a(rand, worldchunkmanagermultinoise_a3.a(), worldchunkmanagermultinoise_a3.b());
+        }
         this.p = list;
         this.q = false;
     }

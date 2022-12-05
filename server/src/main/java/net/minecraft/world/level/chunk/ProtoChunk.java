@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.HeightMap;
+import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.WorldGenStage;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -71,6 +72,9 @@ public class ProtoChunk implements IChunkAccess {
     protected volatile com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] skyNibbles = com.tuinity.tuinity.chunk.light.StarLightEngine.getFilledEmptyLight();
     protected volatile boolean[] skyEmptinessMap;
     protected volatile boolean[] blockEmptinessMap;
+
+    private boolean hasComputedSlimeChunk = false;
+    private boolean isSlimeChunk;
 
     @Override
     public com.tuinity.tuinity.chunk.light.SWMRNibbleArray[] getBlockNibbles() {
@@ -573,5 +577,14 @@ public class ProtoChunk implements IChunkAccess {
     public void b(boolean flag) {
         this.u = flag;
         this.setNeedsSaving(true);
+    }
+
+    @Override
+    public boolean secureseed_isSlimeChunk() {
+        if (!hasComputedSlimeChunk) {
+            hasComputedSlimeChunk = true;
+            isSlimeChunk = SeededRandom.a(b.x, b.z, 0L, 0L).nextInt(10) == 0;
+        }
+        return isSlimeChunk;
     }
 }

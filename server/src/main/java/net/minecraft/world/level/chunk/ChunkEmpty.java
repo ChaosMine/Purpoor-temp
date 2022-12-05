@@ -111,4 +111,9 @@ public class ChunkEmpty extends Chunk {
     public PlayerChunk.State getState() {
         return PlayerChunk.State.BORDER;
     }
+
+    @Override
+    public boolean secureseed_isSlimeChunk() {
+        return false;
+    }
 }
