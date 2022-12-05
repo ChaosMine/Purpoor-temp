@@ -397,9 +397,9 @@ public final class BiomeBase {
         }
     }
 
-    public static class c {
+    public static class _c {
 
-        public static final Codec<BiomeBase.c> a = RecordCodecBuilder.create((instance) -> {
+        public static final Codec<_c> a = RecordCodecBuilder.create((instance) -> {
             return instance.group(Codec.floatRange(-2.0F, 2.0F).fieldOf("temperature").forGetter((biomebase_c) -> {
                 return biomebase_c.b;
             }), Codec.floatRange(-2.0F, 2.0F).fieldOf("humidity").forGetter((biomebase_c) -> {
@@ -410,7 +410,7 @@ public final class BiomeBase {
                 return biomebase_c.e;
             }), Codec.floatRange(0.0F, 1.0F).fieldOf("offset").forGetter((biomebase_c) -> {
                 return biomebase_c.f;
-            })).apply(instance, BiomeBase.c::new);
+            })).apply(instance, _c::new);
         });
         private final float b;
         private final float c;
@@ -418,7 +418,7 @@ public final class BiomeBase {
         private final float e;
         private final float f;
 
-        public c(float f, float f1, float f2, float f3, float f4) {
+        public _c(float f, float f1, float f2, float f3, float f4) {
             this.b = f;
             this.c = f1;
             this.d = f2;
@@ -430,7 +430,7 @@ public final class BiomeBase {
             if (this == object) {
                 return true;
             } else if (object != null && this.getClass() == object.getClass()) {
-                BiomeBase.c biomebase_c = (BiomeBase.c) object;
+                _c biomebase_c = (_c) object;
 
                 return Float.compare(biomebase_c.b, this.b) != 0 ? false : (Float.compare(biomebase_c.c, this.c) != 0 ? false : (Float.compare(biomebase_c.d, this.d) != 0 ? false : Float.compare(biomebase_c.e, this.e) == 0));
             } else {
@@ -447,7 +447,7 @@ public final class BiomeBase {
             return i;
         }
 
-        public float a(BiomeBase.c biomebase_c) {
+        public float a(_c biomebase_c) {
             return (this.b - biomebase_c.b) * (this.b - biomebase_c.b) + (this.c - biomebase_c.c) * (this.c - biomebase_c.c) + (this.d - biomebase_c.d) * (this.d - biomebase_c.d) + (this.e - biomebase_c.e) * (this.e - biomebase_c.e) + (this.f - biomebase_c.f) * (this.f - biomebase_c.f);
         }
     }

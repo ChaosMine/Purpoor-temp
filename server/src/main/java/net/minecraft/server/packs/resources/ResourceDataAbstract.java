@@ -10,11 +10,10 @@ public abstract class ResourceDataAbstract<T> implements IReloadListener {
 
     @Override
     public final CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller, GameProfilerFiller gameprofilerfiller1, Executor executor, Executor executor1) {
-        CompletableFuture completablefuture = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<T> completablefuture = CompletableFuture.supplyAsync(() -> {
             return this.b(iresourcemanager, gameprofilerfiller);
         }, executor);
 
-        ireloadlistener_a.getClass();
         return completablefuture.thenCompose(ireloadlistener_a::a).thenAcceptAsync((object) -> {
             this.a(object, iresourcemanager, gameprofilerfiller1);
         }, executor1);

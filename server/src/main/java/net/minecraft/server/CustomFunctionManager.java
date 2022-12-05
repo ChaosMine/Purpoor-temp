@@ -96,7 +96,7 @@ public class CustomFunctionManager implements IReloadListener {
                 return map;
             });
         });
-        CompletableFuture completablefuture2 = completablefuture.thenCombine(completablefuture1, Pair::of);
+        CompletableFuture<Pair<?, Map<MinecraftKey, CompletableFuture<CustomFunction>>>> completablefuture2 = completablefuture.thenCombine(completablefuture1, Pair::of);
 
         ireloadlistener_a.getClass();
         return completablefuture2.thenCompose(ireloadlistener_a::a).thenAcceptAsync((pair) -> {

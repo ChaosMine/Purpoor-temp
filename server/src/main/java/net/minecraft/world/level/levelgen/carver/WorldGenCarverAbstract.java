@@ -41,7 +41,7 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
     protected final int l;
 
     private static <C extends WorldGenCarverConfiguration, F extends WorldGenCarverAbstract<C>> F a(String s, F f0) {
-        return (WorldGenCarverAbstract) IRegistry.a(IRegistry.CARVER, s, (Object) f0);
+        return IRegistry.a(IRegistry.CARVER, s, f0);
     }
 
     public WorldGenCarverAbstract(Codec<C> codec, int i) {

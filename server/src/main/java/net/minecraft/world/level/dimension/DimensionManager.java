@@ -156,7 +156,7 @@ public class DimensionManager {
     }
 
     private static ChunkGenerator b(IRegistry<BiomeBase> iregistry, IRegistry<GeneratorSettingBase> iregistry1, long i) {
-        return new ChunkGeneratorAbstract(WorldChunkManagerMultiNoise.b.a.a(iregistry, i), i, () -> {
+        return new ChunkGeneratorAbstract(WorldChunkManagerMultiNoise._b.a.a(iregistry, i), i, () -> {
             return (GeneratorSettingBase) iregistry1.d(GeneratorSettingBase.e);
         });
     }

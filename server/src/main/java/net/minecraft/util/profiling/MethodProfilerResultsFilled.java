@@ -43,7 +43,7 @@ public class MethodProfilerResultsFilled implements MethodProfilerResults {
         }
     };
     private static final Splitter c = Splitter.on('\u001e');
-    private static final Comparator<Entry<String, MethodProfilerResultsFilled.a>> d = Entry.comparingByValue(Comparator.comparingLong((methodprofilerresultsfilled_a) -> {
+    private static final Comparator<Entry<String, MethodProfilerResultsFilled.a>> d = Entry.<String, MethodProfilerResultsFilled.a>comparingByValue(Comparator.comparingLong((methodprofilerresultsfilled_a) -> {
         return methodprofilerresultsfilled_a.b;
     })).reversed();
     private final Map<String, ? extends MethodProfilerResult> e;

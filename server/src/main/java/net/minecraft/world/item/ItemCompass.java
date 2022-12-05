@@ -5,6 +5,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.GameProfileSerializer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldServer;
@@ -99,10 +100,9 @@ public class ItemCompass extends Item implements ItemVanishable {
 
     private void a(ResourceKey<World> resourcekey, BlockPosition blockposition, NBTTagCompound nbttagcompound) {
         nbttagcompound.set("LodestonePos", GameProfileSerializer.a(blockposition));
-        DataResult dataresult = World.f.encodeStart(DynamicOpsNBT.a, resourcekey);
+        DataResult<NBTBase> dataresult = World.f.encodeStart(DynamicOpsNBT.a, resourcekey);
         Logger logger = ItemCompass.LOGGER;
 
-        logger.getClass();
         dataresult.resultOrPartial(logger::error).ifPresent((nbtbase) -> {
             nbttagcompound.set("LodestoneDimension", nbtbase);
         });

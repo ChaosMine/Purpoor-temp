@@ -39,7 +39,7 @@ public class Reloadable<S> implements IReloadable {
         this.i.getClass();
         completablefuture.thenRun(atomicinteger::incrementAndGet);
         List<CompletableFuture<S>> list1 = Lists.newArrayList();
-        final CompletableFuture<?> completablefuture1 = completablefuture;
+        CompletableFuture<?> completablefuture1 = completablefuture;
 
         this.d = Sets.newHashSet(list);
 
@@ -48,6 +48,7 @@ public class Reloadable<S> implements IReloadable {
         for (Iterator iterator = list.iterator(); iterator.hasNext(); completablefuture1 = completablefuture2) {
             final IReloadListener ireloadlistener = (IReloadListener) iterator.next();
 
+            CompletableFuture<?> finalCompletablefuture = completablefuture1;
             completablefuture2 = reloadable_a.create(new IReloadListener.a() {
                 @Override
                 public <T> CompletableFuture<T> a(T t0) {
@@ -58,7 +59,7 @@ public class Reloadable<S> implements IReloadable {
                         }
 
                     });
-                    return Reloadable.this.b.thenCombine(completablefuture1, (unit, object) -> {
+                    return Reloadable.this.b.thenCombine(finalCompletablefuture, (unit, object) -> {
                         return t0;
                     });
                 }

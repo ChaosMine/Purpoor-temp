@@ -5,16 +5,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.LongSupplier;
 import javax.annotation.Nullable;
+
+import net.minecraft.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class GameProfilerTick {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private final LongSupplier b;
-    private final long c;
+    private final LongSupplier b = SystemUtils.a; // wtf
+    private final long c = Long.MAX_VALUE; // wtf
     private int d;
-    private final File e;
+    private final File e = new File("."); // wtf
     private GameProfilerFillerActive f;
 
     public GameProfilerFiller a() {
