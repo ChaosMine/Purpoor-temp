@@ -39,6 +39,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.LazyInitVar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.craftbukkit.event.CraftEventFactory; // Kamillaova
 
 public class ServerConnection {
 
@@ -119,6 +120,11 @@ public class ServerConnection {
                     channel.pipeline().addLast("packet_handler", (ChannelHandler) object);
                     ((NetworkManager) object).setPacketListener(new HandshakeListener(ServerConnection.this.e, (NetworkManager) object));
                     io.papermc.paper.network.ChannelInitializeListenerHolder.callListeners(channel); // Paper
+                    // Kamillaova start
+                    if (NetworkManager.class == object.getClass()) {
+                        CraftEventFactory.callEvent(new dev.kamillaova.paper.event.PlayerNettyChannelCreateEvent(channel));
+                    }
+                    // Kamillaova end
                 }
             }).group((EventLoopGroup) lazyinitvar.a()).localAddress(address)).option(ChannelOption.AUTO_READ, false).bind().syncUninterruptibly()); // CraftBukkit // Paper
         }
