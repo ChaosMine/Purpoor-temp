@@ -310,10 +310,6 @@ public class EntityTypes<T extends Entity> {
 
         // Paper start - timings
         this.id = id;
-        this.tickTimer = co.aikar.timings.MinecraftTimings.getEntityTimings(id, "tick");
-        this.inactiveTickTimer = co.aikar.timings.MinecraftTimings.getEntityTimings(id, "inactiveTick");
-        this.passengerTickTimer = co.aikar.timings.MinecraftTimings.getEntityTimings(id, "passengerTick");
-        this.passengerInactiveTickTimer = co.aikar.timings.MinecraftTimings.getEntityTimings(id, "passengerInactiveTick");
         // Paper end
     }
 
@@ -597,12 +593,6 @@ public class EntityTypes<T extends Entity> {
         return this.bn;
     }
 
-    // Paper start - timings
-    public final co.aikar.timings.Timing tickTimer;
-    public final co.aikar.timings.Timing inactiveTickTimer;
-    public final co.aikar.timings.Timing passengerTickTimer;
-    public final co.aikar.timings.Timing passengerInactiveTickTimer;
-    // Paper end
     public boolean isDeltaTracking() {
         return this != EntityTypes.PLAYER && this != EntityTypes.LLAMA_SPIT && this != EntityTypes.WITHER && this != EntityTypes.BAT && this != EntityTypes.ITEM_FRAME && this != EntityTypes.LEASH_KNOT && this != EntityTypes.PAINTING && this != EntityTypes.END_CRYSTAL && this != EntityTypes.EVOKER_FANGS;
     }

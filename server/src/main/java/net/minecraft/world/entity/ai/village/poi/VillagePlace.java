@@ -326,9 +326,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
                 ChunkCoordIntPair chunkcoordintpair = SectionPosition.a(((RegionFileSection)this).d.firstLong()).r();
 
                 NBTTagCompound data;
-                try (co.aikar.timings.Timing ignored1 = this.world.timings.poiSaveDataSerialization.startTiming()) {
                     data = this.getData(chunkcoordintpair);
-                }
                 com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(this.world,
                     chunkcoordintpair.x, chunkcoordintpair.z, data, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - use normal priority
             }

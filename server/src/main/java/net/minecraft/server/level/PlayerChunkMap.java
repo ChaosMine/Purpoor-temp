@@ -1,6 +1,5 @@
 package net.minecraft.server.level;
 
-import co.aikar.timings.Timing; // Paper
 import com.destroystokyo.paper.PaperWorldConfig; // Paper
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -1018,15 +1017,11 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     protected void unloadChunks(BooleanSupplier booleansupplier) {
         GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
 
-        try (Timing ignored = this.world.timings.poiUnload.startTiming()) { // Paper
         gameprofilerfiller.enter("poi");
         this.m.a(booleansupplier);
-        } // Paper
         gameprofilerfiller.exitEnter("chunk_unload");
         if (!this.world.isSavingDisabled()) {
-            try (Timing ignored = this.world.timings.chunkUnload.startTiming()) { // Paper
             this.b(booleansupplier);
-            }// Paper
         }
 
         gameprofilerfiller.exit();
@@ -1074,9 +1069,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     private void asyncSave(IChunkAccess chunk) {
         ChunkCoordIntPair chunkPos = chunk.getPos();
         NBTTagCompound poiData;
-        try (Timing ignored = this.world.timings.chunkUnloadPOISerialization.startTiming()) {
             poiData = this.getVillagePlace().getData(chunk.getPos());
-        }
 
         com.destroystokyo.paper.io.PaperFileIOThread.Holder.INSTANCE.scheduleSave(this.world, chunkPos.x, chunkPos.z,
             poiData, null, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY); // Tuinity - use normal priority
@@ -1089,7 +1082,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         // Copied from PlayerChunkMap#saveChunk(IChunkAccess, boolean)
         if (chunkstatus.getType() != ChunkStatus.Type.LEVELCHUNK) {
-            try (co.aikar.timings.Timing ignored1 = this.world.timings.chunkSaveOverwriteCheck.startTiming()) { // Paper
                 // Paper start - Optimize save by using status cache
                 try {
                     ChunkStatus statusOnDisk = this.getChunkStatusOnDisk(chunkPos);
@@ -1105,13 +1097,10 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     ex.printStackTrace();
                     return;
                 }
-            }
         }
 
         ChunkRegionLoader.AsyncSaveData asyncSaveData;
-        try (Timing ignored = this.world.timings.chunkUnloadPrepareSave.startTiming()) {
             asyncSaveData = ChunkRegionLoader.getAsyncSaveData(this.world, chunk);
-        }
 
         this.world.asyncChunkTaskManager.scheduleChunkSave(chunkPos.x, chunkPos.z, com.destroystokyo.paper.io.PrioritizedTaskQueue.NORMAL_PRIORITY, // Tuinity - use normal priority
             asyncSaveData, chunk);
@@ -1251,7 +1240,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     private CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> f(ChunkCoordIntPair chunkcoordintpair) {
         // Paper start - Async chunk io
         final java.util.function.BiFunction<ChunkRegionLoader.InProgressChunkHolder, Throwable, Either<IChunkAccess, PlayerChunk.Failure>> syncLoadComplete = (chunkHolder, ioThrowable) -> {
-            try (Timing ignored = this.world.timings.chunkLoad.startTimingIfSync()) { // Paper
+            try { // Paper
                 this.world.getMethodProfiler().c("chunkLoad");
                 // Paper start
                 if (ioThrowable != null) {
@@ -1263,7 +1252,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 this.getVillagePlace().dequeueUnload(chunkcoordintpair.pair()); // Tuinity
                 // Paper end
 
-                if (chunkHolder.protoChunk != null) {try (Timing ignored2 = this.world.timings.chunkLoadLevelTimer.startTimingIfSync()) { // Paper start - timings // Paper - chunk is created async
+                if (chunkHolder.protoChunk != null) { // Paper - chunk is created async
 
                     if (true) {
                         ProtoChunk protochunk = chunkHolder.protoChunk;
@@ -1274,7 +1263,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     }
 
                     PlayerChunkMap.LOGGER.error("Chunk file at {} is missing level data, skipping", chunkcoordintpair);
-                }} // Paper
+                } // Paper
             } catch (ReportedException reportedexception) {
                 Throwable throwable = reportedexception.getCause();
 
@@ -1407,7 +1396,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             ChunkStatus chunkstatus = PlayerChunk.getChunkStatus(playerchunk.getTicketLevel());
 
             return !chunkstatus.b(ChunkStatus.FULL) ? PlayerChunk.UNLOADED_CHUNK_ACCESS : either.mapLeft((ichunkaccess) -> {
-            try (Timing ignored = world.timings.chunkPostLoad.startTimingIfSync()) { // Paper
                 ChunkCoordIntPair chunkcoordintpair = playerchunk.i();
                 Chunk chunk;
 
@@ -1469,7 +1457,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 }
 
                 return chunk;
-                } // Paper
             });
         }, (runnable) -> {
             Mailbox mailbox = this.mailboxMain;
@@ -1562,7 +1549,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     public boolean saveChunk(IChunkAccess ichunkaccess) {
-        try (co.aikar.timings.Timing ignored = this.world.timings.chunkSave.startTiming()) { // Paper
         this.m.a(ichunkaccess.getPos());
         if (!ichunkaccess.isNeedsSaving()) {
             return false;
@@ -1575,7 +1561,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 ChunkStatus chunkstatus = ichunkaccess.getChunkStatus();
 
                 if (chunkstatus.getType() != ChunkStatus.Type.LEVELCHUNK) {
-                    try (co.aikar.timings.Timing ignored1 = this.world.timings.chunkSaveOverwriteCheck.startTiming()) { // Paper
                     if (this.h(chunkcoordintpair)) {
                         return false;
                     }
@@ -1583,14 +1568,11 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     if (chunkstatus == ChunkStatus.EMPTY && ichunkaccess.h().values().stream().noneMatch(StructureStart::e)) {
                         return false;
                     }
-                    } // Paper
                 }
 
                 this.world.getMethodProfiler().c("chunkSave");
                 NBTTagCompound nbttagcompound;
-                try (co.aikar.timings.Timing ignored1 = this.world.timings.chunkSaveDataSerialization.startTiming()) { // Paper
                     nbttagcompound = ChunkRegionLoader.saveChunk(this.world, ichunkaccess);
-                } // Paper
 
 
                 // Paper start - async chunk io
@@ -1605,7 +1587,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 return false;
             }
         }
-        } // Paper
     }
 
     private boolean h(ChunkCoordIntPair chunkcoordintpair) {
@@ -2168,24 +2149,16 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
     // Paper start - optimised tracker
     private final void processTrackQueue() {
-        this.world.timings.tracker1.startTiming();
-        try {
             for (EntityTracker tracker : this.trackedEntities.values()) {
                 // update tracker entry
                 tracker.updatePlayers(tracker.tracker.getPlayersInTrackRange());
             }
-        } finally {
-            this.world.timings.tracker1.stopTiming();
-        }
 
-
-        this.world.timings.tracker2.startTiming();
         try {
             for (EntityTracker tracker : this.trackedEntities.values()) {
                 tracker.trackerEntry.tick();
             }
         } finally {
-            this.world.timings.tracker2.stopTiming();
         }
     }
     // Paper end - optimised tracker
@@ -2202,7 +2175,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         PlayerChunkMap.EntityTracker playerchunkmap_entitytracker;
         ObjectIterator objectiterator;
-        world.timings.tracker1.startTiming(); // Paper
 
         for (objectiterator = this.trackedEntities.values().iterator(); objectiterator.hasNext(); playerchunkmap_entitytracker.trackerEntry.a()) {
             playerchunkmap_entitytracker = (PlayerChunkMap.EntityTracker) objectiterator.next();
@@ -2220,17 +2192,14 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 playerchunkmap_entitytracker.e = sectionposition1;
             }
         }
-        world.timings.tracker1.stopTiming(); // Paper
 
         if (!list.isEmpty()) {
             objectiterator = this.trackedEntities.values().iterator();
 
-            world.timings.tracker2.startTiming(); // Paper
             while (objectiterator.hasNext()) {
                 playerchunkmap_entitytracker = (PlayerChunkMap.EntityTracker) objectiterator.next();
                 playerchunkmap_entitytracker.track(list);
             }
-            world.timings.tracker2.stopTiming(); // Paper
         }
 
 

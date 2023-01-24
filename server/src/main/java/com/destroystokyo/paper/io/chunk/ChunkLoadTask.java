@@ -1,6 +1,5 @@
 package com.destroystokyo.paper.io.chunk;
 
-import co.aikar.timings.Timing;
 import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.IOUtil;
 import net.minecraft.server.level.PlayerChunkMap;
@@ -86,7 +85,6 @@ public final class ChunkLoadTask extends ChunkTask {
 
         final PlayerChunkMap chunkManager = this.world.getChunkProvider().playerChunkMap;
 
-        try (Timing ignored = this.world.timings.chunkLoadLevelTimer.startTimingIfSync()) {
             final ChunkRegionLoader.InProgressChunkHolder chunkHolder;
 
             // apply fixes
@@ -121,7 +119,6 @@ public final class ChunkLoadTask extends ChunkTask {
             }
 
             this.complete(chunkHolder);
-        }
     }
 
     private void complete(final ChunkRegionLoader.InProgressChunkHolder holder) {

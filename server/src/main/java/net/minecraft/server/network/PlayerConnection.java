@@ -219,7 +219,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.SmithingInventory;
 import org.bukkit.util.NumberConversions;
-import co.aikar.timings.MinecraftTimings; // Paper
 // CraftBukkit end
 
 public class PlayerConnection implements PacketListenerPlayIn {
@@ -2296,7 +2295,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
     // CraftBukkit end
 
     private void handleCommand(String s) {
-        MinecraftTimings.playerCommandTimer.startTiming(); // Paper
         // CraftBukkit start - whole method
         if ( org.spigotmc.SpigotConfig.logCommands ) // Spigot
         this.LOGGER.info(this.player.getName() + " issued server command: " + s);
@@ -2307,7 +2305,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
         this.server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
-            MinecraftTimings.playerCommandTimer.stopTiming(); // Paper
             return;
         }
 
@@ -2319,8 +2316,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
             player.sendMessage(org.bukkit.ChatColor.RED + "An internal error occurred while attempting to perform this command");
             java.util.logging.Logger.getLogger(PlayerConnection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             return;
-        } finally {
-            MinecraftTimings.playerCommandTimer.stopTiming(); // Paper
         }
         // this.minecraftServer.getCommandDispatcher().a(this.player.getCommandListener(), s);
         // CraftBukkit end

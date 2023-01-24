@@ -699,10 +699,8 @@ public class ChunkProviderServer extends IChunkProvider {
                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.pushChunkWait(this.world, x, z);
                 // Paper end
                 com.destroystokyo.paper.io.SyncLoadFinder.logSyncLoad(this.world, x, z); // Paper - sync load info
-                this.world.timings.syncChunkLoad.startTiming(); // Paper
             this.serverThreadQueue.awaitTasks(completablefuture::isDone);
                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.popChunkWait(); // Paper - async chunk debug
-                this.world.timings.syncChunkLoad.stopTiming(); // Paper
                 this.chunkMapDistance.clearPriorityTickets(pair); // Paper
                 this.chunkMapDistance.clearUrgent(pair); // Paper
             } // Paper
@@ -843,7 +841,6 @@ public class ChunkProviderServer extends IChunkProvider {
     public boolean tickDistanceManager() { // Paper - private -> public
         if (chunkMapDistance.delayDistanceManagerTick) return false; // Paper
         if (this.playerChunkMap.unloadingPlayerChunk) { MinecraftServer.LOGGER.fatal("Cannot tick distance manager while unloading playerchunks", new Throwable()); throw new IllegalStateException("Cannot tick distance manager while unloading playerchunks"); } // Tuinity
-        co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Tuinity - add timings for distance manager
         boolean flag = this.chunkMapDistance.a(this.playerChunkMap);
         boolean flag1 = this.playerChunkMap.b();
 
@@ -853,7 +850,6 @@ public class ChunkProviderServer extends IChunkProvider {
             this.clearCache();
             return true;
         }
-        } finally { co.aikar.timings.MinecraftTimings.distanceManagerTick.stopTiming(); } // Tuinity - add timings for distance manager
     }
 
     public final boolean isInEntityTickingChunk(Entity entity) { return this.a(entity); } // Paper - OBFHELPER
@@ -897,17 +893,13 @@ public class ChunkProviderServer extends IChunkProvider {
 
     public void save(boolean flag) {
         this.tickDistanceManager();
-        try (co.aikar.timings.Timing timed = world.timings.chunkSaveData.startTiming()) { // Paper - Timings
         this.playerChunkMap.save(flag);
-        } // Paper - Timings
     }
 
     // Paper start - duplicate save, but call incremental
     public void saveIncrementally() {
         this.tickDistanceManager();
-        try (co.aikar.timings.Timing timed = world.timings.chunkSaveData.startTiming()) { // Paper - Timings
             this.playerChunkMap.saveIncrementally();
-        } // Paper - Timings
     }
     // Paper end
 
@@ -941,21 +933,15 @@ public class ChunkProviderServer extends IChunkProvider {
 
     public void tick(BooleanSupplier booleansupplier) {
         this.world.getMethodProfiler().enter("purge");
-        this.world.timings.doChunkMap.startTiming(); // Spigot
         this.chunkMapDistance.purgeTickets();
         // Tuinity - replace logic
         this.tickDistanceManager();
-        this.world.timings.doChunkMap.stopTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("chunks");
-        this.world.timings.chunks.startTiming(); // Paper - timings
         this.playerChunkMap.playerChunkManager.tick(); // Tuinity - this is mostly is to account for view distance changes
         this.tickChunks();
-        this.world.timings.chunks.stopTiming(); // Paper - timings
-        this.world.timings.doChunkUnload.startTiming(); // Spigot
         this.world.getMethodProfiler().exitEnter("unload");
         this.playerChunkMap.unloadChunks(booleansupplier);
         // Tuinity - replace logic
-        this.world.timings.doChunkUnload.stopTiming(); // Spigot
         this.world.getMethodProfiler().exit();
         this.clearCache();
     }
@@ -1006,15 +992,12 @@ public class ChunkProviderServer extends IChunkProvider {
             boolean flag2 = world.ticksPerAnimalSpawns != 0L && worlddata.getTime() % world.ticksPerAnimalSpawns == 0L; // CraftBukkit
 
             this.world.getMethodProfiler().enter("naturalSpawnCount");
-            this.world.timings.countNaturalMobs.startTiming(); // Paper - timings
             int l = this.chunkMapDistance.b();
             // Paper start - per player mob spawning
             SpawnerCreature.d spawnercreature_d; // moved down
             if ((this.allowAnimals || this.allowMonsters) && this.playerChunkMap.playerMobDistanceMap != null) { // don't update when animals and monsters are disabled
                 // update distance map
-                this.world.timings.playerMobDistanceMapUpdate.startTiming();
                 this.playerChunkMap.playerMobDistanceMap.update(this.world.players, this.playerChunkMap.viewDistance);
-                this.world.timings.playerMobDistanceMapUpdate.stopTiming();
                 // re-set mob counts
                 for (EntityPlayer player : this.world.players) {
                     Arrays.fill(player.mobCounts, 0);
@@ -1024,7 +1007,6 @@ public class ChunkProviderServer extends IChunkProvider {
                 spawnercreature_d = SpawnerCreature.countMobs(l, this.world.A(), this::a, false, this); // Tuinity
             }
             // Paper end
-            this.world.timings.countNaturalMobs.stopTiming(); // Paper - timings
 
             int ticked = 0; // Tuinity - exec chunk tasks during world tick
 
@@ -1033,7 +1015,6 @@ public class ChunkProviderServer extends IChunkProvider {
             //List<PlayerChunk> list = Lists.newArrayList(this.playerChunkMap.f()); // Paper
             //Collections.shuffle(list); // Paper
             // Paper - moved up
-            this.world.timings.chunkTicks.startTiming(); // Paper
             // Tuinity start - optimise chunk tick iteration
             com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.Iterator<Chunk> iterator = this.entityTickingChunks.iterator();
             try {
@@ -1043,9 +1024,7 @@ public class ChunkProviderServer extends IChunkProvider {
                 if (playerchunk != null) { // make sure load event has been called along with the load logic we put there
                     // Tuinity end - optimise chunk tick iteration
                     this.world.getMethodProfiler().enter("broadcast");
-                    this.world.timings.broadcastChunkUpdates.startTiming(); // Paper - timings
                     playerchunk.a(chunk); // Tuinity
-                    this.world.timings.broadcastChunkUpdates.stopTiming(); // Paper - timings
                     this.world.getMethodProfiler().exit();
                     // Tuinity
 
@@ -1071,12 +1050,9 @@ public class ChunkProviderServer extends IChunkProvider {
                 iterator.finishedIterating();
             }
             // Tuinity end - optimise chunk tick iteration
-            this.world.timings.chunkTicks.stopTiming(); // Paper
             this.world.getMethodProfiler().enter("customSpawners");
             if (flag1) {
-                try (co.aikar.timings.Timing ignored = this.world.timings.miscMobSpawning.startTiming()) { // Paper - timings
                 this.world.doMobSpawning(this.allowMonsters, this.allowAnimals);
-                } // Paper - timings
             }
 
             this.world.getMethodProfiler().exit();

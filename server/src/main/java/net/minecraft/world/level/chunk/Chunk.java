@@ -108,19 +108,15 @@ public class Chunk implements IChunkAccess {
     }
 
     // Paper start
-    public final co.aikar.util.Counter<String> entityCounts = new co.aikar.util.Counter<>();
-    public final co.aikar.util.Counter<String> tileEntityCounts = new co.aikar.util.Counter<>();
     private class TileEntityHashMap extends java.util.HashMap<BlockPosition, TileEntity> {
         @Override
         public TileEntity put(BlockPosition key, TileEntity value) {
             TileEntity replaced = super.put(key, value);
             if (replaced != null) {
                 replaced.setCurrentChunk(null);
-                tileEntityCounts.decrement(replaced.getMinecraftKeyString());
             }
             if (value != null) {
                 value.setCurrentChunk(Chunk.this);
-                tileEntityCounts.increment(value.getMinecraftKeyString());
             }
             return replaced;
         }
@@ -130,7 +126,6 @@ public class Chunk implements IChunkAccess {
             TileEntity removed = super.remove(key);
             if (removed != null) {
                 removed.setCurrentChunk(null);
-                tileEntityCounts.decrement(removed.getMinecraftKeyString());
             }
             return removed;
         }
@@ -784,7 +779,6 @@ public class Chunk implements IChunkAccess {
         }
         // Paper end
 
-        if (!entity.inChunk || entity.getCurrentChunk() != this) entityCounts.increment(entity.getMinecraftKeyString()); // Paper
         entity.inChunk = true;
         entity.setCurrentChunk(this); // Paper
         entity.chunkX = this.loc.x;
@@ -839,7 +833,6 @@ public class Chunk implements IChunkAccess {
         } else if (entity instanceof IInventory) {
             inventoryEntityCounts[i]--;
         }
-        entityCounts.decrement(entity.getMinecraftKeyString());
         this.markDirty(); // Paper
         // Paper end
         this.entities.remove(entity); // Paper
@@ -1028,7 +1021,6 @@ public class Chunk implements IChunkAccess {
             server.getPluginManager().callEvent(new org.bukkit.event.world.ChunkLoadEvent(this.bukkitChunk, this.needsDecoration));
 
             if (this.needsDecoration) {
-                try (co.aikar.timings.Timing ignored = this.world.timings.chunkLoadPopulate.startTiming()) { // Paper
                 this.needsDecoration = false;
                 java.util.Random random = new java.util.Random();
                 random.setSeed(world.getSeed());
@@ -1048,7 +1040,6 @@ public class Chunk implements IChunkAccess {
                     }
                 }
                 server.getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(bukkitChunk));
-                } // Paper
             }
         }
     }

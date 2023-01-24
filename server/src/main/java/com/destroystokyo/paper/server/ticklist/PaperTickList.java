@@ -47,10 +47,6 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
     //private final Function<MinecraftKey, T> getObjectFronMinecraftKey;
     private final Consumer<NextTickListEntry<T>> tickFunction;
 
-    private final co.aikar.timings.Timing timingCleanup; // Paper
-    private final co.aikar.timings.Timing timingTicking; // Paper
-    private final co.aikar.timings.Timing timingFinished;
-
     // note: remove ops / add ops suck on fastutil, a chained hashtable implementation would work better, but Long...
     // try to alleviate with a very small load factor
     private final Long2ObjectOpenHashMap<ArrayList<NextTickListEntry<T>>> entriesByBlock = new Long2ObjectOpenHashMap<>(1024, 0.25f);
@@ -93,9 +89,6 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
         this.excludeFromScheduling = excludeFromScheduling;
         this.getMinecraftKeyFrom = getMinecraftKeyFrom;
         this.tickFunction = tickFunction;
-        this.timingCleanup = co.aikar.timings.WorldTimingsHandler.getTickList(world, timingsType + " - Cleanup"); // Paper
-        this.timingTicking = co.aikar.timings.WorldTimingsHandler.getTickList(world, timingsType + " - Ticking"); // Paper
-        this.timingFinished = co.aikar.timings.WorldTimingsHandler.getTickList(world, timingsType + " - Finish");
         this.currentTick = this.world.getTime();
     }
 
@@ -286,7 +279,6 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
         final ChunkProviderServer chunkProvider = this.world.getChunkProvider();
 
         this.world.getMethodProfiler().enter("cleaning");
-        this.timingCleanup.startTiming();
 
         this.prepare();
 
@@ -294,9 +286,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
         this.shortScheduled[this.shortScheduledIndex].clear();
         this.shortScheduledIndex = getNextIndex(this.shortScheduledIndex, SHORT_SCHEDULE_TICK_THRESHOLD);
 
-        this.timingCleanup.stopTiming();
         this.world.getMethodProfiler().exitEnter("ticking");
-        this.timingTicking.startTiming();
 
         for (final NextTickListEntry<T> toTick : this.toTickThisTick) {
             if (toTick.tickState != STATE_PENDING_TICK) {
@@ -327,9 +317,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
             }
         }
 
-        this.timingTicking.stopTiming();
         this.world.getMethodProfiler().exit();
-        this.timingFinished.startTiming();
 
         // finished ticking, actual cleanup time
         for (int i = 0, len = this.toTickThisTick.size(); i < len; ++i) {
@@ -340,8 +328,6 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
                 this.onTickEnd(entry);
             }
         }
-
-        this.timingFinished.stopTiming();
     }
 
     private void onTickEnd(final NextTickListEntry<T> entry) {

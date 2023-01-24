@@ -115,15 +115,10 @@ public final class CraftScoreboardManager implements ScoreboardManager {
     public void getScoreboardScores(IScoreboardCriteria criteria, String name, Consumer<ScoreboardScore> consumer) {
         // Tuinity start - add timings for scoreboard search
         // plugins leaking scoreboards will make this very expensive, let server owners debug it easily
-        co.aikar.timings.MinecraftTimings.scoreboardScoreSearch.startTimingIfSync();
-        try {
         // Tuinity end - add timings for scoreboard search
         for (CraftScoreboard scoreboard : scoreboards) {
             Scoreboard board = scoreboard.board;
             board.getObjectivesForCriteria(criteria, name, (score) -> consumer.accept(score));
-        }
-        } finally { // Tuinity start - add timings for scoreboard search
-            co.aikar.timings.MinecraftTimings.scoreboardScoreSearch.stopTimingIfSync();
         }
         // Tuinity end - add timings for scoreboard search
     }

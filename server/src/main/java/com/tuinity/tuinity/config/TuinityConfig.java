@@ -1,6 +1,5 @@
 package com.tuinity.tuinity.config;
 
-import co.aikar.timings.TimingsManager;
 import com.destroystokyo.paper.util.SneakyThrow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.TicketType;
@@ -461,7 +460,6 @@ public final class TuinityConfig {
             } else if (!seedString.equalsIgnoreCase("default")) {
                 this.populatorSeed = Long.parseLong(seedString);
             }
-            if (!TimingsManager.hiddenConfigs.contains("worldgen.seeds.populator")) TimingsManager.hiddenConfigs.add("worldgen.seeds.populator");
         }
 
     }

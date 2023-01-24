@@ -25,13 +25,8 @@ import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.inventory.InventoryHolder;
 // CraftBukkit end
 
-import org.spigotmc.CustomTimingsHandler; // Spigot
-import co.aikar.timings.MinecraftTimings; // Paper
-import co.aikar.timings.Timing; // Paper
-
 public abstract class TileEntity implements net.minecraft.server.KeyedObject { // Paper
 
-    public Timing tickTimer = MinecraftTimings.getTileEntityTimings(this); // Paper
     // CraftBukkit start - data containers
     private static final CraftPersistentDataTypeRegistry DATA_TYPE_REGISTRY = new CraftPersistentDataTypeRegistry();
     public CraftPersistentDataContainer persistentDataContainer;

@@ -1,6 +1,5 @@
 package net.minecraft.server.players;
 
-import co.aikar.timings.MinecraftTimings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -1270,7 +1269,6 @@ public abstract class PlayerList {
     }
     public void savePlayers(Integer interval) {
         MCUtil.ensureMain("Save Players" , () -> { // Paper - Ensure main
-        MinecraftTimings.savePlayers.startTiming(); // Paper
         int numSaved = 0;
         long now = MinecraftServer.currentTick;
         for (int i = 0; i < this.players.size(); ++i) {
@@ -1281,7 +1279,6 @@ public abstract class PlayerList {
             }
             // Paper end
         }
-        MinecraftTimings.savePlayers.stopTiming(); // Paper
         return null; }); // Paper - ensure main
     }
 

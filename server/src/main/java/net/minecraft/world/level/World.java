@@ -1,7 +1,5 @@
 package net.minecraft.world.level;
 
-import co.aikar.timings.Timing;
-import co.aikar.timings.Timings;
 import com.destroystokyo.paper.antixray.ChunkPacketBlockController; // Paper - Anti-Xray
 import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray; // Paper - Anti-Xray
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
@@ -158,7 +156,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public final com.tuinity.tuinity.config.TuinityConfig.WorldConfig tuinityConfig; // Tuinity - Server Config
     public final net.pl3x.purpur.PurpurWorldConfig purpurConfig; // Purpur
 
-    public final co.aikar.timings.WorldTimingsHandler timings; // Paper
     public static BlockPosition lastPhysicsProblem; // Spigot
     private org.spigotmc.TickLimiter entityLimiter;
     private org.spigotmc.TickLimiter tileLimiter;
@@ -364,7 +361,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             public void c(WorldBorder worldborder, double d0) {}
         });
         // CraftBukkit end
-        timings = new co.aikar.timings.WorldTimingsHandler(this); // Paper - code below can generate new world and access timings
         this.keepSpawnInMemory = this.paperConfig.keepSpawnInMemory; // Paper
         this.entityLimiter = new org.spigotmc.TickLimiter(spigotConfig.entityMaxTickTime);
         this.tileLimiter = new org.spigotmc.TickLimiter(spigotConfig.tileMaxTickTime);
@@ -950,7 +946,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
 
         gameprofilerfiller.enter("blockEntities");
-        timings.tileEntityTick.startTiming(); // Spigot
         if (!this.tileEntityListUnload.isEmpty()) {
             // Paper start - Use alternate implementation with faster contains
             java.util.Set<TileEntity> toRemove = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
@@ -985,7 +980,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                         gameprofilerfiller.a(() -> {
                             return String.valueOf(TileEntityTypes.a(tileentity.getTileType()));
                         });
-                        tileentity.tickTimer.startTiming(); // Spigot
                         if (tileentity.getTileType().isValidBlock(chunk.getType(blockposition).getBlock())) { // Paper - reuse the chunk from above, do not look it up again
                             ((ITickable) tileentity).tick();
                         } else {
@@ -1006,9 +1000,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                         continue;
                         // Paper end
                         // Spigot start
-                    } finally {
-                        tileentity.tickTimer.stopTiming();
-                        // Spigot end
                     }
                 }
             }
@@ -1027,8 +1018,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             }
         }
 
-        timings.tileEntityTick.stopTiming(); // Spigot
-        timings.tileEntityPending.startTiming(); // Spigot
         this.tickingTileEntities = false;
         gameprofilerfiller.exitEnter("pendingBlockEntities");
         if (!this.tileEntityListPending.isEmpty()) {
@@ -1061,8 +1050,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             this.tileEntityListPending.clear();
         }
 
-        timings.tileEntityPending.stopTiming(); // Spigot
-        co.aikar.timings.TimingHistory.tileEntityTicks += this.tileEntityListTick.size(); // Paper
         gameprofilerfiller.exit();
         spigotConfig.currentPrimedTnt = 0; // Spigot
     }

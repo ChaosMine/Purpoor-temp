@@ -203,12 +203,6 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
     // Paper end
     // ========================================================================
-    // Paper start
-    @Override
-    public void reportTimings() {
-        co.aikar.timings.TimingsExport.reportTimings();
-    }
-    // Paper end
 
     public static byte toLegacyData(IBlockData data) {
         return CraftLegacy.toLegacyData(data);
@@ -390,10 +384,6 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     // Paper start
-    @Override
-    public String getTimingsServerName() {
-        return com.destroystokyo.paper.PaperConfig.timingsServerName;
-    }
 
     @Override
     public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

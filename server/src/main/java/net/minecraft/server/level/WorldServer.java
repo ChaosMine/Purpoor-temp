@@ -2,8 +2,6 @@ package net.minecraft.server.level;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
-import co.aikar.timings.TimingHistory; // Paper
-import co.aikar.timings.Timings; // Paper
 
 import com.destroystokyo.paper.PaperWorldConfig; // Paper
 import com.google.common.collect.Lists;
@@ -1059,26 +1057,18 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         this.Q();
         this.b();
         gameprofilerfiller.exitEnter("chunkSource");
-        this.timings.chunkProviderTick.startTiming(); // Paper - timings
         this.getChunkProvider().tick(booleansupplier);
-        this.timings.chunkProviderTick.stopTiming(); // Paper - timings
         gameprofilerfiller.exitEnter("tickPending");
-        timings.scheduledBlocks.startTiming(); // Paper
         if (!this.isDebugWorld()) {
             this.nextTickListBlock.b();
             this.nextTickListFluid.b();
         }
-        timings.scheduledBlocks.stopTiming(); // Paper
 
         // Tuinity - replace logic
         gameprofilerfiller.exitEnter("raid");
-        this.timings.raids.startTiming(); // Paper - timings
         this.persistentRaid.a();
-        this.timings.raids.stopTiming(); // Paper - timings
         gameprofilerfiller.exitEnter("blockEvents");
-        timings.doSounds.startTiming(); // Spigot
         this.ak();
-        timings.doSounds.stopTiming(); // Spigot
         // Tuinity - replace logic
         this.ticking = false;
         gameprofilerfiller.exitEnter("entities");
@@ -1089,7 +1079,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
 
         if (flag3 || this.emptyTime++ < 300) {
-            timings.tickEntities.startTiming(); // Spigot
             if (this.dragonBattle != null) {
                 this.dragonBattle.b();
             }
@@ -1098,7 +1087,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet.Iterator<Entity> objectiterator = this.entitiesForIteration.iterator(); // Tuinity
 
             org.spigotmc.ActivationRange.activateEntities(this); // Spigot
-            timings.entityTick.startTiming(); // Spigot
             while (objectiterator.hasNext()) {
                 Entity entity = (Entity) objectiterator.next(); // Tuinity
                 Entity entity1 = entity.getVehicle();
@@ -1158,7 +1146,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
                 gameprofilerfiller.exit();
             }
-            timings.entityTick.stopTiming(); // Spigot
 
             objectiterator.finishedIterating(); // Tuinity
             this.tickingEntities = false;
@@ -1181,7 +1168,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 this.registerEntity(entity2);
             }
 
-            timings.tickEntities.stopTiming(); // Spigot
             // Tuinity - replace logic
             this.tickBlockEntities();
         }
@@ -1330,7 +1316,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         gameprofilerfiller.exit();
         if (i > 0) {
             gameprofilerfiller.enter("randomTick");
-            timings.chunkTicksBlocks.startTiming(); // Paper
 
             ChunkSection[] sections = chunk.getSections();
 
@@ -1365,7 +1350,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 }
             }
             gameprofilerfiller.exit();
-            timings.chunkTicksBlocks.stopTiming(); // Paper
             // Paper end
         }
     }
@@ -1483,9 +1467,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         if (!(entity instanceof EntityHuman) && !this.getChunkProvider().a(entity)) {
             this.chunkCheck(entity);
         } else {
-            ++TimingHistory.entityTicks; // Paper - timings
             // Spigot start
-            co.aikar.timings.Timing timer; // Paper
             /*if (!org.spigotmc.ActivationRange.checkIfActive(entity)) { // Paper - comment out - EAR 2, reimplement below
                 entity.ticksLived++;
                 timer =  entity.getEntityType().inactiveTickTimer.startTiming(); try { // Paper - timings
@@ -1496,8 +1478,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             // Spigot end
             // Paper start- timings
             final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(entity);
-            timer = isActive ? entity.getEntityType().tickTimer.startTiming() : entity.getEntityType().inactiveTickTimer.startTiming(); // Paper
-            try {
             // Paper end - timings
             entity.g(entity.locX(), entity.locY(), entity.locZ());
             entity.lastYaw = entity.yaw;
@@ -1511,7 +1491,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 });
                 gameprofilerfiller.c("tickNonPassenger");
                 if (isActive) { // Paper - EAR 2
-                    TimingHistory.activatedEntityTicks++; // Paper
                 entity.tick();
                 entity.postTick(); // CraftBukkit
                 } else { entity.inactiveTick(); } // Paper - EAR 2
@@ -1519,7 +1498,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
 
             this.chunkCheck(entity);
-            } finally { timer.stopTiming(); } // Paper - timings
             if (entity.inChunk) {
                 Iterator iterator = entity.getPassengers().iterator();
 
@@ -1546,8 +1524,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             if (entity1 instanceof EntityHuman || this.getChunkProvider().a(entity1)) {
                 // Paper - EAR 2
                 final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(entity1);
-                co.aikar.timings.Timing timer = isActive ? entity1.getEntityType().passengerTickTimer.startTiming() : entity1.getEntityType().passengerInactiveTickTimer.startTiming(); // Paper
-                try {
                 // Paper end
                 entity1.g(entity1.locX(), entity1.locY(), entity1.locZ());
                 entity1.lastYaw = entity1.yaw;
@@ -1583,7 +1559,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
                         this.a(entity1, entity2);
                     }
-                } } finally { timer.stopTiming(); } // Paper - EAR2 timings
+                }
 
             }
         } else {
@@ -1683,14 +1659,11 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld()));
         }
 
-        try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) {
             if (doFull) {
                 this.saveData();
             }
 
-            timings.worldSaveChunks.startTiming(); // Paper
             if (!this.isSavingDisabled()) chunkproviderserver.saveIncrementally();
-            timings.worldSaveChunks.stopTiming(); // Paper
 
 
             // Copied from save()
@@ -1703,7 +1676,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 convertable.a(this.server.customRegistry, this.worldDataServer, this.server.getPlayerList().save());
             }
             // CraftBukkit end
-        }
     }
     // Paper end
 
@@ -1712,7 +1684,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
         if (!flag1) {
             org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit
-            try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) { // Paper
             if (iprogressupdate != null) {
                 iprogressupdate.a(new ChatMessage("menu.savingLevel"));
             }
@@ -1722,10 +1693,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 iprogressupdate.c(new ChatMessage("menu.savingChunks"));
             }
 
-            timings.worldSaveChunks.startTiming(); // Paper
             chunkproviderserver.save(flag);
-            timings.worldSaveChunks.stopTiming(); // Paper
-            } // Paper
         }
 
         // CraftBukkit start - moved from MinecraftServer.saveChunks

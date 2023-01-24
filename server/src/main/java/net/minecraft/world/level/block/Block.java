@@ -80,13 +80,6 @@ public class Block extends BlockBase implements IMaterial {
             this != Blocks.STRUCTURE_BLOCK &&
             this != Blocks.JIGSAW;
     }
-    public co.aikar.timings.Timing timing;
-    public co.aikar.timings.Timing getTiming() {
-        if (timing == null) {
-            timing = co.aikar.timings.MinecraftTimings.getBlockTiming(this);
-        }
-        return timing;
-    }
     // Paper end
     public net.minecraft.world.level.material.Material getMaterial() { return material; } // Purpur - OBFHELPER
     @Nullable

@@ -75,7 +75,7 @@ public class CustomFunctionData {
         } else {
             int j;
 
-            try (co.aikar.timings.Timing timing = customfunction.getTiming().startTiming()) { // Paper
+            try {
                 this.d = true;
                 int k = 0;
                 CustomFunction.c[] acustomfunction_c = customfunction.b();

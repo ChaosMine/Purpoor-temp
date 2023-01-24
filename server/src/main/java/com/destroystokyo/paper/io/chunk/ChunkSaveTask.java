@@ -1,6 +1,5 @@
 package com.destroystokyo.paper.io.chunk;
 
-import co.aikar.timings.Timing;
 import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.IOUtil;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
@@ -34,7 +33,7 @@ public final class ChunkSaveTask extends ChunkTask {
         // can be executed asynchronously or synchronously
         final NBTTagCompound compound;
 
-        try (Timing ignored = this.world.timings.chunkUnloadDataSave.startTimingIfSync()) {
+        try {
             compound = ChunkRegionLoader.saveChunk(this.world, this.chunk, this.asyncSaveData);
         } catch (final Throwable ex) {
             // has a plugin modified something it should not have and made us CME?
@@ -43,7 +42,6 @@ public final class ChunkSaveTask extends ChunkTask {
             // Note: We add to the server thread queue here since this is what the server will drain tasks from
             // when waiting for chunks
             ChunkTaskManager.queueChunkWaitTask(() -> {
-                try (Timing ignored = this.world.timings.chunkUnloadDataSave.startTiming()) {
                     NBTTagCompound data = PaperFileIOThread.FAILURE_VALUE;
 
                     try {
@@ -54,7 +52,6 @@ public final class ChunkSaveTask extends ChunkTask {
                     }
 
                     ChunkSaveTask.this.complete(data);
-                }
             });
 
             return; // the main thread will now complete the data

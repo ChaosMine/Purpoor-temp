@@ -182,7 +182,6 @@ import org.bukkit.craftbukkit.Main;
 import org.bukkit.event.server.ServerLoadEvent;
 // CraftBukkit end
 
-import co.aikar.timings.MinecraftTimings; // Paper
 import org.spigotmc.SlackActivityAccountant; // Spigot
 import io.papermc.paper.util.PaperJvmChecker; // Paper
 import io.papermc.paper.event.server.ServerResourcesReloadedEvent; // Paper
@@ -909,7 +908,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         // Paper end
         // CraftBukkit end
         MinecraftServer.LOGGER.info("Stopping server");
-        MinecraftTimings.stopServer(); // Paper
         // CraftBukkit start
         if (this.server != null) {
             this.server.disablePlugins();
@@ -1276,8 +1274,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             return;
         }
 
-        co.aikar.timings.MinecraftTimings.midTickChunkTasks.startTiming();
-        try {
             for (;;) {
                 boolean moreTasks = this.tickMidTickTasks();
                 long currTime = System.nanoTime();
@@ -1302,9 +1298,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                     return;
                 }
             }
-        } finally {
-            co.aikar.timings.MinecraftTimings.midTickChunkTasks.stopTiming();
-        }
     }
     // Tuinity end - execute chunk tasks mid tick
 
@@ -1409,17 +1402,16 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     protected void exit() {}
 
     protected void a(BooleanSupplier booleansupplier) {
-        co.aikar.timings.TimingsManager.FULL_SERVER_TICK.startTiming(); // Paper
         this.slackActivityAccountant.tickStarted(); // Spigot
         long i = SystemUtils.getMonotonicNanos();
 
         // Paper start - move oversleep into full server tick
-        isOversleep = true;MinecraftTimings.serverOversleep.startTiming();
+        isOversleep = true;
         this.awaitTasks(() -> {
             // Tuinity - replace logic
             return !this.canOversleep();
         });
-        isOversleep = false;MinecraftTimings.serverOversleep.stopTiming();
+        isOversleep = false;
         // Paper end
         new com.destroystokyo.paper.event.server.ServerTickStartEvent(this.ticks+1).callEvent(); // Paper
 
@@ -1475,11 +1467,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
         this.methodProfiler.exit();
 
-        // Paper start - move executeAll() into full server tick timing
-        try (co.aikar.timings.Timing ignored = MinecraftTimings.processTasksTimer.startTiming()) {
-            this.executeAll();
-        }
-        // Paper end
+        this.executeAll();
 
         com.tuinity.tuinity.util.CachedLists.reset(); // Tuinity
 
@@ -1505,32 +1493,24 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         this.methodProfiler.exit();
         org.spigotmc.WatchdogThread.tick(); // Spigot
         this.slackActivityAccountant.tickEnded(l); // Spigot
-        co.aikar.timings.TimingsManager.FULL_SERVER_TICK.stopTiming(); // Paper
     }
 
     protected void b(BooleanSupplier booleansupplier) {
         // Tuinity - replace logic
-        MinecraftTimings.bukkitSchedulerTimer.startTiming(); // Spigot // Paper
         this.server.getScheduler().mainThreadHeartbeat(this.ticks); // CraftBukkit
-        MinecraftTimings.bukkitSchedulerTimer.stopTiming(); // Spigot // Paper
         // Tuinity - replace logic
         this.methodProfiler.enter("commandFunctions");
-        MinecraftTimings.commandFunctionsTimer.startTiming(); // Spigot // Paper
         this.getFunctionData().tick();
-        MinecraftTimings.commandFunctionsTimer.stopTiming(); // Spigot // Paper
         // Tuinity - replace logic
         this.methodProfiler.exitEnter("levels");
         Iterator iterator = this.getWorlds().iterator();
 
         // CraftBukkit start
         // Run tasks that are waiting on processing
-        MinecraftTimings.processQueueTimer.startTiming(); // Spigot
         while (!processQueue.isEmpty()) {
             processQueue.remove().run();
         }
-        MinecraftTimings.processQueueTimer.stopTiming(); // Spigot
         // Tuinity - replace logic
-        MinecraftTimings.timeUpdateTimer.startTiming(); // Spigot // Paper
         // Send time updates to everyone, it will get the right time from the world the player is in.
         // Paper start - optimize time updates
         for (final WorldServer world : this.getWorlds()) {
@@ -1550,7 +1530,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             }
         }
         // Paper end
-        MinecraftTimings.timeUpdateTimer.stopTiming(); // Spigot // Paper
 
         while (iterator.hasNext()) {
             WorldServer worldserver = (WorldServer) iterator.next();
@@ -1574,14 +1553,12 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
             try {
                 // Tuinity - replace logic
-                worldserver.timings.doTick.startTiming(); // Spigot
                 worldserver.doTick(booleansupplier);
                 // Tuinity start
                 for (final com.tuinity.tuinity.chunk.SingleThreadChunkRegionManager regionManager : worldserver.getChunkProvider().playerChunkMap.regionManagers) {
                     regionManager.recalculateRegions();
                 }
                 // Tuinity end
-                worldserver.timings.doTick.stopTiming(); // Spigot
                 // Tuinity - replace logic
             } catch (Throwable throwable) {
                 // Spigot Start
@@ -1604,24 +1581,18 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         }
 
         this.methodProfiler.exitEnter("connection");
-        MinecraftTimings.connectionTimer.startTiming(); // Spigot
         this.getServerConnection().c();
-        MinecraftTimings.connectionTimer.stopTiming(); // Spigot
         this.methodProfiler.exitEnter("players");
-        MinecraftTimings.playerListTimer.startTiming(); // Spigot // Paper
         this.playerList.tick();
-        MinecraftTimings.playerListTimer.stopTiming(); // Spigot // Paper
         if (SharedConstants.d) {
             GameTestHarnessTicker.a.b();
         }
 
         this.methodProfiler.exitEnter("server gui refresh");
 
-        MinecraftTimings.tickablesTimer.startTiming(); // Spigot // Paper
         for (int i = 0; i < this.tickables.size(); ++i) {
             ((Runnable) this.tickables.get(i)).run();
         }
-        MinecraftTimings.tickablesTimer.stopTiming(); // Spigot // Paper
 
         this.methodProfiler.exit();
     }

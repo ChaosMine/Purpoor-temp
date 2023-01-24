@@ -31,7 +31,6 @@ import net.minecraft.world.entity.raid.EntityRaider;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.phys.AxisAlignedBB;
-import co.aikar.timings.MinecraftTimings;
 
 // Paper start
 import net.minecraft.core.BlockPosition;
@@ -175,7 +174,6 @@ public class ActivationRange
      */
     public static void activateEntities(World world)
     {
-        MinecraftTimings.entityActivationCheckTimer.startTiming();
         final int miscActivationRange = world.spigotConfig.miscActivationRange;
         final int raiderActivationRange = world.spigotConfig.raiderActivationRange;
         final int animalActivationRange = world.spigotConfig.animalActivationRange;
@@ -234,7 +232,6 @@ public class ActivationRange
                 }
             }
         }
-        MinecraftTimings.entityActivationCheckTimer.stopTiming();
     }
 
     /**

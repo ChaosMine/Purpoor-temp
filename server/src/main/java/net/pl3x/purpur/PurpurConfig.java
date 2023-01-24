@@ -1,6 +1,5 @@
 package net.pl3x.purpur;
 
-import co.aikar.timings.TimingsManager;
 import com.destroystokyo.paper.PaperConfig;
 import com.google.common.base.Throwables;
 import net.minecraft.locale.LocaleLanguage;
@@ -180,20 +179,11 @@ public class PurpurConfig {
     public static int dungeonSeed = -1;
     private static void seedSettings() {
         dungeonSeed = getInt("settings.seed.dungeon", dungeonSeed);
-        if (!TimingsManager.hiddenConfigs.contains("settings.seed")) TimingsManager.hiddenConfigs.add("settings.seed");
-        if (!TimingsManager.hiddenConfigs.contains("settings.seed.dungeon")) TimingsManager.hiddenConfigs.add("settings.seed.dungeon");
-        if (!TimingsManager.hiddenConfigs.contains("settings.seed.end-spike")) TimingsManager.hiddenConfigs.add("settings.seed.end-spike");
     }
 
     public static String serverModName = "Purpur";
     private static void serverModName() {
         serverModName = getString("settings.server-mod-name", serverModName);
-    }
-
-    public static String timingsUrl = "https://timings.aikar.co/";
-    private static void timingsSettings() {
-        timingsUrl = getString("settings.timings.url", timingsUrl);
-        if (!TimingsManager.hiddenConfigs.contains("server-ip")) TimingsManager.hiddenConfigs.add("server-ip");
     }
 
     public static double laggingThreshold = 19.0D;
