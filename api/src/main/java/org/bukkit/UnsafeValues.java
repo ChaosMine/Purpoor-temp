@@ -25,7 +25,6 @@ public interface UnsafeValues {
     net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer legacyComponentSerializer();
     // Paper end
 
-    void reportTimings(); // Paper
     Material toLegacy(Material material);
 
     Material fromLegacy(Material material);
@@ -79,12 +78,6 @@ public interface UnsafeValues {
     boolean removeAdvancement(NamespacedKey key);
 
     // Paper start
-    /**
-     * Server name to report to timings v2
-     * @return name
-     */
-    String getTimingsServerName();
-
     /**
      * Called once by the version command on first use, then cached.
      *

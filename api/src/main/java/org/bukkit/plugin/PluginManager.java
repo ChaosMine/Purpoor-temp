@@ -308,11 +308,4 @@ public interface PluginManager {
      */
     @NotNull
     public Set<Permission> getPermissions();
-
-    /**
-     * Returns whether or not timing code should be used for event calls
-     *
-     * @return True if event timings are to be used
-     */
-    public boolean useTimings();
 }

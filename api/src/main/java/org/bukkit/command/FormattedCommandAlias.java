@@ -12,7 +12,6 @@ public class FormattedCommandAlias extends Command {
 
     public FormattedCommandAlias(@NotNull String alias, @NotNull String[] formatStrings) {
         super(alias);
-        timings = co.aikar.timings.TimingsManager.getCommandTiming("minecraft", this); // Spigot
         this.formatStrings = formatStrings;
     }
 
@@ -119,10 +118,6 @@ public class FormattedCommandAlias extends Command {
 
         return formatString;
     }
-
-    @NotNull
-    @Override // Paper
-    public String getTimingName() {return "Command Forwarder - " + super.getTimingName();} // Paper
 
     private static boolean inRange(int i, int j, int k) {
         return i >= j && i <= k;
