@@ -71,6 +71,7 @@ public class RemoteStatusListener extends RemoteConnectionThread {
 
     @Nullable
     public static RemoteStatusListener a(IMinecraftServer iminecraftserver) {
+        throw new UnsupportedOperationException();/*
         int i = iminecraftserver.getDedicatedServerProperties().queryPort;
 
         if (0 < i && 65535 >= i) {
@@ -81,6 +82,7 @@ public class RemoteStatusListener extends RemoteConnectionThread {
             RemoteStatusListener.LOGGER.warn("Invalid query port {} found in server.properties (queries disabled)", i);
             return null;
         }
+        */
     }
 
     private void a(byte[] abyte, DatagramPacket datagrampacket) throws IOException {

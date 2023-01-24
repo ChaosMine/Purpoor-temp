@@ -43,7 +43,7 @@ public class RemoteControlCommandListener implements ICommandListener {
 
     @Override
     public org.bukkit.command.CommandSender getBukkitSender(CommandListenerWrapper wrapper) {
-        return server.remoteConsole;
+        throw new UnsupportedOperationException();
     }
     // CraftBukkit end
 

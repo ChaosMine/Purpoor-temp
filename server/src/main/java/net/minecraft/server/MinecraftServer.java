@@ -268,7 +268,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public org.bukkit.craftbukkit.CraftServer server;
     public OptionSet options;
     public org.bukkit.command.ConsoleCommandSender console;
-    public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
     //public ConsoleReader reader; // Paper
     public static int currentTick = 0; // Paper - Further improve tick loop
     public static long currentTickLong = 0L; // Tuinity

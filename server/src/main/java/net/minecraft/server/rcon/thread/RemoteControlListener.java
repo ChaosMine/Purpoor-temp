@@ -61,6 +61,7 @@ public class RemoteControlListener extends RemoteConnectionThread {
 
     @Nullable
     public static RemoteControlListener a(IMinecraftServer iminecraftserver) {
+        throw new UnsupportedOperationException();/*
         DedicatedServerProperties dedicatedserverproperties = iminecraftserver.getDedicatedServerProperties();
         String s = dedicatedserverproperties.rconIp; // Paper - Configurable rcon ip
 
@@ -98,6 +99,7 @@ public class RemoteControlListener extends RemoteConnectionThread {
             RemoteControlListener.LOGGER.warn("Invalid rcon port {} found in server.properties, rcon disabled!", i);
             return null;
         }
+        */
     }
 
     @Override

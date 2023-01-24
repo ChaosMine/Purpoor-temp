@@ -75,9 +75,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Pattern k = Pattern.compile("^[a-fA-F0-9]{40}$");
     private final java.util.Queue<ServerCommand> serverCommandQueue = new java.util.concurrent.ConcurrentLinkedQueue<>(); // Paper - use a proper queue
-    private RemoteStatusListener remoteStatusListener;
     public final RemoteControlCommandListener remoteControlCommandListener;
-    private RemoteControlListener remoteControlListener;
     public DedicatedServerSettings propertyManager;
     @Nullable
     private final TextFilter r;
@@ -312,17 +310,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
                 ((GameRules.GameRuleBoolean) this.getGameRules().get(GameRules.ANNOUNCE_ADVANCEMENTS)).a(dedicatedserverproperties.announcePlayerAchievements, (MinecraftServer) this);
             }
 
-            if (dedicatedserverproperties.enableQuery) {
-                DedicatedServer.LOGGER.info("Starting GS4 status listener");
-                this.remoteStatusListener = RemoteStatusListener.a((IMinecraftServer) this);
-            }
-
-            if (dedicatedserverproperties.enableRcon) {
-                DedicatedServer.LOGGER.info("Starting remote control listener");
-                this.remoteControlListener = RemoteControlListener.a((IMinecraftServer) this);
-                this.remoteConsole = new org.bukkit.craftbukkit.command.CraftRemoteConsoleCommandSender(this.remoteControlCommandListener); // CraftBukkit
-            }
-
             if (false && this.getMaxTickTime() > 0L) {  // Spigot - disable
                 Thread thread1 = new Thread(new ThreadWatchdog(this));
 
@@ -423,14 +410,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     public void exit() {
         if (this.r != null) {
             this.r.close();
-        }
-
-        if (this.remoteControlListener != null) {
-            //this.remoteControlListener.b(); // Paper - don't wait for remote connections
-        }
-
-        if (this.remoteStatusListener != null) {
-            //this.remoteStatusListener.b(); // Paper - don't wait for remote connections
         }
 
         hasFullyShutdown = true; // Paper
@@ -709,49 +688,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
 
     @Override
     public String executeRemoteCommand(String s) {
-        Waitable[] waitableArray = new Waitable[1];
-        this.remoteControlCommandListener.clearMessages();
-        this.executeSync(() -> {
-            // CraftBukkit start - fire RemoteServerCommandEvent
-            RemoteServerCommandEvent event = new RemoteServerCommandEvent(remoteConsole, s);
-            server.getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return;
-            }
-            // Paper start
-            if (s.toLowerCase().startsWith("timings") && s.toLowerCase().matches("timings (report|paste|get|merged|seperate)")) {
-                org.bukkit.command.BufferedCommandSender sender = new org.bukkit.command.BufferedCommandSender();
-                Waitable<String> waitable = new Waitable<String>() {
-                    @Override
-                    protected String evaluate() {
-                        return sender.getBuffer();
-                    }
-                };
-                waitableArray[0] = waitable;
-                co.aikar.timings.Timings.generateReport(new co.aikar.timings.TimingsReportListener(sender, waitable));
-            } else {
-            // Paper end
-            ServerCommand serverCommand = new ServerCommand(event.getCommand(), remoteControlCommandListener.getWrapper());
-            server.dispatchServerCommand(remoteConsole, serverCommand);
-            } // Paper
-            // CraftBukkit end
-        });
-        // Paper start
-        if (waitableArray[0] != null) {
-            //noinspection unchecked
-            Waitable<String> waitable = waitableArray[0];
-            try {
-                return waitable.get();
-            } catch (java.util.concurrent.ExecutionException e) {
-                throw new RuntimeException("Exception processing rcon command " + s, e.getCause());
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // Maintain interrupted state
-                throw new RuntimeException("Interrupted processing rcon command " + s, e);
-            }
-
-        }
-        // Paper end
-        return this.remoteControlCommandListener.getMessages();
+        throw new UnsupportedOperationException();
     }
 
     public void setHasWhitelist(boolean flag) {

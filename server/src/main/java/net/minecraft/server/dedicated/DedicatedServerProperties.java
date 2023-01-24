@@ -35,11 +35,6 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
     public final int serverPort;
     public final int maxBuildHeight;
     public final Boolean announcePlayerAchievements;
-    public final boolean enableQuery;
-    public final int queryPort;
-    public final boolean enableRcon;
-    public final int rconPort;
-    public final String rconPassword;
     public final String resourcePackHash;
     public final String resourcePackSha1;
     public final boolean hardcore;
@@ -68,8 +63,6 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
     public final PropertyManager<DedicatedServerProperties>.EditableProperty<Boolean> whiteList;
     public final GeneratorSettings generatorSettings;
 
-    public final String rconIp; // Paper - Add rcon ip
-
     // CraftBukkit start
     public DedicatedServerProperties(Properties properties, IRegistryCustom iregistrycustom, OptionSet optionset) {
         super(properties, optionset);
@@ -82,11 +75,6 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
             return MathHelper.clamp((integer + 8) / 16 * 16, 64, 256);
         }, 256);
         this.announcePlayerAchievements = this.b("announce-player-achievements");
-        this.enableQuery = this.getBoolean("enable-query", false);
-        this.queryPort = this.getInt("query.port", 25565);
-        this.enableRcon = this.getBoolean("enable-rcon", false);
-        this.rconPort = this.getInt("rcon.port", 25575);
-        this.rconPassword = this.getString("rcon.password", "");
         this.resourcePackHash = this.a("resource-pack-hash");
         this.resourcePackSha1 = this.getString("resource-pack-sha1", "");
         this.hardcore = this.getBoolean("hardcore", false);
@@ -121,10 +109,6 @@ public class DedicatedServerProperties extends PropertyManager<DedicatedServerPr
         this.textFilteringConfig = this.getString("text-filtering-config", "");
         this.playerIdleTimeout = this.b("player-idle-timeout", 0);
         this.whiteList = this.b("white-list", false);
-        // Paper start - Configurable rcon ip
-        final String rconIp = this.getSettingIfExists("rcon.ip");
-        this.rconIp = rconIp == null ? this.serverIp : rconIp;
-        // Paper end
         this.generatorSettings = GeneratorSettings.a(iregistrycustom, properties);
     }
 
