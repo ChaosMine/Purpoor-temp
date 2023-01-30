@@ -322,7 +322,6 @@ public class Explosion {
                 if (!iblockdata.isAir() && iblockdata.isDestroyable()) { // Paper
                     BlockPosition blockposition1 = blockposition.immutableCopy();
 
-                    this.world.getMethodProfiler().enter("explosion_blocks");
                     if (block.a(this) && this.world instanceof WorldServer) {
                         TileEntity tileentity = block.isTileEntity() ? this.world.getTileEntity(blockposition) : null;
                         LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder((WorldServer) this.world)).a(this.world.random).set(LootContextParameters.ORIGIN, Vec3D.a((BaseBlockPosition) blockposition)).set(LootContextParameters.TOOL, ItemStack.b).setOptional(LootContextParameters.BLOCK_ENTITY, tileentity).setOptional(LootContextParameters.THIS_ENTITY, this.source);
@@ -338,7 +337,6 @@ public class Explosion {
 
                     this.world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 3);
                     block.wasExploded(this.world, blockposition, this);
-                    this.world.getMethodProfiler().exit();
                 }
             }
 

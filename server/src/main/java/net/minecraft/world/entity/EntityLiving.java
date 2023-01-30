@@ -366,7 +366,6 @@ public abstract class EntityLiving extends Entity {
         }
 
         super.entityBaseTick();
-        this.world.getMethodProfiler().enter("livingEntityBaseTick");
         boolean flag = this instanceof EntityHuman;
 
         if (this.isAlive()) {
@@ -469,7 +468,6 @@ public abstract class EntityLiving extends Entity {
         this.aD = this.aC;
         this.lastYaw = this.yaw;
         this.lastPitch = this.pitch;
-        this.world.getMethodProfiler().exit();
     }
 
     public boolean cN() {
@@ -2691,10 +2689,7 @@ public abstract class EntityLiving extends Entity {
         }
 
         this.aK += (f3 - this.aK) * 0.3F;
-        this.world.getMethodProfiler().enter("headTurn");
         f2 = this.f(f1, f2);
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("rangeChecks");
 
         while (this.yaw - this.lastYaw < -180.0F) {
             this.lastYaw -= 360.0F;
@@ -2728,7 +2723,6 @@ public abstract class EntityLiving extends Entity {
             this.aD += 360.0F;
         }
 
-        this.world.getMethodProfiler().exit();
         this.aL += f2;
         if (this.isGliding()) {
             ++this.be;
@@ -2926,19 +2920,14 @@ public abstract class EntityLiving extends Entity {
         }
 
         this.setMot(d4, d5, d6);
-        this.world.getMethodProfiler().enter("ai");
         if (this.isFrozen()) {
             this.jumping = false;
             this.aR = 0.0F;
             this.aT = 0.0F;
         } else if (this.doAITick()) {
-            this.world.getMethodProfiler().enter("newAi");
             this.doTick();
-            this.world.getMethodProfiler().exit();
         }
 
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("jump");
         if (this.jumping && this.cT()) {
             double d7;
 
@@ -2965,8 +2954,6 @@ public abstract class EntityLiving extends Entity {
             this.jumpTicks = 0;
         }
 
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("travel");
         this.aR *= 0.98F;
         this.aT *= 0.98F;
         this.r();
@@ -2975,15 +2962,12 @@ public abstract class EntityLiving extends Entity {
         // SpigotTimings.timerEntityAIMove.startTiming(); // Spigot // Paper
         this.g(new Vec3D((double) this.aR, (double) this.aS, (double) this.aT));
         // SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot // Paper
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("push");
         if (this.bf > 0) {
             --this.bf;
             this.a(axisalignedbb, this.getBoundingBox());
         }
 
         this.collideNearby();
-        this.world.getMethodProfiler().exit();
         // Paper start
         // Purpur start
         if (lastX != locX() || lastY != locY() || lastZ != locZ() || lastYaw != yaw || lastPitch != pitch) {

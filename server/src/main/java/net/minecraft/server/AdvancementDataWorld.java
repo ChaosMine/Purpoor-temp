@@ -19,7 +19,6 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.server.packs.resources.ResourceDataJson;
 import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.level.storage.loot.LootPredicateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +35,7 @@ public class AdvancementDataWorld extends ResourceDataJson {
         this.d = lootpredicatemanager;
     }
 
-    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller) {
+    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
         Map<MinecraftKey, Advancement.SerializedAdvancement> map1 = Maps.newHashMap();
 
         map.forEach((minecraftkey, jsonelement) -> {

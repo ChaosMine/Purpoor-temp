@@ -67,7 +67,7 @@ public class CustomFunctionManager implements IReloadListener {
     }
 
     @Override
-    public CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller, GameProfilerFiller gameprofilerfiller1, Executor executor, Executor executor1) {
+    public CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, Executor executor, Executor executor1) {
         CompletableFuture<Map<MinecraftKey, Tag.a>> completablefuture = this.e.a(iresourcemanager, executor);
         CompletableFuture<Map<MinecraftKey, CompletableFuture<CustomFunction>>> completablefuture1 = CompletableFuture.supplyAsync(() -> {
             return iresourcemanager.a("functions", (s) -> {

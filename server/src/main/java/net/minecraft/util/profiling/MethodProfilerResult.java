@@ -1,12 +1,5 @@
 package net.minecraft.util.profiling;
 
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
-
+@Deprecated(forRemoval = true)
 public interface MethodProfilerResult {
-
-    long a();
-
-    long b();
-
-    Object2LongMap<String> c();
 }

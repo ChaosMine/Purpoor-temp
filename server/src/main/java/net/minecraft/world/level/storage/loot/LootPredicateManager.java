@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.server.packs.resources.ResourceDataJson;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -35,7 +34,7 @@ public class LootPredicateManager extends ResourceDataJson {
         return (LootItemCondition) this.c.get(minecraftkey);
     }
 
-    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller) {
+    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
         Builder<MinecraftKey, LootItemCondition> builder = ImmutableMap.builder();
 
         map.forEach((minecraftkey, jsonelement) -> {

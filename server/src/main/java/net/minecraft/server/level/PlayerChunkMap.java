@@ -1015,16 +1015,10 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     public static final double UNLOAD_QUEUE_RESIZE_FACTOR = 0.90; // Spigot // Paper - unload more // Tuinity - private -> public
 
     protected void unloadChunks(BooleanSupplier booleansupplier) {
-        GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
-
-        gameprofilerfiller.enter("poi");
         this.m.a(booleansupplier);
-        gameprofilerfiller.exitEnter("chunk_unload");
         if (!this.world.isSavingDisabled()) {
             this.b(booleansupplier);
         }
-
-        gameprofilerfiller.exit();
     }
 
     private void b(BooleanSupplier booleansupplier) {
@@ -1241,7 +1235,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
         // Paper start - Async chunk io
         final java.util.function.BiFunction<ChunkRegionLoader.InProgressChunkHolder, Throwable, Either<IChunkAccess, PlayerChunk.Failure>> syncLoadComplete = (chunkHolder, ioThrowable) -> {
             try { // Paper
-                this.world.getMethodProfiler().c("chunkLoad");
                 // Paper start
                 if (ioThrowable != null) {
                     com.destroystokyo.paper.util.SneakyThrow.sneaky(ioThrowable);
@@ -1329,9 +1322,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
             return this.a(chunkstatus, i);
         });
 
-        this.world.getMethodProfiler().c(() -> {
-            return "chunkGenerate " + chunkstatus.d();
-        });
         return completablefuture.thenComposeAsync((either) -> {
             return either.map((list) -> { // Paper - Shut up.
                 try {
@@ -1570,7 +1560,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                     }
                 }
 
-                this.world.getMethodProfiler().c("chunkSave");
                 NBTTagCompound nbttagcompound;
                     nbttagcompound = ChunkRegionLoader.saveChunk(this.world, ichunkaccess);
 

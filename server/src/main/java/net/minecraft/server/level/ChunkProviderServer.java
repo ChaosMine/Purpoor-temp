@@ -27,7 +27,6 @@ import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.WorldLoadListener;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.util.thread.IAsyncTaskHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
@@ -672,9 +671,6 @@ public class ChunkProviderServer extends IChunkProvider {
                 return ifLoaded;
             }
             // Paper end
-            GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
-
-            gameprofilerfiller.c("getChunk");
             long k = ChunkCoordIntPair.pair(i, j);
 
             IChunkAccess ichunkaccess;
@@ -688,7 +684,6 @@ public class ChunkProviderServer extends IChunkProvider {
                 }
             }
 
-            gameprofilerfiller.c("getChunkCacheMiss");
             CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = this.getChunkFutureMainThread(i, j, chunkstatus, flag, true); // Paper
 
             if (!completablefuture.isDone()) { // Paper
@@ -762,13 +757,9 @@ public class ChunkProviderServer extends IChunkProvider {
             this.chunkMapDistance.addTicketAtLevel(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Tuinity - prevent plugin unloads from removing our ticket
             if (isUrgent) this.chunkMapDistance.markUrgent(chunkcoordintpair); // Paper
             if (this.a(playerchunk, l)) {
-                GameProfilerFiller gameprofilerfiller = this.world.getMethodProfiler();
-
-                gameprofilerfiller.enter("chunkLoad");
                 chunkMapDistance.delayDistanceManagerTick = false; // Paper - ensure this is never false
                 this.tickDistanceManager();
                 playerchunk = this.getChunk(k);
-                gameprofilerfiller.exit();
                 if (this.a(playerchunk, l)) {
                     this.chunkMapDistance.removeTicketAtLevel(TicketType.REQUIRED_LOAD, chunkcoordintpair, l, identifier); // Tuinity
                     throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("No chunk holder after ticket has been added")));
@@ -921,28 +912,21 @@ public class ChunkProviderServer extends IChunkProvider {
     // CraftBukkit start - modelled on below
     public void purgeUnload() {
         if (true) return; // Tuinity - tickets will be removed later, this behavior isn't really well accounted for by the chunk system
-        this.world.getMethodProfiler().enter("purge");
         this.chunkMapDistance.purgeTickets();
         this.tickDistanceManager();
-        this.world.getMethodProfiler().exitEnter("unload");
         this.playerChunkMap.unloadChunks(() -> true);
-        this.world.getMethodProfiler().exit();
         this.clearCache();
     }
     // CraftBukkit end
 
     public void tick(BooleanSupplier booleansupplier) {
-        this.world.getMethodProfiler().enter("purge");
         this.chunkMapDistance.purgeTickets();
         // Tuinity - replace logic
         this.tickDistanceManager();
-        this.world.getMethodProfiler().exitEnter("chunks");
         this.playerChunkMap.playerChunkManager.tick(); // Tuinity - this is mostly is to account for view distance changes
         this.tickChunks();
-        this.world.getMethodProfiler().exitEnter("unload");
         this.playerChunkMap.unloadChunks(booleansupplier);
         // Tuinity - replace logic
-        this.world.getMethodProfiler().exit();
         this.clearCache();
     }
 
@@ -987,11 +971,9 @@ public class ChunkProviderServer extends IChunkProvider {
                 player.playerNaturallySpawnedEvent = event;
             }
             // Paper end - optimize isOutisdeRange
-            this.world.getMethodProfiler().enter("pollingChunks");
             int k = this.world.getGameRules().getInt(GameRules.RANDOM_TICK_SPEED);
             boolean flag2 = world.ticksPerAnimalSpawns != 0L && worlddata.getTime() % world.ticksPerAnimalSpawns == 0L; // CraftBukkit
 
-            this.world.getMethodProfiler().enter("naturalSpawnCount");
             int l = this.chunkMapDistance.b();
             // Paper start - per player mob spawning
             SpawnerCreature.d spawnercreature_d; // moved down
@@ -1011,7 +993,6 @@ public class ChunkProviderServer extends IChunkProvider {
             int ticked = 0; // Tuinity - exec chunk tasks during world tick
 
             this.p = spawnercreature_d;
-            this.world.getMethodProfiler().exit();
             //List<PlayerChunk> list = Lists.newArrayList(this.playerChunkMap.f()); // Paper
             //Collections.shuffle(list); // Paper
             // Paper - moved up
@@ -1023,9 +1004,7 @@ public class ChunkProviderServer extends IChunkProvider {
                 PlayerChunk playerchunk = chunk.playerChunk;
                 if (playerchunk != null) { // make sure load event has been called along with the load logic we put there
                     // Tuinity end - optimise chunk tick iteration
-                    this.world.getMethodProfiler().enter("broadcast");
                     playerchunk.a(chunk); // Tuinity
-                    this.world.getMethodProfiler().exit();
                     // Tuinity
 
                     if (true) { // Tuinity
@@ -1050,13 +1029,9 @@ public class ChunkProviderServer extends IChunkProvider {
                 iterator.finishedIterating();
             }
             // Tuinity end - optimise chunk tick iteration
-            this.world.getMethodProfiler().enter("customSpawners");
             if (flag1) {
                 this.world.doMobSpawning(this.allowMonsters, this.allowAnimals);
             }
-
-            this.world.getMethodProfiler().exit();
-            this.world.getMethodProfiler().exit();
         }
 
         // Tuinity start - controlled flush for entity tracker packets
@@ -1215,7 +1190,6 @@ public class ChunkProviderServer extends IChunkProvider {
 
         @Override
         protected void executeTask(Runnable runnable) {
-            ChunkProviderServer.this.world.getMethodProfiler().c("runTask");
             super.executeTask(runnable);
         }
         // Tuinity - replace logic

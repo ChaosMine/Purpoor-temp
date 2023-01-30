@@ -27,7 +27,6 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.server.packs.resources.ResourceDataJson;
 import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
@@ -47,7 +46,7 @@ public class CraftingManager extends ResourceDataJson {
         super(CraftingManager.a, "recipes");
     }
 
-    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller) {
+    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
         this.d = false;
         // CraftBukkit start - SPIGOT-5667 make sure all types are populated and mutable
         Map<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>> map1 = Maps.newHashMap();

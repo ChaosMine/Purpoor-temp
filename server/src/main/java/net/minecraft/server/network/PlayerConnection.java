@@ -361,7 +361,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
             this.E = 0;
         }} // Paper - end if (valid)
 
-        this.minecraftServer.getMethodProfiler().enter("keepAlive");
         // Paper Start - give clients a longer time to respond to pings as per pre 1.12.2 timings
         // This should effectively place the keepalive handling back to "as it was" before 1.12.2
         long currentTime = SystemUtils.getMonotonicMillis();
@@ -397,7 +396,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
         }
         // Paper end
 
-        this.minecraftServer.getMethodProfiler().exit();
         // CraftBukkit start
         for (int spam; (spam = this.chatThrottle) > 0 && !chatSpamField.compareAndSet(this, spam, spam - 1); ) ;
         if (tabSpamLimiter.get() > 0) tabSpamLimiter.getAndDecrement(); // Paper - split to seperate variable

@@ -289,7 +289,6 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     @Override
     protected void mobTick() { mobTick(false); }
     protected void mobTick(boolean inactive) {
-        this.world.getMethodProfiler().enter("villagerBrain");
         // Purpur start
         if (world.purpurConfig.villagerLobotomizeEnabled) inactive = inactive || isLobotomized();
         boolean tick = (world.getTime() + brainTickOffset) % world.purpurConfig.villagerBrainTicks == 0;
@@ -297,7 +296,6 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         // Purpur end
         if (!inactive) this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
         else if (shouldRestock()) doRestock(); // Purpur
-        this.world.getMethodProfiler().exit();
         if (this.bF) {
             this.bF = false;
         }

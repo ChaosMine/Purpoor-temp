@@ -10,7 +10,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.SystemUtils;
 import net.minecraft.util.Unit;
-import net.minecraft.util.profiling.GameProfilerDisabled;
 
 public class Reloadable<S> implements IReloadable {
 
@@ -26,7 +25,7 @@ public class Reloadable<S> implements IReloadable {
 
     public static Reloadable<Void> a(IResourceManager iresourcemanager, List<IReloadListener> list, Executor executor, Executor executor1, CompletableFuture<Unit> completablefuture) {
         return new Reloadable<>(executor, executor1, iresourcemanager, list, (ireloadlistener_a, iresourcemanager1, ireloadlistener, executor2, executor3) -> {
-            return ireloadlistener.a(ireloadlistener_a, iresourcemanager1, GameProfilerDisabled.a, GameProfilerDisabled.a, executor, executor3);
+            return ireloadlistener.a(ireloadlistener_a, iresourcemanager1, executor, executor3);
         }, completablefuture);
     }
 

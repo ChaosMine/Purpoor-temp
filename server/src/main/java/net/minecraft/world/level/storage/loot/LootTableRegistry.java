@@ -10,7 +10,6 @@ import java.util.function.Function;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.server.packs.resources.ResourceDataJson;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +32,7 @@ public class LootTableRegistry extends ResourceDataJson {
         return (LootTable) this.keyToLootTable.getOrDefault(minecraftkey, LootTable.EMPTY);
     }
 
-    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller) {
+    protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
         Builder<MinecraftKey, LootTable> builder = ImmutableMap.builder();
         JsonElement jsonelement = (JsonElement) map.remove(LootTables.a);
 

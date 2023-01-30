@@ -74,8 +74,6 @@ public class TickListServer<T> implements TickList<T> {
             ChunkProviderServer chunkproviderserver = this.e.getChunkProvider();
             Iterator<NextTickListEntry<T>> iterator = this.nextTickList.iterator();
 
-            this.e.getMethodProfiler().enter("cleaning");
-
             NextTickListEntry nextticklistentry;
 
             while (i > 0 && iterator.hasNext()) {
@@ -91,7 +89,6 @@ public class TickListServer<T> implements TickList<T> {
                     --i;
                 }
             }
-            this.e.getMethodProfiler().exitEnter("ticking");
 
             while ((nextticklistentry = (NextTickListEntry) this.f.poll()) != null) {
                 if (chunkproviderserver.a(nextticklistentry.a)) {
@@ -110,7 +107,6 @@ public class TickListServer<T> implements TickList<T> {
                 }
             }
 
-            this.e.getMethodProfiler().exit();
             this.g.clear();
             this.f.clear();
         }

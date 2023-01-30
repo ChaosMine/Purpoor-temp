@@ -171,14 +171,12 @@ public abstract class NavigationAbstract {
                 }
             }
             // Paper end
-            this.b.getMethodProfiler().enter("pathfind");
             float f = (float) this.a.b(GenericAttributes.FOLLOW_RANGE);
             BlockPosition blockposition = flag ? this.a.getChunkCoordinates().up() : this.a.getChunkCoordinates();
             int k = (int) (f + (float) i);
             ChunkCache chunkcache = new ChunkCache(this.b, blockposition.b(-k, -k, -k), blockposition.b(k, k, k));
             PathEntity pathentity = this.s.a(chunkcache, this.a, set, f, j, this.r);
 
-            this.b.getMethodProfiler().exit();
             if (pathentity != null && pathentity.m() != null) {
                 this.p = pathentity.m();
                 this.q = j;

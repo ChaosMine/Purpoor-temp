@@ -134,8 +134,8 @@ public abstract class EntityInsentient extends EntityLiving {
         this.bt = Maps.newEnumMap(PathType.class);
         this.bz = BlockPosition.ZERO;
         this.bA = -1.0F;
-        this.goalSelector = new PathfinderGoalSelector(world.getMethodProfilerSupplier());
-        this.targetSelector = new PathfinderGoalSelector(world.getMethodProfilerSupplier());
+        this.goalSelector = new PathfinderGoalSelector();
+        this.targetSelector = new PathfinderGoalSelector();
         this.lookController = new net.pl3x.purpur.controller.ControllerLookWASD(this); // Purpur
         this.moveController = new net.pl3x.purpur.controller.ControllerMoveWASD(this); // Purpur
         this.bi = new ControllerJump(this);
@@ -314,13 +314,11 @@ public abstract class EntityInsentient extends EntityLiving {
     @Override
     public void entityBaseTick() {
         super.entityBaseTick();
-        this.world.getMethodProfiler().enter("mobBaseTick");
         if (this.isAlive() && this.random.nextInt(1000) < this.e++) {
             this.m();
             this.F();
         }
         incrementTicksSinceLastInteraction(); // Purpur
-        this.world.getMethodProfiler().exit();
     }
 
     // Purpur start
@@ -648,7 +646,6 @@ public abstract class EntityInsentient extends EntityLiving {
     @Override
     public void movementTick() {
         super.movementTick();
-        this.world.getMethodProfiler().enter("looting");
         if (!this.world.isClientSide && this.canPickupLoot() && this.isAlive() && !this.killed && (this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || world.purpurConfig.entitiesPickUpLootBypassMobGriefing)) { // Purpur
             List<EntityItem> list = this.world.a(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
             Iterator iterator = list.iterator();
@@ -666,8 +663,6 @@ public abstract class EntityInsentient extends EntityLiving {
                 }
             }
         }
-
-        this.world.getMethodProfiler().exit();
     }
 
     protected void b(EntityItem entityitem) {
@@ -861,30 +856,14 @@ public abstract class EntityInsentient extends EntityLiving {
             return;
         }
         // Paper end
-        this.world.getMethodProfiler().enter("sensing");
         this.bo.a();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("targetSelector");
         this.targetSelector.doTick();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("goalSelector");
         this.goalSelector.doTick();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("navigation");
         this.navigation.c();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("mob tick");
         this.mobTick();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().enter("controls");
-        this.world.getMethodProfiler().enter("move");
         this.moveController.a();
-        this.world.getMethodProfiler().exitEnter("look");
         this.lookController.a();
-        this.world.getMethodProfiler().exitEnter("jump");
         this.bi.b();
-        this.world.getMethodProfiler().exit();
-        this.world.getMethodProfiler().exit();
         this.M();
     }
 

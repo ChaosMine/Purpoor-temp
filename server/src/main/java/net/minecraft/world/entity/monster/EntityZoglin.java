@@ -216,10 +216,8 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
 
     @Override
     protected void mobTick() {
-        this.world.getMethodProfiler().enter("zoglinBrain");
         if (getPurpurRider() == null) // Purpur - only use brain if no rider
         this.getBehaviorController().a((WorldServer) this.world, this); // Purpur - decompile error
-        this.world.getMethodProfiler().exit();
         this.eL();
     }
 

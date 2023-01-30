@@ -145,10 +145,8 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
 
     @Override
     protected void mobTick() {
-        this.world.getMethodProfiler().enter("hoglinBrain");
         if (getPurpurRider() == null) // Purpur - only use brain if no rider
         this.getBehaviorController().a((WorldServer) this.world, this); // Purpour - decompile error
-        this.world.getMethodProfiler().exit();
         HoglinAI.a(this);
         if (this.isConverting()) {
             ++this.conversionTicks;

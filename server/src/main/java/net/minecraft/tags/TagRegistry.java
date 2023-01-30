@@ -9,7 +9,6 @@ import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IReloadListener;
 import net.minecraft.server.packs.resources.IResourceManager;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +35,7 @@ public class TagRegistry implements IReloadListener {
     }
 
     @Override
-    public CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller, GameProfilerFiller gameprofilerfiller1, Executor executor, Executor executor1) {
+    public CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, Executor executor, Executor executor1) {
         CompletableFuture<Map<MinecraftKey, Tag.a>> completablefuture = this.blockTags.a(iresourcemanager, executor);
         CompletableFuture<Map<MinecraftKey, Tag.a>> completablefuture1 = this.itemTags.a(iresourcemanager, executor);
         CompletableFuture<Map<MinecraftKey, Tag.a>> completablefuture2 = this.fluidTags.a(iresourcemanager, executor);

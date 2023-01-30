@@ -126,7 +126,6 @@ public class CommandDispatcher {
         CommandClone.a(this.b);
         CommandData.a(this.b);
         CommandDatapack.a(this.b);
-        CommandDebug.a(this.b);
         CommandGamemodeDefault.a(this.b);
         CommandDifficulty.a(this.b);
         CommandEffect.a(this.b);
@@ -269,11 +268,8 @@ public class CommandDispatcher {
             stringreader.skip();
         }
 
-        commandlistenerwrapper.getServer().getMethodProfiler().enter(s);
-
         byte b0;
 
-        try {
             byte b1;
 
             try {
@@ -331,9 +327,6 @@ public class CommandDispatcher {
 
                 b0 = 0;
             }
-        } finally {
-            commandlistenerwrapper.getServer().getMethodProfiler().exit();
-        }
 
         return b0;
     }

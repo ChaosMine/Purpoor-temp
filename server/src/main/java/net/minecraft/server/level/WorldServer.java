@@ -533,7 +533,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     // Add env and gen to constructor, WorldData -> WorldDataServer
     public WorldServer(MinecraftServer minecraftserver, Executor executor, Convertable.ConversionSession convertable_conversionsession, IWorldDataServer iworlddataserver, ResourceKey<World> resourcekey, DimensionManager dimensionmanager, WorldLoadListener worldloadlistener, ChunkGenerator chunkgenerator, boolean flag, long i, List<MobSpawner> list, boolean flag1, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen) {
-        super(iworlddataserver, resourcekey, dimensionmanager, minecraftserver::getMethodProfiler, false, flag, i, gen, env, executor); // Paper pass executor
+        super(iworlddataserver, resourcekey, dimensionmanager, false, flag, i, gen, env, executor); // Paper pass executor
         this.pvpMode = minecraftserver.getPVP();
         convertable = convertable_conversionsession;
         uuid = WorldUUID.getUUID(convertable_conversionsession.folder.toFile());
@@ -910,7 +910,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     }
 
     public void doTick(BooleanSupplier booleansupplier) {
-        GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
         // Tuinity start - optimise checkDespawn
         this.playersAffectingSpawning.clear();
         for (EntityPlayer player : this.getPlayers()) {
@@ -921,9 +920,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         // Tuinity end - optimise checkDespawn
 
         this.ticking = true;
-        gameprofilerfiller.enter("world border");
         this.getWorldBorder().s();
-        gameprofilerfiller.exitEnter("weather");
         boolean flag = this.isRaining();
 
         if (this.getDimensionManager().hasSkyLight()) {
@@ -1056,22 +1053,17 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
         this.Q();
         this.b();
-        gameprofilerfiller.exitEnter("chunkSource");
         this.getChunkProvider().tick(booleansupplier);
-        gameprofilerfiller.exitEnter("tickPending");
         if (!this.isDebugWorld()) {
             this.nextTickListBlock.b();
             this.nextTickListFluid.b();
         }
 
         // Tuinity - replace logic
-        gameprofilerfiller.exitEnter("raid");
         this.persistentRaid.a();
-        gameprofilerfiller.exitEnter("blockEvents");
         this.ak();
         // Tuinity - replace logic
         this.ticking = false;
-        gameprofilerfiller.exitEnter("entities");
         boolean flag3 = true || !this.players.isEmpty() || !this.getForceLoadedChunks().isEmpty(); // CraftBukkit - this prevents entity cleanup, other issues on servers with no players
 
         if (flag3) {
@@ -1101,7 +1093,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 }
                 // CraftBukkit end */
 
-                gameprofilerfiller.enter("checkDespawn");
                 if (!entity.dead) {
                     entity.checkDespawn();
                     // Tuinity start - optimise notify()
@@ -1115,7 +1106,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     // Tuinity end - optimise notify()
                 }
 
-                gameprofilerfiller.exit();
                 if (entity1 != null) {
                     if (!entity1.dead && entity1.w(entity)) {
                         continue;
@@ -1124,13 +1114,10 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     entity.stopRiding();
                 }
 
-                gameprofilerfiller.enter("tick");
                 if (!entity.dead && !(entity instanceof EntityComplexPart)) {
                     this.a(this::entityJoinedWorld, entity);
                 }
 
-                gameprofilerfiller.exit();
-                gameprofilerfiller.enter("remove");
                 if (entity.dead) {
                     this.removeEntityFromChunk(entity);
                     this.entitiesById.remove(entity.getId()); // Tuinity
@@ -1143,8 +1130,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     this.removeNavigatorsFromData(entity);
                 }
                 // Tuinity end - optimise notify()
-
-                gameprofilerfiller.exit();
             }
 
             objectiterator.finishedIterating(); // Tuinity
@@ -1171,8 +1156,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             // Tuinity - replace logic
             this.tickBlockEntities();
         }
-
-        gameprofilerfiller.exit();
     }
 
     protected void b() {
@@ -1244,9 +1227,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         boolean flag = this.isRaining();
         int j = chunkcoordintpair.d();
         int k = chunkcoordintpair.e();
-        GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
 
-        gameprofilerfiller.enter("thunder");
         final BlockPosition.MutableBlockPosition blockposition = this.chunkTickMutablePosition; // Paper - use mutable to reduce allocation rate, final to force compile fail on change
 
         if (!this.paperConfig.disableThunder && flag && this.W() && this.random.nextInt(100000) == 0) { // Paper - Disable thunder
@@ -1278,7 +1259,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             }
         }
 
-        gameprofilerfiller.exitEnter("iceandsnow");
         if (!this.paperConfig.disableIceAndSnow && this.randomTickRandom.nextInt(16) == 0) { // Paper - Disable ice and snow // Paper - optimise random ticking
             // Paper start - optimise chunk ticking
             // Tuinity start - optimise chunk ice snow ticking
@@ -1313,10 +1293,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
         }
 
         // Paper start - optimise random block ticking
-        gameprofilerfiller.exit();
         if (i > 0) {
-            gameprofilerfiller.enter("randomTick");
-
             ChunkSection[] sections = chunk.getSections();
 
             for (int sectionIndex = 0; sectionIndex < 16; ++sectionIndex) {
@@ -1349,7 +1326,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                     // TODO CHECK ON UPDATE
                 }
             }
-            gameprofilerfiller.exit();
             // Paper end
         }
     }
@@ -1484,17 +1460,11 @@ public class WorldServer extends World implements GeneratorAccessSeed {
             entity.lastPitch = entity.pitch;
             if (entity.inChunk) {
                 ++entity.ticksLived;
-                GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
 
-                gameprofilerfiller.a(() -> {
-                    return IRegistry.ENTITY_TYPE.getKey(entity.getEntityType()).toString();
-                });
-                gameprofilerfiller.c("tickNonPassenger");
                 if (isActive) { // Paper - EAR 2
                 entity.tick();
                 entity.postTick(); // CraftBukkit
                 } else { entity.inactiveTick(); } // Paper - EAR 2
-                gameprofilerfiller.exit();
             }
 
             this.chunkCheck(entity);
@@ -1530,12 +1500,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 entity1.lastPitch = entity1.pitch;
                 if (entity1.inChunk) {
                     ++entity1.ticksLived;
-                    GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
 
-                    gameprofilerfiller.a(() -> {
-                        return IRegistry.ENTITY_TYPE.getKey(entity1.getEntityType()).toString();
-                    });
-                    gameprofilerfiller.c("tickPassenger");
                     // Paper start - EAR 2
                     if (isActive) {
                     entity1.passengerTick();
@@ -1547,7 +1512,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                         entity.syncPositionOf(entity1);
                     }
                     // Paper end - EAR 2
-                    gameprofilerfiller.exit();
                 }
 
                 this.chunkCheck(entity1);
@@ -1569,7 +1533,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     public void chunkCheck(Entity entity) {
         if (entity.cl()) {
-            this.getMethodProfiler().enter("chunkCheck");
             int i = MathHelper.floor(entity.locX() / 16.0D);
             int j =  Math.min(15, Math.max(0, MathHelper.floor(entity.locY() / 16.0D))); // Paper - stay consistent with chunk add/remove behavior
             int k = MathHelper.floor(entity.locZ() / 16.0D);
@@ -1641,8 +1604,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
                 }
                 // Tuinity end
             }
-
-            this.getMethodProfiler().exit();
         }
     }
 

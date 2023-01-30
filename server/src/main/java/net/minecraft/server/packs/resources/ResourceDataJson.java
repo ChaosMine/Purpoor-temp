@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Map;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +30,7 @@ public abstract class ResourceDataJson extends ResourceDataAbstract<Map<Minecraf
     }
 
     @Override
-    protected Map<MinecraftKey, JsonElement> b(IResourceManager iresourcemanager, GameProfilerFiller gameprofilerfiller) {
+    protected Map<MinecraftKey, JsonElement> b(IResourceManager iresourcemanager) {
         Map<MinecraftKey, JsonElement> map = Maps.newHashMap();
         int i = this.d.length() + 1;
         Iterator iterator = iresourcemanager.a(this.d, (s) -> {

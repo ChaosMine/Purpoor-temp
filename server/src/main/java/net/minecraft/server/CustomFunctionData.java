@@ -51,7 +51,6 @@ public class CustomFunctionData {
     }
 
     private void a(Collection<CustomFunction> collection, MinecraftKey minecraftkey) {
-        this.server.getMethodProfiler().a(minecraftkey::toString);
         Iterator iterator = collection.iterator();
 
         while (iterator.hasNext()) {
@@ -59,8 +58,6 @@ public class CustomFunctionData {
 
             this.a(customfunction, this.e());
         }
-
-        this.server.getMethodProfiler().exit();
     }
 
     public int a(CustomFunction customfunction, CommandListenerWrapper commandlistenerwrapper) {
@@ -90,10 +87,8 @@ public class CustomFunctionData {
                         return j;
                     }
 
-                    try {
                         CustomFunctionData.a customfunctiondata_a = (CustomFunctionData.a) this.e.removeFirst();
 
-                        this.server.getMethodProfiler().a(customfunctiondata_a::toString);
                         customfunctiondata_a.a(this.e, i);
                         if (!this.f.isEmpty()) {
                             List list = Lists.reverse(this.f);
@@ -103,9 +98,6 @@ public class CustomFunctionData {
                             list.forEach(arraydeque::addFirst);
                             this.f.clear();
                         }
-                    } finally {
-                        this.server.getMethodProfiler().exit();
-                    }
 
                     ++k;
                 } while (k < i);

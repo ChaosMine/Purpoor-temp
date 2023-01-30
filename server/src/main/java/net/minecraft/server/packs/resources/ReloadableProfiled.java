@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.minecraft.SystemUtils;
 import net.minecraft.util.Unit;
-import net.minecraft.util.profiling.MethodProfiler;
-import net.minecraft.util.profiling.MethodProfilerResults;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,13 +21,7 @@ public class ReloadableProfiled extends Reloadable<ReloadableProfiled.a> {
         super(executor, executor1, iresourcemanager, list, (ireloadlistener_a, iresourcemanager1, ireloadlistener, executor2, executor3) -> {
             AtomicLong atomiclong = new AtomicLong();
             AtomicLong atomiclong1 = new AtomicLong();
-            MethodProfiler methodprofiler = new MethodProfiler(SystemUtils.a, () -> {
-                return 0;
-            }, false);
-            MethodProfiler methodprofiler1 = new MethodProfiler(SystemUtils.a, () -> {
-                return 0;
-            }, false);
-            CompletableFuture<Void> completablefuture1 = ireloadlistener.a(ireloadlistener_a, iresourcemanager1, methodprofiler, methodprofiler1, (runnable) -> {
+            CompletableFuture<Void> completablefuture1 = ireloadlistener.a(ireloadlistener_a, iresourcemanager1, (runnable) -> {
                 executor2.execute(() -> {
                     long i = SystemUtils.getMonotonicNanos();
 
@@ -46,7 +38,7 @@ public class ReloadableProfiled extends Reloadable<ReloadableProfiled.a> {
             });
 
             return completablefuture1.thenApplyAsync((ovoid) -> {
-                return new ReloadableProfiled.a(ireloadlistener.c(), methodprofiler.d(), methodprofiler1.d(), atomiclong, atomiclong1);
+                return new ReloadableProfiled.a(ireloadlistener.c(), atomiclong, atomiclong1);
             }, executor1);
         }, completablefuture);
         this.e.start();
@@ -63,8 +55,6 @@ public class ReloadableProfiled extends Reloadable<ReloadableProfiled.a> {
 
         for (Iterator iterator = list.iterator(); iterator.hasNext(); i += j) {
             ReloadableProfiled.a reloadableprofiled_a = (ReloadableProfiled.a) iterator.next();
-            MethodProfilerResults methodprofilerresults = reloadableprofiled_a.b;
-            MethodProfilerResults methodprofilerresults1 = reloadableprofiled_a.c;
             int k = (int) ((double) reloadableprofiled_a.d.get() / 1000000.0D);
 
             j = (int) ((double) reloadableprofiled_a.e.get() / 1000000.0D);
@@ -80,15 +70,11 @@ public class ReloadableProfiled extends Reloadable<ReloadableProfiled.a> {
     public static class a {
 
         private final String a;
-        private final MethodProfilerResults b;
-        private final MethodProfilerResults c;
         private final AtomicLong d;
         private final AtomicLong e;
 
-        private a(String s, MethodProfilerResults methodprofilerresults, MethodProfilerResults methodprofilerresults1, AtomicLong atomiclong, AtomicLong atomiclong1) {
+        private a(String s, AtomicLong atomiclong, AtomicLong atomiclong1) {
             this.a = s;
-            this.b = methodprofilerresults;
-            this.c = methodprofilerresults1;
             this.d = atomiclong;
             this.e = atomiclong1;
         }

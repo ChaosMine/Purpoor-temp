@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,15 +28,10 @@ public class PathfinderGoalSelector {
     };
     private final Map<PathfinderGoal.Type, PathfinderGoalWrapped> c = new EnumMap(PathfinderGoal.Type.class);
     private final Set<PathfinderGoalWrapped> d = Sets.newLinkedHashSet(); public final Set<PathfinderGoalWrapped> getTasks() { return d; }// Paper - OBFHELPER // Paper - private -> public
-    private final Supplier<GameProfilerFiller> e;
     private final EnumSet<PathfinderGoal.Type> f = EnumSet.noneOf(PathfinderGoal.Type.class); // Paper unused, but dummy to prevent plugins from crashing as hard. Theyll need to support paper in a special case if this is super important, but really doesn't seem like it would be.
     private final OptimizedSmallEnumSet<PathfinderGoal.Type> goalTypes = new OptimizedSmallEnumSet<>(PathfinderGoal.Type.class); // Paper - remove streams from pathfindergoalselector
     private int g = 3;private int getTickRate() { return g; } // Paper - OBFHELPER
     private int curRate;private int getCurRate() { return curRate; } private void incRate() { this.curRate++; } // Paper TODO
-
-    public PathfinderGoalSelector(Supplier<GameProfilerFiller> supplier) {
-        this.e = supplier;
-    }
 
     public void addGoal(int priority, PathfinderGoal goal) {a(priority, goal);} public void a(int i, PathfinderGoal pathfindergoal) { // Paper - OBFHELPER
         this.d.add(new PathfinderGoalWrapped(i, pathfindergoal));
@@ -76,9 +70,6 @@ public class PathfinderGoalSelector {
     private static final PathfinderGoal.Type[] PATHFINDER_GOAL_TYPES = PathfinderGoal.Type.values(); // Paper - remove streams from pathfindergoalselector
 
     public void doTick() {
-        GameProfilerFiller gameprofilerfiller = (GameProfilerFiller) this.e.get();
-
-        gameprofilerfiller.enter("goalCleanup");
         // Paper start - remove streams from pathfindergoalselector
         for (Iterator<PathfinderGoalWrapped> iterator = this.d.iterator(); iterator.hasNext();) {
             PathfinderGoalWrapped wrappedGoal = iterator.next();
@@ -97,8 +88,6 @@ public class PathfinderGoalSelector {
             }
 
         });
-        gameprofilerfiller.exit();
-        gameprofilerfiller.enter("goalUpdate");
         // Paper start - remove streams from pathfindergoalselector
         goal_update_loop: for (Iterator<PathfinderGoalWrapped> iterator = this.d.iterator(); iterator.hasNext();) {
             PathfinderGoalWrapped wrappedGoal = iterator.next();
@@ -141,8 +130,6 @@ public class PathfinderGoalSelector {
             wrappedGoal.c();
         }
         // Paper end - remove streams from pathfindergoalselector
-        gameprofilerfiller.exit();
-        gameprofilerfiller.enter("goalTick");
         // Paper start - remove streams from pathfindergoalselector
         for (Iterator<PathfinderGoalWrapped> iterator = this.d.iterator(); iterator.hasNext();) {
             PathfinderGoalWrapped wrappedGoal = iterator.next();
@@ -151,7 +138,6 @@ public class PathfinderGoalSelector {
             }
         }
         // Paper end - remove streams from pathfindergoalselector
-        gameprofilerfiller.exit();
     }
 
     public final Stream<PathfinderGoalWrapped> getExecutingGoals() { return d(); } // Paper - OBFHELPER

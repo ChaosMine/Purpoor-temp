@@ -1265,7 +1265,6 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             ShapeDetectorShape shapedetectorshape = this.a(worldserver);
 
             if (shapedetectorshape != null) {
-                worldserver1.getMethodProfiler().enter("moving");
                 worldserver = shapedetectorshape.world; // CraftBukkit
                 if (worldserver == null) { } else // CraftBukkit - empty to fall through to null to event
                 if (resourcekey == DimensionManager.OVERWORLD && worldserver.getTypeKey() == DimensionManager.THE_NETHER) { // CraftBukkit
@@ -1288,8 +1287,6 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
             worldserver = ((CraftWorld) exit.getWorld()).getHandle();
             // CraftBukkit end
 
-            worldserver1.getMethodProfiler().exit();
-            worldserver1.getMethodProfiler().enter("placing");
             if (true) { // CraftBukkit
                 this.worldChangeInvuln = true; // CraftBukkit - Set teleport invulnerability only if player changing worlds
 
@@ -1307,7 +1304,6 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                 worldserver.addPlayerPortal(this);
                 this.playerConnection.teleport(exit); // CraftBukkit - use internal teleport without event
                 this.playerConnection.syncPosition(); // CraftBukkit - sync position after changing it (from PortalTravelAgent#findAndteleport)
-                worldserver1.getMethodProfiler().exit();
                 this.triggerDimensionAdvancements(worldserver1);
                 this.playerInteractManager.a(worldserver);
                 this.playerConnection.sendPacket(new PacketPlayOutAbilities(this.abilities));

@@ -291,10 +291,8 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
 
     @Override
     protected void mobTick() {
-        this.world.getMethodProfiler().enter("piglinBrain");
         if (getPurpurRider() == null) // Purpur - only use brain if no rider
         this.getBehaviorController().a((WorldServer) this.world, (EntityPiglin) this); // CraftBukkit - decompile error
-        this.world.getMethodProfiler().exit();
         PiglinAI.b(this);
         super.mobTick();
     }

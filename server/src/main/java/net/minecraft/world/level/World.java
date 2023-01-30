@@ -116,7 +116,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public final Random random = new Random();
     private final DimensionManager x;
     public final WorldDataMutable worldData;
-    private final Supplier<GameProfilerFiller> methodProfiler;
     public final boolean isClientSide;
     protected boolean tickingTileEntities;
     private final WorldBorder worldBorder;
@@ -290,7 +289,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     }
     // Tuinity end - optimise checkDespawn
 
-    protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, final DimensionManager dimensionmanager, Supplier<GameProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper
+    protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, final DimensionManager dimensionmanager, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper
         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName()); // Spigot
         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(((net.minecraft.world.level.storage.WorldDataServer) worlddatamutable).getName(), this.spigotConfig); // Paper
         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
@@ -308,7 +307,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return new IllegalStateException("Unregistered dimension type: " + dimensionmanager);
         });
         // CraftBukkit end
-        this.methodProfiler = supplier;
         this.worldData = worlddatamutable;
         this.x = dimensionmanager;
         this.dimensionKey = resourcekey;
@@ -588,9 +586,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
                 IBlockData iblockdata2 = this.getType(blockposition);
 
                 if ((i & 128) == 0 && iblockdata2 != iblockdata1 && (iblockdata2.b((IBlockAccess) this, blockposition) != iblockdata1.b((IBlockAccess) this, blockposition) || iblockdata2.f() != iblockdata1.f() || iblockdata2.e() || iblockdata1.e())) {
-                    this.getMethodProfiler().enter("queueCheckLight");
                     this.getChunkProvider().getLightEngine().a(blockposition);
-                    this.getMethodProfiler().exit();
                 }
 
                 /*
@@ -943,9 +939,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     }
 
     public void tickBlockEntities() {
-        GameProfilerFiller gameprofilerfiller = this.getMethodProfiler();
-
-        gameprofilerfiller.enter("blockEntities");
         if (!this.tileEntityListUnload.isEmpty()) {
             // Paper start - Use alternate implementation with faster contains
             java.util.Set<TileEntity> toRemove = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
@@ -977,16 +970,12 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
                 Chunk chunk; PlayerChunk playerChunk; if ((chunk = tileentity.getCurrentChunk()) != null && (playerChunk = chunk.playerChunk) != null && playerChunk.isTickingReady() && this.getWorldBorder().isInBounds(blockposition)) { // Paper - optimized tick ready check by inlining ChunkProviderServer.a(BlockPosition). Chunk lookup is no longer required and we can use the PlayerChunk directly available through the tile entity
                     try {
-                        gameprofilerfiller.a(() -> {
-                            return String.valueOf(TileEntityTypes.a(tileentity.getTileType()));
-                        });
                         if (tileentity.getTileType().isValidBlock(chunk.getType(blockposition).getBlock())) { // Paper - reuse the chunk from above, do not look it up again
                             ((ITickable) tileentity).tick();
                         } else {
                             tileentity.w();
                         }
 
-                        gameprofilerfiller.exit();
                     } catch (Throwable throwable) {
                         if (throwable instanceof ThreadDeath) throw throwable; // Paper
                         // Paper start - Prevent tile entity and entity crashes
@@ -1019,7 +1008,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         }
 
         this.tickingTileEntities = false;
-        gameprofilerfiller.exitEnter("pendingBlockEntities");
         if (!this.tileEntityListPending.isEmpty()) {
             for (int i = 0; i < this.tileEntityListPending.size(); ++i) {
                 TileEntity tileentity1 = (TileEntity) this.tileEntityListPending.get(i);
@@ -1050,7 +1038,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             this.tileEntityListPending.clear();
         }
 
-        gameprofilerfiller.exit();
         spigotConfig.currentPrimedTnt = 0; // Spigot
     }
 
@@ -1289,7 +1276,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     }
     public List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate, List<Entity> list) {
         // Tuinity end - add list parameter
-        this.getMethodProfiler().c("getEntities");
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxX + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
@@ -1310,7 +1296,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     }
 
     public <T extends Entity> List<T> a(@Nullable EntityTypes<T> entitytypes, AxisAlignedBB axisalignedbb, Predicate<? super T> predicate) {
-        this.getMethodProfiler().c("getEntities");
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.f((axisalignedbb.maxX + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
@@ -1332,7 +1317,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     public <T extends Entity> List<T> getEntities(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate) { return a(oclass, axisalignedbb, predicate); } // Paper - OBFHELPER
     @Override public <T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate) {
-        this.getMethodProfiler().c("getEntities");
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.f((axisalignedbb.maxX + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
@@ -1355,7 +1339,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     @Override
     public <T extends Entity> List<T> b(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate) {
-        this.getMethodProfiler().c("getLoadedEntities");
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.f((axisalignedbb.maxX + 2.0D) / 16.0D);
         int k = MathHelper.floor((axisalignedbb.minZ - 2.0D) / 16.0D);
@@ -1752,14 +1735,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     public boolean isSavingDisabled() {
         return false;
-    }
-
-    public GameProfilerFiller getMethodProfiler() {
-        return (GameProfilerFiller) this.methodProfiler.get();
-    }
-
-    public Supplier<GameProfilerFiller> getMethodProfilerSupplier() {
-        return this.methodProfiler;
     }
 
     public BiomeManager getBiomeManager() { return d(); } // Paper - OBFHELPER

@@ -278,15 +278,11 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
         com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async tick list tick"); // Tuinity - soft async catcher
         final ChunkProviderServer chunkProvider = this.world.getChunkProvider();
 
-        this.world.getMethodProfiler().enter("cleaning");
-
         this.prepare();
 
         // this must be done here in case something schedules in the tick code
         this.shortScheduled[this.shortScheduledIndex].clear();
         this.shortScheduledIndex = getNextIndex(this.shortScheduledIndex, SHORT_SCHEDULE_TICK_THRESHOLD);
-
-        this.world.getMethodProfiler().exitEnter("ticking");
 
         for (final NextTickListEntry<T> toTick : this.toTickThisTick) {
             if (toTick.tickState != STATE_PENDING_TICK) {
@@ -316,8 +312,6 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
                 // end copy from TickListServer
             }
         }
-
-        this.world.getMethodProfiler().exit();
 
         // finished ticking, actual cleanup time
         for (int i = 0, len = this.toTickThisTick.size(); i < len; ++i) {

@@ -602,7 +602,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
     // CraftBukkit end
 
     public void entityBaseTick() {
-        this.world.getMethodProfiler().enter("entityBaseTick");
         if (this.isPassenger() && this.getVehicle().dead) {
             this.stopRiding();
         }
@@ -660,7 +659,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         }
 
         this.justCreated = false;
-        this.world.getMethodProfiler().exit();
     }
 
     public void resetPortalCooldown() {
@@ -822,7 +820,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 }
             }
 
-            this.world.getMethodProfiler().enter("move");
             if (this.x.g() > 1.0E-7D) {
                 vec3d = vec3d.h(this.x);
                 this.x = Vec3D.ORIGIN;
@@ -831,7 +828,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
             // Paper start - ignore movement changes while inactive.
             if (isTemporarilyActive && !(this instanceof EntityItem || this instanceof EntityMinecartAbstract) && vec3d == getMot() && enummovetype == EnumMoveType.SELF) {
                 setMot(Vec3D.ORIGIN);
-                this.world.getMethodProfiler().exit();
                 return;
             }
             // Paper end
@@ -844,8 +840,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 this.recalcPosition();
             }
 
-            this.world.getMethodProfiler().exit();
-            this.world.getMethodProfiler().enter("rest");
             this.positionChanged = !MathHelper.b(vec3d.x, vec3d1.x) || !MathHelper.b(vec3d.z, vec3d1.z);
             this.v = vec3d.y != vec3d1.y;
             this.onGround = this.v && vec3d.y < 0.0D;
@@ -946,8 +940,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 this.playSound(SoundEffects.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.7F, 1.6F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                 this.setFireTicks(-this.getMaxFireTicks());
             }
-
-            this.world.getMethodProfiler().exit();
         }
         // Tuinity start - detailed watchdog information
         } finally {
@@ -2583,7 +2575,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 WorldServer worldserver1 = minecraftserver.getWorldServer(resourcekey);
 
                 if (true && !this.isPassenger() && this.portalTicks++ >= i) { // CraftBukkit
-                    this.world.getMethodProfiler().enter("portal");
                     this.portalTicks = i;
                     this.resetPortalCooldown();
                     // CraftBukkit start
@@ -2593,7 +2584,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                         this.b(worldserver1);
                     }
                     // CraftBukkit end
-                    this.world.getMethodProfiler().exit();
                 }
 
                 this.inPortal = false;
@@ -2983,14 +2973,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
         }
         // Paper end
         if (this.world instanceof WorldServer && !this.dead) {
-            this.world.getMethodProfiler().enter("changeDimension");
             // CraftBukkit start
             // this.decouple();
             if (worldserver == null) {
                 return null;
             }
             // CraftBukkit end
-            this.world.getMethodProfiler().enter("reposition");
             ShapeDetectorShape shapedetectorshape = (location == null) ? this.a(worldserver) : new ShapeDetectorShape(new Vec3D(location.getX(), location.getY(), location.getZ()), Vec3D.ORIGIN, this.yaw, this.pitch, worldserver, null); // CraftBukkit
 
             if (shapedetectorshape == null) {
@@ -3001,7 +2989,6 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 this.decouple();
                 // CraftBukkit end
 
-                this.world.getMethodProfiler().exitEnter("reloading");
                 // Paper start - Change lead drop timing to prevent dupe
                 if (this instanceof EntityInsentient) {
                     ((EntityInsentient) this).unleash(true, true); // Paper drop lead
@@ -3024,10 +3011,8 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                 }
 
                 this.bN();
-                this.world.getMethodProfiler().exit();
                 ((WorldServer) this.world).resetEmptyTime();
                 worldserver.resetEmptyTime();
-                this.world.getMethodProfiler().exit();
                 return entity;
             }
         } else {

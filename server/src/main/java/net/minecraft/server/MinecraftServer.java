@@ -196,8 +196,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public final WorldNBTStorage worldNBTStorage;
     private final MojangStatisticsGenerator snooper = new MojangStatisticsGenerator("server", this, SystemUtils.getMonotonicMillis());
     private final List<Runnable> tickables = Lists.newArrayList();
-    private final GameProfilerSwitcher m;
-    private GameProfilerFiller methodProfiler;
     private ServerConnection serverConnection;
     public final WorldLoadListenerFactory worldLoadListenerFactory;
     private final ServerPing serverPing;
@@ -236,7 +234,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     private String L;
     private volatile boolean hasTicked;
     private long lastOverloadTime;
-    private boolean O;
     private boolean P;
     private final MinecraftSessionService minecraftSessionService;
     private final GameProfileRepository gameProfileRepository;
@@ -308,8 +305,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     public MinecraftServer(OptionSet options, DataPackConfiguration datapackconfiguration, Thread thread, IRegistryCustom.Dimension iregistrycustom_dimension, Convertable.ConversionSession convertable_conversionsession, SaveData savedata, ResourcePackRepository resourcepackrepository, Proxy proxy, DataFixer datafixer, DataPackResources datapackresources, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache, WorldLoadListenerFactory worldloadlistenerfactory) {
         super("Server");
         SERVER = this; // Paper - better singleton
-        this.m = new GameProfilerSwitcher(SystemUtils.a, this::ai);
-        this.methodProfiler = GameProfilerDisabled.a;
         this.serverPing = new ServerPing();
         this.r = new Random();
         this.serverPort = -1;
@@ -1143,13 +1138,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                     //MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit // Paper - don't overwrite current tick time
                     lastTick = curTime;
                     this.nextTick += 50L;
-                    GameProfilerTick gameprofilertick = GameProfilerTick.a("Server");
-
-                    this.a(gameprofilertick);
-                    this.methodProfiler.a();
-                    this.methodProfiler.enter("tick");
                     this.a(this::canSleepForTick);
-                    this.methodProfiler.exitEnter("nextTickWait");
                     this.X = true;
                     // Purpur start - tps catchup
                     if (net.pl3x.purpur.PurpurConfig.tpsCatchup) {
@@ -1159,9 +1148,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                     }
                     // Purpur end - tps catchup
                     this.sleepForTick();
-                    this.methodProfiler.exit();
-                    this.methodProfiler.b();
-                    this.b(gameprofilertick);
                     this.hasTicked = true;
                 }
             } else {
@@ -1361,7 +1347,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
 
     protected void c(TickTask ticktask) {
-        this.getMethodProfiler().c("runTask");
         super.executeTask(ticktask);
     }
 
@@ -1440,7 +1425,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 playerSaveInterval = autosavePeriod;
             }
             // Paper end
-            this.methodProfiler.enter("save");
             if (playerSaveInterval > 0) { // Paper
             this.playerList.savePlayers(playerSaveInterval); // Paper
             }// Paper
@@ -1452,11 +1436,9 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             }
             // Paper end
 
-            this.methodProfiler.exit();
             //MinecraftServer.LOGGER.debug("Autosave finished"); // Paper
         //} // Paper
 
-        this.methodProfiler.enter("snooper");
         if (((DedicatedServer) this).getDedicatedServerProperties().snooperEnabled && !this.snooper.d() && this.ticks > 100) { // Spigot
             this.snooper.a();
         }
@@ -1464,8 +1446,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         if (((DedicatedServer) this).getDedicatedServerProperties().snooperEnabled && this.ticks % 6000 == 0) { // Spigot
             this.snooper.b();
         }
-
-        this.methodProfiler.exit();
 
         this.executeAll();
 
@@ -1477,7 +1457,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         new com.destroystokyo.paper.event.server.ServerTickEndEvent(this.ticks, ((double)(endTime - lastTick) / 1000000D), remaining).callEvent();
         // Paper end
 
-        this.methodProfiler.enter("tallying");
         long l = this.h[this.ticks % 100] = SystemUtils.getMonotonicNanos() - i;
 
         this.ag = this.ag * 0.8F + (float) l / 1000000.0F * 0.19999999F;
@@ -1490,7 +1469,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         // Paper end
 
         this.circularTimer.a(i1 - i);
-        this.methodProfiler.exit();
         org.spigotmc.WatchdogThread.tick(); // Spigot
         this.slackActivityAccountant.tickEnded(l); // Spigot
     }
@@ -1499,10 +1477,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         // Tuinity - replace logic
         this.server.getScheduler().mainThreadHeartbeat(this.ticks); // CraftBukkit
         // Tuinity - replace logic
-        this.methodProfiler.enter("commandFunctions");
         this.getFunctionData().tick();
         // Tuinity - replace logic
-        this.methodProfiler.exitEnter("levels");
         Iterator iterator = this.getWorlds().iterator();
 
         // CraftBukkit start
@@ -1538,9 +1514,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
             worldserver.hasRidableMoveEvent = net.pl3x.purpur.event.entity.RidableMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Purpur
             TileEntityHopper.skipHopperEvents = worldserver.paperConfig.disableHopperMoveEvents || org.bukkit.event.inventory.InventoryMoveItemEvent.getHandlerList().getRegisteredListeners().length == 0; // Paper
 
-            this.methodProfiler.a(() -> {
-                return worldserver + " " + worldserver.getDimensionKey().a();
-            });
             /* Drop global time updates
             if (this.ticks % 20 == 0) {
                 this.methodProfiler.enter("timeSync");
@@ -1548,8 +1521,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 this.methodProfiler.exit();
             }
             // CraftBukkit end */
-
-            this.methodProfiler.enter("tick");
 
             try {
                 // Tuinity - replace logic
@@ -1575,26 +1546,18 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                 throw new ReportedException(crashreport);
             }
 
-            this.methodProfiler.exit();
-            this.methodProfiler.exit();
             worldserver.explosionDensityCache.clear(); // Paper - Optimize explosions
         }
 
-        this.methodProfiler.exitEnter("connection");
         this.getServerConnection().c();
-        this.methodProfiler.exitEnter("players");
         this.playerList.tick();
         if (SharedConstants.d) {
             GameTestHarnessTicker.a.b();
         }
 
-        this.methodProfiler.exitEnter("server gui refresh");
-
         for (int i = 0; i < this.tickables.size(); ++i) {
             ((Runnable) this.tickables.get(i)).run();
         }
-
-        this.methodProfiler.exit();
     }
 
     public boolean getAllowNether() {
@@ -2197,10 +2160,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         }
     }
 
-    public GameProfilerFiller getMethodProfiler() {
-        return this.methodProfiler;
-    }
-
     public abstract boolean a(GameProfile gameprofile);
 
     public void a(Path path) throws IOException {
@@ -2410,38 +2369,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
         return SERVER; // Paper
     }
     // CraftBukkit end
-
-    private void a(@Nullable GameProfilerTick gameprofilertick) {
-        if (this.O) {
-            this.O = false;
-            this.m.c();
-        }
-
-        this.methodProfiler = GameProfilerTick.a(this.m.d(), gameprofilertick);
-    }
-
-    private void b(@Nullable GameProfilerTick gameprofilertick) {
-        if (gameprofilertick != null) {
-            gameprofilertick.b();
-        }
-
-        this.methodProfiler = this.m.d();
-    }
-
-    public boolean aS() {
-        return this.m.a();
-    }
-
-    public void aT() {
-        this.O = true;
-    }
-
-    public MethodProfilerResults aU() {
-        MethodProfilerResults methodprofilerresults = this.m.e();
-
-        this.m.b();
-        return methodprofilerresults;
-    }
 
     public Path a(SavedFile savedfile) {
         return this.convertable.getWorldFolder(savedfile);

@@ -100,10 +100,8 @@ public class EntityPiglinBrute extends EntityPiglinAbstract {
 
     @Override
     protected void mobTick() {
-        this.world.getMethodProfiler().enter("piglinBruteBrain");
         if (getPurpurRider() == null) // Purpur - only use brain if no rider
         this.getBehaviorController().a((WorldServer) this.world, this); // Purpur - decompile error
-        this.world.getMethodProfiler().exit();
         PiglinBruteAI.b(this);
         PiglinBruteAI.c(this);
         super.mobTick();

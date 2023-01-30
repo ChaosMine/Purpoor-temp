@@ -131,7 +131,6 @@ public final class SpawnerCreature {
     }
 
     public static void a(WorldServer worldserver, Chunk chunk, SpawnerCreature.d spawnercreature_d, boolean flag, boolean flag1, boolean flag2) {
-        worldserver.getMethodProfiler().enter("spawner");
         EnumCreatureType[] aenumcreaturetype = SpawnerCreature.c;
         int i = aenumcreaturetype.length;
 
@@ -203,8 +202,6 @@ public final class SpawnerCreature {
                 // Paper end - per player mob spawning
             }
         }
-
-        worldserver.getMethodProfiler().exit();
     }
 
     public static void a(EnumCreatureType enumcreaturetype, WorldServer worldserver, Chunk chunk, SpawnerCreature.c spawnercreature_c, SpawnerCreature.a spawnercreature_a) {
