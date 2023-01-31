@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.boss.enderdragon.phases;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.pathfinder.PathPoint;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 public class DragonControllerStrafe extends AbstractDragonController {
 

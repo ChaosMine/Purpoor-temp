@@ -1,10 +1,6 @@
 package net.minecraft.world.level;
 
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -16,15 +12,15 @@ import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.UtilColor;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityPositionTypes;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class MobSpawnerAbstract {
 

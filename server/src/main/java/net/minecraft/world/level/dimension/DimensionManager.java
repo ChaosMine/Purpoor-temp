@@ -5,10 +5,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.io.File;
-import java.util.Optional;
-import java.util.OptionalLong;
-import java.util.function.Supplier;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.core.IRegistryWritable;
@@ -20,16 +16,16 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.biome.BiomeBase;
-import net.minecraft.world.level.biome.GenLayerZoomVoronoi;
-import net.minecraft.world.level.biome.GenLayerZoomVoronoiFixed;
-import net.minecraft.world.level.biome.GenLayerZoomer;
-import net.minecraft.world.level.biome.WorldChunkManagerMultiNoise;
-import net.minecraft.world.level.biome.WorldChunkManagerTheEnd;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.ChunkGeneratorAbstract;
 import net.minecraft.world.level.levelgen.GeneratorSettingBase;
+
+import java.io.File;
+import java.util.Optional;
+import java.util.OptionalLong;
+import java.util.function.Supplier;
 
 public class DimensionManager {
 

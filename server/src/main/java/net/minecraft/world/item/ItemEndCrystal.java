@@ -1,6 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.EnumInteractionResult;
@@ -12,6 +11,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.dimension.end.EnderDragonBattle;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.List;
 
 public class ItemEndCrystal extends Item {
 
@@ -36,30 +37,30 @@ public class ItemEndCrystal extends Item {
                 double d0 = (double) blockposition1.getX();
                 double d1 = (double) blockposition1.getY();
                 double d2 = (double) blockposition1.getZ();
-                List<Entity> list = world.getEntities((Entity) null, new AxisAlignedBB(d0, d1, d2, d0 + 1.0D, d1 + 2.0D, d2 + 1.0D));
+                try (var list = world.getEntities(null, new AxisAlignedBB(d0, d1, d2, d0 + 1.0D, d1 + 2.0D, d2 + 1.0D))) {
+                    if (!list.isEmpty()) {
+                        return EnumInteractionResult.FAIL;
+                    } else {
+                        if (world instanceof WorldServer) {
+                            EntityEnderCrystal entityendercrystal = new EntityEnderCrystal(world, d0 + 0.5D, d1, d2 + 0.5D);
 
-                if (!list.isEmpty()) {
-                    return EnumInteractionResult.FAIL;
-                } else {
-                    if (world instanceof WorldServer) {
-                        EntityEnderCrystal entityendercrystal = new EntityEnderCrystal(world, d0 + 0.5D, d1, d2 + 0.5D);
+                            entityendercrystal.setShowingBottom(false);
+                            // CraftBukkit start
+                            if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityPlaceEvent(itemactioncontext, entityendercrystal).isCancelled()) {
+                                return EnumInteractionResult.FAIL;
+                            }
+                            // CraftBukkit end
+                            world.addEntity(entityendercrystal);
+                            EnderDragonBattle enderdragonbattle = ((WorldServer) world).getDragonBattle();
 
-                        entityendercrystal.setShowingBottom(false);
-                        // CraftBukkit start
-                        if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityPlaceEvent(itemactioncontext, entityendercrystal).isCancelled()) {
-                            return EnumInteractionResult.FAIL;
+                            if (enderdragonbattle != null) {
+                                enderdragonbattle.initiateRespawn();
+                            }
                         }
-                        // CraftBukkit end
-                        world.addEntity(entityendercrystal);
-                        EnderDragonBattle enderdragonbattle = ((WorldServer) world).getDragonBattle();
 
-                        if (enderdragonbattle != null) {
-                            enderdragonbattle.initiateRespawn();
-                        }
+                        itemactioncontext.getItemStack().subtract(1);
+                        return EnumInteractionResult.a(world.isClientSide);
                     }
-
-                    itemactioncontext.getItemStack().subtract(1);
-                    return EnumInteractionResult.a(world.isClientSide);
                 }
             }
         }

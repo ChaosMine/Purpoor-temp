@@ -1,12 +1,13 @@
 package net.minecraft.world.level;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidTypes;
+
+import javax.annotation.Nullable;
 
 public enum BlockAccessAir implements IBlockAccess {
 

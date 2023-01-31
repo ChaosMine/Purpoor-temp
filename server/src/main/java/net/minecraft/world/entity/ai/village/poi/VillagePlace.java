@@ -2,24 +2,8 @@ package net.minecraft.world.entity.ai.village.poi;
 
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.longs.Long2ByteMap;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap; // Tuinity
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import it.unimi.dsi.fastutil.longs.*;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
@@ -33,6 +17,14 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkSection;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.storage.RegionFileSection;
+
+import java.io.File;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
@@ -118,7 +110,6 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public void queueUnload(long coordinate, long minTarget) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload queue");
         QueuedUnload unload = new QueuedUnload(minTarget + this.determineDelay(coordinate), coordinate);
         QueuedUnload existing = this.queuedUnloadsByCoordinate.put(coordinate, unload);
         if (existing != null) {
@@ -128,7 +119,6 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public void dequeueUnload(long coordinate) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload dequeue");
         QueuedUnload unload = this.queuedUnloadsByCoordinate.remove(coordinate);
         if (unload != null) {
             this.queuedUnloads.remove(unload);
@@ -136,7 +126,6 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public void pollUnloads(BooleanSupplier canSleepForTick) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload");
         long currentTick = net.minecraft.server.MinecraftServer.currentTickLong;
         net.minecraft.server.level.ChunkProviderServer chunkProvider = this.world.getChunkProvider();
         net.minecraft.server.level.PlayerChunkMap playerChunkMap = chunkProvider.playerChunkMap;
@@ -165,13 +154,11 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
     @Override
     public void unloadData(long coordinate) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async unloading poi data");
         super.unloadData(coordinate);
     }
 
     @Override
     protected void onUnload(long coordinate) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("async poi unload callback");
         this.getLoadedChunks().remove(coordinate);
         int chunkX = net.minecraft.server.MCUtil.getCoordinateX(coordinate);
         int chunkZ = net.minecraft.server.MCUtil.getCoordinateZ(coordinate);
@@ -269,7 +256,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
 
     public Optional<BlockPosition> a(Predicate<VillagePlaceType> predicate, Predicate<BlockPosition> predicate1, VillagePlace.Occupancy villageplace_occupancy, BlockPosition blockposition, int i, Random random) {
         // Tuinity start - re-route to faster logic
-        List<VillagePlaceRecord> list = new java.util.ArrayList<>();
+        List<VillagePlaceRecord> list = new ObjectArrayList<>();
         com.tuinity.tuinity.util.PoiAccess.findAnyPoiRecords(this, predicate, predicate1, blockposition, i, villageplace_occupancy, false, Integer.MAX_VALUE, list);
         // Tuinity end - re-route to faster logic
 

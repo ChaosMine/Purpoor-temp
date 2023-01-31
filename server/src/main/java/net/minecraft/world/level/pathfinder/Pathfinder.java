@@ -2,19 +2,15 @@ package net.minecraft.world.level.pathfinder;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.level.ChunkCache;
+
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Pathfinder {
 

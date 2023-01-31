@@ -4,14 +4,15 @@ import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.EnumChatFormat;
+import net.minecraft.commands.CommandListenerWrapper;
+import net.minecraft.world.entity.Entity;
+
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
-import javax.annotation.Nullable;
-import net.minecraft.EnumChatFormat;
-import net.minecraft.commands.CommandListenerWrapper;
-import net.minecraft.world.entity.Entity;
 
 public class ChatComponentUtils {
 

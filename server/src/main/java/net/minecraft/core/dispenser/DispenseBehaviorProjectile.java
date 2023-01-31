@@ -4,13 +4,11 @@ import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
 import net.minecraft.core.ISourceBlock;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.IProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockDispenser;
-
-// CraftBukkit start
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.TileEntityDispenser;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockDispenseEvent;

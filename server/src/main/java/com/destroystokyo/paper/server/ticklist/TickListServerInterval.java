@@ -1,9 +1,10 @@
 package com.destroystokyo.paper.server.ticklist;
 
 import com.destroystokyo.paper.util.set.LinkedSortedSet;
-import java.util.Comparator;
 import net.minecraft.world.level.NextTickListEntry;
 import net.minecraft.world.level.TickListPriority;
+
+import java.util.Comparator;
 
 // represents a set of entries to tick at a specified time
 public final class TickListServerInterval<T> {

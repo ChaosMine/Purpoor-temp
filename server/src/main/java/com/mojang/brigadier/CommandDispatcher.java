@@ -13,15 +13,9 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -220,7 +214,7 @@ public class CommandDispatcher<S> {
         final String command = parse.getReader().getString();
         final CommandContext<S> original = parse.getContext().build(command);
         List<CommandContext<S>> contexts = Collections.singletonList(original);
-        ArrayList<CommandContext<S>> next = null;
+        ObjectArrayList<CommandContext<S>> next = null;
 
         while (contexts != null) {
             final int size = contexts.size();
@@ -234,7 +228,7 @@ public class CommandDispatcher<S> {
                         final RedirectModifier<S> modifier = context.getRedirectModifier();
                         if (modifier == null) {
                             if (next == null) {
-                                next = new ArrayList<>(1);
+                                next = new ObjectArrayList<>(1);
                             }
                             next.add(child.copyFor(context.getSource()));
                         } else {
@@ -242,7 +236,7 @@ public class CommandDispatcher<S> {
                                 final Collection<S> results = modifier.apply(context);
                                 if (!results.isEmpty()) {
                                     if (next == null) {
-                                        next = new ArrayList<>(results.size());
+                                        next = new ObjectArrayList<>(results.size());
                                     }
                                     for (final S source : results) {
                                         next.add(child.copyFor(source));
@@ -390,13 +384,13 @@ public class CommandDispatcher<S> {
                 } else {
                     final ParseResults<S> parse = parseNodes(child, reader, context);
                     if (potentials == null) {
-                        potentials = new ArrayList<>(1);
+                        potentials = new ObjectArrayList<>(1);
                     }
                     potentials.add(parse);
                 }
             } else {
                 if (potentials == null) {
-                    potentials = new ArrayList<>(1);
+                    potentials = new ObjectArrayList<>(1);
                 }
                 potentials.add(new ParseResults<>(context, reader, Collections.emptyMap()));
             }
@@ -448,12 +442,12 @@ public class CommandDispatcher<S> {
      * @return array of full usage strings under the target node
      */
     public String[] getAllUsage(final CommandNode<S> node, final S source, final boolean restricted) {
-        final ArrayList<String> result = new ArrayList<>();
+        final ObjectArrayList<String> result = new ObjectArrayList<>();
         getAllUsage(node, source, result, "", restricted);
-        return result.toArray(new String[result.size()]);
+        return result.toArray(String[]::new);
     }
 
-    private void getAllUsage(final CommandNode<S> node, final S source, final ArrayList<String> result, final String prefix, final boolean restricted) {
+    private void getAllUsage(final CommandNode<S> node, final S source, final ObjectArrayList<String> result, final String prefix, final boolean restricted) {
         if (restricted && !node.canUse(source)) {
             return;
         }
@@ -539,7 +533,8 @@ public class CommandDispatcher<S> {
                         final String usage = childUsage.iterator().next();
                         return self + ARGUMENT_SEPARATOR + (childOptional ? USAGE_OPTIONAL_OPEN + usage + USAGE_OPTIONAL_CLOSE : usage);
                     } else if (childUsage.size() > 1) {
-                        final StringBuilder builder = new StringBuilder(open);
+                        final StringBuilder builder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+                        builder.append(open);
                         int count = 0;
                         for (final CommandNode<S> child : children) {
                             if (count > 0) {
@@ -602,7 +597,7 @@ public class CommandDispatcher<S> {
 
         final CompletableFuture<Suggestions> result = new CompletableFuture<>();
         CompletableFuture.allOf(futures).thenRun(() -> {
-            final List<Suggestions> suggestions = new ArrayList<>();
+            final List<Suggestions> suggestions = new ObjectArrayList<>();
             for (final CompletableFuture<Suggestions> future : futures) {
                 suggestions.add(future.join());
             }
@@ -640,12 +635,12 @@ public class CommandDispatcher<S> {
      * @return a path to the resulting node, or an empty list if it was not found
      */
     public Collection<String> getPath(final CommandNode<S> target) {
-        final List<List<CommandNode<S>>> nodes = new ArrayList<>();
-        addPaths(root, nodes, new ArrayList<>());
+        final List<List<CommandNode<S>>> nodes = new ObjectArrayList<>();
+        addPaths(root, nodes, new ObjectArrayList<>());
 
         for (final List<CommandNode<S>> list : nodes) {
             if (list.get(list.size() - 1) == target) {
-                final List<String> result = new ArrayList<>(list.size());
+                final List<String> result = new ObjectArrayList<>(list.size());
                 for (final CommandNode<S> node : list) {
                     if (node != root) {
                         result.add(node.getName());
@@ -695,7 +690,7 @@ public class CommandDispatcher<S> {
     }
 
     private void addPaths(final CommandNode<S> node, final List<List<CommandNode<S>>> result, final List<CommandNode<S>> parents) {
-        final List<CommandNode<S>> current = new ArrayList<>(parents);
+        final List<CommandNode<S>> current = new ObjectArrayList<>(parents);
         current.add(node);
         result.add(current);
 

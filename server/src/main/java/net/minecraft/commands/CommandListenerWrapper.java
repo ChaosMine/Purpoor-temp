@@ -7,13 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BinaryOperator;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import com.mojang.brigadier.tree.CommandNode;
+import io.netty.util.concurrent.FastThreadLocal;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.SystemUtils;
 import net.minecraft.commands.arguments.ArgumentAnchor;
@@ -36,7 +31,13 @@ import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
 
-import com.mojang.brigadier.tree.CommandNode; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BinaryOperator;
+import java.util.stream.Stream;
 
 public class CommandListenerWrapper implements ICompletionProvider, com.destroystokyo.paper.brigadier.BukkitBrigadierCommandSource { // Paper
 
@@ -55,7 +56,7 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
     private final ResultConsumer<CommandListenerWrapper> l;
     private final ArgumentAnchor.Anchor m;
     private final Vec2F n;
-    public ThreadLocal<CommandNode> currentCommand = new ThreadLocal<>(); // CraftBukkit // Paper
+    public FastThreadLocal<CommandNode> currentCommand = new FastThreadLocal<>(); // CraftBukkit // Paper
 
     public CommandListenerWrapper(ICommandListener icommandlistener, Vec3D vec3d, Vec2F vec2f, WorldServer worldserver, int i, String s, IChatBaseComponent ichatbasecomponent, MinecraftServer minecraftserver, @Nullable Entity entity) {
         this(icommandlistener, vec3d, vec2f, worldserver, i, s, ichatbasecomponent, minecraftserver, entity, false, (commandcontext, flag, j) -> {
@@ -251,11 +252,6 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
         if (this.base.shouldSendSuccess() && !this.j) {
             this.base.sendMessage(ichatbasecomponent, SystemUtils.b);
         }
-
-        if (flag && this.base.shouldBroadcastCommands() && !this.j) {
-            this.sendAdminMessage(ichatbasecomponent);
-        }
-
     }
 
     private void sendAdminMessage(IChatBaseComponent ichatbasecomponent) {

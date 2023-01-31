@@ -4,9 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import net.minecraft.SystemUtils;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentEntity;
@@ -14,6 +11,10 @@ import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.GameRules;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 public class CommandGamemode {
 

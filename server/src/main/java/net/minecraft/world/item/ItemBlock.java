@@ -1,14 +1,12 @@
 package net.minecraft.world.item;
 
-import java.util.Iterator;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.world.EnumInteractionResult;
@@ -24,12 +22,13 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-// CraftBukkit start
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.event.block.BlockCanBuildEvent;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Map;
 // CraftBukkit end
 
 public class ItemBlock extends Item {
@@ -44,7 +43,7 @@ public class ItemBlock extends Item {
 
     @Override
     public EnumInteractionResult a(ItemActionContext itemactioncontext) {
-        EnumInteractionResult enuminteractionresult = this.a(new BlockActionContext(itemactioncontext));
+        var enuminteractionresult = this.a(new BlockActionContext(itemactioncontext));
 
         return !enuminteractionresult.a() && this.isFood() ? this.a(itemactioncontext.getWorld(), itemactioncontext.getEntity(), itemactioncontext.getHand()).a() : enuminteractionresult;
     }
@@ -53,12 +52,12 @@ public class ItemBlock extends Item {
         if (!blockactioncontext.b()) {
             return EnumInteractionResult.FAIL;
         } else {
-            BlockActionContext blockactioncontext1 = this.b(blockactioncontext);
+            var blockactioncontext1 = this.b(blockactioncontext);
 
             if (blockactioncontext1 == null) {
                 return EnumInteractionResult.FAIL;
             } else {
-                IBlockData iblockdata = this.c(blockactioncontext1);
+                var iblockdata = this.c(blockactioncontext1);
                 // CraftBukkit start - special case for handling block placement with water lilies
                 org.bukkit.block.BlockState blockstate = null;
                 if (this instanceof ItemWaterLily) {
@@ -71,12 +70,12 @@ public class ItemBlock extends Item {
                 } else if (!this.a(blockactioncontext1, iblockdata)) {
                     return EnumInteractionResult.FAIL;
                 } else {
-                    BlockPosition blockposition = blockactioncontext1.getClickPosition();
-                    World world = blockactioncontext1.getWorld();
-                    EntityHuman entityhuman = blockactioncontext1.getEntity();
-                    ItemStack itemstack = blockactioncontext1.getItemStack();
-                    IBlockData iblockdata1 = world.getType(blockposition);
-                    Block block = iblockdata1.getBlock();
+                    var blockposition = blockactioncontext1.getClickPosition();
+                    var world = blockactioncontext1.getWorld();
+                    var entityhuman = blockactioncontext1.getEntity();
+                    var itemstack = blockactioncontext1.getItemStack();
+                    var iblockdata1 = world.getType(blockposition);
+                    var block = iblockdata1.getBlock();
 
                     if (block == iblockdata.getBlock()) {
                         iblockdata1 = this.a(blockposition, world, itemstack, iblockdata1);
@@ -84,8 +83,8 @@ public class ItemBlock extends Item {
                         block.postPlace(world, blockposition, iblockdata1, entityhuman, itemstack);
                         // CraftBukkit start
                         if (blockstate != null) {
-                            org.bukkit.event.block.BlockPlaceEvent placeEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPlaceEvent((WorldServer) world, entityhuman, blockactioncontext1.getHand(), blockstate, blockposition.getX(), blockposition.getY(), blockposition.getZ());
-                            if (placeEvent != null && (placeEvent.isCancelled() || !placeEvent.canBuild())) {
+                            var placeEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callBlockPlaceEvent((WorldServer) world, entityhuman, blockactioncontext1.getHand(), blockstate, blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                            if (placeEvent.isCancelled() || !placeEvent.canBuild()) {
                                 blockstate.update(true, false);
                                 return EnumInteractionResult.FAIL;
                             }
@@ -96,9 +95,9 @@ public class ItemBlock extends Item {
                         }
                     }
 
-                    SoundEffectType soundeffecttype = iblockdata1.getStepSound();
+                    var soundeffecttype = iblockdata1.getStepSound();
 
-                    // world.playSound(entityhuman, blockposition, this.a(iblockdata1), SoundCategory.BLOCKS, (soundeffecttype.getVolume() + 1.0F) / 2.0F, soundeffecttype.getPitch() * 0.8F);
+                    if (entityhuman == null) world.playSound(null, blockposition, this.a(iblockdata1), SoundCategory.BLOCKS, (soundeffecttype.getVolume() + 1.0F) / 2.0F, soundeffecttype.getPitch() * 0.8F); // Paper - reintroduce this for the dispenser (i.e the shulker)
                     if ((entityhuman == null || !entityhuman.abilities.canInstantlyBuild) && itemstack != ItemStack.b) { // CraftBukkit
                         itemstack.subtract(1);
                     }
@@ -120,11 +119,11 @@ public class ItemBlock extends Item {
 
     protected boolean a(BlockPosition blockposition, World world, @Nullable EntityHuman entityhuman, ItemStack itemstack, IBlockData iblockdata) {
         // Purpur start
-        boolean handled = a(world, entityhuman, blockposition, itemstack);
+        var handled = a(world, entityhuman, blockposition, itemstack);
         if (world.purpurConfig.persistentTileEntityDisplayNames && itemstack.hasTag()) {
-            NBTTagCompound display = itemstack.getSubTag("display");
+            var display = itemstack.getSubTag("display");
             if (display != null) {
-                TileEntity tile = world.getTileEntity(blockposition);
+                var tile = world.getTileEntity(blockposition);
                 if (tile != null) {
                     if (display.hasKeyOfType("Name", 8)) {
                         tile.setPersistentDisplayName(display.getString("Name"));
@@ -141,17 +140,17 @@ public class ItemBlock extends Item {
 
     @Nullable
     protected IBlockData c(BlockActionContext blockactioncontext) {
-        IBlockData iblockdata = this.getBlock().getPlacedState(blockactioncontext);
+        var iblockdata = this.getBlock().getPlacedState(blockactioncontext);
 
         return iblockdata != null && this.b(blockactioncontext, iblockdata) ? iblockdata : null;
     }
 
     private IBlockData a(BlockPosition blockposition, World world, ItemStack itemstack, IBlockData iblockdata) {
-        IBlockData iblockdata1 = iblockdata;
-        NBTTagCompound nbttagcompound = itemstack.getTag();
+        var iblockdata1 = iblockdata;
+        var nbttagcompound = itemstack.getTag();
 
         if (nbttagcompound != null) {
-            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("BlockStateTag");
+            var nbttagcompound1 = nbttagcompound.getCompound("BlockStateTag");
             // CraftBukkit start
             iblockdata1 = getBlockState(iblockdata1, nbttagcompound1);
         }
@@ -164,18 +163,18 @@ public class ItemBlock extends Item {
     }
 
     public static IBlockData getBlockState(IBlockData iblockdata, NBTTagCompound nbttagcompound1) {
-        IBlockData iblockdata1 = iblockdata;
+        var iblockdata1 = iblockdata;
         {
             // CraftBukkit end
-            BlockStateList<Block, IBlockData> blockstatelist = iblockdata.getBlock().getStates();
+            var blockstatelist = iblockdata.getBlock().getStates();
             Iterator iterator = nbttagcompound1.getKeys().iterator();
 
             while (iterator.hasNext()) {
-                String s = (String) iterator.next();
-                IBlockState<?> iblockstate = blockstatelist.a(s);
+                var s = (String) iterator.next();
+                var iblockstate = blockstatelist.a(s);
 
                 if (iblockstate != null) {
-                    String s1 = nbttagcompound1.get(s).asString();
+                    var s1 = nbttagcompound1.get(s).asString();
 
                     iblockdata1 = a(iblockdata1, iblockstate, s1);
                 }
@@ -191,14 +190,14 @@ public class ItemBlock extends Item {
     }
 
     protected boolean b(BlockActionContext blockactioncontext, IBlockData iblockdata) {
-        EntityHuman entityhuman = blockactioncontext.getEntity();
-        VoxelShapeCollision voxelshapecollision = entityhuman == null ? VoxelShapeCollision.a() : VoxelShapeCollision.a((Entity) entityhuman);
+        var entityhuman = blockactioncontext.getEntity();
+        var voxelshapecollision = entityhuman == null ? VoxelShapeCollision.a() : VoxelShapeCollision.a((Entity) entityhuman);
         // CraftBukkit start - store default return
-        World world = blockactioncontext.getWorld(); // Paper
-        boolean defaultReturn = (!this.isCheckCollisions() || iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) && world.checkEntityCollision(iblockdata, entityhuman, voxelshapecollision, blockactioncontext.getClickPosition(), true); // Paper
-        org.bukkit.entity.Player player = (blockactioncontext.getEntity() instanceof EntityPlayer) ? (org.bukkit.entity.Player) blockactioncontext.getEntity().getBukkitEntity() : null;
+        var world = blockactioncontext.getWorld(); // Paper
+        var defaultReturn = (!this.isCheckCollisions() || iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) && world.checkEntityCollision(iblockdata, entityhuman, voxelshapecollision, blockactioncontext.getClickPosition(), true); // Paper
+        var player = (blockactioncontext.getEntity() instanceof EntityPlayer) ? (org.bukkit.entity.Player) blockactioncontext.getEntity().getBukkitEntity() : null;
 
-        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(blockactioncontext.getWorld(), blockactioncontext.getClickPosition()), player, CraftBlockData.fromData(iblockdata), defaultReturn);
+        var event = new BlockCanBuildEvent(CraftBlock.at(blockactioncontext.getWorld(), blockactioncontext.getClickPosition()), player, CraftBlockData.fromData(iblockdata), defaultReturn);
         blockactioncontext.getWorld().getServer().getPluginManager().callEvent(event);
 
         return event.isBuildable();
@@ -214,23 +213,23 @@ public class ItemBlock extends Item {
     }
 
     public static boolean a(World world, @Nullable EntityHuman entityhuman, BlockPosition blockposition, ItemStack itemstack) {
-        MinecraftServer minecraftserver = world.getMinecraftServer();
+        var minecraftserver = world.getMinecraftServer();
 
         if (minecraftserver == null) {
             return false;
         } else {
-            NBTTagCompound nbttagcompound = itemstack.b("BlockEntityTag");
+            var nbttagcompound = itemstack.b("BlockEntityTag");
 
             if (nbttagcompound != null) {
-                TileEntity tileentity = world.getTileEntity(blockposition);
+                var tileentity = world.getTileEntity(blockposition);
 
                 if (tileentity != null) {
                     if (!world.isClientSide && tileentity.isFilteredNBT() && (entityhuman == null || !(entityhuman.isCreativeAndOp() || (entityhuman.abilities.canInstantlyBuild && entityhuman.getBukkitEntity().hasPermission("minecraft.nbt.place"))))) { // Spigot - add permission
                         return false;
                     }
 
-                    NBTTagCompound nbttagcompound1 = tileentity.save(new NBTTagCompound());
-                    NBTTagCompound nbttagcompound2 = nbttagcompound1.clone();
+                    var nbttagcompound1 = tileentity.save(new NBTTagCompound());
+                    var nbttagcompound2 = nbttagcompound1.clone();
 
                     nbttagcompound1.a(nbttagcompound);
                     nbttagcompound1.setInt("x", blockposition.getX());

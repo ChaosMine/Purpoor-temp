@@ -20,8 +20,7 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
-
-import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class EntityWitherSkull extends EntityFireball {
 

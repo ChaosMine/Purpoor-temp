@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,21 +15,11 @@ import net.minecraft.tags.TagsItem;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.effect.MobEffectList;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.IShearable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemBlock;
-import net.minecraft.world.item.ItemLiquidUtil;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemSuspiciousStew;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
@@ -41,10 +28,12 @@ import net.minecraft.world.level.block.BlockFlowers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import org.apache.commons.lang3.tuple.Pair;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTransformEvent;
+
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 // CraftBukkit end
 
 public class EntityMushroomCow extends EntityCow implements IShearable {

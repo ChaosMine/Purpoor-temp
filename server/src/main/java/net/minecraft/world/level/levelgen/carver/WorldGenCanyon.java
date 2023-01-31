@@ -1,10 +1,6 @@
 package net.minecraft.world.level.levelgen.carver;
 
 import com.mojang.serialization.Codec;
-import java.util.BitSet;
-import java.util.Random;
-import java.util.function.Function;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.MathHelper;
@@ -12,6 +8,10 @@ import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfigurationChance;
+
+import java.util.BitSet;
+import java.util.Random;
+import java.util.function.Function;
 
 public class WorldGenCanyon extends WorldGenCarverAbstract<WorldGenFeatureConfigurationChance> {
 

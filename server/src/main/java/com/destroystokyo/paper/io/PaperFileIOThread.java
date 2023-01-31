@@ -93,7 +93,7 @@ public final class PaperFileIOThread extends QueueExecutorThread {
             throw new IllegalArgumentException("Invalid priority: " + priority);
         }
 
-        final Long key = Long.valueOf(IOUtil.getCoordinateKey(chunkX, chunkZ));
+        final Long key = IOUtil.getCoordinateKey(chunkX, chunkZ);
 
         final ChunkDataTask poiTask = world.poiDataController.tasks.get(key);
         final ChunkDataTask chunkTask = world.chunkDataController.tasks.get(key);

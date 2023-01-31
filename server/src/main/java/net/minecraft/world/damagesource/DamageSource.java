@@ -1,6 +1,5 @@
 package net.minecraft.world.damagesource;
 
-import javax.annotation.Nullable;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +11,8 @@ import net.minecraft.world.entity.projectile.EntityFireworks;
 import net.minecraft.world.entity.projectile.EntityWitherSkull;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
 
 public class DamageSource {
 

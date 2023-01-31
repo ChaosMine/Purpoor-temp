@@ -1,5 +1,7 @@
 package org.spigotmc;
 
+import net.minecraft.SystemUtils;
+
 public class TickLimiter {
 
     private final int maxTime;
@@ -10,11 +12,11 @@ public class TickLimiter {
     }
 
     public void initTick() {
-        startTime = System.currentTimeMillis();
+        startTime = SystemUtils.getMonotonicMillis();
     }
 
     public boolean shouldContinue() {
-        long remaining = System.currentTimeMillis() - startTime;
+        long remaining = SystemUtils.getMonotonicMillis() - startTime;
         return remaining < maxTime;
     }
 }

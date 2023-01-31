@@ -11,14 +11,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.IRegistry;
 import net.minecraft.data.worldgen.biome.BiomeRegistry;
@@ -26,6 +18,10 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.RegistryLookupCodec;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.synth.NoiseGeneratorNormal;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class WorldChunkManagerMultiNoise extends WorldChunkManager {
 

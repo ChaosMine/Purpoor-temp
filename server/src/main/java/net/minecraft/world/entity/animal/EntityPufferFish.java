@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.network.syncher.DataWatcher;
@@ -14,18 +11,17 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMonsterType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class EntityPufferFish extends EntityFish {
 

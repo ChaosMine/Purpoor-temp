@@ -1,11 +1,12 @@
 package net.minecraft.world.level;
 
+import net.minecraft.core.BlockPosition;
+
+import javax.annotation.Nullable;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nullable;
-import net.minecraft.core.BlockPosition;
 
 public class ChunkCoordIntPair {
 

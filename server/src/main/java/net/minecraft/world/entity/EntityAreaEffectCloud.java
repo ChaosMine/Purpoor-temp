@@ -4,13 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.arguments.ArgumentParticle;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.particles.ParticleParam;
@@ -22,6 +16,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.effect.MobEffect;
@@ -32,11 +27,12 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.material.EnumPistonReaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.resources.MinecraftKey;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
 // CraftBukkit end
 
 public class EntityAreaEffectCloud extends Entity {
@@ -308,7 +304,7 @@ public class EntityAreaEffectCloud extends Entity {
                     if (!list1.isEmpty()) {
                         Iterator iterator2 = list1.iterator();
 
-                        List<LivingEntity> entities = new java.util.ArrayList<LivingEntity>(); // CraftBukkit
+                        List<LivingEntity> entities = new ObjectArrayList<>(); // CraftBukkit
                         while (iterator2.hasNext()) {
                             EntityLiving entityliving = (EntityLiving) iterator2.next();
 

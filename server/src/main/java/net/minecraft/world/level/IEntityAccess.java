@@ -2,14 +2,7 @@ package net.minecraft.world.level;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.bukkit.entity.HumanEntity;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import dev.kamillaova.paper.collections.list.RecyclableObjectList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.IEntitySelector;
@@ -19,279 +12,303 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+import org.bukkit.entity.HumanEntity;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public interface IEntityAccess {
 
-    List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate);
+	RecyclableObjectList<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate);
 
-    <T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate);
+	<T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate);
 
-    default <T extends Entity> List<T> b(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate) {
-        return this.a(oclass, axisalignedbb, predicate);
-    }
+	default <T extends Entity> List<T> b(Class<? extends T> oclass, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super T> predicate) {
+		return this.a(oclass, axisalignedbb, predicate);
+	}
 
-    List<? extends EntityHuman> getPlayers();
+	List<? extends EntityHuman> getPlayers();
 
-    default List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb) {
-        return this.getEntities(entity, axisalignedbb, IEntitySelector.g);
-    }
+	default RecyclableObjectList<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb) {
+		return this.getEntities(entity, axisalignedbb, IEntitySelector.g);
+	}
 
-    default boolean a(@Nullable Entity entity, VoxelShape voxelshape) {
-        if (voxelshape.isEmpty()) {
-            return true;
-        } else {
-            Iterator iterator = this.getEntities(entity, voxelshape.getBoundingBox()).iterator();
+	default boolean a(@Nullable Entity entity, VoxelShape voxelshape) {
+		if (voxelshape.isEmpty()) {
+			return true;
+		} else {
+			Entity entity1;
+			try (var XUI = this.getEntities(entity, voxelshape.getBoundingBox())) {
+				Iterator<Entity> iterator = XUI.iterator();
+				do {
+					if (!iterator.hasNext()) {
+						return true;
+					}
 
-            Entity entity1;
+					entity1 = iterator.next();
+				} while (entity1.dead || !entity1.i || entity != null && entity1.isSameVehicle(entity) || !VoxelShapes.c(voxelshape, VoxelShapes.a(entity1.getBoundingBox()), OperatorBoolean.AND));
 
-            do {
-                if (!iterator.hasNext()) {
-                    return true;
-                }
+			}
+			return false;
+		}
+	}
 
-                entity1 = (Entity) iterator.next();
-            } while (entity1.dead || !entity1.i || entity != null && entity1.isSameVehicle(entity) || !VoxelShapes.c(voxelshape, VoxelShapes.a(entity1.getBoundingBox()), OperatorBoolean.AND));
+	default <T extends Entity> List<T> getEntitiesInAABB(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
+		return a(oclass, axisalignedbb);
+	} // Purpur - OBFHELPER
 
-            return false;
-        }
-    }
+	default <T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
+		return this.a(oclass, axisalignedbb, IEntitySelector.g);
+	}
 
-    default <T extends Entity> List<T> getEntitiesInAABB(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) { return a(oclass, axisalignedbb); } // Purpur - OBFHELPER
-    default <T extends Entity> List<T> a(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
-        return this.a(oclass, axisalignedbb, IEntitySelector.g);
-    }
+	default <T extends Entity> List<T> b(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
+		return this.b(oclass, axisalignedbb, IEntitySelector.g);
+	}
 
-    default <T extends Entity> List<T> b(Class<? extends T> oclass, AxisAlignedBB axisalignedbb) {
-        return this.b(oclass, axisalignedbb, IEntitySelector.g);
-    }
+	// Tuinity start - optimise hard collision
 
-    // Tuinity start - optimise hard collision
-    /**
-     * Not guaranteed to only return hard colliding entities
-     */
-    default List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
-        return this.getEntities(entity, axisalignedbb, predicate);
-    }
-    // Tuinity end - optimise hard collision
+	/**
+	 * Not guaranteed to only return hard colliding entities
+	 */
+	default RecyclableObjectList<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+		return this.getEntities(entity, axisalignedbb, predicate);
+	}
+	// Tuinity end - optimise hard collision
 
-    default Stream<VoxelShape> c(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
-        if (axisalignedbb.a() < 1.0E-7D) {
-            return Stream.empty();
-        } else {
-            AxisAlignedBB axisalignedbb1 = axisalignedbb.g(-1.0E-7D); // Tuinity - to comply with vanilla intersection rules, expand by -epsilon so we only get stuff we definitely collide with. expanding by +epsilon gives us stuff we don't collide with, which will screw over callers in some cases.
+	default Stream<VoxelShape> c(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+		if (axisalignedbb.a() < 1.0E-7D) {
+			return Stream.empty();
+		} else {
+			AxisAlignedBB axisalignedbb1 = axisalignedbb.g(-1.0E-7D); // Tuinity - to comply with vanilla intersection rules, expand by -epsilon so we only get stuff we definitely collide with. expanding by +epsilon gives us stuff we don't collide with, which will screw over callers in some cases.
 
-            if (predicate == null) predicate = (e) -> true; // Tuinity - allow nullable
-            predicate = predicate.and((entity1) -> { // Tuinity - optimise entity hard collisions // Tuinity - allow nullable
-                boolean flag;
+			if (predicate == null) predicate = (e) -> true; // Tuinity - allow nullable
+			predicate = predicate.and((entity1) -> { // Tuinity - optimise entity hard collisions // Tuinity - allow nullable
+				// Tuinity - always true, wtf did they think this.getEntities(entity, axisalignedbb1) does?
+				label25:
+				{
+					if (entity == null) {
+						if (!entity1.aZ()) {
+							break label25;
+						}
+					} else if (!entity.j(entity1)) {
+						break label25;
+					}
 
-                if (true || entity1.getBoundingBox().c(axisalignedbb1)) { // Tuinity - always true, wtf did they think this.getEntities(entity, axisalignedbb1) does?
-                    label25:
-                    {
-                        if (entity == null) {
-                            if (!entity1.aZ()) {
-                                break label25;
-                            }
-                        } else if (!entity.j(entity1)) {
-                            break label25;
-                        }
+					return true;
+				}
 
-                        flag = true;
-                        return flag;
-                    }
-                }
+				return false;
+			});
+			var l = entity != null && entity.hardCollides()
+				? this.getEntities(entity, axisalignedbb1, predicate)
+				: this.getHardCollidingEntities(entity, axisalignedbb1, predicate);
+			try {
+				return l.stream().map(Entity::getBoundingBox).map(VoxelShapes::a); // Tuinity - optimise entity hard collisions
+			} finally {
+				l.recycle();
+			}
+		}
+	}
 
-                flag = false;
-                return flag;
-            }); return ((entity != null && entity.hardCollides()) ? this.getEntities(entity, axisalignedbb1, predicate) : this.getHardCollidingEntities(entity, axisalignedbb1, predicate)).stream().map(Entity::getBoundingBox).map(VoxelShapes::a); // Tuinity - optimise entity hard collisions
-        }
-    }
+	default EntityHuman findNearbyPlayer(Entity entity, double d0, @Nullable Predicate<Entity> predicate) {
+		return this.findNearbyPlayer(entity.locX(), entity.locY(), entity.locZ(), d0, predicate);
+	} // Paper
 
-    default EntityHuman findNearbyPlayer(Entity entity, double d0, @Nullable Predicate<Entity> predicate) { return this.findNearbyPlayer(entity.locX(), entity.locY(), entity.locZ(), d0, predicate); } // Paper
-    @Nullable default EntityHuman findNearbyPlayer(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { return a(d0, d1, d2, d3, predicate); } // Paper - OBFHELPER
-    @Nullable default EntityHuman a(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { // Paper // Tuinity - diff on change, override in World - this should be "get closest player that matches predicate"
-        double d4 = -1.0D;
-        EntityHuman entityhuman = null;
-        Iterator iterator = this.getPlayers().iterator();
+	@Nullable
+	default EntityHuman findNearbyPlayer(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) {
+		return a(d0, d1, d2, d3, predicate);
+	} // Paper - OBFHELPER
 
-        while (iterator.hasNext()) {
-            EntityHuman entityhuman1 = (EntityHuman) iterator.next();
+	@Nullable
+	default EntityHuman a(double d0, double d1, double d2, double d3, @Nullable Predicate<Entity> predicate) { // Paper // Tuinity - diff on change, override in World - this should be "get closest player that matches predicate"
+		double d4 = -1.0D;
+		EntityHuman entityhuman = null;
+		Iterator iterator = this.getPlayers().iterator();
 
-            if (predicate == null || predicate.test(entityhuman1)) {
-                double d5 = entityhuman1.h(d0, d1, d2);
+		while (iterator.hasNext()) {
+			EntityHuman entityhuman1 = (EntityHuman) iterator.next();
 
-                if ((d3 < 0.0D || d5 < d3 * d3) && (d4 == -1.0D || d5 < d4)) {
-                    d4 = d5;
-                    entityhuman = entityhuman1;
-                }
-            }
-        }
+			if (predicate == null || predicate.test(entityhuman1)) {
+				double d5 = entityhuman1.h(d0, d1, d2);
 
-        return entityhuman;
-    }
+				if ((d3 < 0.0D || d5 < d3 * d3) && (d4 == -1.0D || d5 < d4)) {
+					d4 = d5;
+					entityhuman = entityhuman1;
+				}
+			}
+		}
 
-    // Paper start
-    default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, boolean notSpectator) {
-        return findNearbyBukkitPlayers(x, y, z, radius, notSpectator ? IEntitySelector.notSpectator() : IEntitySelector.canAITarget());
-    }
+		return entityhuman;
+	}
 
-    default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, @Nullable Predicate<Entity> predicate) {
-        ImmutableList.Builder<HumanEntity> builder = ImmutableList.builder();
+	// Paper start
+	default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, boolean notSpectator) {
+		return findNearbyBukkitPlayers(x, y, z, radius, notSpectator ? IEntitySelector.notSpectator() : IEntitySelector.canAITarget());
+	}
 
-        for (EntityHuman human : this.getPlayers()) {
-            if (predicate == null || predicate.test(human)) {
-                double distanceSquared = human.getDistanceSquared(x, y, z);
+	default List<HumanEntity> findNearbyBukkitPlayers(double x, double y, double z, double radius, @Nullable Predicate<Entity> predicate) {
+		ImmutableList.Builder<HumanEntity> builder = ImmutableList.builder();
 
-                if (radius < 0.0D || distanceSquared < radius * radius) {
-                    builder.add(human.getBukkitEntity());
-                }
-            }
-        }
+		for (EntityHuman human : this.getPlayers()) {
+			if (predicate == null || predicate.test(human)) {
+				double distanceSquared = human.getDistanceSquared(x, y, z);
 
-        return builder.build();
-    }
-    // Paper end
+				if (radius < 0.0D || distanceSquared < radius * radius) {
+					builder.add(human.getBukkitEntity());
+				}
+			}
+		}
 
-    @Nullable
-    default EntityHuman findNearbyPlayer(Entity entity, double d0) {
-        return this.a(entity.locX(), entity.locY(), entity.locZ(), d0, false);
-    }
+		return builder.build();
+	}
+	// Paper end
 
-    @Nullable
-    default EntityHuman a(double d0, double d1, double d2, double d3, boolean flag) {
-        Predicate<Entity> predicate = flag ? IEntitySelector.e : IEntitySelector.g;
+	@Nullable
+	default EntityHuman findNearbyPlayer(Entity entity, double d0) {
+		return this.a(entity.locX(), entity.locY(), entity.locZ(), d0, false);
+	}
 
-        return this.a(d0, d1, d2, d3, predicate);
-    }
+	@Nullable
+	default EntityHuman a(double d0, double d1, double d2, double d3, boolean flag) {
+		Predicate<Entity> predicate = flag ? IEntitySelector.e : IEntitySelector.g;
 
-    // Paper end
-    default boolean isAffectsSpawningPlayerNearby(double d0, double d1, double d2, double d3) {
-        Iterator iterator = this.getPlayers().iterator();
-        double d4;
-        do {
-            EntityHuman entityhuman;
-            do {
-                if (!iterator.hasNext()) {
-                    return false;
-                }
+		return this.a(d0, d1, d2, d3, predicate);
+	}
 
-                entityhuman = (EntityHuman) iterator.next();
-            } while (!IEntitySelector.affectsSpawning.test(entityhuman));
+	// Paper end
+	default boolean isAffectsSpawningPlayerNearby(double d0, double d1, double d2, double d3) {
+		Iterator iterator = this.getPlayers().iterator();
+		double d4;
+		do {
+			EntityHuman entityhuman;
+			do {
+				if (!iterator.hasNext()) {
+					return false;
+				}
 
-            d4 = entityhuman.getDistanceSquared(d0, d1, d2);
-        } while (d3 >= 0.0D && d4 >= d3 * d3);
+				entityhuman = (EntityHuman) iterator.next();
+			} while (!IEntitySelector.affectsSpawning.test(entityhuman));
 
-        return true;
-    }
-    // Paper end
+			d4 = entityhuman.getDistanceSquared(d0, d1, d2);
+		} while (d3 >= 0.0D && d4 >= d3 * d3);
 
-    // Purpur start
-    default boolean isPlayerNearby(double x, double y, double z, double distance) {
-        double distanceSq = distance * distance;
-        for (EntityHuman player : getPlayers()) {
-            if (IEntitySelector.notSpectator().test(player) && IEntitySelector.isLivingAlive().test(player) && IEntitySelector.notAfk.test(player)) {
-                if (distance < 0.0D || player.getDistanceSquared(x, y, z) < distanceSq) {
-                    return true;
-                }
-            }
-        }
-        return false;
-        // Purpur end
-    }
+		return true;
+	}
+	// Paper end
 
-    @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
-        return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
-    }
+	// Purpur start
+	default boolean isPlayerNearby(double x, double y, double z, double distance) {
+		double distanceSq = distance * distance;
+		for (EntityHuman player : getPlayers()) {
+			if (IEntitySelector.notSpectator().test(player) && IEntitySelector.isLivingAlive().test(player) && IEntitySelector.notAfk.test(player)) {
+				if (distance < 0.0D || player.getDistanceSquared(x, y, z) < distanceSq) {
+					return true;
+				}
+			}
+		}
+		return false;
+		// Purpur end
+	}
 
-    @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
-        return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, d0, d1, d2);
-    }
+	@Nullable
+	default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
+		return this.a(this.getPlayers(), pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
+	}
 
-    @Nullable
-    default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
-        return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, (EntityLiving) null, d0, d1, d2);
-    }
+	@Nullable
+	default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
+		return this.a(this.getPlayers(), pathfindertargetcondition, entityliving, d0, d1, d2);
+	}
 
-    @Nullable
-    default <T extends EntityLiving> T a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
-        return this.a(this.a(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
-    }
+	@Nullable
+	default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, double d0, double d1, double d2) { // Tuinity - diff on change, override in World - this should be "get closest player that matches path finder target condition"
+		return this.a(this.getPlayers(), pathfindertargetcondition, null, d0, d1, d2);
+	}
 
-    @Nullable
-    default <T extends EntityLiving> T b(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
-        return this.a(this.b(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
-    }
+	@Nullable
+	default <T extends EntityLiving> T a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
+		return this.a(this.a(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
+	}
 
-    @Nullable
-    default <T extends EntityLiving> T a(List<? extends T> list, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2) {
-        double d3 = -1.0D;
-        T t0 = null;
-        Iterator<? extends T> iterator = list.iterator(); // Paper - decompile fix
+	@Nullable
+	default <T extends EntityLiving> T b(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get closest entity by class that matches path finder target condition"
+		return this.a(this.b(oclass, axisalignedbb, null), pathfindertargetcondition, entityliving, d0, d1, d2); // Paper - decompile fix
+	}
 
-        while (iterator.hasNext()) {
-            T t1 = iterator.next(); // Paper - decompile fix
+	@Nullable
+	default <T extends EntityLiving> T a(List<? extends T> list, PathfinderTargetCondition pathfindertargetcondition, @Nullable EntityLiving entityliving, double d0, double d1, double d2) {
+		double d3 = -1.0D;
+		T t0 = null;
+		Iterator<? extends T> iterator = list.iterator(); // Paper - decompile fix
 
-            if (pathfindertargetcondition.a(entityliving, t1)) {
-                double d4 = t1.h(d0, d1, d2);
+		while (iterator.hasNext()) {
+			T t1 = iterator.next(); // Paper - decompile fix
 
-                if (d3 == -1.0D || d4 < d3) {
-                    d3 = d4;
-                    t0 = t1;
-                }
-            }
-        }
+			if (pathfindertargetcondition.a(entityliving, t1)) {
+				double d4 = t1.h(d0, d1, d2);
 
-        return t0;
-    }
+				if (d3 == -1.0D || d4 < d3) {
+					d3 = d4;
+					t0 = t1;
+				}
+			}
+		}
 
-    default List<EntityHuman> a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get players that matches path finder target condition"
-        List<EntityHuman> list = Lists.newArrayList();
-        Iterator iterator = this.getPlayers().iterator();
+		return t0;
+	}
 
-        while (iterator.hasNext()) {
-            EntityHuman entityhuman = (EntityHuman) iterator.next();
+	default List<EntityHuman> a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) { // Tuinity - diff on change, override in World - this should be "get players that matches path finder target condition"
+		List<EntityHuman> list = Lists.newArrayList();
+		Iterator iterator = this.getPlayers().iterator();
 
-            if (axisalignedbb.e(entityhuman.locX(), entityhuman.locY(), entityhuman.locZ()) && pathfindertargetcondition.a(entityliving, entityhuman)) {
-                list.add(entityhuman);
-            }
-        }
+		while (iterator.hasNext()) {
+			EntityHuman entityhuman = (EntityHuman) iterator.next();
 
-        return list;
-    }
+			if (axisalignedbb.e(entityhuman.locX(), entityhuman.locY(), entityhuman.locZ()) && pathfindertargetcondition.a(entityliving, entityhuman)) {
+				list.add(entityhuman);
+			}
+		}
 
-    default <T extends EntityLiving> List<T> a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) {
-        List<T> list = this.a(oclass, axisalignedbb, (Predicate) null);
-        List<T> list1 = Lists.newArrayList();
-        Iterator<T> iterator = list.iterator(); // Paper - decompile fix
+		return list;
+	}
 
-        while (iterator.hasNext()) {
-            T t0 = iterator.next(); // Paper - decompile fix
+	default <T extends EntityLiving> List<T> a(Class<? extends T> oclass, PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving, AxisAlignedBB axisalignedbb) {
+		List<T> list = this.a(oclass, axisalignedbb, (Predicate) null);
+		List<T> list1 = Lists.newArrayList();
+		Iterator<T> iterator = list.iterator(); // Paper - decompile fix
 
-            if (pathfindertargetcondition.a(entityliving, t0)) {
-                list1.add(t0);
-            }
-        }
+		while (iterator.hasNext()) {
+			T t0 = iterator.next(); // Paper - decompile fix
 
-        return list1;
-    }
+			if (pathfindertargetcondition.a(entityliving, t0)) {
+				list1.add(t0);
+			}
+		}
 
-    @Nullable
-    default EntityHuman b(UUID uuid) {
-        // Paper start - allow WorldServer to override
-        return this.getPlayerByUUID(uuid);
-    }
-    @Nullable
-    default EntityHuman getPlayerByUUID(UUID uuid) {
-        // Paper end
-        for (int i = 0; i < this.getPlayers().size(); ++i) {
-            EntityHuman entityhuman = (EntityHuman) this.getPlayers().get(i);
+		return list1;
+	}
 
-            if (uuid.equals(entityhuman.getUniqueID())) {
-                return entityhuman;
-            }
-        }
+	@Nullable
+	default EntityHuman b(UUID uuid) {
+		// Paper start - allow WorldServer to override
+		return this.getPlayerByUUID(uuid);
+	}
 
-        return null;
-    }
+	@Nullable
+	default EntityHuman getPlayerByUUID(UUID uuid) {
+		// Paper end
+		for (int i = 0; i < this.getPlayers().size(); ++i) {
+			EntityHuman entityhuman = this.getPlayers().get(i);
+
+			if (uuid.equals(entityhuman.getUniqueID())) {
+				return entityhuman;
+			}
+		}
+
+		return null;
+	}
 }

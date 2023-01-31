@@ -1,7 +1,7 @@
 package com.destroystokyo.paper.io.chunk;
 
-import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.IOUtil;
+import com.destroystokyo.paper.io.PaperFileIOThread;
 import com.destroystokyo.paper.io.PrioritizedTaskQueue;
 import com.destroystokyo.paper.io.QueueExecutorThread;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +16,6 @@ import net.minecraft.world.level.chunk.storage.ChunkRegionLoader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
-import org.spigotmc.AsyncCatcher;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;

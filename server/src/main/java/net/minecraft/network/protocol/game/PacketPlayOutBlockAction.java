@@ -36,7 +36,7 @@ public class PacketPlayOutBlockAction implements Packet<PacketListenerPlayOut> {
         packetdataserializer.a(this.a);
         packetdataserializer.writeByte(this.b);
         packetdataserializer.writeByte(this.c);
-        packetdataserializer.d(IRegistry.BLOCK.a((Object) this.d));
+        packetdataserializer.d(IRegistry.BLOCK.a(this.d));
     }
 
     public void a(PacketListenerPlayOut packetlistenerplayout) {

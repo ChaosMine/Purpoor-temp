@@ -1,11 +1,8 @@
 package net.minecraft.world.level.block.piston;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -18,11 +15,7 @@ import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockDirectional;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EnumBlockMirror;
-import net.minecraft.world.level.block.EnumBlockRotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
@@ -35,13 +28,15 @@ import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
-import com.google.common.collect.ImmutableList;
-import java.util.AbstractList;
 import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+
+import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 // CraftBukkit end
 
 public class BlockPiston extends BlockDirectional {

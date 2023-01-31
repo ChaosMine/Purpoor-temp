@@ -2,11 +2,8 @@
 // Licensed under the MIT license.
 package com.mojang.datafixers.util;
 
-import com.mojang.datafixers.kinds.App;
-import com.mojang.datafixers.kinds.Applicative;
-import com.mojang.datafixers.kinds.CocartesianLike;
-import com.mojang.datafixers.kinds.K1;
-import com.mojang.datafixers.kinds.Traversable;
+import com.mojang.datafixers.kinds.*;
+import net.minecraft.util.Unit;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -166,11 +163,17 @@ public abstract class Either<L, R> implements App<Either.Mu<R>, L> {
         return map(Either::left, t -> right(l.apply(t)));
     }
 
+    private static final Either UNIT_LEFT = left(Unit.INSTANCE);
+
     public static <L, R> Either<L, R> left(final L value) {
+        if (value == Unit.INSTANCE) return UNIT_LEFT;
         return new Left<>(value);
     }
 
+    private static final Either UNIT_RIGHT = right(Unit.INSTANCE);
+
     public static <L, R> Either<L, R> right(final R value) {
+        if (value == Unit.INSTANCE) return UNIT_RIGHT;
         return new Right<>(value);
     }
 

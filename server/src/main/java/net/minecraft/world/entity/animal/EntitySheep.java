@@ -1,12 +1,6 @@
 package net.minecraft.world.entity.animal;
 
 import com.google.common.collect.Maps;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,35 +17,17 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.IShearable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalEatTile;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.Containers;
+import net.minecraft.world.inventory.InventoryCraftResult;
 import net.minecraft.world.inventory.InventoryCrafting;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.item.ItemDye;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.IMaterial;
@@ -60,13 +36,16 @@ import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.storage.loot.LootTables;
-
-// CraftBukkit start
-import net.minecraft.world.inventory.InventoryCraftResult;
-import net.minecraft.world.item.Item;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.inventory.InventoryView;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class EntitySheep extends EntityAnimal implements IShearable {

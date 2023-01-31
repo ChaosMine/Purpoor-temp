@@ -1,12 +1,15 @@
 package com.tuinity.tuinity.chunk;
 
 import com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet;
+import dev.kamillaova.paper.pool.StringBuilderPool;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.ChunkCoordIntPair;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -79,7 +82,7 @@ public final class SingleThreadChunkRegionManager {
         return section != null ? section.region : null;
     }
 
-    private final List<Region> toMerge = new ArrayList<>();
+    private final List<Region> toMerge = new ObjectArrayList<>();
 
     protected RegionSection getOrCreateAndMergeSection(final int sectionX, final int sectionZ, final RegionSection force) {
         final long sectionKey = MCUtil.getCoordinateKey(sectionX, sectionZ);
@@ -342,7 +345,7 @@ public final class SingleThreadChunkRegionManager {
 
         @Override
         public String toString() {
-            final StringBuilder ret = new StringBuilder(128);
+            var ret = StringBuilderPool.take();
 
             ret.append("Region{");
             ret.append("dead=").append(this.dead).append(',');
@@ -447,7 +450,7 @@ public final class SingleThreadChunkRegionManager {
         }
 
         private static String toString(final long[] array) {
-            final StringBuilder ret = new StringBuilder();
+            final StringBuilder ret = dev.kamillaova.paper.pool.StringBuilderPool.take();
             for (final long value : array) {
                 // zero pad the hex string
                 final char[] zeros = new char[Long.SIZE / 4];

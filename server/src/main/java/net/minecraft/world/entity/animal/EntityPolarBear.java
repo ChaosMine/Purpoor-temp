@@ -1,13 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -23,27 +15,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.TimeRange;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.IEntityAngerable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStroll;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalUniversalAngerReset;
@@ -57,6 +32,10 @@ import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
 

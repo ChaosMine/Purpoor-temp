@@ -3,11 +3,9 @@ package com.destroystokyo.paper.gui;
 import net.minecraft.SystemUtils;
 import net.minecraft.server.MinecraftServer;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JList;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.Dimension;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;

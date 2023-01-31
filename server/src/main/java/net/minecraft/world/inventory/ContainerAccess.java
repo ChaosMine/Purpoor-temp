@@ -1,10 +1,11 @@
 package net.minecraft.world.inventory;
 
+import net.minecraft.core.BlockPosition;
+import net.minecraft.world.level.World;
+
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.world.level.World;
 
 public interface ContainerAccess {
 

@@ -5,10 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.UnmodifiableIterator;
 import com.mojang.serialization.Codec;
-import java.util.Comparator;
-import java.util.Map.Entry;
-import java.util.Random;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -17,6 +13,10 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.synth.NoiseGeneratorOctaves;
+
+import java.util.Comparator;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<WorldGenSurfaceConfigurationBase> {
 

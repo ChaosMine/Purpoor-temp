@@ -4,23 +4,25 @@ import com.tuinity.tuinity.util.CoordinateUtils;
 import com.tuinity.tuinity.util.IntegerUtil;
 import com.tuinity.tuinity.util.WorldUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.shorts.ShortCollection;
 import it.unimi.dsi.fastutil.shorts.ShortIterator;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
+import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.core.EnumDirection;
 import net.minecraft.world.level.EnumSkyBlock;
 import net.minecraft.world.level.IBlockAccess;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.chunk.ChunkSection;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.chunk.ILightAccess;
-import net.minecraft.core.SectionPosition;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-import net.minecraft.world.level.World;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1125,7 +1127,7 @@ public abstract class StarLightEngine {
     protected static final int ALL_DIRECTIONS_BITSET = (1 << 6) - 1;
     static {
         for (int i = 0; i < OLD_CHECK_DIRECTIONS.length; ++i) {
-            final List<AxisDirection> directions = new ArrayList<>();
+            final List<AxisDirection> directions = new ObjectArrayList<>();
             for (int bitset = i, len = Integer.bitCount(i), index = 0; index < len; ++index, bitset ^= IntegerUtil.getTrailingBit(bitset)) {
                 directions.add(AXIS_DIRECTIONS[IntegerUtil.trailingZeros(bitset)]);
             }

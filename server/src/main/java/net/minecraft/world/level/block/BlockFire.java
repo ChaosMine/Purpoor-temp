@@ -1,13 +1,9 @@
 package net.minecraft.world.level.block;
 
+import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import com.destroystokyo.paper.event.block.TNTPrimeEvent; // Paper - TNTPrimeEvent
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -16,11 +12,7 @@ import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.item.context.ItemActionContext;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -30,12 +22,15 @@ import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class BlockFire extends BlockFireAbstract {

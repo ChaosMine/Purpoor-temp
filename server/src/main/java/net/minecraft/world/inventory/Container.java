@@ -1,17 +1,18 @@
 package net.minecraft.world.inventory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import javax.annotation.Nullable;
+import com.google.common.base.Preconditions;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IInventory;
@@ -21,34 +22,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TileEntity;
-
-// CraftBukkit start
-import com.google.common.base.Preconditions;
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
+
+import javax.annotation.Nullable;
+import java.util.*;
 // CraftBukkit end
 
 public abstract class Container {
 
     public NonNullList<ItemStack> items = NonNullList.a();
-    public List<Slot> slots = Lists.newArrayList();
-    private final List<ContainerProperty> d = Lists.newArrayList();
+    public List<Slot> slots = new ObjectArrayList<>();
+    private final List<ContainerProperty> d = new ObjectArrayList<>();
     @Nullable
     private final Containers<?> e;
     public final int windowId;
     private int dragType = -1;
     private int h;
-    private final Set<Slot> i = Sets.newHashSet();
-    private final List<ICrafting> listeners = Lists.newArrayList();
-    private final Set<EntityHuman> k = Sets.newHashSet();
+    private final Set<Slot> i = new ObjectLinkedOpenHashSet<>();
+    private final List<ICrafting> listeners = new ObjectArrayList<>();
+    private final Set<EntityHuman> k = new ReferenceLinkedOpenHashSet<>();
 
     // CraftBukkit start
     public boolean checkReachable = true;
@@ -152,33 +149,36 @@ public abstract class Container {
     public void c() {
         int i;
 
-        for (i = 0; i < this.slots.size(); ++i) {
-            ItemStack itemstack = ((Slot) this.slots.get(i)).getItem();
-            ItemStack itemstack1 = (ItemStack) this.items.get(i);
+        var slots = this.slots;
+        var slotsSize = slots.size();
+        var items = this.items;
+        var listeners = this.listeners;
+        var listenersSize = listeners.size();
+
+        for (i = 0; i < slotsSize; ++i) {
+            ItemStack itemstack = slots.get(i).getItem();
+            ItemStack itemstack1 = items.get(i);
 
             if (!ItemStack.matches(itemstack1, itemstack)) {
                 ItemStack itemstack2 = itemstack.cloneItemStack();
 
                 this.items.set(i, itemstack2);
-                Iterator iterator = this.listeners.iterator();
 
-                while (iterator.hasNext()) {
-                    ICrafting icrafting = (ICrafting) iterator.next();
-
+                for (var q = 0; q < listenersSize; q++) {
+                    var icrafting = listeners.get(q);
                     icrafting.a(this, i, itemstack2);
                 }
             }
         }
 
-        for (i = 0; i < this.d.size(); ++i) {
-            ContainerProperty containerproperty = (ContainerProperty) this.d.get(i);
+        var d = this.d;
+        var dSize = d.size();
+        for (i = 0; i < dSize; ++i) {
+            ContainerProperty containerproperty = d.get(i);
 
             if (containerproperty.c()) {
-                Iterator iterator1 = this.listeners.iterator();
-
-                while (iterator1.hasNext()) {
-                    ICrafting icrafting1 = (ICrafting) iterator1.next();
-
+                for (var q = 0; q < listenersSize; q++) {
+                    var icrafting1 = listeners.get(q);
                     icrafting1.setContainerData(this, i, containerproperty.get());
                 }
             }
@@ -195,9 +195,7 @@ public abstract class Container {
     }
 
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
-        Slot slot = (Slot) this.slots.get(i);
-
-        return slot != null ? slot.getItem() : ItemStack.b;
+        return ItemStack.b;
     }
 
     public ItemStack a(int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman) {
@@ -256,11 +254,11 @@ public abstract class Container {
                 if (!this.i.isEmpty()) {
                     itemstack2 = playerinventory.getCarried().cloneItemStack();
                     k = playerinventory.getCarried().getCount();
-                    Iterator iterator = this.i.iterator();
+                    Iterator<Slot> iterator = this.i.iterator();
 
-                    Map<Integer, ItemStack> draggedSlots = new HashMap<Integer, ItemStack>(); // CraftBukkit - Store slots from drag in map (raw slot id -> new stack)
+                    Int2ObjectOpenHashMap<ItemStack> draggedSlots = new Int2ObjectOpenHashMap<>(); // CraftBukkit - Store slots from drag in map (raw slot id -> new stack)
                     while (iterator.hasNext()) {
-                        Slot slot1 = (Slot) iterator.next();
+                        Slot slot1 = iterator.next();
                         ItemStack itemstack3 = playerinventory.getCarried();
 
                         if (slot1 != null && a(slot1, itemstack3, true) && slot1.isAllowed(itemstack3) && (this.dragType == 2 || itemstack3.getCount() >= this.i.size()) && this.b(slot1)) {
@@ -283,9 +281,9 @@ public abstract class Container {
                     InventoryView view = getBukkitView();
                     org.bukkit.inventory.ItemStack newcursor = CraftItemStack.asCraftMirror(itemstack2);
                     newcursor.setAmount(k);
-                    Map<Integer, org.bukkit.inventory.ItemStack> eventmap = new HashMap<Integer, org.bukkit.inventory.ItemStack>();
-                    for (Map.Entry<Integer, ItemStack> ditem : draggedSlots.entrySet()) {
-                        eventmap.put(ditem.getKey(), CraftItemStack.asBukkitCopy(ditem.getValue()));
+                    Int2ObjectOpenHashMap<org.bukkit.inventory.ItemStack> eventmap = new Int2ObjectOpenHashMap<>();
+                    for (var ditem : draggedSlots.int2ObjectEntrySet()) {
+                        eventmap.put(ditem.getIntKey(), CraftItemStack.asBukkitCopy(ditem.getValue()));
                     }
 
                     // It's essential that we set the cursor to the new value here to prevent item duplication if a plugin closes the inventory.

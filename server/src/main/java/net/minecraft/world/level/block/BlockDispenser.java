@@ -1,15 +1,8 @@
 package net.minecraft.world.level.block;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
-import java.util.Random;
 import net.minecraft.SystemUtils;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.EnumDirection;
-import net.minecraft.core.IPosition;
-import net.minecraft.core.ISourceBlock;
-import net.minecraft.core.Position;
-import net.minecraft.core.SourceBlock;
+import net.minecraft.core.*;
 import net.minecraft.core.dispenser.DispenseBehaviorItem;
 import net.minecraft.core.dispenser.IDispenseBehavior;
 import net.minecraft.server.level.WorldServer;
@@ -36,6 +29,9 @@ import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.block.state.properties.BlockStateDirection;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+
+import java.util.Map;
+import java.util.Random;
 
 public class BlockDispenser extends BlockTileEntity {
 

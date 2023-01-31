@@ -1,6 +1,5 @@
 package net.minecraft.world.entity;
 
-import java.util.Map.Entry;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
@@ -16,11 +15,11 @@ import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+
+import java.util.Map.Entry;
 // CraftBukkit end
 
 public class EntityExperienceOrb extends Entity {

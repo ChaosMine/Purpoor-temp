@@ -5,15 +5,16 @@ import it.unimi.dsi.fastutil.shorts.ShortCollection;
 import it.unimi.dsi.fastutil.shorts.ShortIterator;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.IBlockAccess;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkSection;
 import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.chunk.ILightAccess;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-import net.minecraft.world.level.World;
+
 import java.util.Arrays;
 import java.util.Set;
 

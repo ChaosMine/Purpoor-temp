@@ -1,9 +1,10 @@
 package org.bukkit;
 
-import java.util.Random;
 import net.minecraft.world.level.chunk.NibbleArray;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Random;
 
 public class NibbleArrayTest {
 

@@ -2,12 +2,13 @@ package net.minecraft.server.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.util.Iterator;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.EnumGamemode;
+
+import java.util.Iterator;
 
 public class CommandGamemodeDefault {
 

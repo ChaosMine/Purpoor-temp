@@ -1,12 +1,11 @@
 package net.minecraft.world;
 
-import javax.annotation.concurrent.Immutable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
+
+import javax.annotation.concurrent.Immutable;
 // CraftBukkit end
 
 @Immutable

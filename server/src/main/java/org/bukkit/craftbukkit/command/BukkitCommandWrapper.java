@@ -10,12 +10,13 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
 import net.minecraft.commands.CommandListenerWrapper;
 import org.bukkit.command.Command;
 import org.bukkit.craftbukkit.CraftServer;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 public class BukkitCommandWrapper implements com.mojang.brigadier.Command<CommandListenerWrapper>, Predicate<CommandListenerWrapper>, SuggestionProvider<CommandListenerWrapper>, com.destroystokyo.paper.brigadier.BukkitBrigadierCommand<CommandListenerWrapper> { // Paper
 

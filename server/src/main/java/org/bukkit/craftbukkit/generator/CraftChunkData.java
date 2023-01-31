@@ -1,7 +1,5 @@
 package org.bukkit.craftbukkit.generator;
 
-import java.util.HashSet;
-import java.util.Set;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -13,6 +11,9 @@ import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.material.MaterialData;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Data to be used for the block types and data in a newly generated chunk.

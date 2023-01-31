@@ -1,5 +1,6 @@
 package com.destroystokyo.paper;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,7 +34,7 @@ public class MSPTCommand extends Command {
 
         MinecraftServer server = MinecraftServer.getServer();
 
-        List<String> times = new ArrayList<>();
+        List<String> times = new ObjectArrayList<>();
         times.addAll(eval(server.tickTimes5s.getTimes()));
         times.addAll(eval(server.tickTimes10s.getTimes()));
         times.addAll(eval(server.tickTimes60s.getTimes()));

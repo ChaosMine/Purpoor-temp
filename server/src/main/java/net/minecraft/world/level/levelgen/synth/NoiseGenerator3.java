@@ -3,11 +3,11 @@ package net.minecraft.world.level.levelgen.synth;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.world.level.levelgen.SeededRandom;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class NoiseGenerator3 implements NoiseGenerator {
 

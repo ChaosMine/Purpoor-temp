@@ -1,8 +1,6 @@
 package net.minecraft.world.inventory;
 
 import net.minecraft.core.IRegistry;
-
-// CraftBukkit start
 import net.minecraft.world.entity.player.PlayerInventory;
 // CraftBukkit end
 

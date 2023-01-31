@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
-import java.util.Iterator;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.NonNullList;
@@ -17,6 +16,9 @@ import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class ItemPotion extends Item {
 
@@ -37,7 +39,7 @@ public class ItemPotion extends Item {
             CriterionTriggers.z.a((EntityPlayer) entityhuman, itemstack);
         }
 
-        List<MobEffect> instantLater = new java.util.ArrayList<>(); // Paper - Fix harming potion dupe
+        List<MobEffect> instantLater = new ObjectArrayList<>(); // Paper - Fix harming potion dupe
         if (!world.isClientSide) {
             List<MobEffect> list = PotionUtil.getEffects(itemstack);
             Iterator iterator = list.iterator();

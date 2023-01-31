@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block.grower;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.IBlockAccess;
@@ -11,6 +9,9 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureTreeConfiguration;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public abstract class WorldGenMegaTreeProvider extends WorldGenTreeProvider {
 

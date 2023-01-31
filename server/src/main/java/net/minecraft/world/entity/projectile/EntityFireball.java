@@ -15,8 +15,7 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
-
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 public abstract class EntityFireball extends IProjectile {
 

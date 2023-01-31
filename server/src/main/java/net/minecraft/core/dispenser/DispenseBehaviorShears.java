@@ -1,7 +1,5 @@
 package net.minecraft.core.dispenser;
 
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.ISourceBlock;
@@ -22,11 +20,12 @@ import net.minecraft.world.level.block.BlockDispenser;
 import net.minecraft.world.level.block.entity.TileEntityBeehive;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockDispenseEvent;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class DispenseBehaviorShears extends DispenseBehaviorMaybe {

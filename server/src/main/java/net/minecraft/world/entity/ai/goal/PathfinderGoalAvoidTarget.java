@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
-import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityLiving;
@@ -11,6 +9,9 @@ import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.entity.ai.util.RandomPositionGenerator;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.EnumSet;
+import java.util.function.Predicate;
 
 public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends PathfinderGoal {
 

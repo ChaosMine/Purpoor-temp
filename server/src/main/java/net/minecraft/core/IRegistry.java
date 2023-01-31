@@ -2,19 +2,7 @@ package net.minecraft.core;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.Keyable;
-import com.mojang.serialization.Lifecycle;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-import javax.annotation.Nullable;
+import com.mojang.serialization.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.particles.Particle;
 import net.minecraft.core.particles.Particles;
@@ -60,11 +48,7 @@ import net.minecraft.world.level.dimension.WorldDimension;
 import net.minecraft.world.level.levelgen.GeneratorSettingBase;
 import net.minecraft.world.level.levelgen.carver.WorldGenCarverAbstract;
 import net.minecraft.world.level.levelgen.carver.WorldGenCarverWrapper;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureGenerator;
-import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
-import net.minecraft.world.level.levelgen.feature.WorldGenFeatureStructurePieceType;
-import net.minecraft.world.level.levelgen.feature.WorldGenerator;
+import net.minecraft.world.level.levelgen.feature.*;
 import net.minecraft.world.level.levelgen.feature.blockplacers.WorldGenBlockPlacers;
 import net.minecraft.world.level.levelgen.feature.featuresize.FeatureSizeType;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.WorldGenFoilagePlacers;
@@ -91,6 +75,15 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
 
@@ -130,98 +123,38 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     public static final ResourceKey<IRegistry<LootItemFunctionType>> I = a("loot_function_type");
     public static final ResourceKey<IRegistry<LootItemConditionType>> J = a("loot_condition_type");
     public static final ResourceKey<IRegistry<DimensionManager>> K = a("dimension_type");
-    public static final ResourceKey<IRegistry<World>> L = a("dimension"); public static final ResourceKey<IRegistry<World>> getWorldRegistry() { return L; } // Paper - OBFHELPER
+    public static final ResourceKey<IRegistry<World>> L = a("dimension"); public static ResourceKey<IRegistry<World>> getWorldRegistry() { return L; } // Paper - OBFHELPER
     public static final ResourceKey<IRegistry<WorldDimension>> M = a("dimension");
-    public static final IRegistry<SoundEffect> SOUND_EVENT = a(IRegistry.g, () -> {
-        return SoundEffects.ENTITY_ITEM_PICKUP;
-    });
-    public static final RegistryBlocks<FluidType> FLUID = a(IRegistry.h, "empty", () -> {
-        return FluidTypes.EMPTY;
-    });
-    public static final IRegistry<MobEffectList> MOB_EFFECT = a(IRegistry.i, () -> {
-        return MobEffects.LUCK;
-    });
-    public static final RegistryBlocks<Block> BLOCK = a(IRegistry.j, "air", () -> {
-        return Blocks.AIR;
-    });
-    public static final IRegistry<Enchantment> ENCHANTMENT = a(IRegistry.k, () -> {
-        return Enchantments.LOOT_BONUS_BLOCKS;
-    });
-    public static final RegistryBlocks<EntityTypes<?>> ENTITY_TYPE = a(IRegistry.l, "pig", () -> {
-        return EntityTypes.PIG;
-    });
-    public static final RegistryBlocks<Item> ITEM = a(IRegistry.m, "air", () -> {
-        return Items.AIR;
-    });
-    public static final RegistryBlocks<PotionRegistry> POTION = a(IRegistry.n, "empty", () -> {
-        return Potions.EMPTY;
-    });
-    public static final IRegistry<Particle<?>> PARTICLE_TYPE = a(IRegistry.o, () -> {
-        return Particles.BLOCK;
-    });
-    public static final IRegistry<TileEntityTypes<?>> BLOCK_ENTITY_TYPE = a(IRegistry.p, () -> {
-        return TileEntityTypes.FURNACE;
-    });
-    public static final RegistryBlocks<Paintings> MOTIVE = a(IRegistry.q, "kebab", () -> {
-        return Paintings.a;
-    });
-    public static final IRegistry<MinecraftKey> CUSTOM_STAT = a(IRegistry.r, () -> {
-        return StatisticList.JUMP;
-    });
-    public static final RegistryBlocks<ChunkStatus> CHUNK_STATUS = a(IRegistry.s, "empty", () -> {
-        return ChunkStatus.EMPTY;
-    });
-    public static final IRegistry<DefinedStructureRuleTestType<?>> RULE_TEST = a(IRegistry.t, () -> {
-        return DefinedStructureRuleTestType.a;
-    });
-    public static final IRegistry<PosRuleTestType<?>> POS_RULE_TEST = a(IRegistry.u, () -> {
-        return PosRuleTestType.a;
-    });
-    public static final IRegistry<Containers<?>> MENU = a(IRegistry.v, () -> {
-        return Containers.ANVIL;
-    });
-    public static final IRegistry<Recipes<?>> RECIPE_TYPE = a(IRegistry.w, () -> {
-        return Recipes.CRAFTING;
-    });
-    public static final IRegistry<RecipeSerializer<?>> RECIPE_SERIALIZER = a(IRegistry.x, () -> {
-        return RecipeSerializer.b;
-    });
-    public static final IRegistry<AttributeBase> ATTRIBUTE = a(IRegistry.y, () -> {
-        return GenericAttributes.LUCK;
-    });
-    public static final IRegistry<StatisticWrapper<?>> STATS = a(IRegistry.z, () -> {
-        return StatisticList.ITEM_USED;
-    });
-    public static final RegistryBlocks<VillagerType> VILLAGER_TYPE = a(IRegistry.A, "plains", () -> {
-        return VillagerType.PLAINS;
-    });
-    public static final RegistryBlocks<VillagerProfession> VILLAGER_PROFESSION = a(IRegistry.B, "none", () -> {
-        return VillagerProfession.NONE;
-    });
-    public static final RegistryBlocks<VillagePlaceType> POINT_OF_INTEREST_TYPE = a(IRegistry.C, "unemployed", () -> {
-        return VillagePlaceType.c;
-    });
-    public static final RegistryBlocks<MemoryModuleType<?>> MEMORY_MODULE_TYPE = a(IRegistry.D, "dummy", () -> {
-        return MemoryModuleType.DUMMY;
-    });
-    public static final RegistryBlocks<SensorType<?>> SENSOR_TYPE = a(IRegistry.E, "dummy", () -> {
-        return SensorType.a;
-    });
-    public static final IRegistry<Schedule> SCHEDULE = a(IRegistry.F, () -> {
-        return Schedule.EMPTY;
-    });
-    public static final IRegistry<Activity> ACTIVITY = a(IRegistry.G, () -> {
-        return Activity.IDLE;
-    });
-    public static final IRegistry<LootEntryType> ao = a(IRegistry.H, () -> {
-        return LootEntries.a;
-    });
-    public static final IRegistry<LootItemFunctionType> ap = a(IRegistry.I, () -> {
-        return LootItemFunctions.b;
-    });
-    public static final IRegistry<LootItemConditionType> aq = a(IRegistry.J, () -> {
-        return LootItemConditions.a;
-    });
+    public static final IRegistry<SoundEffect> SOUND_EVENT = a(IRegistry.g, () -> SoundEffects.ENTITY_ITEM_PICKUP);
+    public static final RegistryBlocks<FluidType> FLUID = a(IRegistry.h, "empty", () -> FluidTypes.EMPTY);
+    public static final IRegistry<MobEffectList> MOB_EFFECT = a(IRegistry.i, () -> MobEffects.LUCK);
+    public static final RegistryBlocks<Block> BLOCK = a(IRegistry.j, "air", () -> Blocks.AIR);
+    public static final IRegistry<Enchantment> ENCHANTMENT = a(IRegistry.k, () -> Enchantments.LOOT_BONUS_BLOCKS);
+    public static final RegistryBlocks<EntityTypes<?>> ENTITY_TYPE = a(IRegistry.l, "pig", () -> EntityTypes.PIG);
+    public static final RegistryBlocks<Item> ITEM = a(IRegistry.m, "air", () -> Items.AIR);
+    public static final RegistryBlocks<PotionRegistry> POTION = a(IRegistry.n, "empty", () -> Potions.EMPTY);
+    public static final IRegistry<Particle<?>> PARTICLE_TYPE = a(IRegistry.o, () -> Particles.BLOCK);
+    public static final IRegistry<TileEntityTypes<?>> BLOCK_ENTITY_TYPE = a(IRegistry.p, () -> TileEntityTypes.FURNACE);
+    public static final RegistryBlocks<Paintings> MOTIVE = a(IRegistry.q, "kebab", () -> Paintings.a);
+    public static final IRegistry<MinecraftKey> CUSTOM_STAT = a(IRegistry.r, () -> StatisticList.JUMP);
+    public static final RegistryBlocks<ChunkStatus> CHUNK_STATUS = a(IRegistry.s, "empty", () -> ChunkStatus.EMPTY);
+    public static final IRegistry<DefinedStructureRuleTestType<?>> RULE_TEST = a(IRegistry.t, () -> DefinedStructureRuleTestType.a);
+    public static final IRegistry<PosRuleTestType<?>> POS_RULE_TEST = a(IRegistry.u, () -> PosRuleTestType.a);
+    public static final IRegistry<Containers<?>> MENU = a(IRegistry.v, () -> Containers.ANVIL);
+    public static final IRegistry<Recipes<?>> RECIPE_TYPE = a(IRegistry.w, () -> Recipes.CRAFTING);
+    public static final IRegistry<RecipeSerializer<?>> RECIPE_SERIALIZER = a(IRegistry.x, () -> RecipeSerializer.b);
+    public static final IRegistry<AttributeBase> ATTRIBUTE = a(IRegistry.y, () -> GenericAttributes.LUCK);
+    public static final IRegistry<StatisticWrapper<?>> STATS = a(IRegistry.z, () -> StatisticList.ITEM_USED);
+    public static final RegistryBlocks<VillagerType> VILLAGER_TYPE = a(IRegistry.A, "plains", () -> VillagerType.PLAINS);
+    public static final RegistryBlocks<VillagerProfession> VILLAGER_PROFESSION = a(IRegistry.B, "none", () -> VillagerProfession.NONE);
+    public static final RegistryBlocks<VillagePlaceType> POINT_OF_INTEREST_TYPE = a(IRegistry.C, "unemployed", () -> VillagePlaceType.c);
+    public static final RegistryBlocks<MemoryModuleType<?>> MEMORY_MODULE_TYPE = a(IRegistry.D, "dummy", () -> MemoryModuleType.DUMMY);
+    public static final RegistryBlocks<SensorType<?>> SENSOR_TYPE = a(IRegistry.E, "dummy", () -> SensorType.a);
+    public static final IRegistry<Schedule> SCHEDULE = a(IRegistry.F, () -> Schedule.EMPTY);
+    public static final IRegistry<Activity> ACTIVITY = a(IRegistry.G, () -> Activity.IDLE);
+    public static final IRegistry<LootEntryType> ao = a(IRegistry.H, () -> LootEntries.a);
+    public static final IRegistry<LootItemFunctionType> ap = a(IRegistry.I, () -> LootItemFunctions.b);
+    public static final IRegistry<LootItemConditionType> aq = a(IRegistry.J, () -> LootItemConditions.a);
     public static final ResourceKey<IRegistry<GeneratorSettingBase>> ar = a("worldgen/noise_settings");
     public static final ResourceKey<IRegistry<WorldGenSurfaceComposite<?>>> as = a("worldgen/configured_surface_builder");
     public static final ResourceKey<IRegistry<WorldGenCarverWrapper<?>>> at = a("worldgen/configured_carver");
@@ -231,29 +164,17 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     public static final ResourceKey<IRegistry<WorldGenFeatureDefinedStructurePoolTemplate>> ax = a("worldgen/template_pool");
     public static final ResourceKey<IRegistry<BiomeBase>> ay = a("worldgen/biome");
     public static final ResourceKey<IRegistry<WorldGenSurface<?>>> az = a("worldgen/surface_builder");
-    public static final IRegistry<WorldGenSurface<?>> SURFACE_BUILDER = a(IRegistry.az, () -> {
-        return WorldGenSurface.v;
-    });
+    public static final IRegistry<WorldGenSurface<?>> SURFACE_BUILDER = a(IRegistry.az, () -> WorldGenSurface.v);
     public static final ResourceKey<IRegistry<WorldGenCarverAbstract<?>>> aB = a("worldgen/carver");
-    public static final IRegistry<WorldGenCarverAbstract<?>> CARVER = a(IRegistry.aB, () -> {
-        return WorldGenCarverAbstract.a;
-    });
+    public static final IRegistry<WorldGenCarverAbstract<?>> CARVER = a(IRegistry.aB, () -> WorldGenCarverAbstract.a);
     public static final ResourceKey<IRegistry<WorldGenerator<?>>> aD = a("worldgen/feature");
-    public static final IRegistry<WorldGenerator<?>> FEATURE = a(IRegistry.aD, () -> {
-        return WorldGenerator.ORE;
-    });
+    public static final IRegistry<WorldGenerator<?>> FEATURE = a(IRegistry.aD, () -> WorldGenerator.ORE);
     public static final ResourceKey<IRegistry<StructureGenerator<?>>> aF = a("worldgen/structure_feature");
-    public static final IRegistry<StructureGenerator<?>> STRUCTURE_FEATURE = a(IRegistry.aF, () -> {
-        return StructureGenerator.MINESHAFT;
-    });
+    public static final IRegistry<StructureGenerator<?>> STRUCTURE_FEATURE = a(IRegistry.aF, () -> StructureGenerator.MINESHAFT);
     public static final ResourceKey<IRegistry<WorldGenFeatureStructurePieceType>> aH = a("worldgen/structure_piece");
-    public static final IRegistry<WorldGenFeatureStructurePieceType> STRUCTURE_PIECE = a(IRegistry.aH, () -> {
-        return WorldGenFeatureStructurePieceType.c;
-    });
+    public static final IRegistry<WorldGenFeatureStructurePieceType> STRUCTURE_PIECE = a(IRegistry.aH, () -> WorldGenFeatureStructurePieceType.c);
     public static final ResourceKey<IRegistry<WorldGenDecorator<?>>> aJ = a("worldgen/decorator");
-    public static final IRegistry<WorldGenDecorator<?>> DECORATOR = a(IRegistry.aJ, () -> {
-        return WorldGenDecorator.a;
-    });
+    public static final IRegistry<WorldGenDecorator<?>> DECORATOR = a(IRegistry.aJ, () -> WorldGenDecorator.a);
     public static final ResourceKey<IRegistry<WorldGenFeatureStateProviders<?>>> aL = a("worldgen/block_state_provider_type");
     public static final ResourceKey<IRegistry<WorldGenBlockPlacers<?>>> aM = a("worldgen/block_placer_type");
     public static final ResourceKey<IRegistry<WorldGenFoilagePlacers<?>>> aN = a("worldgen/foliage_placer_type");
@@ -264,36 +185,16 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     public static final ResourceKey<IRegistry<Codec<? extends ChunkGenerator>>> aS = a("worldgen/chunk_generator");
     public static final ResourceKey<IRegistry<DefinedStructureStructureProcessorType<?>>> aT = a("worldgen/structure_processor");
     public static final ResourceKey<IRegistry<WorldGenFeatureDefinedStructurePools<?>>> aU = a("worldgen/structure_pool_element");
-    public static final IRegistry<WorldGenFeatureStateProviders<?>> BLOCK_STATE_PROVIDER_TYPE = a(IRegistry.aL, () -> {
-        return WorldGenFeatureStateProviders.a;
-    });
-    public static final IRegistry<WorldGenBlockPlacers<?>> BLOCK_PLACER_TYPE = a(IRegistry.aM, () -> {
-        return WorldGenBlockPlacers.a;
-    });
-    public static final IRegistry<WorldGenFoilagePlacers<?>> FOLIAGE_PLACER_TYPE = a(IRegistry.aN, () -> {
-        return WorldGenFoilagePlacers.a;
-    });
-    public static final IRegistry<TrunkPlacers<?>> TRUNK_PLACER_TYPE = a(IRegistry.aO, () -> {
-        return TrunkPlacers.a;
-    });
-    public static final IRegistry<WorldGenFeatureTrees<?>> TREE_DECORATOR_TYPE = a(IRegistry.aP, () -> {
-        return WorldGenFeatureTrees.b;
-    });
-    public static final IRegistry<FeatureSizeType<?>> FEATURE_SIZE_TYPE = a(IRegistry.aQ, () -> {
-        return FeatureSizeType.a;
-    });
-    public static final IRegistry<Codec<? extends WorldChunkManager>> BIOME_SOURCE = a(IRegistry.aR, Lifecycle.stable(), () -> {
-        return WorldChunkManager.a;
-    });
-    public static final IRegistry<Codec<? extends ChunkGenerator>> CHUNK_GENERATOR = a(IRegistry.aS, Lifecycle.stable(), () -> {
-        return ChunkGenerator.a;
-    });
-    public static final IRegistry<DefinedStructureStructureProcessorType<?>> STRUCTURE_PROCESSOR = a(IRegistry.aT, () -> {
-        return DefinedStructureStructureProcessorType.a;
-    });
-    public static final IRegistry<WorldGenFeatureDefinedStructurePools<?>> STRUCTURE_POOL_ELEMENT = a(IRegistry.aU, () -> {
-        return WorldGenFeatureDefinedStructurePools.d;
-    });
+    public static final IRegistry<WorldGenFeatureStateProviders<?>> BLOCK_STATE_PROVIDER_TYPE = a(IRegistry.aL, () -> WorldGenFeatureStateProviders.a);
+    public static final IRegistry<WorldGenBlockPlacers<?>> BLOCK_PLACER_TYPE = a(IRegistry.aM, () -> WorldGenBlockPlacers.a);
+    public static final IRegistry<WorldGenFoilagePlacers<?>> FOLIAGE_PLACER_TYPE = a(IRegistry.aN, () -> WorldGenFoilagePlacers.a);
+    public static final IRegistry<TrunkPlacers<?>> TRUNK_PLACER_TYPE = a(IRegistry.aO, () -> TrunkPlacers.a);
+    public static final IRegistry<WorldGenFeatureTrees<?>> TREE_DECORATOR_TYPE = a(IRegistry.aP, () -> WorldGenFeatureTrees.b);
+    public static final IRegistry<FeatureSizeType<?>> FEATURE_SIZE_TYPE = a(IRegistry.aQ, () -> FeatureSizeType.a);
+    public static final IRegistry<Codec<? extends WorldChunkManager>> BIOME_SOURCE = a(IRegistry.aR, Lifecycle.stable(), () -> WorldChunkManager.a);
+    public static final IRegistry<Codec<? extends ChunkGenerator>> CHUNK_GENERATOR = a(IRegistry.aS, Lifecycle.stable(), () -> ChunkGenerator.a);
+    public static final IRegistry<DefinedStructureStructureProcessorType<?>> STRUCTURE_PROCESSOR = a(IRegistry.aT, () -> DefinedStructureStructureProcessorType.a);
+    public static final IRegistry<WorldGenFeatureDefinedStructurePools<?>> STRUCTURE_POOL_ELEMENT = a(IRegistry.aU, () -> WorldGenFeatureDefinedStructurePools.d);
     private final ResourceKey<? extends IRegistry<T>> b;
     private final Lifecycle bf;
 
@@ -305,9 +206,6 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
         iregistrywritable.forEach((iregistrywritable1) -> {
             if (iregistrywritable1.keySet().isEmpty()) {
                 IRegistry.LOGGER.error("Registry '{}' was empty after loading", iregistrywritable.getKey(iregistrywritable1));
-                if (SharedConstants.d) {
-                    throw new IllegalStateException("Registry: '" + iregistrywritable.getKey(iregistrywritable1) + "' is empty, not allowed, fix me!");
-                }
             }
 
             if (iregistrywritable1 instanceof RegistryBlocks) {
@@ -362,9 +260,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
             T t0 = this.fromId(number.intValue());
 
             return t0 == null ? DataResult.error("Unknown registry id: " + number) : DataResult.success(t0, this.d(t0));
-        }).map((object) -> {
-            return Pair.of(object, dynamicops.empty());
-        }) : MinecraftKey.a.decode(dynamicops, u0).flatMap((pair) -> {
+        }).map((object) -> Pair.of(object, dynamicops.empty())) : MinecraftKey.a.decode(dynamicops, u0).flatMap((pair) -> {
             T t0 = this.get((MinecraftKey) pair.getFirst());
 
             return t0 == null ? DataResult.error("Unknown registry key: " + pair.getFirst()) : DataResult.success(Pair.of(t0, pair.getSecond()), this.d(t0));
@@ -378,9 +274,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     }
 
     public <U> Stream<U> keys(DynamicOps<U> dynamicops) {
-        return this.keySet().stream().map((minecraftkey) -> {
-            return dynamicops.createString(minecraftkey.toString());
-        });
+        return this.keySet().stream().map((minecraftkey) -> dynamicops.createString(minecraftkey.toString()));
     }
 
     @Nullable

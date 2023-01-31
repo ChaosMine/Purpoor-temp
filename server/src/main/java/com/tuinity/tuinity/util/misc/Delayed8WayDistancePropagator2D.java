@@ -95,7 +95,7 @@ public final class Delayed8WayDistancePropagator2D {
         // test multiple sources at origin
         {
             int originDistance = 31;
-            java.util.List<Ticket> list = new java.util.ArrayList<>();
+            java.util.List<Ticket> list = new ObjectArrayList<>();
             for (int i = 0; i < 10; ++i) {
                 Ticket a = new Ticket();
                 list.add(a);
@@ -202,7 +202,7 @@ public final class Delayed8WayDistancePropagator2D {
             int originDistance = 31;
             int offX = 54432;
             int offZ = -134567;
-            java.util.List<Ticket> list = new java.util.ArrayList<>();
+            java.util.List<Ticket> list = new ObjectArrayList<>();
             for (int i = 0; i < 10; ++i) {
                 Ticket a = new Ticket();
                 list.add(a);

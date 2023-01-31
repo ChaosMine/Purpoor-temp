@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.minecraft.world.entity.EntityInsentient; // Paper
-import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.EntityInsentient;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.ComplexLivingEntity;
 

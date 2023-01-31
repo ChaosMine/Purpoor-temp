@@ -2,8 +2,6 @@ package net.minecraft.world.level.levelgen.surfacebuilders;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import java.util.Random;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.biome.BiomeBase;
@@ -12,6 +10,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.synth.NoiseGeneratorOctaves;
+
+import java.util.Random;
 
 public class WorldGenSurfaceNetherForest extends WorldGenSurface<WorldGenSurfaceConfigurationBase> {
 

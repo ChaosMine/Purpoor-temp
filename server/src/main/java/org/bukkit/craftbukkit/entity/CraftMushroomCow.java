@@ -5,7 +5,6 @@ import net.minecraft.world.entity.animal.EntityMushroomCow;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.MushroomCow;
-import org.bukkit.entity.MushroomCow.Variant;
 
 public class CraftMushroomCow extends CraftCow implements MushroomCow {
     public CraftMushroomCow(CraftServer server, EntityMushroomCow entity) {

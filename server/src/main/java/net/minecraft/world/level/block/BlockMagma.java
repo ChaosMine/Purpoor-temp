@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.Particles;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.Random;
 
 public class BlockMagma extends Block {
 

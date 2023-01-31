@@ -1,14 +1,15 @@
 package org.bukkit.entity;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.entity.EntityTypes;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EntityTypesTest extends AbstractTestingBase {
 

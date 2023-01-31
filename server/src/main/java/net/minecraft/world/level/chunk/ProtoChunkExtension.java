@@ -1,10 +1,6 @@
 package net.minecraft.world.level.chunk;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-import java.util.BitSet;
-import java.util.Map;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +17,11 @@ import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.material.FluidTypes;
+
+import javax.annotation.Nullable;
+import java.util.BitSet;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class ProtoChunkExtension extends ProtoChunk {
 

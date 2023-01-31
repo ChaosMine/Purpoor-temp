@@ -1,12 +1,13 @@
 package net.minecraft.world.inventory;
 
-import javax.annotation.Nullable;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
 
 public abstract class ContainerAnvilAbstract extends Container {
 

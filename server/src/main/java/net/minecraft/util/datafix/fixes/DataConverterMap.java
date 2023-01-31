@@ -1,17 +1,14 @@
 package net.minecraft.util.datafix.fixes;
 
-import com.mojang.datafixers.DSL;
-import com.mojang.datafixers.DataFix;
-import com.mojang.datafixers.OpticFinder;
-import com.mojang.datafixers.TypeRewriteRule;
-import com.mojang.datafixers.Typed;
+import com.mojang.datafixers.*;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import net.minecraft.util.datafix.schemas.DataConverterSchemaNamed;
+
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.util.datafix.schemas.DataConverterSchemaNamed;
 
 public class DataConverterMap extends DataFix {
 

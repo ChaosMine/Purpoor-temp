@@ -4,9 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.server.packs.resources.ResourceDataJson;
@@ -14,6 +11,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSet
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 public class LootTableRegistry extends ResourceDataJson {
 

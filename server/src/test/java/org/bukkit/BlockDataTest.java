@@ -1,6 +1,5 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.level.block.BlockCake;
 import net.minecraft.world.level.block.BlockChest;
@@ -13,6 +12,9 @@ import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class BlockDataTest extends AbstractTestingBase {
 

@@ -1,13 +1,14 @@
 package net.minecraft.world.entity;
 
-import java.util.Objects;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.UUID;
 
 public interface IEntityAngerable {
 

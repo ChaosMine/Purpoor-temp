@@ -1,13 +1,14 @@
 package net.minecraft.world.entity.ai.sensing;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class SensorGolemLastSeen extends Sensor<EntityLiving> {
 

@@ -1,19 +1,17 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
-import java.util.function.Predicate;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.IEntitySelector;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-
-// CraftBukkit start
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
+
+import java.util.Optional;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class BehaviorAttackTargetForget<E extends EntityInsentient> extends Behavior<E> {

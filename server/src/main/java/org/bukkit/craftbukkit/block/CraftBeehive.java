@@ -1,8 +1,7 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.TileEntityBeehive;
@@ -13,6 +12,9 @@ import org.bukkit.block.Beehive;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftBee;
 import org.bukkit.entity.Bee;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftBeehive extends CraftBlockEntityState<TileEntityBeehive> implements Beehive {
 
@@ -65,7 +67,7 @@ public class CraftBeehive extends CraftBlockEntityState<TileEntityBeehive> imple
 
     @Override
     public List<Bee> releaseEntities() {
-        List<Bee> bees = new ArrayList<>();
+        List<Bee> bees = new ObjectArrayList<>();
 
         if (isPlaced()) {
             TileEntityBeehive beehive = ((TileEntityBeehive) this.getTileEntityFromWorld());

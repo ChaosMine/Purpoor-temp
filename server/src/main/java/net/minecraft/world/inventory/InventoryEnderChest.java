@@ -6,8 +6,6 @@ import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.TileEntityEnderChest;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.inventory.InventoryHolder;
 // CraftBukkit end

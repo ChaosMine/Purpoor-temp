@@ -2,14 +2,18 @@ package net.minecraft.world.entity;
 
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
+import org.jetbrains.annotations.Unmodifiable;
 
 public enum EnumMainHand {
+    LEFT(new ChatMessage("options.mainHand.left")),
+    RIGHT(new ChatMessage("options.mainHand.right")),
+    ;
 
-    LEFT(new ChatMessage("options.mainHand.left")), RIGHT(new ChatMessage("options.mainHand.right"));
+    public static final EnumMainHand @Unmodifiable [] VALUES = values();
 
     private final IChatBaseComponent c;
 
-    private EnumMainHand(IChatBaseComponent ichatbasecomponent) {
+    EnumMainHand(IChatBaseComponent ichatbasecomponent) {
         this.c = ichatbasecomponent;
     }
 

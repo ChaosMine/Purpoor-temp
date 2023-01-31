@@ -1,8 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -25,10 +22,12 @@ import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.predicate.MaterialPredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateDirection;
 import net.minecraft.world.level.material.Material;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.util.BlockStateListPopulator;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWearable {

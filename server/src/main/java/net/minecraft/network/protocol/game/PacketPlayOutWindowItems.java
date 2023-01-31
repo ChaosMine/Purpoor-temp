@@ -1,13 +1,14 @@
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.item.ItemStack;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 public class PacketPlayOutWindowItems implements Packet<PacketListenerPlayOut> {
 
@@ -52,14 +53,10 @@ public class PacketPlayOutWindowItems implements Packet<PacketListenerPlayOut> {
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.writeByte(this.a);
         packetdataserializer.writeShort(this.b.size());
-        Iterator iterator = this.b.iterator();
 
-        while (iterator.hasNext()) {
-            ItemStack itemstack = (ItemStack) iterator.next();
-
+        for (ItemStack itemstack : this.b) {
             packetdataserializer.a(itemstack);
         }
-
     }
 
     public void a(PacketListenerPlayOut packetlistenerplayout) {

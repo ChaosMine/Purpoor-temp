@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import java.util.Set;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
@@ -15,6 +14,8 @@ import net.minecraft.world.level.storage.loot.LootValueBounds;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameter;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+
+import java.util.Set;
 
 public class LootEnchantFunction extends LootItemFunctionConditional {
 

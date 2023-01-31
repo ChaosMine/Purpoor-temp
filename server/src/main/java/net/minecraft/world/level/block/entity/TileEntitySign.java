@@ -1,18 +1,12 @@
 package net.minecraft.world.level.block.entity;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.papermc.paper.adventure.PaperAdventure; // Purpur
-import javax.annotation.Nullable;
+import io.papermc.paper.adventure.PaperAdventure;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICommandListener;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.chat.ChatClickable;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.ChatComponentUtils;
-import net.minecraft.network.chat.ChatModifier;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
@@ -23,6 +17,8 @@ import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
 
 public class TileEntitySign extends TileEntity implements ICommandListener { // CraftBukkit - implements
 
@@ -208,10 +204,6 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         return false;
     }
 
-    @Override
-    public boolean shouldBroadcastCommands() {
-        return false;
-    }
     // CraftBukkit end
 
     public CommandListenerWrapper createCommandSourceStack(@Nullable EntityPlayer entityplayer) { return this.a(entityplayer); } // Paper - OBFHELPER

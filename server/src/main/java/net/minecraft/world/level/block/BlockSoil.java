@@ -1,12 +1,9 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
@@ -15,11 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.piston.BlockPistonMoving;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
@@ -29,10 +22,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-// CraftBukkit start
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityInteractEvent;
+
+import java.util.Iterator;
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockSoil extends Block {

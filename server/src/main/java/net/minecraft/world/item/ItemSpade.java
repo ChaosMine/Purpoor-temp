@@ -3,8 +3,6 @@ package net.minecraft.world.item;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import java.util.Map;
-import java.util.Set;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.sounds.SoundCategory;
@@ -18,6 +16,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockCampfire;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.Map;
+import java.util.Set;
 
 public class ItemSpade extends ItemTool {
 

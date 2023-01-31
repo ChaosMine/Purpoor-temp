@@ -29,8 +29,8 @@ public class PacketPlayOutBlockBreak implements Packet<PacketListenerPlayOut> {
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
         this.c = packetdataserializer.e();
-        this.d = (IBlockData) Block.REGISTRY_ID.fromId(packetdataserializer.i());
-        this.a = (PacketPlayInBlockDig.EnumPlayerDigType) packetdataserializer.a(PacketPlayInBlockDig.EnumPlayerDigType.class);
+        this.d = Block.REGISTRY_ID.fromId(packetdataserializer.i());
+        this.a = packetdataserializer.readEnum(PacketPlayInBlockDig.EnumPlayerDigType.VALUES);
         this.e = packetdataserializer.readBoolean();
     }
 
@@ -38,7 +38,7 @@ public class PacketPlayOutBlockBreak implements Packet<PacketListenerPlayOut> {
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.a(this.c);
         packetdataserializer.d(Block.getCombinedId(this.d));
-        packetdataserializer.a((Enum) this.a);
+        packetdataserializer.writeEnum(this.a);
         packetdataserializer.writeBoolean(this.e);
     }
 

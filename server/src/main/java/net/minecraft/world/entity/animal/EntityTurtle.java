@@ -1,11 +1,6 @@
 package net.minecraft.world.entity.animal;
 
 import com.google.common.collect.Sets;
-import java.util.EnumSet;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -27,26 +22,11 @@ import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.EnumMonsterType;
-import net.minecraft.world.entity.EnumMoveType;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMove;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalGotoTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStroll;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.NavigationAbstract;
 import net.minecraft.world.entity.ai.navigation.NavigationGuardian;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
@@ -55,13 +35,7 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IMaterial;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockTurtleEgg;
 import net.minecraft.world.level.block.Blocks;
@@ -70,6 +44,12 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.Pathfinder;
 import net.minecraft.world.level.pathfinder.PathfinderTurtle;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class EntityTurtle extends EntityAnimal {
 

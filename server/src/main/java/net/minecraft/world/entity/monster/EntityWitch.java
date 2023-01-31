@@ -1,19 +1,11 @@
 package net.minecraft.world.entity.monster;
 
 // Paper start
-import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
-import net.minecraft.server.PathfinderGoalHasRider;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.entity.Witch;
-// Paper end
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.PathfinderGoalHasRider;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
@@ -22,21 +14,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalArrowAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTargetWitch;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestHealableRaider;
@@ -50,6 +33,11 @@ import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 public class EntityWitch extends EntityRaider implements IRangedEntity {
 

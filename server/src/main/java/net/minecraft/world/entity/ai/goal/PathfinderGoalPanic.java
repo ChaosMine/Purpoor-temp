@@ -1,18 +1,17 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityCreature;
+import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.util.RandomPositionGenerator;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.phys.Vec3D;
 
-// CraftBukkit start
-import net.minecraft.world.entity.EntityLiving;
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 // CraftBukkit end
 
 public class PathfinderGoalPanic extends PathfinderGoal {

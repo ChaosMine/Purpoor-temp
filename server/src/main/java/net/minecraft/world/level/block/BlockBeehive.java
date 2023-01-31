@@ -1,11 +1,7 @@
 package net.minecraft.world.level.block;
 
-import io.papermc.paper.event.block.PlayerShearBlockEvent; // Paper - PlayerShearBlockEvent namespace conflicts
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nullable;
+import io.papermc.paper.event.block.PlayerShearBlockEvent;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.SystemUtils;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
@@ -49,6 +45,11 @@ import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 public class BlockBeehive extends BlockTileEntity {
 
@@ -120,7 +121,7 @@ public class BlockBeehive extends BlockTileEntity {
         if (i >= 5) {
             if (itemstack.getItem() == Items.SHEARS) {
                 // Paper start - Add PlayerShearBlockEvent
-                PlayerShearBlockEvent event = new PlayerShearBlockEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), MCUtil.toBukkitBlock(world, blockposition), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (enumhand == EnumHand.OFF_HAND ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND), new java.util.ArrayList<>());
+                PlayerShearBlockEvent event = new PlayerShearBlockEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), MCUtil.toBukkitBlock(world, blockposition), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (enumhand == EnumHand.OFF_HAND ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND), new ObjectArrayList<>());
                 event.getDrops().add(org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(new ItemStack(Items.HONEYCOMB, 3)));
                 if (!event.callEvent()) {
                     return EnumInteractionResult.PASS;

@@ -1,8 +1,6 @@
 package io.papermc.paper.adventure;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import java.io.IOException;
-import java.util.UUID;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -13,6 +11,9 @@ import net.kyori.adventure.util.Codec;
 import net.minecraft.nbt.MojangsonParser;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.io.IOException;
+import java.util.UUID;
 
 final class NBTLegacyHoverEventSerializer implements LegacyHoverEventSerializer {
     public static final NBTLegacyHoverEventSerializer INSTANCE = new NBTLegacyHoverEventSerializer();

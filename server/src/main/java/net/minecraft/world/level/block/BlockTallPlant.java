@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockPropertyDoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.BlockStateEnum;
+
+import javax.annotation.Nullable;
 
 public class BlockTallPlant extends BlockPlant {
 

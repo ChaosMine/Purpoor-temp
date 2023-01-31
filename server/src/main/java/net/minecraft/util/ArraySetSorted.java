@@ -1,11 +1,8 @@
 package net.minecraft.util;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
-import java.util.AbstractSet;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import java.util.*;
 
 public class ArraySetSorted<T> extends AbstractSet<T> {
 

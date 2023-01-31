@@ -1,11 +1,5 @@
 package net.minecraft.world.entity.ai.behavior;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.WorldServer;
@@ -22,6 +16,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemProjectileWeapon;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class BehaviorUtil {
 

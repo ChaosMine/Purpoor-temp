@@ -4,7 +4,6 @@ import net.minecraft.world.entity.animal.EntityOcelot;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Ocelot.Type;
 
 public class CraftOcelot extends CraftAnimals implements Ocelot {
     public CraftOcelot(CraftServer server, EntityOcelot ocelot) {

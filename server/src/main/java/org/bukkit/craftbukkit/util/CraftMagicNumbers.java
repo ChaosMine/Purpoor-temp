@@ -8,24 +8,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.critereon.LootDeserializationContext;
 import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.AdvancementDataWorld;
 import net.minecraft.server.MinecraftServer;
@@ -37,15 +27,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.storage.SavedFile;
-import org.bukkit.Bukkit;
-import org.bukkit.Fluid;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.UnsafeValues;
+import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.legacy.CraftLegacy;
@@ -53,6 +37,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
@@ -77,7 +67,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     @Override
-    public net.kyori.adventure.text.serializer.plain.PlainComponentSerializer plainComponentSerializer() {
+    public net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer plainComponentSerializer() {
         return io.papermc.paper.adventure.PaperAdventure.PLAIN;
     }
 
@@ -112,15 +102,15 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     // ========================================================================
-    private static final Map<Block, Material> BLOCK_MATERIAL = new HashMap<>();
-    private static final Map<Item, Material> ITEM_MATERIAL = new HashMap<>();
-    private static final Map<FluidType, Fluid> FLUID_MATERIAL = new HashMap<>();
-    private static final Map<Material, Item> MATERIAL_ITEM = new HashMap<>();
-    private static final Map<Material, Block> MATERIAL_BLOCK = new HashMap<>();
-    private static final Map<Material, FluidType> MATERIAL_FLUID = new HashMap<>();
+    private static final Object2ReferenceMap<Block, Material> BLOCK_MATERIAL = new Object2ReferenceOpenHashMap<>();
+    private static final Object2ReferenceMap<Item, Material> ITEM_MATERIAL = new Object2ReferenceOpenHashMap<>();
+    private static final Object2ReferenceMap<FluidType, Fluid> FLUID_MATERIAL = new Object2ReferenceOpenHashMap<>();
+    private static final Reference2ObjectMap<Material, Item> MATERIAL_ITEM = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectMap<Material, Block> MATERIAL_BLOCK = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectMap<Material, FluidType> MATERIAL_FLUID = new Reference2ObjectOpenHashMap<>();
     // Paper start
-    private static final Map<org.bukkit.entity.EntityType, net.minecraft.world.entity.EntityTypes<?>> ENTITY_TYPE_ENTITY_TYPES = new HashMap<>();
-    private static final Map<net.minecraft.world.entity.EntityTypes<?>, org.bukkit.entity.EntityType> ENTITY_TYPES_ENTITY_TYPE = new HashMap<>();
+    private static final Reference2ObjectMap<org.bukkit.entity.EntityType, net.minecraft.world.entity.EntityTypes<?>> ENTITY_TYPE_ENTITY_TYPES = new Reference2ObjectOpenHashMap<>();
+    private static final Object2ReferenceMap<net.minecraft.world.entity.EntityTypes<?>, org.bukkit.entity.EntityType> ENTITY_TYPES_ENTITY_TYPE = new Object2ReferenceOpenHashMap<>();
 
     static {
         for (org.bukkit.entity.EntityType type : org.bukkit.entity.EntityType.values()) {
@@ -255,11 +245,11 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     /**
      * This string should be changed if the NMS mappings do.
-     *
+     * <p>
      * It has no meaning and should only be used as an equality check. Plugins
      * which are sensitive to the NMS mappings may read it and refuse to load if
      * it cannot be found or is different to the expected value.
-     *
+     * <p>
      * Remember: NMS is not supported API and may break at any time for any
      * reason irrespective of this. There is often supported API to do the same
      * thing as many common NMS usages. If not, you are encouraged to open a
@@ -282,7 +272,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.world.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
         try {
-            nmsStack.setTag((NBTTagCompound) MojangsonParser.parse(arguments));
+            nmsStack.setTag(MojangsonParser.parse(arguments));
         } catch (CommandSyntaxException ex) {
             Logger.getLogger(CraftMagicNumbers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -359,28 +349,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
                 throw new InvalidPluginException("Plugin API version " + pdf.getAPIVersion() + " is lower than the minimum allowed version. Please update or replace it.");
             }
         } else {
-            if (minimumIndex == -1) {
-                CraftLegacy.init();
-                Bukkit.getLogger().log(Level.WARNING, "Legacy plugin " + pdf.getFullName() + " does not specify an api-version.");
-            } else {
-                throw new InvalidPluginException("Plugin API version " + pdf.getAPIVersion() + " is lower than the minimum allowed version. Please update or replace it.");
-            }
+            throw new InvalidPluginException("Unsupported legacy plugin");
         }
     }
 
     public static boolean isLegacy(PluginDescriptionFile pdf) {
         return pdf.getAPIVersion() == null;
-    }
-
-    @Override
-    public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
-        try {
-            clazz = Commodore.convert(clazz, !isLegacy(pdf));
-        } catch (Exception ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Fatal error trying to convert " + pdf.getFullName() + ":" + path, ex);
-        }
-
-        return clazz;
     }
 
     // Paper start

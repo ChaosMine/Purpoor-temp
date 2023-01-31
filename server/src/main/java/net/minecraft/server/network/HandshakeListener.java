@@ -1,6 +1,9 @@
 package net.minecraft.server.network;
 
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.SharedConstants;
+import net.minecraft.SystemUtils;
 import net.minecraft.network.EnumProtocol;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.chat.ChatComponentText;
@@ -11,9 +14,7 @@ import net.minecraft.network.protocol.handshake.PacketHandshakingInSetProtocol;
 import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
 import net.minecraft.server.MinecraftServer;
 
-// CraftBukkit start
 import java.net.InetAddress;
-import java.util.HashMap;
 // CraftBukkit end
 
 public class HandshakeListener implements PacketHandshakingInListener {
@@ -24,7 +25,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
     static final java.util.regex.Pattern PROP_PATTERN = java.util.regex.Pattern.compile("\\w{0,16}");
     // Spigot end
     // CraftBukkit start - add fields
-    private static final HashMap<InetAddress, Long> throttleTracker = new HashMap<InetAddress, Long>();
+    private static final Object2LongMap<InetAddress> throttleTracker = new Object2LongOpenHashMap<>();
     private static int throttleCounter = 0;
     // CraftBukkit end
     private static final IChatBaseComponent a = new ChatComponentText("Ignoring status request");
@@ -45,14 +46,14 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 // CraftBukkit start - Connection throttle
                 try {
                     if (!(this.c.channel.localAddress() instanceof io.netty.channel.unix.DomainSocketAddress)) { // Paper - the connection throttle is useless when you have a Unix domain socket
-                    long currentTime = System.currentTimeMillis();
-                    long connectionThrottle = this.b.server.getConnectionThrottle();
-                    InetAddress address = ((java.net.InetSocketAddress) this.c.getSocketAddress()).getAddress();
+                        var currentTime = SystemUtils.getMonotonicMillis();
+                        var connectionThrottle = this.b.server.getConnectionThrottle();
+                        var address = ((java.net.InetSocketAddress) this.c.getSocketAddress()).getAddress();
 
                     synchronized (throttleTracker) {
-                        if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.get(address) < connectionThrottle) {
+                        if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.getLong(address) < connectionThrottle) {
                             throttleTracker.put(address, currentTime);
-                            IChatBaseComponent chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage, true)[0]; // Paper - Configurable connection throttle kick message // Paper - Fix hex colors not working in some kick messages
+                            var chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(com.destroystokyo.paper.PaperConfig.connectionThrottleKickMessage, true)[0]; // Paper - Configurable connection throttle kick message // Paper - Fix hex colors not working in some kick messages
                             this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.c.close(chatmessage);
                             return;
@@ -64,13 +65,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                             throttleCounter = 0;
 
                             // Cleanup stale entries
-                            java.util.Iterator iter = throttleTracker.entrySet().iterator();
-                            while (iter.hasNext()) {
-                                java.util.Map.Entry<InetAddress, Long> entry = (java.util.Map.Entry) iter.next();
-                                if (entry.getValue() > connectionThrottle) {
-                                    iter.remove();
-                                }
-                            }
+                            throttleTracker.object2LongEntrySet().removeIf(entry -> entry.getLongValue() > connectionThrottle);
                         }
                     }
                     } // Paper - add closing bracket for if check above
@@ -92,17 +87,17 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 } else {
                     this.c.setPacketListener(new LoginListener(this.b, this.c));
                 // Paper start - handshake event
-                boolean proxyLogicEnabled = org.spigotmc.SpigotConfig.bungee;
-                boolean handledByEvent = false;
+                    var proxyLogicEnabled = org.spigotmc.SpigotConfig.bungee;
+                    var handledByEvent = false;
                 // Try and handle the handshake through the event
                 if (com.destroystokyo.paper.event.player.PlayerHandshakeEvent.getHandlerList().getRegisteredListeners().length != 0) { // Hello? Can you hear me?
-                    java.net.SocketAddress socketAddress = this.getNetworkManager().socketAddress;
-                    String hostnameOfRemote = socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getHostString() : InetAddress.getLoopbackAddress().getHostAddress();
-                    com.destroystokyo.paper.event.player.PlayerHandshakeEvent event = new com.destroystokyo.paper.event.player.PlayerHandshakeEvent(packethandshakinginsetprotocol.hostname, hostnameOfRemote, !proxyLogicEnabled);
+                    var socketAddress = this.getNetworkManager().socketAddress;
+                    var hostnameOfRemote = socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getHostString() : InetAddress.getLoopbackAddress().getHostAddress();
+                    var event = new com.destroystokyo.paper.event.player.PlayerHandshakeEvent(packethandshakinginsetprotocol.hostname, hostnameOfRemote, !proxyLogicEnabled);
                     if (event.callEvent()) {
                         // If we've failed somehow, let the client know so and go no further.
                         if (event.isFailed()) {
-                            IChatBaseComponent chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(event.getFailMessage(), true)[0]; // Paper - Fix hex colors not working in some kick messages
+                            var chatmessage = org.bukkit.craftbukkit.util.CraftChatMessage.fromString(event.getFailMessage(), true)[0]; // Paper - Fix hex colors not working in some kick messages
                             this.getNetworkManager().sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.getNetworkManager().close(chatmessage);
                             return;
@@ -120,17 +115,17 @@ public class HandshakeListener implements PacketHandshakingInListener {
                 // Paper end
                     // Spigot Start
                 //if (org.spigotmc.SpigotConfig.bungee) { // Paper - comment out, we check above!
-                        String[] split = packethandshakinginsetprotocol.hostname.split("\00");
+                    var split = packethandshakinginsetprotocol.hostname.split("\00");
                         if ( ( split.length == 3 || split.length == 4 ) && ( BYPASS_HOSTCHECK || HOST_PATTERN.matcher( split[1] ).matches() ) ) { // Paper
                             // Paper start - Unix domain socket support
-                            java.net.SocketAddress socketAddress = c.getSocketAddress();
+                            var socketAddress = c.getSocketAddress();
                             packethandshakinginsetprotocol.hostname = split[0];
                             c.socketAddress = new java.net.InetSocketAddress(split[1], socketAddress instanceof java.net.InetSocketAddress ? ((java.net.InetSocketAddress) socketAddress).getPort() : 0);
                             // Paper end
                             c.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
                         } else
                         {
-                            ChatMessage chatmessage = new ChatMessage("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
+                            var chatmessage = new ChatMessage("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
                             this.c.sendPacket(new PacketLoginOutDisconnect(chatmessage));
                             this.c.close(chatmessage);
                             return;
@@ -141,7 +136,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
                         }
                     }
                     // Spigot End
-                    ((LoginListener) this.c.j()).hostname = packethandshakinginsetprotocol.hostname + ":" + packethandshakinginsetprotocol.port; // CraftBukkit - set hostname
+                    ((LoginListener) this.c.packetListener()).hostname = packethandshakinginsetprotocol.hostname + ":" + packethandshakinginsetprotocol.port; // CraftBukkit - set hostname
                 }
                 break;
             case STATUS:

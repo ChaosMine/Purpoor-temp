@@ -4,6 +4,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.util.MathHelper;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class MapIcon {
 
@@ -64,21 +65,47 @@ public class MapIcon {
         return i;
     }
 
-    public static enum Type {
+    public enum Type {
+        PLAYER(),
+        FRAME(),
+        RED_MARKER(),
+        BLUE_MARKER(),
+        TARGET_X(),
+        TARGET_POINT(),
+        PLAYER_OFF_MAP(),
+        PLAYER_OFF_LIMITS(),
+        MANSION(5393476),
+        MONUMENT(3830373),
+        BANNER_WHITE(),
+        BANNER_ORANGE(),
+        BANNER_MAGENTA(),
+        BANNER_LIGHT_BLUE(),
+        BANNER_YELLOW(),
+        BANNER_LIME(),
+        BANNER_PINK(),
+        BANNER_GRAY(),
+        BANNER_LIGHT_GRAY(),
+        BANNER_CYAN(),
+        BANNER_PURPLE(),
+        BANNER_BLUE(),
+        BANNER_BROWN(),
+        BANNER_GREEN(),
+        BANNER_RED(),
+        BANNER_BLACK(),
+        RED_X(),
+        ;
 
-        PLAYER(false), FRAME(true), RED_MARKER(false), BLUE_MARKER(false), TARGET_X(true), TARGET_POINT(true), PLAYER_OFF_MAP(false), PLAYER_OFF_LIMITS(false), MANSION(true, 5393476), MONUMENT(true, 3830373), BANNER_WHITE(true), BANNER_ORANGE(true), BANNER_MAGENTA(true), BANNER_LIGHT_BLUE(true), BANNER_YELLOW(true), BANNER_LIME(true), BANNER_PINK(true), BANNER_GRAY(true), BANNER_LIGHT_GRAY(true), BANNER_CYAN(true), BANNER_PURPLE(true), BANNER_BLUE(true), BANNER_BROWN(true), BANNER_GREEN(true), BANNER_RED(true), BANNER_BLACK(true), RED_X(true);
+        public static final Type @Unmodifiable [] VALUES = values();
 
         private final byte B;
-        private final boolean C;
         private final int D;
 
-        private Type(boolean flag) {
-            this(flag, -1);
+        Type() {
+            this(-1);
         }
 
-        private Type(boolean flag, int i) {
+        Type(int i) {
             this.B = (byte) this.ordinal();
-            this.C = flag;
             this.D = i;
         }
 

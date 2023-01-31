@@ -9,8 +9,7 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityFishingHook;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.World;
-
-import org.bukkit.event.player.PlayerFishEvent; // CraftBukkit
+import org.bukkit.event.player.PlayerFishEvent;
 
 public class ItemFishingRod extends Item implements ItemVanishable {
 

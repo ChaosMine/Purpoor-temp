@@ -17,7 +17,7 @@ public class PacketPlayOutOpenWindow implements Packet<PacketListenerPlayOut> {
 
     public PacketPlayOutOpenWindow(int i, Containers<?> containers, IChatBaseComponent ichatbasecomponent) {
         this.a = i;
-        this.b = IRegistry.MENU.a((Object) containers);
+        this.b = IRegistry.MENU.a(containers);
         this.c = ichatbasecomponent;
     }
 

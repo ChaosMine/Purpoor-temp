@@ -2,11 +2,12 @@ package net.minecraft.world.entity.ai.attributes;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import net.minecraft.core.IRegistry;
+
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
-import javax.annotation.Nullable;
-import net.minecraft.core.IRegistry;
 
 public class AttributeProvider {
 

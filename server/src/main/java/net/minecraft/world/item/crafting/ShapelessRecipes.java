@@ -3,8 +3,7 @@ package net.minecraft.world.item.crafting;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import it.unimi.dsi.fastutil.ints.IntList;
-import java.util.Iterator;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.resources.MinecraftKey;
@@ -13,11 +12,11 @@ import net.minecraft.world.entity.player.AutoRecipeStackManager;
 import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapelessRecipe;
+
+import java.util.Iterator;
 // CraftBukkit end
 
 public class ShapelessRecipes implements RecipeCrafting {
@@ -37,11 +36,11 @@ public class ShapelessRecipes implements RecipeCrafting {
     // CraftBukkit start
     @SuppressWarnings("unchecked")
     public org.bukkit.inventory.ShapelessRecipe toBukkitRecipe() {
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
-        CraftShapelessRecipe recipe = new CraftShapelessRecipe(result, this);
+        var result = CraftItemStack.asCraftMirror(this.result);
+        var recipe = new CraftShapelessRecipe(result, this);
         recipe.setGroup(this.group);
 
-        for (RecipeItemStack list : this.ingredients) {
+        for (var list : this.ingredients) {
             recipe.addIngredient(CraftRecipe.toBukkit(list));
         }
         return recipe;
@@ -69,22 +68,19 @@ public class ShapelessRecipes implements RecipeCrafting {
     }
 
     public boolean a(InventoryCrafting inventorycrafting, World world) {
-        AutoRecipeStackManager autorecipestackmanager = new AutoRecipeStackManager();
-        int i = 0;
-
         // Paper start
-        java.util.List<ItemStack> providedItems = new java.util.ArrayList<>();
-        co.aikar.util.Counter<ItemStack> matchedProvided = new co.aikar.util.Counter<>();
-        co.aikar.util.Counter<RecipeItemStack> matchedIngredients = new co.aikar.util.Counter<>();
+        java.util.List<ItemStack> providedItems = new ObjectArrayList<>();
+        var matchedProvided = new co.aikar.util.Counter<ItemStack>();
+        var matchedIngredients = new co.aikar.util.Counter<RecipeItemStack>();
         // Paper end
-        for (int j = 0; j < inventorycrafting.getSize(); ++j) {
-            ItemStack itemstack = inventorycrafting.getItem(j);
+        for (var j = 0; j < inventorycrafting.getSize(); ++j) {
+            var itemstack = inventorycrafting.getItem(j);
 
             if (!itemstack.isEmpty()) {
                 // Paper start
                 itemstack = itemstack.cloneItemStack();
                 providedItems.add(itemstack);
-                for (RecipeItemStack ingredient : ingredients) {
+                for (var ingredient : ingredients) {
                     if (ingredient.test(itemstack)) {
                         matchedProvided.increment(itemstack);
                         matchedIngredients.increment(ingredient);
@@ -98,14 +94,14 @@ public class ShapelessRecipes implements RecipeCrafting {
         if (matchedProvided.isEmpty() || matchedIngredients.isEmpty()) {
             return false;
         }
-        java.util.List<RecipeItemStack> ingredients = new java.util.ArrayList<>(this.ingredients);
+        java.util.List<RecipeItemStack> ingredients = new ObjectArrayList<>(this.ingredients);
         providedItems.sort(java.util.Comparator.comparingInt((ItemStack c) -> (int) matchedProvided.getCount(c)).reversed());
         ingredients.sort(java.util.Comparator.comparingInt((RecipeItemStack c) -> (int) matchedIngredients.getCount(c)));
 
         PROVIDED:
-        for (ItemStack provided : providedItems) {
-            for (Iterator<RecipeItemStack> itIngredient = ingredients.iterator(); itIngredient.hasNext(); ) {
-                RecipeItemStack ingredient = itIngredient.next();
+        for (var provided : providedItems) {
+            for (var itIngredient = ingredients.iterator(); itIngredient.hasNext(); ) {
+                var ingredient = itIngredient.next();
                 if (ingredient.test(provided)) {
                     itIngredient.remove();
                     continue PROVIDED;
@@ -127,15 +123,15 @@ public class ShapelessRecipes implements RecipeCrafting {
 
         @Override
         public ShapelessRecipes a(MinecraftKey minecraftkey, JsonObject jsonobject) {
-            String s = ChatDeserializer.a(jsonobject, "group", "");
-            NonNullList<RecipeItemStack> nonnulllist = a(ChatDeserializer.u(jsonobject, "ingredients"));
+            var s = ChatDeserializer.a(jsonobject, "group", "");
+            var nonnulllist = a(ChatDeserializer.u(jsonobject, "ingredients"));
 
             if (nonnulllist.isEmpty()) {
                 throw new JsonParseException("No ingredients for shapeless recipe");
             } else if (nonnulllist.size() > 9) {
                 throw new JsonParseException("Too many ingredients for shapeless recipe");
             } else {
-                ItemStack itemstack = ShapedRecipes.a(ChatDeserializer.t(jsonobject, "result"));
+                var itemstack = ShapedRecipes.a(ChatDeserializer.t(jsonobject, "result"));
 
                 return new ShapelessRecipes(minecraftkey, s, itemstack, nonnulllist);
             }
@@ -144,8 +140,8 @@ public class ShapelessRecipes implements RecipeCrafting {
         private static NonNullList<RecipeItemStack> a(JsonArray jsonarray) {
             NonNullList<RecipeItemStack> nonnulllist = NonNullList.a();
 
-            for (int i = 0; i < jsonarray.size(); ++i) {
-                RecipeItemStack recipeitemstack = RecipeItemStack.a(jsonarray.get(i));
+            for (var i = 0; i < jsonarray.size(); ++i) {
+                var recipeitemstack = RecipeItemStack.a(jsonarray.get(i));
 
                 if (!recipeitemstack.d()) {
                     nonnulllist.add(recipeitemstack);
@@ -157,15 +153,15 @@ public class ShapelessRecipes implements RecipeCrafting {
 
         @Override
         public ShapelessRecipes a(MinecraftKey minecraftkey, PacketDataSerializer packetdataserializer) {
-            String s = packetdataserializer.e(32767);
-            int i = packetdataserializer.i();
-            NonNullList<RecipeItemStack> nonnulllist = NonNullList.a(i, RecipeItemStack.a);
+            var s = packetdataserializer.e(32767);
+            var i = packetdataserializer.i();
+            var nonnulllist = NonNullList.a(i, RecipeItemStack.a);
 
-            for (int j = 0; j < nonnulllist.size(); ++j) {
+            for (var j = 0; j < nonnulllist.size(); ++j) {
                 nonnulllist.set(j, RecipeItemStack.b(packetdataserializer));
             }
 
-            ItemStack itemstack = packetdataserializer.n();
+            var itemstack = packetdataserializer.n();
 
             return new ShapelessRecipes(minecraftkey, s, itemstack, nonnulllist);
         }
@@ -173,11 +169,8 @@ public class ShapelessRecipes implements RecipeCrafting {
         public void a(PacketDataSerializer packetdataserializer, ShapelessRecipes shapelessrecipes) {
             packetdataserializer.a(shapelessrecipes.group);
             packetdataserializer.d(shapelessrecipes.ingredients.size());
-            Iterator iterator = shapelessrecipes.ingredients.iterator();
 
-            while (iterator.hasNext()) {
-                RecipeItemStack recipeitemstack = (RecipeItemStack) iterator.next();
-
+            for (var recipeitemstack : shapelessrecipes.ingredients) {
                 recipeitemstack.a(packetdataserializer);
             }
 

@@ -1,19 +1,19 @@
 package net.minecraft.util;
 
+import net.minecraft.SystemUtils;
+import net.minecraft.core.BaseBlockPosition;
+
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.IntPredicate;
-import net.minecraft.SystemUtils;
-import net.minecraft.core.BaseBlockPosition;
 
 public class MathHelper {
 
     public static final float a = c(2.0F);
-    private static final float[] b = (float[]) SystemUtils.a((new float[65536]), (afloat) -> { // Paper - decompile error
-        for (int i = 0; i < afloat.length; ++i) {
+    private static final float[] b = SystemUtils.a(new float[65536], afloat -> { // Paper - decompile error
+        for (var i = 0; i < afloat.length; ++i) {
             afloat[i] = (float) Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
         }
-
     });
     private static final Random c = new Random();
     private static final int[] d = new int[]{0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
@@ -30,7 +30,7 @@ public class MathHelper {
     }
 
     public static float c(float f) {
-        return (float) Math.sqrt((double) f);
+        return (float) Math.sqrt(f);
     }
 
     public static float sqrt(double d0) {
@@ -38,20 +38,19 @@ public class MathHelper {
     }
 
     public static int d(float f) {
-        int i = (int) f;
-
+        var i = (int) f;
         return f < (float) i ? i - 1 : i;
     }
 
     public static int floor(double d0) {
-        int i = (int) d0;
-
+        var i = (int) d0;
         return d0 < (double) i ? i - 1 : i;
     }
 
     public static long floorLong(double d0) { return d(d0); } // Paper - OBFHELPER
+
     public static long d(double d0) {
-        long i = (long) d0;
+        var i = (long) d0;
 
         return d0 < (double) i ? i - 1L : i;
     }
@@ -65,27 +64,25 @@ public class MathHelper {
     }
 
     public static int f(float f) {
-        int i = (int) f;
-
+        var i = (int) f;
         return f > (float) i ? i + 1 : i;
     }
 
     public static int f(double d0) {
-        int i = (int) d0;
-
+        var i = (int) d0;
         return d0 > (double) i ? i + 1 : i;
     }
 
     public static int clamp(int i, int j, int k) {
-        return i < j ? j : (i > k ? k : i);
+        return i < j ? j : Math.min(i, k);
     }
 
     public static float a(float f, float f1, float f2) {
-        return f < f1 ? f1 : (f > f2 ? f2 : f);
+        return f < f1 ? f1 : (Math.min(f, f2));
     }
 
     public static double a(double d0, double d1, double d2) {
-        return d0 < d1 ? d1 : (d0 > d2 ? d2 : d0);
+        return d0 < d1 ? d1 : (Math.min(d0, d2));
     }
 
     public static double b(double d0, double d1, double d2) {
@@ -101,7 +98,7 @@ public class MathHelper {
             d1 = -d1;
         }
 
-        return d0 > d1 ? d0 : d1;
+        return Math.max(d0, d1);
     }
 
     public static int a(int i, int j) {
@@ -121,13 +118,11 @@ public class MathHelper {
     }
 
     public static double a(long[] along) {
-        long i = 0L;
-        long[] along1 = along;
-        int j = along.length;
+        var i = 0L;
+        var j = along.length;
 
-        for (int k = 0; k < j; ++k) {
-            long l = along1[k];
-
+        for (var k = 0; k < j; ++k) {
+            var l = along[k];
             i += l;
         }
 
@@ -143,7 +138,7 @@ public class MathHelper {
     }
 
     public static float g(float f) {
-        float f1 = f % 360.0F;
+        var f1 = f % 360.0F;
 
         if (f1 >= 180.0F) {
             f1 -= 360.0F;
@@ -157,7 +152,7 @@ public class MathHelper {
     }
 
     public static double g(double d0) {
-        double d1 = d0 % 360.0D;
+        var d1 = d0 % 360.0D;
 
         if (d1 >= 180.0D) {
             d1 -= 360.0D;
@@ -179,8 +174,8 @@ public class MathHelper {
     }
 
     public static float b(float f, float f1, float f2) {
-        float f3 = c(f, f1);
-        float f4 = a(f3, -f2, f2);
+        var f3 = c(f, f1);
+        var f4 = a(f3, -f2, f2);
 
         return f1 - f4;
     }
@@ -191,13 +186,13 @@ public class MathHelper {
     }
 
     public static float d(float f, float f1, float f2) {
-        float f3 = c(f, f1);
+        var f3 = c(f, f1);
 
         return c(f, f + f3, f2);
     }
 
     public static int c(int i) {
-        int j = i - 1;
+        var j = i - 1;
 
         j |= j >> 1;
         j |= j >> 2;
@@ -230,7 +225,7 @@ public class MathHelper {
                 j *= -1;
             }
 
-            int k = i % j;
+            var k = i % j;
 
             return k == 0 ? i : i + j - k;
         }
@@ -249,15 +244,15 @@ public class MathHelper {
     }
 
     public static long c(int i, int j, int k) {
-        long l = (long) (i * 3129871) ^ (long) k * 116129781L ^ (long) j;
+        var l = (long) (i * 3129871) ^ (long) k * 116129781L ^ (long) j;
 
         l = l * l * 42317861L + l * 11L;
         return l >> 16;
     }
 
     public static UUID a(Random random) {
-        long i = random.nextLong() & -61441L | 16384L;
-        long j = random.nextLong() & 4611686018427387903L | Long.MIN_VALUE;
+        var i = random.nextLong() & -61441L | 16384L;
+        var j = random.nextLong() & 4611686018427387903L | Long.MIN_VALUE;
 
         return new UUID(i, j);
     }
@@ -271,24 +266,24 @@ public class MathHelper {
     }
 
     public static double d(double d0, double d1) {
-        double d2 = d1 * d1 + d0 * d0;
+        var d2 = d1 * d1 + d0 * d0;
 
         if (Double.isNaN(d2)) {
             return Double.NaN;
         } else {
-            boolean flag = d0 < 0.0D;
+            var flag = d0 < 0.0D;
 
             if (flag) {
                 d0 = -d0;
             }
 
-            boolean flag1 = d1 < 0.0D;
+            var flag1 = d1 < 0.0D;
 
             if (flag1) {
                 d1 = -d1;
             }
 
-            boolean flag2 = d0 > d1;
+            var flag2 = d0 > d1;
             double d3;
 
             if (flag2) {
@@ -300,14 +295,14 @@ public class MathHelper {
             d3 = i(d2);
             d1 *= d3;
             d0 *= d3;
-            double d4 = MathHelper.e + d0;
-            int i = (int) Double.doubleToRawLongBits(d4);
-            double d5 = MathHelper.f[i];
-            double d6 = MathHelper.g[i];
-            double d7 = d4 - MathHelper.e;
-            double d8 = d0 * d6 - d1 * d7;
-            double d9 = (6.0D + d8 * d8) * d8 * 0.16666666666666666D;
-            double d10 = d5 + d9;
+            var d4 = MathHelper.e + d0;
+            var i = (int) Double.doubleToRawLongBits(d4);
+            var d5 = MathHelper.f[i];
+            var d6 = MathHelper.g[i];
+            var d7 = d4 - MathHelper.e;
+            var d8 = d0 * d6 - d1 * d7;
+            var d9 = (6.0D + d8 * d8) * d8 * 0.16666666666666666D;
+            var d10 = d5 + d9;
 
             if (flag2) {
                 d10 = 1.5707963267948966D - d10;
@@ -326,8 +321,8 @@ public class MathHelper {
     }
 
     public static double i(double d0) {
-        double d1 = 0.5D * d0;
-        long i = Double.doubleToRawLongBits(d0);
+        var d1 = 0.5D * d0;
+        var i = Double.doubleToRawLongBits(d0);
 
         i = 6910469410427058090L - (i >> 1);
         d0 = Double.longBitsToDouble(i);
@@ -336,11 +331,11 @@ public class MathHelper {
     }
 
     public static int f(float f, float f1, float f2) {
-        int i = (int) (f * 6.0F) % 6;
-        float f3 = f * 6.0F - (float) i;
-        float f4 = f2 * (1.0F - f1);
-        float f5 = f2 * (1.0F - f3 * f1);
-        float f6 = f2 * (1.0F - (1.0F - f3) * f1);
+        var i = (int) (f * 6.0F) % 6;
+        var f3 = f * 6.0F - (float) i;
+        var f4 = f2 * (1.0F - f1);
+        var f5 = f2 * (1.0F - f3 * f1);
+        var f6 = f2 * (1.0F - (1.0F - f3) * f1);
         float f7;
         float f8;
         float f9;
@@ -380,9 +375,9 @@ public class MathHelper {
                 throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + f + ", " + f1 + ", " + f2);
         }
 
-        int j = clamp((int) (f7 * 255.0F), 0, 255);
-        int k = clamp((int) (f8 * 255.0F), 0, 255);
-        int l = clamp((int) (f9 * 255.0F), 0, 255);
+        var j = clamp((int) (f7 * 255.0F), 0, 255);
+        var k = clamp((int) (f8 * 255.0F), 0, 255);
+        var l = clamp((int) (f9 * 255.0F), 0, 255);
 
         return j << 16 | k << 8 | l;
     }
@@ -397,11 +392,11 @@ public class MathHelper {
     }
 
     public static int a(int i, int j, IntPredicate intpredicate) {
-        int k = j - i;
+        var k = j - i;
 
         while (k > 0) {
-            int l = k / 2;
-            int i1 = i + l;
+            var l = k / 2;
+            var i1 = i + l;
 
             if (intpredicate.test(i1)) {
                 k = l;
@@ -413,6 +408,8 @@ public class MathHelper {
 
         return i;
     }
+
+    public static float lerp(float delta, float start, float end) { return g(delta, start, end); }
 
     public static float g(float f, float f1, float f2) {
         return f1 + f * (f2 - f1);
@@ -458,9 +455,9 @@ public class MathHelper {
     }
 
     static {
-        for (int i = 0; i < 257; ++i) {
-            double d0 = (double) i / 256.0D;
-            double d1 = Math.asin(d0);
+        for (var i = 0; i < 257; ++i) {
+            var d0 = (double) i / 256.0D;
+            var d1 = Math.asin(d0);
 
             MathHelper.g[i] = Math.cos(d1);
             MathHelper.f[i] = d1;

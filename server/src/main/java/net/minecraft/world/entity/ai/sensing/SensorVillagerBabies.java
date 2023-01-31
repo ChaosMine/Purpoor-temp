@@ -2,13 +2,14 @@ package net.minecraft.world.entity.ai.sensing;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+
+import java.util.List;
+import java.util.Set;
 
 public class SensorVillagerBabies extends Sensor<EntityLiving> {
 
@@ -27,7 +28,7 @@ public class SensorVillagerBabies extends Sensor<EntityLiving> {
     private List<EntityLiving> a(EntityLiving entityliving) {
         // Tuinity start - remove streams
         List<EntityLiving> nearby = this.c(entityliving); // copied from removed code, make sure to update
-        List<EntityLiving> ret = new java.util.ArrayList<>();
+        List<EntityLiving> ret = new ObjectArrayList<>();
 
         for (int index = 0, len = nearby.size(); index < len; ++index) {
             EntityLiving entity = nearby.get(index);

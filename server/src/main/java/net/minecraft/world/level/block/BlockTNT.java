@@ -1,6 +1,6 @@
 package net.minecraft.world.level.block;
 
-import javax.annotation.Nullable;
+import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
@@ -22,7 +22,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
-import com.destroystokyo.paper.event.block.TNTPrimeEvent; // Paper - TNTPrimeEvent
+
+import javax.annotation.Nullable;
 
 public class BlockTNT extends Block {
 

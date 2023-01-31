@@ -2,12 +2,9 @@ package org.bukkit.craftbukkit.legacy;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Dynamic;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import it.unimi.dsi.fastutil.bytes.Byte2ReferenceMap;
+import it.unimi.dsi.fastutil.bytes.Byte2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.NBTBase;
@@ -31,6 +28,8 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.EntityType;
 import org.bukkit.material.MaterialData;
 
+import java.util.*;
+
 /**
  * This class may seem unnecessarily slow and complicated/repetitive however it
  * is able to handle a lot more edge cases and invertible transformations (many
@@ -44,14 +43,14 @@ import org.bukkit.material.MaterialData;
 @Deprecated
 public final class CraftLegacy {
 
-    private static final Map<Byte, Material> SPAWN_EGGS = new HashMap<>();
+    private static final Byte2ReferenceMap<Material> SPAWN_EGGS = new Byte2ReferenceOpenHashMap<>();
     private static final Set<String> whitelistedStates = new HashSet<>(Arrays.asList("explode", "check_decay", "decayable", "facing"));
-    private static final Map<MaterialData, Item> materialToItem = new HashMap<>(16384);
-    private static final Map<Item, MaterialData> itemToMaterial = new HashMap<>(1024);
-    private static final Map<MaterialData, IBlockData> materialToData = new HashMap<>(4096);
-    private static final Map<IBlockData, MaterialData> dataToMaterial = new HashMap<>(4096);
-    private static final Map<MaterialData, Block> materialToBlock = new HashMap<>(4096);
-    private static final Map<Block, MaterialData> blockToMaterial = new HashMap<>(1024);
+    private static final Map<MaterialData, Item> materialToItem = new Object2ObjectOpenHashMap<>(16384);
+    private static final Map<Item, MaterialData> itemToMaterial = new Object2ObjectOpenHashMap<>(1024);
+    private static final Map<MaterialData, IBlockData> materialToData = new Object2ObjectOpenHashMap<>(4096);
+    private static final Map<IBlockData, MaterialData> dataToMaterial = new Object2ObjectOpenHashMap<>(4096);
+    private static final Map<MaterialData, Block> materialToBlock = new Object2ObjectOpenHashMap<>(4096);
+    private static final Map<Block, MaterialData> blockToMaterial = new Object2ObjectOpenHashMap<>(1024);
 
     private CraftLegacy() {
         //
@@ -254,14 +253,11 @@ public final class CraftLegacy {
     }
 
     static {
-        if (!net.pl3x.purpur.PurpurConfig.loggerSuppressInitLegacyMaterialError) // Purpur
-        System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
-        if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
-            new Exception().printStackTrace();
+        if (!net.pl3x.purpur.PurpurConfig.loggerSuppressInitLegacyMaterialError){// Purpur
+            System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
         }
 
         SPAWN_EGGS.put((byte) 0, Material.PIG_SPAWN_EGG); // Will be fixed by updateMaterial if possible
-
         SPAWN_EGGS.put((byte) EntityType.BAT.getTypeId(), Material.BAT_SPAWN_EGG);
         SPAWN_EGGS.put((byte) EntityType.BLAZE.getTypeId(), Material.BLAZE_SPAWN_EGG);
         SPAWN_EGGS.put((byte) EntityType.CAVE_SPIDER.getTypeId(), Material.CAVE_SPIDER_SPAWN_EGG);

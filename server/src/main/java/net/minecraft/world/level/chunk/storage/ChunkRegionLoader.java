@@ -3,29 +3,15 @@ package net.minecraft.world.level.chunk.storage;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import it.unimi.dsi.fastutil.shorts.ShortListIterator;
-import java.util.ArrayDeque; // Paper
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.Function;
-import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.RegistryBlocks;
 import net.minecraft.core.SectionPosition;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLongArray;
-import net.minecraft.nbt.NBTTagShort;
+import net.minecraft.nbt.*;
 import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.LightEngineThreaded;
@@ -33,25 +19,11 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.EnumSkyBlock;
-import net.minecraft.world.level.TickList;
-import net.minecraft.world.level.TickListChunk;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.WorldChunkManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TileEntity;
-import net.minecraft.world.level.chunk.BiomeStorage;
-import net.minecraft.world.level.chunk.Chunk;
-import net.minecraft.world.level.chunk.ChunkConverter;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.IChunkAccess;
-import net.minecraft.world.level.chunk.NibbleArray;
-import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraft.world.level.chunk.ProtoChunkExtension;
-import net.minecraft.world.level.chunk.ProtoChunkTickList;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.levelgen.WorldGenStage;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
@@ -62,6 +34,11 @@ import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.material.FluidTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 public class ChunkRegionLoader {
 
@@ -559,7 +536,7 @@ public class ChunkRegionLoader {
         nbttagcompound1.set("TileEntities", nbttaglist1);
         NBTTagList nbttaglist2 = new NBTTagList();
 
-        java.util.List<Entity> toUpdate = new java.util.ArrayList<>(); // Paper
+        java.util.List<Entity> toUpdate = new ObjectArrayList<>(); // Paper
         if (ichunkaccess.getChunkStatus().getType() == ChunkStatus.Type.LEVELCHUNK) {
             Chunk chunk = (Chunk) ichunkaccess;
 

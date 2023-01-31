@@ -2,13 +2,6 @@ package net.minecraft.core;
 
 import com.google.common.collect.AbstractIterator;
 import com.mojang.serialization.Codec;
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-import javax.annotation.concurrent.Immutable;
 import net.minecraft.SystemUtils;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.block.EnumBlockRotation;
@@ -18,6 +11,14 @@ import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.concurrent.Immutable;
+import java.util.Optional;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Immutable
 public class BlockPosition extends BaseBlockPosition {

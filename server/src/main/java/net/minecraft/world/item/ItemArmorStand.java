@@ -1,6 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.Random;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 
+import java.util.Random;
+
 public class ItemArmorStand extends Item {
 
     public ItemArmorStand(Item.Info item_info) {
@@ -39,46 +40,45 @@ public class ItemArmorStand extends Item {
             BlockActionContext blockactioncontext = new BlockActionContext(itemactioncontext);
             BlockPosition blockposition = blockactioncontext.getClickPosition();
             ItemStack itemstack = itemactioncontext.getItemStack();
-            Vec3D vec3d = Vec3D.c((BaseBlockPosition) blockposition);
+            Vec3D vec3d = Vec3D.c(blockposition);
             AxisAlignedBB axisalignedbb = EntityTypes.ARMOR_STAND.l().a(vec3d.getX(), vec3d.getY(), vec3d.getZ());
 
-            if (world.b((Entity) null, axisalignedbb, (entity) -> {
-                return true;
-            }) && world.getEntities((Entity) null, axisalignedbb).isEmpty()) {
-                if (world instanceof WorldServer) {
-                    WorldServer worldserver = (WorldServer) world;
-                    EntityArmorStand entityarmorstand = (EntityArmorStand) EntityTypes.ARMOR_STAND.createCreature(worldserver, itemstack.getTag(), (IChatBaseComponent) null, itemactioncontext.getEntity(), blockposition, EnumMobSpawn.SPAWN_EGG, true, true);
+            try (var XUI = world.getEntities(null, axisalignedbb)) {
+                if (world.b((Entity) null, axisalignedbb, __ -> true) && XUI.isEmpty()) {
+                    if (world instanceof WorldServer worldserver) {
+                        EntityArmorStand entityarmorstand = EntityTypes.ARMOR_STAND.createCreature(worldserver, itemstack.getTag(), (IChatBaseComponent) null, itemactioncontext.getEntity(), blockposition, EnumMobSpawn.SPAWN_EGG, true, true);
 
-                    if (entityarmorstand == null) {
-                        return EnumInteractionResult.FAIL;
-                    }
-
-                    // Paper - moved down
-                    float f = (float) MathHelper.d((MathHelper.g(itemactioncontext.h() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
-
-                    entityarmorstand.setPositionRotation(entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), f, 0.0F);
-                    this.a(entityarmorstand, world.random);
-                    // CraftBukkit start
-                    if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityPlaceEvent(itemactioncontext, entityarmorstand).isCancelled()) {
-                        return EnumInteractionResult.FAIL;
-                    }
-                    // CraftBukkit end
-                    // Purpur start
-                    if (itemactioncontext.getWorld().purpurConfig.persistentDroppableEntityDisplayNames && itemactioncontext.getItemStack().hasName()) {
-                        entityarmorstand.setCustomName(itemactioncontext.getItemStack().getName());
-                        if (itemactioncontext.getWorld().purpurConfig.armorstandSetNameVisible) {
-                            entityarmorstand.setCustomNameVisible(true);
+                        if (entityarmorstand == null) {
+                            return EnumInteractionResult.FAIL;
                         }
-                    }
-                    // Purpur end
-                    worldserver.addAllEntities(entityarmorstand); // Paper - moved down
-                    world.playSound((EntityHuman) null, entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), SoundEffects.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
-                }
 
-                itemstack.subtract(1);
-                return EnumInteractionResult.a(world.isClientSide);
-            } else {
-                return EnumInteractionResult.FAIL;
+                        // Paper - moved down
+                        float f = (float) MathHelper.d((MathHelper.g(itemactioncontext.h() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
+
+                        entityarmorstand.setPositionRotation(entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), f, 0.0F);
+                        this.a(entityarmorstand, world.random);
+                        // CraftBukkit start
+                        if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityPlaceEvent(itemactioncontext, entityarmorstand).isCancelled()) {
+                            return EnumInteractionResult.FAIL;
+                        }
+                        // CraftBukkit end
+                        // Purpur start
+                        if (itemactioncontext.getWorld().purpurConfig.persistentDroppableEntityDisplayNames && itemactioncontext.getItemStack().hasName()) {
+                            entityarmorstand.setCustomName(itemactioncontext.getItemStack().getName());
+                            if (itemactioncontext.getWorld().purpurConfig.armorstandSetNameVisible) {
+                                entityarmorstand.setCustomNameVisible(true);
+                            }
+                        }
+                        // Purpur end
+                        worldserver.addAllEntities(entityarmorstand); // Paper - moved down
+                        world.playSound((EntityHuman) null, entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), SoundEffects.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
+                    }
+
+                    itemstack.subtract(1);
+                    return EnumInteractionResult.a(world.isClientSide);
+                } else {
+                    return EnumInteractionResult.FAIL;
+                }
             }
         }
     }

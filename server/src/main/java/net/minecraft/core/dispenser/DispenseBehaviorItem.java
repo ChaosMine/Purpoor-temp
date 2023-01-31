@@ -7,8 +7,6 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockDispenser;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.event.block.BlockDispenseEvent;

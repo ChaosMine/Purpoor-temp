@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.List;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +9,10 @@ import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFishSchool;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Stream;
 
 public abstract class EntityFishSchool extends EntityFish {
 

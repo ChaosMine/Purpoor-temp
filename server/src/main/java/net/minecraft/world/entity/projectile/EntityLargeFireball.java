@@ -10,8 +10,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
-
-import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class EntityLargeFireball extends EntityFireballFireball {
 

@@ -3,8 +3,6 @@ package net.minecraft.world.phys.shapes;
 import com.google.common.collect.Lists;
 import com.google.common.math.DoubleMath;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumAxisCycle;
@@ -13,6 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class VoxelShape {
 
@@ -89,9 +90,7 @@ public abstract class VoxelShape {
     public List<AxisAlignedBB> d() {
         List<AxisAlignedBB> list = Lists.newArrayList();
 
-        this.b((d0, d1, d2, d3, d4, d5) -> {
-            list.add(new AxisAlignedBB(d0, d1, d2, d3, d4, d5));
-        });
+        this.b((d0, d1, d2, d3, d4, d5) -> list.add(new AxisAlignedBB(d0, d1, d2, d3, d4, d5)));
         return list;
     }
 

@@ -1,17 +1,6 @@
 package net.minecraft.world.entity.animal;
 
 import com.google.common.collect.Lists;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -34,35 +23,10 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFleeSun;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalGotoTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLeapAtTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalNearestVillage;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalWaterJumpAbstract;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.entity.item.EntityItem;
@@ -83,6 +47,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class EntityFox extends EntityAnimal {
 

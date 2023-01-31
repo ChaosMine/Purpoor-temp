@@ -1,13 +1,12 @@
 package net.minecraft.world;
 
-import java.util.Set;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
 import net.minecraft.world.item.crafting.IRecipe;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+
+import java.util.Set;
 // CraftBukkit end
 
 public interface IInventory extends Clearable {

@@ -1,12 +1,12 @@
 // mc-dev import
 package net.minecraft.world.level.chunk;
 
-import com.destroystokyo.paper.util.pooled.PooledObjects; // Paper
+import com.destroystokyo.paper.util.pooled.PooledObjects;
+import net.minecraft.SystemUtils;
+import net.minecraft.server.MCUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import net.minecraft.SystemUtils;
-import net.minecraft.server.MCUtil;
 
 public class NibbleArray {
 
@@ -170,7 +170,7 @@ public class NibbleArray {
     }
 
     public String toString() {
-        StringBuilder stringbuilder = new StringBuilder();
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
 
         for (int i = 0; i < 4096; ++i) {
             stringbuilder.append(Integer.toHexString(this.b(i)));

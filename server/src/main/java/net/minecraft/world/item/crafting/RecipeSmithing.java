@@ -9,8 +9,6 @@ import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingRecipe;

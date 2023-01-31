@@ -9,9 +9,9 @@ import net.minecraft.EnumChatFormat;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.stats.StatisticWrapper;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class IScoreboardCriteria {
-
     public static final Map<String, IScoreboardCriteria> criteria = Maps.newHashMap();
     public static final IScoreboardCriteria DUMMY = new IScoreboardCriteria("dummy");
     public static final IScoreboardCriteria TRIGGER = new IScoreboardCriteria("trigger");
@@ -54,9 +54,7 @@ public class IScoreboardCriteria {
     }
 
     private static <T> Optional<IScoreboardCriteria> a(StatisticWrapper<T> statisticwrapper, MinecraftKey minecraftkey) {
-        Optional optional = statisticwrapper.getRegistry().getOptional(minecraftkey);
-
-        statisticwrapper.getClass();
+        var optional = statisticwrapper.getRegistry().getOptional(minecraftkey);
         return optional.map(statisticwrapper::b);
     }
 
@@ -73,8 +71,11 @@ public class IScoreboardCriteria {
     }
 
     public static enum EnumScoreboardHealthDisplay {
+        INTEGER("integer"),
+        HEARTS("hearts"),
+        ;
 
-        INTEGER("integer"), HEARTS("hearts");
+        public static final EnumScoreboardHealthDisplay @Unmodifiable [] VALUES = values();
 
         private final String c;
         private static final Map<String, IScoreboardCriteria.EnumScoreboardHealthDisplay> d;
@@ -88,7 +89,7 @@ public class IScoreboardCriteria {
         }
 
         public static IScoreboardCriteria.EnumScoreboardHealthDisplay a(String s) {
-            return (IScoreboardCriteria.EnumScoreboardHealthDisplay) IScoreboardCriteria.EnumScoreboardHealthDisplay.d.getOrDefault(s, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
+            return EnumScoreboardHealthDisplay.d.getOrDefault(s, EnumScoreboardHealthDisplay.INTEGER);
         }
 
         static {

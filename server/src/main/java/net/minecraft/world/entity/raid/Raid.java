@@ -2,20 +2,7 @@ package net.minecraft.world.entity.raid;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BaseBlockPosition;
@@ -39,13 +26,7 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPositionTypes;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +39,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.EnumBannerPatternType;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class Raid {
 
@@ -254,7 +240,7 @@ public class Raid {
                 if (!this.world.a_(this.center)) {
                     if (this.groupsSpawned > 0) {
                         this.status = Raid.Status.LOSS;
-                        org.bukkit.craftbukkit.event.CraftEventFactory.callRaidFinishEvent(this, new java.util.ArrayList<>()); // CraftBukkit
+                        org.bukkit.craftbukkit.event.CraftEventFactory.callRaidFinishEvent(this, new ObjectArrayList<>()); // CraftBukkit
                     } else {
                         org.bukkit.craftbukkit.event.CraftEventFactory.callRaidStopEvent(this, org.bukkit.event.raid.RaidStopEvent.Reason.NOT_IN_VILLAGE); // CraftBukkit
                         this.stop();
@@ -350,7 +336,7 @@ public class Raid {
                         this.status = Raid.Status.VICTORY;
                         Iterator iterator = this.heroes.iterator();
 
-                        List<org.bukkit.entity.Player> winners = new java.util.ArrayList<>(); // CraftBukkit
+                        List<org.bukkit.entity.Player> winners = new ObjectArrayList<>(); // CraftBukkit
                         while (iterator.hasNext()) {
                             UUID uuid = (UUID) iterator.next();
                             Entity entity = this.world.getEntity(uuid);
@@ -513,7 +499,7 @@ public class Raid {
 
         // CraftBukkit start
         EntityRaider leader = null;
-        List<EntityRaider> raiders = new java.util.ArrayList<>();
+        List<EntityRaider> raiders = new ObjectArrayList<>();
         // CraftBukkit end
         for (int k = 0; k < j; ++k) {
             Raid.Wave raid_wave = araid_wave[k];

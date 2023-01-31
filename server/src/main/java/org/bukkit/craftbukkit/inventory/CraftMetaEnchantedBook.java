@@ -2,15 +2,17 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import java.util.HashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @DelegateDeserialization(SerializableMeta.class)
 class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorageMeta {
@@ -21,14 +23,12 @@ class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorage
     CraftMetaEnchantedBook(CraftMetaItem meta) {
         super(meta);
 
-        if (!(meta instanceof CraftMetaEnchantedBook)) {
+        if (!(meta instanceof CraftMetaEnchantedBook that)) {
             return;
         }
 
-        CraftMetaEnchantedBook that = (CraftMetaEnchantedBook) meta;
-
         if (that.hasEnchants()) {
-            this.enchantments = new HashMap<Enchantment, Integer>(that.enchantments);
+            this.enchantments = new Reference2IntOpenHashMap<>(that.enchantments);
         }
     }
 
@@ -105,7 +105,7 @@ class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorage
         CraftMetaEnchantedBook meta = (CraftMetaEnchantedBook) super.clone();
 
         if (this.enchantments != null) {
-            meta.enchantments = new HashMap<Enchantment, Integer>(this.enchantments);
+            meta.enchantments = new Reference2IntOpenHashMap<>(this.enchantments);
         }
 
         return meta;
@@ -146,7 +146,7 @@ class CraftMetaEnchantedBook extends CraftMetaItem implements EnchantmentStorage
     @Override
     public boolean addStoredEnchant(Enchantment ench, int level, boolean ignoreRestrictions) {
         if (enchantments == null) {
-            enchantments = new HashMap<Enchantment, Integer>(4);
+            enchantments = new Reference2IntOpenHashMap<>(4);
         }
 
         if (ignoreRestrictions || level >= ench.getStartLevel() && level <= ench.getMaxLevel()) {

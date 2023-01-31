@@ -2,9 +2,10 @@ package net.minecraft.world.entity.ai.village.poi;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
+
+import java.util.Objects;
 
 public class VillagePlaceRecord {
 

@@ -1,8 +1,6 @@
 package net.minecraft.world.item.enchantment;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.IRegistry;
@@ -14,6 +12,9 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.EnumMonsterType;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nullable;
+import java.util.Map;
 
 public abstract class Enchantment {
 
@@ -30,6 +31,7 @@ public abstract class Enchantment {
     }
 
     public Map<EnumItemSlot, ItemStack> a(EntityLiving entityliving) {
+        //Map<EnumItemSlot, ItemStack> map = new SimpleEnumMap<>(EnumItemSlot.VALUES);
         Map<EnumItemSlot, ItemStack> map = Maps.newEnumMap(EnumItemSlot.class);
         EnumItemSlot[] aenumitemslot = this.a;
         int i = aenumitemslot.length;

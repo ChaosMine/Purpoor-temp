@@ -1,14 +1,15 @@
 package org.bukkit.craftbukkit.legacy;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.material.MaterialData;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LegacyTest extends AbstractTestingBase {
 

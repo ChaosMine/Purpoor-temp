@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.animal.horse;
 
-import javax.annotation.Nullable;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -8,6 +7,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityAgeable;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.World;
+
+import javax.annotation.Nullable;
 
 public class EntityHorseMule extends EntityHorseChestedAbstract {
 

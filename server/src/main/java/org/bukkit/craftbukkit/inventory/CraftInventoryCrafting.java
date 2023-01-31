@@ -1,12 +1,13 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.item.crafting.IRecipe;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CraftInventoryCrafting extends CraftInventory implements CraftingInventory {
     private final IInventory resultInventory;

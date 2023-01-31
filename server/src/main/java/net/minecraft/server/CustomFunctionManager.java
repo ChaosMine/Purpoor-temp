@@ -5,15 +5,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.datafixers.util.Pair;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executor;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.CustomFunction;
 import net.minecraft.commands.ICommandListener;
@@ -26,13 +17,22 @@ import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagDataPack;
 import net.minecraft.tags.Tags;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
 
 public class CustomFunctionManager implements IReloadListener {
 

@@ -12,8 +12,6 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.event.block.BlockFormEvent;
 // CraftBukkit end

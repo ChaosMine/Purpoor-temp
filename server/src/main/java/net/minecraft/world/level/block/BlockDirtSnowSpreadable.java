@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.MinecraftServer;
@@ -12,6 +11,8 @@ import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.lighting.LightEngineLayer;
+
+import java.util.Random;
 
 public abstract class BlockDirtSnowSpreadable extends BlockDirtSnow {
 

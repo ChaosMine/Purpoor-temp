@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.ParticleParamItem;
 import net.minecraft.core.particles.Particles;
@@ -10,19 +8,15 @@ import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.event.entity.EntityInteractEvent;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 // CraftBukkit end
 
 public class PathfinderGoalRemoveBlock extends PathfinderGoalGotoTarget {

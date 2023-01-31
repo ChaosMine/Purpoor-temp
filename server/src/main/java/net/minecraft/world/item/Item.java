@@ -3,10 +3,6 @@ package net.minecraft.world.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -37,6 +33,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 public class Item implements IMaterial {
 

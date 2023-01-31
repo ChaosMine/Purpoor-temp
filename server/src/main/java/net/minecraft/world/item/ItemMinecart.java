@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.BlockDispenser;
 import net.minecraft.world.level.block.BlockMinecartTrackAbstract;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockPropertyTrackPosition;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockDispenseEvent;
 // CraftBukkit end

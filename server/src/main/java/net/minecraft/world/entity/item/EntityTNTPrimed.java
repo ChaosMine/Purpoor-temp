@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.item;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
@@ -12,16 +11,12 @@ import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMoveType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.World;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-import org.bukkit.event.entity.ExplosionPrimeEvent; // CraftBukkit
+import javax.annotation.Nullable;
 
 public class EntityTNTPrimed extends Entity {
 
@@ -117,7 +112,7 @@ public class EntityTNTPrimed extends Entity {
                     .forEach(viewer -> {
                         viewer.playerConnection.sendPacket(velocityPacket);
                         viewer.playerConnection.sendPacket(positionPacket);
-                    });
+                    }); // TODO: Optimize
             }
         }
         // Paper end

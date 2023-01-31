@@ -14,8 +14,7 @@ import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-import org.bukkit.event.block.BlockFromToEvent; // CraftBukkit
+import org.bukkit.event.block.BlockFromToEvent;
 
 public class BlockDragonEgg extends BlockFalling {
 

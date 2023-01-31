@@ -1,8 +1,7 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.item.EnumColor;
@@ -14,6 +13,9 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> implements Banner {
 
@@ -33,7 +35,7 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
         super.load(banner);
 
         base = DyeColor.getByWoolData((byte) ((BlockBannerAbstract) this.data.getBlock()).getColor().getColorIndex());
-        patterns = new ArrayList<Pattern>();
+        patterns = new ObjectArrayList<>();
 
         if (banner.patterns != null) {
             for (int i = 0; i < banner.patterns.size(); i++) {
@@ -56,12 +58,12 @@ public class CraftBanner extends CraftBlockEntityState<TileEntityBanner> impleme
 
     @Override
     public List<Pattern> getPatterns() {
-        return new ArrayList<Pattern>(patterns);
+        return new ObjectArrayList<Pattern>(patterns);
     }
 
     @Override
     public void setPatterns(List<Pattern> patterns) {
-        this.patterns = new ArrayList<Pattern>(patterns);
+        this.patterns = new ObjectArrayList<Pattern>(patterns);
     }
 
     @Override

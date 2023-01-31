@@ -1,16 +1,14 @@
 package net.minecraft.world.food;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
-
-// CraftBukkit start
-import net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth;
-import net.minecraft.server.level.EntityPlayer;
 // CraftBukkit end
 
 public class FoodMetaData {

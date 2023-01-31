@@ -1,19 +1,13 @@
 package net.minecraft.world.entity.vehicle;
 
-import java.util.Iterator;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.ContainerUtil;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.ITileInventory;
-import net.minecraft.world.InventoryUtils;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
@@ -28,13 +22,14 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
-
-// CraftBukkit start
-import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public abstract class EntityMinecartContainer extends EntityMinecartAbstract implements IInventory, ITileInventory {
@@ -47,7 +42,7 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
 
     // CraftBukkit start
     { this.lootableData = new com.destroystokyo.paper.loottable.PaperLootableInventoryData(new com.destroystokyo.paper.loottable.PaperMinecartLootableInventory(this)); } // Paper
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
 
     public List<ItemStack> getContents() {

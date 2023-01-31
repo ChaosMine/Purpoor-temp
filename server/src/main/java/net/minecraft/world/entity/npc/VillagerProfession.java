@@ -1,7 +1,6 @@
 package net.minecraft.world.entity.npc;
 
 import com.google.common.collect.ImmutableSet;
-import javax.annotation.Nullable;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.sounds.SoundEffect;
@@ -11,6 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
+import javax.annotation.Nullable;
 
 public class VillagerProfession {
 

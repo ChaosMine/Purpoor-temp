@@ -1,6 +1,5 @@
 package net.minecraft.world.level.chunk;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.Registry;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.ChunkCoordIntPair;
@@ -9,6 +8,8 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.WorldChunkManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 public class BiomeStorage implements BiomeManager.Provider {
 

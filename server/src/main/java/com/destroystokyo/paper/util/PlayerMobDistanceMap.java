@@ -2,20 +2,22 @@ package com.destroystokyo.paper.util;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.ChunkCoordIntPair;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /** @author Spottedleaf */
 public final class PlayerMobDistanceMap {
 
     private static final PooledHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> EMPTY_SET = new PooledHashSets.PooledObjectLinkedOpenHashSet<>();
 
-    private final Map<EntityPlayer, SectionPosition> players = new HashMap<>();
+    private final Map<EntityPlayer, SectionPosition> players = new Object2ObjectOpenHashMap<>();
     // we use linked for better iteration.
     private final Long2ObjectOpenHashMap<PooledHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer>> playerMap = new Long2ObjectOpenHashMap<>(32, 0.5f);
     private int viewDistance;

@@ -21,7 +21,9 @@ public class CommandAliasHelpTopic extends HelpTopic {
 
     @Override
     public String getFullText(CommandSender forWho) {
-        StringBuilder sb = new StringBuilder(shortText);
+        StringBuilder sb = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        sb.append(shortText);
+
         HelpTopic aliasForTopic = helpMap.getHelpTopic(aliasFor);
         if (aliasForTopic != null) {
             sb.append("\n");

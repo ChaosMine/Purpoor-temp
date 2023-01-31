@@ -1,11 +1,6 @@
 package net.minecraft.world.entity.raid;
 
 import com.google.common.collect.Maps;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +19,12 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.saveddata.PersistentBase;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PersistentRaid extends PersistentBase {
 

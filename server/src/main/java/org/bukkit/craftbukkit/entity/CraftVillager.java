@@ -1,7 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.destroystokyo.paper.entity.villager.Reputation;
 import com.google.common.base.Preconditions;
-import java.util.Locale;
+import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.entity.npc.EntityVillager;
@@ -14,12 +15,8 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.Villager.Type;
 
-// Paper start
-import com.destroystokyo.paper.entity.villager.Reputation;
-import com.google.common.collect.Maps;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 // Paper end

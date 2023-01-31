@@ -1,27 +1,24 @@
 package com.destroystokyo.paper;
 
-import com.destroystokyo.paper.io.chunk.ChunkTaskManager;
 import com.destroystokyo.paper.io.SyncLoadFinder;
+import com.destroystokyo.paper.io.chunk.ChunkTaskManager;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.game.PacketPlayOutLightUpdate;
 import net.minecraft.resources.MinecraftKey;
-import com.google.gson.JsonObject;
-import com.google.gson.internal.Streams;
-import com.google.gson.stream.JsonWriter;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkProviderServer;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.LightEngineThreaded;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
@@ -47,17 +44,7 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PaperCommand extends Command {
@@ -96,7 +83,7 @@ public class PaperCommand extends Command {
                 }
                 break;
             case "chunkinfo":
-                List<String> worldNames = new ArrayList<>();
+                List<String> worldNames = new ObjectArrayList<>();
                 worldNames.add("*");
                 for (org.bukkit.World world : Bukkit.getWorlds()) {
                     worldNames.add(world.getName());
@@ -381,7 +368,7 @@ public class PaperCommand extends Command {
         if (args.length < 2 || args[1].equals("*")) {
             worlds = Bukkit.getWorlds();
         } else {
-            worlds = new ArrayList<>(args.length - 1);
+            worlds = new ObjectArrayList<>(args.length - 1);
             for (int i = 1; i < args.length; ++i) {
                 org.bukkit.World world = Bukkit.getWorld(args[i]);
                 if (world == null) {

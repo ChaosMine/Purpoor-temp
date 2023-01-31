@@ -1,36 +1,29 @@
 package net.minecraft.world.entity.decoration;
 
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
-import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
-// CraftBukkit end
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
 
-import org.bukkit.event.player.PlayerUnleashEntityEvent; // Paper
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityLeash extends EntityHanging {
 

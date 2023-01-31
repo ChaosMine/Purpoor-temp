@@ -1,8 +1,5 @@
 package net.minecraft.world.entity;
 
-import java.util.Optional;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,13 +7,17 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.players.NameReferencingFileConverter;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 import net.minecraft.world.scores.ScoreboardTeamBase;
+import net.pl3x.purpur.PurpurConfig;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 
 public abstract class EntityTameableAnimal extends EntityAnimal {
 
@@ -49,15 +50,7 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
     @Override
     public void loadData(NBTTagCompound nbttagcompound) {
         super.loadData(nbttagcompound);
-        UUID uuid;
-
-        if (nbttagcompound.b("Owner")) {
-            uuid = nbttagcompound.a("Owner");
-        } else {
-            String s = nbttagcompound.getString("Owner");
-
-            uuid = NameReferencingFileConverter.a(this.getMinecraftServer(), s);
-        }
+        UUID uuid = nbttagcompound.a("Owner");
 
         if (uuid != null) {
             try {
@@ -155,6 +148,7 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
 
     @Override
     public ScoreboardTeamBase getScoreboardTeam() {
+        if (PurpurConfig.disableTeams) return null;
         if (this.isTamed()) {
             EntityLiving entityliving = this.getOwner();
 

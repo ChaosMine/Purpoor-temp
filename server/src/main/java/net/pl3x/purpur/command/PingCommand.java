@@ -1,8 +1,8 @@
 package net.pl3x.purpur.command;
 
-import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.commands.CommandDispatcher;
 import net.minecraft.commands.CommandListenerWrapper;
+import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.server.level.EntityPlayer;
 import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.craftbukkit.util.CraftChatMessage;

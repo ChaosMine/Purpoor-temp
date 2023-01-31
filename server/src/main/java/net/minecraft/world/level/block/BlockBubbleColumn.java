@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.Particles;
@@ -21,6 +20,8 @@ import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import java.util.Random;
 
 public class BlockBubbleColumn extends Block implements IFluidSource {
 

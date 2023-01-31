@@ -1,9 +1,8 @@
 package net.minecraft.world.item;
 
+import io.papermc.paper.event.player.PlayerItemCooldownEvent;
 import net.minecraft.network.protocol.game.PacketPlayOutSetCooldown;
 import net.minecraft.server.level.EntityPlayer;
-
-import io.papermc.paper.event.player.PlayerItemCooldownEvent; // Paper
 
 public class ItemCooldownPlayer extends ItemCooldown {
 

@@ -1,17 +1,14 @@
 package net.minecraft.world.entity.ai.goal.target;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import net.minecraft.world.entity.EntityCreature;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class PathfinderGoalHurtByTarget extends PathfinderGoalTarget {
 

@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.EnumHand;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+
+import javax.annotation.Nullable;
 
 public class BlockJukeBox extends BlockTileEntity {
 

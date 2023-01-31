@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.core.particles.ParticleParam;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,6 +12,9 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityDragonFireball extends EntityFireball {
 

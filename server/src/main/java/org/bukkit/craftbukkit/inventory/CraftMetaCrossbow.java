@@ -3,19 +3,19 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.item.ItemArrow;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
 public class CraftMetaCrossbow extends CraftMetaItem implements CrossbowMeta {
@@ -37,7 +37,7 @@ public class CraftMetaCrossbow extends CraftMetaItem implements CrossbowMeta {
         this.charged = crossbow.charged;
 
         if (crossbow.hasChargedProjectiles()) {
-            this.chargedProjectiles = new ArrayList<>(crossbow.chargedProjectiles);
+            this.chargedProjectiles = new ObjectArrayList<>(crossbow.chargedProjectiles);
         }
     }
 
@@ -50,7 +50,7 @@ public class CraftMetaCrossbow extends CraftMetaItem implements CrossbowMeta {
             NBTTagList list = tag.getList(CHARGED_PROJECTILES.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
 
             if (list != null && !list.isEmpty()) {
-                chargedProjectiles = new ArrayList<>();
+                chargedProjectiles = new ObjectArrayList<>();
 
                 for (int i = 0; i < list.size(); i++) {
                     NBTTagCompound nbttagcompound1 = list.getCompound(i);
@@ -146,7 +146,7 @@ public class CraftMetaCrossbow extends CraftMetaItem implements CrossbowMeta {
         Preconditions.checkArgument(item.getType() == Material.FIREWORK_ROCKET || CraftMagicNumbers.getItem(item.getType()) instanceof ItemArrow, "Item %s is not an arrow or firework rocket", item);
 
         if (chargedProjectiles == null) {
-            chargedProjectiles = new ArrayList<>();
+            chargedProjectiles = new ObjectArrayList<>();
         }
 
         charged = true;

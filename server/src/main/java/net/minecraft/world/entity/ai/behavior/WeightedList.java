@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Comparator;
 import java.util.List;
@@ -49,7 +50,7 @@ public class WeightedList<U> {
 
     public WeightedList<U> a(Random random) {
         // Paper start - make concurrent safe, work off a clone of the list
-        List<WeightedList.a<U>> list = isUnsafe ? new java.util.ArrayList<WeightedList.a<U>>(this.list) : this.list;
+        List<WeightedList.a<U>> list = isUnsafe ? new ObjectArrayList<>(this.list) : this.list;
         list.forEach((weightedlist_a) -> weightedlist_a.a(random.nextFloat()));
         list.sort(Comparator.comparingDouble(a::c));
         return isUnsafe ? new WeightedList<>(list, isUnsafe) : this;

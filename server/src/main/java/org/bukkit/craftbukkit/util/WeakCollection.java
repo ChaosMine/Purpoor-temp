@@ -1,18 +1,20 @@
 package org.bukkit.craftbukkit.util;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.apache.commons.lang.Validate;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.apache.commons.lang.Validate;
 
 public final class WeakCollection<T> implements Collection<T> {
     static final Object NO_VALUE = new Object();
     private final Collection<WeakReference<T>> collection;
 
     public WeakCollection() {
-        collection = new ArrayList<WeakReference<T>>();
+        collection = new ObjectArrayList<>();
     }
 
     @Override
@@ -175,7 +177,7 @@ public final class WeakCollection<T> implements Collection<T> {
     }
 
     private Collection<T> toCollection() {
-        ArrayList<T> collection = new ArrayList<T>();
+        ObjectArrayList<T> collection = new ObjectArrayList<T>();
         for (T value : this) {
             collection.add(value);
         }

@@ -1,7 +1,7 @@
 package net.minecraft.world.level.block;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
+import io.papermc.paper.event.player.PlayerFlowerPotManipulateEvent;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.stats.StatisticList;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 
-import io.papermc.paper.event.player.PlayerFlowerPotManipulateEvent; // Paper
+import java.util.Map;
 
 public class BlockFlowerPot extends Block {
 

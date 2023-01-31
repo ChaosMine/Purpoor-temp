@@ -1,14 +1,7 @@
 package net.minecraft.world.entity;
 
 import com.google.common.collect.Maps;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.Particles;
@@ -21,6 +14,7 @@ import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.tags.Tag;
@@ -50,45 +44,23 @@ import net.minecraft.world.entity.monster.IMonster;
 import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.vehicle.EntityBoat;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemArmor;
-import net.minecraft.world.item.ItemAxe;
-import net.minecraft.world.item.ItemBlock;
-import net.minecraft.world.item.ItemBow;
-import net.minecraft.world.item.ItemCrossbow;
-import net.minecraft.world.item.ItemMonsterEgg;
-import net.minecraft.world.item.ItemProjectileWeapon;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemSword;
-import net.minecraft.world.item.ItemTool;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IMaterial;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BlockSkullAbstract;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
-
-// CraftBukkit start
-import net.minecraft.server.level.EntityPlayer;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.EntityTransformEvent;
-import org.bukkit.event.entity.EntityUnleashEvent;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
-import org.bukkit.event.player.PlayerUnleashEntityEvent; // Paper
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
 // CraftBukkit end
 
 public abstract class EntityInsentient extends EntityLiving {
@@ -985,13 +957,13 @@ public abstract class EntityInsentient extends EntityLiving {
 
     // Purpur start
     public List<List<ItemStack>> cloneEquipment() {
-        List<List<ItemStack>> list = new java.util.ArrayList<>();
-        List<ItemStack> handItems = new java.util.ArrayList<>();
+        List<List<ItemStack>> list = new ObjectArrayList<>();
+        List<ItemStack> handItems = new ObjectArrayList<>();
         for (ItemStack item : this.getHandEquipment()) {
             handItems.add(item.cloneItemStack());
         }
         list.add(handItems);
-        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        List<ItemStack> armorItems = new ObjectArrayList<>();
         for (ItemStack item : this.getArmorEquipment()) {
             armorItems.add(item.cloneItemStack());
         }

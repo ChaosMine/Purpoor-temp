@@ -1,9 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.data.worldgen.BiomeDecoratorGroups;
@@ -23,20 +19,22 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.levelgen.feature.WorldGenerator;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenEndGatewayConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfiguration;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.world.level.dimension.DimensionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 // CraftBukkit end
 
 public class TileEntityEndGateway extends TileEntityEnderPortal implements ITickable {

@@ -8,8 +8,6 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.inventory.InventoryView;
 // CraftBukkit end

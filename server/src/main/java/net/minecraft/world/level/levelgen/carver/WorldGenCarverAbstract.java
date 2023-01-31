@@ -2,11 +2,6 @@ package net.minecraft.world.level.levelgen.carver;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import java.util.BitSet;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Function;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -26,6 +21,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.material.FluidTypes;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import java.util.BitSet;
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 
 public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfiguration> {
 

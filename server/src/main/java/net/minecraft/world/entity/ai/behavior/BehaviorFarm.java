@@ -2,8 +2,6 @@ package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.server.level.WorldServer;
@@ -24,6 +22,9 @@ import net.minecraft.world.level.block.BlockCrops;
 import net.minecraft.world.level.block.BlockSoil;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BehaviorFarm extends Behavior<EntityVillager> {
 

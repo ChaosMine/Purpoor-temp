@@ -4,30 +4,15 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.core.RegistryMaterials;
+import net.minecraft.resources.RegistryReadOps;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.resources.IResourceManager;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.biome.BiomeBase;
@@ -39,9 +24,11 @@ import net.minecraft.world.level.levelgen.flat.GeneratorSettingsFlat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// CraftBukkit start
-import net.minecraft.resources.RegistryReadOps;
-import net.minecraft.server.packs.resources.IResourceManager;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class GeneratorSettings {

@@ -13,7 +13,7 @@ import java.util.Set;
 final class LazyChatAudienceSet extends LazyHashSet<Audience> {
     @Override
     protected Set<Audience> makeReference() {
-        final Set<Player> playerSet = LazyPlayerSet.makePlayerSet(MinecraftServer.getServer());
+        final Set<Player> playerSet = LazyPlayerSet.makePlayerSet(MinecraftServer.SERVER);
         final HashSet<Audience> audiences = new HashSet<>(playerSet);
         audiences.add(Bukkit.getConsoleSender());
         return audiences;

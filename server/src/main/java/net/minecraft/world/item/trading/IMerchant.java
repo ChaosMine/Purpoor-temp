@@ -1,7 +1,5 @@
 package net.minecraft.world.item.trading;
 
-import java.util.OptionalInt;
-import javax.annotation.Nullable;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.world.TileInventory;
@@ -9,6 +7,9 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.ContainerMerchant;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
+
+import javax.annotation.Nullable;
+import java.util.OptionalInt;
 
 public interface IMerchant {
 

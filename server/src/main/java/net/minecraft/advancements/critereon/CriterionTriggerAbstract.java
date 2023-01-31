@@ -1,18 +1,18 @@
 package net.minecraft.advancements.critereon;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.server.AdvancementDataPlayer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
+import net.pl3x.purpur.PurpurConfig;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstract> implements CriterionTrigger<T> {
 
@@ -22,6 +22,7 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
 
     @Override
     public final void a(AdvancementDataPlayer advancementdataplayer, CriterionTrigger.a<T> criteriontrigger_a) {
+        if (PurpurConfig.disableCriterions) return;
         (advancementdataplayer.criterionData.computeIfAbsent(this, (advancementdataplayer1) -> { // Paper - fix AdvancementDataPlayer leak
             return Sets.newHashSet();
         })).add(criteriontrigger_a);
@@ -29,6 +30,7 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
 
     @Override
     public final void b(AdvancementDataPlayer advancementdataplayer, CriterionTrigger.a<T> criteriontrigger_a) {
+        if (PurpurConfig.disableCriterions) return;
         Set<CriterionTrigger.a<T>> set = (Set) advancementdataplayer.criterionData.get(this); // Paper - fix AdvancementDataPlayer leak
 
         if (set != null) {
@@ -42,6 +44,7 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
 
     @Override
     public final void a(AdvancementDataPlayer advancementdataplayer) {
+        if (PurpurConfig.disableCriterions) return;
         advancementdataplayer.criterionData.remove(this); // Paper - fix AdvancementDataPlayer leak
     }
 
@@ -55,18 +58,17 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
     }
 
     protected void a(EntityPlayer entityplayer, Predicate<T> predicate) {
+        if (PurpurConfig.disableCriterions) return;
         AdvancementDataPlayer advancementdataplayer = entityplayer.getAdvancementData();
         Set<CriterionTrigger.a<T>> set = (Set) advancementdataplayer.criterionData.get(this); // Paper - fix AdvancementDataPlayer leak
 
         if (set != null && !set.isEmpty()) {
             LootTableInfo loottableinfo = CriterionConditionEntity.b(entityplayer, entityplayer);
             List<CriterionTrigger.a<T>> list = null;
-            Iterator iterator = set.iterator();
-
             CriterionTrigger.a criteriontrigger_a;
 
-            while (iterator.hasNext()) {
-                criteriontrigger_a = (CriterionTrigger.a) iterator.next();
+            for (a<T> ta : set) {
+                criteriontrigger_a = ta;
                 T t0 = (T) criteriontrigger_a.a(); // Paper - decompile fix
 
                 if (t0.b().a(loottableinfo) && predicate.test(t0)) {
@@ -79,7 +81,7 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
             }
 
             if (list != null) {
-                iterator = list.iterator();
+                Iterator iterator = list.iterator();
 
                 while (iterator.hasNext()) {
                     criteriontrigger_a = (CriterionTrigger.a) iterator.next();

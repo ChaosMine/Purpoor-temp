@@ -1,18 +1,18 @@
 package net.minecraft.world.inventory;
 
-import java.util.Iterator;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.IRecipe;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
 // CraftBukkit end
 
 public class InventoryCraftResult implements IInventory, RecipeHolder {
@@ -36,7 +36,7 @@ public class InventoryCraftResult implements IInventory, RecipeHolder {
     public void onOpen(CraftHumanEntity who) {}
     public void onClose(CraftHumanEntity who) {}
     public java.util.List<HumanEntity> getViewers() {
-        return new java.util.ArrayList<HumanEntity>();
+        return new ObjectArrayList<>();
     }
 
     @Override

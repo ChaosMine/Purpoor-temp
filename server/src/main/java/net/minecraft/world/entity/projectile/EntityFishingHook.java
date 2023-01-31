@@ -1,11 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
@@ -44,11 +38,12 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
-import org.bukkit.entity.Player;
 import org.bukkit.entity.FishHook;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerFishEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
 // CraftBukkit end
 
 public class EntityFishingHook extends IProjectile {

@@ -1,7 +1,6 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.IPosition;
@@ -12,11 +11,11 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.VillagerProfession;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftVillager;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
+
+import java.util.Optional;
 // CraftBukkit end
 
 public class BehaviorCareer extends Behavior<EntityVillager> {

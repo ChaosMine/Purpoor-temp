@@ -1,11 +1,11 @@
 package net.minecraft.world.entity.ai.goal;
 
-import com.destroystokyo.paper.util.set.OptimizedSmallEnumSet; // Paper - remove streams from pathfindergoalselector
+import com.destroystokyo.paper.util.set.OptimizedSmallEnumSet;
+
 import java.util.EnumSet;
 
 public abstract class PathfinderGoal {
 
-    private final EnumSet<PathfinderGoal.Type> a = EnumSet.noneOf(PathfinderGoal.Type.class); // Paper unused, but dummy to prevent plugins from crashing as hard. Theyll need to support paper in a special case if this is super important, but really doesn't seem like it would be.
     private final OptimizedSmallEnumSet<Type> goalTypes = new OptimizedSmallEnumSet<>(PathfinderGoal.Type.class); // Paper - remove streams from pathfindergoalselector
 
     // Paper start make sure goaltypes is never empty
@@ -60,6 +60,8 @@ public abstract class PathfinderGoal {
     public static enum Type {
 
         MOVE, LOOK, JUMP, TARGET, UNKNOWN_BEHAVIOR; // Paper - add unknown
+
+        public static Type[] VALUES = values();
 
         private Type() {}
     }

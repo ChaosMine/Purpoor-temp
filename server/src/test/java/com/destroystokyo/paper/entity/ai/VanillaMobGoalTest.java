@@ -1,7 +1,10 @@
 package com.destroystokyo.paper.entity.ai;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import org.bukkit.entity.Mob;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.bukkit.entity.Mob;
-
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ScanResult;
 
 public class VanillaMobGoalTest {
 

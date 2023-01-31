@@ -1,11 +1,12 @@
 package net.minecraft.world.damagesource;
 
-import javax.annotation.Nullable;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class EntityDamageSourceIndirect extends EntityDamageSource {
 

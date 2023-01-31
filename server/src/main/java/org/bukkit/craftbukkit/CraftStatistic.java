@@ -10,6 +10,7 @@ import net.minecraft.stats.StatisticList;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -132,6 +133,7 @@ public enum CraftStatistic {
     }
 
     public static net.minecraft.stats.Statistic getNMSStatistic(org.bukkit.Statistic bukkit) {
+        if (PurpurConfig.disableStatistics) return null;
         Preconditions.checkArgument(bukkit.getType() == Statistic.Type.UNTYPED, "This method only accepts untyped statistics");
 
         net.minecraft.stats.Statistic<MinecraftKey> nms = StatisticList.CUSTOM.b(statistics.inverse().get(bukkit));
@@ -141,6 +143,7 @@ public enum CraftStatistic {
     }
 
     public static net.minecraft.stats.Statistic getMaterialStatistic(org.bukkit.Statistic stat, Material material) {
+        if (PurpurConfig.disableStatistics) return null;
         try {
             if (stat == Statistic.MINE_BLOCK) {
                 return StatisticList.BLOCK_MINED.b(CraftMagicNumbers.getBlock(material));
@@ -167,6 +170,7 @@ public enum CraftStatistic {
     }
 
     public static net.minecraft.stats.Statistic getEntityStatistic(org.bukkit.Statistic stat, EntityType entity) {
+        if (PurpurConfig.disableStatistics) return null;
         if (entity.getName() != null) {
             EntityTypes<?> nmsEntity = IRegistry.ENTITY_TYPE.get(new MinecraftKey(entity.getName()));
 
@@ -181,11 +185,13 @@ public enum CraftStatistic {
     }
 
     public static EntityType getEntityTypeFromStatistic(net.minecraft.stats.Statistic<EntityTypes<?>> statistic) {
+        if (PurpurConfig.disableStatistics) return null;
         MinecraftKey name = EntityTypes.getName(statistic.b());
         return EntityType.fromName(name.getKey());
     }
 
     public static Material getMaterialFromStatistic(net.minecraft.stats.Statistic<?> statistic) {
+        if (PurpurConfig.disableStatistics) return null;
         if (statistic.b() instanceof Item) {
             return CraftMagicNumbers.getMaterial((Item) statistic.b());
         }
@@ -196,30 +202,36 @@ public enum CraftStatistic {
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic) {
+        if (PurpurConfig.disableStatistics) return;
         incrementStatistic(manager, statistic, 1);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic) {
+        if (PurpurConfig.disableStatistics) return;
         decrementStatistic(manager, statistic, 1);
     }
 
     public static int getStatistic(ServerStatisticManager manager, Statistic statistic) {
+        if (PurpurConfig.disableStatistics) return 0;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.isTrue(statistic.getType() == Type.UNTYPED, "Must supply additional paramater for this statistic");
         return manager.getStatisticValue(CraftStatistic.getNMSStatistic(statistic));
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, getStatistic(manager, statistic) + amount);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, getStatistic(manager, statistic) - amount);
     }
 
     public static void setStatistic(ServerStatisticManager manager, Statistic statistic, int newValue) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.isTrue(statistic.getType() == Type.UNTYPED, "Must supply additional paramater for this statistic");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");
@@ -228,14 +240,17 @@ public enum CraftStatistic {
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic, Material material) {
+        if (PurpurConfig.disableStatistics) return;
         incrementStatistic(manager, statistic, material, 1);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic, Material material) {
+        if (PurpurConfig.disableStatistics) return;
         decrementStatistic(manager, statistic, material, 1);
     }
 
     public static int getStatistic(ServerStatisticManager manager, Statistic statistic, Material material) {
+        if (PurpurConfig.disableStatistics) return 0;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(material, "Material cannot be null");
         Validate.isTrue(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
@@ -245,16 +260,19 @@ public enum CraftStatistic {
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic, Material material, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, material, getStatistic(manager, statistic, material) + amount);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic, Material material, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, material, getStatistic(manager, statistic, material) - amount);
     }
 
     public static void setStatistic(ServerStatisticManager manager, Statistic statistic, Material material, int newValue) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(material, "Material cannot be null");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");
@@ -265,14 +283,17 @@ public enum CraftStatistic {
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType) {
+        if (PurpurConfig.disableStatistics) return;
         incrementStatistic(manager, statistic, entityType, 1);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType) {
+        if (PurpurConfig.disableStatistics) return;
         decrementStatistic(manager, statistic, entityType, 1);
     }
 
     public static int getStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType) {
+        if (PurpurConfig.disableStatistics) return 0;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(entityType, "EntityType cannot be null");
         Validate.isTrue(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
@@ -282,16 +303,19 @@ public enum CraftStatistic {
     }
 
     public static void incrementStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, entityType, getStatistic(manager, statistic, entityType) + amount);
     }
 
     public static void decrementStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType, int amount) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.isTrue(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, entityType, getStatistic(manager, statistic, entityType) - amount);
     }
 
     public static void setStatistic(ServerStatisticManager manager, Statistic statistic, EntityType entityType, int newValue) {
+        if (PurpurConfig.disableStatistics) return;
         Validate.notNull(statistic, "Statistic cannot be null");
         Validate.notNull(entityType, "EntityType cannot be null");
         Validate.isTrue(newValue >= 0, "Value must be greater than or equal to 0");

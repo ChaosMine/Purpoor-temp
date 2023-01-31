@@ -1,16 +1,16 @@
 package org.bukkit.craftbukkit.entity;
 
-import java.util.UUID;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
 import org.apache.commons.lang.Validate;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.inventory.CraftInventoryAbstractHorse;
 import org.bukkit.craftbukkit.inventory.CraftSaddledInventory;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Horse;
 import org.bukkit.inventory.AbstractHorseInventory;
+
+import java.util.UUID;
 
 public abstract class CraftAbstractHorse extends CraftAnimals implements AbstractHorse {
 

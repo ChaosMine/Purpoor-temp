@@ -3,6 +3,10 @@ package com.destroystokyo.paper;
 import com.google.common.base.MoreObjects;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.bukkit.Bukkit;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,10 +18,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public enum VersionHistoryManager {
     INSTANCE;

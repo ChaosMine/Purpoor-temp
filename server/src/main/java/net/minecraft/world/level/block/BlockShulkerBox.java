@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTBase;
@@ -35,6 +33,9 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockShulkerBox extends BlockTileEntity {
 

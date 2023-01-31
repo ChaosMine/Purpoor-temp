@@ -1,5 +1,7 @@
 package net.minecraft.world.level.block;
 
+import io.papermc.paper.event.block.PlayerShearBlockEvent;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.MCUtil;
@@ -16,8 +18,6 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 
-import io.papermc.paper.event.block.PlayerShearBlockEvent; // Paper - PlayerShearBlockEvent namespace conflicts
-
 public class BlockPumpkin extends BlockStemmed {
 
     protected BlockPumpkin(BlockBase.Info blockbase_info) {
@@ -31,7 +31,7 @@ public class BlockPumpkin extends BlockStemmed {
         if (itemstack.getItem() == Items.SHEARS) {
             if (!world.isClientSide) {
                 // Paper start - Add PlayerShearBlockEvent
-                PlayerShearBlockEvent event = new PlayerShearBlockEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), MCUtil.toBukkitBlock(world, blockposition), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (enumhand == EnumHand.OFF_HAND ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND), new java.util.ArrayList<>());
+                PlayerShearBlockEvent event = new PlayerShearBlockEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), MCUtil.toBukkitBlock(world, blockposition), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack), (enumhand == EnumHand.OFF_HAND ? org.bukkit.inventory.EquipmentSlot.OFF_HAND : org.bukkit.inventory.EquipmentSlot.HAND), new ObjectArrayList<>());
                 event.getDrops().add(org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(new ItemStack(Items.PUMPKIN_SEEDS, 4)));
                 if (!event.callEvent()) {
                     return EnumInteractionResult.PASS;

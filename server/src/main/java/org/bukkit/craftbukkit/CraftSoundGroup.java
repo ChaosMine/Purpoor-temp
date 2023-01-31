@@ -1,14 +1,16 @@
 package org.bukkit.craftbukkit;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.level.block.SoundEffectType;
 import org.bukkit.Sound;
 import org.bukkit.SoundGroup;
 
+import java.util.HashMap;
+
 public class CraftSoundGroup implements SoundGroup {
 
     private final net.minecraft.world.level.block.SoundEffectType handle;
-    private static final HashMap<SoundEffectType, CraftSoundGroup> SOUND_GROUPS = new HashMap<>();
+    private static final Object2ObjectOpenHashMap<SoundEffectType, CraftSoundGroup> SOUND_GROUPS = new Object2ObjectOpenHashMap<>();
 
     public static SoundGroup getSoundGroup(SoundEffectType soundEffectType) {
         return SOUND_GROUPS.computeIfAbsent(soundEffectType, CraftSoundGroup::new);

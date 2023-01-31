@@ -1,12 +1,7 @@
 package net.minecraft.world.level.block.entity;
 
+import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.google.common.collect.Lists;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,15 +32,17 @@ import net.minecraft.world.level.block.IBeaconBeam;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
-import org.bukkit.craftbukkit.potion.CraftPotionUtil;
-import org.bukkit.potion.PotionEffect;
-// CraftBukkit end
-// Paper start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.craftbukkit.potion.CraftPotionUtil;
 import org.bukkit.entity.Player;
-import com.destroystokyo.paper.event.block.BeaconEffectEvent;
+import org.bukkit.potion.PotionEffect;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 // Paper end
 
 public class TileEntityBeacon extends TileEntity implements ITileInventory, ITickable {

@@ -1,8 +1,13 @@
 package net.minecraft.world.inventory;
 
+import org.jetbrains.annotations.Unmodifiable;
+
 public enum RecipeBookType {
+    CRAFTING,
+    FURNACE,
+    BLAST_FURNACE,
+    SMOKER,
+    ;
 
-    CRAFTING, FURNACE, BLAST_FURNACE, SMOKER;
-
-    private RecipeBookType() {}
+    public static final RecipeBookType @Unmodifiable [] VALUES = values();
 }

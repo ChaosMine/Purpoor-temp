@@ -6,12 +6,13 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.world.level.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import net.minecraft.world.level.World;
 
 public class SyncLoadFinder {
 
@@ -72,7 +73,7 @@ public class SyncLoadFinder {
 
             worldData.addProperty("name", world.getWorld().getName());
 
-            final List<Pair<ThrowableWithEquals, SyncLoadInformation>> data = new ArrayList<>();
+            final List<Pair<ThrowableWithEquals, SyncLoadInformation>> data = new ObjectArrayList<>();
 
             entry.getValue().forEach((ThrowableWithEquals stacktrace, SyncLoadInformation times) -> {
                 data.add(new Pair<>(stacktrace, times));

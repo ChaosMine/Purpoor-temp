@@ -1,25 +1,15 @@
 package org.bukkit.craftbukkit.persistence;
 
 import com.google.common.primitives.Primitives;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.nbt.*;
+import org.bukkit.persistence.PersistentDataContainer;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagByteArray;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagLongArray;
-import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.nbt.NBTTagString;
-import org.bukkit.persistence.PersistentDataContainer;
 
 /**
  * This class represents a registry that contains the used adapters for.
@@ -92,7 +82,7 @@ public final class CraftPersistentDataTypeRegistry {
         }
     }
 
-    private final Map<Class, TagAdapter> adapters = new HashMap<>();
+    private final Map<Class, TagAdapter> adapters = new Object2ObjectOpenHashMap<>();
 
     /**
      * Creates a suitable adapter instance for the primitive class type

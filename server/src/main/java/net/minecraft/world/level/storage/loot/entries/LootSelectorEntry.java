@@ -4,11 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootCollector;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
@@ -17,6 +13,10 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionUser;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public abstract class LootSelectorEntry extends LootEntryAbstract {
 

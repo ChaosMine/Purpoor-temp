@@ -4,14 +4,11 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import net.minecraft.util.INamable;
+
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import net.minecraft.util.INamable;
 
 public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T> {
 

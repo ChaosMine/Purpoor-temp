@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatMessage;
@@ -24,6 +23,8 @@ import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import javax.annotation.Nullable;
 
 public class BlockStonecutter extends Block {
 

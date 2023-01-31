@@ -3,18 +3,13 @@ package net.minecraft.world.entity.animal.horse;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.DifficultyDamageScaler;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.monster.EntitySkeleton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.World;
-
 import org.bukkit.entity.HumanEntity;
 
 import java.util.List;

@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.List;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.IBlockAccess;
@@ -10,6 +8,9 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.level.levelgen.feature.WorldGenFlowers;
+
+import java.util.List;
+import java.util.Random;
 
 public class BlockGrass extends BlockDirtSnowSpreadable implements IBlockFragilePlantElement {
 

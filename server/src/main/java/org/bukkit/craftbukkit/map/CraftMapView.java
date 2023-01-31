@@ -1,11 +1,7 @@
 package org.bukkit.craftbukkit.map;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldServer;
@@ -16,13 +12,15 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
-import org.bukkit.map.MapView.Scale;
+
+import java.util.*;
+import java.util.logging.Level;
 
 public final class CraftMapView implements MapView {
 
-    private final Map<CraftPlayer, RenderData> renderCache = new HashMap<CraftPlayer, RenderData>();
-    private final List<MapRenderer> renderers = new ArrayList<MapRenderer>();
-    private final Map<MapRenderer, Map<CraftPlayer, CraftMapCanvas>> canvases = new HashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
+    private final Map<CraftPlayer, RenderData> renderCache = new Object2ObjectOpenHashMap<CraftPlayer, RenderData>();
+    private final List<MapRenderer> renderers = new ObjectArrayList<>();
+    private final Map<MapRenderer, Map<CraftPlayer, CraftMapCanvas>> canvases = new Object2ObjectOpenHashMap<MapRenderer, Map<CraftPlayer, CraftMapCanvas>>();
     protected final WorldMap worldMap;
 
     public CraftMapView(WorldMap worldMap) {
@@ -94,14 +92,14 @@ public final class CraftMapView implements MapView {
 
     @Override
     public List<MapRenderer> getRenderers() {
-        return new ArrayList<MapRenderer>(renderers);
+        return new ObjectArrayList<MapRenderer>(renderers);
     }
 
     @Override
     public void addRenderer(MapRenderer renderer) {
         if (!renderers.contains(renderer)) {
             renderers.add(renderer);
-            canvases.put(renderer, new HashMap<CraftPlayer, CraftMapCanvas>());
+            canvases.put(renderer, new Object2ObjectOpenHashMap<CraftPlayer, CraftMapCanvas>());
             renderer.initialize(this);
         }
     }

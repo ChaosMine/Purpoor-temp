@@ -1,20 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
-import static org.bukkit.support.Matchers.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -30,6 +17,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+
+import java.io.*;
+import java.util.*;
+
+import static org.bukkit.support.Matchers.sameHash;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class ItemStackTest extends AbstractTestingBase {

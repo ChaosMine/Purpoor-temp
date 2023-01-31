@@ -1,9 +1,5 @@
 package net.minecraft.server;
 
-import java.io.PrintStream;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Function;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.CommandDispatcher;
 import net.minecraft.commands.arguments.selector.options.PlayerSelector;
@@ -12,6 +8,9 @@ import net.minecraft.core.IRegistry;
 import net.minecraft.core.dispenser.IDispenseBehavior;
 import net.minecraft.locale.LocaleLanguage;
 import net.minecraft.tags.TagStatic;
+import net.minecraft.util.datafix.fixes.DataConverterFlattenData;
+import net.minecraft.util.datafix.fixes.DataConverterMaterialId;
+import net.minecraft.util.datafix.fixes.DataConverterSpawnEgg;
 import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.AttributeBase;
@@ -26,10 +25,10 @@ import net.minecraft.world.level.block.BlockFire;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// CraftBukkit start
-import net.minecraft.util.datafix.fixes.DataConverterFlattenData;
-import net.minecraft.util.datafix.fixes.DataConverterMaterialId;
-import net.minecraft.util.datafix.fixes.DataConverterSpawnEgg;
+import java.io.PrintStream;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
 // CraftBukkit end
 
 public class DispenserRegistry {
@@ -170,13 +169,6 @@ public class DispenserRegistry {
         if (!DispenserRegistry.b) {
             throw new IllegalArgumentException("Not bootstrapped");
         } else {
-            if (SharedConstants.d) {
-                b().forEach((s) -> {
-                    DispenserRegistry.LOGGER.error("Missing translations: " + s);
-                });
-                CommandDispatcher.b();
-            }
-
             AttributeDefaults.a();
         }
     }

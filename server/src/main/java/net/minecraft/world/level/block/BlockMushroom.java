@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.data.worldgen.BiomeDecoratorGroups;
 import net.minecraft.server.level.WorldServer;
@@ -15,9 +13,10 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-// CraftBukkit start
 import org.bukkit.TreeType;
+
+import java.util.Iterator;
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockMushroom extends BlockPlant implements IBlockFragilePlantElement {

@@ -2,10 +2,11 @@ package net.minecraft.util;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
+import net.minecraft.core.Registry;
+
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-import net.minecraft.core.Registry;
 
 public class RegistryID<K> implements Registry<K> {
 

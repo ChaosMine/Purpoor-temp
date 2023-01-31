@@ -1,9 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +14,11 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public final class ProjectileHelper {
 
@@ -46,19 +47,19 @@ public final class ProjectileHelper {
     public static MovingObjectPositionEntity a(World world, Entity entity, Vec3D vec3d, Vec3D vec3d1, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
         double d0 = Double.MAX_VALUE;
         Entity entity1 = null;
-        Iterator iterator = world.getEntities(entity, axisalignedbb, predicate).iterator();
 
-        while (iterator.hasNext()) {
-            Entity entity2 = (Entity) iterator.next();
-            AxisAlignedBB axisalignedbb1 = entity2.getBoundingBox().g(0.30000001192092896D);
-            Optional<Vec3D> optional = axisalignedbb1.b(vec3d, vec3d1);
+        try (var list = world.getEntities(entity, axisalignedbb, predicate)) {
+            for (Entity entity2 : list) {
+                AxisAlignedBB axisalignedbb1 = entity2.getBoundingBox().g(0.30000001192092896D);
+                Optional<Vec3D> optional = axisalignedbb1.b(vec3d, vec3d1);
 
-            if (optional.isPresent()) {
-                double d1 = vec3d.distanceSquared((Vec3D) optional.get());
+                if (optional.isPresent()) {
+                    double d1 = vec3d.distanceSquared(optional.get());
 
-                if (d1 < d0) {
-                    entity1 = entity2;
-                    d0 = d1;
+                    if (d1 < d0) {
+                        entity1 = entity2;
+                        d0 = d1;
+                    }
                 }
             }
         }
@@ -70,7 +71,7 @@ public final class ProjectileHelper {
         }
     }
 
-    public static final void a(Entity entity, float f) {
+    public static void a(Entity entity, float f) {
         Vec3D vec3d = entity.getMot();
 
         if (vec3d.g() != 0.0D) {

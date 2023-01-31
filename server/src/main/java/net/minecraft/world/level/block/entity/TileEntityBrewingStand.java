@@ -1,14 +1,13 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.IWorldInventory;
 import net.minecraft.world.InventoryUtils;
@@ -23,16 +22,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewer;
 import net.minecraft.world.level.block.BlockBrewingStand;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
-import java.util.List;
-import net.minecraft.server.MinecraftServer;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.inventory.InventoryHolder;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityBrewingStand extends TileEntityContainer implements IWorldInventory, ITickable {
@@ -48,7 +48,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
     protected final IContainerProperties a;
     // CraftBukkit start - add fields and methods
     private int lastTick = MinecraftServer.currentTick;
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = 64;
 
     public void onOpen(CraftHumanEntity who) {

@@ -5,23 +5,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
@@ -31,51 +16,21 @@ import net.minecraft.network.protocol.game.PacketPlayOutUpdateTime;
 import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.MCUtil;
-import net.minecraft.server.level.ChunkMapDistance;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.PlayerChunkMap;
-import net.minecraft.server.level.Ticket;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.*;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.util.ArraySetSorted;
 import net.minecraft.util.Unit;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.entity.EntityAreaEffectCloud;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.decoration.EntityArmorStand;
-import net.minecraft.world.entity.decoration.EntityHanging;
-import net.minecraft.world.entity.decoration.EntityItemFrame;
-import net.minecraft.world.entity.decoration.EntityLeash;
-import net.minecraft.world.entity.decoration.EntityPainting;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.decoration.*;
 import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.projectile.EntityArrow;
-import net.minecraft.world.entity.projectile.EntityEgg;
-import net.minecraft.world.entity.projectile.EntityEnderSignal;
-import net.minecraft.world.entity.projectile.EntityEvokerFangs;
-import net.minecraft.world.entity.projectile.EntityFireball;
-import net.minecraft.world.entity.projectile.EntityFireworks;
-import net.minecraft.world.entity.projectile.EntityPotion;
-import net.minecraft.world.entity.projectile.EntitySnowball;
-import net.minecraft.world.entity.projectile.EntityTippedArrow;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.raid.PersistentRaid;
-import net.minecraft.world.entity.vehicle.EntityBoat;
-import net.minecraft.world.entity.vehicle.EntityMinecartChest;
-import net.minecraft.world.entity.vehicle.EntityMinecartCommandBlock;
-import net.minecraft.world.entity.vehicle.EntityMinecartFurnace;
-import net.minecraft.world.entity.vehicle.EntityMinecartHopper;
-import net.minecraft.world.entity.vehicle.EntityMinecartMobSpawner;
-import net.minecraft.world.entity.vehicle.EntityMinecartRideable;
-import net.minecraft.world.entity.vehicle.EntityMinecartTNT;
+import net.minecraft.world.entity.vehicle.*;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
@@ -94,23 +49,7 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.lang.Validate;
-import org.bukkit.BlockChangeDelegate;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Difficulty;
-import org.bukkit.Effect;
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Raid;
-import org.bukkit.Sound;
-import org.bukkit.StructureType;
-import org.bukkit.TreeType;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.WorldBorder;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -118,7 +57,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.boss.CraftDragonBattle;
 import org.bukkit.craftbukkit.entity.CraftEntity;
@@ -128,132 +66,10 @@ import org.bukkit.craftbukkit.metadata.BlockMetadataStore;
 import org.bukkit.craftbukkit.potion.CraftPotionUtil;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.util.CraftRayTraceResult;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.Ambient;
-import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.Bee;
-import org.bukkit.entity.Blaze;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Cat;
-import org.bukkit.entity.CaveSpider;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cod;
-import org.bukkit.entity.ComplexLivingEntity;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Dolphin;
-import org.bukkit.entity.Donkey;
-import org.bukkit.entity.DragonFireball;
-import org.bukkit.entity.Drowned;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.ElderGuardian;
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.EnderSignal;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Endermite;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Evoker;
-import org.bukkit.entity.EvokerFangs;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.Fox;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Golem;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.Hoglin;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Husk;
-import org.bukkit.entity.Illager;
-import org.bukkit.entity.Illusioner;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.LeashHitch;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.LingeringPotion;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.LlamaSpit;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Mule;
-import org.bukkit.entity.MushroomCow;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Panda;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Phantom;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.PiglinBrute;
-import org.bukkit.entity.Pillager;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PolarBear;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.PufferFish;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Ravager;
-import org.bukkit.entity.Salmon;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Shulker;
-import org.bukkit.entity.ShulkerBullet;
-import org.bukkit.entity.Silverfish;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.SkeletonHorse;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.SmallFireball;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Snowman;
-import org.bukkit.entity.SpectralArrow;
-import org.bukkit.entity.Spellcaster;
-import org.bukkit.entity.Spider;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Stray;
-import org.bukkit.entity.Strider;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.TippedArrow;
-import org.bukkit.entity.TraderLlama;
-import org.bukkit.entity.Trident;
-import org.bukkit.entity.TropicalFish;
-import org.bukkit.entity.Turtle;
-import org.bukkit.entity.Vex;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Vindicator;
-import org.bukkit.entity.WanderingTrader;
-import org.bukkit.entity.Witch;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkeleton;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zoglin;
-import org.bukkit.entity.Zombie;
-import org.bukkit.entity.ZombieHorse;
-import org.bukkit.entity.ZombieVillager;
-import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
-import org.bukkit.entity.minecart.HopperMinecart;
-import org.bukkit.entity.minecart.PoweredMinecart;
-import org.bukkit.entity.minecart.SpawnerMinecart;
-import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.world.SpawnChangeEvent;
 import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
@@ -269,6 +85,13 @@ import org.bukkit.util.Consumer;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 public class CraftWorld implements World {
     public static final int CUSTOM_DIMENSION_OFFSET = 10;
 
@@ -277,7 +100,7 @@ public class CraftWorld implements World {
     private Environment environment;
     private final CraftServer server = (CraftServer) Bukkit.getServer();
     private final ChunkGenerator generator;
-    private final List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
+    private final List<BlockPopulator> populators = new ObjectArrayList<BlockPopulator>();
     private final BlockMetadataStore blockMetadata = new BlockMetadataStore(this);
     private int monsterSpawn = -1;
     private int animalSpawn = -1;
@@ -705,7 +528,7 @@ public class CraftWorld implements World {
 
     @Override
     public Map<Plugin, Collection<Chunk>> getPluginChunkTickets() {
-        Map<Plugin, ImmutableList.Builder<Chunk>> ret = new HashMap<>();
+        Map<Plugin, ImmutableList.Builder<Chunk>> ret = new Object2ObjectOpenHashMap<>();
         ChunkMapDistance chunkDistanceManager = this.world.getChunkProvider().playerChunkMap.chunkDistanceManager;
 
         for (Long2ObjectMap.Entry<ArraySetSorted<Ticket<?>>> chunkTickets : chunkDistanceManager.tickets.long2ObjectEntrySet()) {
@@ -732,7 +555,7 @@ public class CraftWorld implements World {
     // Tuinity start - don't load chunks for crash reports
     public Map<Plugin, Collection<ChunkCoordIntPair>> getPluginChunkTicketsCoordinates() {
         // Copied from above
-        Map<Plugin, ImmutableList.Builder<ChunkCoordIntPair>> ret = new HashMap<>();
+        Map<Plugin, ImmutableList.Builder<ChunkCoordIntPair>> ret = new Object2ObjectOpenHashMap<>();
         ChunkMapDistance chunkDistanceManager = this.world.getChunkProvider().playerChunkMap.chunkDistanceManager;
 
         for (Long2ObjectMap.Entry<ArraySetSorted<Ticket<?>>> chunkTickets : chunkDistanceManager.tickets.long2ObjectEntrySet()) {
@@ -1180,7 +1003,7 @@ public class CraftWorld implements World {
 
     @Override
     public List<Entity> getEntities() {
-        List<Entity> list = new ArrayList<Entity>();
+        List<Entity> list = new ObjectArrayList<Entity>();
 
         for (Object o : world.entitiesById.values()) {
             if (o instanceof net.minecraft.world.entity.Entity) {
@@ -1200,7 +1023,7 @@ public class CraftWorld implements World {
 
     @Override
     public List<LivingEntity> getLivingEntities() {
-        List<LivingEntity> list = new ArrayList<LivingEntity>();
+        List<LivingEntity> list = new ObjectArrayList<LivingEntity>();
 
         for (Object o : world.entitiesById.values()) {
             if (o instanceof net.minecraft.world.entity.Entity) {
@@ -1228,7 +1051,7 @@ public class CraftWorld implements World {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Entity> Collection<T> getEntitiesByClass(Class<T> clazz) {
-        Collection<T> list = new ArrayList<T>();
+        Collection<T> list = new ObjectArrayList<T>();
 
         for (Object entity: world.entitiesById.values()) {
             if (entity instanceof net.minecraft.world.entity.Entity) {
@@ -1252,7 +1075,7 @@ public class CraftWorld implements World {
 
     @Override
     public Collection<Entity> getEntitiesByClasses(Class<?>... classes) {
-        Collection<Entity> list = new ArrayList<Entity>();
+        Collection<Entity> list = new ObjectArrayList<Entity>();
 
         for (Object entity: world.entitiesById.values()) {
             if (entity instanceof net.minecraft.world.entity.Entity) {
@@ -1303,17 +1126,18 @@ public class CraftWorld implements World {
         Validate.notNull(boundingBox, "Bounding box is null!");
 
         AxisAlignedBB bb = new AxisAlignedBB(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ(), boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMaxZ());
-        List<net.minecraft.world.entity.Entity> entityList = getHandle().getEntities((net.minecraft.world.entity.Entity) null, bb, null);
-        List<Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(entityList.size());
+        try (var entityList = getHandle().getEntities((net.minecraft.world.entity.Entity) null, bb, null)) {
+            List<Entity> bukkitEntityList = new ObjectArrayList<>(entityList.size());
 
-        for (net.minecraft.world.entity.Entity entity : entityList) {
-            Entity bukkitEntity = entity.getBukkitEntity();
-            if (filter == null || filter.test(bukkitEntity)) {
-                bukkitEntityList.add(bukkitEntity);
+            for (net.minecraft.world.entity.Entity entity : entityList) {
+                Entity bukkitEntity = entity.getBukkitEntity();
+                if (filter == null || filter.test(bukkitEntity)) {
+                    bukkitEntityList.add(bukkitEntity);
+                }
             }
-        }
 
-        return bukkitEntityList;
+            return bukkitEntityList;
+        }
     }
 
     @Override
@@ -1439,7 +1263,7 @@ public class CraftWorld implements World {
 
     @Override
     public List<Player> getPlayers() {
-        List<Player> list = new ArrayList<Player>(world.getPlayers().size());
+        List<Player> list = new ObjectArrayList<Player>(world.getPlayers().size());
 
         for (EntityHuman human : world.getPlayers()) {
             HumanEntity bukkitEntity = human.getBukkitEntity();
@@ -1969,11 +1793,12 @@ public class CraftWorld implements World {
                     AxisAlignedBB bb = (ItemFrame.class.isAssignableFrom(clazz))
                             ? EntityItemFrame.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).opposite(), width, height)
                             : EntityHanging.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).opposite(), width, height);
-                    List<net.minecraft.world.entity.Entity> list = (List<net.minecraft.world.entity.Entity>) world.getEntities(null, bb);
-                    for (Iterator<net.minecraft.world.entity.Entity> it = list.iterator(); !taken && it.hasNext();) {
-                        net.minecraft.world.entity.Entity e = it.next();
-                        if (e instanceof EntityHanging) {
-                            taken = true; // Hanging entities do not like hanging entities which intersect them.
+                    try (var list = world.getEntities(null, bb)) {
+                        for (var it = list.iterator(); !taken && it.hasNext();) {
+                            net.minecraft.world.entity.Entity e = it.next();
+                            if (e instanceof EntityHanging) {
+                                taken = true; // Hanging entities do not like hanging entities which intersect them.
+                            }
                         }
                     }
 
@@ -2351,7 +2176,7 @@ public class CraftWorld implements World {
             return gamerules;
         }
 
-        Map<String, GameRules.GameRuleKey<?>> gamerules = new HashMap<>();
+        Map<String, GameRules.GameRuleKey<?>> gamerules = new Object2ObjectOpenHashMap<>();
         GameRules.a(new GameRules.GameRuleVisitor() {
             @Override
             public <T extends GameRules.GameRuleValue<T>> void a(GameRules.GameRuleKey<T> gamerules_gamerulekey, GameRules.GameRuleDefinition<T> gamerules_gameruledefinition) {
@@ -2368,7 +2193,7 @@ public class CraftWorld implements World {
             return gameruleDefinitions;
         }
 
-        Map<String, GameRules.GameRuleDefinition<?>> gameruleDefinitions = new HashMap<>();
+        Map<String, GameRules.GameRuleDefinition<?>> gameruleDefinitions = new Object2ObjectOpenHashMap<>();
         GameRules.a(new GameRules.GameRuleVisitor() {
             @Override
             public <T extends GameRules.GameRuleValue<T>> void a(GameRules.GameRuleKey<T> gamerules_gamerulekey, GameRules.GameRuleDefinition<T> gamerules_gameruledefinition) {

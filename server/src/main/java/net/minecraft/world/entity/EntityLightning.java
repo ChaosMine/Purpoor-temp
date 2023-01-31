@@ -1,30 +1,28 @@
 package net.minecraft.world.entity;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockFireAbstract;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
-import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class EntityLightning extends Entity {
@@ -126,19 +124,26 @@ public class EntityLightning extends Entity {
         if (this.lifeTicks >= 0 && !this.isEffect) { // CraftBukkit - add !this.isEffect
             if (!(this.world instanceof WorldServer)) {
                 this.world.c(2);
-            } else if (!this.isEffect) {
-                double d0 = 3.0D;
-                List<Entity> list = this.world.getEntities(this, new AxisAlignedBB(this.locX() - 3.0D, this.locY() - 3.0D, this.locZ() - 3.0D, this.locX() + 3.0D, this.locY() + 6.0D + 3.0D, this.locZ() + 3.0D), Entity::isAlive);
-                Iterator iterator = list.iterator();
+            } else {
+                try (var list = this.world.getEntities(
+                  this,
+                  new AxisAlignedBB(
+                    this.locX() - 3.0D,
+                    this.locY() - 3.0D,
+                    this.locZ() - 3.0D,
+                    this.locX() + 3.0D,
+                    this.locY() + 6.0D + 3.0D,
+                    this.locZ() + 3.0D
+                  ),
+                  Entity::isAlive
+                )) {
+                    for (Entity entity : list) {
+                        entity.onLightningStrike((WorldServer) this.world, this);
+                    }
 
-                while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
-
-                    entity.onLightningStrike((WorldServer) this.world, this);
-                }
-
-                if (this.f != null) {
-                    CriterionTriggers.E.a(this.f, (Collection) list);
+                    if (this.f != null) {
+                        CriterionTriggers.E.a(this.f, list);
+                    }
                 }
             }
         }

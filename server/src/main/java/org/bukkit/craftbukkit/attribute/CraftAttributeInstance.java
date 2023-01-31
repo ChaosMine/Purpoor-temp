@@ -1,12 +1,14 @@
 package org.bukkit.craftbukkit.attribute;
 
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class CraftAttributeInstance implements AttributeInstance {
 
@@ -35,7 +37,7 @@ public class CraftAttributeInstance implements AttributeInstance {
 
     @Override
     public Collection<AttributeModifier> getModifiers() {
-        List<AttributeModifier> result = new ArrayList<AttributeModifier>();
+        List<AttributeModifier> result = new ObjectArrayList<>();
         for (net.minecraft.world.entity.ai.attributes.AttributeModifier nms : handle.getModifiers()) {
             result.add(convert(nms));
         }

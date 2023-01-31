@@ -5,13 +5,8 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyTrackPosition;
-import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
-import net.minecraft.world.level.block.state.properties.IBlockState;
-
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import net.minecraft.world.level.block.state.properties.*;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 public class BlockPoweredRail extends BlockMinecartTrackAbstract {
 

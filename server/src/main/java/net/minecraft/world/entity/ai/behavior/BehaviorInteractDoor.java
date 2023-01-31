@@ -2,11 +2,6 @@ package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.IPosition;
@@ -21,6 +16,11 @@ import net.minecraft.world.level.block.BlockDoor;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
 
 public class BehaviorInteractDoor extends Behavior<EntityLiving> {
 

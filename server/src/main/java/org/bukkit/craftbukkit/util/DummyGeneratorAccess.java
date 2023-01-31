@@ -1,8 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
+import dev.kamillaova.paper.collections.list.RecyclableObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.core.particles.ParticleParam;
@@ -31,6 +29,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.storage.WorldData;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 public class DummyGeneratorAccess implements GeneratorAccess {
 
@@ -95,7 +97,7 @@ public class DummyGeneratorAccess implements GeneratorAccess {
     }
 
     @Override
-    public List<Entity> getEntities(Entity entity, AxisAlignedBB aabb, Predicate<? super Entity> prdct) {
+    public RecyclableObjectArrayList<Entity> getEntities(Entity entity, AxisAlignedBB aabb, Predicate<? super Entity> prdct) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

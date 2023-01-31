@@ -1,9 +1,10 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.entity.EntityInsentient;
+
+import java.util.EnumSet;
 
 public class PathfinderGoalFloat extends PathfinderGoal {
 

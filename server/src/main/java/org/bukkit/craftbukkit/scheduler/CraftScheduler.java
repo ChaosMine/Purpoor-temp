@@ -1,24 +1,8 @@
 package org.bukkit.craftbukkit.scheduler;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-import java.util.function.IntUnaryOperator; // Paper - Backport Spigot-#891
-import java.util.logging.Level;
-import com.destroystokyo.paper.ServerSchedulerReportingWrapper;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerSchedulerException;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.Plugin;
@@ -26,6 +10,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
+
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
+import java.util.logging.Level;
 
 /**
  * The fundamental concepts for this implementation:
@@ -92,7 +87,7 @@ public class CraftScheduler implements BukkitScheduler {
     /**
      * Main thread logic only
      */
-    private final List<CraftTask> temp = new ArrayList<CraftTask>();
+    private final List<CraftTask> temp = new ObjectArrayList<CraftTask>();
     /**
      * These are tasks that are currently active. It's provided for 'viewing' the current state.
      */
@@ -412,7 +407,7 @@ public class CraftScheduler implements BukkitScheduler {
             return this.asyncScheduler.getActiveWorkers();
         }
         // Paper end
-        final ArrayList<BukkitWorker> workers = new ArrayList<BukkitWorker>();
+        final ObjectArrayList<BukkitWorker> workers = new ObjectArrayList<BukkitWorker>();
         for (final CraftTask taskObj : runners.values()) {
             // Iterator will be a best-effort (may fail to grab very new values) if called from an async thread
             if (taskObj.isSync()) {
@@ -429,7 +424,7 @@ public class CraftScheduler implements BukkitScheduler {
 
     @Override
     public List<BukkitTask> getPendingTasks() {
-        final ArrayList<CraftTask> truePending = new ArrayList<CraftTask>();
+        final ObjectArrayList<CraftTask> truePending = new ObjectArrayList<>();
         for (CraftTask task = head.getNext(); task != null; task = task.getNext()) {
             if (task.getTaskId() != -1) {
                 // -1 is special code
@@ -437,7 +432,7 @@ public class CraftScheduler implements BukkitScheduler {
             }
         }
 
-        final ArrayList<BukkitTask> pending = new ArrayList<BukkitTask>();
+        final ObjectArrayList<BukkitTask> pending = new ObjectArrayList<>();
         for (CraftTask task : runners.values()) {
             if (task.getPeriod() >= CraftTask.NO_REPEATING) {
                 pending.add(task);
@@ -594,7 +589,7 @@ public class CraftScheduler implements BukkitScheduler {
         return "";
         /*
         int debugTick = currentTick;
-        StringBuilder string = new StringBuilder("Recent tasks from ").append(debugTick - RECENT_TICKS).append('-').append(debugTick).append('{');
+        StringBuilder string = dev.kamillaova.paper.pool.StringBuilderPool.take("Recent tasks from ").append(debugTick - RECENT_TICKS).append('-').append(debugTick).append('{');
         debugHead.debugTo(string);
         return string.append('}').toString();
         */

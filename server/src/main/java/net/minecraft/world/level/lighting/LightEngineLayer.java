@@ -1,7 +1,5 @@
 package net.minecraft.world.level.lighting;
 
-import java.util.Arrays;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.SectionPosition;
@@ -16,6 +14,9 @@ import net.minecraft.world.level.chunk.NibbleArray;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 import org.apache.commons.lang3.mutable.MutableInt;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public abstract class LightEngineLayer<M extends LightEngineStorageArray<M>, S extends LightEngineStorage<M>> extends LightEngineGraph implements LightEngineLayerEventListener {
 

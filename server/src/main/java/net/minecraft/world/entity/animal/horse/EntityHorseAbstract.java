@@ -1,11 +1,6 @@
 package net.minecraft.world.entity.animal.horse;
 
 import com.google.common.collect.UnmodifiableIterator;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -17,43 +12,19 @@ import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.PathfinderGoalHorseHasRider;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.server.players.NameReferencingFileConverter;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.DifficultyDamageScaler;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.IInventoryListener;
-import net.minecraft.world.InventorySubcontainer;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMainHand;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.IJumpable;
-import net.minecraft.world.entity.ISaddleable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerLook;
 import net.minecraft.world.entity.ai.control.ControllerMove;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalTame;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -70,8 +41,13 @@ import net.minecraft.world.level.block.SoundEffectType;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 public abstract class EntityHorseAbstract extends EntityAnimal implements IInventoryListener, IJumpable, ISaddleable {
 
@@ -842,15 +818,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
         this.w(nbttagcompound.getBoolean("Bred"));
         this.setTemper(nbttagcompound.getInt("Temper"));
         this.setTamed(nbttagcompound.getBoolean("Tame"));
-        UUID uuid;
-
-        if (nbttagcompound.b("Owner")) {
-            uuid = nbttagcompound.a("Owner");
-        } else {
-            String s = nbttagcompound.getString("Owner");
-
-            uuid = NameReferencingFileConverter.a(this.getMinecraftServer(), s);
-        }
+        UUID uuid = nbttagcompound.a("Owner");
 
         if (uuid != null) {
             this.setOwnerUUID(uuid);

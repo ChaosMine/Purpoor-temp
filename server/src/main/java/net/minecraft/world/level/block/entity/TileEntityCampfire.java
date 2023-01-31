@@ -1,8 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Optional;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
@@ -21,11 +18,13 @@ import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockCampfire;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockCookEvent;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.Random;
 // CraftBukkit end
 
 public class TileEntityCampfire extends TileEntity implements Clearable, ITickable {

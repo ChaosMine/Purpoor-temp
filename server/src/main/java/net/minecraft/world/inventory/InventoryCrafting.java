@@ -1,20 +1,20 @@
 package net.minecraft.world.inventory;
 
-import java.util.Iterator;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.AutoRecipeStackManager;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
-import java.util.List;
 import net.minecraft.world.item.crafting.IRecipe;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class InventoryCrafting implements IInventory, AutoRecipeOutput {
@@ -25,7 +25,7 @@ public class InventoryCrafting implements IInventory, AutoRecipeOutput {
     public final Container container;
 
     // CraftBukkit start - add fields
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private IRecipe currentRecipe;
     public IInventory resultInventory;
     private EntityHuman owner;

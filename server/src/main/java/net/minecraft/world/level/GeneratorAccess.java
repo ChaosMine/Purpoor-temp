@@ -1,7 +1,5 @@
 package net.minecraft.world.level;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.ParticleParam;
 import net.minecraft.sounds.SoundCategory;
@@ -13,6 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.IChunkProvider;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.storage.WorldData;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public interface GeneratorAccess extends ICombinedAccess, IWorldTime {
 

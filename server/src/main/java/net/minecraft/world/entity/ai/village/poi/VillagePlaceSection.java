@@ -7,6 +7,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import net.minecraft.SharedConstants;
+import net.minecraft.SystemUtils;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.core.SectionPosition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Supplier;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,13 +23,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import net.minecraft.SharedConstants;
-import net.minecraft.SystemUtils;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.SectionPosition;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Supplier;
 
 public class VillagePlaceSection {
 
@@ -91,10 +92,6 @@ public class VillagePlaceSection {
             }
 
             String s = "POI data mismatch: already registered at " + blockposition;
-
-            if (SharedConstants.d) {
-                throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException(s)));
-            }
 
             VillagePlaceSection.LOGGER.error(s);
         }

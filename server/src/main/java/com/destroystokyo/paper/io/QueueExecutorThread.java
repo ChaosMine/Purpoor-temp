@@ -41,10 +41,8 @@ public class QueueExecutorThread<T extends PrioritizedTaskQueue.PrioritizedTask 
 
             final long start = System.nanoTime();
 
-            for (;;) {
-                // If we are interrpted for any reason, park() will always return immediately. Clear so that we don't needlessly use cpu in such an event.
-                Thread.interrupted();
-                LockSupport.parkNanos("Spinwaiting on tasks", 1000L); // 1us
+            do {
+                Thread.onSpinWait();
 
                 if (this.pollTasks(true)) {
                     // restart loop, found tasks
@@ -55,10 +53,7 @@ public class QueueExecutorThread<T extends PrioritizedTaskQueue.PrioritizedTask 
                     return; // we're done
                 }
 
-                if ((System.nanoTime() - start) >= spinWaitTime) {
-                    break;
-                }
-            }
+            } while ((System.nanoTime() - start) < spinWaitTime);
 
             if (this.handleClose()) {
                 return;
@@ -189,7 +184,7 @@ public class QueueExecutorThread<T extends PrioritizedTaskQueue.PrioritizedTask 
             final long currentCycle = this.flushCycles; // may be opaque read
 
             if (currentCycle == lastCycle) {
-                Thread.yield();
+                Thread.onSpinWait();
                 continue;
             }
 

@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 import com.mojang.authlib.GameProfile;
-import java.util.UUID;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
@@ -9,6 +8,8 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TileEntitySkull;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.UUID;
 
 public class ItemSkullPlayer extends ItemBlockWallable {
 

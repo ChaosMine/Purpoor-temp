@@ -6,7 +6,6 @@ import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.decoration.EntityItemFrame;
 import net.minecraft.world.entity.decoration.EntityPainting;
 import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.monster.EntityGhast;
 
 public class TrackingRange
 {

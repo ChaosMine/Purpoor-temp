@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import javax.annotation.Nullable;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.MojangsonParser;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +15,8 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class AdvancementDisplay {
 
@@ -122,7 +123,7 @@ public class AdvancementDisplay {
         packetdataserializer.a(this.a);
         packetdataserializer.a(this.b);
         packetdataserializer.a(this.c);
-        packetdataserializer.a((Enum) this.e);
+        packetdataserializer.writeEnum((Enum) this.e);
         int i = 0;
 
         if (this.d != null) {
@@ -150,7 +151,7 @@ public class AdvancementDisplay {
         IChatBaseComponent ichatbasecomponent = packetdataserializer.h();
         IChatBaseComponent ichatbasecomponent1 = packetdataserializer.h();
         ItemStack itemstack = packetdataserializer.n();
-        AdvancementFrameType advancementframetype = (AdvancementFrameType) packetdataserializer.a(AdvancementFrameType.class);
+        AdvancementFrameType advancementframetype = packetdataserializer.readEnum(AdvancementFrameType.VALUES);
         int i = packetdataserializer.readInt();
         MinecraftKey minecraftkey = (i & 1) != 0 ? packetdataserializer.p() : null;
         boolean flag = (i & 2) != 0;

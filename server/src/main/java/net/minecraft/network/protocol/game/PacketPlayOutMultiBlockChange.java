@@ -2,8 +2,6 @@ package net.minecraft.network.protocol.game;
 
 import it.unimi.dsi.fastutil.shorts.ShortIterator;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
-import java.io.IOException;
-import java.util.function.BiConsumer;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.network.PacketDataSerializer;
@@ -11,6 +9,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkSection;
+
+import java.io.IOException;
+import java.util.function.BiConsumer;
 
 public class PacketPlayOutMultiBlockChange implements Packet<PacketListenerPlayOut> {
 

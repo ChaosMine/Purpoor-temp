@@ -1,27 +1,25 @@
 package net.minecraft.network;
 
+import com.velocitypowered.proxy.protocol.ProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 
 @Sharable
-public class PacketPrepender extends MessageToByteEncoder<ByteBuf> {
+public class PacketPrepender extends ChannelOutboundHandlerAdapter {
+	public static final PacketPrepender INSTANCE = new PacketPrepender();
 
-    public PacketPrepender() {}
+	@Override
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+		if (msg instanceof ByteBuf buf) {
+			var packetSize = buf.readableBytes();
+			buf.setIndex(0, 0);
 
-    protected void encode(ChannelHandlerContext channelhandlercontext, ByteBuf bytebuf, ByteBuf bytebuf1) throws Exception {
-        int i = bytebuf.readableBytes();
-        int j = PacketDataSerializer.a(i);
-
-        if (j > 3) {
-            throw new IllegalArgumentException("unable to fit " + i + " into " + 3);
-        } else {
-            PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf1);
-
-            packetdataserializer.ensureWritable(j + i);
-            packetdataserializer.d(i);
-            packetdataserializer.writeBytes(bytebuf, bytebuf.readerIndex(), i);
-        }
-    }
+			ProtocolUtils.write21BitVarInt(buf, packetSize);
+			buf.resetWriterIndex();
+		}
+		ctx.write(msg, promise);
+	}
 }

@@ -4,25 +4,6 @@ import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.destroystokyo.paper.profile.CraftPlayerProfile;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.EnumDirection;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.server.level.ChunkMapDistance;
-import net.minecraft.server.level.ChunkProviderServer;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.PlayerChunkMap;
-import net.minecraft.server.level.Ticket;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.RayTrace;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.IChunkAccess;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
@@ -30,11 +11,23 @@ import com.google.gson.stream.JsonWriter;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.server.level.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.RayTrace;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.IChunkAccess;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.util.Waitable;
-import org.spigotmc.AsyncCatcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,12 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -71,7 +59,7 @@ public final class MCUtil {
 
 
     public static Runnable once(Runnable run) {
-        AtomicBoolean ran = new AtomicBoolean(false);
+        var ran = new AtomicBoolean(false);
         return () -> {
             if (ran.compareAndSet(false, true)) {
                 run.run();
@@ -97,7 +85,7 @@ public final class MCUtil {
      */
     public static Runnable registerCleaner(Object obj, Runnable run) {
         // Wrap callback in its own method above or the lambda will leak object
-        Runnable cleaner = makeCleanerCallback(run);
+        var cleaner = makeCleanerCallback(run);
         co.aikar.cleaner.Cleaner.register(obj, cleaner);
         return cleaner;
     }
@@ -133,9 +121,9 @@ public final class MCUtil {
         List<ChunkCoordIntPair> list = com.google.common.collect.Lists.newArrayList();
 
         list.add(new ChunkCoordIntPair(blockposition.getX() >> 4, blockposition.getZ() >> 4));
-        for (int r = 1; r <= radius; r++) {
-            int x = -r;
-            int z = r;
+        for (var r = 1; r <= radius; r++) {
+            var x = -r;
+            var z = r;
 
             // Iterates the edge of half of the box; then negates for other half.
             while (x <= r && z > -r) {
@@ -153,17 +141,17 @@ public final class MCUtil {
     }
 
     public static int fastFloor(double x) {
-        int truncated = (int)x;
+        var truncated = (int)x;
         return x < (double)truncated ? truncated - 1 : truncated;
     }
 
     public static int fastFloor(float x) {
-        int truncated = (int)x;
+        var truncated = (int)x;
         return x < (double)truncated ? truncated - 1 : truncated;
     }
 
     public static float normalizeYaw(float f) {
-        float f1 = f % 360.0F;
+        var f1 = f % 360.0F;
 
         if (f1 >= 180.0F) {
             f1 -= 360.0F;
@@ -195,47 +183,47 @@ public final class MCUtil {
         return ExceptionUtils.getFullStackTrace(new Throwable(str));
     }
 
-    public static long getCoordinateKey(final BlockPosition blockPos) {
+    public static long getCoordinateKey(BlockPosition blockPos) {
         return ((long)(blockPos.getZ() >> 4) << 32) | ((blockPos.getX() >> 4) & 0xFFFFFFFFL);
     }
 
-    public static long getCoordinateKey(final Entity entity) {
+    public static long getCoordinateKey(Entity entity) {
         return ((long)(MCUtil.fastFloor(entity.locZ()) >> 4) << 32) | ((MCUtil.fastFloor(entity.locX()) >> 4) & 0xFFFFFFFFL);
     }
 
-    public static long getCoordinateKey(final ChunkCoordIntPair pair) {
+    public static long getCoordinateKey(ChunkCoordIntPair pair) {
         return ((long)pair.z << 32) | (pair.x & 0xFFFFFFFFL);
     }
 
-    public static long getCoordinateKey(final int x, final int z) {
+    public static long getCoordinateKey(int x, int z) {
         return ((long)z << 32) | (x & 0xFFFFFFFFL);
     }
 
-    public static int getCoordinateX(final long key) {
+    public static int getCoordinateX(long key) {
         return (int)key;
     }
 
-    public static int getCoordinateZ(final long key) {
+    public static int getCoordinateZ(long key) {
         return (int)(key >>> 32);
     }
 
-    public static int getChunkCoordinate(final double coordinate) {
+    public static int getChunkCoordinate(double coordinate) {
         return MCUtil.fastFloor(coordinate) >> 4;
     }
 
-    public static int getBlockCoordinate(final double coordinate) {
+    public static int getBlockCoordinate(double coordinate) {
         return MCUtil.fastFloor(coordinate);
     }
 
-    public static long getBlockKey(final int x, final int y, final int z) {
+    public static long getBlockKey(int x, int y, int z) {
         return ((long)x & 0x7FFFFFF) | (((long)z & 0x7FFFFFF) << 27) | ((long)y << 54);
     }
 
-    public static long getBlockKey(final BlockPosition pos) {
+    public static long getBlockKey(BlockPosition pos) {
         return ((long)pos.getX() & 0x7FFFFFF) | (((long)pos.getZ() & 0x7FFFFFF) << 27) | ((long)pos.getY() << 54);
     }
 
-    public static long getBlockKey(final Entity entity) {
+    public static long getBlockKey(Entity entity) {
         return getBlockKey(getBlockCoordinate(entity.locX()), getBlockCoordinate(entity.locY()), getBlockCoordinate(entity.locZ()));
     }
 
@@ -253,54 +241,54 @@ public final class MCUtil {
     static final int SECTION_X_SHIFT = SECTION_Z_SHIFT + SECTION_X_BITS;
     static final int SECTION_TO_BLOCK_SHIFT = 4;
 
-    public static long getSectionKey(final int x, final int y, final int z) {
+    public static long getSectionKey(int x, int y, int z) {
         return ((x & SECTION_X_MASK) << SECTION_X_SHIFT)
                 | ((y & SECTION_Y_MASK) << SECTION_Y_SHIFT)
                 | ((z & SECTION_Z_MASK) << SECTION_Z_SHIFT);
     }
 
-    public static long getSectionKey(final net.minecraft.core.SectionPosition pos) {
+    public static long getSectionKey(net.minecraft.core.SectionPosition pos) {
         return ((pos.getX() & SECTION_X_MASK) << SECTION_X_SHIFT)
                 | ((pos.getY() & SECTION_Y_MASK) << SECTION_Y_SHIFT)
                 | ((pos.getZ() & SECTION_Z_MASK) << SECTION_Z_SHIFT);
     }
 
-    public static long getSectionKey(final ChunkCoordIntPair pos, final int y) {
+    public static long getSectionKey(ChunkCoordIntPair pos, int y) {
         return ((pos.x & SECTION_X_MASK) << SECTION_X_SHIFT)
                 | ((y & SECTION_Y_MASK) << SECTION_Y_SHIFT)
                 | ((pos.z & SECTION_Z_MASK) << SECTION_Z_SHIFT);
     }
 
-    public static long getSectionKey(final BlockPosition pos) {
+    public static long getSectionKey(BlockPosition pos) {
         return (((long)pos.getX() << (SECTION_X_SHIFT - SECTION_TO_BLOCK_SHIFT)) & (SECTION_X_MASK << SECTION_X_SHIFT)) |
                 ((pos.getY() >> SECTION_TO_BLOCK_SHIFT) & (SECTION_Y_MASK << SECTION_Y_SHIFT)) |
                 (((long)pos.getZ() << (SECTION_Z_SHIFT - SECTION_TO_BLOCK_SHIFT)) & (SECTION_Z_MASK << SECTION_Z_SHIFT));
     }
 
-    public static long getSectionKey(final Entity entity) {
+    public static long getSectionKey(Entity entity) {
         return ((MCUtil.fastFloor(entity.locX()) & SECTION_X_MASK) << SECTION_X_SHIFT)
                 | ((MCUtil.fastFloor(entity.locY()) & SECTION_Y_MASK) << SECTION_Y_SHIFT)
                 | ((MCUtil.fastFloor(entity.locZ()) & SECTION_Z_MASK) << SECTION_Z_SHIFT);
     }
 
-    public static int getSectionX(final long key) {
+    public static int getSectionX(long key) {
         return (int)(key << (Long.SIZE - (SECTION_X_SHIFT + SECTION_X_BITS)) >> (Long.SIZE - SECTION_X_BITS));
     }
 
-    public static int getSectionY(final long key) {
+    public static int getSectionY(long key) {
         return (int)(key << (Long.SIZE - (SECTION_Y_SHIFT + SECTION_Y_BITS)) >> (Long.SIZE - SECTION_Y_BITS));
     }
 
-    public static int getSectionZ(final long key) {
+    public static int getSectionZ(long key) {
         return (int)(key << (Long.SIZE - (SECTION_Z_SHIFT + SECTION_Z_BITS)) >> (Long.SIZE - SECTION_Z_BITS));
     }
     // Tuinity end
 
     // assumes the sets have the same comparator, and if this comparator is null then assume T is Comparable
-    public static <T> void mergeSortedSets(final java.util.function.Consumer<T> consumer, final java.util.Comparator<? super T> comparator, final java.util.SortedSet<T>...sets) {
-        final ObjectRBTreeSet<T> all = new ObjectRBTreeSet<>(comparator);
+    public static <T> void mergeSortedSets(java.util.function.Consumer<T> consumer, java.util.Comparator<? super T> comparator, java.util.SortedSet<T>...sets) {
+        var all = new ObjectRBTreeSet<T>(comparator);
         // note: this is done in log(n!) ~ nlogn time. It could be improved if it were to mimic what mergesort does.
-        for (java.util.SortedSet<T> set : sets) {
+        for (var set : sets) {
             if (set != null) {
                 all.addAll(set);
             }
@@ -330,7 +318,7 @@ public final class MCUtil {
     }
 
     public static boolean isMainThread() {
-        return MinecraftServer.getServer().isMainThread();
+        return MinecraftServer.SERVER.isMainThread();
     }
 
     public static org.bukkit.scheduler.BukkitTask scheduleTask(int ticks, Runnable runnable) {
@@ -338,12 +326,12 @@ public final class MCUtil {
     }
 
     public static org.bukkit.scheduler.BukkitTask scheduleTask(int ticks, Runnable runnable, String taskName) {
-        return MinecraftServer.getServer().server.getScheduler().scheduleInternalTask(runnable, ticks, taskName);
+        return MinecraftServer.SERVER.server.getScheduler().scheduleInternalTask(runnable, ticks, taskName);
     }
 
     public static void processQueue() {
         Runnable runnable;
-        Queue<Runnable> processQueue = getProcessQueue();
+        var processQueue = getProcessQueue();
         while ((runnable = processQueue.poll()) != null) {
             try {
                 runnable.run();
@@ -513,8 +501,8 @@ public final class MCUtil {
     }
 
     public static boolean isEdgeOfChunk(BlockPosition pos) {
-        final int modX = pos.getX() & 15;
-        final int modZ = pos.getZ() & 15;
+        var modX = pos.getX() & 15;
+        var modZ = pos.getZ() & 15;
         return (modX == 0 || modX == 15 || modZ == 0 || modZ == 15);
     }
 
@@ -572,7 +560,7 @@ public final class MCUtil {
         if (!compound.hasKey(key)) {
             return null;
         }
-        String string = compound.getString(key);
+        var string = compound.getString(key);
         try {
             return IChatBaseComponent.ChatSerializer.jsonToComponent(string);
         } catch (com.google.gson.JsonParseException e) {
@@ -583,10 +571,10 @@ public final class MCUtil {
     }
 
     public static ChunkStatus getChunkStatus(PlayerChunk chunk) {
-        List<ChunkStatus> statuses = ChunkProviderServer.getPossibleChunkStatuses();
-        for (int i = statuses.size() - 1; i >= 0; --i) {
-            ChunkStatus curr = statuses.get(i);
-            CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> future = chunk.getStatusFutureUnchecked(curr);
+        var statuses = ChunkProviderServer.getPossibleChunkStatuses();
+        for (var i = statuses.size() - 1; i >= 0; --i) {
+            var curr = statuses.get(i);
+            var future = chunk.getStatusFutureUnchecked(curr);
             if (future != PlayerChunk.UNLOADED_CHUNK_ACCESS_FUTURE) {
                 return curr;
             }
@@ -636,27 +624,27 @@ public final class MCUtil {
          *  -add-tick:<long>
          *  -object-reason:<string> // This depends on the type of ticket. ie POST_TELEPORT -> entity id
          */
-        List<org.bukkit.World> worlds = org.bukkit.Bukkit.getWorlds();
-        JsonObject data = new JsonObject();
+        var worlds = org.bukkit.Bukkit.getWorlds();
+        var data = new JsonObject();
 
         data.addProperty("server-version", org.bukkit.Bukkit.getVersion());
         data.addProperty("data-version", 0);
 
-        JsonArray worldsData = new JsonArray();
+        var worldsData = new JsonArray();
 
-        for (org.bukkit.World bukkitWorld : worlds) {
-            JsonObject worldData = new JsonObject();
+        for (var bukkitWorld : worlds) {
+            var worldData = new JsonObject();
 
-            WorldServer world = ((org.bukkit.craftbukkit.CraftWorld)bukkitWorld).getHandle();
-            PlayerChunkMap chunkMap = world.getChunkProvider().playerChunkMap;
-            Long2ObjectLinkedOpenHashMap<PlayerChunk> visibleChunks = chunkMap.getVisibleChunks();
+            var world = ((org.bukkit.craftbukkit.CraftWorld)bukkitWorld).getHandle();
+            var chunkMap = world.getChunkProvider().playerChunkMap;
+            var visibleChunks = chunkMap.getVisibleChunks();
             ChunkMapDistance chunkMapDistance = chunkMap.chunkDistanceManager;
-            List<PlayerChunk> allChunks = new ArrayList<>(visibleChunks.values());
-            List<EntityPlayer> players = world.players;
+            List<PlayerChunk> allChunks = new ObjectArrayList<>(visibleChunks.values());
+            var players = world.players;
 
-            int fullLoadedChunks = 0;
+            var fullLoadedChunks = 0;
 
-            for (PlayerChunk chunk : allChunks) {
+            for (var chunk : allChunks) {
                 if (chunk.getFullChunkIfCached() != null) {
                     ++fullLoadedChunks;
                 }
@@ -679,10 +667,10 @@ public final class MCUtil {
             worldData.addProperty("loaded-chunk-count", chunkMap.loadedChunks.size());
             worldData.addProperty("verified-fully-loaded-chunks", fullLoadedChunks);
 
-            JsonArray playersData = new JsonArray();
+            var playersData = new JsonArray();
 
-            for (EntityPlayer player : players) {
-                JsonObject playerData = new JsonObject();
+            for (var player : players) {
+                var playerData = new JsonObject();
 
                 playerData.addProperty("name", player.getName());
                 playerData.addProperty("x", player.locX());
@@ -695,13 +683,13 @@ public final class MCUtil {
 
             worldData.add("players", playersData);
 
-            JsonArray chunksData = new JsonArray();
+            var chunksData = new JsonArray();
 
-            for (PlayerChunk playerChunk : allChunks) {
-                JsonObject chunkData = new JsonObject();
+            for (var playerChunk : allChunks) {
+                var chunkData = new JsonObject();
 
                 Set<Ticket<?>> tickets = chunkMapDistance.tickets.get(playerChunk.location.pair());
-                ChunkStatus status = getChunkStatus(playerChunk);
+                var status = getChunkStatus(playerChunk);
 
                 chunkData.addProperty("x", playerChunk.location.x);
                 chunkData.addProperty("z", playerChunk.location.z);
@@ -711,11 +699,11 @@ public final class MCUtil {
                 chunkData.addProperty("queued-for-unload", chunkMap.unloadQueue.contains(playerChunk.location.pair()));
                 chunkData.addProperty("status", status == null ? "unloaded" : status.toString());
 
-                JsonArray ticketsData = new JsonArray();
+                var ticketsData = new JsonArray();
 
                 if (tickets != null) {
-                    for (Ticket<?> ticket : tickets) {
-                        JsonObject ticketData = new JsonObject();
+                    for (var ticket : tickets) {
+                        var ticketData = new JsonObject();
 
                         ticketData.addProperty("ticket-type", ticket.getTicketType().toString());
                         ticketData.addProperty("ticket-level", ticket.getTicketLevel());
@@ -737,15 +725,15 @@ public final class MCUtil {
 
         data.add("worlds", worldsData);
 
-        StringWriter stringWriter = new StringWriter();
-        JsonWriter jsonWriter = new JsonWriter(stringWriter);
+        var stringWriter = new StringWriter();
+        var jsonWriter = new JsonWriter(stringWriter);
         jsonWriter.setIndent(" ");
         jsonWriter.setLenient(false);
         Streams.write(data, jsonWriter);
 
-        String fileData = stringWriter.toString();
+        var fileData = stringWriter.toString();
 
-        try (PrintStream out = new PrintStream(new FileOutputStream(file), false, "UTF-8")) {
+        try (var out = new PrintStream(new FileOutputStream(file), false, "UTF-8")) {
             out.print(fileData);
         }
     }

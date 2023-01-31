@@ -1,9 +1,10 @@
 package net.minecraft.world.entity;
 
-import java.util.Random;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
+
+import java.util.Random;
 
 public class SaddleStorage {
 

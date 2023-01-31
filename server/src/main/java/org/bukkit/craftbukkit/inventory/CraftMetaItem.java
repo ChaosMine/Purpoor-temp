@@ -1,50 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
+import com.destroystokyo.paper.Namespaced;
+import com.destroystokyo.paper.NamespacedTag;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.ImmutableSortedMap; // Paper
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator; // Paper
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeMap; // Paper
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.arguments.blocks.ArgumentBlock;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTCompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.entity.EnumItemSlot;
@@ -82,14 +46,22 @@ import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.persistence.PersistentDataContainer;
 
-// Spigot start
-import static org.spigotmc.ValidateUtils.*;
-// Spigot end
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-// Paper start
-import com.destroystokyo.paper.Namespaced;
-import com.destroystokyo.paper.NamespacedTag;
-import java.util.Collections;
+import static org.spigotmc.ValidateUtils.limit;
 // Paper end
 
 /**
@@ -315,7 +287,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         this.locName = meta.locName;
 
         if (meta.lore != null) {
-            this.lore = new ArrayList<String>(meta.lore);
+            this.lore = new ObjectArrayList<String>(meta.lore);
         }
 
         this.customModelData = meta.customModelData;
@@ -367,7 +339,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
 
             if (display.hasKey(LORE.NBT)) {
                 NBTTagList list = display.getList(LORE.NBT, CraftMagicNumbers.NBT.TAG_STRING);
-                lore = new ArrayList<String>(list.size());
+                lore = new ObjectArrayList<>(list.size());
                 for (int index = 0; index < list.size(); index++) {
                     String line = limit( list.getString(index), com.destroystokyo.paper.PaperConfig.itemValidationLoreLineLength ); // Spigot // Paper - make configurable
                     lore.add(line);
@@ -524,7 +496,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
 
         Iterable<?> lore = SerializableMeta.getObject(Iterable.class, map, LORE.BUKKIT, true);
         if (lore != null) {
-            safelyAdd(lore, this.lore = new ArrayList<String>(), true);
+            safelyAdd(lore, this.lore = new ObjectArrayList<String>(), true);
         }
 
         Integer customModelData = SerializableMeta.getObject(Integer.class, map, CUSTOM_MODEL_DATA.BUKKIT, true);
@@ -1031,13 +1003,13 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
 
     @Override
     public List<String> getLore() {
-        return this.lore == null ? null : new ArrayList<String>(Lists.transform(this.lore, CraftChatMessage::fromJSONComponent));
+        return this.lore == null ? null : new ObjectArrayList<String>(Lists.transform(this.lore, CraftChatMessage::fromJSONComponent));
     }
 
     // Paper start
     @Override
     public List<net.md_5.bungee.api.chat.BaseComponent[]> getLoreComponents() {
-        return this.lore == null ? null : new ArrayList<>(this.lore.stream().map(entry ->
+        return this.lore == null ? null : new ObjectArrayList<>(this.lore.stream().map(entry ->
             net.md_5.bungee.chat.ComponentSerializer.parse(entry)
         ).collect(java.util.stream.Collectors.toList()));
     }
@@ -1048,7 +1020,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             this.lore = null;
         } else {
             if (this.lore == null) {
-                this.lore = new ArrayList<String>(lore.size());
+                this.lore = new ObjectArrayList<String>(lore.size());
             } else {
                 this.lore.clear();
             }
@@ -1063,7 +1035,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             this.lore = null;
         } else {
             if (this.lore == null) {
-                safelyAdd(lore, this.lore = new ArrayList<>(lore.size()), false);
+                safelyAdd(lore, this.lore = new ObjectArrayList<>(lore.size()), false);
             } else {
                 this.lore.clear();
                 safelyAdd(lore, this.lore, false);
@@ -1366,7 +1338,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         try {
             CraftMetaItem clone = (CraftMetaItem) super.clone();
             if (this.lore != null) {
-                clone.lore = new ArrayList<String>(this.lore);
+                clone.lore = new ObjectArrayList<String>(this.lore);
             }
             clone.customModelData = this.customModelData;
             clone.blockData = this.blockData;
@@ -1430,7 +1402,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             builder.put(REPAIR.BUKKIT, repairCost);
         }
 
-        List<String> hideFlags = new ArrayList<String>();
+        List<String> hideFlags = new ObjectArrayList<String>();
         for (ItemFlag hideFlagEnum : getItemFlags()) {
             hideFlags.add(hideFlagEnum.name());
         }
@@ -1464,7 +1436,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         }
         // Paper end
 
-        final Map<String, NBTBase> internalTags = new HashMap<String, NBTBase>(unhandledTags);
+        final Map<String, NBTBase> internalTags = new Object2ObjectOpenHashMap<String, NBTBase>(unhandledTags);
         serializeInternal(internalTags);
         if (!internalTags.isEmpty()) {
             NBTTagCompound internal = new NBTTagCompound();
@@ -1521,7 +1493,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             if (modCollection == null || modCollection.isEmpty()) {
                 continue;
             }
-            mods.put(entry.getKey().name(), new ArrayList<>(modCollection));
+            mods.put(entry.getKey().name(), new ObjectArrayList<>(modCollection));
         }
         builder.put(key.BUKKIT, mods);
     }

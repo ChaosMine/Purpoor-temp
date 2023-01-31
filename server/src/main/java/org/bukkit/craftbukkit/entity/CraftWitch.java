@@ -1,14 +1,12 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.world.entity.monster.EntityWitch;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Witch;
-// Paper start
-import com.destroystokyo.paper.entity.CraftRangedEntity;
-import com.google.common.base.Preconditions;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 // Paper end
 

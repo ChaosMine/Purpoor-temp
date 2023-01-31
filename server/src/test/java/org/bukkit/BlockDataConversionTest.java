@@ -1,7 +1,5 @@
 package org.bukkit;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -11,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This test class ensures that all Blocks (as registered in IRegistry.BLOCK)

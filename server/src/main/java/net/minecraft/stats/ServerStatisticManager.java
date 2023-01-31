@@ -13,14 +13,6 @@ import com.mojang.datafixers.DataFixer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.IRegistry;
@@ -32,26 +24,37 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 
 public class ServerStatisticManager extends StatisticManager {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final MinecraftServer c;
     private final File d;
-    private final Set<Statistic<?>> e = Sets.newHashSet();
+    private Set<Statistic<?>> e = null;
     private int f = -300;
 
     public ServerStatisticManager(MinecraftServer minecraftserver, File file) {
         this.c = minecraftserver;
         this.d = file;
+        if (PurpurConfig.disableStatistics) return;
+        e = Sets.newHashSet();
         // Spigot start
-        for ( Map.Entry<MinecraftKey, Integer> entry : org.spigotmc.SpigotConfig.forcedStats.entrySet() )
-        {
-            Statistic<MinecraftKey> wrapper = StatisticList.CUSTOM.b( entry.getKey() );
-            this.a.put( wrapper, entry.getValue().intValue() );
+        for (Map.Entry<MinecraftKey, Integer> entry : org.spigotmc.SpigotConfig.forcedStats.entrySet()) {
+            Statistic<MinecraftKey> wrapper = StatisticList.CUSTOM.b(entry.getKey());
+            this.a.put(wrapper, entry.getValue().intValue());
         }
         // Spigot end
         if (file.isFile()) {
@@ -63,10 +66,10 @@ public class ServerStatisticManager extends StatisticManager {
                 ServerStatisticManager.LOGGER.error("Couldn't parse statistics file {}", file, jsonparseexception);
             }
         }
-
     }
 
     public void save() {
+        if (PurpurConfig.disableStatistics) return;
         if ( org.spigotmc.SpigotConfig.disableStatSaving ) return; // Spigot
         try {
             FileUtils.writeStringToFile(this.d, this.b());
@@ -78,6 +81,7 @@ public class ServerStatisticManager extends StatisticManager {
 
     @Override
     public void setStatistic(EntityHuman entityhuman, Statistic<?> statistic, int i) {
+        if (PurpurConfig.disableStatistics) return;
         if ( org.spigotmc.SpigotConfig.disableStatSaving ) return; // Spigot
         super.setStatistic(entityhuman, statistic, i);
         this.e.add(statistic);
@@ -91,6 +95,7 @@ public class ServerStatisticManager extends StatisticManager {
     }
 
     public void a(DataFixer datafixer, String s) {
+        if (PurpurConfig.disableStatistics) return;
         try {
             JsonReader jsonreader = new JsonReader(new StringReader(s));
             Throwable throwable = null;
@@ -168,6 +173,7 @@ public class ServerStatisticManager extends StatisticManager {
     }
 
     private <T> Optional<Statistic<T>> a(StatisticWrapper<T> statisticwrapper, String s) {
+        if (PurpurConfig.disableStatistics) return Optional.empty();
         // CraftBukkit - decompile error start
         Optional<MinecraftKey> optional = Optional.ofNullable(MinecraftKey.a(s));
         IRegistry<T> iregistry = statisticwrapper.getRegistry();
@@ -178,6 +184,7 @@ public class ServerStatisticManager extends StatisticManager {
 
     private static NBTTagCompound a(JsonObject jsonobject) {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
+        if (PurpurConfig.disableStatistics) return nbttagcompound;
         Iterator iterator = jsonobject.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -198,7 +205,7 @@ public class ServerStatisticManager extends StatisticManager {
         return nbttagcompound;
     }
 
-    protected String b() {
+    private String b() {
         Map<StatisticWrapper<?>, JsonObject> map = Maps.newHashMap();
         ObjectIterator objectiterator = this.a.object2IntEntrySet().iterator();
 
@@ -232,20 +239,19 @@ public class ServerStatisticManager extends StatisticManager {
     }
 
     public void c() {
+        if (PurpurConfig.disableStatistics) return;
         this.e.addAll(this.a.keySet());
     }
 
     public void a(EntityPlayer entityplayer) {
+        if (PurpurConfig.disableStatistics) return;
         int i = this.c.ai();
-        Object2IntMap<Statistic<?>> object2intmap = new Object2IntOpenHashMap();
+        Object2IntMap<Statistic<?>> object2intmap = new Object2IntOpenHashMap<>();
 
         if (i - this.f > 300) {
             this.f = i;
-            Iterator iterator = this.d().iterator();
 
-            while (iterator.hasNext()) {
-                Statistic<?> statistic = (Statistic) iterator.next();
-
+            for (Statistic<?> statistic : this.d()) {
                 object2intmap.put(statistic, this.getStatisticValue(statistic));
             }
         }

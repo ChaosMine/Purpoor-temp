@@ -7,6 +7,7 @@ import net.minecraft.core.dispenser.DispenseBehaviorItem;
 import net.minecraft.core.dispenser.IDispenseBehavior;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.IInventory;
+import net.minecraft.world.InventoryLargeChest;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
@@ -15,9 +16,6 @@ import net.minecraft.world.level.block.entity.TileEntityDispenser;
 import net.minecraft.world.level.block.entity.TileEntityDropper;
 import net.minecraft.world.level.block.entity.TileEntityHopper;
 import net.minecraft.world.level.block.state.BlockBase;
-
-// CraftBukkit start
-import net.minecraft.world.InventoryLargeChest;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 // CraftBukkit end

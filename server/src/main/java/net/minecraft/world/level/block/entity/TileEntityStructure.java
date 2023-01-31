@@ -34,6 +34,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStruct
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorRotation;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class TileEntityStructure extends TileEntity {
 
@@ -481,10 +482,13 @@ public class TileEntityStructure extends TileEntity {
         this.showBoundingBox = flag;
     }
 
-    public static enum UpdateType {
+    public enum UpdateType {
+        UPDATE_DATA,
+        SAVE_AREA,
+        LOAD_AREA,
+        SCAN_AREA,
+        ;
 
-        UPDATE_DATA, SAVE_AREA, LOAD_AREA, SCAN_AREA;
-
-        private UpdateType() {}
+        public static final UpdateType @Unmodifiable [] VALUES = values();
     }
 }

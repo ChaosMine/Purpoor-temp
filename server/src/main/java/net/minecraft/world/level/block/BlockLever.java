@@ -21,8 +21,7 @@ import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class BlockLever extends BlockAttachable {
 

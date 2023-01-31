@@ -20,7 +20,7 @@ public class MultipleCommandAliasHelpTopic extends HelpTopic {
         name = "/" + alias.getLabel();
 
         // Build short text
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = dev.kamillaova.paper.pool.StringBuilderPool.take();
         for (int i = 0; i < alias.getCommands().length; i++) {
             if (i != 0) {
                 sb.append(ChatColor.GOLD + " > " + ChatColor.WHITE);

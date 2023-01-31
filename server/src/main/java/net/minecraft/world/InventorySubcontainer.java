@@ -1,9 +1,7 @@
 package net.minecraft.world;
 
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,11 +10,13 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.AutoRecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
@@ -26,7 +26,7 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
     private List<IInventoryListener> c;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
     protected org.bukkit.inventory.InventoryHolder bukkitOwner;
 

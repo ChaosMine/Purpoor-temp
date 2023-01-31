@@ -2,9 +2,7 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import org.bukkit.DyeColor;
@@ -12,10 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.BannerMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
 public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
@@ -26,7 +26,7 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
     static final ItemMetaKey PATTERN = new ItemMetaKey("Pattern", "pattern");
 
     private DyeColor base;
-    private List<Pattern> patterns = new ArrayList<Pattern>();
+    private List<Pattern> patterns = new ObjectArrayList<Pattern>();
 
     CraftMetaBanner(CraftMetaItem meta) {
         super(meta);
@@ -37,7 +37,7 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
 
         CraftMetaBanner banner = (CraftMetaBanner) meta;
         base = banner.base;
-        patterns = new ArrayList<Pattern>(banner.patterns);
+        patterns = new ObjectArrayList<Pattern>(banner.patterns);
     }
 
     CraftMetaBanner(NBTTagCompound tag) {
@@ -119,12 +119,12 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
 
     @Override
     public List<Pattern> getPatterns() {
-        return new ArrayList<Pattern>(patterns);
+        return new ObjectArrayList<>(patterns);
     }
 
     @Override
     public void setPatterns(List<Pattern> patterns) {
-        this.patterns = new ArrayList<Pattern>(patterns);
+        this.patterns = new ObjectArrayList<Pattern>(patterns);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
     @Override
     public CraftMetaBanner clone() {
         CraftMetaBanner meta = (CraftMetaBanner) super.clone();
-        meta.patterns = new ArrayList<>(patterns);
+        meta.patterns = new ObjectArrayList<>(patterns);
         return meta;
     }
 }

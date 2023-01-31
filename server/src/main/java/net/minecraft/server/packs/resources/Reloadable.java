@@ -2,14 +2,15 @@ package net.minecraft.server.packs.resources;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.minecraft.SystemUtils;
+import net.minecraft.util.Unit;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.minecraft.SystemUtils;
-import net.minecraft.util.Unit;
 
 public class Reloadable<S> implements IReloadable {
 

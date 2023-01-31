@@ -11,12 +11,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic4CommandExceptionType;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.commands.arguments.coordinates.ArgumentVec2;
@@ -32,6 +26,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.scores.ScoreboardTeamBase;
+
+import java.util.*;
 
 public class CommandSpreadPlayers {
 

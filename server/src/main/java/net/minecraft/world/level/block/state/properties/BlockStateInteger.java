@@ -2,6 +2,7 @@ package net.minecraft.world.level.block.state.properties;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;

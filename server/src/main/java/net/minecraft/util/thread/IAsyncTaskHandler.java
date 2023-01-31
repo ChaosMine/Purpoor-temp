@@ -1,13 +1,13 @@
 package net.minecraft.util.thread;
 
 import com.google.common.collect.Queues;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.locks.LockSupport;
 import java.util.function.BooleanSupplier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R>, Executor {
 
@@ -79,7 +79,6 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
     public final void addTask(R r0) { a(r0); }; // Paper - OBFHELPER
     public void a(R r0) {
         this.d.add(r0);
-        LockSupport.unpark(this.getThread());
     }
 
     public void execute(Runnable runnable) {
@@ -88,12 +87,11 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
         } else {
             runnable.run();
         }
-
     }
 
     public void executeAll() { // Paper - protected -> public
         while (this.executeNext()) {
-            ;
+            Thread.onSpinWait();
         }
 
     }
@@ -117,18 +115,13 @@ public abstract class IAsyncTaskHandler<R extends Runnable> implements Mailbox<R
         try {
             while (!booleansupplier.getAsBoolean()) {
                 if (!this.executeNext()) {
-                    this.bm();
+                    Thread.onSpinWait();
                 }
             }
         } finally {
             --this.e;
         }
 
-    }
-
-    protected void bm() {
-        Thread.yield();
-        LockSupport.parkNanos("waiting for tasks", 100000L);
     }
 
     protected void executeTask(R r0) {

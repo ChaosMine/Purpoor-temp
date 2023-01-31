@@ -2,8 +2,9 @@ package net.minecraft.world.level.border;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.DynamicLike;
-import java.util.Iterator;
-import java.util.List;
+import io.papermc.paper.event.world.border.WorldBorderBoundsChangeEvent;
+import io.papermc.paper.event.world.border.WorldBorderBoundsChangeFinishEvent;
+import io.papermc.paper.event.world.border.WorldBorderCenterChangeEvent;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,9 +15,9 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-import io.papermc.paper.event.world.border.WorldBorderBoundsChangeFinishEvent; // Paper
-import io.papermc.paper.event.world.border.WorldBorderCenterChangeEvent; // Paper
-import io.papermc.paper.event.world.border.WorldBorderBoundsChangeEvent; // Paper
+
+import java.util.Iterator;
+import java.util.List;
 
 public class WorldBorder {
 

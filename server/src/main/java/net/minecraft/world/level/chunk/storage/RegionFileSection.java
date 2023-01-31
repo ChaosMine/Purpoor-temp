@@ -3,21 +3,10 @@ package net.minecraft.world.level.chunk.storage;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.DataFixer;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.OptionalDynamic;
+import com.mojang.serialization.*;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-import java.util.function.Function;
-import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.SectionPosition;
@@ -29,6 +18,14 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 public class RegionFileSection<R> extends RegionFileCache implements AutoCloseable { // Paper - nuke IOWorker
 

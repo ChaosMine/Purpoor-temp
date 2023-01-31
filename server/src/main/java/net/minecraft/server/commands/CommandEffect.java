@@ -9,9 +9,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import java.util.Collection;
-import java.util.Iterator;
-import javax.annotation.Nullable;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.commands.arguments.ArgumentMobEffect;
@@ -20,6 +17,10 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class CommandEffect {
 

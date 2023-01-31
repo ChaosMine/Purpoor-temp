@@ -3,8 +3,7 @@ package net.minecraft.server.commands;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.util.Collection;
-import java.util.Iterator;
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.MinecraftServer;
@@ -12,7 +11,9 @@ import net.minecraft.server.packs.repository.ResourcePackRepository;
 import net.minecraft.world.level.storage.SaveData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.papermc.paper.event.server.ServerResourcesReloadedEvent; // Paper
+
+import java.util.Collection;
+import java.util.Iterator;
 
 public class CommandReload {
 

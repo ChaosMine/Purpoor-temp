@@ -1,22 +1,16 @@
 package com.destroystokyo.paper.entity.ai;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWrapped;
 import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.entity.Mob;
 
-public class PaperMobGoals implements MobGoals {
+import java.util.*;
 
-    private final Map<PathfinderGoal, PaperVanillaGoal<?>> instanceCache = new HashMap<>();
+public class PaperMobGoals implements MobGoals {
+    private final Map<PathfinderGoal, PaperVanillaGoal<?>> instanceCache = new Object2ObjectOpenHashMap<>();
 
     @Override
     public <T extends Mob> void addGoal(T mob, int priority, Goal<T> goal) {
@@ -25,6 +19,7 @@ public class PaperMobGoals implements MobGoals {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Mob> void removeGoal(T mob, Goal<T> goal) {
         CraftMob craftMob = (CraftMob) mob;
         if (goal instanceof PaperCustomGoal) {
@@ -35,7 +30,6 @@ public class PaperMobGoals implements MobGoals {
             List<PathfinderGoal> toRemove = new LinkedList<>();
             for (PathfinderGoalWrapped item : getHandle(craftMob, goal.getTypes()).getTasks()) {
                 if (item.getGoal() instanceof PaperCustomGoal) {
-                    //noinspection unchecked
                     if (((PaperCustomGoal<T>) item.getGoal()).getHandle() == goal) {
                         toRemove.add(item.getGoal());
                     }

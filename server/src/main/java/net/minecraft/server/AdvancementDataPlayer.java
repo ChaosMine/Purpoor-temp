@@ -15,30 +15,10 @@ import com.google.gson.stream.JsonReader;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import io.papermc.paper.adventure.PaperAdventure;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemUtils;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.CriterionInstance;
-import net.minecraft.advancements.CriterionProgress;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.CriterionTriggers;
+import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.CriterionTriggerAbstract;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.ChatMessageType;
@@ -49,23 +29,42 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.GameRules;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.papermc.paper.adventure.PaperAdventure; // Paper
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AdvancementDataPlayer {
-
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson b = (new GsonBuilder()).registerTypeAdapter(AdvancementProgress.class, new AdvancementProgress.a()).registerTypeAdapter(MinecraftKey.class, new MinecraftKey.a()).setPrettyPrinting().create();
-    private static final TypeToken<Map<MinecraftKey, AdvancementProgress>> c = new TypeToken<Map<MinecraftKey, AdvancementProgress>>() {
-    };
+    private static final TypeToken<Map<MinecraftKey, AdvancementProgress>> c = new TypeToken<>() {};
     private final DataFixer d;
     private final PlayerList e; public PlayerList getPlayerList() { return e; } // Purpur - OBFHELPER
     private final File f;
-    public final Map<Advancement, AdvancementProgress> data = Maps.newLinkedHashMap();
-    private final Set<Advancement> h = Sets.newLinkedHashSet();
-    private final Set<Advancement> i = Sets.newLinkedHashSet();
-    private final Set<Advancement> j = Sets.newLinkedHashSet();
+    public final Map<Advancement, AdvancementProgress> data;
+    private final Set<Advancement> h;
+    private final Set<Advancement> i;
+    private final Set<Advancement> j;
+    {
+        if (PurpurConfig.disableCriterions) {
+            data = null;
+            h = null;
+            i = null;
+            j = null;
+        } else {
+            h = Sets.newLinkedHashSet();
+            i = Sets.newLinkedHashSet();
+            j = Sets.newLinkedHashSet();
+            data = Maps.newLinkedHashMap();
+        }
+    }
     private EntityPlayer player;
     @Nullable
     private Advancement l;
@@ -84,14 +83,15 @@ public class AdvancementDataPlayer {
     }
 
     public void a(EntityPlayer entityplayer) {
+        if (PurpurConfig.disableCriterions) return;
         this.player = entityplayer;
     }
 
     public void a() {
-        Iterator iterator = CriterionTriggers.a().iterator();
+        if (PurpurConfig.disableCriterions) return;
 
-        while (iterator.hasNext()) {
-            CriterionTrigger<?> criteriontrigger = (CriterionTrigger) iterator.next();
+        for (CriterionTrigger<?> criterionTrigger : CriterionTriggers.a()) {
+            CriterionTrigger<?> criteriontrigger = (CriterionTrigger) criterionTrigger;
 
             criteriontrigger.a(this);
         }
@@ -100,6 +100,7 @@ public class AdvancementDataPlayer {
 
     public final void reload(AdvancementDataWorld advancementDataWorld) { this.a(advancementDataWorld); } // Paper - OBFHELPER
     public void a(AdvancementDataWorld advancementdataworld) {
+        if (PurpurConfig.disableCriterions) return;
         this.a();
         this.data.clear();
         this.h.clear();
@@ -111,6 +112,7 @@ public class AdvancementDataPlayer {
     }
 
     private void b(AdvancementDataWorld advancementdataworld) {
+        if (PurpurConfig.disableCriterions) return;
         Iterator iterator = advancementdataworld.getAdvancements().iterator();
 
         while (iterator.hasNext()) {
@@ -122,6 +124,7 @@ public class AdvancementDataPlayer {
     }
 
     private void c() {
+        if (PurpurConfig.disableCriterions) return;
         List<Advancement> list = Lists.newArrayList();
         Iterator iterator = this.data.entrySet().iterator();
 
@@ -145,6 +148,7 @@ public class AdvancementDataPlayer {
     }
 
     private void c(AdvancementDataWorld advancementdataworld) {
+        if (PurpurConfig.disableCriterions) return;
         Iterator iterator = advancementdataworld.getAdvancements().iterator();
 
         while (iterator.hasNext()) {
@@ -159,6 +163,7 @@ public class AdvancementDataPlayer {
     }
 
     private void d(AdvancementDataWorld advancementdataworld) {
+        if (PurpurConfig.disableCriterions) return;
         if (this.f.isFile()) {
             try {
                 JsonReader jsonreader = new JsonReader(new StringReader(Files.toString(this.f, StandardCharsets.UTF_8)));
@@ -228,6 +233,7 @@ public class AdvancementDataPlayer {
     }
 
     public void b() {
+        if (PurpurConfig.disableCriterions) return;
         if (org.spigotmc.SpigotConfig.disableAdvancementSaving) return; // Spigot
         Map<MinecraftKey, AdvancementProgress> map = Maps.newHashMap();
         Iterator iterator = this.data.entrySet().iterator();
@@ -300,6 +306,7 @@ public class AdvancementDataPlayer {
     }
 
     public boolean grantCriteria(Advancement advancement, String s) {
+        if (PurpurConfig.disableCriterions) return false;
         boolean flag = false;
         AdvancementProgress advancementprogress = this.getProgress(advancement);
         boolean flag1 = advancementprogress.isDone();
@@ -345,6 +352,7 @@ public class AdvancementDataPlayer {
     }
 
     public boolean revokeCritera(Advancement advancement, String s) {
+        if (PurpurConfig.disableCriterions) return false;
         boolean flag = false;
         AdvancementProgress advancementprogress = this.getProgress(advancement);
 
@@ -362,6 +370,7 @@ public class AdvancementDataPlayer {
     }
 
     private void c(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return;
         AdvancementProgress advancementprogress = this.getProgress(advancement);
 
         if (!advancementprogress.isDone()) {
@@ -388,6 +397,7 @@ public class AdvancementDataPlayer {
     }
 
     private void d(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return;
         AdvancementProgress advancementprogress = this.getProgress(advancement);
         Iterator iterator = advancement.getCriteria().entrySet().iterator();
 
@@ -412,6 +422,7 @@ public class AdvancementDataPlayer {
 
     public final void sendUpdateIfNeeded(EntityPlayer entityPlayer) { this.b(entityPlayer); } // Paper - OBFHELPER
     public void b(EntityPlayer entityplayer) {
+        if (PurpurConfig.disableCriterions) return;
         if (this.m || !this.i.isEmpty() || !this.j.isEmpty()) {
             Map<MinecraftKey, AdvancementProgress> map = Maps.newHashMap();
             Set<Advancement> set = Sets.newLinkedHashSet();
@@ -449,6 +460,7 @@ public class AdvancementDataPlayer {
     }
 
     public void a(@Nullable Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return;
         Advancement advancement1 = this.l;
 
         if (advancement != null && advancement.b() == null && advancement.c() != null) {
@@ -463,7 +475,10 @@ public class AdvancementDataPlayer {
 
     }
 
+    private static final AdvancementProgress EMPTY_PROGRESS = new AdvancementProgress();
+
     public AdvancementProgress getProgress(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return EMPTY_PROGRESS;
         AdvancementProgress advancementprogress = (AdvancementProgress) this.data.get(advancement);
 
         if (advancementprogress == null) {
@@ -475,11 +490,13 @@ public class AdvancementDataPlayer {
     }
 
     private void a(Advancement advancement, AdvancementProgress advancementprogress) {
+        if (PurpurConfig.disableCriterions) return;
         advancementprogress.a(advancement.getCriteria(), advancement.i());
         this.data.put(advancement, advancementprogress);
     }
 
     private void e(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return;
         // Paper start
         e(advancement, IterationEntryPoint.ROOT);
     }
@@ -489,6 +506,7 @@ public class AdvancementDataPlayer {
         PARENT_OF_ITERATOR
     }
     private void e(Advancement advancement, IterationEntryPoint entryPoint) {
+        if (PurpurConfig.disableCriterions) return;
         // Paper end
         boolean flag = this.f(advancement);
         boolean flag1 = this.h.contains(advancement);
@@ -516,17 +534,14 @@ public class AdvancementDataPlayer {
             return;
         } // Paper end
 
-        Iterator iterator = advancement.e().iterator();
-
-        while (iterator.hasNext()) {
-            Advancement advancement1 = (Advancement) iterator.next();
-
+        for (Advancement advancement1 : advancement.e()) {
             this.e(advancement1, IterationEntryPoint.ITERATOR); // Paper - Mark this call as being from iteration
         }
 
     }
 
     private boolean f(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return false;
         for (int i = 0; advancement != null && i <= 2; ++i) {
             if (i == 0 && this.g(advancement)) {
                 return true;
@@ -553,6 +568,7 @@ public class AdvancementDataPlayer {
     }
 
     private boolean g(Advancement advancement) {
+        if (PurpurConfig.disableCriterions) return false;
         AdvancementProgress advancementprogress = this.getProgress(advancement);
 
         if (advancementprogress.isDone()) {

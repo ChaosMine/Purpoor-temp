@@ -1,8 +1,6 @@
 package net.minecraft.core.dispenser;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -16,55 +14,22 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.tags.TagsFluid;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.ISaddleable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
 import net.minecraft.world.entity.animal.horse.EntityHorseChestedAbstract;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.projectile.EntityArrow;
-import net.minecraft.world.entity.projectile.EntityEgg;
-import net.minecraft.world.entity.projectile.EntityFireworks;
-import net.minecraft.world.entity.projectile.EntityPotion;
-import net.minecraft.world.entity.projectile.EntitySmallFireball;
-import net.minecraft.world.entity.projectile.EntitySnowball;
-import net.minecraft.world.entity.projectile.EntitySpectralArrow;
-import net.minecraft.world.entity.projectile.EntityThrownExpBottle;
-import net.minecraft.world.entity.projectile.EntityTippedArrow;
-import net.minecraft.world.entity.projectile.IProjectile;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.vehicle.EntityBoat;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemArmor;
-import net.minecraft.world.item.ItemBoneMeal;
-import net.minecraft.world.item.ItemBucket;
-import net.minecraft.world.item.ItemMonsterEgg;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockAnvil;
-import net.minecraft.world.level.block.BlockBeehive;
-import net.minecraft.world.level.block.BlockCampfire;
-import net.minecraft.world.level.block.BlockDispenser;
-import net.minecraft.world.level.block.BlockFireAbstract;
-import net.minecraft.world.level.block.BlockPumpkinCarved;
-import net.minecraft.world.level.block.BlockRespawnAnchor;
-import net.minecraft.world.level.block.BlockShulkerBox;
-import net.minecraft.world.level.block.BlockSkull;
-import net.minecraft.world.level.block.BlockTNT;
-import net.minecraft.world.level.block.BlockWitherSkull;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.IFluidSource;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityBeehive;
 import net.minecraft.world.level.block.entity.TileEntityDispenser;
@@ -73,13 +38,9 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.material.FluidTypeFlowing;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
-
-// CraftBukkit start
-import net.minecraft.world.level.block.BlockSapling;
-import net.minecraft.world.level.block.IFluidContainer;
-import net.minecraft.world.level.material.Material;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -87,6 +48,10 @@ import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 // CraftBukkit end
 
 public interface IDispenseBehavior {
@@ -730,7 +695,7 @@ public interface IDispenseBehavior {
                     TreeType treeType = BlockSapling.treeType;
                     BlockSapling.treeType = null;
                     Location location = new Location(worldserver.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
-                    List<org.bukkit.block.BlockState> blocks = new java.util.ArrayList<>(worldserver.capturedBlockStates.values());
+                    List<org.bukkit.block.BlockState> blocks = new ObjectArrayList<>(worldserver.capturedBlockStates.values());
                     worldserver.capturedBlockStates.clear();
                     StructureGrowEvent structureEvent = null;
                     if (treeType != null) {

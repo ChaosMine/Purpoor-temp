@@ -1,7 +1,7 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class PathfinderGoalWrapped extends PathfinderGoal {
 

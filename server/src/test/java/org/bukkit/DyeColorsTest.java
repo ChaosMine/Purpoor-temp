@@ -1,9 +1,5 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.world.item.EnumColor;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
@@ -11,6 +7,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class DyeColorsTest extends AbstractTestingBase {

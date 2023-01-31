@@ -1,10 +1,6 @@
 package net.minecraft.world.entity.ai.navigation;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -21,12 +17,13 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.pathfinder.PathEntity;
-import net.minecraft.world.level.pathfinder.PathPoint;
-import net.minecraft.world.level.pathfinder.Pathfinder;
-import net.minecraft.world.level.pathfinder.PathfinderAbstract;
-import net.minecraft.world.level.pathfinder.PathfinderNormal;
+import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class NavigationAbstract {
 

@@ -1,9 +1,6 @@
 package org.bukkit.craftbukkit;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,6 +22,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 public class CraftLootTable implements org.bukkit.loot.LootTable {
 
     private final LootTable handle;
@@ -43,7 +45,7 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
     public Collection<ItemStack> populateLoot(Random random, LootContext context) {
         LootTableInfo nmsContext = convertContext(context);
         List<net.minecraft.world.item.ItemStack> nmsItems = handle.populateLoot(nmsContext);
-        Collection<ItemStack> bukkit = new ArrayList<>(nmsItems.size());
+        Collection<ItemStack> bukkit = new ObjectArrayList<>(nmsItems.size());
 
         for (net.minecraft.world.item.ItemStack item : nmsItems) {
             if (item.isEmpty()) {

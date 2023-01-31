@@ -1,9 +1,9 @@
 package net.pl3x.purpur.controller;
 
-import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.pl3x.purpur.event.entity.RidableSpacebarEvent;
 

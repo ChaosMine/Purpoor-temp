@@ -1,8 +1,6 @@
 package net.minecraft.world.level.newbiome.context;
 
 import it.unimi.dsi.fastutil.longs.Long2IntLinkedOpenHashMap;
-import java.util.Random;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.world.level.levelgen.SeededRandom;

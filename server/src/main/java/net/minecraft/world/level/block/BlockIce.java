@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -16,6 +14,9 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.EnumPistonReaction;
 import net.minecraft.world.level.material.Material;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class BlockIce extends BlockHalfTransparent {
 

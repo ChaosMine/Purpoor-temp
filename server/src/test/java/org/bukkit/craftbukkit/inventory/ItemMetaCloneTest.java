@@ -1,10 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import java.lang.reflect.Method;
 import org.bukkit.Material;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class ItemMetaCloneTest {
 

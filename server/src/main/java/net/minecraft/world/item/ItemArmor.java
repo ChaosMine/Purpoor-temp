@@ -3,8 +3,6 @@ package net.minecraft.world.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
-import java.util.List;
-import java.util.UUID;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.ISourceBlock;
@@ -24,10 +22,11 @@ import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockDispenser;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
+
+import java.util.List;
+import java.util.UUID;
 // CraftBukkit end
 
 public class ItemArmor extends Item implements ItemWearable {

@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.Random;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
@@ -12,11 +9,7 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,11 +19,12 @@ import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
-
-// CraftBukkit start
-import net.minecraft.world.entity.EntityTameableAnimal;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
+
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.UUID;
 // CraftBukkit end
 
 public abstract class EntityAnimal extends EntityAgeable {

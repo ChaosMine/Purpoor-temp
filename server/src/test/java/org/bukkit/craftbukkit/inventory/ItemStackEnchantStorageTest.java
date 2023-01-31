@@ -1,18 +1,16 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Joiner;
-import java.util.Arrays;
-import java.util.List;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.inventory.ItemStackTest.CompoundOperator;
-import org.bukkit.craftbukkit.inventory.ItemStackTest.Operator;
-import org.bukkit.craftbukkit.inventory.ItemStackTest.StackProvider;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class ItemStackEnchantStorageTest extends ItemStackTest {

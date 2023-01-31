@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.ai.goal.target;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
@@ -10,6 +7,10 @@ import net.minecraft.world.entity.animal.EntityIronGolem;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class PathfinderGoalDefendVillage extends PathfinderGoalTarget {
 

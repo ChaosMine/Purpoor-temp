@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import java.util.Iterator;
-import java.util.Map;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.Recipes;
 import org.bukkit.inventory.Recipe;
+
+import java.util.Iterator;
+import java.util.Map;
 
 public class RecipeIterator implements Iterator<Recipe> {
     private final Iterator<Map.Entry<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>>> recipes;

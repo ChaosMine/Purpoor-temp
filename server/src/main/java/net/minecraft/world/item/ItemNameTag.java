@@ -1,5 +1,7 @@
 package net.minecraft.world.item;
 
+import io.papermc.paper.adventure.PaperAdventure;
+import io.papermc.paper.event.player.PlayerNameEntityEvent;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
@@ -7,10 +9,6 @@ import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.player.EntityHuman;
-
-// Paper start
-import io.papermc.paper.adventure.PaperAdventure;
-import io.papermc.paper.event.player.PlayerNameEntityEvent;
 // Paper end
 
 public class ItemNameTag extends Item {

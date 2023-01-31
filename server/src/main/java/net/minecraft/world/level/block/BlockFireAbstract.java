@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,6 +15,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.portal.BlockPortalShape;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import java.util.Optional;
 
 public abstract class BlockFireAbstract extends Block {
 

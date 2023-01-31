@@ -3,7 +3,6 @@ package net.minecraft.world.level.material;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
@@ -15,6 +14,8 @@ import net.minecraft.world.level.block.state.IBlockDataHolder;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.Random;
 
 public final class Fluid extends IBlockDataHolder<FluidType, Fluid> {
 

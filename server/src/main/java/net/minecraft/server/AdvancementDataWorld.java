@@ -2,15 +2,7 @@
 package net.minecraft.server;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import javax.annotation.Nullable;
+import com.google.gson.*;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementTree;
 import net.minecraft.advancements.Advancements;
@@ -22,6 +14,11 @@ import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.level.storage.loot.LootPredicateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 public class AdvancementDataWorld extends ResourceDataJson {
 

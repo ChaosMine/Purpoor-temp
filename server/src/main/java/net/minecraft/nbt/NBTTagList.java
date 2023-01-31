@@ -5,15 +5,15 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.bytes.ByteOpenHashSet;
 import it.unimi.dsi.fastutil.bytes.ByteSet;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.IChatBaseComponent;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.IChatBaseComponent;
 
 public class NBTTagList extends NBTList<NBTBase> {
 
@@ -71,19 +71,15 @@ public class NBTTagList extends NBTList<NBTBase> {
         if (this.list.isEmpty()) {
             this.type = 0;
         } else {
-            this.type = ((NBTBase) this.list.get(0)).getTypeId();
+            this.type = this.list.get(0).getTypeId();
         }
 
         dataoutput.writeByte(this.type);
         dataoutput.writeInt(this.list.size());
-        Iterator iterator = this.list.iterator();
 
-        while (iterator.hasNext()) {
-            NBTBase nbtbase = (NBTBase) iterator.next();
-
+        for (var nbtbase : this.list) {
             nbtbase.write(dataoutput);
         }
-
     }
 
     @Override
@@ -98,8 +94,8 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     @Override
     public String toString() {
-        StringBuilder stringbuilder = new StringBuilder("[");
-
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        stringbuilder.append("[");
         for (int i = 0; i < this.list.size(); ++i) {
             if (i != 0) {
                 stringbuilder.append(',');

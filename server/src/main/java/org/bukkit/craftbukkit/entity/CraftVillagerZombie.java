@@ -1,8 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
-import java.util.Locale;
-import java.util.UUID;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.effect.MobEffects;
@@ -15,6 +13,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
+
+import java.util.Locale;
+import java.util.UUID;
 
 public class CraftVillagerZombie extends CraftZombie implements ZombieVillager {
 

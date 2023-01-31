@@ -1,9 +1,5 @@
 package net.minecraft.world.level;
 
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +14,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class ChunkCache implements IBlockAccess, ICollisionAccess {
 

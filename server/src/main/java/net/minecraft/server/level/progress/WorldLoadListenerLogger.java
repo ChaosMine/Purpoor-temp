@@ -1,6 +1,5 @@
 package net.minecraft.server.level.progress;
 
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.util.MathHelper;
@@ -8,6 +7,8 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 public class WorldLoadListenerLogger implements WorldLoadListener {
 

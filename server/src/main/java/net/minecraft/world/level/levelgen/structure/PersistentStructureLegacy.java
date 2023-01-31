@@ -5,23 +5,21 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.storage.WorldPersistentData;
 
-// CraftBukkit start
-import net.minecraft.world.level.dimension.DimensionManager;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 // CraftBukkit end
 
 public class PersistentStructureLegacy {

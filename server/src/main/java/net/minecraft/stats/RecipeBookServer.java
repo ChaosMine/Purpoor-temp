@@ -1,12 +1,6 @@
 package net.minecraft.stats;
 
 import com.google.common.collect.Lists;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,8 +13,10 @@ import net.minecraft.world.item.crafting.CraftingManager;
 import net.minecraft.world.item.crafting.IRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import java.util.*;
+import java.util.function.Consumer;
 
 public class RecipeBookServer extends RecipeBook {
 

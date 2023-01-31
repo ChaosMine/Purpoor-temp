@@ -1,9 +1,10 @@
 package net.minecraft.nbt;
 
-import java.io.DataOutput;
-import java.io.IOException;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.IChatBaseComponent;
+
+import java.io.DataOutput;
+import java.io.IOException;
 
 public interface NBTBase {
 

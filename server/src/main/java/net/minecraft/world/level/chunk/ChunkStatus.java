@@ -5,13 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import javax.annotation.Nullable;
-
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.IRegistry;
@@ -24,6 +18,13 @@ import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.levelgen.WorldGenStage;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import net.minecraft.world.level.lighting.LightEngine;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class ChunkStatus {
 
@@ -184,7 +185,7 @@ public class ChunkStatus {
         this.w = chunkstatus_c;
         this.x = i;
         this.y = chunkstatus_type;
-        this.z = enumset; this.heightMaps = new java.util.ArrayList<>(this.z).toArray(new HeightMap.Type[0]); // Tuinity
+        this.z = enumset; this.heightMaps = new ObjectArrayList<>(this.z).toArray(new HeightMap.Type[0]); // Tuinity
         this.t = chunkstatus == null ? 0 : chunkstatus.c() + 1;
     }
 

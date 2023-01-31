@@ -2,28 +2,6 @@
 package net.minecraft.world.level.chunk.storage;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.util.zip.InflaterInputStream; // Paper
-
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTCompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +9,14 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+import java.util.zip.InflaterInputStream;
 
 public class RegionFile implements AutoCloseable {
 
@@ -364,7 +350,7 @@ public class RegionFile implements AutoCloseable {
             // simply destroy the timestamp header, it's not used
 
             for (int i = 0; i < 32 * 32; ++i) {
-                this.getTimestamps().put(i, calculatedOffsets[i] != 0 ? (int)System.currentTimeMillis() : 0); // write a valid timestamp for valid chunks, I do not want to find out whatever dumb program actually checks this
+                this.getTimestamps().put(i, calculatedOffsets[i] != 0 ? (int)SystemUtils.getMonotonicMillis() : 0); // write a valid timestamp for valid chunks, I do not want to find out whatever dumb program actually checks this
             }
 
             // write new header

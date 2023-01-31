@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import java.util.Random;
 
 public class BlockGrassPath extends Block {
 

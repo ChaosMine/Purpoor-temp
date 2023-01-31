@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block.piston;
 
-import java.util.Iterator;
-import java.util.List;
+import io.netty.util.concurrent.FastThreadLocal;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -26,15 +25,15 @@ import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 
+import java.util.List;
+
 public class TileEntityPiston extends TileEntity implements ITickable {
 
     private IBlockData a;
     private EnumDirection b;
     private boolean c;
     private boolean g;
-    private static final ThreadLocal<EnumDirection> h = ThreadLocal.withInitial(() -> {
-        return null;
-    });
+    private static final FastThreadLocal<EnumDirection> h = new FastThreadLocal<>();
     private float i;
     private float j;
     private long k;
@@ -94,67 +93,57 @@ public class TileEntityPiston extends TileEntity implements ITickable {
 
         if (!voxelshape.isEmpty()) {
             AxisAlignedBB axisalignedbb = this.a(voxelshape.getBoundingBox());
-            List<Entity> list = this.world.getEntities((Entity) null, PistonUtil.a(axisalignedbb, enumdirection, d0).b(axisalignedbb));
+            try (var list = this.world.getEntities((Entity) null, PistonUtil.a(axisalignedbb, enumdirection, d0).b(axisalignedbb))) {
+                if (!list.isEmpty()) {
+                    List<AxisAlignedBB> list1 = voxelshape.d();
+                    boolean flag = this.a.a(Blocks.SLIME_BLOCK);
 
-            if (!list.isEmpty()) {
-                List<AxisAlignedBB> list1 = voxelshape.d();
-                boolean flag = this.a.a(Blocks.SLIME_BLOCK);
-                Iterator iterator = list.iterator();
+                    for (Entity entity : list) {
+                        if (entity.getPushReaction() != EnumPistonReaction.IGNORE) {
+                            if (flag) {
+                                if (entity instanceof EntityPlayer) {
+                                    continue;
+                                }
 
-                while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
+                                Vec3D vec3d = entity.getMot();
+                                double d1 = vec3d.x;
+                                double d2 = vec3d.y;
+                                double d3 = vec3d.z;
 
-                    if (entity.getPushReaction() != EnumPistonReaction.IGNORE) {
-                        if (flag) {
-                            if (entity instanceof EntityPlayer) {
-                                continue;
+                                switch (enumdirection.n()) {
+                                    case X -> d1 = enumdirection.getAdjacentX();
+                                    case Y -> d2 = enumdirection.getAdjacentY();
+                                    case Z -> d3 = enumdirection.getAdjacentZ();
+                                }
+
+                                entity.setMot(d1, d2, d3);
                             }
 
-                            Vec3D vec3d = entity.getMot();
-                            double d1 = vec3d.x;
-                            double d2 = vec3d.y;
-                            double d3 = vec3d.z;
+                            double d4 = 0.0D;
 
-                            switch (enumdirection.n()) {
-                                case X:
-                                    d1 = (double) enumdirection.getAdjacentX();
-                                    break;
-                                case Y:
-                                    d2 = (double) enumdirection.getAdjacentY();
-                                    break;
-                                case Z:
-                                    d3 = (double) enumdirection.getAdjacentZ();
+                            for (AxisAlignedBB axisalignedbb1 : list1) {
+                                AxisAlignedBB axisalignedbb2 = PistonUtil.a(this.a(axisalignedbb1), enumdirection, d0);
+                                AxisAlignedBB axisalignedbb3 = entity.getBoundingBox();
+
+                                if (axisalignedbb2.c(axisalignedbb3)) {
+                                    d4 = Math.max(d4, a(axisalignedbb2, enumdirection, axisalignedbb3));
+                                    if (d4 >= d0) {
+                                        break;
+                                    }
+                                }
                             }
 
-                            entity.setMot(d1, d2, d3);
-                        }
-
-                        double d4 = 0.0D;
-                        Iterator iterator1 = list1.iterator();
-
-                        while (iterator1.hasNext()) {
-                            AxisAlignedBB axisalignedbb1 = (AxisAlignedBB) iterator1.next();
-                            AxisAlignedBB axisalignedbb2 = PistonUtil.a(this.a(axisalignedbb1), enumdirection, d0);
-                            AxisAlignedBB axisalignedbb3 = entity.getBoundingBox();
-
-                            if (axisalignedbb2.c(axisalignedbb3)) {
-                                d4 = Math.max(d4, a(axisalignedbb2, enumdirection, axisalignedbb3));
-                                if (d4 >= d0) {
-                                    break;
+                            if (d4 > 0.0D) {
+                                d4 = Math.min(d4, d0) + 0.01D;
+                                a(enumdirection, entity, d4, enumdirection);
+                                if (!this.c && this.g) {
+                                    this.a(entity, enumdirection, d0);
                                 }
                             }
                         }
-
-                        if (d4 > 0.0D) {
-                            d4 = Math.min(d4, d0) + 0.01D;
-                            a(enumdirection, entity, d4, enumdirection);
-                            if (!this.c && this.g) {
-                                this.a(entity, enumdirection, d0);
-                            }
-                        }
                     }
-                }
 
+                }
             }
         }
     }
@@ -173,17 +162,13 @@ public class TileEntityPiston extends TileEntity implements ITickable {
                 double d0 = this.a.getCollisionShape(this.world, this.position).c(EnumDirection.EnumAxis.Y);
                 AxisAlignedBB axisalignedbb = this.a(new AxisAlignedBB(0.0D, d0, 0.0D, 1.0D, 1.5000000999999998D, 1.0D));
                 double d1 = (double) (f - this.i);
-                List<Entity> list = this.world.getEntities((Entity) null, axisalignedbb, (entity) -> {
+                try (var list = this.world.getEntities((Entity) null, axisalignedbb, (entity) -> {
                     return a(axisalignedbb, entity);
-                });
-                Iterator iterator = list.iterator();
-
-                while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
-
-                    a(enumdirection, entity, d1, enumdirection);
+                })) {
+                    for (Entity entity : list) {
+                        a(enumdirection, entity, d1, enumdirection);
+                    }
                 }
-
             }
         }
     }

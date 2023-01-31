@@ -4,6 +4,7 @@ import java.io.IOException;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.MinecraftKey;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class PacketPlayInAdvancements implements Packet<PacketListenerPlayIn> {
 
@@ -14,7 +15,7 @@ public class PacketPlayInAdvancements implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.a = (PacketPlayInAdvancements.Status) packetdataserializer.a(PacketPlayInAdvancements.Status.class);
+        this.a = packetdataserializer.readEnum(Status.VALUES);
         if (this.a == PacketPlayInAdvancements.Status.OPENED_TAB) {
             this.b = packetdataserializer.p();
         }
@@ -23,7 +24,7 @@ public class PacketPlayInAdvancements implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.a((Enum) this.a);
+        packetdataserializer.writeEnum(this.a);
         if (this.a == PacketPlayInAdvancements.Status.OPENED_TAB) {
             packetdataserializer.a(this.b);
         }
@@ -45,6 +46,8 @@ public class PacketPlayInAdvancements implements Packet<PacketListenerPlayIn> {
     public static enum Status {
 
         OPENED_TAB, CLOSED_SCREEN;
+
+        public static final Status @Unmodifiable [] VALUES = values();
 
         private Status() {}
     }

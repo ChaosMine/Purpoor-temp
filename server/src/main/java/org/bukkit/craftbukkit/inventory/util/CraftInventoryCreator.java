@@ -1,17 +1,21 @@
 package org.bukkit.craftbukkit.inventory.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class CraftInventoryCreator {
 
     public static final CraftInventoryCreator INSTANCE = new CraftInventoryCreator();
     //
     private final CraftCustomInventoryConverter DEFAULT_CONVERTER = new CraftCustomInventoryConverter();
-    private final Map<InventoryType, InventoryConverter> converterMap = new HashMap<>();
+    private final Reference2ObjectMap<InventoryType, InventoryConverter> converterMap = new Reference2ObjectOpenHashMap<>();
 
     private CraftInventoryCreator() {
         converterMap.put(InventoryType.CHEST, DEFAULT_CONVERTER);

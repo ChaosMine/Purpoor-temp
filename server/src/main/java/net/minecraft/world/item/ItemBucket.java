@@ -1,11 +1,12 @@
 package net.minecraft.world.item;
 
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.Particles;
+import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -28,15 +29,13 @@ import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
-
-// CraftBukkit start
-import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+
+import javax.annotation.Nullable;
 // CraftBukkit end
 
 public class ItemBucket extends Item {

@@ -1,8 +1,9 @@
 package org.bukkit.craftbukkit.util;
 
-import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
+
+import java.util.Arrays;
 
 /**
  * @deprecated legacy use only

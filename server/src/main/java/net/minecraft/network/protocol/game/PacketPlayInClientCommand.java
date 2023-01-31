@@ -3,6 +3,7 @@ package net.minecraft.network.protocol.game;
 import java.io.IOException;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class PacketPlayInClientCommand implements Packet<PacketListenerPlayIn> {
 
@@ -16,12 +17,12 @@ public class PacketPlayInClientCommand implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.a = (PacketPlayInClientCommand.EnumClientCommand) packetdataserializer.a(PacketPlayInClientCommand.EnumClientCommand.class);
+        this.a = packetdataserializer.readEnum(EnumClientCommand.VALUES);
     }
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.a((Enum) this.a);
+        packetdataserializer.writeEnum((Enum) this.a);
     }
 
     public void a(PacketListenerPlayIn packetlistenerplayin) {
@@ -35,6 +36,7 @@ public class PacketPlayInClientCommand implements Packet<PacketListenerPlayIn> {
     public static enum EnumClientCommand {
 
         PERFORM_RESPAWN, REQUEST_STATS;
+        public static final EnumClientCommand @Unmodifiable [] VALUES = values();
 
         private EnumClientCommand() {}
     }

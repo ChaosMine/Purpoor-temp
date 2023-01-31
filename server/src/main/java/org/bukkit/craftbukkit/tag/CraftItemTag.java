@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit.tag;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.tags.Tags;
 import net.minecraft.world.item.Item;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CraftItemTag extends CraftTag<Item, Material> {
 

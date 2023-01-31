@@ -1,26 +1,19 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.world.ContainerUtil;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.IInventoryHolder;
-import net.minecraft.world.IWorldInventory;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.IEntitySelector;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
+import net.minecraft.world.entity.vehicle.EntityMinecartHopper;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerHopper;
 import net.minecraft.world.item.ItemStack;
@@ -32,16 +25,18 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
-import net.minecraft.world.InventoryLargeChest;
-import net.minecraft.world.entity.vehicle.EntityMinecartHopper;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.Inventory;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 // CraftBukkit end
 
 public class TileEntityHopper extends TileEntityLootable implements IHopper, ITickable {
@@ -51,7 +46,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
     private long k;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
 
     public List<ItemStack> getContents() {
@@ -688,10 +683,10 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
         }
 
         if (object == null && (!optimizeEntities || !org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(block).isOccluding())) { // Paper
-            List<Entity> list = world.getEntities((Entity) null, new AxisAlignedBB(d0 - 0.5D, d1 - 0.5D, d2 - 0.5D, d0 + 0.5D, d1 + 0.5D, d2 + 0.5D), IEntitySelector.d);
-
-            if (!list.isEmpty()) {
-                object = (IInventory) list.get(world.random.nextInt(list.size()));
+            try (var list = world.getEntities((Entity) null, new AxisAlignedBB(d0 - 0.5D, d1 - 0.5D, d2 - 0.5D, d0 + 0.5D, d1 + 0.5D, d2 + 0.5D), IEntitySelector.d)) {
+                if (!list.isEmpty()) {
+                    object = list.get(world.random.nextInt(list.size()));
+                }
             }
         }
 

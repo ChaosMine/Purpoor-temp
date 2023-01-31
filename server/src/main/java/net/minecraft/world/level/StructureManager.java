@@ -1,11 +1,7 @@
 // mc-dev import
 package net.minecraft.world.level;
 
-import com.mojang.datafixers.DataFixUtils;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList; // Paper
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import net.minecraft.core.BaseBlockPosition;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.RegionLimitedWorldAccess;
@@ -15,6 +11,9 @@ import net.minecraft.world.level.levelgen.GeneratorSettings;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+
+import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public class StructureManager {
 

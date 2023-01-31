@@ -2,7 +2,6 @@ package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.level.biome.BiomeBase;
@@ -17,6 +16,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+
+import java.util.function.Predicate;
 
 /**
  * Represents a static, thread-safe snapshot of chunk of blocks

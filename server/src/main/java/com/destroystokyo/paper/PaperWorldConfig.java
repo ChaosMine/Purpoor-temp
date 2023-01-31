@@ -1,13 +1,8 @@
 package com.destroystokyo.paper;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray.EngineMode;
+import dev.kamillaova.paper.SimpleEnumMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityVindicator;
@@ -17,6 +12,12 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.spigotmc.SpigotWorldConfig;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.destroystokyo.paper.PaperConfig.log;
 import static com.destroystokyo.paper.PaperConfig.logError;
@@ -562,13 +563,9 @@ public class PaperWorldConfig {
 
         altItemDespawnRateEnabled = getBoolean(path + ".enabled", false);
 
-        Map<Material, Integer> altItemDespawnRateMapDefault = new EnumMap<>(Material.class);
-        altItemDespawnRateMapDefault.put(Material.COBBLESTONE, 300);
-        for (Material key : altItemDespawnRateMapDefault.keySet()) {
-            config.addDefault("world-settings.default." + path + ".items." + key, altItemDespawnRateMapDefault.get(key));
-        }
+        config.addDefault("world-settings.default." + path + ".items." + Material.COBBLESTONE, 300);
 
-        Map<String, Integer> rawMap = new HashMap<>();
+        Object2IntOpenHashMap<String> rawMap = new Object2IntOpenHashMap<>();
         try {
             ConfigurationSection mapSection = config.getConfigurationSection("world-settings." + worldName + "." + path + ".items");
             if (mapSection == null) {
@@ -584,7 +581,7 @@ public class PaperWorldConfig {
             altItemDespawnRateEnabled = false;
         }
 
-        altItemDespawnRateMap = new EnumMap<>(Material.class);
+        altItemDespawnRateMap = new SimpleEnumMap<>(Material.VALUES);
         if (!altItemDespawnRateEnabled) {
             return;
         }
@@ -801,7 +798,7 @@ public class PaperWorldConfig {
         );
     }
 
-    public Map<EntityTypes<?>, Integer> entityPerChunkSaveLimits = new HashMap<>();
+    public Object2IntOpenHashMap<EntityTypes<?>> entityPerChunkSaveLimits = new Object2IntOpenHashMap<>();
     private void entityPerChunkSaveLimits() {
         getInt("entity-per-chunk-save-limit.experience_orb", -1);
         getInt("entity-per-chunk-save-limit.snowball", -1);

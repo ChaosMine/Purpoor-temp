@@ -1,10 +1,11 @@
 // mc-dev import
 package net.minecraft.network.protocol.handshake;
 
-import java.io.IOException;
 import net.minecraft.network.EnumProtocol;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
+
+import java.io.IOException;
 
 public class PacketHandshakingInSetProtocol implements Packet<PacketHandshakingInListener> {
 

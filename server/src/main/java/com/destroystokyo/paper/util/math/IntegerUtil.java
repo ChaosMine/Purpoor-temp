@@ -99,7 +99,7 @@ public final class IntegerUtil {
     }
 
     // copied from hacker's delight (signed division magic value)
-    // http://www.hackersdelight.org/hdcodetxt/magic.c.txt
+    // https://www.hackersdelight.org/hdcodetxt/magic.c.txt
     public static long getDivisorNumbers(final int d) {
         final int ad = IntegerUtil.branchlessAbs(d);
 

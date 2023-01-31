@@ -1,13 +1,16 @@
 package org.bukkit.craftbukkit.entity;
 
-import java.util.HashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import net.minecraft.world.entity.animal.EntityTropicalFish;
 import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TropicalFish;
-import org.bukkit.entity.TropicalFish.Pattern;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CraftTropicalFish extends CraftFish implements TropicalFish {
 
@@ -78,7 +81,7 @@ public class CraftTropicalFish extends CraftFish implements TropicalFish {
         private final boolean large;
 
         //
-        private static final Map<Integer, Pattern> BY_DATA = new HashMap<>();
+        private static final Int2ReferenceMap<Pattern> BY_DATA = new Int2ReferenceOpenHashMap<>();
 
         static {
             for (CraftPattern type : values()) {

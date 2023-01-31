@@ -1,8 +1,6 @@
 package net.minecraft.world.level.portal;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Optional;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -20,6 +18,9 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.levelgen.HeightMap;
+
+import java.util.Iterator;
+import java.util.Optional;
 
 public class PortalTravelAgent {
 
@@ -42,7 +43,7 @@ public class PortalTravelAgent {
         // Tuinity start - optimise portals
         //villageplace.a(this.world, blockposition, i);
         Optional<VillagePlaceRecord> optional;
-        java.util.List<VillagePlaceRecord> records = new java.util.ArrayList<>();
+        java.util.List<VillagePlaceRecord> records = new ObjectArrayList<>();
         com.tuinity.tuinity.util.PoiAccess.findClosestPoiDataRecords(villageplace,
                 (VillagePlaceType villageplacetype) -> {
                     return villageplacetype == VillagePlaceType.v; // this should break this entire diff on update if it changes, so TODO check that on diff break

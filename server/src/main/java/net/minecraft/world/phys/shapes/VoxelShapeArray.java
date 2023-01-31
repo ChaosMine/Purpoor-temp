@@ -2,9 +2,11 @@ package net.minecraft.world.phys.shapes;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import java.util.Arrays;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.EnumDirection;
+
+import java.util.Arrays;
 
 public final class VoxelShapeArray extends VoxelShape {
 
@@ -85,7 +87,7 @@ public final class VoxelShapeArray extends VoxelShape {
         if (this.boundingBoxesRepresentation == null) {
             return super.d();
         }
-        java.util.List<net.minecraft.world.phys.AxisAlignedBB> ret = new java.util.ArrayList<>(this.boundingBoxesRepresentation.length);
+        java.util.List<net.minecraft.world.phys.AxisAlignedBB> ret = new ObjectArrayList<>(this.boundingBoxesRepresentation.length);
 
         double offX = this.offsetX;
         double offY = this.offsetY;

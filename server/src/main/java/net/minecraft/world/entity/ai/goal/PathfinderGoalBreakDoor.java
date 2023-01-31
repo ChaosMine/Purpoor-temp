@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.function.Predicate;
 import net.minecraft.core.IPosition;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.entity.Entity;
@@ -8,6 +7,8 @@ import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
+
+import java.util.function.Predicate;
 
 public class PathfinderGoalBreakDoor extends PathfinderGoalDoorInteract {
 

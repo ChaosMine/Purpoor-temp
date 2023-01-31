@@ -1,12 +1,11 @@
 package net.minecraft.server.dedicated;
 
-import java.nio.file.Path;
-import java.util.function.UnaryOperator;
+import joptsimple.OptionSet;
 import net.minecraft.core.IRegistryCustom;
 
-// CraftBukkit start
 import java.io.File;
-import joptsimple.OptionSet;
+import java.nio.file.Path;
+import java.util.function.UnaryOperator;
 // CraftBukkit end
 
 public class DedicatedServerSettings {

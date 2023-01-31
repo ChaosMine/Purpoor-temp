@@ -1,37 +1,32 @@
 // mc-dev import
 package net.minecraft.world.level.block.entity;
 
-import com.google.common.collect.Iterables;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftSessionService;
-import com.mojang.authlib.properties.Property;
-import java.util.UUID;
-import javax.annotation.Nullable;
-import net.minecraft.nbt.GameProfileSerializer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
-import net.minecraft.server.players.UserCache;
-import net.minecraft.util.UtilColor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.IBlockData;
-
-// Spigot start
 import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.authlib.Agent;
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.ProfileLookupCallback;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.properties.Property;
+import net.minecraft.nbt.GameProfileSerializer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.UserCache;
+import net.minecraft.util.UtilColor;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.concurrent.*;
 // Spigot end
 
 public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Paper - remove tickable

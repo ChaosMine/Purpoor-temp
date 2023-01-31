@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block.piston;
 
 import com.google.common.collect.Lists;
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.level.World;
@@ -9,6 +8,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.EnumPistonReaction;
+
+import java.util.List;
 
 public class PistonExtendsChecker {
 

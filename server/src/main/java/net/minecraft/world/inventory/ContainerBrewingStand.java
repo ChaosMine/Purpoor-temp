@@ -12,8 +12,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewer;
 import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.item.alchemy.PotionUtil;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftInventoryBrewer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end

@@ -1,83 +1,87 @@
 package net.minecraft.network;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
-import io.papermc.paper.adventure.PaperAdventure; // Paper
-import java.io.IOException;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 import net.minecraft.network.protocol.EnumProtocolDirection;
 import net.minecraft.network.protocol.Packet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
-public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+import java.util.Locale;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Marker b = MarkerManager.getMarker("PACKET_SENT", NetworkManager.b);
-    private final EnumProtocolDirection c;
+import static me.steinborn.krypton.mod.shared.network.util.VarIntUtil.VARINT21_SIZE_MAX;
 
-    public PacketEncoder(EnumProtocolDirection enumprotocoldirection) {
-        this.c = enumprotocoldirection;
-    }
+public class PacketEncoder extends ChannelOutboundHandlerAdapter {
+	private static final Logger LOGGER = LogManager.getLogger(PacketEncoder.class);
 
-    protected void encode(ChannelHandlerContext channelhandlercontext, Packet<?> packet, ByteBuf bytebuf) throws Exception {
-        EnumProtocol enumprotocol = (EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get();
+	private final EnumProtocolDirection direction;
 
-        if (enumprotocol == null) {
-            throw new RuntimeException("ConnectionProtocol unknown: " + packet);
-        } else {
-            Integer integer = enumprotocol.a(this.c, packet);
+	private EnumProtocol protocol;
+	private Locale adventure$locale;
 
-            if (PacketEncoder.LOGGER.isDebugEnabled()) {
-                PacketEncoder.LOGGER.debug(PacketEncoder.b, "OUT: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName());
-            }
+	public PacketEncoder(EnumProtocolDirection direction) {
+		this.direction = direction;
+	}
 
-            if (integer == null) {
-                throw new IOException("Can't serialize unregistered packet");
-            } else {
-                PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
-                packetdataserializer.adventure$locale = channelhandlercontext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
+	@Override
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+		if (msg instanceof Packet<?> packet) {
+			var id = protocol.getId(this.direction, packet);
 
-                packetdataserializer.d(integer);
+			var buf = ctx.alloc().ioBuffer();
+			var ds = new PacketDataSerializer(buf);
+			ds.adventure$locale = this.adventure$locale;
 
-                try {
-                    packet.b(packetdataserializer);
-                } catch (Throwable throwable) {
-                    PacketEncoder.LOGGER.error(throwable);
-                    throwable.printStackTrace(); // Paper - WHAT WAS IT? WHO DID THIS TO YOU? WHAT DID YOU SEE?
-                    if (packet.a()) {
-                        throw new SkipEncodeException(throwable);
-                    } else {
-                        throw throwable;
-                    }
-                }
+			ds.setIndex(VARINT21_SIZE_MAX, VARINT21_SIZE_MAX);
 
-                // Paper start
-                int packetLength = bytebuf.readableBytes();
-                if (packetLength > MAX_PACKET_SIZE) {
-                    throw new PacketTooLargeException(packet, packetLength);
-                }
-                // Paper end
-            }
-        }
-    }
+			ds.writeVarInt(id);
 
-    // Paper start
-    private static int MAX_PACKET_SIZE = 2097152;
+			try {
+				packet.serialize(ds);
+			} catch (Throwable throwable) {
+				PacketEncoder.LOGGER.error(throwable);
+				throwable.printStackTrace(); // Paper - WHAT WAS IT? WHO DID THIS TO YOU? WHAT DID YOU SEE?
+				if (packet.a()) {
+					throw new SkipEncodeException(throwable);
+				} else {
+					throw throwable;
+				}
+			}
 
-    public static class PacketTooLargeException extends RuntimeException {
-        private final Packet<?> packet;
+			var packetLength = ds.readableBytes();
+			if (packetLength > MAX_PACKET_SIZE) {
+				throw new PacketTooLargeException(packet, packetLength);
+			}
 
-        PacketTooLargeException(Packet<?> packet, int packetLength) {
-            super("PacketTooLarge - " + packet.getClass().getSimpleName() + " is " + packetLength + ". Max is " + MAX_PACKET_SIZE);
-            this.packet = packet;
-        }
+			ds.markWriterIndex();
+			ctx.write(buf, promise);
+			return;
+		}
+		ctx.write(msg, promise);
+	}
 
-        public Packet<?> getPacket() {
-            return packet;
-        }
-    }
-    // Paper end
+	private static final int MAX_PACKET_SIZE = 2097152;
+
+	public static class PacketTooLargeException extends RuntimeException {
+		private final Packet<?> packet;
+
+		PacketTooLargeException(Packet<?> packet, int packetLength) {
+			super("PacketTooLarge - " + packet.getClass().getSimpleName() + " is " + packetLength + ". Max is " + MAX_PACKET_SIZE);
+			this.packet = packet;
+		}
+
+		public Packet<?> getPacket() {
+			return packet;
+		}
+	}
+
+
+	public void setProtocol(EnumProtocol protocol) {
+		this.protocol = protocol;
+	}
+
+	public void setAdventure$locale(Locale adventure$locale) {
+		this.adventure$locale = adventure$locale;
+	}
 }

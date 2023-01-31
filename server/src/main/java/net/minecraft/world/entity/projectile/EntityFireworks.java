@@ -1,9 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.OptionalInt;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,8 +24,12 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.OptionalInt;
 
 public class EntityFireworks extends IProjectile {
 

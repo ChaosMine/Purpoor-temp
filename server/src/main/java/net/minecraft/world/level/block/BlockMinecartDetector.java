@@ -1,10 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -19,14 +14,15 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyTrackPosition;
-import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
-import net.minecraft.world.level.block.state.properties.IBlockState;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.AxisAlignedBB;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
-import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 public class BlockMinecartDetector extends BlockMinecartTrackAbstract {
 

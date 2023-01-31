@@ -1,22 +1,17 @@
 package net.minecraft.world.level.chunk;
 
+import com.destroystokyo.paper.antixray.ChunkPacketInfo;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import com.destroystokyo.paper.antixray.ChunkPacketInfo; // Paper - Anti-Xray - Add chunk packet info
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import net.minecraft.CrashReport;
-import net.minecraft.CrashReportSystemDetails;
-import net.minecraft.ReportedException;
 import net.minecraft.core.RegistryBlockID;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.util.DataBits;
 import net.minecraft.util.MathHelper;
+
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class DataPaletteBlock<T> implements DataPaletteExpandable<T> {
 

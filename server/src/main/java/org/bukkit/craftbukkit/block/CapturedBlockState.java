@@ -1,6 +1,5 @@
 package org.bukkit.craftbukkit.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.EntityBee;
@@ -10,6 +9,8 @@ import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityBeehive;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import java.util.Random;
 
 public final class CapturedBlockState extends CraftBlockState {
 

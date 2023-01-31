@@ -5,10 +5,6 @@ import com.google.common.math.DoubleMath;
 import com.google.common.math.IntMath;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.stream.Stream;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumAxisCycle;
@@ -19,6 +15,11 @@ import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public final class VoxelShapes {
 

@@ -1,9 +1,10 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTameableAnimal;
+
+import java.util.EnumSet;
 
 public class PathfinderGoalSit extends PathfinderGoal {
 

@@ -1,20 +1,17 @@
 package net.minecraft.world.inventory;
 
+import io.papermc.paper.event.player.PlayerLecternPageChangeEvent;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
-import net.minecraft.world.level.block.entity.TileEntityLectern.LecternInventory;
 import net.minecraft.world.entity.player.PlayerInventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.TileEntityLectern.LecternInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftInventoryLectern;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTakeLecternBookEvent;
-// CraftBukkit end
-import io.papermc.paper.event.player.PlayerLecternPageChangeEvent; // Paper
 
 public class ContainerLectern extends Container {
 

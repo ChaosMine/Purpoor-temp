@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
@@ -14,6 +12,9 @@ import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureHugeFungiConfiguration;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class BlockFungi extends BlockPlant implements IBlockFragilePlantElement {
 

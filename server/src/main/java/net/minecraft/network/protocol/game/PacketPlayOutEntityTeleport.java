@@ -7,13 +7,13 @@ import net.minecraft.world.entity.Entity;
 
 public class PacketPlayOutEntityTeleport implements Packet<PacketListenerPlayOut> {
 
-    private int a;
-    private double b;
-    private double c;
-    private double d;
-    private byte e;
-    private byte f;
-    private boolean g;
+    public int a;
+    public double b;
+    public double c;
+    public double d;
+    public byte e;
+    public byte f;
+    public boolean g;
 
     public PacketPlayOutEntityTeleport() {}
 

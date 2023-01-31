@@ -1,20 +1,7 @@
 package net.minecraft.world.level.storage.loot;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
+import com.google.gson.*;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.util.MathHelper;
@@ -28,12 +15,18 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSet
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import java.util.stream.Collectors;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.world.LootGenerateEvent;
+
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class LootTable {

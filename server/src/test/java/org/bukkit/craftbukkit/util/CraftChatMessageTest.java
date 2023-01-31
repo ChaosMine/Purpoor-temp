@@ -1,10 +1,12 @@
 package org.bukkit.craftbukkit.util;
 
-import static org.junit.Assert.*;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CraftChatMessageTest {
 
@@ -56,7 +58,7 @@ public class CraftChatMessageTest {
         testPlainString("");
         testPlainString("Foo§f§mBar§0");
         testPlainString("Link to https://www.spigotmc.org/ ...");
-        testPlainString("Link to http://www.spigotmc.org/ ...");
+        testPlainString("Link to https://www.spigotmc.org/ ...");
         testPlainString("Link to www.spigotmc.org ...");
     }
 

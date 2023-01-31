@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.item.context.BlockActionContext;
@@ -11,8 +9,10 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.block.state.properties.IBlockState;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class BlockRedstoneLamp extends Block {
 

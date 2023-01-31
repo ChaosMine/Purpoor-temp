@@ -1,10 +1,11 @@
 package net.minecraft.server.level;
 
-import java.util.Comparator;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkCoordIntPair;
+
+import java.util.Comparator;
 
 public class TicketType<T> {
 

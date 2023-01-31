@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -19,6 +18,8 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 public class CraftBlockState implements BlockState {
     protected final CraftWorld world;

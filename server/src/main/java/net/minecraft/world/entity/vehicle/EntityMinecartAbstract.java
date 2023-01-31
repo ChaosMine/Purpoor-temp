@@ -5,10 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.UnmodifiableIterator;
 import com.mojang.datafixers.util.Pair;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.BlockUtil;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BaseBlockPosition;
@@ -26,13 +22,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMoveType;
-import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.EntityIronGolem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
@@ -48,14 +38,17 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockPropertyTrackPosition;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 // CraftBukkit end
 
 public abstract class EntityMinecartAbstract extends Entity {
@@ -425,53 +418,51 @@ public abstract class EntityMinecartAbstract extends Entity {
             }
             // CraftBukkit end
             if (this.getMinecartType() == EntityMinecartAbstract.EnumMinecartType.RIDEABLE && c(this.getMot()) > 0.01D) {
-                List<Entity> list = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D), IEntitySelector.a(this));
+                try (var list = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D), IEntitySelector.a(this))) {
+                    if (!list.isEmpty()) {
+                        for (int l = 0; l < list.size(); ++l) {
+                            Entity entity = list.get(l);
 
-                if (!list.isEmpty()) {
-                    for (int l = 0; l < list.size(); ++l) {
-                        Entity entity = (Entity) list.get(l);
-
-                        if (!(entity instanceof EntityHuman) && !(entity instanceof EntityIronGolem) && !(entity instanceof EntityMinecartAbstract) && !this.isVehicle() && !entity.isPassenger()) {
-                            // CraftBukkit start
-                            VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent(vehicle, entity.getBukkitEntity());
-                            this.world.getServer().getPluginManager().callEvent(collisionEvent);
-
-                            if (collisionEvent.isCancelled()) {
-                                continue;
-                            }
-                            // CraftBukkit end
-                            entity.startRiding(this);
-                        } else {
-                            // CraftBukkit start
-                            if (!this.isSameVehicle(entity)) {
+                            if (!(entity instanceof EntityHuman) && !(entity instanceof EntityIronGolem) && !(entity instanceof EntityMinecartAbstract) && !this.isVehicle() && !entity.isPassenger()) {
+                                // CraftBukkit start
                                 VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent(vehicle, entity.getBukkitEntity());
                                 this.world.getServer().getPluginManager().callEvent(collisionEvent);
 
                                 if (collisionEvent.isCancelled()) {
                                     continue;
                                 }
+                                // CraftBukkit end
+                                entity.startRiding(this);
+                            } else {
+                                // CraftBukkit start
+                                if (!this.isSameVehicle(entity)) {
+                                    VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent(vehicle, entity.getBukkitEntity());
+                                    this.world.getServer().getPluginManager().callEvent(collisionEvent);
+
+                                    if (collisionEvent.isCancelled()) {
+                                        continue;
+                                    }
+                                }
+                                // CraftBukkit end
+                                entity.collide(this);
                             }
-                            // CraftBukkit end
-                            entity.collide(this);
                         }
                     }
                 }
             } else {
-                Iterator iterator = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
+                try (var XUI = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D))) {
+                    for (Entity entity1 : XUI) {
+                        if (!this.w(entity1) && entity1.isCollidable() && entity1 instanceof EntityMinecartAbstract) {
+                            // CraftBukkit start
+                            VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent(vehicle, entity1.getBukkitEntity());
+                            this.world.getServer().getPluginManager().callEvent(collisionEvent);
 
-                while (iterator.hasNext()) {
-                    Entity entity1 = (Entity) iterator.next();
-
-                    if (!this.w(entity1) && entity1.isCollidable() && entity1 instanceof EntityMinecartAbstract) {
-                        // CraftBukkit start
-                        VehicleEntityCollisionEvent collisionEvent = new VehicleEntityCollisionEvent(vehicle, entity1.getBukkitEntity());
-                        this.world.getServer().getPluginManager().callEvent(collisionEvent);
-
-                        if (collisionEvent.isCancelled()) {
-                            continue;
+                            if (collisionEvent.isCancelled()) {
+                                continue;
+                            }
+                            // CraftBukkit end
+                            entity1.collide(this);
                         }
-                        // CraftBukkit end
-                        entity1.collide(this);
                     }
                 }
             }

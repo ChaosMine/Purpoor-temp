@@ -1,9 +1,8 @@
 package net.minecraft.world.entity.boss.enderdragon;
 
+import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,14 +18,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMoveType;
-import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
@@ -36,9 +28,12 @@ import net.minecraft.world.entity.boss.enderdragon.phases.DragonControllerPhase;
 import net.minecraft.world.entity.boss.enderdragon.phases.IDragonController;
 import net.minecraft.world.entity.monster.IMonster;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.dimension.end.EnderDragonBattle;
 import net.minecraft.world.level.levelgen.HeightMap;
@@ -47,22 +42,19 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
+import net.minecraft.world.level.storage.loot.LootTableInfo;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.block.entity.TileEntity;
-import net.minecraft.world.level.storage.loot.LootTableInfo;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-// CraftBukkit end
-import com.destroystokyo.paper.event.block.TNTPrimeEvent; // Paper - TNTPrimeEvent
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
@@ -364,10 +356,18 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 this.a(this.bD, (double) (f12 * 4.5F), 2.0D, (double) (f11 * 4.5F));
                 this.a(this.bE, (double) (f12 * -4.5F), 2.0D, (double) (f11 * -4.5F));
                 if (!hasRider && !this.world.isClientSide && this.hurtTicks == 0) { // Purpur
-                    this.a(this.world.getEntities(this, this.bD.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e));
-                    this.a(this.world.getEntities(this, this.bE.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e));
-                    this.b(this.world.getEntities(this, this.bo.getBoundingBox().g(1.0D), IEntitySelector.e));
-                    this.b(this.world.getEntities(this, this.by.getBoundingBox().g(1.0D), IEntitySelector.e));
+                    try (var list = this.world.getEntities(this, this.bD.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e)) {
+                        this.a(list);
+                    }
+                    try (var list = this.world.getEntities(this, this.bE.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e)) {
+                        this.a(list);
+                    }
+                    try (var list = this.world.getEntities(this, this.bo.getBoundingBox().g(1.0D), IEntitySelector.e)) {
+                        this.b(list);
+                    }
+                    try (var list = this.world.getEntities(this, this.by.getBoundingBox().g(1.0D), IEntitySelector.e)) {
+                        this.b(list);
+                    }
                 }
 
                 float f13 = MathHelper.sin(this.yaw * 0.017453292F - this.bt * 0.01F);
@@ -480,11 +480,8 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
     private void a(List<Entity> list) {
         double d0 = (this.bz.getBoundingBox().minX + this.bz.getBoundingBox().maxX) / 2.0D;
         double d1 = (this.bz.getBoundingBox().minZ + this.bz.getBoundingBox().maxZ) / 2.0D;
-        Iterator iterator = list.iterator();
 
-        while (iterator.hasNext()) {
-            Entity entity = (Entity) iterator.next();
-
+        for (Entity entity : list) {
             if (entity instanceof EntityLiving) {
                 double d2 = entity.locX() - d0;
                 double d3 = entity.locZ() - d1;
@@ -493,7 +490,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 entity.i(d2 / d4 * 4.0D, 0.20000000298023224D, d3 / d4 * 4.0D);
                 if (!this.bG.a().a() && ((EntityLiving) entity).da() < entity.ticksLived - 2) {
                     entity.damageEntity(DamageSource.mobAttack(this), 5.0F);
-                    this.a((EntityLiving) this, entity);
+                    this.a(this, entity);
                 }
             }
         }
@@ -528,7 +525,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         boolean flag = false;
         boolean flag1 = false;
         // CraftBukkit start - Create a list to hold all the destroyed blocks
-        List<org.bukkit.block.Block> destroyedBlocks = new java.util.ArrayList<org.bukkit.block.Block>();
+        List<org.bukkit.block.Block> destroyedBlocks = new ObjectArrayList<>();
         // CraftBukkit end
 
         for (int k1 = i; k1 <= l; ++k1) {

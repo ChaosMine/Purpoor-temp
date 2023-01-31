@@ -1,9 +1,5 @@
 package net.minecraft.world.level;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
@@ -18,6 +14,11 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.UtilColor;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.player.EntityHuman;
+
+import javax.annotation.Nullable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 public abstract class CommandBlockListenerAbstract implements ICommandListener {
 
@@ -213,10 +214,5 @@ public abstract class CommandBlockListenerAbstract implements ICommandListener {
     @Override
     public boolean shouldSendFailure() {
         return this.trackOutput;
-    }
-
-    @Override
-    public boolean shouldBroadcastCommands() {
-        return this.d().getGameRules().getBoolean(GameRules.COMMAND_BLOCK_OUTPUT);
     }
 }

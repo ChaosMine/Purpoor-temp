@@ -1,21 +1,19 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.navigation.Navigation;
 import net.minecraft.world.entity.ai.navigation.NavigationFlying;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
-import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeItemStack;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+
+import java.util.EnumSet;
 // CraftBukkit end
 
 public class PathfinderGoalTempt extends PathfinderGoal {

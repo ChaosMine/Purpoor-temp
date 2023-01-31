@@ -1,16 +1,11 @@
 package net.minecraft.world.level.block;
 
-import com.destroystokyo.paper.PaperConfig;
 import com.destroystokyo.paper.util.RedstoneWireTurbo;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.UnmodifiableIterator;
 import com.mojang.math.Vector3fa;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -26,17 +21,17 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyRedstoneSide;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
-import net.minecraft.world.level.block.state.properties.BlockStateInteger;
-import net.minecraft.world.level.block.state.properties.IBlockState;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
-import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class BlockRedstoneWire extends Block {
 

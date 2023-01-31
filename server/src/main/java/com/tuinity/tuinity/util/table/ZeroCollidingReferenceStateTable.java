@@ -3,6 +3,7 @@ package com.tuinity.tuinity.util.table;
 import com.google.common.collect.Table;
 import net.minecraft.world.level.block.state.IBlockDataHolder;
 import net.minecraft.world.level.block.state.properties.IBlockState;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;

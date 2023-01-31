@@ -1,9 +1,5 @@
 package net.minecraft.world.entity.ai.util;
 
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.function.ToDoubleFunction;
-import javax.annotation.Nullable;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
@@ -17,6 +13,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfinderNormal;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 public class RandomPositionGenerator {
 

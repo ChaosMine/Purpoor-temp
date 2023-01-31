@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.decoration;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,17 +12,12 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMoveType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemWorldMap;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockDiodeAbstract;
 import net.minecraft.world.level.block.Blocks;
@@ -34,6 +28,8 @@ import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 public class EntityItemFrame extends EntityHanging {
 
@@ -133,7 +129,9 @@ public class EntityItemFrame extends EntityHanging {
         } else {
             IBlockData iblockdata = this.world.getType(this.blockPosition.shift(this.direction.opposite()));
 
-            return !iblockdata.getMaterial().isBuildable() && (!this.direction.n().d() || !BlockDiodeAbstract.isDiode(iblockdata)) ? false : this.world.getEntities(this, this.getBoundingBox(), EntityItemFrame.b).isEmpty();
+            try (var XUI = this.world.getEntities(this, this.getBoundingBox(), EntityItemFrame.b)) {
+                return !iblockdata.getMaterial().isBuildable() && (!this.direction.n().d() || !BlockDiodeAbstract.isDiode(iblockdata)) ? false : XUI.isEmpty();
+            }
         }
     }
 

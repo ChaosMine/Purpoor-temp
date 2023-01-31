@@ -1,12 +1,13 @@
 package net.minecraft.world.entity.ai.behavior;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class Behavior<E extends EntityLiving> {
 

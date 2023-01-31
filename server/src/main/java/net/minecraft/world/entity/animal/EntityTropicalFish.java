@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -20,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+
+import javax.annotation.Nullable;
 
 public class EntityTropicalFish extends EntityFishSchool {
 

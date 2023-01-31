@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
@@ -16,6 +14,9 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.level.World;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityGuardianElder extends EntityGuardian {
 

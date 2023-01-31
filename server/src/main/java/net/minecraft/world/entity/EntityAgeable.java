@@ -1,6 +1,5 @@
 package net.minecraft.world.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -10,6 +9,8 @@ import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+
+import javax.annotation.Nullable;
 
 public abstract class EntityAgeable extends EntityCreature {
 

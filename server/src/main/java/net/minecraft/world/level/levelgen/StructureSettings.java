@@ -5,14 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.IRegistry;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureSettingsFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureSettingsStronghold;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Optional;
 
 public class StructureSettings {
 

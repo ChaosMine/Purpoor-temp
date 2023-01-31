@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
@@ -14,11 +13,11 @@ import net.minecraft.world.level.block.BlockLeaves;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfinderNormal;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
+
+import java.util.EnumSet;
 // CraftBukkit end
 
 public class PathfinderGoalFollowOwner extends PathfinderGoal {

@@ -1,18 +1,9 @@
 package net.minecraft.server.level;
 
 import com.mojang.datafixers.util.Either;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap; // Paper
-import it.unimi.dsi.fastutil.shorts.ShortArraySet;
-import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet; // Tuinity
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-import java.util.function.IntConsumer;
-import java.util.function.IntSupplier;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
@@ -22,22 +13,24 @@ import net.minecraft.network.protocol.game.PacketPlayOutLightUpdate;
 import net.minecraft.network.protocol.game.PacketPlayOutMultiBlockChange;
 import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
 import net.minecraft.server.MCUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumSkyBlock;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.chunk.Chunk;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.IChunkAccess;
-import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraft.world.level.chunk.ProtoChunkExtension;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.lighting.LightEngine;
 
-// CraftBukkit start
-import net.minecraft.server.MinecraftServer;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+import java.util.stream.Stream;
 // CraftBukkit end
 
 public class PlayerChunk {
@@ -602,7 +595,6 @@ public class PlayerChunk {
     protected long updateCount; // Tuinity - correctly handle recursion
     protected final void handleLevelUpdate(PlayerChunkMap playerchunkmap) { this.a(playerchunkmap); } // Tuinity - OBFHELPER
     protected void a(PlayerChunkMap playerchunkmap) {
-        com.tuinity.tuinity.util.TickThread.ensureTickThread("Async ticket level update"); // Tuinity
         long updateCount = ++this.updateCount; // Tuinity - correctly handle recursion
         ChunkStatus chunkstatus = getChunkStatus(this.oldTicketLevel);
         ChunkStatus chunkstatus1 = getChunkStatus(this.ticketLevel);
@@ -614,7 +606,6 @@ public class PlayerChunk {
         // ChunkUnloadEvent: Called before the chunk is unloaded: isChunkLoaded is still true and chunk can still be modified by plugins.
         if (playerchunk_state.isAtLeast(PlayerChunk.State.BORDER) && !playerchunk_state1.isAtLeast(PlayerChunk.State.BORDER)) {
             this.getStatusFutureUnchecked(ChunkStatus.FULL).thenAccept((either) -> { // Paper - ensure main // Tuinity - is always on main
-                com.tuinity.tuinity.util.TickThread.ensureTickThread("Async full status chunk future completion"); // Tuinity
                 Chunk chunk = (Chunk)either.left().orElse(null);
                 if (chunk != null) {
                     playerchunkmap.callbackExecutor.execute(() -> {
@@ -657,7 +648,7 @@ public class PlayerChunk {
             // Paper end
 
             for (int i = flag1 ? chunkstatus1.c() + 1 : 0; i <= chunkstatus.c(); ++i) {
-                completablefuture = (CompletableFuture) this.statusFutures.get(i);
+                completablefuture = this.statusFutures.get(i);
                 if (completablefuture != null) {
                     completablefuture.complete(either);
                 } else {
@@ -686,7 +677,6 @@ public class PlayerChunk {
             // Paper start - cache ticking ready status
             int expectCreateCount = ++this.fullChunkCreateCount;
             this.fullChunkFuture = playerchunkmap.b(this); this.fullChunkFuture.thenAccept((either) -> { // Paper - ensure main // Tuinity - always fired on main
-                com.tuinity.tuinity.util.TickThread.ensureTickThread("Async full chunk future completion"); // Tuinity
                 if (either.left().isPresent() && PlayerChunk.this.fullChunkCreateCount == expectCreateCount) {
                     // note: Here is a very good place to add callbacks to logic waiting on this.
                     Chunk fullChunk = either.left().get();
@@ -718,7 +708,6 @@ public class PlayerChunk {
         if (!flag4 && flag5) {
             // Paper start - cache ticking ready status
             this.tickingFuture = playerchunkmap.a(this); this.tickingFuture.thenAccept((either) -> { // Paper - ensure main // Tuinity - always completed on main
-                com.tuinity.tuinity.util.TickThread.ensureTickThread("Async ticking chunk future completion"); // Tuinity
                 if (either.left().isPresent()) {
                     // note: Here is a very good place to add callbacks to logic waiting on this.
                     Chunk tickingChunk = either.left().get();
@@ -759,7 +748,6 @@ public class PlayerChunk {
 
             // Paper start - cache ticking ready status
             this.entityTickingFuture = playerchunkmap.b(this.location); this.entityTickingFuture.thenAccept((either) -> { // Paper ensureMain // Tuinity - always completed on main
-                com.tuinity.tuinity.util.TickThread.ensureTickThread("Async entity ticking chunk future completion"); // Tuinity
                 if (either.left().isPresent()) {
                     // note: Here is a very good place to add callbacks to logic waiting on this.
                     Chunk entityTickingChunk = either.left().get();
@@ -811,7 +799,6 @@ public class PlayerChunk {
         // ChunkLoadEvent: Called after the chunk is loaded: isChunkLoaded returns true and chunk is ready to be modified by plugins.
         if (!playerchunk_state.isAtLeast(PlayerChunk.State.BORDER) && playerchunk_state1.isAtLeast(PlayerChunk.State.BORDER)) {
             this.getStatusFutureUnchecked(ChunkStatus.FULL).thenAccept((either) -> { // Paper - ensure main // Tuinity - is always on main
-                com.tuinity.tuinity.util.TickThread.ensureTickThread("Async full status chunk future completion"); // Tuinity
                 Chunk chunk = (Chunk)either.left().orElse(null);
                 if (chunk != null) {
                     playerchunkmap.callbackExecutor.execute(() -> {

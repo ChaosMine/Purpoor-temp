@@ -1,8 +1,7 @@
 package net.minecraft.world.level.block;
 
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
+import io.papermc.paper.adventure.PaperAdventure;
+import io.papermc.paper.event.player.PlayerBedFailEnterEvent;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatMessage;
@@ -19,12 +18,7 @@ import net.minecraft.world.entity.vehicle.DismountUtil;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.ICollisionAccess;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityBed;
 import net.minecraft.world.level.block.state.BlockBase;
@@ -43,8 +37,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 import org.apache.commons.lang3.ArrayUtils;
-import io.papermc.paper.event.player.PlayerBedFailEnterEvent; // Paper
-import io.papermc.paper.adventure.PaperAdventure; // Paper
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class BlockBed extends BlockFacingHorizontal implements ITileEntity {
 

@@ -3,13 +3,6 @@ package net.minecraft.world.level;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
@@ -23,13 +16,7 @@ import net.minecraft.tags.TagsBlock;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityPositionTypes;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumCreatureType;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.biome.BiomeSettingsMobs;
@@ -43,13 +30,19 @@ import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathMode;
+import net.minecraft.world.level.storage.WorldData;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.world.level.storage.WorldData;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 // CraftBukkit end
 
 public final class SpawnerCreature {

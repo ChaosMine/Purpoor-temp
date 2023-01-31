@@ -5,16 +5,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import dev.kamillaova.paper.util.JavaUtil;
+import io.netty.util.concurrent.FastThreadLocal;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
@@ -22,11 +15,7 @@ import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.chat.ChatClickable;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.ChatMessage;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity;
 import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
 import net.minecraft.network.syncher.DataWatcher;
@@ -44,26 +33,12 @@ import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Unit;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.ITileInventory;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMainHand;
-import net.minecraft.world.entity.EnumMonsterType;
-import net.minecraft.world.entity.EnumMoveType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.animal.EntityParrot;
@@ -80,23 +55,11 @@ import net.minecraft.world.food.FoodMetaData;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerPlayer;
 import net.minecraft.world.inventory.InventoryEnderChest;
-import net.minecraft.world.item.ItemArmor;
-import net.minecraft.world.item.ItemAxe;
-import net.minecraft.world.item.ItemCooldown;
-import net.minecraft.world.item.ItemElytra;
-import net.minecraft.world.item.ItemProjectileWeapon;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemSword;
-import net.minecraft.world.item.ItemWorldMap;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.trading.MerchantRecipeList;
-import net.minecraft.world.level.CommandBlockListenerAbstract;
-import net.minecraft.world.level.EnumGamemode;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ICollisionAccess;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockBed;
 import net.minecraft.world.level.block.BlockRespawnAnchor;
@@ -111,8 +74,7 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.ScoreboardTeam;
-
-// CraftBukkit start
+import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.CraftVector;
@@ -123,6 +85,17 @@ import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityExhaustionEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+
+import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandle;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.function.Predicate;
+
+import static dev.kamillaova.paper.util.JavaUtil.sneaky;
+import static dev.kamillaova.paper.util.NettyUtil.fastThreadLocal;
+import static java.lang.invoke.MethodType.methodType;
 // CraftBukkit end
 
 public abstract class EntityHuman extends EntityLiving {
@@ -186,8 +159,6 @@ public abstract class EntityHuman extends EntityLiving {
 
     // Purpur start
     public abstract void resetIdleTimer();
-
-    private javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino");
 
     public void setAfk(boolean setAfk){
     }
@@ -563,13 +534,13 @@ public abstract class EntityHuman extends EntityLiving {
                 axisalignedbb = this.getBoundingBox().grow(1.0D, 0.5D, 1.0D);
             }
 
-            List<Entity> list = this.world.getEntities(this, axisalignedbb);
+            try (var list = this.world.getEntities(this, axisalignedbb)) {
+                for (int i = 0; i < list.size(); ++i) {
+                    Entity entity = (Entity) list.get(i);
 
-            for (int i = 0; i < list.size(); ++i) {
-                Entity entity = (Entity) list.get(i);
-
-                if (!entity.dead) {
-                    this.c(entity);
+                    if (!entity.dead) {
+                        this.c(entity);
+                    }
                 }
             }
         }
@@ -583,6 +554,8 @@ public abstract class EntityHuman extends EntityLiving {
     }
 
     private void j(@Nullable NBTTagCompound nbttagcompound) {
+        if (PurpurConfig.disableShitParrotSounds) return;
+
         if (nbttagcompound != null && (!nbttagcompound.hasKey("Silent") || !nbttagcompound.getBoolean("Silent")) && this.world.random.nextInt(200) == 0) {
             String s = nbttagcompound.getString("id");
 
@@ -1479,6 +1452,7 @@ public abstract class EntityHuman extends EntityLiving {
     public void a(IChatBaseComponent ichatbasecomponent, boolean flag) {}
 
     public void a(MinecraftKey minecraftkey) {
+        if (PurpurConfig.disableStatistics) return;
         this.b(StatisticList.CUSTOM.b(minecraftkey));
     }
 
@@ -1487,6 +1461,7 @@ public abstract class EntityHuman extends EntityLiving {
     }
 
     public void b(Statistic<?> statistic) {
+        if (PurpurConfig.disableStatistics) return;
         this.a(statistic, 1);
     }
 
@@ -1844,18 +1819,8 @@ public abstract class EntityHuman extends EntityLiving {
     @Override
     protected int getExpValue(EntityHuman entityhuman) {
         if (!this.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) && !this.isSpectator()) {
-            // Purpur start
-            int toDrop;
-            try {
-                scriptEngine.eval("expLevel = " + expLevel);
-                scriptEngine.eval("expTotal = " + expTotal);
-                scriptEngine.eval("exp = " + exp);
-                toDrop = (int) Math.round((Double) scriptEngine.eval(world.purpurConfig.playerDeathExpDropEquation));
-            } catch (Exception ignore) {
-                toDrop = expLevel * 7;
-            }
-            return Math.min(toDrop, world.purpurConfig.playerDeathExpDropMax);
-            // Purpur end
+            int i = this.expLevel * 7;
+            return Math.min(i, 100);
         } else {
             return 0;
         }
@@ -1891,18 +1856,18 @@ public abstract class EntityHuman extends EntityLiving {
 
     // Purpur start
     public List<List<ItemStack>> cloneEquipment() {
-        List<List<ItemStack>> list = new java.util.ArrayList<>();
-        List<ItemStack> invItems = new java.util.ArrayList<>();
+        List<List<ItemStack>> list = new ObjectArrayList<>();
+        List<ItemStack> invItems = new ObjectArrayList<>();
         for (ItemStack item : this.inventory.items) {
             invItems.add(item.cloneItemStack());
         }
         list.add(invItems);
-        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        List<ItemStack> armorItems = new ObjectArrayList<>();
         for (ItemStack item : this.inventory.armor) {
             armorItems.add(item.cloneItemStack());
         }
         list.add(armorItems);
-        List<ItemStack> extraItems = new java.util.ArrayList<>();
+        List<ItemStack> extraItems = new ObjectArrayList<>();
         for (ItemStack item : this.inventory.extraSlots) {
             extraItems.add(item.cloneItemStack());
         }
@@ -2120,8 +2085,39 @@ public abstract class EntityHuman extends EntityLiving {
         return uuid;
     }
 
+    private static final FastThreadLocal<MessageDigest> md5ThreadLocal =
+      fastThreadLocal(() -> MessageDigest.getInstance("MD5"));
+
+    private static final MethodHandle MH_CTOR__UUID_data;
+
+    static {
+        try {
+            MH_CTOR__UUID_data = JavaUtil.IMPL_LOOKUP.findConstructor(
+              UUID.class,
+              methodType(void.class, byte[].class)
+            );
+        } catch (Throwable t) {
+            throw new ExceptionInInitializerError(t);
+        }
+    }
+
+    private static UUID nameUUIDFromBytes(byte[] name) {
+        var md = md5ThreadLocal.get();
+        md.reset();
+        byte[] md5Bytes = md.digest(name);
+        md5Bytes[6]  &= 0x0f;  /* clear version        */
+        md5Bytes[6]  |= 0x30;  /* set to version 3     */
+        md5Bytes[8]  &= 0x3f;  /* clear variant        */
+        md5Bytes[8]  |= (byte) 0x80;  /* set to IETF variant  */
+        try {
+            return (UUID) MH_CTOR__UUID_data.invokeExact(md5Bytes);
+        } catch (Throwable t) {
+            throw sneaky(t);
+        }
+    }
+
     public static UUID getOfflineUUID(String s) {
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + s).getBytes(StandardCharsets.UTF_8));
+        return nameUUIDFromBytes(("OfflinePlayer:" + s).getBytes(StandardCharsets.UTF_8));
     }
 
     @Override

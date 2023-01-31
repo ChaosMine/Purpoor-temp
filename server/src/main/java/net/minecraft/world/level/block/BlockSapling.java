@@ -1,6 +1,6 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.IBlockAccess;
@@ -14,12 +14,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
+
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockSapling extends BlockPlant implements IBlockFragilePlantElement {
@@ -53,7 +53,7 @@ public class BlockSapling extends BlockPlant implements IBlockFragilePlantElemen
                 TreeType treeType = BlockSapling.treeType;
                 BlockSapling.treeType = null;
                 Location location = new Location(worldserver.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
-                java.util.List<BlockState> blocks = new java.util.ArrayList<>(worldserver.capturedBlockStates.values());
+                java.util.List<BlockState> blocks = new ObjectArrayList<>(worldserver.capturedBlockStates.values());
                 worldserver.capturedBlockStates.clear();
                 StructureGrowEvent event = null;
                 if (treeType != null) {

@@ -1,10 +1,11 @@
 package org.bukkit;
 
-import java.util.Map;
 import net.minecraft.world.level.GameRules;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Map;
 
 public class GameRuleTest {
 

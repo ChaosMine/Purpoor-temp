@@ -4,15 +4,15 @@
           "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-    <!-- See http://checkstyle.sourceforge.net/config_misc.html#NewlineAtEndOfFile -->
+    <!-- See https://checkstyle.sourceforge.net/config_misc.html#NewlineAtEndOfFile -->
     <module name="NewlineAtEndOfFile">
         <property name="lineSeparator" value="lf_cr_crlf"/>
     </module>
 
-    <!-- See http://checkstyle.sourceforge.net/config_whitespace.html -->
+    <!-- See https://checkstyle.sourceforge.net/config_whitespace.html -->
     <module name="FileTabCharacter"/>
 
-    <!-- See http://checkstyle.sourceforge.net/config_misc.html -->
+    <!-- See https://checkstyle.sourceforge.net/config_misc.html -->
     <module name="RegexpSingleline">
         <property name="format" value="\s+$"/>
         <property name="minimum" value="0"/>
@@ -20,7 +20,7 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
 
-    <!-- See http://checkstyle.sourceforge.net/config_filters.html -->
+    <!-- See https://checkstyle.sourceforge.net/config_filters.html -->
     <module name="SuppressionSingleFilter">
         <property name="checks" value="UnusedImports"/>
         <property name="files" value=".*[/\\]net[/\\]minecraft[/\\]server[/\\].*"/>
@@ -40,7 +40,7 @@
         <module name="MissingJavadocPackage"/>
         <!--<module name="NonEmptyAtclauseDescription"/>-->
 
-        <!-- See http://checkstyle.sourceforge.net/config_filters.html -->
+        <!-- See https://checkstyle.sourceforge.net/config_filters.html -->
         <module name="SuppressionCommentFilter"/>
         <module name="SuppressionCommentFilter">
             <property name="offCommentFormat" value="CraftBukkit start"/>
@@ -57,7 +57,7 @@
             <property name="commentFormat" value="Spigot"/>
         </module>
 
-        <!-- See http://checkstyle.sourceforge.net/config_imports.html -->
+        <!-- See https://checkstyle.sourceforge.net/config_imports.html -->
         <module name="AvoidStarImport">
             <property name="allowStaticMemberImports" value="true"/>
         </module>
@@ -90,7 +90,7 @@
             <property name="allowEmptyTypes" value="true"/>
         </module>
 
-        <!-- See http://checkstyle.sourceforge.net/config_modifiers.html -->
+        <!-- See https://checkstyle.sourceforge.net/config_modifiers.html -->
         <module name="ModifierOrder"/>
 
         <!-- See https://checkstyle.org/config_blocks.html -->
@@ -98,11 +98,11 @@
         <module name="LeftCurly"/>
         <module name="RightCurly"/>
 
-        <!-- See http://checkstyle.sourceforge.net/config_design.html -->
+        <!-- See https://checkstyle.sourceforge.net/config_design.html -->
         <!--<module name="FinalClass"/>-->
         <!--<module name="InterfaceIsType"/>-->
 
-        <!-- See http://checkstyle.sourceforge.net/config_misc.html -->
+        <!-- See https://checkstyle.sourceforge.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
         <module name="UpperEll"/>
     </module>

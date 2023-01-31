@@ -4,12 +4,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import java.util.Random;
-import java.util.Set;
 import net.minecraft.world.level.storage.loot.LootSerializer;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameter;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
+
+import java.util.Random;
+import java.util.Set;
 
 public class LootItemConditionSurvivesExplosion implements LootItemCondition {
 

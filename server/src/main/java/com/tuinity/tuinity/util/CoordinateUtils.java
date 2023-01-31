@@ -1,9 +1,9 @@
 package com.tuinity.tuinity.util;
 
 import net.minecraft.core.BlockPosition;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.core.SectionPosition;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkCoordIntPair;
 
 public final class CoordinateUtils {

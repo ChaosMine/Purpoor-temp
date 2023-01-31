@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
@@ -21,6 +19,9 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.commons.lang3.mutable.MutableInt;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class TileEntityBell extends TileEntity implements ITickable {
 

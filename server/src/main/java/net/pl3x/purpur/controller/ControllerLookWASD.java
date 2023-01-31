@@ -1,9 +1,9 @@
 package net.pl3x.purpur.controller;
 
 import net.minecraft.network.protocol.game.PacketPlayOutEntity;
-import net.minecraft.world.entity.ai.control.ControllerLook;
-import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.ai.control.ControllerLook;
 import net.minecraft.world.entity.player.EntityHuman;
 
 public class ControllerLookWASD extends ControllerLook {

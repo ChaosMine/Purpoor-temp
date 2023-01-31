@@ -3,45 +3,40 @@ package net.minecraft.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import net.minecraft.network.protocol.EnumProtocolDirection;
+
 import java.io.IOException;
 import java.util.List;
-import net.minecraft.network.protocol.EnumProtocolDirection;
-import net.minecraft.network.protocol.Packet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
 public class PacketDecoder extends ByteToMessageDecoder {
+	private final EnumProtocolDirection direction;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Marker b = MarkerManager.getMarker("PACKET_RECEIVED", NetworkManager.b);
-    private final EnumProtocolDirection c;
+	private EnumProtocol protocol;
 
-    public PacketDecoder(EnumProtocolDirection enumprotocoldirection) {
-        this.c = enumprotocoldirection;
-    }
+	public PacketDecoder(EnumProtocolDirection direction) {
+		this.direction = direction;
+	}
 
-    protected void decode(ChannelHandlerContext channelhandlercontext, ByteBuf bytebuf, List<Object> list) throws Exception {
-        if (bytebuf.readableBytes() != 0) {
-            PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
-            int i = packetdataserializer.i();
-            Packet<?> packet = ((EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get()).a(this.c, i);
+	protected void decode(ChannelHandlerContext channelhandlercontext, ByteBuf buf, List<Object> list) throws Exception {
+		if (buf.readableBytes() != 0) {
+			var packetdataserializer = new PacketDataSerializer(buf);
+			var id = packetdataserializer.readVarInt();
+			var packet = protocol.getById(this.direction, id);
 
-            if (packet == null) {
-                throw new IOException("Bad packet id " + i);
-            } else {
-                packet.a(packetdataserializer);
-                if (packetdataserializer.readableBytes() > 0) {
-                    throw new IOException("Packet " + ((EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get()).a() + "/" + i + " (" + packet.getClass().getSimpleName() + ") was larger than I expected, found " + packetdataserializer.readableBytes() + " bytes extra whilst reading packet " + i);
-                } else {
-                    list.add(packet);
-                    if (PacketDecoder.LOGGER.isDebugEnabled()) {
-                        PacketDecoder.LOGGER.debug(PacketDecoder.b, " IN: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), i, packet.getClass().getName());
-                    }
+			if (packet == null) {
+				throw new IOException("Bad packet id " + id);
+			} else {
+				packet.deserialize(packetdataserializer);
+				if (packetdataserializer.readableBytes() > 0) {
+					throw new IOException("Packet not fully read, broken client?");
+				} else {
+					list.add(packet);
+				}
+			}
+		}
+	}
 
-                }
-            }
-        }
-    }
+	public void setProtocol(EnumProtocol protocol) {
+		this.protocol = protocol;
+	}
 }

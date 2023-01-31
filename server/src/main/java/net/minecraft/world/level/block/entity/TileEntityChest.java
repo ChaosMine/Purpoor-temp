@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Iterator;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
@@ -24,14 +23,15 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockChest;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockPropertyChestType;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// CraftBukkit start
-import net.minecraft.world.level.block.Blocks;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITickable
@@ -43,7 +43,7 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
     private int j;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
     public boolean opened;
 

@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.ai.navigation;
 
-import java.util.Iterator;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
@@ -9,13 +8,10 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.PathEntity;
-import net.minecraft.world.level.pathfinder.PathMode;
-import net.minecraft.world.level.pathfinder.PathPoint;
-import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.pathfinder.Pathfinder;
-import net.minecraft.world.level.pathfinder.PathfinderNormal;
+import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Iterator;
 
 public class Navigation extends NavigationAbstract {
 

@@ -1,19 +1,7 @@
 package net.minecraft.world.level.dimension.end;
 
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Range;
-import com.google.common.collect.Sets;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
-
+import com.google.common.collect.*;
+import io.papermc.paper.event.block.DragonEggFormEvent;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
@@ -24,11 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.chat.ChatMessage;
-import net.minecraft.server.level.BossBattleServer;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.*;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Unit;
 import net.minecraft.world.BossBattle;
@@ -60,7 +44,10 @@ import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeature
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.papermc.paper.event.block.DragonEggFormEvent; // Paper - DragonEggFormEvent
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class EnderDragonBattle {
 

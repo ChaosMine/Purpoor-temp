@@ -1,7 +1,5 @@
 package net.minecraft.world.level.levelgen.feature;
 
-import java.util.Iterator;
-import java.util.Random;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -11,6 +9,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureEmptyConfiguration;
+
+import java.util.Iterator;
+import java.util.Random;
 
 public class WorldGenEndTrophy extends WorldGenerator<WorldGenFeatureEmptyConfiguration> {
 

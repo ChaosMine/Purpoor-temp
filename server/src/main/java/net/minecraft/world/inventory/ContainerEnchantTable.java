@@ -1,7 +1,5 @@
 package net.minecraft.world.inventory;
 
-import java.util.List;
-import java.util.Random;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,13 +14,10 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemEnchantedBook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.WeightedRandomEnchant;
 import net.minecraft.world.level.block.Blocks;
-
-// CraftBukkit start
-import java.util.Map;
-import net.minecraft.world.item.enchantment.Enchantment;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.inventory.CraftInventoryEnchanting;
@@ -30,9 +25,13 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.enchantments.EnchantmentOffer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 // CraftBukkit end
 
 public class ContainerEnchantTable extends Container {

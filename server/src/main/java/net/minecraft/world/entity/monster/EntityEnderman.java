@@ -1,12 +1,6 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.EnumSet;
-import java.util.Optional;
-import com.destroystokyo.paper.event.entity.EndermanEscapeEvent; // Paper
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import com.destroystokyo.paper.event.entity.EndermanEscapeEvent;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -28,22 +22,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.TimeRange;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSourceIndirect;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.IEntityAngerable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalUniversalAngerReset;
@@ -51,11 +35,7 @@ import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IMaterial;
-import net.minecraft.world.level.RayTrace;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -63,6 +43,13 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
@@ -251,7 +238,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
     }
     private boolean g_real(EntityHuman entityhuman) {
         // Paper end
-        ItemStack itemstack = (ItemStack) entityhuman.inventory.armor.get(3);
+        ItemStack itemstack = entityhuman.inventory.armor.get(3);
 
         if (world.purpurConfig.endermanDisableStareAggro || itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem() || (world.purpurConfig.endermanIgnorePlayerDragonHead && itemstack.getItem() == Items.DRAGON_HEAD)) { // Purpur
             return false;
@@ -299,7 +286,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
             float f = this.aR();
 
             if (f > 0.5F && this.world.e(this.getChunkCoordinates()) && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.tryEscape(EndermanEscapeEvent.Reason.RUNAWAY)) { // Paper
-                this.setGoalTarget((EntityLiving) null);
+                this.setGoalTarget(null);
                 this.eL();
             }
         }
@@ -341,13 +328,13 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         IBlockData iblockdata = this.world.getType(blockposition_mutableblockposition);
         boolean flag = iblockdata.getMaterial().isSolid();
-        boolean flag1 = iblockdata.getFluid().a((Tag) TagsFluid.WATER);
+        boolean flag1 = iblockdata.getFluid().a(TagsFluid.WATER);
 
         if (flag && !flag1) {
             boolean flag2 = this.a(d0, d1, d2, true);
 
             if (flag2 && !this.isSilent()) {
-                this.world.playSound((EntityHuman) null, this.lastX, this.lastY, this.lastZ, SoundEffects.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+                this.world.playSound(null, this.lastX, this.lastY, this.lastZ, SoundEffects.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
                 this.playSound(SoundEffects.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
 
@@ -378,7 +365,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         IBlockData iblockdata = this.getCarried();
 
         if (iblockdata != null) {
-            this.a((IMaterial) iblockdata.getBlock());
+            this.a(iblockdata.getBlock());
         }
 
     }
@@ -389,7 +376,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
     @Nullable
     public IBlockData getCarried() {
-        return (IBlockData) ((Optional) this.datawatcher.get(EntityEnderman.d)).orElse((Object) null);
+        return (IBlockData) ((Optional) this.datawatcher.get(EntityEnderman.d)).orElse(null);
     }
 
     @Override
@@ -420,11 +407,11 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
     }
 
     public boolean eN() {
-        return (Boolean) this.datawatcher.get(EntityEnderman.bo);
+        return this.datawatcher.get(EntityEnderman.bo);
     }
 
     public boolean eO() {
-        return (Boolean) this.datawatcher.get(EntityEnderman.bp);
+        return this.datawatcher.get(EntityEnderman.bp);
     }
 
     public void eP() {
@@ -467,7 +454,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
             MovingObjectPositionBlock movingobjectpositionblock = world.rayTrace(new RayTrace(vec3d, vec3d1, RayTrace.BlockCollisionOption.OUTLINE, RayTrace.FluidCollisionOption.NONE, this.enderman));
             boolean flag = movingobjectpositionblock.getBlockPosition().equals(blockposition);
 
-            if (block.a((Tag) TagsBlock.ENDERMAN_HOLDABLE) && flag) {
+            if (block.a(TagsBlock.ENDERMAN_HOLDABLE) && flag) {
                 // CraftBukkit start - Pickup event
                 if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.enderman, blockposition, Blocks.AIR.getBlockData()).isCancelled()) {
                     world.a(blockposition, false);
@@ -509,12 +496,12 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
             IBlockData iblockdata2 = this.a.getCarried();
 
             if (iblockdata2 != null) {
-                iblockdata2 = Block.b(iblockdata2, (GeneratorAccess) this.a.world, blockposition);
+                iblockdata2 = Block.b(iblockdata2, this.a.world, blockposition);
                 if (this.a(world, blockposition, iblockdata2, iblockdata, iblockdata1, blockposition1)) {
                     // CraftBukkit start - Place event
                     if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.a, blockposition, iblockdata2).isCancelled()) {
                     world.setTypeAndData(blockposition, iblockdata2, 3);
-                    this.a.setCarried((IBlockData) null);
+                    this.a.setCarried(null);
                     }
                     // CraftBukkit end
                 }
@@ -523,7 +510,9 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
         }
 
         private boolean a(World world, BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, IBlockData iblockdata2, BlockPosition blockposition1) {
-            return iblockdata1.isAir() && !iblockdata2.isAir() && !iblockdata2.a(Blocks.BEDROCK) && iblockdata2.r(world, blockposition1) && iblockdata.canPlace(world, blockposition) && world.getEntities(this.a, AxisAlignedBB.a(Vec3D.b((BaseBlockPosition) blockposition))).isEmpty();
+            try (var XUI = world.getEntities(this.a, AxisAlignedBB.a(Vec3D.b(blockposition)))) {
+                return iblockdata1.isAir() && !iblockdata2.isAir() && !iblockdata2.a(Blocks.BEDROCK) && iblockdata2.r(world, blockposition1) && iblockdata.canPlace(world, blockposition) && XUI.isEmpty();
+            }
         }
     }
 
@@ -543,7 +532,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
             if (!(this.b instanceof EntityHuman)) {
                 return false;
             } else {
-                double d0 = this.b.h((Entity) this.a);
+                double d0 = this.b.h(this.a);
 
                 return d0 > 256.0D ? false : this.a.g((EntityHuman) this.b);
             }
@@ -579,7 +568,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
 
         @Override
         public boolean a() {
-            this.j = this.i.world.a(this.m, (EntityLiving) this.i);
+            this.j = this.i.world.a(this.m, this.i);
             return this.j != null;
         }
 
@@ -602,7 +591,7 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
                 if (!this.i.g(this.j)) {
                     return false;
                 } else {
-                    this.i.a((Entity) this.j, 10.0F, 10.0F);
+                    this.i.a(this.j, 10.0F, 10.0F);
                     return true;
                 }
             } else {
@@ -625,12 +614,12 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
             } else {
                 if (this.c != null && !this.i.isPassenger()) {
                     if (this.i.g((EntityHuman) this.c)) {
-                        if (this.c.h((Entity) this.i) < 16.0D && this.getEnderman().tryEscape(EndermanEscapeEvent.Reason.STARE)) { // Paper
+                        if (this.c.h(this.i) < 16.0D && this.getEnderman().tryEscape(EndermanEscapeEvent.Reason.STARE)) { // Paper
                             this.i.eL();
                         }
 
                         this.l = 0;
-                    } else if (this.c.h((Entity) this.i) > 256.0D && this.l++ >= 30 && this.i.a((Entity) this.c)) {
+                    } else if (this.c.h(this.i) > 256.0D && this.l++ >= 30 && this.i.a(this.c)) {
                         this.l = 0;
                     }
                 }

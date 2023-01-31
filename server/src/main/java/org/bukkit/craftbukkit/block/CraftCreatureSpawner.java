@@ -10,10 +10,9 @@ import net.minecraft.world.level.block.entity.TileEntityMobSpawner;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.EntityType;
-// Paper start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 // Paper end
 

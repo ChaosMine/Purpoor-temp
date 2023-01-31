@@ -21,7 +21,7 @@ public class PacketPlayInSetCommandBlock implements Packet<PacketListenerPlayIn>
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
         this.a = packetdataserializer.e();
         this.b = packetdataserializer.e(32767);
-        this.f = (TileEntityCommand.Type) packetdataserializer.a(TileEntityCommand.Type.class);
+        this.f = packetdataserializer.readEnum(TileEntityCommand.Type.VALUES);
         byte b0 = packetdataserializer.readByte();
 
         this.c = (b0 & 1) != 0;
@@ -33,7 +33,7 @@ public class PacketPlayInSetCommandBlock implements Packet<PacketListenerPlayIn>
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.a(this.a);
         packetdataserializer.a(this.b);
-        packetdataserializer.a((Enum) this.f);
+        packetdataserializer.writeEnum((Enum) this.f);
         int i = 0;
 
         if (this.c) {

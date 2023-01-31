@@ -2,16 +2,7 @@ package net.minecraft.world.level.chunk;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import io.papermc.paper.event.world.StructureLocateEvent; // Paper - Add import due to naming conflict.
-import java.util.BitSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
-
+import io.papermc.paper.event.world.StructureLocateEvent;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
@@ -25,23 +16,9 @@ import net.minecraft.network.protocol.game.PacketDebug;
 import net.minecraft.server.level.RegionLimitedWorldAccess;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EnumCreatureType;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.GeneratorAccessSeed;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.biome.BiomeBase;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.BiomeSettingsGeneration;
-import net.minecraft.world.level.biome.BiomeSettingsMobs;
-import net.minecraft.world.level.biome.WorldChunkManager;
-import net.minecraft.world.level.levelgen.ChunkGeneratorAbstract;
-import net.minecraft.world.level.levelgen.ChunkProviderDebug;
-import net.minecraft.world.level.levelgen.ChunkProviderFlat;
-import net.minecraft.world.level.levelgen.HeightMap;
-import net.minecraft.world.level.levelgen.SeededRandom;
-import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.WorldGenStage;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.WorldGenCarverWrapper;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
@@ -49,6 +26,14 @@ import net.minecraft.world.level.levelgen.feature.configurations.StructureSettin
 import net.minecraft.world.level.levelgen.feature.configurations.StructureSettingsStronghold;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
+
+import javax.annotation.Nullable;
+import java.util.BitSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class ChunkGenerator {
 

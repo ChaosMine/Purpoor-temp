@@ -1,51 +1,39 @@
 package net.minecraft.server.level;
 
-import java.util.Objects;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
-import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreak;
-import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
-import net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo;
+import net.minecraft.network.protocol.game.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.ITileInventory;
 import net.minecraft.world.InteractionResultWrapper;
+import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemBisected;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.EnumGamemode;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockCommand;
-import net.minecraft.world.level.block.BlockFlowerPot;
-import net.minecraft.world.level.block.BlockJigsaw;
-import net.minecraft.world.level.block.BlockStructure;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.block.state.properties.BlockPropertyDoubleBlockHalf;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import java.util.ArrayList;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.item.ItemBisected;
-import net.minecraft.world.level.block.BlockCake;
-import net.minecraft.world.level.block.BlockDoor;
-import net.minecraft.world.level.block.BlockTrapdoor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.BlockPropertyDoubleBlockHalf;
 import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.Objects;
 // CraftBukkit end
 
 public class PlayerInteractManager {
@@ -431,7 +419,7 @@ public class PlayerInteractManager {
             } else {
                 // CraftBukkit start
                 org.bukkit.block.BlockState state = bblock.getState();
-                world.captureDrops = new ArrayList<>();
+                world.captureDrops = new ObjectArrayList<>();
                 // CraftBukkit end
                 block.a((World) this.world, blockposition, iblockdata, (EntityHuman) this.player);
                 boolean flag = this.world.a(blockposition, false);

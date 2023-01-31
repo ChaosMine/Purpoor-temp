@@ -3,7 +3,9 @@ package com.destroystokyo.paper.util.map;
 import com.destroystokyo.paper.util.concurrent.WeakSeqLock;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectBidirectionalIterator;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -132,7 +134,7 @@ public class QueuedChangesMapLong2Object<V> {
     }
 
     public List<V> getUpdatingValuesCopy() {
-        return new ArrayList<>(this.updatingMap.values());
+        return new ObjectArrayList<>(this.updatingMap.values());
     }
 
     // unlike mojang's impl this cannot be used async since it's not a view of an immutable map
@@ -141,7 +143,7 @@ public class QueuedChangesMapLong2Object<V> {
     }
 
     public List<V> getVisibleValuesCopy() {
-        return new ArrayList<>(this.visibleMap.values());
+        return new ObjectArrayList<>(this.visibleMap.values());
     }
 
     public boolean performUpdates() {

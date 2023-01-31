@@ -1,9 +1,7 @@
 package net.minecraft.world.level.portal;
 
-import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.phys.Vec3D;
 import org.bukkit.craftbukkit.event.CraftPortalEvent;
 // CraftBukkit end
 

@@ -1,10 +1,10 @@
 package org.bukkit.craftbukkit.entity;
 
 import net.minecraft.world.entity.vehicle.EntityBoat;
-import org.bukkit.Material; // Paper
+import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.util.CraftMagicNumbers; // Paper
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.EntityType;
 

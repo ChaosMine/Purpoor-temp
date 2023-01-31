@@ -1,7 +1,5 @@
 package net.minecraft.world.inventory;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
@@ -11,8 +9,10 @@ import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 
-import org.bukkit.craftbukkit.inventory.CraftInventoryView; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ContainerSmithing extends ContainerAnvilAbstract {
 

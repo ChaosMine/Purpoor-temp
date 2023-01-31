@@ -1,5 +1,6 @@
 package net.minecraft.world.inventory;
 
+import io.papermc.paper.event.player.PlayerLoomPatternSelectEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.sounds.SoundCategory;
@@ -8,21 +9,13 @@ import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.item.ItemBanner;
-import net.minecraft.world.item.ItemBannerPattern;
-import net.minecraft.world.item.ItemDye;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.EnumBannerPatternType;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.inventory.CraftInventoryLoom;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
-// CraftBukkit end
-import io.papermc.paper.event.player.PlayerLoomPatternSelectEvent; // Paper
 
 public class ContainerLoom extends Container {
 

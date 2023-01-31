@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.level.storage.loot.LootCollector;
 import net.minecraft.world.level.storage.loot.LootSerializer;
@@ -13,6 +11,9 @@ import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionUser;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class LootEntryAbstract implements LootEntryChildren {
 

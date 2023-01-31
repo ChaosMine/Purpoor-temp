@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 import com.mojang.serialization.DataResult;
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -18,8 +17,11 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public class ItemCompass extends Item implements ItemVanishable {
 
@@ -46,6 +48,8 @@ public class ItemCompass extends Item implements ItemVanishable {
 
     @Override
     public void a(ItemStack itemstack, World world, Entity entity, int i, boolean flag) {
+        if (PurpurConfig.disableCompassTicking) return;
+
         if (!world.isClientSide) {
             if (d(itemstack)) {
                 NBTTagCompound nbttagcompound = itemstack.getOrCreateTag();

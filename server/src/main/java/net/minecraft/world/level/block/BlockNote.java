@@ -14,12 +14,7 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyInstrument;
-import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
-import net.minecraft.world.level.block.state.properties.BlockStateInteger;
-import net.minecraft.world.level.block.state.properties.IBlockState;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 
 public class BlockNote extends Block {

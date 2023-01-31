@@ -5,14 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.IntStream;
-import javax.annotation.Nullable;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
@@ -21,12 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.RegionLimitedWorldAccess;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EnumCreatureType;
-import net.minecraft.world.level.BlockColumn;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.SpawnerCreature;
-import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.biome.BiomeSettingsMobs;
 import net.minecraft.world.level.biome.WorldChunkManager;
@@ -44,11 +31,15 @@ import net.minecraft.world.level.levelgen.structure.StructureBoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.WorldGenFeaturePillagerOutpostPoolPiece;
-import net.minecraft.world.level.levelgen.synth.NoiseGenerator;
-import net.minecraft.world.level.levelgen.synth.NoiseGenerator3;
-import net.minecraft.world.level.levelgen.synth.NoiseGenerator3Handler;
-import net.minecraft.world.level.levelgen.synth.NoiseGeneratorOctaves;
-import net.minecraft.world.level.levelgen.synth.NoiseGeneratorPerlin;
+import net.minecraft.world.level.levelgen.synth.*;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public final class ChunkGeneratorAbstract extends ChunkGenerator {
 

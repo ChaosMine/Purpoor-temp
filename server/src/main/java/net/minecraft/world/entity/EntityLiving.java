@@ -1,6 +1,7 @@
 package net.minecraft.world.entity;
 
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent; // Paper
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -11,16 +12,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import io.papermc.paper.event.entity.EntityMoveEvent;
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.BlockUtil;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.commands.arguments.ArgumentAnchor;
@@ -31,16 +23,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleParamBlock;
 import net.minecraft.core.particles.ParticleParamItem;
 import net.minecraft.core.particles.Particles;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
-import net.minecraft.network.protocol.game.PacketPlayOutCollect;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
@@ -67,14 +52,9 @@ import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.BehaviorController;
-import net.minecraft.world.entity.ai.attributes.AttributeBase;
-import net.minecraft.world.entity.ai.attributes.AttributeDefaults;
-import net.minecraft.world.entity.ai.attributes.AttributeMapBase;
-import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeProvider;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
+import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntityBird;
 import net.minecraft.world.entity.animal.EntityWolf;
 import net.minecraft.world.entity.boss.wither.EntityWither;
@@ -82,12 +62,7 @@ import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityArrow;
 import net.minecraft.world.food.FoodInfo;
-import net.minecraft.world.item.EnumAnimation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemArmor;
-import net.minecraft.world.item.ItemElytra;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.enchantment.EnchantmentFrostWalker;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
@@ -95,12 +70,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockBed;
-import net.minecraft.world.level.block.BlockLadder;
-import net.minecraft.world.level.block.BlockTrapdoor;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundEffectType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
@@ -113,30 +83,21 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.scores.ScoreboardTeam;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import com.google.common.base.Function;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.world.entity.animal.EntityAnimal;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.attribute.CraftAttributeMap;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.ArrowBodyCountChangeEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityResurrectEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 
@@ -230,7 +191,7 @@ public abstract class EntityLiving extends Entity {
     public int maxAirTicks = 300;
     public float safeFallDistance = 3.0F; // Purpur
     public boolean forceDrops;
-    public ArrayList<org.bukkit.inventory.ItemStack> drops = new ArrayList<org.bukkit.inventory.ItemStack>();
+    public ObjectArrayList<org.bukkit.inventory.ItemStack> drops = new ObjectArrayList<org.bukkit.inventory.ItemStack>();
     public final org.bukkit.craftbukkit.attribute.CraftAttributeMap craftAttributes;
     public boolean collides = true;
     public Set<UUID> collidableExemptions = new HashSet<>();
@@ -1639,7 +1600,7 @@ public abstract class EntityLiving extends Entity {
         // CraftBukkit start - Call death event
         org.bukkit.event.entity.EntityDeathEvent deathEvent = CraftEventFactory.callEntityDeathEvent(this, this.drops); // Paper
         this.postDeathDropItems(deathEvent); // Paper
-        this.drops = new ArrayList<>();
+        this.drops = new ObjectArrayList<>();
         // CraftBukkit end
 
         // this.dropInventory();// CraftBukkit - moved up
@@ -2690,37 +2651,10 @@ public abstract class EntityLiving extends Entity {
         this.aK += (f3 - this.aK) * 0.3F;
         f2 = this.f(f1, f2);
 
-        while (this.yaw - this.lastYaw < -180.0F) {
-            this.lastYaw -= 360.0F;
-        }
-
-        while (this.yaw - this.lastYaw >= 180.0F) {
-            this.lastYaw += 360.0F;
-        }
-
-        while (this.aA - this.aB < -180.0F) {
-            this.aB -= 360.0F;
-        }
-
-        while (this.aA - this.aB >= 180.0F) {
-            this.aB += 360.0F;
-        }
-
-        while (this.pitch - this.lastPitch < -180.0F) {
-            this.lastPitch -= 360.0F;
-        }
-
-        while (this.pitch - this.lastPitch >= 180.0F) {
-            this.lastPitch += 360.0F;
-        }
-
-        while (this.aC - this.aD < -180.0F) {
-            this.aD -= 360.0F;
-        }
-
-        while (this.aC - this.aD >= 180.0F) {
-            this.aD += 360.0F;
-        }
+        this.lastYaw += Math.round((this.yaw - this.lastYaw) / 360.0F) * 360.0F;
+        this.aB += Math.round((this.aA - this.aB) / 360.0F) * 360.0F;
+        this.lastPitch += Math.round((this.pitch - this.lastPitch) / 360.0F) * 360.0F;
+        this.aD += Math.round((this.aC - this.aD) / 360.0F) * 360.0F;
 
         this.aL += f2;
         if (this.isGliding()) {
@@ -3073,6 +3007,8 @@ public abstract class EntityLiving extends Entity {
     protected void doTick() {}
 
     protected void collideNearby() {
+        if (PurpurConfig.disableEntityCollisions) return;
+
         // Paper - start don't run getEntities if we're not going to use its result
         int i = this.world.getGameRules().getInt(GameRules.MAX_ENTITY_CRAMMING);
         if (i <= 0 && world.paperConfig.maxCollisionsPerEntity <= 0) {
@@ -3120,21 +3056,21 @@ public abstract class EntityLiving extends Entity {
 
     protected void a(AxisAlignedBB axisalignedbb, AxisAlignedBB axisalignedbb1) {
         AxisAlignedBB axisalignedbb2 = axisalignedbb.b(axisalignedbb1);
-        List<Entity> list = this.world.getEntities(this, axisalignedbb2);
+        try (var list = this.world.getEntities(this, axisalignedbb2)) {
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); ++i) {
+                    Entity entity = (Entity) list.get(i);
 
-        if (!list.isEmpty()) {
-            for (int i = 0; i < list.size(); ++i) {
-                Entity entity = (Entity) list.get(i);
-
-                if (entity instanceof EntityLiving) {
-                    this.g((EntityLiving) entity);
-                    this.bf = 0;
-                    this.setMot(this.getMot().a(-0.2D));
-                    break;
+                    if (entity instanceof EntityLiving) {
+                        this.g((EntityLiving) entity);
+                        this.bf = 0;
+                        this.setMot(this.getMot().a(-0.2D));
+                        break;
+                    }
                 }
+            } else if (this.positionChanged) {
+                this.bf = 0;
             }
-        } else if (this.positionChanged) {
-            this.bf = 0;
         }
 
         if (!this.world.isClientSide && this.bf <= 0) {
@@ -3847,21 +3783,22 @@ public abstract class EntityLiving extends Entity {
         Vec3D direction = this.getLookDirection();
         Vec3D end = start.add(direction.x * maxDistance, direction.y * maxDistance, direction.z * maxDistance);
 
-        List<Entity> entityList = world.getEntities(this, getBoundingBox().expand(direction.x * maxDistance, direction.y * maxDistance, direction.z * maxDistance).grow(1.0D, 1.0D, 1.0D), IEntitySelector.canAITarget().and(Entity::isInteractable));
-
-        double distance = 0.0D;
         MovingObjectPositionEntity result = null;
 
-        for (Entity entity : entityList) {
-            AxisAlignedBB aabb = entity.getBoundingBox().grow((double) entity.getCollisionBorderSize());
-            Optional<Vec3D> rayTraceResult = aabb.calculateIntercept(start, end);
+        try (var entityList = world.getEntities(this, getBoundingBox().expand(direction.x * maxDistance, direction.y * maxDistance, direction.z * maxDistance).grow(1.0D, 1.0D, 1.0D), IEntitySelector.canAITarget().and(Entity::isInteractable))) {
+            double distance = 0.0D;
 
-            if (rayTraceResult.isPresent()) {
-                Vec3D rayTrace = rayTraceResult.get();
-                double distanceTo = start.distanceSquared(rayTrace);
-                if (distanceTo < distance || distance == 0.0D) {
-                    result = new MovingObjectPositionEntity(entity, rayTrace);
-                    distance = distanceTo;
+            for (Entity entity : entityList) {
+                AxisAlignedBB aabb = entity.getBoundingBox().grow(entity.getCollisionBorderSize());
+                Optional<Vec3D> rayTraceResult = aabb.calculateIntercept(start, end);
+
+                if (rayTraceResult.isPresent()) {
+                    Vec3D rayTrace = rayTraceResult.get();
+                    double distanceTo = start.distanceSquared(rayTrace);
+                    if (distanceTo < distance || distance == 0.0D) {
+                        result = new MovingObjectPositionEntity(entity, rayTrace);
+                        distance = distanceTo;
+                    }
                 }
             }
         }

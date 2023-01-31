@@ -1,15 +1,16 @@
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
-import java.util.List;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.Entity;
 
+import java.io.IOException;
+import java.util.List;
+
 public class PacketPlayOutMount implements Packet<PacketListenerPlayOut> {
 
-    private int a;
-    private int[] b;
+    public int a;
+    public int[] b;
 
     public PacketPlayOutMount() {}
 

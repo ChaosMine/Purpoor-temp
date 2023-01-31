@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.EnumSet;
-import javax.annotation.Nullable;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -13,6 +11,9 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.level.World;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public abstract class EntityIllagerWizard extends EntityIllagerAbstract {
 

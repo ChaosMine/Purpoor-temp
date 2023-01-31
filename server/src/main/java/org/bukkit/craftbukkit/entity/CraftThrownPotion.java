@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.projectile.EntityPotion;
 import net.minecraft.world.item.alchemy.PotionUtil;
@@ -14,6 +13,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.Collection;
 
 public class CraftThrownPotion extends CraftProjectile implements ThrownPotion {
     public CraftThrownPotion(CraftServer server, EntityPotion entity) {

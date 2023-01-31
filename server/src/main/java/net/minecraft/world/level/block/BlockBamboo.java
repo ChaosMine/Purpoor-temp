@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -17,16 +15,15 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyBambooSize;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
-import net.minecraft.world.level.block.state.properties.BlockStateInteger;
-import net.minecraft.world.level.block.state.properties.IBlockState;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class BlockBamboo extends Block implements IBlockFragilePlantElement {
 

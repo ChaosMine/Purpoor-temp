@@ -1,19 +1,19 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import com.google.common.collect.Lists;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.entity.decoration.Paintings;
 import org.bukkit.craftbukkit.CraftArt;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
+
+import java.util.*;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class ArtTest extends AbstractTestingBase {
     private static final int UNIT_MULTIPLIER = 16;

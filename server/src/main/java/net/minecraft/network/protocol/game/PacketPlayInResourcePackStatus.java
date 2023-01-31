@@ -3,6 +3,7 @@ package net.minecraft.network.protocol.game;
 import java.io.IOException;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class PacketPlayInResourcePackStatus implements Packet<PacketListenerPlayIn> {
 
@@ -16,12 +17,12 @@ public class PacketPlayInResourcePackStatus implements Packet<PacketListenerPlay
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.status = (PacketPlayInResourcePackStatus.EnumResourcePackStatus) packetdataserializer.a(PacketPlayInResourcePackStatus.EnumResourcePackStatus.class);
+        this.status = packetdataserializer.readEnum(EnumResourcePackStatus.VALUES);
     }
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.a((Enum) this.status);
+        packetdataserializer.writeEnum((Enum) this.status);
     }
 
     public void a(PacketListenerPlayIn packetlistenerplayin) {
@@ -31,6 +32,8 @@ public class PacketPlayInResourcePackStatus implements Packet<PacketListenerPlay
     public static enum EnumResourcePackStatus {
 
         SUCCESSFULLY_LOADED, DECLINED, FAILED_DOWNLOAD, ACCEPTED;
+
+        public static final EnumResourcePackStatus @Unmodifiable [] VALUES = values();
 
         private EnumResourcePackStatus() {}
     }

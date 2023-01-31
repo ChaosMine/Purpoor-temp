@@ -1,8 +1,6 @@
 package net.minecraft.world.entity;
 
 import com.google.common.base.Predicates;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.util.MathHelper;
@@ -11,6 +9,10 @@ import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.ScoreboardTeamBase;
+import net.pl3x.purpur.PurpurConfig;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public final class IEntitySelector {
 
@@ -58,6 +60,8 @@ public final class IEntitySelector {
     }
 
     public static Predicate<Entity> pushable(Entity entity, boolean ignoreClimbing) {
+        if (PurpurConfig.disableTeamCollisionRule) return __ -> true;
+
         // Paper end
         ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
         ScoreboardTeamBase.EnumTeamPush scoreboardteambase_enumteampush = scoreboardteambase == null ? ScoreboardTeamBase.EnumTeamPush.ALWAYS : scoreboardteambase.getCollisionRule();

@@ -3,9 +3,9 @@ package net.minecraft.world.level.biome;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.HashCommon; // Paper
-import java.util.List;
-
+import dev.kamillaova.paper.util.NettyUtil;
+import io.netty.util.concurrent.FastThreadLocal;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.RegistryLookupCodec;
@@ -13,6 +13,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.synth.NoiseGenerator3Handler;
+
+import java.util.List;
+import java.util.Map;
+
+import static dev.kamillaova.paper.util.NettyUtil.fastThreadLocal;
 
 public class WorldChunkManagerTheEnd extends WorldChunkManager {
 
@@ -39,7 +44,7 @@ public class WorldChunkManagerTheEnd extends WorldChunkManager {
             java.util.Arrays.fill(keys, Long.MIN_VALUE);
         }
     }
-    private static final ThreadLocal<java.util.Map<NoiseGenerator3Handler, NoiseCache>> noiseCache = ThreadLocal.withInitial(java.util.WeakHashMap::new);
+    private static final FastThreadLocal<Map<NoiseGenerator3Handler, NoiseCache>> noiseCache = fastThreadLocal(java.util.WeakHashMap::new);
     // Paper end
 
     public WorldChunkManagerTheEnd(IRegistry<BiomeBase> iregistry, long i) {

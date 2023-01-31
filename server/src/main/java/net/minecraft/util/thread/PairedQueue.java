@@ -1,13 +1,11 @@
 package net.minecraft.util.thread;
 
 import com.google.common.collect.Queues;
-import java.util.Collection;
-import java.util.Iterator;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.annotation.Nullable;
 
 public interface PairedQueue<T, F> {
 
@@ -24,7 +22,7 @@ public interface PairedQueue<T, F> {
 
         public a(int i) {
             // Paper start - remove streams
-            this.a = new java.util.ArrayList<>(i); // queues
+            this.a = new ObjectArrayList<>(i); // queues
             for (int j = 0; j < i; ++j) {
                 this.getQueues().add(Queues.newConcurrentLinkedQueue());
             }

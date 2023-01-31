@@ -1,25 +1,23 @@
 package net.pl3x.purpur;
 
 import com.destroystokyo.paper.PaperConfig;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.IRegistry;
+import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.item.EnumColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.resources.MinecraftKey;
 import org.apache.commons.lang3.BooleanUtils;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
@@ -132,7 +130,7 @@ public class PurpurWorldConfig {
     public double minecartControllableHopBoost = 0.5D;
     public boolean minecartControllableFallDamage = true;
     public double minecartControllableBaseSpeed = 0.1D;
-    public Map<Block, Double> minecartControllableBlockSpeeds = new HashMap<>();
+    public Object2DoubleMap<Block> minecartControllableBlockSpeeds = new Object2DoubleOpenHashMap<>();
     public double poweredRailBoostModifier = 0.06;
     private void minecartSettings() {
         if (PurpurConfig.version < 12) {
@@ -203,10 +201,10 @@ public class PurpurWorldConfig {
         entityLeftHandedChance = (float) getDouble("gameplay-mechanics.entity-left-handed-chance", entityLeftHandedChance);
     }
 
-    public List<Item> itemImmuneToCactus = new ArrayList<>();
-    public List<Item> itemImmuneToExplosion = new ArrayList<>();
-    public List<Item> itemImmuneToFire = new ArrayList<>();
-    public List<Item> itemImmuneToLightning = new ArrayList<>();
+    public List<Item> itemImmuneToCactus = new ObjectArrayList<>();
+    public List<Item> itemImmuneToExplosion = new ObjectArrayList<>();
+    public List<Item> itemImmuneToFire = new ObjectArrayList<>();
+    public List<Item> itemImmuneToLightning = new ObjectArrayList<>();
     public boolean dontRunWithScissors = false;
     public double scissorsRunningDamage = 1D;
     public float enderPearlDamage = 5.0F;
@@ -215,7 +213,7 @@ public class PurpurWorldConfig {
     public float enderPearlEndermiteChance = 0.05F;
     private void itemSettings() {
         itemImmuneToCactus.clear();
-        getList("gameplay-mechanics.item.immune.cactus", new ArrayList<>()).forEach(key -> {
+        getList("gameplay-mechanics.item.immune.cactus", new ObjectArrayList<>()).forEach(key -> {
             if (key.toString().equals("*")) {
                 IRegistry.ITEM.g().filter(item -> item != Items.AIR).forEach((item) -> itemImmuneToCactus.add(item));
                 return;
@@ -224,7 +222,7 @@ public class PurpurWorldConfig {
             if (item != Items.AIR) itemImmuneToCactus.add(item);
         });
         itemImmuneToExplosion.clear();
-        getList("gameplay-mechanics.item.immune.explosion", new ArrayList<>()).forEach(key -> {
+        getList("gameplay-mechanics.item.immune.explosion", new ObjectArrayList<>()).forEach(key -> {
             if (key.toString().equals("*")) {
                 IRegistry.ITEM.g().filter(item -> item != Items.AIR).forEach((item) -> itemImmuneToExplosion.add(item));
                 return;
@@ -233,7 +231,7 @@ public class PurpurWorldConfig {
             if (item != Items.AIR) itemImmuneToExplosion.add(item);
         });
         itemImmuneToFire.clear();
-        getList("gameplay-mechanics.item.immune.fire", new ArrayList<>()).forEach(key -> {
+        getList("gameplay-mechanics.item.immune.fire", new ObjectArrayList<>()).forEach(key -> {
             if (key.toString().equals("*")) {
                 IRegistry.ITEM.g().filter(item -> item != Items.AIR).forEach((item) -> itemImmuneToFire.add(item));
                 return;
@@ -242,7 +240,7 @@ public class PurpurWorldConfig {
             if (item != Items.AIR) itemImmuneToFire.add(item);
         });
         itemImmuneToLightning.clear();
-        getList("gameplay-mechanics.item.immune.lightning", new ArrayList<>()).forEach(key -> {
+        getList("gameplay-mechanics.item.immune.lightning", new ObjectArrayList<>()).forEach(key -> {
             if (key.toString().equals("*")) {
                 IRegistry.ITEM.g().filter(item -> item != Items.AIR).forEach((item) -> itemImmuneToLightning.add(item));
                 return;
@@ -409,13 +407,6 @@ public class PurpurWorldConfig {
         elytraDamagePerTridentBoost = getInt("gameplay-mechanics.elytra.damage-per-boost.trident", elytraDamagePerTridentBoost);
     }
 
-    public String playerDeathExpDropEquation = "expLevel * 7";
-    public int playerDeathExpDropMax = 100;
-    private void playerDeathExpSettings() {
-        playerDeathExpDropEquation = getString("gameplay-mechanics.player.exp-dropped-on-death.equation", playerDeathExpDropEquation);
-        playerDeathExpDropMax = getInt("gameplay-mechanics.player.exp-dropped-on-death.maximum", playerDeathExpDropMax);
-    }
-
     public int playerNetheriteFireResistanceDuration = 0;
     public int playerNetheriteFireResistanceAmplifier = 0;
     public boolean playerNetheriteFireResistanceAmbient = false;
@@ -450,7 +441,7 @@ public class PurpurWorldConfig {
                 PurpurConfig.config.set("world-settings.default.blocks.no-tick", null);
             }
         }
-        getList("blocks.no-random-tick", new ArrayList<>()).forEach(key -> {
+        getList("blocks.no-random-tick", new ObjectArrayList<>()).forEach(key -> {
             Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
             if (!block.getBlockData().isAir()) {
                 noRandomTickBlocks.add(block);
@@ -473,9 +464,9 @@ public class PurpurWorldConfig {
         totemOfUndyingWorksInInventory = getBoolean("gameplay-mechanics.player.totem-of-undying-works-in-inventory", totemOfUndyingWorksInInventory);
     }
 
-    public List<Block> shovelTurnsBlockToGrassPath = new ArrayList<>();
+    public List<Block> shovelTurnsBlockToGrassPath = new ObjectArrayList<>();
     private void shovelSettings() {
-        getList("gameplay-mechanics.shovel-turns-block-to-grass-path", new ArrayList<String>(){{
+        getList("gameplay-mechanics.shovel-turns-block-to-grass-path", new ObjectArrayList<String>(){{
             add("minecraft:grass_block");
         }}).forEach(key -> {
             Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
@@ -485,17 +476,17 @@ public class PurpurWorldConfig {
 
     public boolean silkTouchEnabled = false;
     public String silkTouchSpawnerName = "Spawner";
-    public List<String> silkTouchSpawnerLore = new ArrayList<>();
-    public List<Item> silkTouchTools = new ArrayList<>();
+    public List<String> silkTouchSpawnerLore = new ObjectArrayList<>();
+    public List<Item> silkTouchTools = new ObjectArrayList<>();
     private void silkTouchSettings() {
         silkTouchEnabled = getBoolean("gameplay-mechanics.silk-touch.enabled", silkTouchEnabled);
         silkTouchSpawnerName = getString("gameplay-mechanics.silk-touch.spawner-name", silkTouchSpawnerName);
         silkTouchSpawnerLore.clear();
-        getList("gameplay-mechanics.silk-touch.spawner-lore", new ArrayList<String>(){{
+        getList("gameplay-mechanics.silk-touch.spawner-lore", new ObjectArrayList<String>(){{
             add("Spawns a {mob}");
         }}).forEach(line -> silkTouchSpawnerLore.add(line.toString()));
         silkTouchTools.clear();
-        getList("gameplay-mechanics.silk-touch.tools", new ArrayList<String>(){{
+        getList("gameplay-mechanics.silk-touch.tools", new ObjectArrayList<String>(){{
             add("minecraft:iron_pickaxe");
             add("minecraft:golden_pickaxe");
             add("minecraft:diamond_pickaxe");
@@ -538,9 +529,9 @@ public class PurpurWorldConfig {
         }
     }
 
-    public List<Block> doorRequiresRedstone = new ArrayList<>();
+    public List<Block> doorRequiresRedstone = new ObjectArrayList<>();
     private void doorSettings() {
-        getList("blocks.door.requires-redstone", new ArrayList<String>()).forEach(key -> {
+        getList("blocks.door.requires-redstone", new ObjectArrayList<String>()).forEach(key -> {
             Block block = IRegistry.BLOCK.get(new MinecraftKey(key.toString()));
             if (!block.getBlockData().isAir()) {
                 doorRequiresRedstone.add(block);
@@ -1294,17 +1285,6 @@ public class PurpurWorldConfig {
 
     public boolean magmaCubeRidable = false;
     public boolean magmaCubeRidableInWater = false;
-    public String magmaCubeMaxHealth = "size * size";
-    private void magmaCubeSettings() {
-        magmaCubeRidable = getBoolean("mobs.magma_cube.ridable", magmaCubeRidable);
-        magmaCubeRidableInWater = getBoolean("mobs.magma_cube.ridable-in-water", magmaCubeRidableInWater);
-        if (PurpurConfig.version < 10) {
-            String oldValue = getString("mobs.magma_cube.attributes.max-health", magmaCubeMaxHealth);
-            set("mobs.magma_cube.attributes.max-health", null);
-            set("mobs.magma_cube.attributes.max_health", oldValue);
-        }
-        magmaCubeMaxHealth = getString("mobs.magma_cube.attributes.max_health", magmaCubeMaxHealth);
-    }
 
     public boolean mooshroomRidable = false;
     public boolean mooshroomRidableInWater = false;
@@ -1581,7 +1561,7 @@ public class PurpurWorldConfig {
     public boolean ravagerRidableInWater = false;
     public boolean ravagerBypassMobGriefing = false;
     public double ravagerMaxHealth = 100.0D;
-    public List<Block> ravagerGriefableBlocks = new ArrayList<>();
+    public List<Block> ravagerGriefableBlocks = new ObjectArrayList<>();
     private void ravagerSettings() {
         ravagerRidable = getBoolean("mobs.ravager.ridable", ravagerRidable);
         ravagerRidableInWater = getBoolean("mobs.ravager.ridable-in-water", ravagerRidableInWater);
@@ -1592,7 +1572,7 @@ public class PurpurWorldConfig {
             set("mobs.ravager.attributes.max_health", oldValue);
         }
         ravagerMaxHealth = getDouble("mobs.ravager.attributes.max_health", ravagerMaxHealth);
-        getList("mobs.ravager.griefable-blocks", new ArrayList<String>(){{
+        getList("mobs.ravager.griefable-blocks", new ObjectArrayList<String>(){{
             add("minecraft:oak_leaves");
             add("minecraft:spruce_leaves");
             add("minecraft:birch_leaves");
@@ -1712,19 +1692,6 @@ public class PurpurWorldConfig {
 
     public boolean slimeRidable = false;
     public boolean slimeRidableInWater = false;
-    public String slimeMaxHealth = "size * size";
-    public Map<Integer, Double> slimeMaxHealthCache = new HashMap<>();
-    private void slimeSettings() {
-        slimeRidable = getBoolean("mobs.slime.ridable", slimeRidable);
-        slimeRidableInWater = getBoolean("mobs.slime.ridable-in-water", slimeRidableInWater);
-        if (PurpurConfig.version < 10) {
-            String oldValue = getString("mobs.slime.attributes.max-health", slimeMaxHealth);
-            set("mobs.slime.attributes.max-health", null);
-            set("mobs.slime.attributes.max_health", oldValue);
-        }
-        slimeMaxHealth = getString("mobs.slime.attributes.max_health", slimeMaxHealth);
-        slimeMaxHealthCache.clear();
-    }
 
     public boolean snowGolemRidable = false;
     public boolean snowGolemRidableInWater = false;

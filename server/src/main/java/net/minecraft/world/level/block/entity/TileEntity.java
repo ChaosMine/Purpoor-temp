@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.core.BlockPosition;
@@ -18,11 +17,11 @@ import net.minecraft.world.level.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Supplier;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer;
 import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.inventory.InventoryHolder;
+
+import javax.annotation.Nullable;
 // CraftBukkit end
 
 public abstract class TileEntity implements net.minecraft.server.KeyedObject { // Paper

@@ -1,6 +1,5 @@
 package net.minecraft.server.level;
 
-import net.minecraft.core.SectionPosition;
 import net.minecraft.world.level.lighting.LightEngineGraph;
 
 public abstract class LightEngineGraphSection extends LightEngineGraph {

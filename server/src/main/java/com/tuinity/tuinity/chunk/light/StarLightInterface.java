@@ -6,14 +6,15 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.ShortCollection;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.chunk.ILightAccess;
-import net.minecraft.world.level.lighting.LightEngineLayerEventListener;
 import net.minecraft.world.level.chunk.NibbleArray;
-import net.minecraft.core.SectionPosition;
+import net.minecraft.world.level.lighting.LightEngineLayerEventListener;
+
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Iterator;

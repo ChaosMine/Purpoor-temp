@@ -1,15 +1,15 @@
 package net.minecraft.world.entity.ai.sensing;
 
-import com.google.common.collect.Lists;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
 
 public class EntitySenses {
 
     private final EntityInsentient a;
-    private final List<Entity> b = Lists.newArrayList();
-    private final List<Entity> c = Lists.newArrayList();
+    private final ObjectSet<Entity> b = new ObjectOpenHashSet<>();
+    private final ObjectSet<Entity> c = new ObjectOpenHashSet<>();
 
     public EntitySenses(EntityInsentient entityinsentient) {
         this.a = entityinsentient;

@@ -1,22 +1,18 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import com.google.common.collect.Maps;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.StreamSupport;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.item.Item;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
+
+import java.util.*;
+import java.util.stream.StreamSupport;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 public class MaterialTest extends AbstractTestingBase {
 

@@ -1,31 +1,25 @@
 package net.minecraft.world.level.chunk.storage;
 
 import com.mojang.datafixers.DataFixer;
-import java.io.File;
-import java.io.IOException;
-// Paper start
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-// Paper end
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.PlayerChunkMap;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.levelgen.structure.PersistentStructureLegacy;
-import net.minecraft.world.level.storage.WorldPersistentData;
-
-// CraftBukkit start
-import net.minecraft.server.level.ChunkProviderServer;
-import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionManager;
+import net.minecraft.world.level.levelgen.structure.PersistentStructureLegacy;
+import net.minecraft.world.level.storage.WorldPersistentData;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.util.function.Supplier;
 // CraftBukkit end
 
 public class IChunkLoader implements AutoCloseable {

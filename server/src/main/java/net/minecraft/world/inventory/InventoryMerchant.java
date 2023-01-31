@@ -1,24 +1,24 @@
 package net.minecraft.world.inventory;
 
-import java.util.Iterator;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.IInventory;
+import net.minecraft.world.entity.npc.EntityVillager;
+import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.IMerchant;
 import net.minecraft.world.item.trading.MerchantRecipe;
 import net.minecraft.world.item.trading.MerchantRecipeList;
-
-// CraftBukkit start
-import java.util.List;
-import net.minecraft.world.entity.npc.EntityVillager;
-import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.entity.CraftAbstractVillager;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 // CraftBukkit end
 
 public class InventoryMerchant implements IInventory {
@@ -31,7 +31,7 @@ public class InventoryMerchant implements IInventory {
     private int e;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
 
     public List<ItemStack> getContents() {

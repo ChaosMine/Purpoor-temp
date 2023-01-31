@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.ai.goal.target;
 
-import javax.annotation.Nullable;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityInsentient;
@@ -12,8 +11,9 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
 import net.minecraft.world.scores.ScoreboardTeamBase;
+import org.bukkit.event.entity.EntityTargetEvent;
 
-import org.bukkit.event.entity.EntityTargetEvent; // CraftBukkit
+import javax.annotation.Nullable;
 
 public abstract class PathfinderGoalTarget extends PathfinderGoal {
 

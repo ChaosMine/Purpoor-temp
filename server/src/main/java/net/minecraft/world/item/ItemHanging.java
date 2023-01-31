@@ -12,8 +12,6 @@ import net.minecraft.world.entity.decoration.EntityPainting;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.World;
-
-// CraftBukkit start
 import org.bukkit.entity.Player;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 // CraftBukkit end

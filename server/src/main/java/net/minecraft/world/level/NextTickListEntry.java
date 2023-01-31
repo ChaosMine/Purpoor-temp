@@ -1,7 +1,8 @@
 package net.minecraft.world.level;
 
-import java.util.Comparator;
 import net.minecraft.core.BlockPosition;
+
+import java.util.Comparator;
 
 public class NextTickListEntry<T> {
 

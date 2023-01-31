@@ -1,7 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.ChestLock;
 import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -14,6 +13,9 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class CraftBeacon extends CraftBlockEntityState<TileEntityBeacon> implements Beacon {
 
@@ -32,7 +34,7 @@ public class CraftBeacon extends CraftBlockEntityState<TileEntityBeacon> impleme
             TileEntityBeacon beacon = (TileEntityBeacon) tileEntity;
 
             Collection<EntityHuman> nms = beacon.getHumansInRange();
-            Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
+            Collection<LivingEntity> bukkit = new ObjectArrayList<>(nms.size());
 
             for (EntityHuman human : nms) {
                 bukkit.add(human.getBukkitEntity());
@@ -42,7 +44,7 @@ public class CraftBeacon extends CraftBlockEntityState<TileEntityBeacon> impleme
         }
 
         // block is no longer a beacon
-        return new ArrayList<LivingEntity>();
+        return new ObjectArrayList<LivingEntity>();
     }
 
     @Override

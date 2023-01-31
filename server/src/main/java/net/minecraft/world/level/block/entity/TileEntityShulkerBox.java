@@ -1,8 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.List;
-import java.util.stream.IntStream;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,10 +26,12 @@ import net.minecraft.world.level.material.EnumPistonReaction;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.IntStream;
 // CraftBukkit end
 
 public class TileEntityShulkerBox extends TileEntityLootable implements IWorldInventory, ITickable {
@@ -47,7 +47,7 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
     private boolean m;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
     public boolean opened;
 
@@ -153,51 +153,51 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
         if (iblockdata.getBlock() instanceof BlockShulkerBox) {
             EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockShulkerBox.a);
             AxisAlignedBB axisalignedbb = this.c(enumdirection).a(this.position);
-            List<Entity> list = this.world.getEntities((Entity) null, axisalignedbb);
+            try (var list = this.world.getEntities((Entity) null, axisalignedbb)) {
+                if (!list.isEmpty()) {
+                    for (int i = 0; i < list.size(); ++i) {
+                        Entity entity = (Entity) list.get(i);
 
-            if (!list.isEmpty()) {
-                for (int i = 0; i < list.size(); ++i) {
-                    Entity entity = (Entity) list.get(i);
+                        if (entity.getPushReaction() != EnumPistonReaction.IGNORE) {
+                            double d0 = 0.0D;
+                            double d1 = 0.0D;
+                            double d2 = 0.0D;
+                            AxisAlignedBB axisalignedbb1 = entity.getBoundingBox();
 
-                    if (entity.getPushReaction() != EnumPistonReaction.IGNORE) {
-                        double d0 = 0.0D;
-                        double d1 = 0.0D;
-                        double d2 = 0.0D;
-                        AxisAlignedBB axisalignedbb1 = entity.getBoundingBox();
+                            switch (enumdirection.n()) {
+                                case X:
+                                    if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
+                                        d0 = axisalignedbb.maxX - axisalignedbb1.minX;
+                                    } else {
+                                        d0 = axisalignedbb1.maxX - axisalignedbb.minX;
+                                    }
 
-                        switch (enumdirection.n()) {
-                            case X:
-                                if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
-                                    d0 = axisalignedbb.maxX - axisalignedbb1.minX;
-                                } else {
-                                    d0 = axisalignedbb1.maxX - axisalignedbb.minX;
-                                }
+                                    d0 += 0.01D;
+                                    break;
+                                case Y:
+                                    if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
+                                        d1 = axisalignedbb.maxY - axisalignedbb1.minY;
+                                    } else {
+                                        d1 = axisalignedbb1.maxY - axisalignedbb.minY;
+                                    }
 
-                                d0 += 0.01D;
-                                break;
-                            case Y:
-                                if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
-                                    d1 = axisalignedbb.maxY - axisalignedbb1.minY;
-                                } else {
-                                    d1 = axisalignedbb1.maxY - axisalignedbb.minY;
-                                }
+                                    d1 += 0.01D;
+                                    break;
+                                case Z:
+                                    if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
+                                        d2 = axisalignedbb.maxZ - axisalignedbb1.minZ;
+                                    } else {
+                                        d2 = axisalignedbb1.maxZ - axisalignedbb.minZ;
+                                    }
 
-                                d1 += 0.01D;
-                                break;
-                            case Z:
-                                if (enumdirection.e() == EnumDirection.EnumAxisDirection.POSITIVE) {
-                                    d2 = axisalignedbb.maxZ - axisalignedbb1.minZ;
-                                } else {
-                                    d2 = axisalignedbb1.maxZ - axisalignedbb.minZ;
-                                }
+                                    d2 += 0.01D;
+                            }
 
-                                d2 += 0.01D;
+                            entity.move(EnumMoveType.SHULKER_BOX, new Vec3D(d0 * (double) enumdirection.getAdjacentX(), d1 * (double) enumdirection.getAdjacentY(), d2 * (double) enumdirection.getAdjacentZ()));
                         }
-
-                        entity.move(EnumMoveType.SHULKER_BOX, new Vec3D(d0 * (double) enumdirection.getAdjacentX(), d1 * (double) enumdirection.getAdjacentY(), d2 * (double) enumdirection.getAdjacentZ()));
                     }
-                }
 
+                }
             }
         }
     }

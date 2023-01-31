@@ -1,7 +1,6 @@
 package net.minecraft.world.item;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.stats.StatisticList;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockJukeBox;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.Map;
 
 public class ItemRecord extends Item {
 

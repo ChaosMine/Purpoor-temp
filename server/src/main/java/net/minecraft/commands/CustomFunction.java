@@ -4,12 +4,13 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.CustomFunctionData;
+
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.server.CustomFunctionData;
 
 public class CustomFunction {
 

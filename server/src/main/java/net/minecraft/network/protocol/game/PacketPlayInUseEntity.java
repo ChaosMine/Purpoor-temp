@@ -1,86 +1,96 @@
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
-import javax.annotation.Nullable;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
+import org.jetbrains.annotations.Unmodifiable;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
 
 public class PacketPlayInUseEntity implements Packet<PacketListenerPlayIn> {
+	public int a;
 
-    private int a; public int getEntityId() { return this.a; } // Paper - add accessor
-    private PacketPlayInUseEntity.EnumEntityUseAction action;
-    private Vec3D c;
-    private EnumHand d;
-    private boolean e;
+	public int getEntityId() {
+		return this.a;
+	} // Paper - add accessor
 
-    public PacketPlayInUseEntity() {}
+	public PacketPlayInUseEntity.EnumEntityUseAction action;
+	public Vec3D c;
+	public EnumHand d;
+	public boolean e;
 
-    @Override
-    public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.a = packetdataserializer.i();
-        this.action = (PacketPlayInUseEntity.EnumEntityUseAction) packetdataserializer.a(PacketPlayInUseEntity.EnumEntityUseAction.class);
-        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
-            this.c = new Vec3D((double) packetdataserializer.readFloat(), (double) packetdataserializer.readFloat(), (double) packetdataserializer.readFloat());
-        }
+	public PacketPlayInUseEntity() {
+	}
 
-        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
-            this.d = (EnumHand) packetdataserializer.a(EnumHand.class);
-        }
+	@Override
+	public void a(PacketDataSerializer packetdataserializer) throws IOException {
+		this.a = packetdataserializer.i();
+		this.action = packetdataserializer.readEnum(EnumEntityUseAction.VALUES);
+		if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
+			this.c = new Vec3D(packetdataserializer.readFloat(), packetdataserializer.readFloat(), packetdataserializer.readFloat());
+		}
 
-        this.e = packetdataserializer.readBoolean();
-    }
+		if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
+			this.d = packetdataserializer.readEnum(EnumHand.VALUES);
+		}
 
-    @Override
-    public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.d(this.a);
-        packetdataserializer.a((Enum) this.action);
-        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
-            packetdataserializer.writeFloat((float) this.c.x);
-            packetdataserializer.writeFloat((float) this.c.y);
-            packetdataserializer.writeFloat((float) this.c.z);
-        }
+		this.e = packetdataserializer.readBoolean();
+	}
 
-        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
-            packetdataserializer.a((Enum) this.d);
-        }
+	@Override
+	public void b(PacketDataSerializer packetdataserializer) throws IOException {
+		packetdataserializer.d(this.a);
+		packetdataserializer.writeEnum(this.action);
+		if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
+			packetdataserializer.writeFloat((float) this.c.x);
+			packetdataserializer.writeFloat((float) this.c.y);
+			packetdataserializer.writeFloat((float) this.c.z);
+		}
 
-        packetdataserializer.writeBoolean(this.e);
-    }
+		if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
+			packetdataserializer.writeEnum(this.d);
+		}
 
-    public void a(PacketListenerPlayIn packetlistenerplayin) {
-        packetlistenerplayin.a(this);
-    }
+		packetdataserializer.writeBoolean(this.e);
+	}
 
-    @Nullable
-    public Entity a(World world) {
-        return world.getEntity(this.a);
-    }
+	public void a(PacketListenerPlayIn packetlistenerplayin) {
+		packetlistenerplayin.a(this);
+	}
 
-    public PacketPlayInUseEntity.EnumEntityUseAction b() {
-        return this.action;
-    }
+	@Nullable
+	public Entity a(World world) {
+		return world.getEntity(this.a);
+	}
 
-    @Nullable
-    public EnumHand c() {
-        return this.d;
-    }
+	public PacketPlayInUseEntity.EnumEntityUseAction b() {
+		return this.action;
+	}
 
-    public Vec3D d() {
-        return this.c;
-    }
+	@Nullable
+	public EnumHand c() {
+		return this.d;
+	}
 
-    public boolean e() {
-        return this.e;
-    }
+	public Vec3D d() {
+		return this.c;
+	}
 
-    public static enum EnumEntityUseAction {
+	public boolean e() {
+		return this.e;
+	}
 
-        INTERACT, ATTACK, INTERACT_AT;
+	public enum EnumEntityUseAction {
 
-        private EnumEntityUseAction() {}
-    }
+		INTERACT, ATTACK, INTERACT_AT;
+
+		public static final EnumEntityUseAction @Unmodifiable [] VALUES = values();
+
+		EnumEntityUseAction() {
+		}
+	}
 }

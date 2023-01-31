@@ -1,8 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -13,6 +11,10 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class CraftInventoryCustom extends CraftInventory {
     public CraftInventoryCustom(InventoryHolder owner, InventoryType type) {
@@ -78,7 +80,7 @@ public class CraftInventoryCustom extends CraftInventory {
             this.items = NonNullList.a(size, ItemStack.b);
             this.title = title;
             this.adventure$title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.deserialize(title);
-            this.viewers = new ArrayList<HumanEntity>();
+            this.viewers = new ObjectArrayList<>();
             this.owner = owner;
             this.type = InventoryType.CHEST;
         }
@@ -89,7 +91,7 @@ public class CraftInventoryCustom extends CraftInventory {
             this.items = NonNullList.a(size, ItemStack.b);
             this.title = io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.serialize(title);
             this.adventure$title = title;
-            this.viewers = new ArrayList<HumanEntity>();
+            this.viewers = new ObjectArrayList<HumanEntity>();
             this.owner = owner;
             this.type = InventoryType.CHEST;
         }

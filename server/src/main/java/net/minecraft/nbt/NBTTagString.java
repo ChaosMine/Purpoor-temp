@@ -1,22 +1,23 @@
 package net.minecraft.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.Objects;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.Objects;
+
 public class NBTTagString implements NBTBase {
 
-    public static final NBTTagType<NBTTagString> a = new NBTTagType<NBTTagString>() {
+    public static final NBTTagType<NBTTagString> a = new NBTTagType<>() {
         @Override
         public NBTTagString b(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
             nbtreadlimiter.a(288L);
-            String s = datainput.readUTF();
+            var s = datainput.readUTF();
 
-            nbtreadlimiter.a((long) (16 * s.length()));
+            nbtreadlimiter.a(16L * s.length());
             return NBTTagString.a(s);
         }
 
@@ -43,7 +44,7 @@ public class NBTTagString implements NBTBase {
         this.data = s;
     }
 
-    public static NBTTagString create(final String value) { return a(value); } // Paper - OBFHELPER
+    public static NBTTagString create(String value) { return a(value); } // Paper - OBFHELPER
     public static NBTTagString a(String s) {
         return s.isEmpty() ? NBTTagString.b : new NBTTagString(s);
     }
@@ -88,19 +89,20 @@ public class NBTTagString implements NBTBase {
 
     @Override
     public IChatBaseComponent a(String s, int i) {
-        String s1 = b(this.data);
-        String s2 = s1.substring(0, 1);
-        IChatMutableComponent ichatmutablecomponent = (new ChatComponentText(s1.substring(1, s1.length() - 1))).a(NBTTagString.e);
+        var s1 = b(this.data);
+        var s2 = s1.substring(0, 1);
+        var ichatmutablecomponent = (new ChatComponentText(s1.substring(1, s1.length() - 1))).a(NBTTagString.e);
 
         return (new ChatComponentText(s2)).addSibling(ichatmutablecomponent).c(s2);
     }
 
     public static String b(String s) {
-        StringBuilder stringbuilder = new StringBuilder(" ");
-        int i = 0;
+        var stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        stringbuilder.append(" ");
+        var i = 0;
 
-        for (int j = 0; j < s.length(); ++j) {
-            char c0 = s.charAt(j);
+        for (var j = 0; j < s.length(); ++j) {
+            var c0 = s.charAt(j);
 
             if (c0 == '\\') {
                 stringbuilder.append('\\');

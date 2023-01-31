@@ -1,6 +1,5 @@
 package net.minecraft.world.inventory;
 
-import java.util.Optional;
 import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
@@ -13,10 +12,10 @@ import net.minecraft.world.item.crafting.RecipeCrafting;
 import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftInventoryCrafting;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+
+import java.util.Optional;
 // CraftBukkit end
 
 public class ContainerWorkbench extends ContainerRecipeBook<InventoryCrafting> {

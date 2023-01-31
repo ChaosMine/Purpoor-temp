@@ -2,21 +2,21 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap.Builder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
 public class CraftMetaSuspiciousStew extends CraftMetaItem implements SuspiciousStewMeta {
@@ -34,7 +34,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
         }
         CraftMetaSuspiciousStew stewMeta = ((CraftMetaSuspiciousStew) meta);
         if (stewMeta.hasCustomEffects()) {
-            this.customEffects = new ArrayList<PotionEffect>(stewMeta.customEffects);
+            this.customEffects = new ObjectArrayList<>(stewMeta.customEffects);
         }
     }
 
@@ -43,7 +43,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
         if (tag.hasKey(EFFECTS.NBT)) {
             NBTTagList list = tag.getList(EFFECTS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
             int length = list.size();
-            customEffects = new ArrayList<PotionEffect>(length);
+            customEffects = new ObjectArrayList<PotionEffect>(length);
 
             for (int i = 0; i < length; i++) {
                 NBTTagCompound effect = list.getCompound(i);
@@ -108,7 +108,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
     public CraftMetaSuspiciousStew clone() {
         CraftMetaSuspiciousStew clone = ((CraftMetaSuspiciousStew) super.clone());
         if (this.customEffects != null) {
-            clone.customEffects = new ArrayList<PotionEffect>(this.customEffects);
+            clone.customEffects = new ObjectArrayList<PotionEffect>(this.customEffects);
         }
         return clone;
     }
@@ -144,7 +144,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
             }
         } else {
             if (customEffects == null) {
-                customEffects = new ArrayList<PotionEffect>();
+                customEffects = new ObjectArrayList<PotionEffect>();
             }
             customEffects.add(effect);
             return true;

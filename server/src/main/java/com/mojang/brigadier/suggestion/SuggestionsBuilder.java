@@ -5,6 +5,7 @@ package com.mojang.brigadier.suggestion;
 
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.StringRange;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class SuggestionsBuilder {
     private final int start;
     private final String remaining;
     private String remainingLowercase; public final String getRemainingLowercase() { return this.remainingLowercase == null ? this.remainingLowercase = this.remaining.toLowerCase() : this.remainingLowercase; } // Tuinity
-    private final List<Suggestion> result = new ArrayList<>();
+    private final List<Suggestion> result = new ObjectArrayList<>();
 
     public SuggestionsBuilder(final String input, final int start) {
         // Tuinity start

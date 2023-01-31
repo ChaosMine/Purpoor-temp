@@ -2,10 +2,11 @@ package net.minecraft.core;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.serialization.Codec;
-import java.util.stream.IntStream;
-import javax.annotation.concurrent.Immutable;
 import net.minecraft.SystemUtils;
 import net.minecraft.util.MathHelper;
+
+import javax.annotation.concurrent.Immutable;
+import java.util.stream.IntStream;
 
 @Immutable
 public class BaseBlockPosition implements Comparable<BaseBlockPosition> {

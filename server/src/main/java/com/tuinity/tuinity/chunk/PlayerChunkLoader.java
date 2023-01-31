@@ -5,21 +5,23 @@ import com.destroystokyo.paper.util.misc.PooledLinkedHashSets;
 import com.tuinity.tuinity.config.TuinityConfig;
 import com.tuinity.tuinity.util.TickThread;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutViewCentre;
 import net.minecraft.network.protocol.game.PacketPlayOutViewDistance;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.server.MCUtil;
-import net.minecraft.util.MathHelper;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.PlayerChunk;
 import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import net.minecraft.world.level.chunk.Chunk;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -372,7 +374,6 @@ public final class PlayerChunkLoader {
     }
 
     public void addPlayer(final EntityPlayer player) {
-        TickThread.ensureTickThread("Cannot add player async");
         if (!player.isRealPlayer) {
             return;
         }
@@ -383,7 +384,6 @@ public final class PlayerChunkLoader {
     }
 
     public void removePlayer(final EntityPlayer player) {
-        TickThread.ensureTickThread("Cannot remove player async");
         if (!player.isRealPlayer) {
             return;
         }
@@ -405,7 +405,6 @@ public final class PlayerChunkLoader {
     }
 
     public void updatePlayer(final EntityPlayer player) {
-        TickThread.ensureTickThread("Cannot update player async");
         if (!player.isRealPlayer) {
             return;
         }
@@ -420,7 +419,6 @@ public final class PlayerChunkLoader {
     }
 
     public void tick() {
-        TickThread.ensureTickThread("Cannot tick async");
         for (final PlayerLoaderData data : this.playerMap.values()) {
             data.update();
         }
@@ -884,7 +882,7 @@ public final class PlayerChunkLoader {
 
             // now that we have all of our points, we can recalculate the load queue
 
-            final List<ChunkPriorityHolder> loadQueue = new ArrayList<>();
+            final List<ChunkPriorityHolder> loadQueue = new ObjectArrayList<>();
 
             // clear send queue, we are re-sorting
             this.sendQueue.clear();

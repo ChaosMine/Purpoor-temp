@@ -2,9 +2,6 @@ package org.bukkit.support;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.server.DispenserRegistry;
 import net.minecraft.server.packs.EnumResourcePackType;
 import net.minecraft.server.packs.ResourcePackVanilla;
@@ -16,6 +13,10 @@ import net.minecraft.world.level.storage.loot.LootTableRegistry;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.junit.Assert;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *  If you are getting: java.lang.ExceptionInInitializerError

@@ -1,13 +1,11 @@
 package net.minecraft.world.inventory;
 
 import net.minecraft.world.IInventory;
+import net.minecraft.world.InventoryLargeChest;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
-import net.minecraft.world.InventoryLargeChest;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end

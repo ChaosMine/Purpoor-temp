@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -18,8 +17,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+import org.bukkit.event.block.LeavesDecayEvent;
 
-import org.bukkit.event.block.LeavesDecayEvent; // CraftBukkit
+import java.util.Random;
 
 public class BlockLeaves extends Block {
 

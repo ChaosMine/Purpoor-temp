@@ -8,15 +8,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.IRegistry;
@@ -38,24 +30,11 @@ import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.DifficultyDamageScaler;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.InventorySubcontainer;
+import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.ReputationHandler;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
@@ -92,13 +71,16 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.VillagerReplenishTradeEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class EntityVillager extends EntityVillagerAbstract implements ReputationHandler, VillagerDataHolder {
@@ -908,7 +890,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
             // CraftBukkit start
             // Paper start
-            List<ItemStack> contentsSnapshot = new java.util.ArrayList<>(inventorysubcontainer.getContents());
+            List<ItemStack> contentsSnapshot = new ObjectArrayList<>(inventorysubcontainer.getContents());
             ItemStack itemstack1 = inventorysubcontainer.addItem(itemstack);
             if (CraftEventFactory.callEntityPickupItemEvent(this, entityitem, itemstack1.getCount(), false).isCancelled()) {
                 inventorysubcontainer.setContents(contentsSnapshot);

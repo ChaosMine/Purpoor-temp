@@ -1,12 +1,9 @@
 package org.bukkit.craftbukkit.scheduler;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import net.minecraft.SystemUtils;
 import org.bukkit.plugin.Plugin;
+
+import java.util.concurrent.*;
 
 class CraftFuture<T> extends CraftTask implements Future<T> {
 
@@ -47,7 +44,7 @@ class CraftFuture<T> extends CraftTask implements Future<T> {
     public synchronized T get(long timeout, final TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         timeout = unit.toMillis(timeout);
         long period = this.getPeriod();
-        long timestamp = timeout > 0 ? System.currentTimeMillis() : 0L;
+        long timestamp = timeout > 0 ? SystemUtils.getMonotonicMillis() : 0L;
         while (true) {
             if (period == CraftTask.NO_REPEATING || period == CraftTask.PROCESS_FOR_FUTURE) {
                 this.wait(timeout);
@@ -56,7 +53,7 @@ class CraftFuture<T> extends CraftTask implements Future<T> {
                     if (timeout == 0L) {
                         continue;
                     }
-                    timeout += timestamp - (timestamp = System.currentTimeMillis());
+                    timeout += timestamp - (timestamp = SystemUtils.getMonotonicMillis());
                     if (timeout > 0) {
                         continue;
                     }

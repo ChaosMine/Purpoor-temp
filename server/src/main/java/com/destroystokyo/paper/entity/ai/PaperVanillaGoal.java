@@ -1,9 +1,9 @@
 package com.destroystokyo.paper.entity.ai;
 
-import java.util.EnumSet;
-
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import org.bukkit.entity.Mob;
+
+import java.util.EnumSet;
 
 /**
  * Wraps vanilla in api

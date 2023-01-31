@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -16,6 +15,8 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+
+import java.util.Random;
 
 public class EntityZombieHusk extends EntityZombie {
 

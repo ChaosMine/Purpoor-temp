@@ -2,8 +2,6 @@ package net.minecraft.world.entity.ai.sensing;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.ResourceKey;
@@ -12,6 +10,9 @@ import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.level.World;
+
+import java.util.List;
+import java.util.Set;
 
 public class SensorSecondaryPlaces extends Sensor<EntityVillager> {
 

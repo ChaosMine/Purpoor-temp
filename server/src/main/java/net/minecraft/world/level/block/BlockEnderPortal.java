@@ -2,6 +2,7 @@ package net.minecraft.world.level.block;
 
 import net.minecraft.core.BlockPosition;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.IBlockAccess;
@@ -10,15 +11,12 @@ import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityEnderPortal;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.level.dimension.DimensionManager;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 // CraftBukkit end

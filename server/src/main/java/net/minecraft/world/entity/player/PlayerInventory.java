@@ -1,9 +1,7 @@
 package net.minecraft.world.entity.player;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Predicate;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
@@ -25,12 +23,15 @@ import net.minecraft.world.item.ItemArmor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
-import java.util.ArrayList;
+import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class PlayerInventory implements IInventory, INamableTileEntity {
@@ -45,11 +46,11 @@ public class PlayerInventory implements IInventory, INamableTileEntity {
     private int h;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
 
     public List<ItemStack> getContents() {
-        List<ItemStack> combined = new ArrayList<ItemStack>(items.size() + armor.size() + extraSlots.size());
+        List<ItemStack> combined = new ObjectArrayList<ItemStack>(items.size() + armor.size() + extraSlots.size());
         for (List<net.minecraft.world.item.ItemStack> sub : this.f) {
             combined.addAll(sub);
         }
@@ -247,7 +248,6 @@ public class PlayerInventory implements IInventory, INamableTileEntity {
         } else {
             j -= k;
             itemstack1.add(k);
-            itemstack1.d(5);
             return j;
         }
     }
@@ -269,18 +269,20 @@ public class PlayerInventory implements IInventory, INamableTileEntity {
     }
 
     public void j() {
-        Iterator iterator = this.f.iterator();
+        if (PurpurConfig.PurpurConfigCache.disableItemsTicking) return;
 
-        while (iterator.hasNext()) {
-            NonNullList<ItemStack> nonnulllist = (NonNullList) iterator.next();
+        this.tickItems(this.items);
+        this.tickItems(this.armor);
+        this.tickItems(this.extraSlots);
+    }
 
-            for (int i = 0; i < nonnulllist.size(); ++i) {
-                if (!((ItemStack) nonnulllist.get(i)).isEmpty()) {
-                    ((ItemStack) nonnulllist.get(i)).a(this.player.world, this.player, i, this.itemInHandIndex == i);
-                }
+    private void tickItems(NonNullList<ItemStack> list) {
+        for (int i = 0; i < list.size(); ++i) {
+            var item = list.get(i);
+            if (!item.isEmpty()) {
+                item.a(this.player.world, this.player, i, this.itemInHandIndex == i);
             }
         }
-
     }
 
     public boolean pickup(ItemStack itemstack) {
@@ -299,7 +301,6 @@ public class PlayerInventory implements IInventory, INamableTileEntity {
 
                     if (i >= 0) {
                         this.items.set(i, itemstack.cloneItemStack());
-                        ((ItemStack) this.items.get(i)).d(5);
                         itemstack.setCount(0);
                         return true;
                     } else if (this.player.abilities.canInstantlyBuild) {
@@ -549,17 +550,18 @@ public class PlayerInventory implements IInventory, INamableTileEntity {
     public ItemStack getItem(int i) {
         List<ItemStack> list = null;
 
-        NonNullList nonnulllist;
-
-        for (Iterator iterator = this.f.iterator(); iterator.hasNext(); i -= nonnulllist.size()) {
-            nonnulllist = (NonNullList) iterator.next();
-            if (i < nonnulllist.size()) {
-                list = nonnulllist;
+        var f = this.f;
+        var size = f.size();
+        for (var q = 0; q < size; q++) {
+            var nnlist = f.get(q);
+            if (i < nnlist.size()) {
+                list = nnlist;
                 break;
             }
+            i -= nnlist.size();
         }
 
-        return list == null ? ItemStack.b : (ItemStack) list.get(i);
+        return list == null ? ItemStack.b : list.get(i);
     }
 
     @Override

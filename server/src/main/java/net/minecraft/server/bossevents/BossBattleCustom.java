@@ -1,10 +1,6 @@
 package net.minecraft.server.bossevents;
 
 import com.google.common.collect.Sets;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,10 +13,13 @@ import net.minecraft.server.level.BossBattleServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.BossBattle;
-
-// CraftBukkit start
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.craftbukkit.boss.CraftKeyedBossbar;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 // CraftBukkit end
 
 public class BossBattleCustom extends BossBattleServer {

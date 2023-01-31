@@ -7,7 +7,17 @@ import com.mojang.datafixers.DSL.TypeReference;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.DataResult;
+import io.netty.util.concurrent.FastThreadLocalThread;
 import it.unimi.dsi.fastutil.Hash.Strategy;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.DispenserRegistry;
+import net.minecraft.server.ServerWorkerThread;
+import net.minecraft.util.datafix.DataConverterRegistry;
+import net.minecraft.world.level.block.state.properties.IBlockState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -16,23 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinWorkerThread;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -42,20 +38,10 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.server.DispenserRegistry;
-import net.minecraft.server.ServerWorkerThread;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.datafix.DataConverterRegistry;
-import net.minecraft.world.level.block.state.properties.IBlockState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class SystemUtils {
 
     private static final AtomicInteger c = new AtomicInteger(1);
-    private static final ExecutorService d = a("Bootstrap", -2); // Paper - add -2 priority
     private static final ExecutorService e = a("Main", -1); // Paper - add -1 priority
     private static final ExecutorService f = n();
     public static LongSupplier a = System::nanoTime;
@@ -95,31 +81,19 @@ public class SystemUtils {
         if (i <= 0) {
             object = MoreExecutors.newDirectExecutorService();
         } else {
-            object = new java.util.concurrent.ThreadPoolExecutor(i, i,0L, TimeUnit.MILLISECONDS, new java.util.concurrent.LinkedBlockingQueue<Runnable>(), target -> new ServerWorkerThread(target, s, priorityModifier));
+            object = new java.util.concurrent.ThreadPoolExecutor(
+              i,
+              i,
+              1L, TimeUnit.SECONDS,
+              new java.util.concurrent.LinkedBlockingQueue<>(),
+              target -> new ServerWorkerThread(target, s, priorityModifier)
+            );
         }
-        /*
-                    protected void onTermination(Throwable throwable) {
-                        if (throwable != null) {
-                            SystemUtils.LOGGER.warn("{} died", this.getName(), throwable);
-                        } else {
-                            SystemUtils.LOGGER.debug("{} shutdown", this.getName());
-                        }
-
-                        super.onTermination(throwable);
-                    }
-                };
-
-                forkjoinworkerthread.setName("Worker-" + s + "-" + SystemUtils.c.getAndIncrement());
-                return forkjoinworkerthread;
-            }, SystemUtils::a, true);
-        }
-        }*/ // Paper end
-
-        return (ExecutorService) object;
+        return object;
     }
 
     public static Executor e() {
-        return SystemUtils.d;
+        return SystemUtils.e;
     }
 
     public static Executor f() {
@@ -155,7 +129,7 @@ public class SystemUtils {
 
     private static ExecutorService n() {
         return Executors.newCachedThreadPool((runnable) -> {
-            Thread thread = new Thread(runnable);
+            Thread thread = new FastThreadLocalThread(runnable);
 
             thread.setName("IO-Worker-" + SystemUtils.c.getAndIncrement());
             thread.setUncaughtExceptionHandler(SystemUtils::a);
@@ -180,7 +154,7 @@ public class SystemUtils {
 
     @Nullable
     public static Type<?> a(TypeReference typereference, String s) {
-        return !SharedConstants.c ? null : b(typereference, s);
+        return b(typereference, s);
     }
 
     @Nullable
@@ -191,9 +165,6 @@ public class SystemUtils {
             type = DataConverterRegistry.a().getSchema(DataFixUtils.makeKey(SharedConstants.getGameVersion().getWorldVersion())).getChoiceType(typereference, s);
         } catch (IllegalArgumentException illegalargumentexception) {
             SystemUtils.LOGGER.error("No data fixer registered for {}", s);
-            if (SharedConstants.d) {
-                throw illegalargumentexception;
-            }
         }
 
         return type;
@@ -202,7 +173,17 @@ public class SystemUtils {
     public static SystemUtils.OS i() {
         String s = System.getProperty("os.name").toLowerCase(Locale.ROOT);
 
-        return s.contains("win") ? SystemUtils.OS.WINDOWS : (s.contains("mac") ? SystemUtils.OS.OSX : (s.contains("solaris") ? SystemUtils.OS.SOLARIS : (s.contains("sunos") ? SystemUtils.OS.SOLARIS : (s.contains("linux") ? SystemUtils.OS.LINUX : (s.contains("unix") ? SystemUtils.OS.LINUX : SystemUtils.OS.UNKNOWN)))));
+        if (s.contains("win")) {
+            return OS.WINDOWS;
+        } else if (s.contains("mac")) {
+            return OS.OSX;
+        } else if (s.contains("linux")) {
+            return OS.LINUX;
+        } else if (s.contains("unix")) {
+            return OS.LINUX;
+        } else {
+            return OS.UNKNOWN;
+        }
     }
 
     public static Stream<String> j() {
@@ -267,14 +248,15 @@ public class SystemUtils {
         return t0;
     }
 
+    @SuppressWarnings("unchecked")
     public static <K> Strategy<K> k() {
-        return (Strategy<K>) SystemUtils.IdentityHashingStrategy.INSTANCE; // Paper - decompile fix
+        return SystemUtils.IdentityHashingStrategy.INSTANCE; // Paper - decompile fix
     }
 
     public static <V> CompletableFuture<List<V>> b(List<? extends CompletableFuture<? extends V>> list) {
         List<V> list1 = Lists.newArrayListWithCapacity(list.size());
         CompletableFuture<?>[] acompletablefuture = new CompletableFuture[list.size()];
-        CompletableFuture<Void> completablefuture = new CompletableFuture();
+        CompletableFuture<Void> completablefuture = new CompletableFuture<>();
 
         list.forEach((completablefuture1) -> {
             int i = list1.size();
@@ -289,13 +271,11 @@ public class SystemUtils {
 
             });
         });
-        return CompletableFuture.allOf(acompletablefuture).applyToEither(completablefuture, (ovoid) -> {
-            return list1;
-        });
+        return CompletableFuture.allOf(acompletablefuture).applyToEither(completablefuture, (ovoid) -> list1);
     }
 
     public static <T> Stream<T> a(Optional<? extends T> optional) {
-        return (Stream) DataFixUtils.orElseGet(optional.map(Stream::of), Stream::empty);
+        return DataFixUtils.orElseGet(optional.map(Stream::of), Stream::empty);
     }
 
     public static <T> Optional<T> a(Optional<T> optional, Consumer<T> consumer, Runnable runnable) {
@@ -313,20 +293,7 @@ public class SystemUtils {
     }
 
     public static <T extends Throwable> T c(T t0) {
-        if (SharedConstants.d) {
-            SystemUtils.LOGGER.error("Trying to throw a fatal exception, pausing in IDE", t0);
-
-            while (true) {
-                try {
-                    Thread.sleep(1000L);
-                    SystemUtils.LOGGER.error("paused");
-                } catch (InterruptedException interruptedexception) {
-                    return t0;
-                }
-            }
-        } else {
-            return t0;
-        }
+        return t0;
     }
 
     public static String d(Throwable throwable) {
@@ -435,9 +402,7 @@ public class SystemUtils {
     }
 
     public static void a(Path path, Path path1, Path path2) {
-        boolean flag = true;
-
-        if (!Files.exists(path, new LinkOption[0]) || a(10, "create backup " + path2, a(path2), a(path, path2), c(path2))) {
+        if (!Files.exists(path) || a(10, "create backup " + path2, a(path2), a(path, path2), c(path2))) {
             if (a(10, "remove old " + path, a(path), b(path))) {
                 if (!a(10, "replace " + path + " with " + path1, a(path1, path), c(path))) {
                     a(10, "restore " + path + " from " + path2, a(path2, path), c(path));
@@ -448,9 +413,7 @@ public class SystemUtils {
     }
 
     public static Consumer<String> a(String s, Consumer<String> consumer) {
-        return (s1) -> {
-            consumer.accept(s + s1);
-        };
+        return (s1) -> consumer.accept(s + s1);
     }
 
     public static DataResult<int[]> a(IntStream intstream, int i) {
@@ -464,49 +427,21 @@ public class SystemUtils {
             return DataResult.success(aint);
         }
     }
-
-    public static void l() {
-        Thread thread = new Thread("Timer hack thread") {
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(2147483647L);
-                    } catch (InterruptedException interruptedexception) {
-                        SystemUtils.LOGGER.warn("Timer hack thread interrupted, that really should not happen");
-                        return;
-                    }
-                }
-            }
-        };
-
-        thread.setDaemon(true);
-        thread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(SystemUtils.LOGGER));
-        thread.start();
-    }
-
-    static enum IdentityHashingStrategy implements Strategy<Object> {
-
+    @SuppressWarnings("rawtypes")
+    enum IdentityHashingStrategy implements Strategy {
         INSTANCE;
-
-        private IdentityHashingStrategy() {}
-
         public int hashCode(Object object) {
             return System.identityHashCode(object);
         }
-
         public boolean equals(Object object, Object object1) {
             return object == object1;
         }
     }
 
-    public static enum OS {
-
-        LINUX, SOLARIS, WINDOWS {
-        },
-        OSX {
-        },
-        UNKNOWN;
-
-        private OS() {}
+    public enum OS {
+        LINUX,
+        WINDOWS,
+        OSX,
+        UNKNOWN
     }
 }

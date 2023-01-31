@@ -4,8 +4,6 @@ import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-
 public class EnchantmentRarityTest {
 
     @Test

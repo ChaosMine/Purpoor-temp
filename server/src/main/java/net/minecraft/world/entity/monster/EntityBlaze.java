@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.EnumSet;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
@@ -16,11 +15,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMoveType;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -28,6 +23,8 @@ import net.minecraft.world.entity.projectile.EntitySmallFireball;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.EnumSet;
 
 public class EntityBlaze extends EntityMonster {
 

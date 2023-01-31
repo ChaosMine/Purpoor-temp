@@ -3,6 +3,16 @@ package com.destroystokyo.paper;
 import com.destroystokyo.paper.io.chunk.ChunkTaskManager;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.server.MinecraftServer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.spigotmc.SpigotConfig;
+import org.spigotmc.WatchdogThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,17 +26,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-
-import com.google.common.collect.Lists;
-import net.minecraft.server.MinecraftServer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.spigotmc.SpigotConfig;
-import org.spigotmc.WatchdogThread;
 
 public class PaperConfig {
 
@@ -49,7 +48,6 @@ public class PaperConfig {
     private static boolean verbose;
     private static boolean fatalError;
     /*========================================================================*/
-    private static boolean metricsStarted;
 
     public static void init(File configFile) {
         CONFIG_FILE = configFile;
@@ -65,7 +63,7 @@ public class PaperConfig {
         config.options().copyDefaults(true);
         verbose = getBoolean("verbose", false);
 
-        commands = new HashMap<String, Command>();
+        commands = new Object2ObjectOpenHashMap<>();
         commands.put("paper", new PaperCommand("paper"));
         commands.put("mspt", new MSPTCommand("mspt"));
 
@@ -92,11 +90,6 @@ public class PaperConfig {
     public static void registerCommands() {
         for (Map.Entry<String, Command> entry : commands.entrySet()) {
             MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
-        }
-
-        if (!metricsStarted) {
-            Metrics.PaperMetrics.startMetrics();
-            metricsStarted = true;
         }
     }
 

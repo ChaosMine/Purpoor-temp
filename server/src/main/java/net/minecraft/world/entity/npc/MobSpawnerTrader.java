@@ -1,9 +1,5 @@
 package net.minecraft.world.entity.npc;
 
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,14 +14,15 @@ import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.entity.animal.horse.EntityLlamaTrader;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.MobSpawner;
-import net.minecraft.world.level.SpawnerCreature;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.storage.IWorldDataServer;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Random;
 
 public class MobSpawnerTrader implements MobSpawner {
 

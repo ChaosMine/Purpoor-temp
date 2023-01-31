@@ -1,8 +1,5 @@
 package net.minecraft.world.level.lighting;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.SectionPosition;
 import net.minecraft.world.level.EnumSkyBlock;
 import net.minecraft.world.level.chunk.ILightAccess;
 import net.minecraft.world.level.chunk.NibbleArray;

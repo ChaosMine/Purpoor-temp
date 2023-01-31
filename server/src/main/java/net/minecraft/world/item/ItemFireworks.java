@@ -1,7 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
@@ -13,6 +11,9 @@ import net.minecraft.world.entity.projectile.EntityFireworks;
 import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class ItemFireworks extends Item {
 

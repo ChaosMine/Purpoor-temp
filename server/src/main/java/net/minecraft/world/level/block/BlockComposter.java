@@ -2,19 +2,14 @@ package net.minecraft.world.level.block;
 
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.IInventoryHolder;
-import net.minecraft.world.IWorldInventory;
-import net.minecraft.world.InventorySubcontainer;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
@@ -35,11 +30,11 @@ import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
-import net.minecraft.world.entity.Entity;
 import org.bukkit.craftbukkit.inventory.CraftBlockInventoryHolder;
 import org.bukkit.craftbukkit.util.DummyGeneratorAccess;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockComposter extends Block implements IInventoryHolder {

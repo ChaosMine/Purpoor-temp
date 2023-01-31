@@ -1,17 +1,24 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import com.google.common.collect.HashMultiset;
 import net.minecraft.core.IRegistry;
 import net.minecraft.stats.StatisticWrapper;
 import net.minecraft.world.entity.EntityTypes;
+import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.craftbukkit.CraftStatistic;
 import org.bukkit.entity.EntityType;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class StatisticsAndAchievementsTest extends AbstractTestingBase {
+
+    static {
+        PurpurConfig.disableStatistics = false;
+    }
 
     @Test
     @SuppressWarnings("unchecked")

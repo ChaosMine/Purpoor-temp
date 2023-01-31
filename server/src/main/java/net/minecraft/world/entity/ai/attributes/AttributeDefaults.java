@@ -1,8 +1,6 @@
 package net.minecraft.world.entity.ai.attributes;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import java.util.stream.Stream;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.RegistryBlocks;
@@ -11,59 +9,11 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumCreatureType;
 import net.minecraft.world.entity.ambient.EntityBat;
-import net.minecraft.world.entity.animal.EntityBee;
-import net.minecraft.world.entity.animal.EntityCat;
-import net.minecraft.world.entity.animal.EntityChicken;
-import net.minecraft.world.entity.animal.EntityCow;
-import net.minecraft.world.entity.animal.EntityDolphin;
-import net.minecraft.world.entity.animal.EntityFish;
-import net.minecraft.world.entity.animal.EntityFox;
-import net.minecraft.world.entity.animal.EntityIronGolem;
-import net.minecraft.world.entity.animal.EntityOcelot;
-import net.minecraft.world.entity.animal.EntityPanda;
-import net.minecraft.world.entity.animal.EntityParrot;
-import net.minecraft.world.entity.animal.EntityPig;
-import net.minecraft.world.entity.animal.EntityPolarBear;
-import net.minecraft.world.entity.animal.EntityRabbit;
-import net.minecraft.world.entity.animal.EntitySheep;
-import net.minecraft.world.entity.animal.EntitySnowman;
-import net.minecraft.world.entity.animal.EntitySquid;
-import net.minecraft.world.entity.animal.EntityTurtle;
-import net.minecraft.world.entity.animal.EntityWolf;
-import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
-import net.minecraft.world.entity.animal.horse.EntityHorseChestedAbstract;
-import net.minecraft.world.entity.animal.horse.EntityHorseSkeleton;
-import net.minecraft.world.entity.animal.horse.EntityHorseZombie;
-import net.minecraft.world.entity.animal.horse.EntityLlama;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.horse.*;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
 import net.minecraft.world.entity.boss.wither.EntityWither;
-import net.minecraft.world.entity.monster.EntityBlaze;
-import net.minecraft.world.entity.monster.EntityCaveSpider;
-import net.minecraft.world.entity.monster.EntityCreeper;
-import net.minecraft.world.entity.monster.EntityEnderman;
-import net.minecraft.world.entity.monster.EntityEndermite;
-import net.minecraft.world.entity.monster.EntityEvoker;
-import net.minecraft.world.entity.monster.EntityGhast;
-import net.minecraft.world.entity.monster.EntityGiantZombie;
-import net.minecraft.world.entity.monster.EntityGuardian;
-import net.minecraft.world.entity.monster.EntityGuardianElder;
-import net.minecraft.world.entity.monster.EntityIllagerIllusioner;
-import net.minecraft.world.entity.monster.EntityMagmaCube;
-import net.minecraft.world.entity.monster.EntityMonster;
-import net.minecraft.world.entity.monster.EntityPhantom;
-import net.minecraft.world.entity.monster.EntityPigZombie;
-import net.minecraft.world.entity.monster.EntityPillager;
-import net.minecraft.world.entity.monster.EntityRavager;
-import net.minecraft.world.entity.monster.EntityShulker;
-import net.minecraft.world.entity.monster.EntitySilverfish;
-import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
-import net.minecraft.world.entity.monster.EntitySpider;
-import net.minecraft.world.entity.monster.EntityStrider;
-import net.minecraft.world.entity.monster.EntityVex;
-import net.minecraft.world.entity.monster.EntityVindicator;
-import net.minecraft.world.entity.monster.EntityWitch;
-import net.minecraft.world.entity.monster.EntityZoglin;
-import net.minecraft.world.entity.monster.EntityZombie;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.hoglin.EntityHoglin;
 import net.minecraft.world.entity.monster.piglin.EntityPiglin;
 import net.minecraft.world.entity.monster.piglin.EntityPiglinBrute;
@@ -71,6 +21,9 @@ import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.player.EntityHuman;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class AttributeDefaults {
 
@@ -168,11 +121,7 @@ public class AttributeDefaults {
 
         registryblocks.getClass();
         stream.map(registryblocks::getKey).forEach((minecraftkey) -> {
-            if (SharedConstants.d) {
-                throw new IllegalStateException("Entity " + minecraftkey + " has no attributes");
-            } else {
-                AttributeDefaults.LOGGER.error("Entity {} has no attributes", minecraftkey);
-            }
+            AttributeDefaults.LOGGER.error("Entity {} has no attributes", minecraftkey);
         });
     }
 }

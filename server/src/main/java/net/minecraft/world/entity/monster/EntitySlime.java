@@ -1,10 +1,10 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import javax.annotation.Nullable;
+import com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent;
+import com.destroystokyo.paper.event.entity.SlimeSwimEvent;
+import com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent;
+import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.ParticleParam;
 import net.minecraft.core.particles.Particles;
@@ -22,51 +22,30 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMove;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.animal.EntityIronGolem;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.GeneratorAccessSeed;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.Vec3D;
-
-// Paper start
-import com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent;
-import com.destroystokyo.paper.event.entity.SlimeSwimEvent;
-import com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent;
-import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
-import javax.script.ScriptException;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
-// Paper end
-// CraftBukkit start
-import java.util.ArrayList;
-import java.util.List;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
 // CraftBukkit end
 
 public class EntitySlime extends EntityInsentient implements IMonster {
 
     private static final DataWatcherObject<Integer> bo = DataWatcher.a(EntitySlime.class, DataWatcherRegistry.b);
-    private static javax.script.ScriptEngine scriptEngine = new javax.script.ScriptEngineManager().getEngineByName("rhino"); // Purpur
     public float b;
     public float c;
     public float d;
@@ -106,30 +85,6 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         }
         return true; // do not jump() in wasd controller, let vanilla controller handle
     }
-
-    @Override
-    public void initAttributes() {
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.generateMaxHealth());
-    }
-
-    public String getMaxHealthEquation() {
-        return world.purpurConfig.slimeMaxHealth;
-    }
-
-    public double generateMaxHealth() {
-        int size = getSize();
-        Double maxHealth = world.purpurConfig.slimeMaxHealthCache.get(size);
-        if (maxHealth == null) {
-            try {
-                scriptEngine.eval("size = " + size);
-                maxHealth = (double) scriptEngine.eval(getMaxHealthEquation());
-            } catch (Exception e) {
-                maxHealth = (double) size * size;
-            }
-            world.purpurConfig.slimeMaxHealthCache.put(size, maxHealth);
-        }
-        return maxHealth;
-    }
     // Purpur end
 
     @Override
@@ -156,7 +111,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
         this.datawatcher.set(EntitySlime.bo, i);
         this.af();
         this.updateSize();
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(generateMaxHealth()); // Purpur
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue((double) (i * i)); // Purpur
         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue((double) (0.2F + 0.1F * (float) i));
         this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) i);
         if (flag) {
@@ -294,7 +249,7 @@ public class EntitySlime extends EntityInsentient implements IMonster {
                 super.die();
                 return;
             }
-            List<EntityLiving> slimes = new ArrayList<>(j);
+            List<EntityLiving> slimes = new ObjectArrayList<>(j);
             // CraftBukkit end
 
             for (int l = 0; l < k; ++l) {

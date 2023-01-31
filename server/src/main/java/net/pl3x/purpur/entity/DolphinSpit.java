@@ -1,21 +1,21 @@
 package net.pl3x.purpur.entity;
 
-import net.minecraft.world.entity.animal.EntityDolphin;
-import net.minecraft.world.entity.projectile.EntityLlamaSpit;
+import net.minecraft.core.particles.Particles;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.EntityDolphin;
+import net.minecraft.world.entity.projectile.EntityLlamaSpit;
+import net.minecraft.world.entity.projectile.ProjectileHelper;
+import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
-import net.minecraft.core.particles.Particles;
-import net.minecraft.world.entity.projectile.ProjectileHelper;
 import net.minecraft.world.phys.Vec3D;
-import net.minecraft.world.level.World;
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 public class DolphinSpit extends EntityLlamaSpit {

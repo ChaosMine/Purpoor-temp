@@ -1,16 +1,17 @@
 package net.minecraft.server.packs.resources;
 
 import com.google.common.base.Stopwatch;
+import net.minecraft.SystemUtils;
+import net.minecraft.util.Unit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import net.minecraft.SystemUtils;
-import net.minecraft.util.Unit;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ReloadableProfiled extends Reloadable<ReloadableProfiled.a> {
 

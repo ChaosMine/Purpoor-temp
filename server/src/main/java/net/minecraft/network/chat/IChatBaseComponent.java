@@ -1,19 +1,16 @@
 package net.minecraft.network.chat;
 
-import io.papermc.paper.adventure.AdventureComponent; // Paper
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.common.collect.Streams;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.mojang.brigadier.Message;
+import io.papermc.paper.adventure.AdventureComponent;
+import net.minecraft.SystemUtils;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.util.ChatDeserializer;
+import net.minecraft.util.ChatTypeAdapterFactory;
+
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -22,14 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
-import javax.annotation.Nullable;
-import net.minecraft.SystemUtils;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.ChatTypeAdapterFactory;
-
-// CraftBukkit start
-import com.google.common.collect.Streams;
 import java.util.stream.Stream;
 // CraftBukkit end
 
@@ -56,7 +45,7 @@ public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IC
     }
 
     default String a(int i) {
-        StringBuilder stringbuilder = new StringBuilder();
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
 
         this.a((s) -> {
             int j = i - stringbuilder.length();

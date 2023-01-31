@@ -1,6 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICommandListener;
 import net.minecraft.core.BaseBlockPosition;
@@ -26,17 +26,17 @@ import net.minecraft.world.level.block.BlockLectern;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.block.Lectern;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 // CraftBukkit end
 
 public class TileEntityLectern extends TileEntity implements Clearable, ITileInventory, ICommandListener { // CraftBukkit - ICommandListener
@@ -45,7 +45,7 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
     public final IInventory inventory = new LecternInventory();
     public class LecternInventory implements IInventory {
 
-        public List<HumanEntity> transaction = new ArrayList<>();
+        public List<HumanEntity> transaction = new ObjectArrayList<>();
         private int maxStack = 1;
 
         @Override
@@ -267,11 +267,6 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
 
     @Override
     public boolean shouldSendFailure() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldBroadcastCommands() {
         return false;
     }
 

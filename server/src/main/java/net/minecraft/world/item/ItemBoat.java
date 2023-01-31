@@ -1,8 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.InteractionResultWrapper;
@@ -16,6 +13,10 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ItemBoat extends Item {
 
@@ -36,19 +37,16 @@ public class ItemBoat extends Item {
             return InteractionResultWrapper.pass(itemstack);
         } else {
             Vec3D vec3d = entityhuman.f(1.0F);
-            double d0 = 5.0D;
-            List<Entity> list = world.getEntities(entityhuman, entityhuman.getBoundingBox().b(vec3d.a(5.0D)).g(1.0D), ItemBoat.a);
+            try (var list = world.getEntities(entityhuman, entityhuman.getBoundingBox().b(vec3d.a(5.0D)).g(1.0D), ItemBoat.a)) {
+                if (!list.isEmpty()) {
+                    Vec3D vec3d1 = entityhuman.j(1.0F);
 
-            if (!list.isEmpty()) {
-                Vec3D vec3d1 = entityhuman.j(1.0F);
-                Iterator iterator = list.iterator();
+                    for (Entity entity : list) {
+                        AxisAlignedBB axisalignedbb = entity.getBoundingBox().g((double) entity.bg());
 
-                while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
-                    AxisAlignedBB axisalignedbb = entity.getBoundingBox().g((double) entity.bg());
-
-                    if (axisalignedbb.d(vec3d1)) {
-                        return InteractionResultWrapper.pass(itemstack);
+                        if (axisalignedbb.d(vec3d1)) {
+                            return InteractionResultWrapper.pass(itemstack);
+                        }
                     }
                 }
             }

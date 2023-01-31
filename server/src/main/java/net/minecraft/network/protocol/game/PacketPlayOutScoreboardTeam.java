@@ -1,9 +1,6 @@
 package net.minecraft.network.protocol.game;
 
 import com.google.common.collect.Lists;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.chat.ChatComponentText;
@@ -11,6 +8,9 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.scores.ScoreboardTeam;
 import net.minecraft.world.scores.ScoreboardTeamBase;
+
+import java.io.IOException;
+import java.util.Collection;
 
 public class PacketPlayOutScoreboardTeam implements Packet<PacketListenerPlayOut> {
 
@@ -89,7 +89,7 @@ public class PacketPlayOutScoreboardTeam implements Packet<PacketListenerPlayOut
             this.j = packetdataserializer.readByte();
             this.e = packetdataserializer.e(40);
             this.f = packetdataserializer.e(40);
-            this.g = (EnumChatFormat) packetdataserializer.a(EnumChatFormat.class);
+            this.g = packetdataserializer.readEnum(EnumChatFormat.VALUES);
             this.c = packetdataserializer.h();
             this.d = packetdataserializer.h();
         }
@@ -101,7 +101,6 @@ public class PacketPlayOutScoreboardTeam implements Packet<PacketListenerPlayOut
                 this.h.add(packetdataserializer.e(40));
             }
         }
-
     }
 
     @Override
@@ -113,18 +112,15 @@ public class PacketPlayOutScoreboardTeam implements Packet<PacketListenerPlayOut
             packetdataserializer.writeByte(this.j);
             packetdataserializer.a(this.e);
             packetdataserializer.a(!com.destroystokyo.paper.PaperConfig.enablePlayerCollisions ? "never" : this.f); // Paper
-            packetdataserializer.a((Enum) this.g);
+            packetdataserializer.writeEnum(this.g);
             packetdataserializer.a(this.c);
             packetdataserializer.a(this.d);
         }
 
         if (this.i == 0 || this.i == 3 || this.i == 4) {
             packetdataserializer.d(this.h.size());
-            Iterator iterator = this.h.iterator();
 
-            while (iterator.hasNext()) {
-                String s = (String) iterator.next();
-
+            for (String s : this.h) {
                 packetdataserializer.a(s);
             }
         }

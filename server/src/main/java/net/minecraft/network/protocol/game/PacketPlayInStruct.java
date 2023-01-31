@@ -1,6 +1,5 @@
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
@@ -9,6 +8,8 @@ import net.minecraft.world.level.block.EnumBlockMirror;
 import net.minecraft.world.level.block.EnumBlockRotation;
 import net.minecraft.world.level.block.entity.TileEntityStructure;
 import net.minecraft.world.level.block.state.properties.BlockPropertyStructureMode;
+
+import java.io.IOException;
 
 public class PacketPlayInStruct implements Packet<PacketListenerPlayIn> {
 
@@ -32,17 +33,15 @@ public class PacketPlayInStruct implements Packet<PacketListenerPlayIn> {
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
         this.a = packetdataserializer.e();
-        this.b = (TileEntityStructure.UpdateType) packetdataserializer.a(TileEntityStructure.UpdateType.class);
-        this.c = (BlockPropertyStructureMode) packetdataserializer.a(BlockPropertyStructureMode.class);
+        this.b = packetdataserializer.readEnum(TileEntityStructure.UpdateType.VALUES);
+        this.c = packetdataserializer.readEnum(BlockPropertyStructureMode.VALUES);
         this.d = packetdataserializer.e(32767);
-        boolean flag = true;
 
         this.e = new BlockPosition(MathHelper.clamp(packetdataserializer.readByte(), -48, 48), MathHelper.clamp(packetdataserializer.readByte(), -48, 48), MathHelper.clamp(packetdataserializer.readByte(), -48, 48));
-        boolean flag1 = true;
 
         this.f = new BlockPosition(MathHelper.clamp(packetdataserializer.readByte(), 0, 48), MathHelper.clamp(packetdataserializer.readByte(), 0, 48), MathHelper.clamp(packetdataserializer.readByte(), 0, 48));
-        this.g = (EnumBlockMirror) packetdataserializer.a(EnumBlockMirror.class);
-        this.h = (EnumBlockRotation) packetdataserializer.a(EnumBlockRotation.class);
+        this.g = packetdataserializer.readEnum(EnumBlockMirror.VALUES);
+        this.h = packetdataserializer.readEnum(EnumBlockRotation.VALUES);
         this.i = packetdataserializer.e(128); // Paper - Fix MC-148809, increase max character input to 128
         this.m = MathHelper.a(packetdataserializer.readFloat(), 0.0F, 1.0F);
         this.n = packetdataserializer.j();
@@ -56,8 +55,8 @@ public class PacketPlayInStruct implements Packet<PacketListenerPlayIn> {
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.a(this.a);
-        packetdataserializer.a((Enum) this.b);
-        packetdataserializer.a((Enum) this.c);
+        packetdataserializer.writeEnum(this.b);
+        packetdataserializer.writeEnum(this.c);
         packetdataserializer.a(this.d);
         packetdataserializer.writeByte(this.e.getX());
         packetdataserializer.writeByte(this.e.getY());
@@ -65,8 +64,8 @@ public class PacketPlayInStruct implements Packet<PacketListenerPlayIn> {
         packetdataserializer.writeByte(this.f.getX());
         packetdataserializer.writeByte(this.f.getY());
         packetdataserializer.writeByte(this.f.getZ());
-        packetdataserializer.a((Enum) this.g);
-        packetdataserializer.a((Enum) this.h);
+        packetdataserializer.writeEnum(this.g);
+        packetdataserializer.writeEnum(this.h);
         packetdataserializer.a(this.i);
         packetdataserializer.writeFloat(this.m);
         packetdataserializer.b(this.n);

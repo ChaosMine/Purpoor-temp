@@ -6,7 +6,6 @@ import net.minecraft.world.item.EnumColor;
 import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Cat;
-import org.bukkit.entity.Cat.Type;
 import org.bukkit.entity.EntityType;
 
 public class CraftCat extends CraftTameableAnimal implements Cat {

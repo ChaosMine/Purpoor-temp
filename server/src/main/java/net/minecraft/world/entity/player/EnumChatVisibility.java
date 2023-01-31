@@ -1,21 +1,19 @@
 package net.minecraft.world.entity.player;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import org.jetbrains.annotations.Unmodifiable;
 
 public enum EnumChatVisibility {
+    FULL(0),
+    SYSTEM(1),
+    HIDDEN(2),
+    ;
 
-    FULL(0, "options.chat.visibility.full"), SYSTEM(1, "options.chat.visibility.system"), HIDDEN(2, "options.chat.visibility.hidden");
+    public static final EnumChatVisibility @Unmodifiable [] VALUES = values();
 
-    private static final EnumChatVisibility[] d = (EnumChatVisibility[]) Arrays.stream(values()).sorted(Comparator.comparingInt(EnumChatVisibility::a)).toArray((i) -> {
-        return new EnumChatVisibility[i];
-    });
     private final int e;
-    private final String f;
 
-    private EnumChatVisibility(int i, String s) {
+    EnumChatVisibility(int i) {
         this.e = i;
-        this.f = s;
     }
 
     public int a() {

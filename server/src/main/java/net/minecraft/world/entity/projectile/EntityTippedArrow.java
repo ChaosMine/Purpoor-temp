@@ -1,9 +1,6 @@
 package net.minecraft.world.entity.projectile;
 
 import com.google.common.collect.Sets;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +17,10 @@ import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.World;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 public class EntityTippedArrow extends EntityArrow {
 

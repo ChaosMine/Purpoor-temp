@@ -1,10 +1,10 @@
 package net.minecraft.commands;
 
-import java.util.UUID;
 import net.minecraft.network.chat.IChatBaseComponent;
 
-public interface ICommandListener {
+import java.util.UUID;
 
+public interface ICommandListener {
     ICommandListener DUMMY = new ICommandListener() {
         @Override
         public void sendMessage(IChatBaseComponent ichatbasecomponent, UUID uuid) {}
@@ -16,11 +16,6 @@ public interface ICommandListener {
 
         @Override
         public boolean shouldSendFailure() {
-            return false;
-        }
-
-        @Override
-        public boolean shouldBroadcastCommands() {
             return false;
         }
 
@@ -37,8 +32,6 @@ public interface ICommandListener {
     boolean shouldSendSuccess();
 
     boolean shouldSendFailure();
-
-    boolean shouldBroadcastCommands();
 
     org.bukkit.command.CommandSender getBukkitSender(CommandListenerWrapper wrapper); // CraftBukkit
 }

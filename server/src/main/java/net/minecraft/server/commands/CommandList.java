@@ -2,8 +2,6 @@ package net.minecraft.server.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.util.List;
-import java.util.function.Function;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.network.chat.ChatComponentUtils;
 import net.minecraft.network.chat.ChatMessage;
@@ -12,6 +10,9 @@ import net.minecraft.network.chat.IChatMutableComponent;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.player.EntityHuman;
+
+import java.util.List;
+import java.util.function.Function;
 
 public class CommandList {
 

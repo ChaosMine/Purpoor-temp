@@ -1,8 +1,7 @@
 package net.minecraft.world.inventory;
 
-import java.util.Iterator;
-import java.util.Map;
-
+import io.papermc.paper.adventure.PaperAdventure;
+import net.kyori.adventure.text.Component;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -23,14 +22,10 @@ import net.minecraft.world.level.block.state.IBlockData;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
-// CraftBukkit end
 
-// Purpur start
-import io.papermc.paper.adventure.PaperAdventure;
-import net.kyori.adventure.text.Component;
+import java.util.Iterator;
+import java.util.Map;
 
 import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 // Purpur end

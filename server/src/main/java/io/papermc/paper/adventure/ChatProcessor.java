@@ -4,11 +4,6 @@ import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AbstractChatEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import io.papermc.paper.event.player.ChatEvent;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.text.Component;
@@ -31,6 +26,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+
 public final class ChatProcessor {
     // <-- copied from adventure-text-serializer-legacy
     private static final Pattern DEFAULT_URL_PATTERN = Pattern.compile("(?:(https?)://)?([-\\w_.]+\\.\\w{2,})(/\\S*)?");
@@ -40,7 +40,7 @@ public final class ChatProcessor {
         .replacement(url -> {
             String clickUrl = url.content();
             if (!URL_SCHEME_PATTERN.matcher(clickUrl).find()) {
-                clickUrl = "http://" + clickUrl;
+                clickUrl = "https://" + clickUrl;
             }
             return url.clickEvent(ClickEvent.openUrl(clickUrl));
         })

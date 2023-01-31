@@ -27,30 +27,19 @@
  */
 package org.spigotmc;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.*;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * <p> The metrics class obtains data about a plugin and submits statistics about it to the metrics backend. </p> <p>
@@ -129,7 +118,7 @@ public class Metrics {
 
         // Do we need to create the file?
         if (configuration.get("guid", null) == null) {
-            configuration.options().header("http://mcstats.org").copyDefaults(true);
+            configuration.options().header("https://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
 
@@ -349,7 +338,7 @@ public class Metrics {
         // END server software specific section -- all code below does not use any code outside of this class / Java
 
         // Construct the post data
-        final StringBuilder data = new StringBuilder();
+        final StringBuilder data = dev.kamillaova.paper.pool.StringBuilderPool.take();
 
         // The plugin's description file containg all of the plugin data such as name, version, author, etc
         data.append(encode("guid")).append('=').append(encode(guid));

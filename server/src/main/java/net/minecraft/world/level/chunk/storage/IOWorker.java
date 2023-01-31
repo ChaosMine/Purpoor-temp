@@ -2,6 +2,16 @@ package net.minecraft.world.level.chunk.storage;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.SystemUtils;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Unit;
+import net.minecraft.util.thread.PairedQueue;
+import net.minecraft.util.thread.ThreadedMailbox;
+import net.minecraft.world.level.ChunkCoordIntPair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -12,15 +22,6 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
-import net.minecraft.SystemUtils;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Unit;
-import net.minecraft.util.thread.PairedQueue;
-import net.minecraft.util.thread.ThreadedMailbox;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class IOWorker implements AutoCloseable {
 

@@ -1,9 +1,6 @@
 package net.minecraft.world.entity.decoration;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vector3f;
 import net.minecraft.core.particles.ParticleParamBlock;
@@ -19,35 +16,28 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMainHand;
-import net.minecraft.world.entity.EnumMoveType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityArrow;
 import net.minecraft.world.entity.vehicle.EntityMinecartAbstract;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockFence;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.EnumPistonReaction;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.inventory.EquipmentSlot;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class EntityArmorStand extends EntityLiving {
@@ -173,13 +163,13 @@ public class EntityArmorStand extends EntityLiving {
 
     // Purpur start
     public List<List<ItemStack>> cloneEquipment() {
-        List<List<ItemStack>> list = new java.util.ArrayList<>();
-        List<ItemStack> handItems = new java.util.ArrayList<>();
+        List<List<ItemStack>> list = new ObjectArrayList<>();
+        List<ItemStack> handItems = new ObjectArrayList<>();
         for (ItemStack item : this.handItems) {
             handItems.add(item.cloneItemStack());
         }
         list.add(handItems);
-        List<ItemStack> armorItems = new java.util.ArrayList<>();
+        List<ItemStack> armorItems = new ObjectArrayList<>();
         for (ItemStack item : this.armorItems) {
             armorItems.add(item.cloneItemStack());
         }
@@ -411,16 +401,15 @@ public class EntityArmorStand extends EntityLiving {
     @Override
     protected void collideNearby() {
         if (!world.paperConfig.armorStandEntityLookups) return; // Paper
-        List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), EntityArmorStand.br);
+        try (var list = this.world.getEntities(this, this.getBoundingBox(), EntityArmorStand.br)) {
+            for (int i = 0; i < list.size(); ++i) {
+                Entity entity = list.get(i);
 
-        for (int i = 0; i < list.size(); ++i) {
-            Entity entity = (Entity) list.get(i);
-
-            if (this.h(entity) <= 0.2D) {
-                entity.collide(this);
+                if (this.h(entity) <= 0.2D) {
+                    entity.collide(this);
+                }
             }
         }
-
     }
 
     @Override

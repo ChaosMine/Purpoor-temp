@@ -3,14 +3,9 @@ package org.bukkit.craftbukkit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import java.util.HashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.IRegistry;
-import net.minecraft.core.particles.ParticleParam;
-import net.minecraft.core.particles.ParticleParamBlock;
-import net.minecraft.core.particles.ParticleParamItem;
-import net.minecraft.core.particles.ParticleParamRedstone;
-import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.*;
 import net.minecraft.resources.MinecraftKey;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -20,6 +15,9 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum CraftParticle {
 
@@ -109,7 +107,7 @@ public enum CraftParticle {
 
     static {
         particles = HashBiMap.create();
-        aliases = new HashMap<>();
+        aliases = new Object2ObjectOpenHashMap<>();
 
         for (CraftParticle particle : CraftParticle.values()) {
             if (particles.containsValue(particle.minecraftKey)) {

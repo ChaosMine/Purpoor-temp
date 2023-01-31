@@ -1,9 +1,7 @@
 package com.destroystokyo.paper.util;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -13,8 +11,9 @@ import net.minecraft.world.level.block.BlockRedstoneWire;
 import net.minecraft.world.level.block.state.IBlockData;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Used for the faster redstone algorithm.

@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.animal;
 
-import java.util.UUID;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,37 +20,11 @@ import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTameableAnimal;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.IEntityAngerable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeProvider;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBeg;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBreed;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowOwner;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLeapAtTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomLookaround;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSit;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalOwnerHurtByTarget;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalOwnerHurtTarget;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalRandomTargetNonTamed;
-import net.minecraft.world.entity.ai.goal.target.PathfinderGoalUniversalAngerReset;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.*;
 import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
 import net.minecraft.world.entity.animal.horse.EntityLlama;
 import net.minecraft.world.entity.monster.EntityCreeper;
@@ -61,19 +32,17 @@ import net.minecraft.world.entity.monster.EntityGhast;
 import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityArrow;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDye;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class EntityWolf extends EntityTameableAnimal implements IEntityAngerable {

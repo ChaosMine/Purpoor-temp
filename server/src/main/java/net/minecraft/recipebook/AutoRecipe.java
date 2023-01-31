@@ -4,9 +4,6 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.network.protocol.game.PacketPlayOutAutoRecipe;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
@@ -20,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.IRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 
 public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Integer> {
 

@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.world.item.EnumColor;
@@ -14,7 +15,7 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
 
     // Lazily initialized only if requested:
     // Paper start
-    private java.util.ArrayList<net.kyori.adventure.text.Component> originalLines = null; // ArrayList for RandomAccess
+    private ObjectArrayList<net.kyori.adventure.text.Component> originalLines = null; // ArrayList for RandomAccess
     private java.util.ArrayList<net.kyori.adventure.text.Component> lines = null; // ArrayList for RandomAccess
     // Paper end
 
@@ -53,7 +54,7 @@ public class CraftSign extends CraftBlockEntityState<TileEntitySign> implements 
         // Lazy initialization:
         TileEntitySign sign = this.getSnapshot();
         lines = io.papermc.paper.adventure.PaperAdventure.asAdventure(com.google.common.collect.Lists.newArrayList(sign.lines));
-        originalLines = new java.util.ArrayList<>(lines);
+        originalLines = new ObjectArrayList<>(lines);
     }
     // Paper end
     @Override

@@ -3,8 +3,6 @@ package net.minecraft.world.entity.boss.enderdragon.phases;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftEnderDragon;
 import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 // CraftBukkit end

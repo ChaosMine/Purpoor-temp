@@ -4,54 +4,57 @@ import com.mojang.bridge.game.GameVersion;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ResourceLeakDetector.Level;
-import java.time.Duration;
 import net.minecraft.commands.CommandExceptionProvider;
 
+import java.time.Duration;
+
 public class SharedConstants {
+	public static final Level a = Level.DISABLED;
+	public static final long b = Duration.ofMillis(300L).toNanos();
+	public static boolean c = true;
+	public static boolean d;
+	public static final char[] allowedCharacters = new char[]{'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '"', ':'};
 
-    public static final Level a = Level.DISABLED;
-    public static final long b = Duration.ofMillis(300L).toNanos();
-    public static boolean c = true;
-    public static boolean d;
-    public static final char[] allowedCharacters = new char[]{'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '"', ':'};
-    private static GameVersion f;
+	private static GameVersion gameVersion;
 
-    public static boolean isAllowedChatCharacter(char c0) {
-        return c0 != 167 && c0 >= ' ' && c0 != 127;
-    }
+	public static boolean isAllowedChatCharacter(char c0) {
+		return c0 != 167 && c0 >= ' ' && c0 != 127;
+	}
 
-    public static String filterAllowedChatCharacters(String input) { return a(input); } // Paper - OBFHELPER
-    public static String a(String s) {
-        StringBuilder stringbuilder = new StringBuilder();
-        char[] achar = s.toCharArray();
-        int i = achar.length;
+	public static String filterAllowedChatCharacters(String input) {
+		return a(input);
+	} // Paper - OBFHELPER
 
-        for (int j = 0; j < i; ++j) {
-            char c0 = achar[j];
+	public static String a(String s) {
+		StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+		char[] achar = s.toCharArray();
+		int i = achar.length;
 
-            if (isAllowedChatCharacter(c0)) {
-                stringbuilder.append(c0);
-            }
-        }
+		for (int j = 0; j < i; ++j) {
+			char c0 = achar[j];
 
-        return stringbuilder.toString();
-    }
+			if (isAllowedChatCharacter(c0)) {
+				stringbuilder.append(c0);
+			}
+		}
 
-    public static GameVersion getGameVersion() {
-        if (SharedConstants.f == null) {
-            SharedConstants.f = MinecraftVersion.a();
-        }
+		return stringbuilder.toString();
+	}
 
-        return SharedConstants.f;
-    }
+	public static GameVersion getGameVersion() {
+		if (SharedConstants.gameVersion == null) {
+			SharedConstants.gameVersion = MinecraftVersion.a();
+		}
 
-    public static int b() {
-        return 754;
-    }
+		return SharedConstants.gameVersion;
+	}
 
-    static {
-        ResourceLeakDetector.setLevel(SharedConstants.a);
-        CommandSyntaxException.ENABLE_COMMAND_STACK_TRACES = false;
-        CommandSyntaxException.BUILT_IN_EXCEPTIONS = new CommandExceptionProvider();
-    }
+	public static int b() {
+		return 754;
+	}
+
+	static {
+		CommandSyntaxException.ENABLE_COMMAND_STACK_TRACES = false;
+		CommandSyntaxException.BUILT_IN_EXCEPTIONS = new CommandExceptionProvider();
+	}
 }

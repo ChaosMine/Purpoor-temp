@@ -1,20 +1,21 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableMap.Builder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.meta.KnowledgeBookMeta;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @DelegateDeserialization(SerializableMeta.class)
 public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBookMeta {
@@ -22,7 +23,7 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
     static final ItemMetaKey BOOK_RECIPES = new ItemMetaKey("Recipes");
     static final int MAX_RECIPES = Short.MAX_VALUE;
 
-    protected List<NamespacedKey> recipes = new ArrayList<NamespacedKey>();
+    protected List<NamespacedKey> recipes = new ObjectArrayList<>();
 
     CraftMetaKnowledgeBook(CraftMetaItem meta) {
         super(meta);
@@ -126,7 +127,7 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
     @Override
     public CraftMetaKnowledgeBook clone() {
         CraftMetaKnowledgeBook meta = (CraftMetaKnowledgeBook) super.clone();
-        meta.recipes = new ArrayList<NamespacedKey>(recipes);
+        meta.recipes = new ObjectArrayList<NamespacedKey>(recipes);
         return meta;
     }
 
@@ -163,7 +164,7 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
         super.serialize(builder);
 
         if (hasRecipes()) {
-            List<String> recipesString = new ArrayList<String>();
+            List<String> recipesString = new ObjectArrayList<String>();
             for (NamespacedKey recipe : recipes) {
                 recipesString.add(recipe.toString());
             }

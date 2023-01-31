@@ -69,7 +69,7 @@ public class PacketPlayOutCommands implements Packet<PacketListenerPlayOut> {
     }
 
     private static void a(PacketPlayOutCommands.a[] apacketplayoutcommands_a) {
-        ArrayList arraylist = Lists.newArrayList(apacketplayoutcommands_a);
+        var arraylist = Lists.newArrayList(apacketplayoutcommands_a);
 
         boolean flag;
 
@@ -78,23 +78,21 @@ public class PacketPlayOutCommands implements Packet<PacketListenerPlayOut> {
                 return;
             }
 
-            flag = arraylist.removeIf((packetplayoutcommands_a) -> {
-                return packetplayoutcommands_a.a(apacketplayoutcommands_a);
-            });
+            flag = arraylist.removeIf((packetplayoutcommands_a) -> packetplayoutcommands_a.a(apacketplayoutcommands_a));
         } while (flag);
 
         throw new IllegalStateException("Server sent an impossible command tree");
     }
 
     private static Object2IntMap<CommandNode<ICompletionProvider>> a(RootCommandNode<ICompletionProvider> rootcommandnode) {
-        Object2IntMap<CommandNode<ICompletionProvider>> object2intmap = new Object2IntOpenHashMap();
+        Object2IntMap<CommandNode<ICompletionProvider>> object2intmap = new Object2IntOpenHashMap<>();
         Queue<CommandNode<ICompletionProvider>> queue = Queues.newArrayDeque();
 
         queue.add(rootcommandnode);
 
         CommandNode commandnode;
 
-        while ((commandnode = (CommandNode) queue.poll()) != null) {
+        while ((commandnode = queue.poll()) != null) {
             if (!object2intmap.containsKey(commandnode)) {
                 int i = object2intmap.size();
 

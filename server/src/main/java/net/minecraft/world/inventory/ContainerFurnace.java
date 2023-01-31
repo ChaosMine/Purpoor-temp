@@ -1,7 +1,5 @@
 package net.minecraft.world.inventory;
 
-import net.minecraft.recipebook.AutoRecipeFurnace;
-import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.AutoRecipeStackManager;
@@ -13,8 +11,6 @@ import net.minecraft.world.item.crafting.RecipeCooking;
 import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.entity.TileEntityFurnace;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftInventoryFurnace;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end

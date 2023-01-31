@@ -1,20 +1,19 @@
 package org.bukkit.craftbukkit.command;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.util.Waitable;
-
-// Paper start - JLine update
+import org.bukkit.event.server.TabCompleteEvent;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
-// Paper end
-import org.bukkit.event.server.TabCompleteEvent;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 public class ConsoleCommandCompleter implements Completer {
     private final DedicatedServer server; // Paper - CraftServer -> DedicatedServer
@@ -39,7 +38,7 @@ public class ConsoleCommandCompleter implements Completer {
         if (event.isCancelled() || event.isHandled()) {
             // Still fire sync event with the provided completions, if someone is listening
             if (!event.isCancelled() && TabCompleteEvent.getHandlerList().getRegisteredListeners().length > 0) {
-                List<com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion> finalCompletions = new java.util.ArrayList<>(completions);
+                List<com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion> finalCompletions = new ObjectArrayList<>(completions);
                 Waitable<List<String>> syncCompletions = new Waitable<List<String>>() {
                     @Override
                     protected List<String> evaluate() {

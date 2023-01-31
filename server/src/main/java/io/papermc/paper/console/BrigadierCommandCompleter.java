@@ -6,6 +6,7 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestion;
 import io.papermc.paper.adventure.PaperAdventure;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.network.chat.ChatComponentUtils;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -48,7 +49,7 @@ public final class BrigadierCommandCompleter {
         final @NonNull List<Suggestion> brigSuggestions,
         final @NonNull List<Completion> existing
     ) {
-        final List<Completion> completions = new ArrayList<>();
+        final List<Completion> completions = new ObjectArrayList<>();
         brigSuggestions.forEach(it -> completions.add(toCompletion(it)));
         for (final Completion completion : existing) {
             if (completion.suggestion().isEmpty() || brigSuggestions.stream().anyMatch(it -> it.getText().equals(completion.suggestion()))) {

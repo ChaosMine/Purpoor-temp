@@ -1,9 +1,11 @@
 package net.minecraft.world;
 
 import io.papermc.paper.adventure.PaperAdventure;
-import java.util.UUID;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.IChatBaseComponent;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.UUID;
 
 public abstract class BossBattle {
 
@@ -106,6 +108,8 @@ public abstract class BossBattle {
 
         PROGRESS("progress"), NOTCHED_6("notched_6"), NOTCHED_10("notched_10"), NOTCHED_12("notched_12"), NOTCHED_20("notched_20");
 
+        public static final BarStyle @Unmodifiable [] VALUES = values();
+
         private final String f;
 
         private BarStyle(String s) {
@@ -135,6 +139,8 @@ public abstract class BossBattle {
     public static enum BarColor {
 
         PINK("pink", EnumChatFormat.RED), BLUE("blue", EnumChatFormat.BLUE), RED("red", EnumChatFormat.DARK_RED), GREEN("green", EnumChatFormat.GREEN), YELLOW("yellow", EnumChatFormat.YELLOW), PURPLE("purple", EnumChatFormat.DARK_BLUE), WHITE("white", EnumChatFormat.WHITE);
+
+        public static final BarColor @Unmodifiable [] VALUES = values();
 
         private final String h;
         private final EnumChatFormat i;

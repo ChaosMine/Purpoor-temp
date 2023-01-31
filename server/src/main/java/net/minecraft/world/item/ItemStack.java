@@ -6,39 +6,28 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.SystemUtils;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.commands.arguments.blocks.ArgumentBlockPredicate;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.ChatComponentUtils;
-import net.minecraft.network.chat.ChatHoverable;
-import net.minecraft.network.chat.ChatModifier;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
+import net.minecraft.nbt.*;
+import net.minecraft.network.chat.*;
+import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
 import net.minecraft.resources.MinecraftKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.stats.StatisticList;
 import net.minecraft.tags.ITagRegistry;
+import net.minecraft.util.datafix.fixes.DataConverterTypes;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.InteractionResultWrapper;
@@ -56,31 +45,15 @@ import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.pattern.ShapeDetectorBlock;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import com.mojang.serialization.Dynamic;
-import java.util.List;
-import java.util.Map;
-import net.minecraft.core.EnumDirection;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.sounds.SoundCategory;
-import net.minecraft.util.datafix.fixes.DataConverterTypes;
-import net.minecraft.world.level.block.BlockJukeBox;
-import net.minecraft.world.level.block.BlockSapling;
-import net.minecraft.world.level.block.BlockTileEntity;
-import net.minecraft.world.level.block.BlockWitherSkull;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundEffectType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntitySign;
 import net.minecraft.world.level.block.entity.TileEntitySkull;
+import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.block.state.pattern.ShapeDetectorBlock;
+import net.pl3x.purpur.PurpurConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockState;
@@ -92,6 +65,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+
+import javax.annotation.Nullable;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public final class ItemStack {
@@ -112,7 +92,6 @@ public final class ItemStack {
     });
     private static final ChatModifier e = ChatModifier.a.setColor(EnumChatFormat.DARK_PURPLE).setItalic(true);
     private int count;
-    private int g;
     @Deprecated
     private Item item;
     public NBTTagCompound tag; // Paper private -> public
@@ -297,7 +276,7 @@ public final class ItemStack {
                 Location location = new Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
                 TreeType treeType = BlockSapling.treeType;
                 BlockSapling.treeType = null;
-                List<BlockState> blocks = new java.util.ArrayList<>(world.capturedBlockStates.values());
+                List<BlockState> blocks = new ObjectArrayList<>(world.capturedBlockStates.values());
                 world.capturedBlockStates.clear();
                 StructureGrowEvent structureEvent = null;
                 if (treeType != null) {
@@ -327,7 +306,7 @@ public final class ItemStack {
 
             if (entityhuman != null && enuminteractionresult.a()) {
                 org.bukkit.event.block.BlockPlaceEvent placeEvent = null;
-                List<BlockState> blocks = new java.util.ArrayList<>(world.capturedBlockStates.values());
+                List<BlockState> blocks = new ObjectArrayList<>(world.capturedBlockStates.values());
                 world.capturedBlockStates.clear();
                 if (blocks.size() > 1) {
                     placeEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callBlockMultiPlaceEvent(world, entityhuman, enumhand, blocks, blockposition.getX(), blockposition.getY(), blockposition.getZ());
@@ -603,7 +582,6 @@ public final class ItemStack {
         } else {
             ItemStack itemstack = new ItemStack(origItem ? this.item : this.getItem(), this.count); // Paper
 
-            itemstack.d(this.D());
             if (this.tag != null) {
                 itemstack.tag = this.tag.clone();
             }
@@ -649,14 +627,12 @@ public final class ItemStack {
     }
 
     public void a(World world, Entity entity, int i, boolean flag) {
-        if (this.g > 0) {
-            --this.g;
-        }
+        if (PurpurConfig.PurpurConfigCache.disableItemsTicking) return;
 
-        if (this.getItem() != null) {
-            this.getItem().a(this, world, entity, i, flag);
+        var item = this.getItem();
+        if (item != null) {
+            item.a(this, world, entity, i, flag);
         }
-
     }
 
     public void a(World world, EntityHuman entityhuman, int i) {
@@ -1037,14 +1013,6 @@ public final class ItemStack {
             this.o = false;
             return false;
         }
-    }
-
-    public int D() {
-        return this.g;
-    }
-
-    public void d(int i) {
-        this.g = i;
     }
 
     public int getCount() {

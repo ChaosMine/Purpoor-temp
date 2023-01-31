@@ -1,24 +1,11 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.inventory.InventoryEnderChest;
 import net.minecraft.world.inventory.InventoryMerchant;
-import net.minecraft.world.level.block.entity.IHopper;
-import net.minecraft.world.level.block.entity.TileEntity;
-import net.minecraft.world.level.block.entity.TileEntityBarrel;
-import net.minecraft.world.level.block.entity.TileEntityBlastFurnace;
-import net.minecraft.world.level.block.entity.TileEntityBrewingStand;
-import net.minecraft.world.level.block.entity.TileEntityDispenser;
-import net.minecraft.world.level.block.entity.TileEntityDropper;
-import net.minecraft.world.level.block.entity.TileEntityFurnace;
-import net.minecraft.world.level.block.entity.TileEntityLectern;
-import net.minecraft.world.level.block.entity.TileEntityShulkerBox;
-import net.minecraft.world.level.block.entity.TileEntitySmoker;
+import net.minecraft.world.level.block.entity.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +15,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 
 public class CraftInventory implements Inventory {
     protected final IInventory inventory;
@@ -368,7 +359,7 @@ public class CraftInventory implements Inventory {
     private HashMap<Integer, ItemStack> removeItem(boolean searchEntire, ItemStack... items) {
         // Paper end
         Validate.notNull(items, "Items cannot be null");
-        HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+        HashMap<Integer, ItemStack> leftover = new HashMap<>();
 
         // TODO: optimization
 

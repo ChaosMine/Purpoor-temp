@@ -1,23 +1,15 @@
 package net.minecraft.world.level.block.state;
 
-import com.google.common.collect.ArrayTable;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
-import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.collect.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
+import net.minecraft.world.level.block.state.properties.IBlockState;
+
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
-import net.minecraft.world.level.block.state.properties.IBlockState;
 
 public abstract class IBlockDataHolder<O, S> {
 
@@ -70,7 +62,7 @@ public abstract class IBlockDataHolder<O, S> {
     }
 
     public String toString() {
-        StringBuilder stringbuilder = new StringBuilder();
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
 
         stringbuilder.append(this.c);
         if (!this.getStateMap().isEmpty()) {

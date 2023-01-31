@@ -9,8 +9,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import java.util.Collection;
-import java.util.Iterator;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentEnchantment;
 import net.minecraft.commands.arguments.ArgumentEntity;
@@ -20,6 +18,9 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 public class CommandEnchant {
 

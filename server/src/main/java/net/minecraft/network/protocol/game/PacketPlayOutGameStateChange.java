@@ -2,9 +2,10 @@ package net.minecraft.network.protocol.game;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import java.io.IOException;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
+
+import java.io.IOException;
 
 public class PacketPlayOutGameStateChange implements Packet<PacketListenerPlayOut> {
 

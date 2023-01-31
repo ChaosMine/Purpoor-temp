@@ -1,11 +1,12 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.level.IWorldReader;
+
+import java.util.EnumSet;
 
 public abstract class PathfinderGoalGotoTarget extends PathfinderGoal {
 

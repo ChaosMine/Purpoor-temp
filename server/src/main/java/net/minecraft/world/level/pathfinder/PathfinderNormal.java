@@ -4,9 +4,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import java.util.EnumSet;
-import java.util.Iterator;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.tags.Tag;
@@ -16,13 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.level.ChunkCache;
 import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockCampfire;
-import net.minecraft.world.level.block.BlockDoor;
-import net.minecraft.world.level.block.BlockFenceGate;
-import net.minecraft.world.level.block.BlockLeaves;
-import net.minecraft.world.level.block.BlockMinecartTrackAbstract;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidTypes;
@@ -30,6 +21,10 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Iterator;
 
 public class PathfinderNormal extends PathfinderAbstract {
 

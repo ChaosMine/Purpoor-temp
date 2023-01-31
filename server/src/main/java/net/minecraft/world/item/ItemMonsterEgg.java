@@ -2,10 +2,6 @@ package net.minecraft.world.item;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,11 +10,7 @@ import net.minecraft.stats.StatisticList;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.InteractionResultWrapper;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.MobSpawnerAbstract;
@@ -32,12 +24,15 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
-
-// Purpur start
 import net.pl3x.purpur.event.PlayerSetSpawnerTypeWithEggEvent;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 // Purpur end
 
 public class ItemMonsterEgg extends Item {

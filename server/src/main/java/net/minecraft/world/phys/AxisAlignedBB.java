@@ -1,12 +1,13 @@
 package net.minecraft.world.phys;
 
-import java.util.Iterator;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.levelgen.structure.StructureBoundingBox;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
 
 public class AxisAlignedBB {
 

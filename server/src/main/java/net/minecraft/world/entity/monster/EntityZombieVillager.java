@@ -2,8 +2,6 @@ package net.minecraft.world.entity.monster;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -13,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
@@ -23,19 +22,10 @@ import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
-import net.minecraft.world.entity.ReputationHandler;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.village.ReputationEvent;
-import net.minecraft.world.entity.npc.EntityVillager;
-import net.minecraft.world.entity.npc.VillagerData;
-import net.minecraft.world.entity.npc.VillagerDataHolder;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.npc.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,12 +37,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockBed;
 import net.minecraft.world.level.block.Blocks;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.server.MinecraftServer;
 import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 // CraftBukkit end
 
 public class EntityZombieVillager extends EntityZombie implements VillagerDataHolder {

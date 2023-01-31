@@ -2,11 +2,6 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
@@ -17,6 +12,13 @@ import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.ScoreboardObjective;
 import net.minecraft.world.scores.ScoreboardScore;
 import net.minecraft.world.scores.ScoreboardTeam;
+import org.jetbrains.annotations.Unmodifiable;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class ScoreboardServer extends Scoreboard {
 
@@ -257,10 +259,11 @@ public class ScoreboardServer extends Scoreboard {
     }
     // CraftBukkit end
 
-    public static enum Action {
+    public enum Action {
+        CHANGE,
+        REMOVE,
+        ;
 
-        CHANGE, REMOVE;
-
-        private Action() {}
+        public static final Action @Unmodifiable [] VALUES = values();
     }
 }

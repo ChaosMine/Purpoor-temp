@@ -1,5 +1,6 @@
 package net.minecraft.world.level.levelgen;
 
+import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.EntityPlayer;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.monster.EntityPhantom;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.MobSpawner;
 import net.minecraft.world.level.SpawnerCreature;
-import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public class MobSpawnerPhantom implements MobSpawner {

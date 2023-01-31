@@ -1,22 +1,19 @@
 package net.minecraft.world.level.material;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BlockFireAbstract;
 import net.minecraft.world.level.block.BlockFluids;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.Random;
 
 public abstract class FluidTypeLava extends FluidTypeFlowing {
 

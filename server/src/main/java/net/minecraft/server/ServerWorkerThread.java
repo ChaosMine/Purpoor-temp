@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import net.minecraft.SystemUtils;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerWorkerThread extends Thread {

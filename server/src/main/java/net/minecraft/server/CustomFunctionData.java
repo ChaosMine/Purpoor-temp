@@ -2,16 +2,13 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.CustomFunction;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.GameRules;
+
+import java.util.*;
 
 public class CustomFunctionData {
 

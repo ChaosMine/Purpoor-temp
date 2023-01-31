@@ -1,9 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -22,8 +18,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+import org.bukkit.event.entity.EntityInteractEvent;
 
-import org.bukkit.event.entity.EntityInteractEvent; // CraftBukkit
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class BlockTripwire extends Block {
 
@@ -138,51 +138,47 @@ public class BlockTripwire extends Block {
         IBlockData iblockdata = world.getType(blockposition);
         boolean flag = (Boolean) iblockdata.get(BlockTripwire.POWERED);
         boolean flag1 = false;
-        List<? extends Entity> list = world.getEntities((Entity) null, iblockdata.getShape(world, blockposition).getBoundingBox().a(blockposition));
+        try (var list = world.getEntities(null, iblockdata.getShape(world, blockposition).getBoundingBox().a(blockposition))) {
 
-        if (!list.isEmpty()) {
-            Iterator iterator = list.iterator();
+            if (!list.isEmpty()) {
 
-            while (iterator.hasNext()) {
-                Entity entity = (Entity) iterator.next();
-
-                if (!entity.isIgnoreBlockTrigger()) {
-                    flag1 = true;
-                    break;
-                }
-            }
-        }
-
-        // CraftBukkit start - Call interact even when triggering connected tripwire
-        if (flag != flag1 && flag1 && (Boolean)iblockdata.get(ATTACHED)) {
-            org.bukkit.World bworld = world.getWorld();
-            org.bukkit.plugin.PluginManager manager = world.getServer().getPluginManager();
-            org.bukkit.block.Block block = bworld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
-            boolean allowed = false;
-
-            // If all of the events are cancelled block the tripwire trigger, else allow
-            for (Object object : list) {
-                if (object != null) {
-                    org.bukkit.event.Cancellable cancellable;
-
-                    if (object instanceof EntityHuman) {
-                        cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityHuman) object, org.bukkit.event.block.Action.PHYSICAL, blockposition, null, null, null);
-                    } else if (object instanceof Entity) {
-                        cancellable = new EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
-                        manager.callEvent((EntityInteractEvent) cancellable);
-                    } else {
-                        continue;
-                    }
-
-                    if (!cancellable.isCancelled()) {
-                        allowed = true;
+                for (Entity entity : list) {
+                    if (!entity.isIgnoreBlockTrigger()) {
+                        flag1 = true;
                         break;
                     }
                 }
             }
 
-            if (!allowed) {
-                return;
+            // CraftBukkit start - Call interact even when triggering connected tripwire
+            if (flag != flag1 && flag1 && iblockdata.get(ATTACHED)) {
+                org.bukkit.World bworld = world.getWorld();
+                org.bukkit.plugin.PluginManager manager = world.getServer().getPluginManager();
+                org.bukkit.block.Block block = bworld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                boolean allowed = false;
+
+                // If all of the events are cancelled block the tripwire trigger, else allow
+                for (var object : list) {
+                    if (object != null) {
+                        org.bukkit.event.Cancellable cancellable;
+
+                        if (object instanceof EntityHuman) {
+                            cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityHuman) object, org.bukkit.event.block.Action.PHYSICAL, blockposition, null, null, null);
+                        } else {
+                            cancellable = new EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
+                            manager.callEvent((EntityInteractEvent) cancellable);
+                        }
+
+                        if (!cancellable.isCancelled()) {
+                            allowed = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!allowed) {
+                    return;
+                }
             }
         }
         // CraftBukkit end

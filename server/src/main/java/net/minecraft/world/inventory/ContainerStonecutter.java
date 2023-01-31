@@ -1,7 +1,7 @@
 package net.minecraft.world.inventory;
 
 import com.google.common.collect.Lists;
-import java.util.List;
+import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.IInventory;
@@ -15,14 +15,12 @@ import net.minecraft.world.item.crafting.RecipeStonecutting;
 import net.minecraft.world.item.crafting.Recipes;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.inventory.CraftInventoryStonecutter;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
-// CraftBukkit end
-import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent; // Paper
+
+import java.util.List;
 
 public class ContainerStonecutter extends Container {
 

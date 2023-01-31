@@ -1,12 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.item.crafting.RecipeItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public interface CraftRecipe extends Recipe {
 
@@ -43,7 +45,7 @@ public interface CraftRecipe extends Recipe {
         }
 
         if (list.exact) {
-            List<org.bukkit.inventory.ItemStack> choices = new ArrayList<>(list.choices.length);
+            List<org.bukkit.inventory.ItemStack> choices = new ObjectArrayList<>(list.choices.length);
             for (net.minecraft.world.item.ItemStack i : list.choices) {
                 choices.add(CraftItemStack.asBukkitCopy(i));
             }
@@ -51,7 +53,7 @@ public interface CraftRecipe extends Recipe {
             return new RecipeChoice.ExactChoice(choices);
         } else {
 
-            List<org.bukkit.Material> choices = new ArrayList<>(list.choices.length);
+            List<org.bukkit.Material> choices = new ObjectArrayList<>(list.choices.length);
             for (net.minecraft.world.item.ItemStack i : list.choices) {
                 choices.add(CraftMagicNumbers.getMaterial(i.getItem()));
             }

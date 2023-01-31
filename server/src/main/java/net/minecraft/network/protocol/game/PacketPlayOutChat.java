@@ -1,13 +1,14 @@
 // mc-dev import
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
-import java.util.UUID;
 import net.minecraft.SystemUtils;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.chat.ChatMessageType;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
+
+import java.io.IOException;
+import java.util.UUID;
 
 public class PacketPlayOutChat implements Packet<PacketListenerPlayOut> {
     private static final int MAX_LENGTH = Short.MAX_VALUE * 8 + 8; // Paper

@@ -2,17 +2,10 @@ package net.minecraft.data;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Lifecycle;
-import java.util.Map;
-import java.util.function.Supplier;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryWritable;
 import net.minecraft.core.RegistryMaterials;
-import net.minecraft.data.worldgen.BiomeDecoratorGroups;
-import net.minecraft.data.worldgen.ProcessorLists;
-import net.minecraft.data.worldgen.StructureFeatures;
-import net.minecraft.data.worldgen.WorldGenCarvers;
-import net.minecraft.data.worldgen.WorldGenFeaturePieces;
-import net.minecraft.data.worldgen.WorldGenSurfaceComposites;
+import net.minecraft.data.worldgen.*;
 import net.minecraft.data.worldgen.biome.BiomeRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +19,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorList
 import net.minecraft.world.level.levelgen.surfacebuilders.WorldGenSurfaceComposite;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class RegistryGeneration {
 

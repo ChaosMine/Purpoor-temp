@@ -6,25 +6,18 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.core.MinecraftSerializableUUID;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.GameProfileSerializer;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
+import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
 import net.minecraft.resources.RegistryWriteOps;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.level.DataPackConfiguration;
@@ -37,14 +30,15 @@ import net.minecraft.world.level.timers.CustomFunctionCallbackTimerQueue;
 import net.minecraft.world.level.timers.CustomFunctionCallbackTimers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+
+import javax.annotation.Nullable;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class WorldDataServer implements IWorldDataServer, SaveData {

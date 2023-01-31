@@ -7,13 +7,13 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntBidirectionalIterator;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
-import java.util.List;
-import java.util.stream.IntStream;
-import javax.annotation.Nullable;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.level.levelgen.SeededRandom;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class NoiseGeneratorOctaves implements NoiseGenerator {
 

@@ -1,12 +1,13 @@
 package net.minecraft.network.chat;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.EnumChatFormat;
+
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import net.minecraft.EnumChatFormat;
 
 public final class ChatHexColor {
 

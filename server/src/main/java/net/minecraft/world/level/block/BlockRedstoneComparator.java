@@ -1,8 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -27,8 +24,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateEnum;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
 
 public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITileEntity {
 

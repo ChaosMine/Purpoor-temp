@@ -3,20 +3,16 @@ package com.tuinity.tuinity.util;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectRBTreeMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
-import net.minecraft.util.MathHelper;
 import net.minecraft.core.SectionPosition;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceRecord;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceSection;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -125,7 +121,7 @@ public final class PoiAccess {
     }
 
     protected static List<SortedChunkSectionPos> calculateSortedPositions(final int minSection, final int maxSection, final int section, final int radius, final boolean addHalfToSection) {
-        final List<SortedChunkSectionPos> ret = new ArrayList<>();
+        final List<SortedChunkSectionPos> ret = new ObjectArrayList<>();
 
         final double sourceX = 8.0;
         final double sourceY = section * 16.0 + 8.0;
@@ -216,7 +212,7 @@ public final class PoiAccess {
             return positions.add(pos.immutableCopy());
         };
 
-        final List<VillagePlaceRecord> toConvert = new ArrayList<>();
+        final List<VillagePlaceRecord> toConvert = new ObjectArrayList<>();
         findClosestPoiDataRecords(
                 poiStorage, villagePlaceType, newPredicate, sourcePosition, range, maxDistance, occupancy, load, toConvert
         );
@@ -237,7 +233,7 @@ public final class PoiAccess {
                                                               final double maxDistance,
                                                               final VillagePlace.Occupancy occupancy,
                                                               final boolean load) {
-        final List<VillagePlaceRecord> ret = new ArrayList<>();
+        final List<VillagePlaceRecord> ret = new ObjectArrayList<>();
         findClosestPoiDataRecords(
                 poiStorage, villagePlaceType, positionPredicate, sourcePosition, range, maxDistance, occupancy, load, ret
         );
@@ -258,7 +254,7 @@ public final class PoiAccess {
                                                  final List<VillagePlaceRecord> ret) {
         final Predicate<? super VillagePlaceRecord> occupancyFilter = occupancy.getPredicate();
 
-        final List<VillagePlaceRecord> closestRecords = new ArrayList<>();
+        final List<VillagePlaceRecord> closestRecords = new ObjectArrayList<>();
         double closestDistanceSquared = maxDistance * maxDistance;
 
         final int lowerX = MathHelper.floor(sourcePosition.getX() - range) >> 4;
@@ -436,7 +432,7 @@ public final class PoiAccess {
             return positions.add(pos.immutableCopy());
         };
 
-        final List<VillagePlaceRecord> toConvert = new ArrayList<>();
+        final List<VillagePlaceRecord> toConvert = new ObjectArrayList<>();
         findNearestPoiRecords(
                 poiStorage, villagePlaceType, newPredicate, sourcePosition, range, maxDistance, occupancy, load, max, toConvert
         );
@@ -456,7 +452,7 @@ public final class PoiAccess {
                                                           final double maxDistance,
                                                           final VillagePlace.Occupancy occupancy,
                                                           final boolean load) {
-        final List<VillagePlaceRecord> ret = new ArrayList<>();
+        final List<VillagePlaceRecord> ret = new ObjectArrayList<>();
         findNearestPoiRecords(
                 poiStorage, villagePlaceType, positionPredicate, sourcePosition, range, maxDistance, occupancy, load,
                 1, ret
@@ -584,7 +580,7 @@ public final class PoiAccess {
                     }
 
                     closestRecords.computeIfAbsent(dataRange, (final double key) -> {
-                        return new ArrayList<>();
+                        return new ObjectArrayList<>();
                     }).add(poiData);
 
                     if (++totalRecords >= max) {
@@ -613,7 +609,7 @@ public final class PoiAccess {
             }
         }
 
-        final List<VillagePlaceRecord> closestRecordsUnsorted = new ArrayList<>();
+        final List<VillagePlaceRecord> closestRecordsUnsorted = new ObjectArrayList<>();
 
         // we're done here, so now just flatten the map and sort it.
 
@@ -698,7 +694,7 @@ public final class PoiAccess {
             return positions.add(pos.immutableCopy());
         };
 
-        final List<VillagePlaceRecord> toConvert = new ArrayList<>();
+        final List<VillagePlaceRecord> toConvert = new ObjectArrayList<>();
         findAnyPoiRecords(
                 poiStorage, villagePlaceType, newPredicate, sourcePosition, range, occupancy, load, max, toConvert
         );
@@ -715,7 +711,7 @@ public final class PoiAccess {
                                                       final int range, // distance on x y z axis
                                                       final VillagePlace.Occupancy occupancy,
                                                       final boolean load) {
-        final List<VillagePlaceRecord> ret = new ArrayList<>();
+        final List<VillagePlaceRecord> ret = new ObjectArrayList<>();
         findAnyPoiRecords(poiStorage, villagePlaceType, positionPredicate, sourcePosition, range, occupancy, load, 1, ret);
         return ret.isEmpty() ? null : ret.get(0);
     }

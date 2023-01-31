@@ -1,6 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
-import java.util.Random;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
@@ -12,12 +12,11 @@ import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerDispenser;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
-import java.util.List;
-
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.List;
+import java.util.Random;
 // CraftBukkit end
 
 public class TileEntityDispenser extends TileEntityLootable {
@@ -26,7 +25,7 @@ public class TileEntityDispenser extends TileEntityLootable {
     private NonNullList<ItemStack> items;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
 
     public List<ItemStack> getContents() {

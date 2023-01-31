@@ -1,7 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsBlock;
@@ -13,8 +11,10 @@ import net.minecraft.world.item.context.ItemActionContext;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AxisAlignedBB;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 
-import org.bukkit.event.hanging.HangingPlaceEvent; // CraftBukkit
+import java.util.Iterator;
+import java.util.List;
 
 public class ItemLeash extends Item {
 

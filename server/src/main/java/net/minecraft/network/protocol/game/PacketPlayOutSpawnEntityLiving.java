@@ -11,25 +11,25 @@ import net.minecraft.world.phys.Vec3D;
 
 public class PacketPlayOutSpawnEntityLiving implements Packet<PacketListenerPlayOut> {
 
-    private int a;
-    private UUID b;
-    private int c;
-    private double d;
-    private double e;
-    private double f;
-    private int g;
-    private int h;
-    private int i;
-    private byte j;
-    private byte k;
-    private byte l;
+    public int a;
+    public UUID b;
+    public int c;
+    public double d;
+    public double e;
+    public double f;
+    public int g;
+    public int h;
+    public int i;
+    public byte j;
+    public byte k;
+    public byte l;
 
     public PacketPlayOutSpawnEntityLiving() {}
 
     public PacketPlayOutSpawnEntityLiving(EntityLiving entityliving) {
         this.a = entityliving.getId();
         this.b = entityliving.getUniqueID();
-        this.c = IRegistry.ENTITY_TYPE.a((Object) entityliving.getEntityType());
+        this.c = IRegistry.ENTITY_TYPE.a(entityliving.getEntityType());
         this.d = entityliving.locX();
         this.e = entityliving.locY();
         this.f = entityliving.locZ();

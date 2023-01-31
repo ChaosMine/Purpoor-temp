@@ -11,8 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.IMerchant;
 import net.minecraft.world.item.trading.MerchantRecipe;
 import net.minecraft.world.item.trading.MerchantRecipeList;
-
-import org.bukkit.craftbukkit.inventory.CraftInventoryView; // CraftBukkit
+import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 
 public class ContainerMerchant extends Container {
 

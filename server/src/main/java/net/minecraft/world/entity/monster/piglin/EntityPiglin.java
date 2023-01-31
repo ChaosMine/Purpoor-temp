@@ -2,16 +2,16 @@ package net.minecraft.world.entity.monster.piglin;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.IRegistry;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -20,15 +20,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -42,6 +34,7 @@ import net.minecraft.world.entity.monster.EntityMonster;
 import net.minecraft.world.entity.monster.ICrossbow;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.IProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemProjectileWeapon;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -53,16 +46,9 @@ import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 
-// CraftBukkit start
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.HashSet;
-import java.util.Set;
-import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.world.item.Item;
 // CraftBukkit end
 
 public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {

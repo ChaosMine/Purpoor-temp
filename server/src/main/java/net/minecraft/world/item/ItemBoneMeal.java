@@ -1,8 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.Objects;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.resources.ResourceKey;
@@ -19,6 +16,10 @@ import net.minecraft.world.level.block.BlockCoralFanWallAbstract;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IBlockFragilePlantElement;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ItemBoneMeal extends Item {
 

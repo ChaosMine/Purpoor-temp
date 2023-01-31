@@ -1,15 +1,9 @@
 package com.destroystokyo.paper.gui;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.ToolTipManager;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
+import net.minecraft.SystemUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
@@ -79,7 +73,7 @@ public class RAMGraph extends JComponent {
                 SwingUtilities.convertPointFromScreen(loc, this);
                 if (this.contains(loc)) {
                     ToolTipManager.sharedInstance().mouseMoved(
-                        new MouseEvent(this, -1, System.currentTimeMillis(), 0, loc.x, loc.y,
+                        new MouseEvent(this, -1, SystemUtils.getMonotonicMillis(), 0, loc.x, loc.y,
                             point.x, point.y, 0, false, 0));
                 }
             }
@@ -135,7 +129,7 @@ public class RAMGraph extends JComponent {
 
     public String getTime(int halfSeconds) {
         int millis = (348 - halfSeconds) / 2 * 1000;
-        return TIME_FORMAT.format(new Date((System.currentTimeMillis() - millis)));
+        return TIME_FORMAT.format(new Date((SystemUtils.getMonotonicMillis() - millis)));
     }
 
     public void stop() {

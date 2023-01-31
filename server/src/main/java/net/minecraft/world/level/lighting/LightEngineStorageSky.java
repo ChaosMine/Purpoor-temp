@@ -1,17 +1,16 @@
 package net.minecraft.world.level.lighting;
 
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import java.util.Arrays;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.world.level.EnumSkyBlock;
 import net.minecraft.world.level.chunk.ILightAccess;
 import net.minecraft.world.level.chunk.NibbleArray;
+
+import java.util.Arrays;
 
 public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorageSky.a> {
 

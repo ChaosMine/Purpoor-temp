@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.particles.ParticleParam;
 import net.minecraft.core.particles.Particles;
@@ -23,6 +22,8 @@ import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.Vec3D;
 
+import java.util.Random;
+
 public class EntityMagmaCube extends EntitySlime {
 
     public EntityMagmaCube(EntityTypes<? extends EntityMagmaCube> entitytypes, World world) {
@@ -43,15 +44,6 @@ public class EntityMagmaCube extends EntitySlime {
     @Override
     public float getJumpHeight() {
         return 0.42F * this.getBlockJumpFactor(); // from EntityLiving
-    }
-
-    @Override
-    public void initAttributes() {
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.generateMaxHealth());
-    }
-
-    public String getMaxHealthEquation() {
-        return world.purpurConfig.magmaCubeMaxHealth;
     }
     // Purpur end
 

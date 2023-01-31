@@ -1,9 +1,7 @@
 package net.minecraft.world.entity.npc;
 
 import com.google.common.collect.Sets;
-import java.util.Iterator;
-import java.util.Set;
-import javax.annotation.Nullable;
+import io.papermc.paper.event.player.PlayerTradeEvent;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -16,13 +14,7 @@ import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeItemStack;
@@ -33,16 +25,15 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
-
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftMerchant;
 import org.bukkit.craftbukkit.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
-// CraftBukkit end
-// Paper start
-import io.papermc.paper.event.player.PlayerTradeEvent;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Set;
 // Paper end
 
 public abstract class EntityVillagerAbstract extends EntityAgeable implements NPC, IMerchant {

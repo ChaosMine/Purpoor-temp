@@ -7,19 +7,6 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import it.unimi.dsi.fastutil.shorts.ShortListIterator;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-import javax.annotation.Nullable;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
@@ -27,29 +14,13 @@ import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkProviderServer;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ChunkTaskQueueSorter;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.PlayerChunk;
-import net.minecraft.server.level.PlayerChunkMap;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.util.EntitySlice;
+import net.minecraft.server.level.*;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.IEntitySelector;
-import net.minecraft.world.entity.boss.EntityComplexPart;
-import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
 import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.TickList;
-import net.minecraft.world.level.TickListChunk;
-import net.minecraft.world.level.TickListEmpty;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BlockMobSpawner;
 import net.minecraft.world.level.block.Blocks;
@@ -69,6 +40,15 @@ import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.phys.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class Chunk implements IChunkAccess {
 
@@ -111,7 +91,7 @@ public class Chunk implements IChunkAccess {
     private class TileEntityHashMap extends java.util.HashMap<BlockPosition, TileEntity> {
         @Override
         public TileEntity put(BlockPosition key, TileEntity value) {
-            TileEntity replaced = super.put(key, value);
+            var replaced = super.put(key, value);
             if (replaced != null) {
                 replaced.setCurrentChunk(null);
             }
@@ -123,7 +103,7 @@ public class Chunk implements IChunkAccess {
 
         @Override
         public TileEntity remove(Object key) {
-            TileEntity removed = super.remove(key);
+            var removed = super.remove(key);
             if (removed != null) {
                 removed.setCurrentChunk(null);
             }
@@ -227,23 +207,23 @@ public class Chunk implements IChunkAccess {
             this.updateGeneralAreaCache();
         }
 
-        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby = this.playerGeneralAreaCache;
+        var nearby = this.playerGeneralAreaCache;
 
         if (nearby == null) {
             return null;
         }
 
         Object[] backingSet = nearby.getBackingSet();
-        double closestDistance = maxRange < 0.0 ? Double.MAX_VALUE : maxRange * maxRange;
+        var closestDistance = maxRange < 0.0 ? Double.MAX_VALUE : maxRange * maxRange;
         EntityPlayer closest = null;
         for (int i = 0, len = backingSet.length; i < len; ++i) {
-            Object _player = backingSet[i];
+            var _player = backingSet[i];
             if (!(_player instanceof EntityPlayer)) {
                 continue;
             }
-            EntityPlayer player = (EntityPlayer)_player;
+            var player = (EntityPlayer)_player;
 
-            double distance = player.getDistanceSquared(sourceX, sourceY, sourceZ);
+            var distance = player.getDistanceSquared(sourceX, sourceY, sourceZ);
             if (distance < closestDistance && predicate.test(player)) {
                 closest = player;
                 closestDistance = distance;
@@ -258,24 +238,24 @@ public class Chunk implements IChunkAccess {
             this.updateGeneralAreaCache();
         }
 
-        com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> nearby = this.playerGeneralAreaCache;
+        var nearby = this.playerGeneralAreaCache;
 
         if (nearby == null) {
             return;
         }
 
-        double rangeSquared = range * range;
+        var rangeSquared = range * range;
 
         Object[] backingSet = nearby.getBackingSet();
         for (int i = 0, len = backingSet.length; i < len; ++i) {
-            Object _player = backingSet[i];
+            var _player = backingSet[i];
             if (!(_player instanceof EntityPlayer)) {
                 continue;
             }
-            EntityPlayer player = (EntityPlayer)_player;
+            var player = (EntityPlayer)_player;
 
             if (range >= 0.0) {
-                double distanceSquared = player.getDistanceSquared(sourceX, sourceY, sourceZ);
+                var distanceSquared = player.getDistanceSquared(sourceX, sourceY, sourceZ);
                 if (distanceSquared > rangeSquared) {
                     continue;
                 }
@@ -301,18 +281,18 @@ public class Chunk implements IChunkAccess {
         this.locX = chunkcoordintpair.x; this.locZ = chunkcoordintpair.z; // Paper - reduce need for field look ups
         this.loc = chunkcoordintpair; this.coordinateKey = ChunkCoordIntPair.pair(locX, locZ); // Paper - cache long key
         this.i = chunkconverter;
-        HeightMap.Type[] aheightmap_type = HeightMap.Type.values();
-        int j = aheightmap_type.length;
+        var aheightmap_type = HeightMap.Type.values();
+        var j = aheightmap_type.length;
 
-        for (int k = 0; k < j; ++k) {
-            HeightMap.Type heightmap_type = aheightmap_type[k];
+        for (var k = 0; k < j; ++k) {
+            var heightmap_type = aheightmap_type[k];
 
             if (ChunkStatus.FULL.h().contains(heightmap_type)) {
                 this.heightMap.put(heightmap_type, new HeightMap(this, heightmap_type));
             }
         }
 
-        for (int l = 0; l < this.entitySlices.length; ++l) {
+        for (var l = 0; l < this.entitySlices.length; ++l) {
             this.entitySlices[l] = new org.bukkit.craftbukkit.util.UnsafeList(); // Spigot
         }
 
@@ -331,7 +311,7 @@ public class Chunk implements IChunkAccess {
 
         // CraftBukkit start
         this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
-        this.entitySlicesManager = new com.tuinity.tuinity.world.ChunkEntitySlices(this.world, this.loc.x, this.loc.z, 0, 15); // TODO update for 1.17 // Tuinity
+        this.entitySlicesManager = new com.tuinity.tuinity.world.ChunkEntitySlices(0, 15); // TODO update for 1.17 // Tuinity
     }
 
     public org.bukkit.Chunk bukkitChunk;
@@ -359,50 +339,50 @@ public class Chunk implements IChunkAccess {
     private long neighbourChunksLoadedBitset;
     private final Chunk[] loadedNeighbourChunks = new Chunk[(NEIGHBOUR_CACHE_RADIUS * 2 + 1) * (NEIGHBOUR_CACHE_RADIUS * 2 + 1)];
 
-    private static int getNeighbourIndex(final int relativeX, final int relativeZ) {
+    private static int getNeighbourIndex(int relativeX, int relativeZ) {
         // index = (relativeX + NEIGHBOUR_CACHE_RADIUS) + (relativeZ + NEIGHBOUR_CACHE_RADIUS) * (NEIGHBOUR_CACHE_RADIUS * 2 + 1)
         // optimised variant of the above by moving some of the ops to compile time
         return relativeX + (relativeZ * (NEIGHBOUR_CACHE_RADIUS * 2 + 1)) + (NEIGHBOUR_CACHE_RADIUS + NEIGHBOUR_CACHE_RADIUS * ((NEIGHBOUR_CACHE_RADIUS * 2 + 1)));
     }
 
-    public final Chunk getRelativeNeighbourIfLoaded(final int relativeX, final int relativeZ) {
+    public final Chunk getRelativeNeighbourIfLoaded(int relativeX, int relativeZ) {
         return this.loadedNeighbourChunks[getNeighbourIndex(relativeX, relativeZ)];
     }
 
-    public final boolean isNeighbourLoaded(final int relativeX, final int relativeZ) {
+    public final boolean isNeighbourLoaded(int relativeX, int relativeZ) {
         return (this.neighbourChunksLoadedBitset & (1L << getNeighbourIndex(relativeX, relativeZ))) != 0;
     }
 
-    public final void setNeighbourLoaded(final int relativeX, final int relativeZ, final Chunk chunk) {
+    public final void setNeighbourLoaded(int relativeX, int relativeZ, Chunk chunk) {
         if (chunk == null) {
             throw new IllegalArgumentException("Chunk must be non-null, neighbour: (" + relativeX + "," + relativeZ + "), chunk: " + this.loc);
         }
-        final long before = this.neighbourChunksLoadedBitset;
-        final int index = getNeighbourIndex(relativeX, relativeZ);
+        var before = this.neighbourChunksLoadedBitset;
+        var index = getNeighbourIndex(relativeX, relativeZ);
         this.loadedNeighbourChunks[index] = chunk;
         this.neighbourChunksLoadedBitset |= (1L << index);
         this.onNeighbourChange(before, this.neighbourChunksLoadedBitset);
     }
 
-    public final void setNeighbourUnloaded(final int relativeX, final int relativeZ) {
-        final long before = this.neighbourChunksLoadedBitset;
-        final int index = getNeighbourIndex(relativeX, relativeZ);
+    public final void setNeighbourUnloaded(int relativeX, int relativeZ) {
+        var before = this.neighbourChunksLoadedBitset;
+        var index = getNeighbourIndex(relativeX, relativeZ);
         this.loadedNeighbourChunks[index] = null;
         this.neighbourChunksLoadedBitset &= ~(1L << index);
         this.onNeighbourChange(before, this.neighbourChunksLoadedBitset);
     }
 
     public final void resetNeighbours() {
-        final long before = this.neighbourChunksLoadedBitset;
+        var before = this.neighbourChunksLoadedBitset;
         this.neighbourChunksLoadedBitset = 0L;
         java.util.Arrays.fill(this.loadedNeighbourChunks, null);
         this.onNeighbourChange(before, 0L);
     }
 
-    protected void onNeighbourChange(final long bitsetBefore, final long bitsetAfter) {
+    protected void onNeighbourChange(long bitsetBefore, long bitsetAfter) {
         // Paper start - no-tick view distance
-        ChunkProviderServer chunkProviderServer = ((WorldServer)this.world).getChunkProvider();
-        PlayerChunkMap chunkMap = chunkProviderServer.playerChunkMap;
+        var chunkProviderServer = ((WorldServer)this.world).getChunkProvider();
+        var chunkMap = chunkProviderServer.playerChunkMap;
         // this code handles the addition of ticking tickets - the distance map handles the removal
         if (!areNeighboursLoaded(bitsetBefore, 2) && areNeighboursLoaded(bitsetAfter, 2)) {
             if (chunkMap.playerChunkManager.tickMap.getObjectsInRange(this.coordinateKey) != null) { // Tuinity - replace old player chunk loading system
@@ -437,38 +417,38 @@ public class Chunk implements IChunkAccess {
     public final boolean isAnyNeighborsLoaded() {
         return neighbourChunksLoadedBitset != 0;
     }
-    public final boolean areNeighboursLoaded(final int radius) {
+    public final boolean areNeighboursLoaded(int radius) {
         return Chunk.areNeighboursLoaded(this.neighbourChunksLoadedBitset, radius);
     }
 
-    public static boolean areNeighboursLoaded(final long bitset, final int radius) {
+    public static boolean areNeighboursLoaded(long bitset, int radius) {
         // index = relativeX + (relativeZ * (NEIGHBOUR_CACHE_RADIUS * 2 + 1)) + (NEIGHBOUR_CACHE_RADIUS + NEIGHBOUR_CACHE_RADIUS * ((NEIGHBOUR_CACHE_RADIUS * 2 + 1)))
         switch (radius) {
             case 0: {
                 return (bitset & (1L << getNeighbourIndex(0, 0))) != 0;
             }
             case 1: {
-                long mask = 0L;
-                for (int dx = -1; dx <= 1; ++dx) {
-                    for (int dz = -1; dz <= 1; ++dz) {
+                var mask = 0L;
+                for (var dx = -1; dx <= 1; ++dx) {
+                    for (var dz = -1; dz <= 1; ++dz) {
                         mask |= (1L << getNeighbourIndex(dx, dz));
                     }
                 }
                 return (bitset & mask) == mask;
             }
             case 2: {
-                long mask = 0L;
-                for (int dx = -2; dx <= 2; ++dx) {
-                    for (int dz = -2; dz <= 2; ++dz) {
+                var mask = 0L;
+                for (var dx = -2; dx <= 2; ++dx) {
+                    for (var dz = -2; dz <= 2; ++dz) {
                         mask |= (1L << getNeighbourIndex(dx, dz));
                     }
                 }
                 return (bitset & mask) == mask;
             }
             case 3: {
-                long mask = 0L;
-                for (int dx = -3; dx <= 3; ++dx) {
-                    for (int dz = -3; dz <= 3; ++dz) {
+                var mask = 0L;
+                for (var dx = -3; dx <= 3; ++dx) {
+                    for (var dz = -3; dz <= 3; ++dz) {
                         mask |= (1L << getNeighbourIndex(dx, dz));
                     }
                 }
@@ -492,7 +472,7 @@ public class Chunk implements IChunkAccess {
         Iterator iterator = protochunk.y().iterator();
 
         while (iterator.hasNext()) {
-            NBTTagCompound nbttagcompound = (NBTTagCompound) iterator.next();
+            var nbttagcompound = (NBTTagCompound) iterator.next();
 
             EntityTypes.a(nbttagcompound, world, (entity) -> {
                 this.a(entity);
@@ -503,14 +483,14 @@ public class Chunk implements IChunkAccess {
         iterator = protochunk.x().values().iterator();
 
         while (iterator.hasNext()) {
-            TileEntity tileentity = (TileEntity) iterator.next();
+            var tileentity = (TileEntity) iterator.next();
 
             this.a(tileentity);
         }
 
         this.e.putAll(protochunk.z());
 
-        for (int i = 0; i < protochunk.l().length; ++i) {
+        for (var i = 0; i < protochunk.l().length; ++i) {
             this.n[i] = protochunk.l()[i];
         }
 
@@ -557,12 +537,12 @@ public class Chunk implements IChunkAccess {
         return this.getBlockData(blockposition.getX(), blockposition.getY(), blockposition.getZ());
     }
 
-    public IBlockData getType(final int x, final int y, final int z) {
+    public IBlockData getType(int x, int y, int z) {
         return getBlockData(x, y, z);
     }
-    public final IBlockData getBlockData(final int x, final int y, final int z) {
+    public final IBlockData getBlockData(int x, int y, int z) {
         // Method body / logic copied from below
-        final int i = y >> 4;
+        var i = y >> 4;
         if (y < 0 || i >= this.sections.length || this.sections[i] == null || this.sections[i].nonEmptyBlockCount == 0) {
             return Blocks.AIR.getBlockData();
         }
@@ -587,7 +567,7 @@ public class Chunk implements IChunkAccess {
         } else {
             try {
                 if (j >= 0 && j >> 4 < this.sections.length) {
-                    ChunkSection chunksection = this.sections[j >> 4];
+                    var chunksection = this.sections[j >> 4];
 
                     if (!ChunkSection.a(chunksection)) {
                         return chunksection.getType(i & 15, j & 15, k & 15);
@@ -596,8 +576,8 @@ public class Chunk implements IChunkAccess {
 
                 return Blocks.AIR.getBlockData();
             } catch (Throwable throwable) {
-                CrashReport crashreport = CrashReport.a(throwable, "Getting block state");
-                CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Block being got");
+                var crashreport = CrashReport.a(throwable, "Getting block state");
+                var crashreportsystemdetails = crashreport.a("Block being got");
 
                 crashreportsystemdetails.a("Location", () -> {
                     return CrashReportSystemDetails.a(i, j, k);
@@ -627,9 +607,9 @@ public class Chunk implements IChunkAccess {
     public Fluid a(int i, int j, int k) {
         //try {  // Paper - remove try catch
         // Paper start - reduce the number of ops in this call
-        int index = j >> 4;
+        var index = j >> 4;
             if (index >= 0 && index < this.sections.length) {
-                ChunkSection chunksection = this.sections[index];
+                var chunksection = this.sections[index];
 
                 if (chunksection != null) {
                     return chunksection.blockIds.a((j & 15) << 8 | (k & 15) << 4 | i & 15).getFluid();
@@ -660,10 +640,10 @@ public class Chunk implements IChunkAccess {
     @Nullable
     public IBlockData setType(BlockPosition blockposition, IBlockData iblockdata, boolean flag, boolean doPlace) {
         // CraftBukkit end
-        int i = blockposition.getX() & 15;
-        int j = blockposition.getY();
-        int k = blockposition.getZ() & 15;
-        ChunkSection chunksection = this.sections[j >> 4];
+        var i = blockposition.getX() & 15;
+        var j = blockposition.getY();
+        var k = blockposition.getZ() & 15;
+        var chunksection = this.sections[j >> 4];
 
         if (chunksection == Chunk.a) {
             if (iblockdata.isAir()) {
@@ -674,20 +654,20 @@ public class Chunk implements IChunkAccess {
             this.sections[j >> 4] = chunksection;
         }
 
-        boolean flag1 = chunksection.c();
-        IBlockData iblockdata1 = chunksection.setType(i, j & 15, k, iblockdata);
+        var flag1 = chunksection.c();
+        var iblockdata1 = chunksection.setType(i, j & 15, k, iblockdata);
 
         if (iblockdata1 == iblockdata) {
             return null;
         } else {
-            Block block = iblockdata.getBlock();
-            Block block1 = iblockdata1.getBlock();
+            var block = iblockdata.getBlock();
+            var block1 = iblockdata1.getBlock();
 
             ((HeightMap) this.heightMap.get(HeightMap.Type.MOTION_BLOCKING)).a(i, j, k, iblockdata);
             ((HeightMap) this.heightMap.get(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES)).a(i, j, k, iblockdata);
             ((HeightMap) this.heightMap.get(HeightMap.Type.OCEAN_FLOOR)).a(i, j, k, iblockdata);
             ((HeightMap) this.heightMap.get(HeightMap.Type.WORLD_SURFACE)).a(i, j, k, iblockdata);
-            boolean flag2 = chunksection.c();
+            var flag2 = chunksection.c();
 
             if (flag1 != flag2) {
                 this.world.getChunkProvider().getLightEngine().a(blockposition, flag2);
@@ -740,8 +720,8 @@ public class Chunk implements IChunkAccess {
     @Override
     public void a(Entity entity) {
         this.q = true;
-        int i = MathHelper.floor(entity.locX() / 16.0D);
-        int j = MathHelper.floor(entity.locZ() / 16.0D);
+        var i = MathHelper.floor(entity.locX() / 16.0D);
+        var j = MathHelper.floor(entity.locZ() / 16.0D);
 
         if (i != this.loc.x || j != this.loc.z) {
             Chunk.LOGGER.warn("Wrong location! ({}, {}) should be ({}, {}), {}", i, j, this.loc.x, this.loc.z, entity);
@@ -749,7 +729,7 @@ public class Chunk implements IChunkAccess {
             return; // Paper
         }
 
-        int k = MathHelper.floor(entity.locY() / 16.0D);
+        var k = MathHelper.floor(entity.locY() / 16.0D);
 
         if (k < 0) {
             k = 0;
@@ -759,8 +739,8 @@ public class Chunk implements IChunkAccess {
             k = this.entitySlices.length - 1;
         }
         // Paper - remove from any old list if its in one
-        List<Entity> nextSlice = this.entitySlices[k]; // the next list to be added to
-        List<Entity> currentSlice = entity.entitySlice;
+        var nextSlice = this.entitySlices[k]; // the next list to be added to
+        var currentSlice = entity.entitySlice;
         if (nextSlice == currentSlice) {
             if (World.DEBUG_ENTITIES) MinecraftServer.LOGGER.warn("Entity was already in this chunk!" + entity, new Throwable());
             return; // ??? silly plugins
@@ -768,7 +748,7 @@ public class Chunk implements IChunkAccess {
         if (currentSlice != null && currentSlice.contains(entity)) {
             // Still in an old chunk...
             if (World.DEBUG_ENTITIES) MinecraftServer.LOGGER.warn("Entity is still in another chunk!" + entity, new Throwable());
-            Chunk chunk = entity.getCurrentChunk();
+            var chunk = entity.getCurrentChunk();
             if (chunk != null) {
                 chunk.removeEntity(entity);
             } else {
@@ -843,8 +823,8 @@ public class Chunk implements IChunkAccess {
 
     @Nullable
     private TileEntity k(BlockPosition blockposition) {
-        IBlockData iblockdata = this.getType(blockposition);
-        Block block = iblockdata.getBlock();
+        var iblockdata = this.getType(blockposition);
+        var block = iblockdata.getBlock();
 
         return !block.isTileEntity() ? null : ((ITileEntity) block).createTile(this.world);
     }
@@ -859,17 +839,17 @@ public class Chunk implements IChunkAccess {
     @Nullable
     public TileEntity a(BlockPosition blockposition, Chunk.EnumTileEntityState chunk_enumtileentitystate) {
         // CraftBukkit start
-        TileEntity tileentity = world.capturedTileEntities.get(blockposition);
+        var tileentity = world.capturedTileEntities.get(blockposition);
         if (tileentity == null) {
             tileentity = (TileEntity) this.tileEntities.get(blockposition);
         }
         // CraftBukkit end
 
         if (tileentity == null) {
-            NBTTagCompound nbttagcompound = (NBTTagCompound) this.e.remove(blockposition);
+            var nbttagcompound = (NBTTagCompound) this.e.remove(blockposition);
 
             if (nbttagcompound != null) {
-                TileEntity tileentity1 = this.a(blockposition, nbttagcompound);
+                var tileentity1 = this.a(blockposition, nbttagcompound);
 
                 if (tileentity1 != null) {
                     return tileentity1;
@@ -903,7 +883,7 @@ public class Chunk implements IChunkAccess {
         if (this.getType(blockposition).getBlock() instanceof ITileEntity) {
             tileentity.setLocation(this.world, blockposition);
             tileentity.r();
-            TileEntity tileentity1 = (TileEntity) this.tileEntities.put(blockposition.immutableCopy(), tileentity);
+            var tileentity1 = (TileEntity) this.tileEntities.put(blockposition.immutableCopy(), tileentity);
 
             if (tileentity1 != null && tileentity1 != tileentity) {
                 tileentity1.al_();
@@ -916,7 +896,7 @@ public class Chunk implements IChunkAccess {
             // Paper end
         } else {
             // Paper start
-            ServerInternalException e = new ServerInternalException(
+            var e = new ServerInternalException(
                     "Attempted to place a tile entity (" + tileentity + ") at " + tileentity.getPosition().getX() + ","
                             + tileentity.getPosition().getY() + "," + tileentity.getPosition().getZ()
                             + " (" + getType(blockposition) + ") where there was no entity tile!\n" +
@@ -942,7 +922,7 @@ public class Chunk implements IChunkAccess {
     @Nullable
     @Override
     public NBTTagCompound j(BlockPosition blockposition) {
-        TileEntity tileentity = this.getTileEntity(blockposition);
+        var tileentity = this.getTileEntity(blockposition);
         NBTTagCompound nbttagcompound;
 
         if (tileentity != null && !tileentity.isRemoved()) {
@@ -969,7 +949,7 @@ public class Chunk implements IChunkAccess {
         // Paper end
         if (this.loaded || this.world.s_()) {
             // Paper start
-            TileEntity tileentity = (TileEntity) this.tileEntities.get(blockposition);
+            var tileentity = (TileEntity) this.tileEntities.get(blockposition);
 
             if (tileentity != null && (match == null || match == tileentity)) {
                 this.tileEntities.remove(blockposition);
@@ -991,12 +971,12 @@ public class Chunk implements IChunkAccess {
     // CraftBukkit start
     public void loadCallback() {
         // Paper start - neighbour cache
-        int chunkX = this.loc.x;
-        int chunkZ = this.loc.z;
-        ChunkProviderServer chunkProvider = ((WorldServer)this.world).getChunkProvider();
-        for (int dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
-            for (int dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
-                Chunk neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
+        var chunkX = this.loc.x;
+        var chunkZ = this.loc.z;
+        var chunkProvider = ((WorldServer)this.world).getChunkProvider();
+        for (var dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
+            for (var dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
+                var neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
                 if (neighbour != null) {
                     neighbour.setNeighbourLoaded(-dx, -dz, this);
                     // should be in cached already
@@ -1020,17 +1000,17 @@ public class Chunk implements IChunkAccess {
 
             if (this.needsDecoration) {
                 this.needsDecoration = false;
-                java.util.Random random = new java.util.Random();
+                var random = new java.util.Random();
                 random.setSeed(world.getSeed());
-                long xRand = random.nextLong() / 2L * 2L + 1L;
-                long zRand = random.nextLong() / 2L * 2L + 1L;
+                var xRand = random.nextLong() / 2L * 2L + 1L;
+                var zRand = random.nextLong() / 2L * 2L + 1L;
                 random.setSeed((long) this.loc.x * xRand + (long) this.loc.z * zRand ^ world.getSeed());
 
                 org.bukkit.World world = this.world.getWorld();
                 if (world != null) {
                     this.world.populating = true;
                     try {
-                        for (org.bukkit.generator.BlockPopulator populator : world.getPopulators()) {
+                        for (var populator : world.getPopulators()) {
                             populator.populate(world, random, bukkitChunk);
                         }
                     } finally {
@@ -1044,18 +1024,18 @@ public class Chunk implements IChunkAccess {
 
     public void unloadCallback() {
         org.bukkit.Server server = this.world.getServer();
-        org.bukkit.event.world.ChunkUnloadEvent unloadEvent = new org.bukkit.event.world.ChunkUnloadEvent(this.bukkitChunk, this.isNeedsSaving());
+        var unloadEvent = new org.bukkit.event.world.ChunkUnloadEvent(this.bukkitChunk, this.isNeedsSaving());
         server.getPluginManager().callEvent(unloadEvent);
         // note: saving can be prevented, but not forced if no saving is actually required
         this.mustNotSave = !unloadEvent.isSaveChunk();
         ((WorldServer)this.world).getChunkProvider().removeLoadedChunk(this); // Paper
         // Paper start - neighbour cache
-        int chunkX = this.loc.x;
-        int chunkZ = this.loc.z;
-        ChunkProviderServer chunkProvider = ((WorldServer)this.world).getChunkProvider();
-        for (int dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
-            for (int dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
-                Chunk neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
+        var chunkX = this.loc.x;
+        var chunkZ = this.loc.z;
+        var chunkProvider = ((WorldServer)this.world).getChunkProvider();
+        for (var dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
+            for (var dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
+                var neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
                 if (neighbour != null) {
                     neighbour.setNeighbourUnloaded(-dx, -dz);
                 }
@@ -1221,17 +1201,17 @@ public class Chunk implements IChunkAccess {
     }
 
     public void A() {
-        ChunkCoordIntPair chunkcoordintpair = this.getPos();
+        var chunkcoordintpair = this.getPos();
 
-        for (int i = 0; i < this.n.length; ++i) {
+        for (var i = 0; i < this.n.length; ++i) {
             if (this.n[i] != null) {
-                ShortListIterator shortlistiterator = this.n[i].iterator();
+                var shortlistiterator = this.n[i].iterator();
 
                 while (shortlistiterator.hasNext()) {
-                    Short oshort = (Short) shortlistiterator.next();
-                    BlockPosition blockposition = ProtoChunk.a(oshort, i, chunkcoordintpair);
-                    IBlockData iblockdata = this.getType(blockposition);
-                    IBlockData iblockdata1 = Block.b(iblockdata, (GeneratorAccess) this.world, blockposition);
+                    var oshort = (Short) shortlistiterator.next();
+                    var blockposition = ProtoChunk.a(oshort, i, chunkcoordintpair);
+                    var iblockdata = this.getType(blockposition);
+                    var iblockdata1 = Block.b(iblockdata, (GeneratorAccess) this.world, blockposition);
 
                     this.world.setTypeAndData(blockposition, iblockdata1, 20 | 2); // Paper - We send chunks before they're ticking ready, so we need to notify here
                 }
@@ -1244,7 +1224,7 @@ public class Chunk implements IChunkAccess {
         Iterator iterator = Sets.newHashSet(this.e.keySet()).iterator();
 
         while (iterator.hasNext()) {
-            BlockPosition blockposition1 = (BlockPosition) iterator.next();
+            var blockposition1 = (BlockPosition) iterator.next();
 
             this.getTileEntity(blockposition1);
         }
@@ -1255,11 +1235,11 @@ public class Chunk implements IChunkAccess {
 
     @Nullable
     private TileEntity a(BlockPosition blockposition, NBTTagCompound nbttagcompound) {
-        IBlockData iblockdata = this.getType(blockposition);
+        var iblockdata = this.getType(blockposition);
         TileEntity tileentity;
 
         if ("DUMMY".equals(nbttagcompound.getString("id"))) {
-            Block block = iblockdata.getBlock();
+            var block = iblockdata.getBlock();
 
             if (block instanceof ITileEntity) {
                 tileentity = ((ITileEntity) block).createTile(this.world);

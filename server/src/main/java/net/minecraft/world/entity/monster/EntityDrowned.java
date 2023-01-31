@@ -1,10 +1,5 @@
 package net.minecraft.world.entity.monster;
 
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,21 +13,10 @@ import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityCreature;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.EnumMoveType;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.ai.control.ControllerMove;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalArrowAttack;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalGotoTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStroll;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalZombieAttack;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.ai.navigation.Navigation;
@@ -45,17 +29,19 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.projectile.EntityThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 public class EntityDrowned extends EntityZombie implements IRangedEntity {
 

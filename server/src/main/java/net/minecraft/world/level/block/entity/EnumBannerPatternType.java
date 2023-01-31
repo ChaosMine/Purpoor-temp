@@ -1,13 +1,14 @@
 package net.minecraft.world.level.block.entity;
 
 import com.google.common.collect.Lists;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.item.EnumColor;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public enum EnumBannerPatternType {
 

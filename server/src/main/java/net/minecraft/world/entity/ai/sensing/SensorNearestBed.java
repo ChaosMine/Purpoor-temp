@@ -3,10 +3,7 @@ package net.minecraft.world.entity.ai.sensing;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityInsentient;
@@ -14,6 +11,10 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.level.pathfinder.PathEntity;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class SensorNearestBed extends Sensor<EntityInsentient> {
 
@@ -48,7 +49,7 @@ public class SensorNearestBed extends Sensor<EntityInsentient> {
                 }
             };
             // Tuinity start - optimise POI access
-            java.util.List<BlockPosition> poiposes = new java.util.ArrayList<>();
+            java.util.List<BlockPosition> poiposes = new ObjectArrayList<>();
             // don't ask me why it's unbounded. ask mojang.
             com.tuinity.tuinity.util.PoiAccess.findAnyPoiPositions(villageplace, VillagePlaceType.r.c(), predicate, entityinsentient.getChunkCoordinates(), 48, VillagePlace.Occupancy.ANY, false, Integer.MAX_VALUE, poiposes);
             PathEntity pathentity = entityinsentient.getNavigation().a(new java.util.HashSet<>(poiposes), VillagePlaceType.r.d());

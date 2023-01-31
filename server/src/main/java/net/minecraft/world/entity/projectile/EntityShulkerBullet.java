@@ -1,9 +1,6 @@
 package net.minecraft.world.entity.projectile;
 
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
@@ -28,6 +25,10 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
 
 public class EntityShulkerBullet extends IProjectile {
 

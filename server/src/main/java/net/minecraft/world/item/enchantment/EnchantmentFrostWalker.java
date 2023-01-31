@@ -1,6 +1,5 @@
 package net.minecraft.world.item.enchantment;
 
-import java.util.Iterator;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.util.MathHelper;
@@ -12,6 +11,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import java.util.Iterator;
 
 public class EnchantmentFrostWalker extends Enchantment {
 

@@ -1,9 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -23,6 +20,10 @@ import net.minecraft.world.level.block.BlockBeehive;
 import net.minecraft.world.level.block.BlockCampfire;
 import net.minecraft.world.level.block.BlockFire;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 
 public class TileEntityBeehive extends TileEntity implements ITickable {
 

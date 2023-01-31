@@ -1,10 +1,11 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
-import java.util.UUID;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Animals;
+
+import java.util.UUID;
 
 public class CraftAnimals extends CraftAgeable implements Animals {
 

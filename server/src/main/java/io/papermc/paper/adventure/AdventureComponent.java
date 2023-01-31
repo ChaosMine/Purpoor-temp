@@ -3,8 +3,6 @@ package io.papermc.paper.adventure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import java.lang.reflect.Type;
-import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.minecraft.network.chat.ChatModifier;
@@ -12,6 +10,9 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public final class AdventureComponent implements IChatBaseComponent {
     final Component wrapped;

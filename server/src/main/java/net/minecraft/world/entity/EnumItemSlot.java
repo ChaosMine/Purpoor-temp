@@ -2,7 +2,14 @@ package net.minecraft.world.entity;
 
 public enum EnumItemSlot {
 
-    MAINHAND(EnumItemSlot.Function.HAND, 0, 0, "mainhand"), OFFHAND(EnumItemSlot.Function.HAND, 1, 5, "offhand"), FEET(EnumItemSlot.Function.ARMOR, 0, 1, "feet"), LEGS(EnumItemSlot.Function.ARMOR, 1, 2, "legs"), CHEST(EnumItemSlot.Function.ARMOR, 2, 3, "chest"), HEAD(EnumItemSlot.Function.ARMOR, 3, 4, "head");
+    MAINHAND(EnumItemSlot.Function.HAND, 0, 0, "mainhand"),
+    OFFHAND(EnumItemSlot.Function.HAND, 1, 5, "offhand"),
+    FEET(EnumItemSlot.Function.ARMOR, 0, 1, "feet"),
+    LEGS(EnumItemSlot.Function.ARMOR, 1, 2, "legs"),
+    CHEST(EnumItemSlot.Function.ARMOR, 2, 3, "chest"),
+    HEAD(EnumItemSlot.Function.ARMOR, 3, 4, "head");
+
+    public static final EnumItemSlot[] VALUES = values();
 
     private final EnumItemSlot.Function g;
     private final int h;

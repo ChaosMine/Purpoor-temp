@@ -1,10 +1,11 @@
 package net.minecraft.world.entity.ai.goal.target;
 
-import java.util.EnumSet;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTameableAnimal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.targeting.PathfinderTargetCondition;
+
+import java.util.EnumSet;
 
 public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget {
 

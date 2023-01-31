@@ -1,8 +1,6 @@
 package net.minecraft.world.level.chunk;
 
-import java.util.function.Predicate;
-import com.destroystokyo.paper.antixray.ChunkPacketInfo; // Paper - Anti-Xray - Add chunk packet info
-import javax.annotation.Nullable;
+import com.destroystokyo.paper.antixray.ChunkPacketInfo;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.world.level.World;
@@ -10,6 +8,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class ChunkSection {
 

@@ -1,11 +1,5 @@
 package org.bukkit.craftbukkit.inventory;
 
-import static org.junit.Assert.*;
-import java.io.StringReader;
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.UUID;
 import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,6 +13,14 @@ import org.bukkit.inventory.meta.tags.ItemTagType;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.StringReader;
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 public class DeprecatedItemMetaCustomValueTest extends AbstractTestingBase {
 

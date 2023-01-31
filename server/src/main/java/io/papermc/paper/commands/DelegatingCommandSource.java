@@ -31,11 +31,6 @@ public class DelegatingCommandSource implements ICommandListener {
     }
 
     @Override
-    public boolean shouldBroadcastCommands() {
-        return delegate.shouldBroadcastCommands();
-    }
-
-    @Override
     public CommandSender getBukkitSender(CommandListenerWrapper wrapper) {
         return delegate.getBukkitSender(wrapper);
     }

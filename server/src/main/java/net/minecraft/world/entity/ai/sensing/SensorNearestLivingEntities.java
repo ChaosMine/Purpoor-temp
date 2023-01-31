@@ -1,15 +1,16 @@
 package net.minecraft.world.entity.ai.sensing;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public class SensorNearestLivingEntities extends Sensor<EntityLiving> {
 
@@ -28,7 +29,7 @@ public class SensorNearestLivingEntities extends Sensor<EntityLiving> {
 
         behaviorcontroller.setMemory(MemoryModuleType.MOBS, list); // Paper - decompile error
         // Tuinity start - remove streams
-        List<EntityLiving> visible = new java.util.ArrayList<>(list.size());
+        List<EntityLiving> visible = new ObjectArrayList<>(list.size());
         for (int index = 0, len = list.size(); index < len; ++index) {
             EntityLiving nearby = list.get(index);
             if (Sensor.a(entityliving, nearby)) { // copied from removed code, make sure to update

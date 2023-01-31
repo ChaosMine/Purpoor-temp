@@ -4,17 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
+import io.papermc.paper.adventure.PaperAdventure;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTNumber;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutMap;
@@ -32,15 +25,15 @@ import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.saveddata.PersistentBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import io.papermc.paper.adventure.PaperAdventure; // Paper
-import java.util.UUID;
-
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.map.CraftMapView;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 // CraftBukkit end
 
 public class WorldMap extends PersistentBase {
@@ -515,7 +508,7 @@ public class WorldMap extends PersistentBase {
             boolean vanillaMaps = shouldUseVanillaMap(); // Paper
             org.bukkit.craftbukkit.map.RenderData render = !vanillaMaps ? WorldMap.this.mapView.render((org.bukkit.craftbukkit.entity.CraftPlayer) this.trackee.getBukkitEntity()) : WorldMap.this.vanillaRender; // CraftBukkit // Paper
 
-            java.util.Collection<MapIcon> icons = new java.util.ArrayList<MapIcon>();
+            java.util.Collection<MapIcon> icons = new ObjectArrayList<>();
             if (vanillaMaps) addSeenPlayers(icons); // Paper
 
             for ( org.bukkit.map.MapCursor cursor : render.cursors) {

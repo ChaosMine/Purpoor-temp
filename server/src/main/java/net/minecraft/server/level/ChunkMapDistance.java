@@ -1,39 +1,22 @@
 package net.minecraft.server.level;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Either;
-import it.unimi.dsi.fastutil.longs.Long2ByteMap;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.Long2IntMaps;
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2IntLinkedOpenHashMap; // Tuinity
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.*;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap.Entry;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import javax.annotation.Nullable;
-import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.server.MCUtil;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ArraySetSorted;
 import net.minecraft.util.thread.Mailbox;
 import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spigotmc.AsyncCatcher; // Paper
+
+import javax.annotation.Nullable;
+import java.util.concurrent.Executor;
 
 public abstract class ChunkMapDistance {
 
@@ -155,8 +138,7 @@ public abstract class ChunkMapDistance {
     }
 
     protected void purgeTickets() {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async purge tickets"); // Tuinity
-        ++this.currentTick;
+         ++this.currentTick;
         ObjectIterator objectiterator = this.tickets.long2ObjectEntrySet().fastIterator();
 
         // Tuinity start - delay chunk unloads
@@ -212,7 +194,6 @@ public abstract class ChunkMapDistance {
 
     protected long ticketLevelUpdateCount; // Tuinity - replace ticket level propagator
     public boolean a(PlayerChunkMap playerchunkmap) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot tick ChunkMapDistance off of the main-thread");// Tuinity
         //this.f.a(); // Paper - no longer used
         //this.g.a(); // Tuinity - no longer used
         boolean flag = this.ticketLevelPropagator.propagateUpdates(); // Tuinity - replace ticket level propagator
@@ -494,7 +475,6 @@ public abstract class ChunkMapDistance {
     }
 
     private ArraySetSorted<Ticket<?>> e(long i) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async tickets compute"); // Tuinity
         return (ArraySetSorted) this.tickets.computeIfAbsent(i, (j) -> {
             return ArraySetSorted.a(4);
         });
@@ -512,7 +492,6 @@ public abstract class ChunkMapDistance {
     }
 
     public void a(SectionPosition sectionposition, EntityPlayer entityplayer) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async player add"); // Tuinity
         long i = sectionposition.r().pair();
 
         ((ObjectSet) this.c.computeIfAbsent(i, (j) -> {
@@ -523,7 +502,6 @@ public abstract class ChunkMapDistance {
     }
 
     public void b(SectionPosition sectionposition, EntityPlayer entityplayer) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async player remove"); // Tuinity
         long i = sectionposition.r().pair();
         ObjectSet<EntityPlayer> objectset = (ObjectSet) this.c.get(i);
         if (objectset == null) return; // CraftBukkit - SPIGOT-6208
@@ -574,7 +552,6 @@ public abstract class ChunkMapDistance {
 
     // CraftBukkit start
     public <T> void removeAllTicketsFor(TicketType<T> ticketType, int ticketLevel, T ticketIdentifier) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async ticket remove"); // Tuinity
         Ticket<T> target = new Ticket<>(ticketType, ticketLevel, ticketIdentifier);
 
         for (java.util.Iterator<Entry<ArraySetSorted<Ticket<?>>>> iterator = this.tickets.long2ObjectEntrySet().fastIterator(); iterator.hasNext();) {

@@ -2,13 +2,6 @@ package net.minecraft.world.level.chunk.storage;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTCompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +9,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ExceptionSuppressor;
 import net.minecraft.world.level.ChunkCoordIntPair;
+
+import javax.annotation.Nullable;
+import java.io.*;
 
 public class RegionFileCache implements AutoCloseable { // Paper - no final
 

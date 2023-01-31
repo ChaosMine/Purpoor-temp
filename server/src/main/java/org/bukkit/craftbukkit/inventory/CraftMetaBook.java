@@ -1,14 +1,11 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
-import com.google.common.collect.ImmutableMap; // Paper
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -16,19 +13,14 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.BookMeta.Generation;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
-// Spigot start
-import static org.spigotmc.ValidateUtils.*;
-import java.util.AbstractList;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import java.util.*;
+
+import static org.spigotmc.ValidateUtils.limit;
 // Spigot end
 
 @DelegateDeserialization(SerializableMeta.class)
@@ -63,7 +55,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
             this.generation = bookMeta.generation;
 
             if (bookMeta.pages != null) {
-                this.pages = new ArrayList<String>(bookMeta.pages.size());
+                this.pages = new ObjectArrayList<>(bookMeta.pages.size());
                 if (meta instanceof CraftMetaBookSigned) {
                     if (this instanceof CraftMetaBookSigned) {
                         pages.addAll(bookMeta.pages);
@@ -109,7 +101,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
 
         if (tag.hasKey(BOOK_PAGES.NBT)) {
             NBTTagList pages = tag.getList(BOOK_PAGES.NBT, CraftMagicNumbers.NBT.TAG_STRING);
-            this.pages = new ArrayList<String>(pages.size());
+            this.pages = new ObjectArrayList<String>(pages.size());
 
             boolean expectJson = (this instanceof CraftMetaBookSigned);
             // Note: We explicitly check for and truncate oversized books and pages,
@@ -138,7 +130,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
 
         Iterable<?> pages = SerializableMeta.getObject(Iterable.class, map, BOOK_PAGES.BUKKIT, true);
         if (pages != null) {
-            this.pages = new ArrayList<String>();
+            this.pages = new ObjectArrayList<String>();
             for (Object page : pages) {
                 if (page instanceof String) {
                     internalAddPage(deserializePage((String) page));
@@ -339,7 +331,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
 
     @Override
     public void addPages(net.kyori.adventure.text.Component... pages) {
-        if (this.pages == null) this.pages = new ArrayList<>();
+        if (this.pages == null) this.pages = new ObjectArrayList<>();
         for (net.kyori.adventure.text.Component page : pages) {
             if (this.pages.size() >= MAX_PAGES) {
                 return;
@@ -363,7 +355,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     static final class CraftMetaBookBuilder implements BookMetaBuilder {
         private net.kyori.adventure.text.Component title = null;
         private net.kyori.adventure.text.Component author = null;
-        private final List<net.kyori.adventure.text.Component> pages = new java.util.ArrayList<>();
+        private final List<net.kyori.adventure.text.Component> pages = new ObjectArrayList<>();
 
         @Override
         public BookMetaBuilder title(net.kyori.adventure.text.Component title) {
@@ -450,7 +442,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     private void internalAddPage(String page) {
         // asserted: page != null
         if (this.pages == null) {
-            this.pages = new ArrayList<String>();
+            this.pages = new ObjectArrayList<String>();
         } else if (this.pages.size() >= MAX_PAGES && !OVERRIDE_CHECKS) {// Paper - Add override
             return;
         }
@@ -500,7 +492,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     public CraftMetaBook clone() {
         CraftMetaBook meta = (CraftMetaBook) super.clone();
         if (this.pages != null) {
-            meta.pages = new ArrayList<String>(this.pages);
+            meta.pages = new ObjectArrayList<String>(this.pages);
         }
         meta.spigot = meta.new SpigotMeta(); // Spigot
         return meta;

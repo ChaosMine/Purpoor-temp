@@ -4,7 +4,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,10 +28,11 @@ import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MaterialMapColor;
 import net.minecraft.world.level.saveddata.maps.WorldMap;
-
-// CraftBukkit start
+import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.MapInitializeEvent;
+
+import javax.annotation.Nullable;
 // CraftBukkit end
 
 public class ItemWorldMap extends ItemWorldMapBase {
@@ -339,6 +339,8 @@ public class ItemWorldMap extends ItemWorldMapBase {
 
     @Override
     public void a(ItemStack itemstack, World world, Entity entity, int i, boolean flag) {
+        if (PurpurConfig.disableWorldMapTicking) return;
+
         if (!world.isClientSide) {
             WorldMap worldmap = getSavedMap(itemstack, world);
 

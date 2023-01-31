@@ -1,16 +1,16 @@
 package net.minecraft.world.entity.ai.goal;
 
-import com.destroystokyo.paper.util.set.OptimizedSmallEnumSet; // Paper - remove streams from pathfindergoalselector
+import com.destroystokyo.paper.util.set.OptimizedSmallEnumSet;
 import com.google.common.collect.Sets;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Iterator; // Paper - remove streams from pathfindergoalselector
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
+import dev.kamillaova.paper.SimpleEnumMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class PathfinderGoalSelector {
 
@@ -26,7 +26,7 @@ public class PathfinderGoalSelector {
             return false;
         }
     };
-    private final Map<PathfinderGoal.Type, PathfinderGoalWrapped> c = new EnumMap(PathfinderGoal.Type.class);
+    private final Map<PathfinderGoal.Type, PathfinderGoalWrapped> c = new SimpleEnumMap<>(PathfinderGoal.Type.VALUES);
     private final Set<PathfinderGoalWrapped> d = Sets.newLinkedHashSet(); public final Set<PathfinderGoalWrapped> getTasks() { return d; }// Paper - OBFHELPER // Paper - private -> public
     private final EnumSet<PathfinderGoal.Type> f = EnumSet.noneOf(PathfinderGoal.Type.class); // Paper unused, but dummy to prevent plugins from crashing as hard. Theyll need to support paper in a special case if this is super important, but really doesn't seem like it would be.
     private final OptimizedSmallEnumSet<PathfinderGoal.Type> goalTypes = new OptimizedSmallEnumSet<>(PathfinderGoal.Type.class); // Paper - remove streams from pathfindergoalselector

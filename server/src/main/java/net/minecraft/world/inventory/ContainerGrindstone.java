@@ -1,9 +1,5 @@
 package net.minecraft.world.inventory;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.EntityExperienceOrb;
@@ -16,12 +12,15 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Blocks;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.inventory.CraftInventoryGrindstone;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 // CraftBukkit end
 
 public class ContainerGrindstone extends Container {

@@ -1,8 +1,9 @@
 package net.minecraft.server.level.progress;
 
-import javax.annotation.Nullable;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.chunk.ChunkStatus;
+
+import javax.annotation.Nullable;
 
 public interface WorldLoadListener {
 

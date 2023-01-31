@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Map;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.item.context.BlockActionContext;
@@ -10,7 +9,8 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
-import net.minecraft.world.level.block.state.properties.IBlockState;
+
+import java.util.Map;
 
 public class BlockHugeMushroom extends Block {
 

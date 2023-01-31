@@ -10,12 +10,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.item.IDyeable;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemBanner;
-import net.minecraft.world.item.ItemBlock;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtil;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.IBlockAccess;
@@ -33,8 +28,7 @@ import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-import org.bukkit.event.block.CauldronLevelChangeEvent; // CraftBukkit
+import org.bukkit.event.block.CauldronLevelChangeEvent;
 
 public class BlockCauldron extends Block {
 

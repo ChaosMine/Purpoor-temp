@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import com.destroystokyo.paper.loottable.PaperLootableBlockInventory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.ITileInventory;
 import net.minecraft.world.level.block.BlockChest;
@@ -12,7 +13,6 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest;
 import org.bukkit.inventory.Inventory;
-import com.destroystokyo.paper.loottable.PaperLootableBlockInventory; // Paper
 
 public class CraftChest extends CraftLootable<TileEntityChest> implements Chest, PaperLootableBlockInventory { // Paper
 

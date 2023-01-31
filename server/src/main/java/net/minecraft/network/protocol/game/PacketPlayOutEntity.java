@@ -1,10 +1,11 @@
 package net.minecraft.network.protocol.game;
 
-import java.io.IOException;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.phys.Vec3D;
+
+import java.io.IOException;
 
 public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
 

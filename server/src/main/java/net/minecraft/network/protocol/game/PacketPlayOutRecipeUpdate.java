@@ -62,6 +62,6 @@ public class PacketPlayOutRecipeUpdate implements Packet<PacketListenerPlayOut> 
     public static <T extends IRecipe<?>> void a(T t0, PacketDataSerializer packetdataserializer) {
         packetdataserializer.a(IRegistry.RECIPE_SERIALIZER.getKey(t0.getRecipeSerializer()));
         packetdataserializer.a(t0.getKey());
-        t0.getRecipeSerializer().a(packetdataserializer, t0);
+        ((RecipeSerializer<T>) t0.getRecipeSerializer()).a(packetdataserializer, t0);
     }
 }

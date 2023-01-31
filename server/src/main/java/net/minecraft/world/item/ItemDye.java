@@ -1,14 +1,14 @@
 package net.minecraft.world.item;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.animal.EntitySheep;
 import net.minecraft.world.entity.player.EntityHuman;
+import org.bukkit.event.entity.SheepDyeWoolEvent;
 
-import org.bukkit.event.entity.SheepDyeWoolEvent; // CraftBukkit
+import java.util.Map;
 
 public class ItemDye extends Item {
 

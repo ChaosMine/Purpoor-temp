@@ -1,15 +1,17 @@
 package org.bukkit.craftbukkit.util;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.block.CraftBlockState;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 public class BlockStateListPopulator extends DummyGeneratorAccess {
     private final World world;
@@ -57,7 +59,7 @@ public class BlockStateListPopulator extends DummyGeneratorAccess {
     }
 
     public List<CraftBlockState> getList() {
-        return new ArrayList<>(list.values());
+        return new ObjectArrayList<>(list.values());
     }
 
     public World getWorld() {

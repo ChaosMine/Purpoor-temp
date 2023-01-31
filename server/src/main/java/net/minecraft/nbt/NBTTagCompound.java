@@ -2,33 +2,25 @@ package net.minecraft.nbt;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap; // Paper
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class NBTTagCompound implements NBTBase {
 
@@ -84,7 +76,43 @@ public class NBTTagCompound implements NBTBase {
     }
 
     public NBTTagCompound() {
-        this(new Object2ObjectOpenHashMap<>(8, 0.8f)); // Paper - reduce memory footprint of NBTTagCompound
+        this(new CustomObject2ObjectOpenHashMap<>(8, 0.8f));
+    }
+
+    private static final class CustomObject2ObjectOpenHashMap<K, V> extends Object2ObjectOpenHashMap<K, V> {
+        private boolean hashCodeComputed = false;
+        private int hashCode;
+
+        public CustomObject2ObjectOpenHashMap(int expected, float f) {
+            super(expected, f);
+        }
+
+        @Override
+        public V put(K k, V v) {
+            hashCodeComputed = false;
+            return super.put(k, v);
+        }
+
+        @Override
+        public boolean remove(Object k, Object v) {
+            hashCodeComputed = false;
+            return super.remove(k, v);
+        }
+
+        @Override
+        public void clear() {
+            hashCodeComputed = false;
+            super.clear();
+        }
+
+        @Override
+        public int hashCode() {
+            if (!hashCodeComputed) {
+                return hashCode = super.hashCode();
+            } else {
+                return hashCode;
+            }
+        }
     }
 
     @Override
@@ -394,7 +422,8 @@ public class NBTTagCompound implements NBTBase {
 
     @Override
     public String toString() {
-        StringBuilder stringbuilder = new StringBuilder("{");
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        stringbuilder.append("{");
         Collection<String> collection = this.map.keySet();
 
         if (NBTTagCompound.LOGGER.isDebugEnabled()) {
@@ -448,7 +477,14 @@ public class NBTTagCompound implements NBTBase {
     }
 
     public boolean equals(Object object) {
-        return this == object ? true : object instanceof NBTTagCompound && Objects.equals(this.map, ((NBTTagCompound) object).map);
+        if (this == object) return true;
+        if (object instanceof NBTTagCompound nbt) {
+            if (this.map.hashCode() == nbt.map.hashCode()) {
+                // return Objects.equals(this.map, nbt.map);
+                return true;
+            }
+        }
+        return false;
     }
 
     public int hashCode() {

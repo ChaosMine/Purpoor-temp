@@ -1,7 +1,5 @@
 package org.spigotmc;
 
-import java.io.File;
-import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.command.Command;
@@ -37,26 +35,12 @@ public class RestartCommand extends Command
 
     public static void restart()
     {
-        restart( SpigotConfig.restartScript );
-    }
-
-    private static void restart(final String restartScript)
-    {
         try
         {
-            // Paper - extract method and cleanup
-            boolean isRestarting = addShutdownHook( restartScript );
-            if ( isRestarting )
-            {
-                System.out.println( "Attempting to restart with " + SpigotConfig.restartScript );
-            } else
-            {
-                System.out.println( "Startup script '" + SpigotConfig.restartScript + "' does not exist! Stopping server." );
-            }
-            // Stop the watchdog
+            System.out.println("Stopping server.");
             WatchdogThread.doStop();
 
-            shutdownServer( isRestarting );
+            shutdownServer(false);
             // Paper end
         } catch ( Exception ex )
         {
@@ -70,7 +54,7 @@ public class RestartCommand extends Command
         if ( MinecraftServer.getServer().isMainThread() )
         {
             // Kick all players
-            for ( EntityPlayer p : com.google.common.collect.ImmutableList.copyOf( MinecraftServer.getServer().getPlayerList().players ) )
+            for (var p : com.google.common.collect.ImmutableList.copyOf( MinecraftServer.getServer().getPlayerList().players ) )
             {
                 p.playerConnection.disconnect(SpigotConfig.restartMessage, org.bukkit.event.player.PlayerKickEvent.Cause.RESTART_COMMAND); // Paper - kick event reason (cause is never used))
             }
@@ -124,7 +108,7 @@ public class RestartCommand extends Command
     private static void closeSocket()
     {
         // Close the socket so we can rebind with the new process
-        MinecraftServer.getServer().getServerConnection().b();
+        MinecraftServer.getServer().getServerConnection().close();
 
         // Give time for it to kick in
         try
@@ -135,43 +119,4 @@ public class RestartCommand extends Command
         }
     }
     // Paper end
-
-    // Paper start - copied from above and modified to return if the hook registered
-    public static boolean addShutdownHook(String restartScript)
-    {
-        String[] split = restartScript.split( " " );
-        if ( split.length > 0 && new File( split[0] ).isFile() )
-        {
-            Thread shutdownHook = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        String os = System.getProperty( "os.name" ).toLowerCase(java.util.Locale.ENGLISH);
-                        if ( os.contains( "win" ) )
-                        {
-                            Runtime.getRuntime().exec( "cmd /c start " + restartScript );
-                        } else
-                        {
-                            Runtime.getRuntime().exec( "sh " + restartScript );
-                        }
-                    } catch ( Exception e )
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            shutdownHook.setDaemon( true );
-            Runtime.getRuntime().addShutdownHook( shutdownHook );
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-    // Paper end
-
 }

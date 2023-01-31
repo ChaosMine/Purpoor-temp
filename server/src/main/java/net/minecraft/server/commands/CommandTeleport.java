@@ -7,12 +7,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentAnchor;
 import net.minecraft.commands.arguments.ArgumentEntity;
@@ -34,11 +28,12 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.entity.EntityTeleportEvent;
+
+import javax.annotation.Nullable;
+import java.util.*;
 // CraftBukkit end
 
 public class CommandTeleport {

@@ -1,8 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Optional;
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.ParticleType;
@@ -24,11 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
 import net.minecraft.world.item.crafting.RecipeCampfire;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityCampfire;
 import net.minecraft.world.level.block.state.BlockBase;
@@ -45,6 +38,10 @@ import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.Random;
 
 public class BlockCampfire extends BlockTileEntity implements IBlockWaterlogged {
 

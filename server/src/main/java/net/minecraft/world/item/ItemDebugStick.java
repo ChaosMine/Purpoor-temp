@@ -1,8 +1,6 @@
 // mc-dev import
 package net.minecraft.world.item;
 
-import java.util.Collection;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -21,6 +19,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.IBlockState;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class ItemDebugStick extends Item {
 

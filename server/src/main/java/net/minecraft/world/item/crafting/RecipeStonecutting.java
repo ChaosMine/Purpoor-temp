@@ -4,8 +4,6 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.World;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftStonecuttingRecipe;

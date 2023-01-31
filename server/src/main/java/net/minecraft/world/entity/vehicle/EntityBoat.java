@@ -1,8 +1,6 @@
 package net.minecraft.world.entity.vehicle;
 
 import com.google.common.collect.UnmodifiableIterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -23,13 +21,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityPose;
-import net.minecraft.world.entity.EntitySize;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMoveType;
-import net.minecraft.world.entity.IEntitySelector;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntityWaterAnimal;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -49,14 +41,15 @@ import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+
+import javax.annotation.Nullable;
+import java.util.List;
 // CraftBukkit end
 
 public class EntityBoat extends Entity {
@@ -378,24 +371,23 @@ public class EntityBoat extends Entity {
         }
 
         this.checkBlockCollisions();
-        List<Entity> list = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), IEntitySelector.a(this));
+        try (var list = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), IEntitySelector.a(this))) {
+            if (!list.isEmpty()) {
+                boolean flag = !this.world.isClientSide && !(this.getRidingPassenger() instanceof EntityHuman);
 
-        if (!list.isEmpty()) {
-            boolean flag = !this.world.isClientSide && !(this.getRidingPassenger() instanceof EntityHuman);
+                for (int j = 0; j < list.size(); ++j) {
+                    Entity entity = list.get(j);
 
-            for (int j = 0; j < list.size(); ++j) {
-                Entity entity = (Entity) list.get(j);
-
-                if (!entity.w(this)) {
-                    if (flag && this.passengers.size() < 2 && !entity.isPassenger() && entity.getWidth() < this.getWidth() && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) { // Paper - do not copy passenger list
-                        entity.startRiding(this);
-                    } else {
-                        this.collide(entity);
+                    if (!entity.w(this)) {
+                        if (flag && this.passengers.size() < 2 && !entity.isPassenger() && entity.getWidth() < this.getWidth() && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) { // Paper - do not copy passenger list
+                            entity.startRiding(this);
+                        } else {
+                            this.collide(entity);
+                        }
                     }
                 }
             }
         }
-
     }
 
     private void q() {

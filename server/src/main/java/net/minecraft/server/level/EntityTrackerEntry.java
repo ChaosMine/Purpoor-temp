@@ -1,26 +1,10 @@
 package net.minecraft.server.level;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutAttachEntity;
-import net.minecraft.network.protocol.game.PacketPlayOutEntity;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEffect;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityHeadRotation;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity;
-import net.minecraft.network.protocol.game.PacketPlayOutMount;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.network.protocol.game.PacketPlayOutUpdateAttributes;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.util.MathHelper;
@@ -40,10 +24,14 @@ import net.minecraft.world.level.saveddata.maps.WorldMap;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerVelocityEvent;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 // CraftBukkit end
 
 public class EntityTrackerEntry {
@@ -88,7 +76,7 @@ public class EntityTrackerEntry {
         this.trackedPlayers = trackedPlayers;
         // CraftBukkit end
         this.m = Vec3D.ORIGIN;
-        this.p = Collections.emptyList();
+        this.p = ImmutableList.of();
         this.b = worldserver;
         this.f = consumer;
         this.tracker = entity;
@@ -103,7 +91,6 @@ public class EntityTrackerEntry {
 
     public final void tick() { this.a(); } // Paper - OBFHELPER
     public void a() {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Tracker update"); // Tuinity
         List<Entity> list = this.tracker.passengers; // Paper - do not copy list
 
         if (!list.equals(this.p)) {
@@ -311,7 +298,6 @@ public class EntityTrackerEntry {
     public void b(EntityPlayer entityplayer) {
         PlayerConnection playerconnection = entityplayer.playerConnection;
 
-        entityplayer.playerConnection.getClass();
         this.a(playerconnection::sendPacket, entityplayer); // CraftBukkit - add player
         this.tracker.b(entityplayer);
         entityplayer.d(this.tracker);

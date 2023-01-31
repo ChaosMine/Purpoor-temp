@@ -1,10 +1,11 @@
 package net.minecraft.resources;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.IRegistry;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
-import net.minecraft.core.IRegistry;
 
 public class ResourceKey<T> {
 

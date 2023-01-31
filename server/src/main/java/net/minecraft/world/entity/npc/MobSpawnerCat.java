@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.npc;
 
-import java.util.List;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.EntityPlayer;
@@ -13,13 +11,12 @@ import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.entity.animal.EntityCat;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.MobSpawner;
-import net.minecraft.world.level.SpawnerCreature;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import java.util.List;
+import java.util.Random;
 
 public class MobSpawnerCat implements MobSpawner {
 

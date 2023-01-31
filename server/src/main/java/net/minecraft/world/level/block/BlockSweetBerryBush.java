@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
@@ -25,13 +24,13 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
-
-// CraftBukkit start
-import java.util.Collections;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
+
+import java.util.Collections;
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlantElement {

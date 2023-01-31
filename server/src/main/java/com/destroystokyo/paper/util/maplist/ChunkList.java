@@ -2,6 +2,7 @@ package com.destroystokyo.paper.util.maplist;
 
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minecraft.world.level.chunk.Chunk;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

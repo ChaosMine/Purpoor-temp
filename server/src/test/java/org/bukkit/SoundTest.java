@@ -1,12 +1,14 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import org.bukkit.craftbukkit.CraftSound;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class SoundTest extends AbstractTestingBase {
 

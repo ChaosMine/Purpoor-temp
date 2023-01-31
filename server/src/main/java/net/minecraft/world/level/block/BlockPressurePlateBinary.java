@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.List;
+import dev.kamillaova.paper.recycle.Recyclable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
@@ -17,8 +16,10 @@ import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AxisAlignedBB;
+import org.bukkit.event.entity.EntityInteractEvent;
 
-import org.bukkit.event.entity.EntityInteractEvent; // CraftBukkit
+import java.util.Iterator;
+import java.util.List;
 
 public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 
@@ -68,7 +69,7 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 
         switch (this.e) {
             case EVERYTHING:
-                list = world.getEntities((Entity) null, axisalignedbb);
+                list = world.getEntities((Entity) null, axisalignedbb); // CLEARED
                 break;
             case MOBS:
                 list = world.a(EntityLiving.class, axisalignedbb);
@@ -77,36 +78,42 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
                 return 0;
         }
 
-        if (!list.isEmpty()) {
-            Iterator iterator = list.iterator();
+        try {
+            if (!list.isEmpty()) {
+                Iterator iterator = list.iterator();
 
-            while (iterator.hasNext()) {
-                Entity entity = (Entity) iterator.next();
-                if (entity.isIgnoreBlockTrigger()) continue; // Paper - don't call event for ignored entities
+                while (iterator.hasNext()) {
+                    Entity entity = (Entity) iterator.next();
+                    if (entity.isIgnoreBlockTrigger()) continue; // Paper - don't call event for ignored entities
 
-                // CraftBukkit start - Call interact event when turning on a pressure plate
-                if (this.getPower(world.getType(blockposition)) == 0) {
-                    org.bukkit.World bworld = world.getWorld();
-                    org.bukkit.plugin.PluginManager manager = world.getServer().getPluginManager();
-                    org.bukkit.event.Cancellable cancellable;
+                    // CraftBukkit start - Call interact event when turning on a pressure plate
+                    if (this.getPower(world.getType(blockposition)) == 0) {
+                        org.bukkit.World bworld = world.getWorld();
+                        org.bukkit.plugin.PluginManager manager = world.getServer().getPluginManager();
+                        org.bukkit.event.Cancellable cancellable;
 
-                    if (entity instanceof EntityHuman) {
-                        cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityHuman) entity, org.bukkit.event.block.Action.PHYSICAL, blockposition, null, null, null);
-                    } else {
-                        cancellable = new EntityInteractEvent(entity.getBukkitEntity(), bworld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()));
-                        manager.callEvent((EntityInteractEvent) cancellable);
+                        if (entity instanceof EntityHuman) {
+                            cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityHuman) entity, org.bukkit.event.block.Action.PHYSICAL, blockposition, null, null, null);
+                        } else {
+                            cancellable = new EntityInteractEvent(entity.getBukkitEntity(), bworld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()));
+                            manager.callEvent((EntityInteractEvent) cancellable);
+                        }
+
+                        // We only want to block turning the plate on if all events are cancelled
+                        if (cancellable.isCancelled()) {
+                            continue;
+                        }
                     }
+                    // CraftBukkit end
 
-                    // We only want to block turning the plate on if all events are cancelled
-                    if (cancellable.isCancelled()) {
-                        continue;
+                    if (!entity.isIgnoreBlockTrigger()) {
+                        return 15;
                     }
                 }
-                // CraftBukkit end
-
-                if (!entity.isIgnoreBlockTrigger()) {
-                    return 15;
-                }
+            }
+        } finally {
+            if (list instanceof Recyclable recyclable) {
+                recyclable.recycle();
             }
         }
 

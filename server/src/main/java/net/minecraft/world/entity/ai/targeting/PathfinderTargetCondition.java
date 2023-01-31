@@ -1,11 +1,12 @@
 package net.minecraft.world.entity.ai.targeting;
 
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class PathfinderTargetCondition {
 

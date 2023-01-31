@@ -2,12 +2,7 @@ package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.SectionPosition;
@@ -38,6 +33,13 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class CraftChunk implements Chunk {
     private WeakReference<net.minecraft.world.level.chunk.Chunk> weakChunk;
@@ -168,7 +170,7 @@ public class CraftChunk implements Chunk {
         }
         net.minecraft.world.level.chunk.Chunk chunk = getHandle();
 
-        List<BlockState> entities = new ArrayList<>();
+        List<BlockState> entities = new ObjectArrayList<>();
 
         for (BlockPosition position : chunk.tileEntities.keySet()) {
             Block block = worldServer.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ());

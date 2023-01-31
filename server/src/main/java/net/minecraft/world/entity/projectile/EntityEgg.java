@@ -1,18 +1,15 @@
 package net.minecraft.world.entity.projectile;
 
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.animal.EntityChicken;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
-
-// CraftBukkit start
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.Entity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

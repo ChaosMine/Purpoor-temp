@@ -1,15 +1,16 @@
 // mc-dev import
 package net.minecraft.nbt;
 
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.chat.IChatMutableComponent;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
-import org.apache.commons.lang3.ArrayUtils;
 
 public class NBTTagIntArray extends NBTList<NBTTagInt> {
 
@@ -88,7 +89,8 @@ public class NBTTagIntArray extends NBTList<NBTTagInt> {
 
     @Override
     public String toString() {
-        StringBuilder stringbuilder = new StringBuilder("[I;");
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        stringbuilder.append("[I;");
 
         for (int i = 0; i < this.data.length; ++i) {
             if (i != 0) {

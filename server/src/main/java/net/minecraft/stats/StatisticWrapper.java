@@ -1,9 +1,11 @@
 package net.minecraft.stats;
 
+import net.minecraft.core.IRegistry;
+import net.pl3x.purpur.PurpurConfig;
+
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
-import net.minecraft.core.IRegistry;
 
 public class StatisticWrapper<T> implements Iterable<Statistic<T>> {
 
@@ -30,6 +32,7 @@ public class StatisticWrapper<T> implements Iterable<Statistic<T>> {
 
     public final Statistic<T> get(T t) { return this.b(t); }; // Paper - OBFHELPER
     public Statistic<T> b(T t0) {
+        if (PurpurConfig.disableStatistics) return null;
         return this.a(t0, Counter.DEFAULT);
     }
 }

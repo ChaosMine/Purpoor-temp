@@ -2,17 +2,15 @@ package org.bukkit.craftbukkit.potion;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.alchemy.PotionRegistry;
+import org.bukkit.potion.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.item.alchemy.PotionRegistry;
-import org.bukkit.potion.PotionBrewer;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 
 public class CraftPotionBrewer implements PotionBrewer {
     private static final Map<Integer, Collection<PotionEffect>> cache = Maps.newHashMap(); // Paper
@@ -42,7 +40,7 @@ public class CraftPotionBrewer implements PotionBrewer {
 
     @Override
     public Collection<PotionEffect> getEffectsFromDamage(int damage) {
-        return new ArrayList<PotionEffect>();
+        return new ObjectArrayList<>();
     }
 
     @Override

@@ -1,11 +1,6 @@
 package org.bukkit.craftbukkit.persistence;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang.Validate;
@@ -15,9 +10,12 @@ import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 public final class CraftPersistentDataContainer implements PersistentDataContainer {
 
-    private final Map<String, NBTBase> customDataTags = new HashMap<>();
+    private final Map<String, NBTBase> customDataTags = new Object2ObjectOpenHashMap<>();
     private final CraftPersistentDataTypeRegistry registry;
     private final CraftPersistentDataAdapterContext adapterContext;
 

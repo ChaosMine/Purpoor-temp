@@ -13,18 +13,18 @@ import net.minecraft.world.phys.Vec3D;
 
 public class PacketPlayOutSpawnEntity implements Packet<PacketListenerPlayOut> {
 
-    private int a;
-    private UUID b;
-    private double c;
-    private double d;
-    private double e;
-    private int f;
-    private int g;
-    private int h;
-    private int i;
-    private int j;
-    private EntityTypes<?> k;
-    private int l;
+    public int a;
+    public UUID b;
+    public double c;
+    public double d;
+    public double e;
+    public int f;
+    public int g;
+    public int h;
+    public int i;
+    public int j;
+    public EntityTypes<?> k;
+    public int l;
 
     public PacketPlayOutSpawnEntity() {}
 
@@ -75,7 +75,7 @@ public class PacketPlayOutSpawnEntity implements Packet<PacketListenerPlayOut> {
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.d(this.a);
         packetdataserializer.a(this.b);
-        packetdataserializer.d(IRegistry.ENTITY_TYPE.a((Object) this.k));
+        packetdataserializer.d(IRegistry.ENTITY_TYPE.a(this.k));
         packetdataserializer.writeDouble(this.c);
         packetdataserializer.writeDouble(this.d);
         packetdataserializer.writeDouble(this.e);

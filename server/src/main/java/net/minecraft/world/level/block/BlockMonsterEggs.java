@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityTypes;
@@ -14,8 +13,9 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason; // CraftBukkit
+import java.util.Map;
 
 public class BlockMonsterEggs extends Block {
 

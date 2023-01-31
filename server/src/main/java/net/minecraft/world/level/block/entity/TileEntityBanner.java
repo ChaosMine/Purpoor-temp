@@ -1,9 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
 import com.mojang.datafixers.util.Pair;
-import java.util.List;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.chat.ChatMessage;
@@ -15,6 +12,10 @@ import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BlockBannerAbstract;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class TileEntityBanner extends TileEntity implements INamableTileEntity {
 

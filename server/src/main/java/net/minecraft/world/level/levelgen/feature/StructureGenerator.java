@@ -1,15 +1,7 @@
 package net.minecraft.world.level.levelgen.feature;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.mojang.serialization.Codec;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryCustom;
@@ -28,23 +20,16 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.WorldGenStage;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureSettingsFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfigurationChance;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureEmptyConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureOceanRuinConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureRuinedPortalConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureShipwreckConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureVillageConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.WorldGenMineshaftConfiguration;
-import net.minecraft.world.level.levelgen.structure.StructureBoundingBox;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.WorldGenFeatureNetherFossil;
-import net.minecraft.world.level.levelgen.structure.WorldGenFeatureOceanRuin;
+import net.minecraft.world.level.levelgen.feature.configurations.*;
+import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration> {
 

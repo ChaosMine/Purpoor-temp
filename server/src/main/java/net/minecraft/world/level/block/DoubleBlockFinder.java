@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.function.BiPredicate;
-import java.util.function.Function;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.level.GeneratorAccess;
@@ -10,6 +8,9 @@ import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityTypes;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockStateDirection;
+
+import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 public class DoubleBlockFinder {
 

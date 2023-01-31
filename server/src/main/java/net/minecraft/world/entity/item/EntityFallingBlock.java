@@ -1,8 +1,6 @@
 package net.minecraft.world.entity.item;
 
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -30,12 +28,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.IMaterial;
 import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockAnvil;
-import net.minecraft.world.level.block.BlockConcretePowder;
-import net.minecraft.world.level.block.BlockFalling;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ITileEntity;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
@@ -43,9 +36,10 @@ import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 
-import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityFallingBlock extends Entity {
 
@@ -250,26 +244,23 @@ public class EntityFallingBlock extends Entity {
             int i = MathHelper.f(f - 1.0F);
 
             if (i > 0) {
-                List<Entity> list = Lists.newArrayList(this.world.getEntities(this, this.getBoundingBox()));
-                boolean flag = this.block.a((Tag) TagsBlock.ANVIL);
-                DamageSource damagesource = flag ? DamageSource.ANVIL : DamageSource.FALLING_BLOCK;
-                Iterator iterator = list.iterator();
+                try (var list = this.world.getEntities(this, this.getBoundingBox())) {
+                    boolean flag = this.block.a(TagsBlock.ANVIL);
+                    DamageSource damagesource = flag ? DamageSource.ANVIL : DamageSource.FALLING_BLOCK;
 
-                while (iterator.hasNext()) {
-                    Entity entity = (Entity) iterator.next();
+                    for (Entity entity : list) {
+                        CraftEventFactory.entityDamage = this; // CraftBukkit
+                        entity.damageEntity(damagesource, (float) Math.min(MathHelper.d((float) i * this.fallHurtAmount), this.fallHurtMax));
+                        CraftEventFactory.entityDamage = null; // CraftBukkit
+                    }
+                    if (flag && (double) this.random.nextFloat() < 0.05000000074505806D + (double) i * 0.05D) {
+                        IBlockData iblockdata = BlockAnvil.c(this.block);
 
-                    CraftEventFactory.entityDamage = this; // CraftBukkit
-                    entity.damageEntity(damagesource, (float) Math.min(MathHelper.d((float) i * this.fallHurtAmount), this.fallHurtMax));
-                    CraftEventFactory.entityDamage = null; // CraftBukkit
-                }
-
-                if (flag && (double) this.random.nextFloat() < 0.05000000074505806D + (double) i * 0.05D) {
-                    IBlockData iblockdata = BlockAnvil.c(this.block);
-
-                    if (iblockdata == null) {
-                        this.g = true;
-                    } else {
-                        this.block = iblockdata;
+                        if (iblockdata == null) {
+                            this.g = true;
+                        } else {
+                            this.block = iblockdata;
+                        }
                     }
                 }
             }

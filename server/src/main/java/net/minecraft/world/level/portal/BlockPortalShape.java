@@ -1,8 +1,5 @@
 package net.minecraft.world.level.portal;
 
-import java.util.Optional;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -19,10 +16,12 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftPortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class BlockPortalShape {

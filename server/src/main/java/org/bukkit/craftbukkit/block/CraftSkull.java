@@ -17,6 +17,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Rotatable;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+
 import javax.annotation.Nullable;
 
 public class CraftSkull extends CraftBlockEntityState<TileEntitySkull> implements Skull {

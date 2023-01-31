@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.npc;
 
-import java.util.EnumSet;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IPosition;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -19,25 +17,8 @@ import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalInteract;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtTradingPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalTradeWithPlayer;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalUseItem;
-import net.minecraft.world.entity.monster.EntityEvoker;
-import net.minecraft.world.entity.monster.EntityIllagerIllusioner;
-import net.minecraft.world.entity.monster.EntityPillager;
-import net.minecraft.world.entity.monster.EntityVex;
-import net.minecraft.world.entity.monster.EntityVindicator;
-import net.minecraft.world.entity.monster.EntityZoglin;
-import net.minecraft.world.entity.monster.EntityZombie;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -48,12 +29,13 @@ import net.minecraft.world.item.trading.MerchantRecipe;
 import net.minecraft.world.item.trading.MerchantRecipeList;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 // CraftBukkit end
 
 public class EntityVillagerTrader extends EntityVillagerAbstract {

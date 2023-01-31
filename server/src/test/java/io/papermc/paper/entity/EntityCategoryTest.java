@@ -2,7 +2,6 @@ package io.papermc.paper.entity;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.minecraft.world.entity.EnumMonsterType;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityCategory;
@@ -10,7 +9,6 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 

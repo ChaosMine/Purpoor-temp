@@ -1,14 +1,9 @@
 package com.destroystokyo.paper.antixray;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.IntSupplier;
-
+import com.destroystokyo.paper.PaperWorldConfig;
+import dev.kamillaova.paper.util.NettyUtil;
+import io.netty.util.concurrent.FastThreadLocal;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
@@ -23,15 +18,16 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.chunk.Chunk;
-import net.minecraft.world.level.chunk.ChunkEmpty;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.world.level.chunk.DataPalette;
-import net.minecraft.world.level.chunk.IChunkAccess;
+import net.minecraft.world.level.chunk.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
 
-import com.destroystokyo.paper.PaperWorldConfig;
+import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.IntSupplier;
+
+import static dev.kamillaova.paper.util.NettyUtil.fastThreadLocal;
 
 public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockController {
 
@@ -77,7 +73,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
             predefinedBlockDataBitsNetherrackGlobal = new int[] {ChunkSection.GLOBAL_PALETTE.getOrCreateIdFor(Blocks.NETHERRACK.getBlockData())};
             predefinedBlockDataBitsEndStoneGlobal = new int[] {ChunkSection.GLOBAL_PALETTE.getOrCreateIdFor(Blocks.END_STONE.getBlockData())};
         } else {
-            toObfuscate = new ArrayList<>(paperWorldConfig.replacementBlocks);
+            toObfuscate = new ObjectArrayList<>(paperWorldConfig.replacementBlocks);
             List<IBlockData> predefinedBlockDataList = new LinkedList<IBlockData>();
 
             for (String id : paperWorldConfig.hiddenBlocks) {
@@ -209,13 +205,13 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
 
     // Actually these fields should be variables inside the obfuscate method but in sync mode or with SingleThreadExecutor in async mode it's okay (even without ThreadLocal)
     // If an ExecutorService with multiple threads is used, ThreadLocal must be used here
-    private final ThreadLocal<int[]> predefinedBlockDataBits = ThreadLocal.withInitial(() -> new int[getPredefinedBlockDataFullLength()]);
-    private static final ThreadLocal<boolean[]> solid = ThreadLocal.withInitial(() -> new boolean[Block.REGISTRY_ID.size()]);
-    private static final ThreadLocal<boolean[]> obfuscate = ThreadLocal.withInitial(() -> new boolean[Block.REGISTRY_ID.size()]);
+    private final FastThreadLocal<int[]> predefinedBlockDataBits = fastThreadLocal(() -> new int[getPredefinedBlockDataFullLength()]);
+    private static final FastThreadLocal<boolean[]> solid = fastThreadLocal(() -> new boolean[Block.REGISTRY_ID.size()]);
+    private static final FastThreadLocal<boolean[]> obfuscate = fastThreadLocal(() -> new boolean[Block.REGISTRY_ID.size()]);
     // These boolean arrays represent chunk layers, true means don't obfuscate, false means obfuscate
-    private static final ThreadLocal<boolean[][]> current = ThreadLocal.withInitial(() -> new boolean[16][16]);
-    private static final ThreadLocal<boolean[][]> next = ThreadLocal.withInitial(() -> new boolean[16][16]);
-    private static final ThreadLocal<boolean[][]> nextNext = ThreadLocal.withInitial(() -> new boolean[16][16]);
+    private static final FastThreadLocal<boolean[][]> current = fastThreadLocal(() -> new boolean[16][16]);
+    private static final FastThreadLocal<boolean[][]> next = fastThreadLocal(() -> new boolean[16][16]);
+    private static final FastThreadLocal<boolean[][]> nextNext = fastThreadLocal(() -> new boolean[16][16]);
 
     public void obfuscate(ChunkPacketInfoAntiXray chunkPacketInfoAntiXray) {
         int[] predefinedBlockDataBits = this.predefinedBlockDataBits.get();

@@ -2,8 +2,6 @@ package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +14,9 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BehaviorTradeVillager extends Behavior<EntityVillager> {
 

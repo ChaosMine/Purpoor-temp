@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.animal.horse;
 
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.syncher.DataWatcher;
@@ -15,12 +13,7 @@ import net.minecraft.world.EnumHand;
 import net.minecraft.world.EnumInteractionResult;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.animal.EntityAnimal;
@@ -31,6 +24,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
 import net.minecraft.world.level.block.SoundEffectType;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class EntityHorse extends EntityHorseAbstract {
 

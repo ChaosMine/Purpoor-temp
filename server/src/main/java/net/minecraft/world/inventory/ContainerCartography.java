@@ -12,8 +12,6 @@ import net.minecraft.world.item.ItemWorldMap;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.maps.WorldMap;
-
-// CraftBukkit start
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.inventory.CraftInventoryCartography;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;

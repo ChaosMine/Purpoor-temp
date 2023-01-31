@@ -9,10 +9,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICompletionProvider;
 import net.minecraft.commands.arguments.selector.ArgumentParserSelector;
@@ -22,6 +18,11 @@ import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.Entity;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ArgumentEntity implements ArgumentType<EntitySelector> {
 

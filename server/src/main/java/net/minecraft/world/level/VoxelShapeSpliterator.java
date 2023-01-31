@@ -1,10 +1,5 @@
 package net.minecraft.world.level;
 
-import java.util.Objects;
-import java.util.Spliterators.AbstractSpliterator;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.CursorPosition;
 import net.minecraft.server.MCUtil;
@@ -20,6 +15,12 @@ import net.minecraft.world.phys.shapes.OperatorBoolean;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.Spliterators.AbstractSpliterator;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 public class VoxelShapeSpliterator extends AbstractSpliterator<VoxelShape> {
 

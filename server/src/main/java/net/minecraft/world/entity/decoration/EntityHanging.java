@@ -1,13 +1,12 @@
 package net.minecraft.world.entity.decoration;
 
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSourceIndirect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLightning;
 import net.minecraft.world.entity.EntityTypes;
@@ -20,16 +19,16 @@ import net.minecraft.world.level.block.BlockDiodeAbstract;
 import net.minecraft.world.level.block.EnumBlockMirror;
 import net.minecraft.world.level.block.EnumBlockRotation;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.commons.lang3.Validate;
-
-// CraftBukkit start
-import net.minecraft.world.damagesource.EntityDamageSourceIndirect;
-import net.minecraft.world.level.material.Material;
 import org.bukkit.entity.Hanging;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public abstract class EntityHanging extends Entity {
@@ -173,7 +172,9 @@ public abstract class EntityHanging extends Entity {
                 }
             }
 
-            return this.world.getEntities(this, this.getBoundingBox(), EntityHanging.b).isEmpty();
+            try (var list = this.world.getEntities(this, this.getBoundingBox(), EntityHanging.b)) {
+                return list.isEmpty();
+            }
         }
     }
 

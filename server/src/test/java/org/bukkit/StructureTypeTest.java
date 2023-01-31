@@ -1,12 +1,13 @@
 package org.bukkit;
 
-import java.util.Map;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * This test makes sure that Bukkit always has Minecraft structure types up to

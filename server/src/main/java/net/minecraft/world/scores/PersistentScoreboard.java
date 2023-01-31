@@ -1,7 +1,5 @@
 package net.minecraft.world.scores;
 
-import java.util.Collection;
-import java.util.Iterator;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,6 +10,9 @@ import net.minecraft.world.level.saveddata.PersistentBase;
 import net.minecraft.world.scores.criteria.IScoreboardCriteria;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 public class PersistentScoreboard extends PersistentBase {
 

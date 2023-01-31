@@ -1,7 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.Random;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -23,6 +21,9 @@ import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import java.util.Iterator;
+import java.util.Random;
 
 public class BlockScaffolding extends Block implements IBlockWaterlogged {
 

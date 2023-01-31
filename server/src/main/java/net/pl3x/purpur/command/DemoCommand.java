@@ -1,14 +1,15 @@
 package net.pl3x.purpur.command;
 
-import java.util.Collection;
-import java.util.Collections;
-import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.commands.CommandDispatcher;
 import net.minecraft.commands.CommandListenerWrapper;
+import net.minecraft.commands.arguments.ArgumentEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.server.level.EntityPlayer;
 import net.pl3x.purpur.PurpurConfig;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class DemoCommand {
     public static void register(com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> dispatcher) {

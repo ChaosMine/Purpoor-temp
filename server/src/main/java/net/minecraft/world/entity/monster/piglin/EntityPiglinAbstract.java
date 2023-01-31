@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.monster.piglin;
 
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.protocol.game.PacketDebug;
 import net.minecraft.network.syncher.DataWatcher;
@@ -19,6 +18,8 @@ import net.minecraft.world.entity.monster.EntityPigZombie;
 import net.minecraft.world.item.ItemToolMaterial;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.pathfinder.PathType;
+
+import javax.annotation.Nullable;
 
 public abstract class EntityPiglinAbstract extends EntityMonster {
 

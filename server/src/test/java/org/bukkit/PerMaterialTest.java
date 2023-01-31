@@ -1,10 +1,6 @@
 package org.bukkit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.EnumHand;
 import net.minecraft.world.entity.EntityInsentient;
@@ -34,6 +30,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class PerMaterialTest extends AbstractTestingBase {

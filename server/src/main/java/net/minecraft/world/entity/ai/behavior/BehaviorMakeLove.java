@@ -1,7 +1,6 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.protocol.game.PacketDebug;
@@ -15,6 +14,8 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.level.pathfinder.PathEntity;
+
+import java.util.Optional;
 
 public class BehaviorMakeLove extends Behavior<EntityVillager> {
 

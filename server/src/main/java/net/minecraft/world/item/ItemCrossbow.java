@@ -3,11 +3,7 @@ package net.minecraft.world.item;
 import com.google.common.collect.Lists;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3fa;
-import org.bukkit.inventory.EquipmentSlot; // Paper
-import io.papermc.paper.event.entity.EntityLoadCrossbowEvent; // Paper - EntityLoadCrossbowEvent namespace conflicts
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
+import io.papermc.paper.event.entity.EntityLoadCrossbowEvent;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -29,6 +25,11 @@ import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
+import org.bukkit.inventory.EquipmentSlot;
+
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
 
 public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable {
 

@@ -5,12 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -21,16 +15,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.item.IDyeable;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemArmorColorable;
-import net.minecraft.world.item.ItemDye;
-import net.minecraft.world.item.ItemEnchantedBook;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemSuspiciousStew;
-import net.minecraft.world.item.ItemWorldMap;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionBrewer;
 import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.item.alchemy.PotionUtil;
@@ -44,6 +29,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.StructureGenerator;
 import net.minecraft.world.level.saveddata.maps.MapIcon;
 import net.minecraft.world.level.saveddata.maps.WorldMap;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class VillagerTrades {
 

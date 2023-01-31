@@ -1,10 +1,11 @@
 package net.minecraft.world.entity.ai.gossip;
 
 import com.google.common.collect.ImmutableMap;
+
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 public enum ReputationType {
 

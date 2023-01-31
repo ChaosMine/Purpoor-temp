@@ -7,11 +7,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
@@ -27,6 +22,12 @@ import net.minecraft.world.level.block.state.IBlockDataHolder;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.UUID;
 
 public final class GameProfileSerializer {
 
@@ -190,7 +191,11 @@ public final class GameProfileSerializer {
         return new NBTTagIntArray(MinecraftSerializableUUID.a(uuid));
     }
 
+    private static final UUID nullUuid = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    
     public static UUID a(NBTBase nbtbase) {
+        if (nbtbase == null) return nullUuid;
+        
         if (nbtbase.b() != NBTTagIntArray.a) {
             throw new IllegalArgumentException("Expected UUID-Tag to be of type " + NBTTagIntArray.a.a() + ", but found " + nbtbase.b().a() + ".");
         } else {

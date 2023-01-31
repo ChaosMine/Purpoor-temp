@@ -62,7 +62,7 @@ public class PacketPlayOutWorldParticles implements Packet<PacketListenerPlayOut
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.writeInt(IRegistry.PARTICLE_TYPE.a((Object) this.j.getParticle()));
+        packetdataserializer.writeInt(IRegistry.PARTICLE_TYPE.a(this.j.getParticle()));
         packetdataserializer.writeBoolean(this.i);
         packetdataserializer.writeDouble(this.a);
         packetdataserializer.writeDouble(this.b);

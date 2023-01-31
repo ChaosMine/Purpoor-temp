@@ -1,11 +1,12 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.util.RandomPositionGenerator;
 import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.EnumSet;
 
 public class PathfinderGoalTame extends PathfinderGoal {
 

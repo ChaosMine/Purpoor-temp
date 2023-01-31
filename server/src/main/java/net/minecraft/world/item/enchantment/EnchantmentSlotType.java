@@ -1,16 +1,7 @@
 package net.minecraft.world.item.enchantment;
 
 import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemArmor;
-import net.minecraft.world.item.ItemBow;
-import net.minecraft.world.item.ItemCrossbow;
-import net.minecraft.world.item.ItemFishingRod;
-import net.minecraft.world.item.ItemSword;
-import net.minecraft.world.item.ItemTool;
-import net.minecraft.world.item.ItemTrident;
-import net.minecraft.world.item.ItemVanishable;
-import net.minecraft.world.item.ItemWearable;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
 public enum EnchantmentSlotType {

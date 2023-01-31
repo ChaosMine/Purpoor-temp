@@ -1,8 +1,6 @@
 package net.minecraft.world.level.levelgen.feature;
 
 import com.mojang.serialization.Codec;
-import java.util.List;
-import java.util.function.Supplier;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.resources.RegistryFileCodec;
@@ -15,6 +13,9 @@ import net.minecraft.world.level.levelgen.feature.configurations.StructureSettin
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class StructureFeature<FC extends WorldGenFeatureConfiguration, F extends StructureGenerator<FC>> {
 

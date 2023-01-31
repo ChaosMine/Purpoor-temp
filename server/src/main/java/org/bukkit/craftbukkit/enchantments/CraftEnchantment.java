@@ -1,8 +1,6 @@
 package org.bukkit.craftbukkit.enchantments;
 
 import net.minecraft.core.IRegistry;
-import net.minecraft.world.item.enchantment.EnchantmentBinding;
-import net.minecraft.world.item.enchantment.EnchantmentVanishing;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.enchantments.Enchantment;

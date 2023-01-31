@@ -1,15 +1,13 @@
 package net.minecraft.tags;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Set;
 
 public class TagSet<T> implements Tag<T> {
 
-    private final ImmutableList<T> b;
+    private final List<T> b;
     private final Set<T> c;
     @VisibleForTesting
     protected final Class<?> a;
@@ -17,11 +15,17 @@ public class TagSet<T> implements Tag<T> {
     protected TagSet(Set<T> set, Class<?> oclass) {
         this.a = oclass;
         this.c = set;
-        this.b = ImmutableList.copyOf(set);
+        this.b = List.copyOf(set);
+    }
+
+    protected TagSet(Class<?> oclass) {
+        this.a = oclass;
+        this.c = Set.of();
+        this.b = List.of();
     }
 
     public static <T> TagSet<T> a() {
-        return new TagSet<>(ImmutableSet.of(), Void.class);
+        return new TagSet<>(Void.class);
     }
 
     public static <T> TagSet<T> a(Set<T> set) {
@@ -43,11 +47,8 @@ public class TagSet<T> implements Tag<T> {
             return Void.class;
         } else {
             Class<?> oclass = null;
-            Iterator iterator = set.iterator();
 
-            while (iterator.hasNext()) {
-                T t0 = iterator.next();
-
+            for (T t0 : set) {
                 if (oclass == null) {
                     oclass = t0.getClass();
                 } else {

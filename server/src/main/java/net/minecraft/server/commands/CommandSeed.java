@@ -1,17 +1,10 @@
 package net.minecraft.server.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.commands.CommandListenerWrapper;
-import net.minecraft.network.chat.ChatClickable;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.ChatComponentUtils;
-import net.minecraft.network.chat.ChatHoverable;
-import net.minecraft.network.chat.ChatMessage;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.IChatMutableComponent;
+import net.minecraft.network.chat.*;
 
 public class CommandSeed {
 

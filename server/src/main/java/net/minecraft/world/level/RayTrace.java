@@ -1,6 +1,5 @@
 package net.minecraft.world.level;
 
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockBase;
@@ -10,6 +9,8 @@ import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import java.util.function.Predicate;
 
 public class RayTrace {
 

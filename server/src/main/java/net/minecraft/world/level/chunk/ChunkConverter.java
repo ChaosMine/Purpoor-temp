@@ -2,15 +2,10 @@ package net.minecraft.world.level.chunk;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.netty.util.concurrent.FastThreadLocal;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import java.util.EnumSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -19,12 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.World;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockChest;
-import net.minecraft.world.level.block.BlockFacingHorizontal;
-import net.minecraft.world.level.block.BlockStem;
-import net.minecraft.world.level.block.BlockStemmed;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.entity.TileEntityChest;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -32,6 +22,10 @@ import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockPropertyChestType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.*;
+
+import static dev.kamillaova.paper.util.NettyUtil.fastThreadLocal;
 
 public class ChunkConverter {
 
@@ -280,7 +274,7 @@ public class ChunkConverter {
             }
         },
         LEAVES(true, new Block[]{Blocks.ACACIA_LEAVES, Blocks.BIRCH_LEAVES, Blocks.DARK_OAK_LEAVES, Blocks.JUNGLE_LEAVES, Blocks.OAK_LEAVES, Blocks.SPRUCE_LEAVES}) {
-            private final ThreadLocal<List<ObjectSet<BlockPosition>>> g = ThreadLocal.withInitial(() -> {
+            private final FastThreadLocal<List<ObjectSet<BlockPosition>>> g = fastThreadLocal(() -> {
                 return Lists.newArrayListWithCapacity(7);
             });
 

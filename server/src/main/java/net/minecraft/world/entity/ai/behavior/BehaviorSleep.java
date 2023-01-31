@@ -1,7 +1,6 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.IPosition;
@@ -16,6 +15,8 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.block.BlockBed;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.pathfinder.PathPoint;
+
+import java.util.Optional;
 
 public class BehaviorSleep extends Behavior<EntityLiving> {
 

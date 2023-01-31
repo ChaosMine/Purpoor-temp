@@ -1,8 +1,8 @@
 package com.destroystokyo.paper.profile;
 
-import com.mojang.authlib.Environment;
 import com.destroystokyo.paper.event.profile.FillProfileEvent;
 import com.destroystokyo.paper.event.profile.PreFillProfileEvent;
+import com.mojang.authlib.Environment;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;

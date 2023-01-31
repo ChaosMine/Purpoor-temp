@@ -1,11 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatMessage;
@@ -13,12 +7,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.stats.Statistic;
 import net.minecraft.stats.StatisticList;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.EnumInteractionResult;
-import net.minecraft.world.IInventory;
-import net.minecraft.world.ITileInventory;
-import net.minecraft.world.InventoryLargeChest;
-import net.minecraft.world.InventoryUtils;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.animal.EntityCat;
 import net.minecraft.world.entity.monster.piglin.PiglinAI;
@@ -38,11 +27,7 @@ import net.minecraft.world.level.block.entity.TileEntityTypes;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.block.state.properties.BlockProperties;
-import net.minecraft.world.level.block.state.properties.BlockPropertyChestType;
-import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
-import net.minecraft.world.level.block.state.properties.BlockStateDirection;
-import net.minecraft.world.level.block.state.properties.BlockStateEnum;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.level.pathfinder.PathMode;
@@ -50,6 +35,13 @@ import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 
 public class BlockChest extends BlockChestAbstract<TileEntityChest> implements IBlockWaterlogged {
 

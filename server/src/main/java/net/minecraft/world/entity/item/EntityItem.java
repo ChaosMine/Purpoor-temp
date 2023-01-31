@@ -1,10 +1,5 @@
 package net.minecraft.world.entity.item;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
@@ -14,6 +9,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.stats.StatisticList;
@@ -30,25 +26,27 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
-import net.minecraft.server.MinecraftServer;
-import org.bukkit.Material; // Paper
+import org.bukkit.Material;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-// CraftBukkit end
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent; // Paper
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class EntityItem extends Entity {
 
-    private static final DataWatcherObject<ItemStack> ITEM = DataWatcher.a(EntityItem.class, DataWatcherRegistry.g);
+    public static final DataWatcherObject<ItemStack> ITEM = DataWatcher.a(EntityItem.class, DataWatcherRegistry.g);
     public int age;
     public int pickupDelay;
-    private int f;
-    private UUID thrower;
-    private UUID owner;
+    public int f;
+    public UUID thrower;
+    public UUID owner;
     public final float b;
-    private int lastTick = MinecraftServer.currentTick - 1; // CraftBukkit
+    public int lastTick = MinecraftServer.currentTick - 1; // CraftBukkit
     public boolean canMobPickup = true; // Paper
     // Purpur start
     public boolean immuneToCactus = false;

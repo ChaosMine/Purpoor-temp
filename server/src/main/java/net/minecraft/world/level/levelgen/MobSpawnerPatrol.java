@@ -1,6 +1,5 @@
 package net.minecraft.world.level.levelgen;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.EntityPlayer;
@@ -10,15 +9,11 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.monster.EntityMonsterPatrolling;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.MobSpawner;
-import net.minecraft.world.level.SpawnerCreature;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.BiomeBase;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.Random;
 
 public class MobSpawnerPatrol implements MobSpawner {
 

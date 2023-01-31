@@ -1,9 +1,10 @@
 package net.minecraft.world.level;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
 
 public interface IWorldWriter {
 

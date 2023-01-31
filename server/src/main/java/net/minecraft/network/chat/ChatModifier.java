@@ -1,20 +1,14 @@
 package net.minecraft.network.chat;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
-import java.lang.reflect.Type;
-import java.util.Objects;
-import javax.annotation.Nullable;
+import com.google.gson.*;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.util.ChatDeserializer;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class ChatModifier {
 

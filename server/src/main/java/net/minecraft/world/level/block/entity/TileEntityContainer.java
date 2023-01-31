@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -15,6 +14,8 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import javax.annotation.Nullable;
 
 public abstract class TileEntityContainer extends TileEntity implements IInventory, ITileInventory, INamableTileEntity {
 

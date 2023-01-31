@@ -3,10 +3,11 @@ package net.minecraft.world.level.block.state.properties;
 import com.google.common.base.MoreObjects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.world.level.block.state.IBlockDataHolder;
+
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.world.level.block.state.IBlockDataHolder;
 
 public abstract class IBlockState<T extends Comparable<T>> {
 

@@ -1,13 +1,14 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.horse.EntityLlama;
 import net.minecraft.world.entity.decoration.EntityLeash;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class PathfinderGoalLlamaFollow extends PathfinderGoal {
 
@@ -25,38 +26,24 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
     public boolean a() {
         if (!getLlama().world.purpurConfig.llamaCaravans || !getLlama().shouldJoinCaravan) return false; // Purpur
         if (!this.a.isLeashed() && !this.a.fC()) {
-            List<Entity> list = this.a.world.getEntities(this.a, this.a.getBoundingBox().grow(9.0D, 4.0D, 9.0D), (entity) -> {
+            try (var list = this.a.world.getEntities(this.a, this.a.getBoundingBox().grow(9.0D, 4.0D, 9.0D), (entity) -> {
                 EntityTypes<?> entitytypes = entity.getEntityType();
 
                 return entitytypes == EntityTypes.LLAMA || entitytypes == EntityTypes.TRADER_LLAMA;
-            });
-            EntityLlama entityllama = null;
-            double d0 = Double.MAX_VALUE;
-            Iterator iterator = list.iterator();
+            })) {
+                EntityLlama entityllama = null;
+                double d0 = Double.MAX_VALUE;
 
-            Entity entity;
-            EntityLlama entityllama1;
-            double d1;
 
-            while (iterator.hasNext()) {
-                entity = (Entity) iterator.next();
-                entityllama1 = (EntityLlama) entity;
-                if (entityllama1.fC() && !entityllama1.fB()) {
-                    d1 = this.a.h((Entity) entityllama1);
-                    if (d1 <= d0) {
-                        d0 = d1;
-                        entityllama = entityllama1;
-                    }
-                }
-            }
+                Entity entity;
+                EntityLlama entityllama1;
+                double d1;
 
-            if (entityllama == null) {
-                iterator = list.iterator();
 
-                while (iterator.hasNext()) {
-                    entity = (Entity) iterator.next();
+                for (Entity value : list) {
+                    entity = value;
                     entityllama1 = (EntityLlama) entity;
-                    if (entityllama1.isLeashed() && !entityllama1.fB()) {
+                    if (entityllama1.fC() && !entityllama1.fB()) {
                         d1 = this.a.h((Entity) entityllama1);
                         if (d1 <= d0) {
                             d0 = d1;
@@ -64,17 +51,31 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
                         }
                     }
                 }
-            }
 
-            if (entityllama == null) {
-                return false;
-            } else if (d0 < 4.0D) {
-                return false;
-            } else if (!entityllama.isLeashed() && !this.a(entityllama, 1)) {
-                return false;
-            } else {
-                this.a.a(entityllama);
-                return true;
+                if (entityllama == null) {
+                    for (Entity value : list) {
+                        entity = value;
+                        entityllama1 = (EntityLlama) entity;
+                        if (entityllama1.isLeashed() && !entityllama1.fB()) {
+                            d1 = this.a.h(entityllama1);
+                            if (d1 <= d0) {
+                                d0 = d1;
+                                entityllama = entityllama1;
+                            }
+                        }
+                    }
+                }
+
+                if (entityllama == null) {
+                    return false;
+                } else if (d0 < 4.0D) {
+                    return false;
+                } else if (!entityllama.isLeashed() && !this.a(entityllama, 1)) {
+                    return false;
+                } else {
+                    this.a.a(entityllama);
+                    return true;
+                }
             }
         } else {
             return false;

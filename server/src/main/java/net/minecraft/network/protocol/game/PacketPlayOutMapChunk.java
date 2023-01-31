@@ -1,14 +1,10 @@
 package net.minecraft.network.protocol.game;
 
-import com.destroystokyo.paper.antixray.ChunkPacketInfo; // Paper - Anti-Xray - Add chunk packet info
+import com.destroystokyo.paper.antixray.ChunkPacketInfo;
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import javax.annotation.Nullable;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagLongArray;
@@ -22,6 +18,12 @@ import net.minecraft.world.level.chunk.BiomeStorage;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.chunk.ChunkSection;
 import net.minecraft.world.level.levelgen.HeightMap;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
 
@@ -43,13 +45,13 @@ public class PacketPlayOutMapChunk implements Packet<PacketListenerPlayOut> {
     // Paper end
 
     // Paper start
-    private final java.util.List<Packet> extraPackets = new java.util.ArrayList<>();
+    private final java.util.List<Packet<?>> extraPackets = new ObjectArrayList<>();
     private static final int TE_LIMIT = Integer.getInteger("tuinity.excessive-te-limit", 750); // Tuinity - handle oversized chunk data packets more robustly
     private static final int TE_SPLIT_LIMIT = Math.max(4096 + 1, Integer.getInteger("tuinity.te-split-limit", 15_000)); // Tuinity - handle oversized chunk data packets more robustly
     private boolean mustSplit; // Tuinity - handle oversized chunk data packets more robustly
 
     @Override
-    public java.util.List<Packet> getExtraPackets() {
+    public java.util.List<Packet<?>> getExtraPackets() {
         return extraPackets;
     }
     // Paper end

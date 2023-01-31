@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.boss.enderdragon;
 
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,10 +18,11 @@ import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockFireAbstract;
 import net.minecraft.world.level.dimension.end.EnderDragonBattle;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 // CraftBukkit end
 
 public class EntityEnderCrystal extends Entity {

@@ -1,6 +1,7 @@
 package io.papermc.paper.world;
 
 import com.mojang.datafixers.DataFixer;
+import io.netty.util.concurrent.FastThreadLocalThread;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.ResourceKey;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.storage.Convertable;
 import net.minecraft.world.level.storage.WorldPersistentData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -45,7 +47,7 @@ public class ThreadedWorldUpgrader {
 
             @Override
             public Thread newThread(final Runnable run) {
-                final Thread ret = new Thread(run);
+                final Thread ret = new FastThreadLocalThread(run);
 
                 ret.setName("World upgrader thread for world " + ThreadedWorldUpgrader.this.worldName + " #" + this.threadCounter.getAndIncrement());
                 ret.setUncaughtExceptionHandler((thread, throwable) -> {

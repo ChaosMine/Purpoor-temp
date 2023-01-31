@@ -4,15 +4,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.util.Iterator;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.arguments.ArgumentTime;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.level.WorldServer;
-
-// CraftBukkit start
 import org.bukkit.Bukkit;
 import org.bukkit.event.world.TimeSkipEvent;
+
+import java.util.Iterator;
 // CraftBukkit end
 
 public class CommandTime {

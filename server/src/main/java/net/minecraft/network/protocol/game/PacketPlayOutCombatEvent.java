@@ -7,6 +7,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.entity.EntityLiving;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class PacketPlayOutCombatEvent implements Packet<PacketListenerPlayOut> {
 
@@ -41,7 +42,7 @@ public class PacketPlayOutCombatEvent implements Packet<PacketListenerPlayOut> {
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.a = (PacketPlayOutCombatEvent.EnumCombatEventType) packetdataserializer.a(PacketPlayOutCombatEvent.EnumCombatEventType.class);
+        this.a = packetdataserializer.readEnum(EnumCombatEventType.VALUES);
         if (this.a == PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT) {
             this.d = packetdataserializer.i();
             this.c = packetdataserializer.readInt();
@@ -55,7 +56,7 @@ public class PacketPlayOutCombatEvent implements Packet<PacketListenerPlayOut> {
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.a((Enum) this.a);
+        packetdataserializer.writeEnum(this.a);
         if (this.a == PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT) {
             packetdataserializer.d(this.d);
             packetdataserializer.writeInt(this.c);
@@ -79,6 +80,8 @@ public class PacketPlayOutCombatEvent implements Packet<PacketListenerPlayOut> {
     public static enum EnumCombatEventType {
 
         ENTER_COMBAT, END_COMBAT, ENTITY_DIED;
+
+        public static final EnumCombatEventType @Unmodifiable [] VALUES = values();
 
         private EnumCombatEventType() {}
     }

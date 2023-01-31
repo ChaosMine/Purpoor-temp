@@ -1,7 +1,5 @@
 package net.minecraft.world.entity.ai.goal;
 
-import java.util.EnumSet;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.level.GameRules;
@@ -10,9 +8,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+
+import java.util.EnumSet;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public class PathfinderGoalEatTile extends PathfinderGoal {

@@ -1,5 +1,6 @@
 package net.minecraft.world.inventory;
 
+import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.EntityInsentient;
@@ -10,9 +11,6 @@ import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
-
-// CraftBukkit start
-import net.minecraft.network.chat.ChatMessage;
 import org.bukkit.craftbukkit.inventory.CraftInventoryCrafting;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 // CraftBukkit end

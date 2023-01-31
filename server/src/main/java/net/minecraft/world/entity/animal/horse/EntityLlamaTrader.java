@@ -1,15 +1,8 @@
 package net.minecraft.world.entity.animal.horse;
 
-import java.util.EnumSet;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.DifficultyDamageScaler;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityAgeable;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMobSpawn;
-import net.minecraft.world.entity.GroupDataEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalPanic;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalTarget;
@@ -18,6 +11,9 @@ import net.minecraft.world.entity.npc.EntityVillagerTrader;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.WorldAccess;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class EntityLlamaTrader extends EntityLlama {
 

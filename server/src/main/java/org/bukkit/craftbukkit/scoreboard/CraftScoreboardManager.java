@@ -1,11 +1,6 @@
 package org.bukkit.craftbukkit.scoreboard;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.Consumer;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
 import net.minecraft.server.MinecraftServer;
@@ -16,17 +11,24 @@ import net.minecraft.world.scores.ScoreboardObjective;
 import net.minecraft.world.scores.ScoreboardScore;
 import net.minecraft.world.scores.ScoreboardTeam;
 import net.minecraft.world.scores.criteria.IScoreboardCriteria;
+import net.pl3x.purpur.PurpurConfig;
 import org.apache.commons.lang.Validate;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.util.WeakCollection;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public final class CraftScoreboardManager implements ScoreboardManager {
     private final CraftScoreboard mainScoreboard;
     private final MinecraftServer server;
-    private final Collection<CraftScoreboard> scoreboards = new WeakCollection<CraftScoreboard>();
-    private final Map<CraftPlayer, CraftScoreboard> playerBoards = new HashMap<CraftPlayer, CraftScoreboard>();
+    private final Collection<CraftScoreboard> scoreboards = new WeakCollection<>();
+    private final Map<CraftPlayer, CraftScoreboard> playerBoards = new Reference2ObjectOpenHashMap<>();
 
     public CraftScoreboardManager(MinecraftServer minecraftserver, net.minecraft.world.scores.Scoreboard scoreboardServer) {
         mainScoreboard = new CraftScoreboard(scoreboardServer);
@@ -42,6 +44,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
 
     @Override
     public CraftScoreboard getNewScoreboard() {
+        if (PurpurConfig.disableScoreboards) throw new UnsupportedOperationException("scoreboards removed");
         CraftScoreboard scoreboard = new CraftScoreboard(new ScoreboardServer(server));
         // Paper start
         if (com.destroystokyo.paper.PaperConfig.trackPluginScoreboards) {
@@ -66,6 +69,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
 
     // CraftBukkit method
     public void setPlayerBoard(CraftPlayer player, org.bukkit.scoreboard.Scoreboard bukkitScoreboard) throws IllegalArgumentException {
+        if (PurpurConfig.disableScoreboards) return;
         Validate.isTrue(bukkitScoreboard instanceof CraftScoreboard, "Cannot set player scoreboard to an unregistered Scoreboard");
 
         CraftScoreboard scoreboard = (CraftScoreboard) bukkitScoreboard;
@@ -106,18 +110,22 @@ public final class CraftScoreboardManager implements ScoreboardManager {
 
     // CraftBukkit method
     public void removePlayer(Player player) {
-        playerBoards.remove(player);
+        if (!PurpurConfig.disableScoreboards) {
+            playerBoards.remove(player);
+        }
     }
 
     // CraftBukkit method
     public void getScoreboardScores(IScoreboardCriteria criteria, String name, Consumer<ScoreboardScore> consumer) {
-        // Tuinity start - add timings for scoreboard search
-        // plugins leaking scoreboards will make this very expensive, let server owners debug it easily
-        // Tuinity end - add timings for scoreboard search
-        for (CraftScoreboard scoreboard : scoreboards) {
-            Scoreboard board = scoreboard.board;
-            board.getObjectivesForCriteria(criteria, name, (score) -> consumer.accept(score));
+        if (!PurpurConfig.disableScoreboards) {
+            // Tuinity start - add timings for scoreboard search
+            // plugins leaking scoreboards will make this very expensive, let server owners debug it easily
+            // Tuinity end - add timings for scoreboard search
+            for (CraftScoreboard scoreboard : scoreboards) {
+                Scoreboard board = scoreboard.board;
+                board.getObjectivesForCriteria(criteria, name, (score) -> consumer.accept(score));
+            }
+            // Tuinity end - add timings for scoreboard search
         }
-        // Tuinity end - add timings for scoreboard search
     }
 }

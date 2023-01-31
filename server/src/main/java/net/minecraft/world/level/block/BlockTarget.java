@@ -1,7 +1,6 @@
 package net.minecraft.world.level.block;
 
-import io.papermc.paper.event.block.TargetHitEvent; // Paper - Need to import because 'io' class exists in nms
-import java.util.Random;
+import io.papermc.paper.event.block.TargetHitEvent;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
+
+import java.util.Random;
 
 public class BlockTarget extends Block {
 

@@ -3,8 +3,8 @@ package net.minecraft.advancements;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
-
-import org.bukkit.advancement.FrameType; // Purpur
+import org.bukkit.advancement.FrameType;
+import org.jetbrains.annotations.Unmodifiable;
 
 public enum AdvancementFrameType {
 
@@ -13,6 +13,8 @@ public enum AdvancementFrameType {
     CHALLENGE("challenge", 26, EnumChatFormat.DARK_PURPLE, FrameType.CHALLENGE),
     GOAL("goal", 52, EnumChatFormat.GREEN, FrameType.GOAL);
     // Purpur end
+
+    public static final AdvancementFrameType @Unmodifiable [] VALUES = values();
 
     private final String d;
     private final int e;

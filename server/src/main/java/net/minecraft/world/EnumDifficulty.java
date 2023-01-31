@@ -1,56 +1,68 @@
 package net.minecraft.world;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import javax.annotation.Nullable;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.network.chat.IChatBaseComponent;
+import org.jetbrains.annotations.Unmodifiable;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+
+import static java.util.Comparator.comparingInt;
 
 public enum EnumDifficulty {
+	PEACEFUL(0, "peaceful"),
+	EASY(1, "easy"),
+	NORMAL(2, "normal"),
+	HARD(3, "hard"),
+	;
 
-    PEACEFUL(0, "peaceful"), EASY(1, "easy"), NORMAL(2, "normal"), HARD(3, "hard");
+	public static final EnumDifficulty @Unmodifiable [] VALUES = values();
 
-    private static final EnumDifficulty[] e = (EnumDifficulty[]) Arrays.stream(values()).sorted(Comparator.comparingInt(EnumDifficulty::a)).toArray((i) -> {
-        return new EnumDifficulty[i];
-    });
-    private final int f;
-    private final String g;
+	private static final EnumDifficulty[] e = Arrays.stream(VALUES)
+		.sorted(comparingInt(EnumDifficulty::a))
+		.toArray(EnumDifficulty[]::new);
 
-    private EnumDifficulty(int i, String s) {
-        this.f = i;
-        this.g = s;
-    }
+	private final int f;
+	private final String g;
 
-    public int getId() { return a(); } // Purpur - OBFHELPER
-    public int a() {
-        return this.f;
-    }
+	EnumDifficulty(int i, String s) {
+		this.f = i;
+		this.g = s;
+	}
 
-    public IChatBaseComponent b() {
-        return new ChatMessage("options.difficulty." + this.g);
-    }
+	public int getId() {
+		return a();
+	} // Purpur - OBFHELPER
 
-    public static EnumDifficulty getById(int i) {
-        return EnumDifficulty.e[i % EnumDifficulty.e.length];
-    }
+	public int a() {
+		return this.f;
+	}
 
-    @Nullable
-    public static EnumDifficulty a(String s) {
-        EnumDifficulty[] aenumdifficulty = values();
-        int i = aenumdifficulty.length;
+	public IChatBaseComponent b() {
+		return new ChatMessage("options.difficulty." + this.g);
+	}
 
-        for (int j = 0; j < i; ++j) {
-            EnumDifficulty enumdifficulty = aenumdifficulty[j];
+	public static EnumDifficulty getById(int i) {
+		return EnumDifficulty.e[i % EnumDifficulty.e.length];
+	}
 
-            if (enumdifficulty.g.equals(s)) {
-                return enumdifficulty;
-            }
-        }
+	@Nullable
+	public static EnumDifficulty a(String s) {
+		EnumDifficulty[] aenumdifficulty = values();
+		int i = aenumdifficulty.length;
 
-        return null;
-    }
+		for (int j = 0; j < i; ++j) {
+			EnumDifficulty enumdifficulty = aenumdifficulty[j];
 
-    public String c() {
-        return this.g;
-    }
+			if (enumdifficulty.g.equals(s)) {
+				return enumdifficulty;
+			}
+		}
+
+		return null;
+	}
+
+	public String c() {
+		return this.g;
+	}
 }

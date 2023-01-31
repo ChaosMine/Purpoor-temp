@@ -1,10 +1,6 @@
 package net.minecraft.world.item.alchemy;
 
 import com.google.common.collect.Lists;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +10,11 @@ import net.minecraft.network.chat.IChatMutableComponent;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class PotionUtil {
 

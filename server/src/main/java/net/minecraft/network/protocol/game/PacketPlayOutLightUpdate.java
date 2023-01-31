@@ -1,11 +1,7 @@
 package net.minecraft.network.protocol.game;
 
 import com.google.common.collect.Lists;
-import io.netty.channel.ChannelFuture; // Paper
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
+import io.netty.channel.ChannelFuture;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.network.protocol.Packet;
@@ -15,6 +11,10 @@ import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumSkyBlock;
 import net.minecraft.world.level.chunk.NibbleArray;
 import net.minecraft.world.level.lighting.LightEngine;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 public class PacketPlayOutLightUpdate implements Packet<PacketListenerPlayOut> {
 

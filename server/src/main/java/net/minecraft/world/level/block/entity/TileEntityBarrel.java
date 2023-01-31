@@ -1,5 +1,6 @@
 package net.minecraft.world.level.block.entity;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
@@ -19,18 +20,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BlockBarrel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
-
-// CraftBukkit start
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 // CraftBukkit end
 
 public class TileEntityBarrel extends TileEntityLootable {
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new ArrayList<>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
     private int maxStack = MAX_STACK;
     public boolean opened;
 

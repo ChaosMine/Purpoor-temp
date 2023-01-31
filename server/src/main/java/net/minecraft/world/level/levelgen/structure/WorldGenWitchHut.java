@@ -1,6 +1,5 @@
 package net.minecraft.world.level.levelgen.structure;
 
-import java.util.Random;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
@@ -10,11 +9,7 @@ import net.minecraft.world.entity.EnumMobSpawn;
 import net.minecraft.world.entity.GroupDataEntity;
 import net.minecraft.world.entity.animal.EntityCat;
 import net.minecraft.world.entity.monster.EntityWitch;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccessSeed;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.World;
-import net.minecraft.world.level.WorldAccess;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BlockStairs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -22,6 +17,8 @@ import net.minecraft.world.level.block.state.properties.BlockPropertyStairsShape
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureStructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
+
+import java.util.Random;
 
 public class WorldGenWitchHut extends WorldGenScatteredPiece {
 

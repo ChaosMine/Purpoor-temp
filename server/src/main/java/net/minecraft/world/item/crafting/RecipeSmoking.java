@@ -2,8 +2,6 @@ package net.minecraft.world.item.crafting;
 
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmokingRecipe;

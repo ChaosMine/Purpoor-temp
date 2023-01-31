@@ -2,7 +2,7 @@ package net.pl3x.purpur;
 
 import com.destroystokyo.paper.PaperConfig;
 import com.google.common.base.Throwables;
-import net.minecraft.locale.LocaleLanguage;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntitySize;
 import net.minecraft.world.entity.EntityTypes;
@@ -55,13 +55,15 @@ public class PurpurConfig {
         config.options().copyDefaults(true);
         verbose = getBoolean("verbose", false);
 
-        commands = new HashMap<>();
+        commands = new Object2ObjectOpenHashMap<>();
         commands.put("purpur", new PurpurCommand("purpur"));
 
-        version = getInt("config-version", 13);
-        set("config-version", 13);
+        version = getInt("config-version", 14);
+        set("config-version", 14);
 
         readConfig(PurpurConfig.class, null);
+
+        PurpurConfigCache.init();
     }
 
     protected static void log(String s) {
@@ -76,7 +78,7 @@ public class PurpurConfig {
 
     public static void registerCommands() {
         for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Purpur", entry.getValue());
+            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Purpoor", entry.getValue());
         }
     }
 
@@ -181,7 +183,7 @@ public class PurpurConfig {
         dungeonSeed = getInt("settings.seed.dungeon", dungeonSeed);
     }
 
-    public static String serverModName = "Purpur";
+    public static String serverModName = "Purpoor";
     private static void serverModName() {
         serverModName = getString("settings.server-mod-name", serverModName);
     }
@@ -294,5 +296,73 @@ public class PurpurConfig {
         }
         advancementOnlyBroadcastToAffectedPlayer  = getBoolean("settings.broadcasts.advancement.only-broadcast-to-affected-player", advancementOnlyBroadcastToAffectedPlayer);
         deathMessageOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.death.only-broadcast-to-affected-player", deathMessageOnlyBroadcastToAffectedPlayer);
+    }
+
+    public static boolean disableScoreboards = true;
+    private static void disableScoreboards() {
+        disableScoreboards = getBoolean("settings.disable-scoreboards", disableScoreboards);
+    }
+
+    public static boolean disableTeams = true;
+    private static void disableTeams() {
+        disableTeams = getBoolean("settings.disable-teams", disableTeams);
+    }
+
+    public static boolean disableTeamCollisionRule = true;
+    private static void disableTeamCollisionRule() {
+        disableTeamCollisionRule = getBoolean("settings.disable-team-collision-rule", disableTeamCollisionRule);
+    }
+
+    public static boolean disableTeamAlly = true;
+    private static void disableTeamAlly() {
+        disableTeamAlly = getBoolean("settings.disable-team-ally", disableTeamAlly);
+    }
+
+    public static boolean disableCompassTicking = true;
+    private static void disableCompassTicking() {
+        disableCompassTicking = getBoolean("settings.disable-compass-ticking", disableCompassTicking);
+    }
+
+    public static boolean disableWorldMapTicking = true;
+    private static void disableWorldMapTicking() {
+        disableWorldMapTicking = getBoolean("settings.disable-world-map-ticking", disableWorldMapTicking);
+    }
+
+    public static boolean disableShitParrotSounds = true;
+
+    private static void disableShitParrotSounds() {
+        disableShitParrotSounds = getBoolean("settings.disable-shit-parrot-sounds", disableShitParrotSounds);
+    }
+
+    public static boolean disableEntityCollisions = true;
+
+    private static void disableEntityCollisions() {
+        disableEntityCollisions = getBoolean("settings.disable-entity-cllisions", disableEntityCollisions);
+    }
+
+    public static boolean disableStatistics = true;
+
+    private static void disableStatistics() {
+        disableStatistics = getBoolean("settings.disable-statistics", disableStatistics);
+    }
+
+    public static int hardcodedViewDistance = 7;
+
+    private static void hardcodedViewDistance() {
+        hardcodedViewDistance = getInt("settings.hardcoded-view-distance", hardcodedViewDistance);
+    }
+
+    public static boolean disableCriterions = true;
+
+    private static void disableCriterions() {
+        disableCriterions = getBoolean("settings.disable-criterions", disableCriterions);
+    }
+
+    public static final class PurpurConfigCache {
+        public static boolean disableItemsTicking;
+
+        public static void init() {
+            disableItemsTicking = PurpurConfig.disableCompassTicking && PurpurConfig.disableWorldMapTicking;
+        }
     }
 }

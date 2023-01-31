@@ -2,17 +2,6 @@ package net.minecraft.world.level.storage;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.DataFixer;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTCompressedStreamTools;
@@ -21,6 +10,12 @@ import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.PersistentBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class WorldPersistentData {
 

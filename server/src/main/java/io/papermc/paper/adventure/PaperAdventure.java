@@ -2,12 +2,7 @@ package io.papermc.paper.adventure;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.netty.util.AttributeKey;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.key.Key;
@@ -19,7 +14,7 @@ import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.kyori.adventure.util.Codec;
 import net.minecraft.EnumChatFormat;
@@ -36,6 +31,13 @@ import net.minecraft.world.item.ItemStack;
 import org.bukkit.ChatColor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class PaperAdventure {
     public static final AttributeKey<Locale> LOCALE_ATTRIBUTE = AttributeKey.valueOf("adventure:locale");
@@ -82,7 +84,7 @@ public final class PaperAdventure {
         .build();
     public static final LegacyComponentSerializer LEGACY_SECTION_UXRC = LegacyComponentSerializer.builder().flattener(FLATTENER).hexColors().useUnusualXRepeatedCharacterHexFormat().build();
     public static final LegacyComponentSerializer LEGACY_AMPERSAND = LegacyComponentSerializer.builder().character(LegacyComponentSerializer.AMPERSAND_CHAR).hexColors().build(); // Purpur
-    public static final PlainComponentSerializer PLAIN = PlainComponentSerializer.builder().flattener(FLATTENER).build();
+    public static final PlainTextComponentSerializer PLAIN = PlainTextComponentSerializer.builder().flattener(FLATTENER).build();
     public static final GsonComponentSerializer GSON = GsonComponentSerializer.builder()
         .legacyHoverEventSerializer(NBTLegacyHoverEventSerializer.INSTANCE)
         .build();
@@ -90,7 +92,7 @@ public final class PaperAdventure {
         .legacyHoverEventSerializer(NBTLegacyHoverEventSerializer.INSTANCE)
         .downsampleColors()
         .build();
-    private static final Codec<NBTTagCompound, String, IOException, IOException> NBT_CODEC = new Codec<NBTTagCompound, String, IOException, IOException>() {
+    private static final Codec<NBTTagCompound, String, IOException, IOException> NBT_CODEC = new Codec<>() {
         @Override
         public @NonNull NBTTagCompound decode(final @NonNull String encoded) throws IOException {
             try {
@@ -146,7 +148,7 @@ public final class PaperAdventure {
     }
 
     public static List<String> asJson(final List<Component> adventures) {
-        final List<String> jsons = new ArrayList<>(adventures.size());
+        final List<String> jsons = new ObjectArrayList<>(adventures.size());
         for (final Component component : adventures) {
             jsons.add(GsonComponentSerializer.gson().serialize(component));
         }
@@ -154,12 +156,11 @@ public final class PaperAdventure {
     }
 
     public static IChatBaseComponent asVanilla(final Component component) {
-        if (true) return new AdventureComponent(component);
-        return IChatBaseComponent.ChatSerializer.fromJsonTree(GSON.serializer().toJsonTree(component));
+        return new AdventureComponent(component);
     }
 
     public static List<IChatBaseComponent> asVanilla(final List<Component> adventures) {
-        final List<IChatBaseComponent> vanillas = new ArrayList<>(adventures.size());
+        final List<IChatBaseComponent> vanillas = new ObjectArrayList<>(adventures.size());
         for (final Component adventure : adventures) {
             vanillas.add(asVanilla(adventure));
         }

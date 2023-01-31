@@ -1,22 +1,20 @@
 package net.minecraft.world.level.storage;
 
 import com.mojang.datafixers.DataFixer;
-import java.io.File;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTCompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.player.EntityHuman;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import java.io.FileInputStream;
-import java.io.InputStream;
-import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
 // CraftBukkit end
 
 public class WorldNBTStorage {
@@ -105,7 +103,7 @@ public class WorldNBTStorage {
             File file1 = new File(this.playerDir, s + ".dat");
 
             if (file1.exists()) {
-                return NBTCompressedStreamTools.a((InputStream) (new FileInputStream(file1)));
+                return NBTCompressedStreamTools.a(new FileInputStream(file1));
             }
         } catch (Exception exception) {
             LOGGER.warn("Failed to load player data for " + s);

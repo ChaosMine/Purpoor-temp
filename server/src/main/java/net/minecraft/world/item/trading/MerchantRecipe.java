@@ -4,8 +4,7 @@ import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.item.ItemStack;
-
-import org.bukkit.craftbukkit.inventory.CraftMerchantRecipe; // CraftBukkit
+import org.bukkit.craftbukkit.inventory.CraftMerchantRecipe;
 
 public class MerchantRecipe {
 

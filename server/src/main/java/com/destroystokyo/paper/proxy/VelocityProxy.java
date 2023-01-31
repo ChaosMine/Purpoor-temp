@@ -4,64 +4,71 @@ import com.destroystokyo.paper.PaperConfig;
 import com.google.common.net.InetAddresses;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import io.netty.util.concurrent.FastThreadLocal;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.resources.MinecraftKey;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.net.InetAddress;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 public class VelocityProxy {
-    private static final int SUPPORTED_FORWARDING_VERSION = 1;
-    public static final MinecraftKey PLAYER_INFO_CHANNEL = new MinecraftKey("velocity", "player_info");
+	private static final FastThreadLocal<Mac> macThreadLocal = new FastThreadLocal<>() {
+		@Override
+		protected Mac initialValue() throws Exception {
+			return Mac.getInstance("HmacSHA256");
+		}
+	};
 
-    public static boolean checkIntegrity(final PacketDataSerializer buf) {
-        final byte[] signature = new byte[32];
-        buf.readBytes(signature);
+	private static final int SUPPORTED_FORWARDING_VERSION = 1;
+	public static final MinecraftKey PLAYER_INFO_CHANNEL = new MinecraftKey("velocity", "player_info");
 
-        final byte[] data = new byte[buf.readableBytes()];
-        buf.getBytes(buf.readerIndex(), data);
+	public static boolean checkIntegrity(final PacketDataSerializer buf) {
+		final byte[] signature = new byte[32];
+		buf.readBytes(signature);
 
-        try {
-            final Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(PaperConfig.velocitySecretKey, "HmacSHA256"));
-            final byte[] mySignature = mac.doFinal(data);
-            if (!MessageDigest.isEqual(signature, mySignature)) {
-                return false;
-            }
-        } catch (final InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new AssertionError(e);
-        }
+		final byte[] data = new byte[buf.readableBytes()];
+		buf.getBytes(buf.readerIndex(), data);
 
-        int version = buf.readVarInt();
-        if (version != SUPPORTED_FORWARDING_VERSION) {
-            throw new IllegalStateException("Unsupported forwarding version " + version + ", wanted " + SUPPORTED_FORWARDING_VERSION);
-        }
+		try {
+			final Mac mac = macThreadLocal.get();
+			mac.reset();
+			mac.init(new SecretKeySpec(PaperConfig.velocitySecretKey, "HmacSHA256"));
+			final byte[] mySignature = mac.doFinal(data);
+			if (!MessageDigest.isEqual(signature, mySignature)) {
+				return false;
+			}
+		} catch (final InvalidKeyException e) {
+			throw new AssertionError(e);
+		}
 
-        return true;
-    }
+		int version = buf.readVarInt();
+		if (version != SUPPORTED_FORWARDING_VERSION) {
+			throw new IllegalStateException("Unsupported forwarding version " + version + ", wanted " + SUPPORTED_FORWARDING_VERSION);
+		}
 
-    public static InetAddress readAddress(final PacketDataSerializer buf) {
-        return InetAddresses.forString(buf.readUTF(Short.MAX_VALUE));
-    }
+		return true;
+	}
 
-    public static GameProfile createProfile(final PacketDataSerializer buf) {
-        final GameProfile profile = new GameProfile(buf.readUUID(), buf.readUTF(16));
-        readProperties(buf, profile);
-        return profile;
-    }
+	public static InetAddress readAddress(final PacketDataSerializer buf) {
+		return InetAddresses.forString(buf.readUTF(Short.MAX_VALUE));
+	}
 
-    private static void readProperties(final PacketDataSerializer buf, final GameProfile profile) {
-        final int properties = buf.readVarInt();
-        for (int i1 = 0; i1 < properties; i1++) {
-            final String name = buf.readUTF(Short.MAX_VALUE);
-            final String value = buf.readUTF(Short.MAX_VALUE);
-            final String signature = buf.readBoolean() ? buf.readUTF(Short.MAX_VALUE) : null;
-            profile.getProperties().put(name, new Property(name, value, signature));
-        }
-    }
+	public static GameProfile createProfile(final PacketDataSerializer buf) {
+		final GameProfile profile = new GameProfile(buf.readUUID(), buf.readUTF(16));
+		readProperties(buf, profile);
+		return profile;
+	}
+
+	private static void readProperties(final PacketDataSerializer buf, final GameProfile profile) {
+		final int properties = buf.readVarInt();
+		for (int i1 = 0; i1 < properties; i1++) {
+			final String name = buf.readUTF(Short.MAX_VALUE);
+			final String value = buf.readUTF(Short.MAX_VALUE);
+			final String signature = buf.readBoolean() ? buf.readUTF(Short.MAX_VALUE) : null;
+			profile.getProperties().put(name, new Property(name, value, signature));
+		}
+	}
 }

@@ -10,6 +10,5 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 @FunctionalInterface
 public interface ChannelInitializeListener {
-
-    void afterInitChannel(@NonNull Channel channel);
+	void afterInitChannel(@NonNull Channel channel);
 }

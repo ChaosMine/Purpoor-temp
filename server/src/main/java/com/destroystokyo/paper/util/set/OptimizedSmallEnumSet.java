@@ -6,8 +6,6 @@ import java.util.Collection;
  * @author Spottedleaf <Spottedleaf@users.noreply.github.com>
  */
 public final class OptimizedSmallEnumSet<E extends Enum<E>> {
-
-    private final Class<E> enumClass;
     private long backingSet;
 
     public OptimizedSmallEnumSet(final Class<E> clazz) {
@@ -17,7 +15,6 @@ public final class OptimizedSmallEnumSet<E extends Enum<E>> {
         if (!clazz.isEnum()) {
             throw new IllegalArgumentException("Class must be enum, not " + clazz.getCanonicalName());
         }
-        this.enumClass = clazz;
     }
 
     public boolean addUnchecked(final E element) {

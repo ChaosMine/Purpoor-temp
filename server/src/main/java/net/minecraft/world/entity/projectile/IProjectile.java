@@ -1,8 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import java.util.Iterator;
-import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
@@ -15,9 +12,11 @@ import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.projectiles.ProjectileSource;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.UUID;
 // CraftBukkit end
 
 public abstract class IProjectile extends Entity {
@@ -113,17 +112,12 @@ public abstract class IProjectile extends Entity {
     public boolean checkIfLeftOwner() { return this.h(); } // Purpur - OBFHELPER
     private boolean h() {
         Entity entity = this.getShooter();
-
         if (entity != null) {
-            Iterator iterator = this.world.getEntities(this, this.getBoundingBox().b(this.getMot()).g(1.0D), (entity1) -> {
-                return !entity1.isSpectator() && entity1.isInteractable();
-            }).iterator();
-
-            while (iterator.hasNext()) {
-                Entity entity1 = (Entity) iterator.next();
-
-                if (entity1.getRootVehicle() == entity.getRootVehicle()) {
-                    return false;
+            try (var list = this.world.getEntities(this, this.getBoundingBox().b(this.getMot()).g(1.0D), (entity1) -> !entity1.isSpectator() && entity1.isInteractable())) {
+                for (Entity entity1 : list) {
+                    if (entity1.getRootVehicle() == entity.getRootVehicle()) {
+                        return false;
+                    }
                 }
             }
         }

@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
@@ -16,6 +15,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
+import org.jetbrains.annotations.Unmodifiable;
+
+import javax.annotation.Nullable;
 
 public class TileEntityCommand extends TileEntity {
 
@@ -191,6 +193,8 @@ public class TileEntityCommand extends TileEntity {
     public static enum Type {
 
         SEQUENCE, AUTO, REDSTONE;
+
+        public static final Type @Unmodifiable [] VALUES = values();
 
         private Type() {}
     }

@@ -4,12 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.protocol.game.PacketDebug;
@@ -20,6 +15,12 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.village.poi.VillagePlace;
 import net.minecraft.world.entity.ai.village.poi.VillagePlaceType;
 import net.minecraft.world.level.pathfinder.PathEntity;
+
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class BehaviorFindPosition extends Behavior<EntityCreature> {
 
@@ -85,7 +86,7 @@ public class BehaviorFindPosition extends Behavior<EntityCreature> {
             }
         };
         // Tuinity start - optimise POI access
-        java.util.List<BlockPosition> poiposes = new java.util.ArrayList<>();
+        java.util.List<BlockPosition> poiposes = new ObjectArrayList<>();
         com.tuinity.tuinity.util.PoiAccess.findNearestPoiPositions(villageplace, this.b.c(), predicate, entitycreature.getChunkCoordinates(), 48, 48*48, VillagePlace.Occupancy.HAS_SPACE, false, 5, poiposes);
         Set<BlockPosition> set = new java.util.HashSet<>(poiposes);
         // Tuinity end - optimise POI access

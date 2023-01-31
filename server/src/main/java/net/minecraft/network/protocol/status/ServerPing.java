@@ -1,228 +1,234 @@
 package net.minecraft.network.protocol.status;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
-import java.lang.reflect.Type;
-import java.util.UUID;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.util.ChatDeserializer;
 
+import java.lang.reflect.Type;
+import java.util.UUID;
+
 public class ServerPing {
 
-    private IChatBaseComponent a;
-    private ServerPing.ServerPingPlayerSample b;
-    private ServerPing.ServerData c;
-    private String d;
+	private IChatBaseComponent a;
+	private ServerPing.ServerPingPlayerSample b;
+	private ServerPing.ServerData c;
+	private String d;
 
-    public ServerPing() {}
+	public ServerPing() {}
 
-    public IChatBaseComponent a() {
-        return this.a;
-    }
+	public IChatBaseComponent a() {
+		return this.a;
+	}
 
-    public void setMOTD(IChatBaseComponent ichatbasecomponent) {
-        this.a = ichatbasecomponent;
-    }
+	public void setMOTD(IChatBaseComponent ichatbasecomponent) {
+		this.a = ichatbasecomponent;
+	}
 
-    public ServerPingPlayerSample getPlayers() { return b(); } // Paper - OBFHELPER
-    public ServerPing.ServerPingPlayerSample b() {
-        return this.b;
-    }
+	public ServerPingPlayerSample getPlayers() {
+		return b();
+	} // Paper - OBFHELPER
 
-    public void setPlayerSample(ServerPing.ServerPingPlayerSample serverping_serverpingplayersample) {
-        this.b = serverping_serverpingplayersample;
-    }
+	public ServerPing.ServerPingPlayerSample b() {
+		return this.b;
+	}
 
-    public ServerPing.ServerData getServerData() {
-        return this.c;
-    }
+	public void setPlayerSample(ServerPing.ServerPingPlayerSample serverping_serverpingplayersample) {
+		this.b = serverping_serverpingplayersample;
+	}
 
-    public void setServerInfo(ServerPing.ServerData serverping_serverdata) {
-        this.c = serverping_serverdata;
-    }
+	public ServerPing.ServerData getServerData() {
+		return this.c;
+	}
 
-    public void setFavicon(String s) {
-        this.d = s;
-    }
+	public void setServerInfo(ServerPing.ServerData serverping_serverdata) {
+		this.c = serverping_serverdata;
+	}
 
-    public String d() {
-        return this.d;
-    }
+	public void setFavicon(String s) {
+		this.d = s;
+	}
 
-    public static class Serializer implements JsonDeserializer<ServerPing>, JsonSerializer<ServerPing> {
+	public String d() {
+		return this.d;
+	}
 
-        public Serializer() {}
+	public static class Serializer implements JsonDeserializer<ServerPing>, JsonSerializer<ServerPing> {
 
-        public ServerPing deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
-            JsonObject jsonobject = ChatDeserializer.m(jsonelement, "status");
-            ServerPing serverping = new ServerPing();
+		public Serializer() {
+		}
 
-            if (jsonobject.has("description")) {
-                serverping.setMOTD((IChatBaseComponent) jsondeserializationcontext.deserialize(jsonobject.get("description"), IChatBaseComponent.class));
-            }
+		public ServerPing deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
+			JsonObject jsonobject = ChatDeserializer.m(jsonelement, "status");
+			ServerPing serverping = new ServerPing();
 
-            if (jsonobject.has("players")) {
-                serverping.setPlayerSample((ServerPing.ServerPingPlayerSample) jsondeserializationcontext.deserialize(jsonobject.get("players"), ServerPing.ServerPingPlayerSample.class));
-            }
+			if (jsonobject.has("description")) {
+				serverping.setMOTD(jsondeserializationcontext.deserialize(jsonobject.get("description"), IChatBaseComponent.class));
+			}
 
-            if (jsonobject.has("version")) {
-                serverping.setServerInfo((ServerPing.ServerData) jsondeserializationcontext.deserialize(jsonobject.get("version"), ServerPing.ServerData.class));
-            }
+			if (jsonobject.has("players")) {
+				serverping.setPlayerSample(jsondeserializationcontext.deserialize(jsonobject.get("players"), ServerPingPlayerSample.class));
+			}
 
-            if (jsonobject.has("favicon")) {
-                serverping.setFavicon(ChatDeserializer.h(jsonobject, "favicon"));
-            }
+			if (jsonobject.has("version")) {
+				serverping.setServerInfo(jsondeserializationcontext.deserialize(jsonobject.get("version"), ServerData.class));
+			}
 
-            return serverping;
-        }
+			if (jsonobject.has("favicon")) {
+				serverping.setFavicon(ChatDeserializer.h(jsonobject, "favicon"));
+			}
 
-        public JsonElement serialize(ServerPing serverping, Type type, JsonSerializationContext jsonserializationcontext) {
-            JsonObject jsonobject = new JsonObject();
+			return serverping;
+		}
 
-            if (serverping.a() != null) {
-                jsonobject.add("description", jsonserializationcontext.serialize(serverping.a()));
-            }
+		public JsonElement serialize(ServerPing serverping, Type type, JsonSerializationContext jsonserializationcontext) {
+			JsonObject jsonobject = new JsonObject();
 
-            if (serverping.b() != null) {
-                jsonobject.add("players", jsonserializationcontext.serialize(serverping.b()));
-            }
+			if (serverping.a() != null) {
+				jsonobject.add("description", jsonserializationcontext.serialize(serverping.a()));
+			}
 
-            if (serverping.getServerData() != null) {
-                jsonobject.add("version", jsonserializationcontext.serialize(serverping.getServerData()));
-            }
+			if (serverping.b() != null) {
+				jsonobject.add("players", jsonserializationcontext.serialize(serverping.b()));
+			}
 
-            if (serverping.d() != null) {
-                jsonobject.addProperty("favicon", serverping.d());
-            }
+			if (serverping.getServerData() != null) {
+				jsonobject.add("version", jsonserializationcontext.serialize(serverping.getServerData()));
+			}
 
-            return jsonobject;
-        }
-    }
+			if (serverping.d() != null) {
+				jsonobject.addProperty("favicon", serverping.d());
+			}
 
-    public static class ServerData {
+			return jsonobject;
+		}
+	}
 
-        private final String a;
-        private final int b;
+	public static class ServerData {
 
-        public ServerData(String s, int i) {
-            this.a = s;
-            this.b = i;
-        }
+		private final String a;
+		private final int b;
 
-        public String a() {
-            return this.a;
-        }
+		public ServerData(String s, int i) {
+			this.a = s;
+			this.b = i;
+		}
 
-        public int getProtocolVersion() {
-            return this.b;
-        }
+		public String a() {
+			return this.a;
+		}
 
-        public static class Serializer implements JsonDeserializer<ServerPing.ServerData>, JsonSerializer<ServerPing.ServerData> {
+		public int getProtocolVersion() {
+			return this.b;
+		}
 
-            public Serializer() {}
+		public static class Serializer implements JsonDeserializer<ServerPing.ServerData>, JsonSerializer<ServerPing.ServerData> {
 
-            public ServerPing.ServerData deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
-                JsonObject jsonobject = ChatDeserializer.m(jsonelement, "version");
+			public Serializer() {
+			}
 
-                return new ServerPing.ServerData(ChatDeserializer.h(jsonobject, "name"), ChatDeserializer.n(jsonobject, "protocol"));
-            }
+			public ServerPing.ServerData deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
+				JsonObject jsonobject = ChatDeserializer.m(jsonelement, "version");
 
-            public JsonElement serialize(ServerPing.ServerData serverping_serverdata, Type type, JsonSerializationContext jsonserializationcontext) {
-                JsonObject jsonobject = new JsonObject();
+				return new ServerPing.ServerData(ChatDeserializer.h(jsonobject, "name"), ChatDeserializer.n(jsonobject, "protocol"));
+			}
 
-                jsonobject.addProperty("name", serverping_serverdata.a());
-                jsonobject.addProperty("protocol", serverping_serverdata.getProtocolVersion());
-                return jsonobject;
-            }
-        }
-    }
+			public JsonElement serialize(ServerPing.ServerData serverping_serverdata, Type type, JsonSerializationContext jsonserializationcontext) {
+				JsonObject jsonobject = new JsonObject();
 
-    public static class ServerPingPlayerSample {
+				jsonobject.addProperty("name", serverping_serverdata.a());
+				jsonobject.addProperty("protocol", serverping_serverdata.getProtocolVersion());
+				return jsonobject;
+			}
+		}
+	}
 
-        private final int a;
-        private final int b;
-        private GameProfile[] c;
+	public static class ServerPingPlayerSample {
 
-        public ServerPingPlayerSample(int i, int j) {
-            this.a = i;
-            this.b = j;
-        }
+		private final int a;
+		private final int b;
+		private GameProfile[] c;
 
-        public int a() {
-            return this.a;
-        }
+		public ServerPingPlayerSample(int i, int j) {
+			this.a = i;
+			this.b = j;
+		}
 
-        public int b() {
-            return this.b;
-        }
+		public int a() {
+			return this.a;
+		}
 
-        public GameProfile[] getSample() { return c(); } // Paper - OBFHELPER
-        public GameProfile[] c() {
-            return this.c;
-        }
+		public int b() {
+			return this.b;
+		}
 
-        public void setSample(GameProfile[] sample) { a(sample); } // Paper - OBFHELPER
-        public void a(GameProfile[] agameprofile) {
-            this.c = agameprofile;
-        }
+		public GameProfile[] getSample() {
+			return c();
+		} // Paper - OBFHELPER
 
-        public static class Serializer implements JsonDeserializer<ServerPing.ServerPingPlayerSample>, JsonSerializer<ServerPing.ServerPingPlayerSample> {
+		public GameProfile[] c() {
+			return this.c;
+		}
 
-            public Serializer() {}
+		public void setSample(GameProfile[] sample) {
+			a(sample);
+		} // Paper - OBFHELPER
 
-            public ServerPing.ServerPingPlayerSample deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
-                JsonObject jsonobject = ChatDeserializer.m(jsonelement, "players");
-                ServerPing.ServerPingPlayerSample serverping_serverpingplayersample = new ServerPing.ServerPingPlayerSample(ChatDeserializer.n(jsonobject, "max"), ChatDeserializer.n(jsonobject, "online"));
+		public void a(GameProfile[] agameprofile) {
+			this.c = agameprofile;
+		}
 
-                if (ChatDeserializer.d(jsonobject, "sample")) {
-                    JsonArray jsonarray = ChatDeserializer.u(jsonobject, "sample");
+		public static class Serializer implements JsonDeserializer<ServerPing.ServerPingPlayerSample>, JsonSerializer<ServerPing.ServerPingPlayerSample> {
 
-                    if (jsonarray.size() > 0) {
-                        GameProfile[] agameprofile = new GameProfile[jsonarray.size()];
+			public Serializer() {
+			}
 
-                        for (int i = 0; i < agameprofile.length; ++i) {
-                            JsonObject jsonobject1 = ChatDeserializer.m(jsonarray.get(i), "player[" + i + "]");
-                            String s = ChatDeserializer.h(jsonobject1, "id");
+			public ServerPing.ServerPingPlayerSample deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
+				JsonObject jsonobject = ChatDeserializer.m(jsonelement, "players");
+				ServerPing.ServerPingPlayerSample serverping_serverpingplayersample = new ServerPing.ServerPingPlayerSample(ChatDeserializer.n(jsonobject, "max"), ChatDeserializer.n(jsonobject, "online"));
 
-                            agameprofile[i] = new GameProfile(UUID.fromString(s), ChatDeserializer.h(jsonobject1, "name"));
-                        }
+				if (ChatDeserializer.d(jsonobject, "sample")) {
+					JsonArray jsonarray = ChatDeserializer.u(jsonobject, "sample");
 
-                        serverping_serverpingplayersample.a(agameprofile);
-                    }
-                }
+					if (jsonarray.size() > 0) {
+						GameProfile[] agameprofile = new GameProfile[jsonarray.size()];
 
-                return serverping_serverpingplayersample;
-            }
+						for (int i = 0; i < agameprofile.length; ++i) {
+							JsonObject jsonobject1 = ChatDeserializer.m(jsonarray.get(i), "player[" + i + "]");
+							String s = ChatDeserializer.h(jsonobject1, "id");
 
-            public JsonElement serialize(ServerPing.ServerPingPlayerSample serverping_serverpingplayersample, Type type, JsonSerializationContext jsonserializationcontext) {
-                JsonObject jsonobject = new JsonObject();
+							agameprofile[i] = new GameProfile(UUID.fromString(s), ChatDeserializer.h(jsonobject1, "name"));
+						}
 
-                jsonobject.addProperty("max", serverping_serverpingplayersample.a());
-                jsonobject.addProperty("online", serverping_serverpingplayersample.b());
-                if (serverping_serverpingplayersample.c() != null && serverping_serverpingplayersample.c().length > 0) {
-                    JsonArray jsonarray = new JsonArray();
+						serverping_serverpingplayersample.a(agameprofile);
+					}
+				}
 
-                    for (int i = 0; i < serverping_serverpingplayersample.c().length; ++i) {
-                        JsonObject jsonobject1 = new JsonObject();
-                        UUID uuid = serverping_serverpingplayersample.c()[i].getId();
+				return serverping_serverpingplayersample;
+			}
 
-                        jsonobject1.addProperty("id", uuid == null ? "" : uuid.toString());
-                        jsonobject1.addProperty("name", serverping_serverpingplayersample.c()[i].getName());
-                        jsonarray.add(jsonobject1);
-                    }
+			public JsonElement serialize(ServerPing.ServerPingPlayerSample serverping_serverpingplayersample, Type type, JsonSerializationContext jsonserializationcontext) {
+				JsonObject jsonobject = new JsonObject();
 
-                    jsonobject.add("sample", jsonarray);
-                }
+				jsonobject.addProperty("max", serverping_serverpingplayersample.a());
+				jsonobject.addProperty("online", serverping_serverpingplayersample.b());
+				if (serverping_serverpingplayersample.c() != null && serverping_serverpingplayersample.c().length > 0) {
+					JsonArray jsonarray = new JsonArray();
 
-                return jsonobject;
-            }
-        }
-    }
+					for (int i = 0; i < serverping_serverpingplayersample.c().length; ++i) {
+						JsonObject jsonobject1 = new JsonObject();
+						UUID uuid = serverping_serverpingplayersample.c()[i].getId();
+
+						jsonobject1.addProperty("id", uuid == null ? "" : uuid.toString());
+						jsonobject1.addProperty("name", serverping_serverpingplayersample.c()[i].getName());
+						jsonarray.add(jsonobject1);
+					}
+
+					jsonobject.add("sample", jsonarray);
+				}
+
+				return jsonobject;
+			}
+		}
+	}
 }

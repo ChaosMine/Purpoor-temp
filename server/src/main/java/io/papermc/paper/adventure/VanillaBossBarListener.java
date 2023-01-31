@@ -1,11 +1,12 @@
 package io.papermc.paper.adventure;
 
-import java.util.Set;
-import java.util.function.Consumer;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.protocol.game.PacketPlayOutBoss;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.Set;
+import java.util.function.Consumer;
 
 public final class VanillaBossBarListener implements BossBar.Listener {
     private final Consumer<PacketPlayOutBoss.Action> action;

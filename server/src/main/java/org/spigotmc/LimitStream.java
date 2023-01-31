@@ -1,9 +1,10 @@
 package org.spigotmc;
 
+import net.minecraft.nbt.NBTReadLimiter;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import net.minecraft.nbt.NBTReadLimiter;
 
 public class LimitStream extends FilterInputStream
 {

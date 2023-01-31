@@ -1,19 +1,10 @@
 package net.minecraft.server.level;
 
-import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap; // Paper
-// Tuinity start
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongIterator;
-// Tuinity end
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import it.unimi.dsi.fastutil.objects.ObjectListIterator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.IntSupplier;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
@@ -21,14 +12,15 @@ import net.minecraft.util.thread.Mailbox;
 import net.minecraft.util.thread.ThreadedMailbox;
 import net.minecraft.world.level.ChunkCoordIntPair;
 import net.minecraft.world.level.EnumSkyBlock;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.IChunkAccess;
-import net.minecraft.world.level.chunk.ILightAccess;
-import net.minecraft.world.level.chunk.NibbleArray;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.lighting.LightEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.IntSupplier;
 
 public class LightEngineThreaded extends LightEngine implements AutoCloseable {
 
@@ -586,8 +578,8 @@ public class LightEngineThreaded extends LightEngine implements AutoCloseable {
     }
 
     // Paper start - replace impl
-    private final java.util.List<Runnable> pre = new java.util.ArrayList<>();
-    private final java.util.List<Runnable> post = new java.util.ArrayList<>();
+    private final java.util.List<Runnable> pre = new ObjectArrayList<>();
+    private final java.util.List<Runnable> post = new ObjectArrayList<>();
     private void b() {
         //final long start = System.nanoTime(); // TODO remove debug
         if (queue.poll(pre, post)) {

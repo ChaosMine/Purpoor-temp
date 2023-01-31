@@ -1,15 +1,14 @@
 package net.minecraft.world;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
-
-// CraftBukkit start
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.Location;
-
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 // CraftBukkit end
 
 public class InventoryLargeChest implements IInventory {
@@ -18,10 +17,10 @@ public class InventoryLargeChest implements IInventory {
     public final IInventory right;
 
     // CraftBukkit start - add fields and methods
-    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+    public List<HumanEntity> transaction = new ObjectArrayList<>();
 
     public List<ItemStack> getContents() {
-        List<ItemStack> result = new ArrayList<ItemStack>(this.getSize());
+        List<ItemStack> result = new ObjectArrayList<ItemStack>(this.getSize());
         for (int i = 0; i < this.getSize(); i++) {
             result.add(this.getItem(i));
         }

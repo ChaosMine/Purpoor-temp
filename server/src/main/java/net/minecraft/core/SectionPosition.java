@@ -1,12 +1,13 @@
 package net.minecraft.core;
 
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkCoordIntPair;
+
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.ChunkCoordIntPair;
 
 public class SectionPosition extends BaseBlockPosition {
 

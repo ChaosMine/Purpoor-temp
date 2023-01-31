@@ -1,10 +1,10 @@
 package org.bukkit.craftbukkit.scheduler;
 
-import java.util.function.Consumer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.function.Consumer;
 
 public class CraftTask implements BukkitTask, Runnable { // Spigot
 

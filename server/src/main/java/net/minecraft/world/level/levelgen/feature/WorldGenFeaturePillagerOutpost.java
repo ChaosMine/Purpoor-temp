@@ -2,8 +2,6 @@ package net.minecraft.world.level.levelgen.feature;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import java.util.List;
-
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkCoordIntPair;
@@ -14,6 +12,8 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.SeededRandom;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureSettingsFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureVillageConfiguration;
+
+import java.util.List;
 
 public class WorldGenFeaturePillagerOutpost extends WorldGenFeatureJigsaw {
 

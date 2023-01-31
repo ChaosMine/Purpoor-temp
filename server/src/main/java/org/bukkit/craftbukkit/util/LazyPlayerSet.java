@@ -1,10 +1,11 @@
 package org.bukkit.craftbukkit.util;
 
-import java.util.HashSet;
-import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.List;
 
 public class LazyPlayerSet extends LazyHashSet<Player> {
 

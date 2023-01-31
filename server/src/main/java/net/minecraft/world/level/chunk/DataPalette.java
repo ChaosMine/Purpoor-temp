@@ -1,9 +1,10 @@
 package net.minecraft.world.level.chunk;
 
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketDataSerializer;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public interface DataPalette<T> {
 

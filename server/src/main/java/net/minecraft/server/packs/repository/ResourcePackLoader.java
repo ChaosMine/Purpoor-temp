@@ -1,23 +1,20 @@
 package net.minecraft.server.packs.repository;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.SharedConstants;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.ChatComponentUtils;
-import net.minecraft.network.chat.ChatHoverable;
-import net.minecraft.network.chat.ChatMessage;
-import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.packs.IResourcePack;
 import net.minecraft.server.packs.metadata.ResourcePackMetaParser;
 import net.minecraft.server.packs.metadata.pack.ResourcePackInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ResourcePackLoader implements AutoCloseable {
 

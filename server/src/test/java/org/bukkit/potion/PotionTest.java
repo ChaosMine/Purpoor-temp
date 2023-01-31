@@ -1,9 +1,5 @@
 package org.bukkit.potion;
 
-import static org.junit.Assert.*;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.IRegistry;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.effect.MobEffect;
@@ -11,6 +7,12 @@ import net.minecraft.world.effect.MobEffectList;
 import net.minecraft.world.item.alchemy.PotionRegistry;
 import org.bukkit.support.AbstractTestingBase;
 import org.junit.Test;
+
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class PotionTest extends AbstractTestingBase {
     @Test

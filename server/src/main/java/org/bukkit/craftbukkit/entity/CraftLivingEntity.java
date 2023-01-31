@@ -4,12 +4,7 @@ import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.destroystokyo.paper.entity.TargetEntityInfo;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumHand;
@@ -24,25 +19,7 @@ import net.minecraft.world.entity.ai.attributes.GenericAttributes;
 import net.minecraft.world.entity.boss.wither.EntityWither;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.projectile.EntityArrow;
-import net.minecraft.world.entity.projectile.EntityDragonFireball;
-import net.minecraft.world.entity.projectile.EntityEgg;
-import net.minecraft.world.entity.projectile.EntityEnderPearl;
-import net.minecraft.world.entity.projectile.EntityFireball;
-import net.minecraft.world.entity.projectile.EntityFireworks;
-import net.minecraft.world.entity.projectile.EntityFishingHook;
-import net.minecraft.world.entity.projectile.EntityLargeFireball;
-import net.minecraft.world.entity.projectile.EntityLlamaSpit;
-import net.minecraft.world.entity.projectile.EntityPotion;
-import net.minecraft.world.entity.projectile.EntityProjectile;
-import net.minecraft.world.entity.projectile.EntityShulkerBullet;
-import net.minecraft.world.entity.projectile.EntitySmallFireball;
-import net.minecraft.world.entity.projectile.EntitySnowball;
-import net.minecraft.world.entity.projectile.EntitySpectralArrow;
-import net.minecraft.world.entity.projectile.EntityThrownExpBottle;
-import net.minecraft.world.entity.projectile.EntityThrownTrident;
-import net.minecraft.world.entity.projectile.EntityTippedArrow;
-import net.minecraft.world.entity.projectile.EntityWitherSkull;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.level.RayTrace;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
@@ -63,31 +40,7 @@ import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
 import org.bukkit.craftbukkit.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.potion.CraftPotionUtil;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.DragonFireball;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityCategory;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.FishHook;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LingeringPotion;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.LlamaSpit;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ShulkerBullet;
-import org.bukkit.entity.SmallFireball;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.SpectralArrow;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.TippedArrow;
-import org.bukkit.entity.Trident;
-import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.*;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -100,6 +53,8 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+
+import java.util.*;
 
 public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     private CraftEntityEquipment equipment;
@@ -184,7 +139,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (maxDistance > 120) {
             maxDistance = 120;
         }
-        ArrayList<Block> blocks = new ArrayList<Block>();
+        ObjectArrayList<Block> blocks = new ObjectArrayList<Block>();
         Iterator<Block> itr = new BlockIterator(this, maxDistance);
         while (itr.hasNext()) {
             Block block = itr.next();
@@ -451,7 +406,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public Collection<PotionEffect> getActivePotionEffects() {
-        List<PotionEffect> effects = new ArrayList<PotionEffect>();
+        List<PotionEffect> effects = new ObjectArrayList<PotionEffect>();
         for (MobEffect handle : getHandle().effects.values()) {
             effects.add(new PotionEffect(PotionEffectType.getById(MobEffectList.getId(handle.getMobEffect())), handle.getDuration(), handle.getAmplifier(), handle.isAmbient(), handle.isShowParticles()));
         }

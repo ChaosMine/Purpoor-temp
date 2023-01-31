@@ -4,7 +4,6 @@ import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 
 public class CraftSkeleton extends CraftMonster implements Skeleton, com.destroystokyo.paper.entity.CraftRangedEntity<EntitySkeletonAbstract> { // Paper
 

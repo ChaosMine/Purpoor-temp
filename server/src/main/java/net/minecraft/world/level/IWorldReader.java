@@ -1,7 +1,5 @@
 package net.minecraft.world.level;
 
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.tags.Tag;
@@ -15,6 +13,9 @@ import net.minecraft.world.level.chunk.IChunkAccess;
 import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.phys.AxisAlignedBB;
+
+import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public interface IWorldReader extends IBlockLightAccess, ICollisionAccess, BiomeManager.Provider {
 

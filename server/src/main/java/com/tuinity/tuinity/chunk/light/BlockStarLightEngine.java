@@ -1,24 +1,15 @@
 package com.tuinity.tuinity.chunk.light;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.level.chunk.Chunk;
-import net.minecraft.world.level.chunk.ChunkSection;
-import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.DataPaletteBlock;
+import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.chunk.IChunkAccess;
-import net.minecraft.world.level.chunk.ILightAccess;
-import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraft.world.level.chunk.ProtoChunkExtension;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
-import net.minecraft.world.level.World;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class BlockStarLightEngine extends StarLightEngine {
@@ -198,7 +189,7 @@ public final class BlockStarLightEngine extends StarLightEngine {
         if (chunk instanceof ProtoChunkExtension || chunk instanceof Chunk) {
             // implementation on Chunk is pretty awful, so write our own here. The big optimisation is
             // skipping empty sections, and the far more optimised reading of types.
-            List<BlockPosition> sources = new ArrayList<>();
+            List<BlockPosition> sources = new ObjectArrayList<>();
 
             int offX = chunk.getPos().x << 4;
             int offZ = chunk.getPos().z << 4;

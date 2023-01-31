@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.animal.horse;
 
-import javax.annotation.Nullable;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
@@ -18,6 +17,8 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.World;
+
+import javax.annotation.Nullable;
 
 public class EntityHorseZombie extends EntityHorseAbstract {
 

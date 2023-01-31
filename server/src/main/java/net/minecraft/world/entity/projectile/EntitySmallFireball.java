@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.BlockFireAbstract;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
-
-import org.bukkit.event.entity.EntityCombustByEntityEvent; // CraftBukkit
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 
 public class EntitySmallFireball extends EntityFireballFireball {
 

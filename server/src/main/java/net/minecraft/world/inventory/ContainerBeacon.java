@@ -1,20 +1,15 @@
 package net.minecraft.world.inventory;
 
+import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsItem;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.InventorySubcontainer;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-
-// CraftBukkit start
-import net.minecraft.world.entity.player.PlayerInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
-// CraftBukkit end
-
-// Paper start
-import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 // Paper end
 
 public class ContainerBeacon extends Container {

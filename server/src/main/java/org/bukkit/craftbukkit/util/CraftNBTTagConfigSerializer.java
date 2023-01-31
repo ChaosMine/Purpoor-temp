@@ -2,19 +2,15 @@ package org.bukkit.craftbukkit.util;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.nbt.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTList;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 
 public class CraftNBTTagConfigSerializer {
 
@@ -25,14 +21,14 @@ public class CraftNBTTagConfigSerializer {
 
     public static Object serialize(NBTBase base) {
         if (base instanceof NBTTagCompound) {
-            Map<String, Object> innerMap = new HashMap<>();
+            Map<String, Object> innerMap = new Object2ObjectOpenHashMap<>();
             for (String key : ((NBTTagCompound) base).getKeys()) {
                 innerMap.put(key, serialize(((NBTTagCompound) base).get(key)));
             }
 
             return innerMap;
         } else if (base instanceof NBTTagList) {
-            List<Object> baseList = new ArrayList<>();
+            List<Object> baseList = new ObjectArrayList<>();
             for (int i = 0; i < ((NBTList) base).size(); i++) {
                 baseList.add(serialize((NBTBase) ((NBTList) base).get(i)));
             }

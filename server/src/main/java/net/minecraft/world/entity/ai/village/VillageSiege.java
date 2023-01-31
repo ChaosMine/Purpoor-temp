@@ -1,9 +1,6 @@
 package net.minecraft.world.entity.ai.village;
 
 import com.destroystokyo.paper.exception.ServerInternalException;
-
-import java.util.Iterator;
-import javax.annotation.Nullable;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +18,9 @@ import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.phys.Vec3D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
 
 public class VillageSiege implements MobSpawner {
 

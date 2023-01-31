@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.projectile;
 
-import javax.annotation.Nullable;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +22,8 @@ import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
+
+import javax.annotation.Nullable;
 
 public class EntityThrownTrident extends EntityArrow {
 

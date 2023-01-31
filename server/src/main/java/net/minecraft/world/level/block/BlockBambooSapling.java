@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.block.state.properties.BlockPropertyBambooSize;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
+
+import java.util.Random;
 
 public class BlockBambooSapling extends Block implements IBlockFragilePlantElement {
 

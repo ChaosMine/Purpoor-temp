@@ -1,13 +1,11 @@
 package net.minecraft.world.level.block;
 
 import com.google.common.collect.Lists;
-import java.util.Queue;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagsFluid;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.BlockBase;
@@ -15,12 +13,12 @@ import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidTypes;
 import net.minecraft.world.level.material.Material;
-
-// CraftBukkit start
-import java.util.List;
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.util.BlockStateListPopulator;
 import org.bukkit.event.block.SpongeAbsorbEvent;
+
+import java.util.List;
+import java.util.Queue;
 // CraftBukkit end
 
 public class BlockSponge extends Block {

@@ -9,8 +9,6 @@ import net.minecraft.tags.TagsFluid;
 import net.minecraft.world.entity.vehicle.EntityBoat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BlockDispenser;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.block.BlockDispenseEvent;
 // CraftBukkit end

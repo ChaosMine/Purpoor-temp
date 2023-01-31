@@ -6,8 +6,6 @@ import net.minecraft.world.level.GeneratorAccess;
 import net.minecraft.world.level.IWorldReader;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
-
-// CraftBukkit start
 import org.bukkit.event.entity.EntityUnleashEvent;
 // CraftBukkit end
 

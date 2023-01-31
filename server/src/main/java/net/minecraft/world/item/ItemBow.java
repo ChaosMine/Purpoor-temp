@@ -1,6 +1,5 @@
 package net.minecraft.world.item;
 
-import java.util.function.Predicate;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.stats.StatisticList;
@@ -12,6 +11,8 @@ import net.minecraft.world.entity.projectile.EntityArrow;
 import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.World;
+
+import java.util.function.Predicate;
 
 public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
 

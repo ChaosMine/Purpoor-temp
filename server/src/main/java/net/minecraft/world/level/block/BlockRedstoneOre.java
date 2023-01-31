@@ -1,6 +1,5 @@
 package net.minecraft.world.level.block;
 
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.particles.ParticleParamRedstone;
@@ -20,10 +19,10 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityInteractEvent;
+
+import java.util.Random;
 // CraftBukkit end
 
 public class BlockRedstoneOre extends Block {

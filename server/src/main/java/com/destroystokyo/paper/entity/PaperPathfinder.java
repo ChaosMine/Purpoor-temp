@@ -1,5 +1,6 @@
 package com.destroystokyo.paper.entity;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
@@ -113,7 +114,7 @@ public class PaperPathfinder implements com.destroystokyo.paper.entity.Pathfinde
 
         @Override
         public List<Location> getPoints() {
-            List<Location> points = new ArrayList<>();
+            List<Location> points = new ObjectArrayList<>();
             for (PathPoint point : path.getPoints()) {
                 points.add(toLoc(point));
             }

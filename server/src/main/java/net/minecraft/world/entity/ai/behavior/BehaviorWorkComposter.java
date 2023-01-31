@@ -1,8 +1,6 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.WorldServer;
@@ -16,6 +14,9 @@ import net.minecraft.world.level.World;
 import net.minecraft.world.level.block.BlockComposter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
+
+import java.util.List;
+import java.util.Optional;
 
 public class BehaviorWorkComposter extends BehaviorWork {
 

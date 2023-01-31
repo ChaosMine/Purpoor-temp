@@ -1,9 +1,6 @@
 package net.minecraft.world.level.block;
 
 import com.google.common.collect.Lists;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.server.level.WorldServer;
@@ -19,16 +16,16 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateInteger;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidType;
-import net.minecraft.world.level.material.FluidTypeFlowing;
-import net.minecraft.world.level.material.FluidTypes;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.*;
 import net.minecraft.world.level.pathfinder.PathMode;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 import net.minecraft.world.phys.shapes.VoxelShapes;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class BlockFluids extends Block implements IFluidSource {
 

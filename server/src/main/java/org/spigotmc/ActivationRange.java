@@ -1,51 +1,32 @@
 package org.spigotmc;
 
-import java.util.Collection;
+import net.minecraft.core.BlockPosition;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityCreature;
-import net.minecraft.world.entity.EntityLightning;
-import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ambient.EntityAmbient;
-import net.minecraft.world.entity.animal.EntityAnimal;
-import net.minecraft.world.entity.animal.EntitySheep;
-import net.minecraft.world.entity.animal.EntitySquid;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.horse.EntityLlama;
 import net.minecraft.world.entity.boss.EntityComplexPart;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EntityEnderDragon;
 import net.minecraft.world.entity.boss.wither.EntityWither;
+import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.entity.monster.EntityCreeper;
-import net.minecraft.world.entity.monster.EntityMonster;
-import net.minecraft.world.entity.monster.EntitySlime;
+import net.minecraft.world.entity.monster.EntityPillager;
+import net.minecraft.world.entity.monster.IMonster;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.projectile.EntityArrow;
-import net.minecraft.world.entity.projectile.EntityFireball;
-import net.minecraft.world.entity.projectile.EntityFireworks;
-import net.minecraft.world.entity.projectile.EntityProjectile;
-import net.minecraft.world.entity.projectile.EntityThrownTrident;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.raid.EntityRaider;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.World;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.phys.AxisAlignedBB;
-
-// Paper start
-import net.minecraft.core.BlockPosition;
-import net.minecraft.server.level.ChunkProviderServer;
-import net.minecraft.world.entity.EntityFlying;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.ai.BehaviorController;
-import net.minecraft.world.entity.animal.EntityBee;
-import net.minecraft.world.entity.animal.EntityWaterAnimal;
-import net.minecraft.world.entity.animal.horse.EntityLlama;
-import net.minecraft.world.entity.monster.EntityPillager;
-import net.minecraft.world.entity.monster.IMonster;
-import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.item.EntityFallingBlock;
-import net.minecraft.world.entity.projectile.EntityEnderSignal;
 // Paper end
 
 public class ActivationRange

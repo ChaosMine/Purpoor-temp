@@ -3,21 +3,9 @@ package net.minecraft.commands.arguments.blocks;
 import com.google.common.collect.Maps;
 import com.google.common.collect.UnmodifiableIterator;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
-import com.mojang.brigadier.exceptions.Dynamic3CommandExceptionType;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.exceptions.*;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-import javax.annotation.Nullable;
 import net.minecraft.commands.ICompletionProvider;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.MojangsonParser;
@@ -30,6 +18,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.IBlockState;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
 public class ArgumentBlock {
 
@@ -511,7 +508,8 @@ public class ArgumentBlock {
     }
 
     public static String a(IBlockData iblockdata) {
-        StringBuilder stringbuilder = new StringBuilder(IRegistry.BLOCK.getKey(iblockdata.getBlock()).toString());
+        StringBuilder stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
+        stringbuilder.append(IRegistry.BLOCK.getKey(iblockdata.getBlock()).toString());
 
         if (!iblockdata.r().isEmpty()) {
             stringbuilder.append('[');

@@ -7,8 +7,6 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
-
-// CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftVillager;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;

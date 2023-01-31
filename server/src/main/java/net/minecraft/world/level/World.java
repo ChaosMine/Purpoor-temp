@@ -1,21 +1,15 @@
 package net.minecraft.world.level;
 
-import com.destroystokyo.paper.antixray.ChunkPacketBlockController; // Paper - Anti-Xray
-import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray; // Paper - Anti-Xray
+import com.destroystokyo.paper.antixray.ChunkPacketBlockController;
+import com.destroystokyo.paper.antixray.ChunkPacketBlockControllerAntiXray;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerInternalException;
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
+import dev.kamillaova.paper.collections.list.RecyclableObjectArrayList;
+import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportSystemDetails;
 import net.minecraft.ReportedException;
@@ -24,23 +18,25 @@ import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.particles.ParticleParam;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutWorldBorder;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MCUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.PlayerChunk;
+import net.minecraft.server.level.WorldServer;
 import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.tags.ITagRegistry;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.profiling.GameProfilerFiller;
 import net.minecraft.world.DifficultyDamageScaler;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
+import net.minecraft.world.entity.item.EntityItem;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingManager;
@@ -52,8 +48,8 @@ import net.minecraft.world.level.block.BlockRedstoneTorch;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ITickable;
 import net.minecraft.world.level.block.entity.TileEntity;
-import net.minecraft.world.level.block.entity.TileEntityTypes;
 import net.minecraft.world.level.block.state.IBlockData;
+import net.minecraft.world.level.border.IWorldBorderListener;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.Chunk;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -75,14 +71,6 @@ import net.minecraft.world.phys.shapes.VoxelShapes;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-// CraftBukkit start
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.network.protocol.game.PacketPlayOutWorldBorder;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.level.border.IWorldBorderListener;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -90,6 +78,12 @@ import org.bukkit.craftbukkit.block.CapturedBlockState;
 import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.event.block.BlockPhysicsEvent;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 // CraftBukkit end
 
 public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -159,7 +153,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     private org.spigotmc.TickLimiter entityLimiter;
     private org.spigotmc.TickLimiter tileLimiter;
     private int tileTickPosition;
-    public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
+    public final Object2FloatMap<Explosion.CacheKey> explosionDensityCache = new Object2FloatOpenHashMap<>(); // Paper - Optimize explosions
+    { explosionDensityCache.defaultReturnValue(Float.NaN); }
     public java.util.ArrayDeque<BlockRedstoneTorch.RedstoneUpdateInfo> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
     // Purpur start
     private com.google.common.cache.Cache<BreedingCooldownPair, Object> playerBreedingCooldowns;
@@ -238,13 +233,13 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return this.getNearbyPlayersSlow(source, sourceX, sourceY, sourceZ, maxRange, predicate);
         }
 
-        List<EntityPlayer> ret = new java.util.ArrayList<>();
+        List<EntityPlayer> ret = new ObjectArrayList<>();
         chunk.getNearestPlayers(sourceX, sourceY, sourceZ, predicate, maxRange, ret);
         return ret;
     }
 
     private List<EntityPlayer> getNearbyPlayersSlow(@Nullable Entity source, double sourceX, double sourceY, double sourceZ, double maxRange, @Nullable Predicate<Entity> predicate) {
-        List<EntityPlayer> ret = new java.util.ArrayList<>();
+        List<EntityPlayer> ret = new ObjectArrayList<>();
         double maxRangeSquared = maxRange * maxRange;
 
         for (EntityPlayer player : (List<EntityPlayer>)this.getPlayers()) {
@@ -379,24 +374,25 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return true;
         }
 
-        List<Entity> entities = this.getEntities(null, voxelshape.getBoundingBox());
-        for (int i = 0, len = entities.size(); i < len; ++i) {
-            Entity entity = entities.get(i);
+        try (var entities = this.getEntities(null, voxelshape.getBoundingBox())) {
+            for (int i = 0, len = entities.size(); i < len; ++i) {
+                Entity entity = entities.get(i);
 
-            if (checkCanSee && source instanceof EntityPlayer && entity instanceof EntityPlayer
-                && !((EntityPlayer) source).getBukkitEntity().canSee(((EntityPlayer) entity).getBukkitEntity())) {
-                continue;
-            }
+                if (checkCanSee && source instanceof EntityPlayer && entity instanceof EntityPlayer
+                  && !((EntityPlayer) source).getBukkitEntity().canSee(((EntityPlayer) entity).getBukkitEntity())) {
+                    continue;
+                }
 
-            // !entity1.dead && entity1.i && (entity == null || !entity1.x(entity));
-            // elide the last check since vanilla calls with entity = null
-            // only we care about the source for the canSee check
-            if (entity.dead || !entity.blocksEntitySpawning()) {
-                continue;
-            }
+                // !entity1.dead && entity1.i && (entity == null || !entity1.x(entity));
+                // elide the last check since vanilla calls with entity = null
+                // only we care about the source for the canSee check
+                if (entity.dead || !entity.blocksEntitySpawning()) {
+                    continue;
+                }
 
-            if (VoxelShapes.applyOperation(voxelshape, VoxelShapes.of(entity.getBoundingBox()), OperatorBoolean.AND)) {
-                return false;
+                if (VoxelShapes.applyOperation(voxelshape, VoxelShapes.of(entity.getBoundingBox()), OperatorBoolean.AND)) {
+                    return false;
+                }
             }
         }
 
@@ -637,7 +633,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     // CraftBukkit start - Split off from above in order to directly send client and physic updates
     public void notifyAndUpdatePhysics(BlockPosition blockposition, Chunk chunk, IBlockData oldBlock, IBlockData newBlock, IBlockData actualBlock, int i, int j) {
-        com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Async notify and update"); // Tuinity
         IBlockData iblockdata = newBlock;
         IBlockData iblockdata1 = oldBlock;
         IBlockData iblockdata2 = actualBlock;
@@ -1240,11 +1235,11 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     // Tuinity start - optimise hard collision handling
     @Override
-    public List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
-        return this.getHardCollidingEntities(entity, axisalignedbb, predicate, Lists.newArrayList());
+    public RecyclableObjectArrayList<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate) {
+        return this.getHardCollidingEntities(entity, axisalignedbb, predicate, RecyclableObjectArrayList.newInstance());
     }
 
-    public List<Entity> getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate, List<Entity> list) {
+    public <L extends List<Entity>> L getHardCollidingEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, Predicate<Entity> predicate, L list) {
         // copied from below
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxX + 2.0D) / 16.0D);
@@ -1268,12 +1263,17 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     // Tuinity end - optimise hard collision handling
 
     @Override
-    public List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate) {
+    public RecyclableObjectArrayList<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate) {
         // Tuinity start - add list parameter
-        List<Entity> list = Lists.newArrayList();
-        return this.getEntities(entity, axisalignedbb, predicate, list);
+        var list = RecyclableObjectArrayList.<Entity>newInstance();
+        try {
+            return this.getEntities(entity, axisalignedbb, predicate, list);
+        } catch (Exception e) {
+            list.recycle();
+            throw e;
+        }
     }
-    public List<Entity> getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate, List<Entity> list) {
+    public <L extends List<Entity>> L getEntities(@Nullable Entity entity, AxisAlignedBB axisalignedbb, @Nullable Predicate<? super Entity> predicate, L list) {
         // Tuinity end - add list parameter
         int i = MathHelper.floor((axisalignedbb.minX - 2.0D) / 16.0D);
         int j = MathHelper.floor((axisalignedbb.maxX + 2.0D) / 16.0D);

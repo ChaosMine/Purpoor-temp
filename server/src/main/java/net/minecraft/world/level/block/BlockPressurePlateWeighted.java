@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockProperties;
 import net.minecraft.world.level.block.state.properties.BlockStateInteger;
-
-import org.bukkit.event.entity.EntityInteractEvent; // CraftBukkit
+import org.bukkit.event.entity.EntityInteractEvent;
 
 public class BlockPressurePlateWeighted extends BlockPressurePlateAbstract {
 

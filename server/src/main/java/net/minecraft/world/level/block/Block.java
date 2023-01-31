@@ -3,18 +3,11 @@ package net.minecraft.world.level.block;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import dev.kamillaova.paper.util.NettyUtil;
+import io.netty.util.concurrent.FastThreadLocal;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
-import net.minecraft.core.BaseBlockPosition;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.EnumDirection;
-import net.minecraft.core.IRegistry;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryBlockID;
+import net.minecraft.core.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -35,13 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemBlock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockActionContext;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.IBlockAccess;
-import net.minecraft.world.level.IMaterial;
-import net.minecraft.world.level.IWorldReader;
-import net.minecraft.world.level.World;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.entity.TileEntity;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.level.block.state.BlockStateList;
@@ -54,6 +41,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static dev.kamillaova.paper.util.NettyUtil.fastThreadLocal;
 
 public class Block extends BlockBase implements IMaterial {
 
@@ -86,9 +80,10 @@ public class Block extends BlockBase implements IMaterial {
     private String name;
     @Nullable
     private Item d;
-    private static final ThreadLocal<Object2ByteLinkedOpenHashMap<Block.a>> e = ThreadLocal.withInitial(() -> {
+    private static final FastThreadLocal<Object2ByteLinkedOpenHashMap<Block.a>> e = fastThreadLocal(() -> {
         Object2ByteLinkedOpenHashMap<Block.a> object2bytelinkedopenhashmap = new Object2ByteLinkedOpenHashMap<Block.a>(2048, 0.25F) {
-            protected void rehash(int i) {}
+            protected void rehash(int i) {
+            }
         };
 
         object2bytelinkedopenhashmap.defaultReturnValue((byte) 127);
@@ -117,14 +112,12 @@ public class Block extends BlockBase implements IMaterial {
 
     public static IBlockData a(IBlockData iblockdata, IBlockData iblockdata1, World world, BlockPosition blockposition) {
         VoxelShape voxelshape = VoxelShapes.b(iblockdata.getCollisionShape(world, blockposition), iblockdata1.getCollisionShape(world, blockposition), OperatorBoolean.ONLY_SECOND).a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
-        List<Entity> list = world.getEntities((Entity) null, voxelshape.getBoundingBox());
-        Iterator iterator = list.iterator();
+        try (var list = world.getEntities((Entity) null, voxelshape.getBoundingBox())) {
+            for (Entity entity : list) {
+                double d0 = VoxelShapes.a(EnumDirection.EnumAxis.Y, entity.getBoundingBox().d(0.0D, 1.0D, 0.0D), Stream.of(voxelshape), -1.0D);
 
-        while (iterator.hasNext()) {
-            Entity entity = (Entity) iterator.next();
-            double d0 = VoxelShapes.a(EnumDirection.EnumAxis.Y, entity.getBoundingBox().d(0.0D, 1.0D, 0.0D), Stream.of(voxelshape), -1.0D);
-
-            entity.enderTeleportTo(entity.locX(), entity.locY() + 1.0D + d0, entity.locZ());
+                entity.enderTeleportTo(entity.locX(), entity.locY() + 1.0D + d0, entity.locZ());
+            }
         }
 
         return iblockdata1;

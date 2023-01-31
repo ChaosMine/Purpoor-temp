@@ -1,11 +1,12 @@
 package net.minecraft.world.phys;
 
 import com.mojang.math.Vector3fa;
-import java.util.EnumSet;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.IPosition;
 import net.minecraft.util.MathHelper;
+
+import java.util.EnumSet;
 
 public class Vec3D implements IPosition {
 

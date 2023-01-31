@@ -2,18 +2,6 @@ package net.minecraft.world.level.levelgen.structure.templatesystem;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.DataFixer;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.FileUtils;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.nbt.GameProfileSerializer;
@@ -27,6 +15,14 @@ import net.minecraft.world.level.storage.Convertable;
 import net.minecraft.world.level.storage.SavedFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.util.Map;
 
 public class DefinedStructureManager {
 
