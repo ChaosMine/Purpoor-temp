@@ -739,7 +739,6 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public void a(Entity entity) {
-        org.spigotmc.AsyncCatcher.catchOp("Chunk add entity"); // Spigot
         this.q = true;
         int i = MathHelper.floor(entity.locX() / 16.0D);
         int j = MathHelper.floor(entity.locZ() / 16.0D);
@@ -809,7 +808,6 @@ public class Chunk implements IChunkAccess {
     }
 
     public void a(Entity entity, int i) {
-        org.spigotmc.AsyncCatcher.catchOp("Chunk remove entity"); // Spigot
         if (i < 0) {
             i = 0;
         }

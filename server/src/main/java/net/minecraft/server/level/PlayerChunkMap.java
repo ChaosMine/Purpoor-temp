@@ -181,7 +181,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         @Override
         public void execute(Runnable runnable) {
-            AsyncCatcher.catchOp("Callback Executor execute");
             if (queued != null) {
                 MinecraftServer.LOGGER.fatal("Failed to schedule runnable", new IllegalStateException("Already queued")); // Paper - make sure this is printed
                 throw new IllegalStateException("Already queued");
@@ -192,7 +191,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 
         @Override
         public void run() {
-            AsyncCatcher.catchOp("Callback Executor run");
             // Tuinity start - revert paper's change
             Runnable task = queued;
             queued = null;
@@ -1115,7 +1113,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                 this.a(i, playerchunk);
             } else {
                 // Tuinity start - do not allow ticket level changes while unloading chunks
-                org.spigotmc.AsyncCatcher.catchOp("playerchunk unload");
                 boolean unloadingBefore = this.unloadingPlayerChunk;
                 this.unloadingPlayerChunk = true;
                 try {
@@ -2070,7 +2067,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     public void addEntity(Entity entity) { // Paper - protected -> public
-        org.spigotmc.AsyncCatcher.catchOp("entity track"); // Spigot
         // Paper start - ignore and warn about illegal addEntity calls instead of crashing server
         if (!entity.valid || entity.world != this.world || this.trackedEntities.containsKey(entity.getId())) {
             new Throwable("[ERROR] Illegal PlayerChunkMap::addEntity for world " + this.world.getWorld().getName()
@@ -2114,7 +2110,6 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
     }
 
     protected void removeEntity(Entity entity) {
-        org.spigotmc.AsyncCatcher.catchOp("entity untrack"); // Spigot
         if (entity instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entity;
 
@@ -2481,7 +2476,6 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
         }
 
         public void clear(EntityPlayer entityplayer) {
-            org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot
             if (this.trackedPlayers.remove(entityplayer)) {
                 this.trackerEntry.a(entityplayer);
             }
@@ -2489,7 +2483,6 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially 
         }
 
         public void updatePlayer(EntityPlayer entityplayer) {
-            org.spigotmc.AsyncCatcher.catchOp("player tracker update"); // Spigot
             if (entityplayer != this.tracker) {
                 // Paper start - remove allocation of Vec3D here
                 //Vec3D vec3d = entityplayer.getPositionVector().d(this.tracker.getPositionVector()); // MC-155077, SPIGOT-5113

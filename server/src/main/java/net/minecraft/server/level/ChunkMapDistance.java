@@ -199,7 +199,6 @@ public abstract class ChunkMapDistance {
     }
 
     private static int getLowestTicketLevel(ArraySetSorted<Ticket<?>> arraysetsorted) {
-        AsyncCatcher.catchOp("ChunkMapDistance::getLowestTicketLevel"); // Paper
         return !arraysetsorted.isEmpty() ? ((Ticket) arraysetsorted.b()).b() : PlayerChunkMap.GOLDEN_TICKET + 1;
     }
 
@@ -215,7 +214,6 @@ public abstract class ChunkMapDistance {
     public boolean a(PlayerChunkMap playerchunkmap) {
         com.tuinity.tuinity.util.TickThread.softEnsureTickThread("Cannot tick ChunkMapDistance off of the main-thread");// Tuinity
         //this.f.a(); // Paper - no longer used
-        AsyncCatcher.catchOp("DistanceManagerTick"); // Paper
         //this.g.a(); // Tuinity - no longer used
         boolean flag = this.ticketLevelPropagator.propagateUpdates(); // Tuinity - replace ticket level propagator
 
@@ -303,7 +301,6 @@ public abstract class ChunkMapDistance {
     boolean pollingPendingChunkUpdates = false; // Paper
 
     private boolean addTicket(long i, Ticket<?> ticket) { // CraftBukkit - void -> boolean
-        AsyncCatcher.catchOp("ChunkMapDistance::addTicket"); // Paper
         ArraySetSorted<Ticket<?>> arraysetsorted = this.e(i);
         int j = getLowestTicketLevel(arraysetsorted);
         Ticket<?> ticket1 = (Ticket) arraysetsorted.a(ticket); // CraftBukkit - decompile error
@@ -317,7 +314,6 @@ public abstract class ChunkMapDistance {
     }
 
     private boolean removeTicket(long i, Ticket<?> ticket) { // CraftBukkit - void -> boolean
-        AsyncCatcher.catchOp("ChunkMapDistance::removeTicket"); // Paper
         ArraySetSorted<Ticket<?>> arraysetsorted = this.e(i);
         int oldLevel = getLowestTicketLevel(arraysetsorted); // Paper
 
@@ -392,7 +388,6 @@ public abstract class ChunkMapDistance {
     }
 
     private boolean addPriorityTicket(ChunkCoordIntPair coords, TicketType<ChunkCoordIntPair> ticketType, int priority) {
-        AsyncCatcher.catchOp("ChunkMapDistance::addPriorityTicket");
         long pair = coords.pair();
         PlayerChunk chunk = chunkMap.getUpdatingChunk(pair);
         boolean needsTicket = false; // Tuinity - replace old loader system
@@ -446,7 +441,6 @@ public abstract class ChunkMapDistance {
     }
 
     public int getChunkPriority(ChunkCoordIntPair coords) {
-        AsyncCatcher.catchOp("ChunkMapDistance::getChunkPriority");
         ArraySetSorted<Ticket<?>> tickets = this.tickets.get(coords.pair());
         if (tickets == null) {
             return 0;
@@ -465,12 +459,10 @@ public abstract class ChunkMapDistance {
     }
 
     public void clearPriorityTickets(ChunkCoordIntPair coords) {
-        AsyncCatcher.catchOp("ChunkMapDistance::clearPriority");
         this.removeTicket(coords.pair(), new Ticket<ChunkCoordIntPair>(TicketType.PRIORITY, PRIORITY_TICKET_LEVEL, coords));
     }
 
     public void clearUrgent(ChunkCoordIntPair coords) {
-        AsyncCatcher.catchOp("ChunkMapDistance::clearUrgent");
         this.removeTicket(coords.pair(), new Ticket<ChunkCoordIntPair>(TicketType.URGENT, PRIORITY_TICKET_LEVEL, coords));
     }
     // Paper end

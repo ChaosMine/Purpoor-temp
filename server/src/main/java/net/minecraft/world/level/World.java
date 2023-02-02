@@ -538,7 +538,6 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     @Override
     public boolean a(BlockPosition blockposition, IBlockData iblockdata, int i, int j) {
-        org.spigotmc.AsyncCatcher.catchOp("set type call"); // Tuinity
         // CraftBukkit start - tree generation
         if (this.captureTreeGeneration) {
             // Paper start

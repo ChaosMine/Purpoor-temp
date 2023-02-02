@@ -367,8 +367,6 @@ public final class ChunkTaskManager {
     public ChunkSaveTask scheduleChunkSave(final int chunkX, final int chunkZ, final int priority,
                                            final ChunkRegionLoader.AsyncSaveData asyncSaveData,
                                            final IChunkAccess chunk) {
-        AsyncCatcher.catchOp("chunk save schedule");
-
         final WorldServer world = this.world;
 
         return this.chunkSaveTasks.compute(Long.valueOf(IOUtil.getCoordinateKey(chunkX, chunkZ)), (final Long keyInMap, final ChunkSaveTask valueInMap) -> {

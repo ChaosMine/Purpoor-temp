@@ -217,8 +217,6 @@ public class WatchdogThread extends Thread
                 {
                 if ( !server.hasStopped() )
                 {
-                    AsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
-                    AsyncCatcher.shuttingDown = true;
                     server.forceTicks = true;
                     if (restart) {
                         RestartCommand.addShutdownHook( SpigotConfig.restartScript );

@@ -42,8 +42,6 @@ public class RestartCommand extends Command
 
     private static void restart(final String restartScript)
     {
-        AsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
-        org.spigotmc.AsyncCatcher.shuttingDown = true; // Paper
         try
         {
             // Paper - extract method and cleanup

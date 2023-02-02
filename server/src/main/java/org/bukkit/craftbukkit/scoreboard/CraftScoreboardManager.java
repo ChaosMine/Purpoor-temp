@@ -42,7 +42,6 @@ public final class CraftScoreboardManager implements ScoreboardManager {
 
     @Override
     public CraftScoreboard getNewScoreboard() {
-        org.spigotmc.AsyncCatcher.catchOp("scoreboard creation"); // Spigot
         CraftScoreboard scoreboard = new CraftScoreboard(new ScoreboardServer(server));
         // Paper start
         if (com.destroystokyo.paper.PaperConfig.trackPluginScoreboards) {
@@ -55,7 +54,6 @@ public final class CraftScoreboardManager implements ScoreboardManager {
 
     // Paper start
     public void registerScoreboardForVanilla(CraftScoreboard scoreboard) {
-        org.spigotmc.AsyncCatcher.catchOp("scoreboard registration");
         scoreboards.add(scoreboard);
     }
     // Paper end

@@ -1799,7 +1799,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     // CraftBukkit start
     private boolean addEntity0(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
-        org.spigotmc.AsyncCatcher.catchOp("entity add"); // Spigot
         if (entity.spawnReason == null) entity.spawnReason = spawnReason; // Paper
         // Paper start
         if (entity.valid) {
@@ -1979,7 +1978,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     }
 
     public void unregisterEntity(Entity entity) {
-        org.spigotmc.AsyncCatcher.catchOp("entity unregister"); // Spigot
         this.entitiesForIteration.remove(entity); // Tuinity
         // Paper start - fix entity registration issues
         if (entity instanceof EntityComplexPart) {
@@ -2118,7 +2116,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
     // Tuinity end - optimise notify()
 
     private void registerEntity(Entity entity) {
-        org.spigotmc.AsyncCatcher.catchOp("entity register"); // Spigot
         // Paper start - don't double enqueue entity registration
         //noinspection ObjectEquality
         if (this.entitiesById.get(entity.getId()) == entity) {
@@ -2289,7 +2286,6 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
     @Override
     public void notify(BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, int i) {
-        org.spigotmc.AsyncCatcher.catchOp("notify call"); // Tuinity
         this.getChunkProvider().flagDirty(blockposition);
         if(this.paperConfig.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
         VoxelShape voxelshape = iblockdata.getCollisionShape(this, blockposition);

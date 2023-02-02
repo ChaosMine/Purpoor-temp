@@ -8,7 +8,6 @@ import java.util.Map;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.level.ChunkCoordIntPair;
-import org.spigotmc.AsyncCatcher;
 import java.util.HashMap;
 
 /** @author Spottedleaf */
@@ -32,7 +31,6 @@ public final class PlayerMobDistanceMap {
     }
 
     public void update(final List<EntityPlayer> currentPlayers, final int newViewDistance) {
-        AsyncCatcher.catchOp("Distance map update");
         final ObjectLinkedOpenHashSet<EntityPlayer> gone = new ObjectLinkedOpenHashSet<>(this.players.keySet());
 
         final int oldViewDistance = this.viewDistance;

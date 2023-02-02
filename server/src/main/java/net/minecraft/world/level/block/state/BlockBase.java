@@ -129,12 +129,10 @@ public abstract class BlockBase {
     // Paper end
     @Deprecated
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        org.spigotmc.AsyncCatcher.catchOp("block onPlace"); // Spigot
     }
 
     @Deprecated
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        org.spigotmc.AsyncCatcher.catchOp("block remove"); // Spigot
         if (this.isTileEntity() && !iblockdata.a(iblockdata1.getBlock())) {
             world.removeTileEntity(blockposition);
         }

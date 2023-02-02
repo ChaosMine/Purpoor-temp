@@ -499,7 +499,6 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     private InventoryView openInventory(Location location, boolean force, Material material) {
-        org.spigotmc.AsyncCatcher.catchOp("open" + material);
         if (location == null) {
             location = getLocation();
         }

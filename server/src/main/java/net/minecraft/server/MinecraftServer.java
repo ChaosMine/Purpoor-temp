@@ -1252,7 +1252,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
     }
 
     public final void executeMidTickTasks() {
-        org.spigotmc.AsyncCatcher.catchOp("mid tick chunk task execution");
         long startTime = System.nanoTime();
         if ((startTime - lastMidTickExecute) <= CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME || (startTime - lastMidTickExecuteFailure) <= TASK_EXECUTION_FAILURE_BACKOFF) {
             // it's shown to be bad to constantly hit the queue (chunk loads slow to a crawl), even if no tasks are executed.

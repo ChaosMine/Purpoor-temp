@@ -22,8 +22,6 @@ public class ServerShutdownThread extends Thread {
                 return;
             }
             // Looks stalled, close async
-            org.spigotmc.AsyncCatcher.enabled = false; // Spigot
-            org.spigotmc.AsyncCatcher.shuttingDown = true; // Paper
             server.forceTicks = true;
             server.close();
             while (!server.hasFullyShutdown) Thread.sleep(1000);

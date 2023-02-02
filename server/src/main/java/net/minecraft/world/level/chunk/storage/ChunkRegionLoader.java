@@ -413,7 +413,6 @@ public class ChunkRegionLoader {
 
     // must be called sync
     public static AsyncSaveData getAsyncSaveData(WorldServer world, IChunkAccess chunk) {
-        org.spigotmc.AsyncCatcher.catchOp("preparation of chunk data for async save");
         ChunkCoordIntPair chunkPos = chunk.getPos();
 
         LightEngineThreaded lightenginethreaded = world.getChunkProvider().getLightEngine();

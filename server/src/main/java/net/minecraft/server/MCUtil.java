@@ -379,13 +379,6 @@ public final class MCUtil {
      * @return
      */
     public static void ensureMain(String reason, Runnable run) {
-        if (AsyncCatcher.enabled && Thread.currentThread() != MinecraftServer.getServer().serverThread) {
-            if (reason != null) {
-                new IllegalStateException("Asynchronous " + reason + "!").printStackTrace();
-            }
-            getProcessQueue().add(run);
-            return;
-        }
         run.run();
     }
 
@@ -404,24 +397,6 @@ public final class MCUtil {
      * @return
      */
     public static <T> T ensureMain(String reason, Supplier<T> run) {
-        if (AsyncCatcher.enabled && Thread.currentThread() != MinecraftServer.getServer().serverThread) {
-            if (reason != null) {
-                new IllegalStateException("Asynchronous " + reason + "! Blocking thread until it returns ").printStackTrace();
-            }
-            Waitable<T> wait = new Waitable<T>() {
-                @Override
-                protected T evaluate() {
-                    return run.get();
-                }
-            };
-            getProcessQueue().add(wait);
-            try {
-                return wait.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
         return run.get();
     }
 
