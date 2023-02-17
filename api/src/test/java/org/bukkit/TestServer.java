@@ -92,7 +92,7 @@ public final class TestServer implements InvocationHandler {
             Bukkit.setServer(instance);
             server.pluginManager = new SimplePluginManager(instance, new SimpleCommandMap(instance));
         } catch (Throwable t) {
-            throw new Error(t);
+            throw new ExceptionInInitializerError(t);
         }
     }
 
