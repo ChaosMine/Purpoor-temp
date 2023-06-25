@@ -2,6 +2,8 @@ package org.bukkit.event.server;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
@@ -106,7 +108,7 @@ public class TabCompleteEvent extends Event implements Cancellable {
      */
     public void setCompletions(@NotNull List<String> completions) {
         Validate.notNull(completions);
-        this.completions = new ArrayList<>(completions); // Paper
+        this.completions = new ObjectArrayList<>(completions); // Paper
     }
 
     @Override

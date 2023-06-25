@@ -7,6 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -436,10 +438,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<String>(0);
+            return new ObjectArrayList<>(0);
         }
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ObjectArrayList<String>();
 
         for (Object object : list) {
             if ((object instanceof String) || (isPrimitiveWrapper(object))) {
@@ -456,10 +458,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Integer>(0);
+            return new ObjectArrayList<Integer>(0);
         }
 
-        List<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ObjectArrayList<Integer>();
 
         for (Object object : list) {
             if (object instanceof Integer) {
@@ -485,10 +487,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Boolean>(0);
+            return new ObjectArrayList<Boolean>(0);
         }
 
-        List<Boolean> result = new ArrayList<Boolean>();
+        List<Boolean> result = new ObjectArrayList<Boolean>();
 
         for (Object object : list) {
             if (object instanceof Boolean) {
@@ -511,10 +513,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Double>(0);
+            return new ObjectArrayList<Double>(0);
         }
 
-        List<Double> result = new ArrayList<Double>();
+        List<Double> result = new ObjectArrayList<Double>();
 
         for (Object object : list) {
             if (object instanceof Double) {
@@ -540,10 +542,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Float>(0);
+            return new ObjectArrayList<Float>(0);
         }
 
-        List<Float> result = new ArrayList<Float>();
+        List<Float> result = new ObjectArrayList<Float>();
 
         for (Object object : list) {
             if (object instanceof Float) {
@@ -569,10 +571,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Long>(0);
+            return new ObjectArrayList<Long>(0);
         }
 
-        List<Long> result = new ArrayList<Long>();
+        List<Long> result = new ObjectArrayList<Long>();
 
         for (Object object : list) {
             if (object instanceof Long) {
@@ -598,10 +600,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Byte>(0);
+            return new ObjectArrayList<Byte>(0);
         }
 
-        List<Byte> result = new ArrayList<Byte>();
+        List<Byte> result = new ObjectArrayList<Byte>();
 
         for (Object object : list) {
             if (object instanceof Byte) {
@@ -627,10 +629,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Character>(0);
+            return new ObjectArrayList<Character>(0);
         }
 
-        List<Character> result = new ArrayList<Character>();
+        List<Character> result = new ObjectArrayList<Character>();
 
         for (Object object : list) {
             if (object instanceof Character) {
@@ -655,10 +657,10 @@ public class MemorySection implements ConfigurationSection {
         List<?> list = getList(path);
 
         if (list == null) {
-            return new ArrayList<Short>(0);
+            return new ObjectArrayList<Short>(0);
         }
 
-        List<Short> result = new ArrayList<Short>();
+        List<Short> result = new ObjectArrayList<Short>();
 
         for (Object object : list) {
             if (object instanceof Short) {
@@ -682,7 +684,7 @@ public class MemorySection implements ConfigurationSection {
     @NotNull
     public List<Map<?, ?>> getMapList(@NotNull String path) {
         List<?> list = getList(path);
-        List<Map<?, ?>> result = new ArrayList<Map<?, ?>>();
+        List<Map<?, ?>> result = new ObjectArrayList<Map<?, ?>>();
 
         if (list == null) {
             return result;

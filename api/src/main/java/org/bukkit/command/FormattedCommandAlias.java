@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher; // Paper
 import java.util.regex.Pattern; // Paper
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ public class FormattedCommandAlias extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         boolean result = false;
-        ArrayList<String> commands = new ArrayList<String>();
+        ObjectArrayList<String> commands = new ObjectArrayList<String>();
         for (String formatString : formatStrings) {
             try {
                 commands.add(buildCommand(sender, formatString, args)); // Paper

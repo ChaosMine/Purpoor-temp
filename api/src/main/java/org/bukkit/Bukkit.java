@@ -1,7 +1,6 @@
 package org.bukkit;
 
 import com.google.common.collect.ImmutableList;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
@@ -28,7 +27,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.Inventory;
@@ -46,7 +44,6 @@ import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.util.CachedServerIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -742,6 +739,11 @@ public final class Bukkit {
     @NotNull
     public static Logger getLogger() {
         return server.getLogger();
+    }
+
+    @NotNull
+    public static org.slf4j.Logger getSlf4jLogger() {
+        return server.getSlf4jLogger();
     }
 
     /**
@@ -1451,55 +1453,6 @@ public final class Bukkit {
     }
 
     /**
-     * Gets an instance of the server's default server-icon.
-     *
-     * @return the default server-icon; null values may be used by the
-     *     implementation to indicate no defined icon, but this behavior is
-     *     not guaranteed
-     */
-    @Nullable
-    public static CachedServerIcon getServerIcon() {
-        return server.getServerIcon();
-    }
-
-    /**
-     * Loads an image from a file, and returns a cached image for the specific
-     * server-icon.
-     * <p>
-     * Size and type are implementation defined. An incompatible file is
-     * guaranteed to throw an implementation-defined {@link Exception}.
-     *
-     * @param file the file to load the from
-     * @throws IllegalArgumentException if image is null
-     * @throws Exception if the image does not meet current server server-icon
-     *     specifications
-     * @return a cached server-icon that can be used for a {@link
-     *     ServerListPingEvent#setServerIcon(CachedServerIcon)}
-     */
-    @NotNull
-    public static CachedServerIcon loadServerIcon(@NotNull File file) throws IllegalArgumentException, Exception {
-        return server.loadServerIcon(file);
-    }
-
-    /**
-     * Creates a cached server-icon for the specific image.
-     * <p>
-     * Size and type are implementation defined. An incompatible file is
-     * guaranteed to throw an implementation-defined {@link Exception}.
-     *
-     * @param image the image to use
-     * @throws IllegalArgumentException if image is null
-     * @throws Exception if the image does not meet current server
-     *     server-icon specifications
-     * @return a cached server-icon that can be used for a {@link
-     *     ServerListPingEvent#setServerIcon(CachedServerIcon)}
-     */
-    @NotNull
-    public static CachedServerIcon loadServerIcon(@NotNull BufferedImage image) throws IllegalArgumentException, Exception {
-        return server.loadServerIcon(image);
-    }
-
-    /**
      * Set the idle kick timeout. Any players idle for the specified amount of
      * time will be automatically kicked.
      * <p>
@@ -1507,15 +1460,15 @@ public final class Bukkit {
      *
      * @param threshold the idle timeout in minutes
      */
-    public static void setIdleTimeout(int threshold) {
-        server.setIdleTimeout(threshold);
-    }
+    @Deprecated(forRemoval = true)
+    public static void setIdleTimeout(int threshold) {}
 
     /**
      * Gets the idle kick timeout.
      *
      * @return the idle timeout in minutes
      */
+    @Deprecated(forRemoval = true)
     public static int getIdleTimeout() {
         return server.getIdleTimeout();
     }
@@ -1840,7 +1793,6 @@ public final class Bukkit {
      * @see UnsafeValues
      * @return the unsafe values instance
      */
-    @Deprecated
     @NotNull
     public static UnsafeValues getUnsafe() {
         return server.getUnsafe();

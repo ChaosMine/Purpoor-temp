@@ -2,6 +2,8 @@ package org.bukkit.material;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Material;
 
 /**
@@ -12,7 +14,7 @@ import org.bukkit.Material;
  */
 @Deprecated
 public class Step extends TexturedMaterial {
-    private static final List<Material> textures = new ArrayList<Material>();
+    private static final List<Material> textures = new ObjectArrayList<>();
     static {
         textures.add(Material.LEGACY_STONE);
         textures.add(Material.LEGACY_SANDSTONE);

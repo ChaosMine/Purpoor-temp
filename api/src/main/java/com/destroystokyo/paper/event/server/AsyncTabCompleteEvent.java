@@ -23,8 +23,8 @@
 
 package com.destroystokyo.paper.event.server;
 
-import com.google.common.collect.ImmutableList;
 import io.papermc.paper.util.TransformingRandomAccessList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kyori.adventure.text.Component;
 import net.kyori.examination.Examinable;
 import net.kyori.examination.ExaminableProperty;
@@ -54,7 +54,7 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
     private final boolean isCommand;
     @Nullable
     private final Location loc;
-    private final List<Completion> completions = new ArrayList<>();
+    private final List<Completion> completions = new ObjectArrayList<>();
     private final List<String> stringCompletions = new TransformingRandomAccessList<>(
         this.completions,
         Completion::suggestion,
@@ -230,7 +230,7 @@ public class AsyncTabCompleteEvent extends Event implements Cancellable {
     }
 
     private static @NotNull List<Completion> fromStrings(final @NotNull List<String> strings) {
-        final List<Completion> list = new ArrayList<>();
+        final List<Completion> list = new ObjectArrayList<>();
         for (final String it : strings) {
             list.add(new CompletionImpl(it, null));
         }

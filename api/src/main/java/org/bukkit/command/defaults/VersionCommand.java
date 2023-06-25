@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kyori.adventure.text.Component; // Paper
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -143,7 +145,7 @@ public class VersionCommand extends BukkitCommand {
         Validate.notNull(alias, "Alias cannot be null");
 
         if (args.length == 1) {
-            List<String> completions = new ArrayList<String>();
+            List<String> completions = new ObjectArrayList<>();
             String toComplete = args[0].toLowerCase(java.util.Locale.ENGLISH);
             for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
                 if (StringUtil.startsWithIgnoreCase(plugin.getName(), toComplete)) {

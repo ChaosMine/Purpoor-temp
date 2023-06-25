@@ -2,6 +2,7 @@ package org.bukkit;
 
 import java.io.File;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.generator.ChunkGenerator;
 
@@ -1541,7 +1542,7 @@ public interface World extends PluginMessageRecipient, Metadatable, net.kyori.ad
         if (clazz == null) {
             clazz = Entity.class;
         }
-        List<T> nearby = new ArrayList<>();
+        List<T> nearby = new ObjectArrayList<>();
         for (Entity bukkitEntity : getNearbyEntities(loc, xRadius, yRadius, zRadius)) {
             //noinspection unchecked
             if (clazz.isAssignableFrom(bukkitEntity.getClass()) && (predicate == null || predicate.test((T) bukkitEntity))) {

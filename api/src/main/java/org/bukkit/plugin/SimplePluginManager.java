@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerEventException;
 import com.destroystokyo.paper.exception.ServerPluginEnableDisableException;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -50,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SimplePluginManager implements PluginManager {
     private final Server server;
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<Pattern, PluginLoader>();
-    private final List<Plugin> plugins = new ArrayList<Plugin>();
+    private final List<Plugin> plugins = new ObjectArrayList<>();
     private final Map<String, Plugin> lookupNames = new HashMap<String, Plugin>();
     private MutableGraph<String> dependencyGraph = GraphBuilder.directed().build();
     private File updateDirectory;
@@ -125,7 +126,7 @@ public final class SimplePluginManager implements PluginManager {
         Validate.notNull(directory, "Directory cannot be null");
         Validate.isTrue(directory.isDirectory(), "Directory must be a directory");
 
-        List<Plugin> result = new ArrayList<Plugin>();
+        List<Plugin> result = new ObjectArrayList<Plugin>();
         Set<Pattern> filters = fileAssociations.keySet();
 
         if (!(server.getUpdateFolder().equals(""))) {
@@ -140,7 +141,7 @@ public final class SimplePluginManager implements PluginManager {
 
         // This is where it figures out all possible plugins
         // Paper start - extra jars
-        final List<File> pluginJars = new ArrayList<>(java.util.Arrays.asList(directory.listFiles()));
+        final List<File> pluginJars = new ObjectArrayList<>(java.util.Arrays.asList(directory.listFiles()));
         pluginJars.addAll(extraPluginJars);
         for (File file : pluginJars) {
             // Paper end

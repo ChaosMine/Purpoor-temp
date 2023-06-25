@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -234,7 +236,7 @@ public class Permission {
      */
     @NotNull
     public static List<Permission> loadPermissions(@NotNull Map<?, ?> data, @NotNull String error, @Nullable PermissionDefault def) {
-        List<Permission> result = new ArrayList<Permission>();
+        List<Permission> result = new ObjectArrayList<>();
 
         for (Map.Entry<?, ?> entry : data.entrySet()) {
             try {

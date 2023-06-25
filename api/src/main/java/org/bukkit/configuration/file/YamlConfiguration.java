@@ -27,8 +27,13 @@ public class YamlConfiguration extends FileConfiguration {
     protected static final String BLANK_CONFIG = "{}\n";
     private final DumperOptions yamlOptions = new DumperOptions();
     private final LoaderOptions loaderOptions = new LoaderOptions();
-    private final Representer yamlRepresenter = new YamlRepresenter();
-    private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions, loaderOptions);
+    private final Representer yamlRepresenter = new YamlRepresenter(yamlOptions);
+    private final Yaml yaml = new Yaml(
+      new YamlConstructor(loaderOptions),
+      yamlRepresenter,
+      yamlOptions,
+      loaderOptions
+    );
 
     @NotNull
     @Override

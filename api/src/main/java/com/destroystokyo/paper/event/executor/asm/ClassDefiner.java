@@ -6,16 +6,6 @@ import org.jetbrains.annotations.NotNull;
  * Class definer
  */
 public interface ClassDefiner {
-
-    /**
-     * Returns if the defined classes can bypass access checks
-     *
-     * @return if classes bypass access checks
-     */
-    public default boolean isBypassAccessChecks() {
-        return false;
-    }
-
     /**
      * Define a class
      *
@@ -33,5 +23,4 @@ public interface ClassDefiner {
     public static ClassDefiner getInstance() {
         return SafeClassDefiner.INSTANCE;
     }
-
 }

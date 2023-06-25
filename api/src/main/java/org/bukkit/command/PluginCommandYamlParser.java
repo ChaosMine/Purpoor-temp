@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +14,7 @@ public class PluginCommandYamlParser {
 
     @NotNull
     public static List<Command> parse(@NotNull Plugin plugin) {
-        List<Command> pluginCmds = new ArrayList<Command>();
+        List<Command> pluginCmds = new ObjectArrayList<Command>();
 
         Map<String, Map<String, Object>> map = plugin.getDescription().getCommands();
 
@@ -41,7 +43,7 @@ public class PluginCommandYamlParser {
             }
 
             if (aliases != null) {
-                List<String> aliasList = new ArrayList<String>();
+                List<String> aliasList = new ObjectArrayList<>();
 
                 if (aliases instanceof List) {
                     for (Object o : (List<?>) aliases) {

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.ServiceRegisterEvent;
 import org.bukkit.event.server.ServiceUnregisterEvent;
@@ -41,7 +43,7 @@ public class SimpleServicesManager implements ServicesManager {
         synchronized (providers) {
             List<RegisteredServiceProvider<?>> registered = providers.get(service);
             if (registered == null) {
-                registered = new ArrayList<RegisteredServiceProvider<?>>();
+                registered = new ObjectArrayList<>();
                 providers.put(service, registered);
             }
 
@@ -66,7 +68,7 @@ public class SimpleServicesManager implements ServicesManager {
      */
     @Override
     public void unregisterAll(@NotNull Plugin plugin) {
-        ArrayList<ServiceUnregisterEvent> unregisteredEvents = new ArrayList<ServiceUnregisterEvent>();
+        ObjectArrayList<ServiceUnregisterEvent> unregisteredEvents = new ObjectArrayList<ServiceUnregisterEvent>();
         synchronized (providers) {
             Iterator<Map.Entry<Class<?>, List<RegisteredServiceProvider<?>>>> it = providers.entrySet().iterator();
 
@@ -109,7 +111,7 @@ public class SimpleServicesManager implements ServicesManager {
      */
     @Override
     public void unregister(@NotNull Class<?> service, @NotNull Object provider) {
-        ArrayList<ServiceUnregisterEvent> unregisteredEvents = new ArrayList<ServiceUnregisterEvent>();
+        ObjectArrayList<ServiceUnregisterEvent> unregisteredEvents = new ObjectArrayList<ServiceUnregisterEvent>();
         synchronized (providers) {
             Iterator<Map.Entry<Class<?>, List<RegisteredServiceProvider<?>>>> it = providers.entrySet().iterator();
 
@@ -157,7 +159,7 @@ public class SimpleServicesManager implements ServicesManager {
      */
     @Override
     public void unregister(@NotNull Object provider) {
-        ArrayList<ServiceUnregisterEvent> unregisteredEvents = new ArrayList<ServiceUnregisterEvent>();
+        ObjectArrayList<ServiceUnregisterEvent> unregisteredEvents = new ObjectArrayList<ServiceUnregisterEvent>();
         synchronized (providers) {
             Iterator<Map.Entry<Class<?>, List<RegisteredServiceProvider<?>>>> it = providers.entrySet().iterator();
 

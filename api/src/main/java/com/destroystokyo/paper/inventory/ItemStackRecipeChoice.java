@@ -1,5 +1,6 @@
 package com.destroystokyo.paper.inventory;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Deprecated
 public class ItemStackRecipeChoice implements RecipeChoice {
 
-    protected final List<ItemStack> choices = new ArrayList<>();
+    protected final List<ItemStack> choices = new ObjectArrayList<>();
 
     public ItemStackRecipeChoice(ItemStack choices) {
         this.choices.add(choices);

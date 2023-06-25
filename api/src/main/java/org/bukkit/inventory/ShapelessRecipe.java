@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class ShapelessRecipe implements Recipe, Keyed {
     private final NamespacedKey key;
     private final ItemStack output;
-    private final List<RecipeChoice> ingredients = new ArrayList<>();
+    private final List<RecipeChoice> ingredients = new ObjectArrayList<>();
     private String group = "";
 
     @Deprecated
@@ -303,7 +305,7 @@ public class ShapelessRecipe implements Recipe, Keyed {
      */
     @NotNull
     public List<ItemStack> getIngredientList() {
-        ArrayList<ItemStack> result = new ArrayList<ItemStack>(ingredients.size());
+        ObjectArrayList<ItemStack> result = new ObjectArrayList<ItemStack>(ingredients.size());
         for (RecipeChoice ingredient : ingredients) {
             result.add(ingredient.getItemStack().clone());
         }
@@ -312,7 +314,7 @@ public class ShapelessRecipe implements Recipe, Keyed {
 
     @NotNull
     public List<RecipeChoice> getChoiceList() {
-        List<RecipeChoice> result = new ArrayList<>(ingredients.size());
+        List<RecipeChoice> result = new ObjectArrayList<>(ingredients.size());
         for (RecipeChoice ingredient : ingredients) {
             result.add(ingredient.clone());
         }

@@ -1,7 +1,7 @@
 name: ScrapBukkit
 main: com.dinnerbone.bukkit.scrap.ScrapBukkit
 version: 1.0.0
-website: http://www.bukkit.org
+website: https://www.bukkit.org
 author: The Bukkit Team
 description: >
              Miscellaneous administrative commands for Bukkit.

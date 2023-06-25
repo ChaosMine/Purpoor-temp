@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @see Server#loadServerIcon(java.io.File)
  * @see ServerListPingEvent#setServerIcon(CachedServerIcon)
  */
+@Deprecated(forRemoval = true)
 public interface CachedServerIcon {
 
     @Nullable

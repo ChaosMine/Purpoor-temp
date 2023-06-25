@@ -630,6 +630,9 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     @NotNull
     public Logger getLogger();
 
+    @NotNull
+    public org.slf4j.Logger getSlf4jLogger();
+
     /**
      * Gets a {@link PluginCommand} with the given name or alias.
      *
@@ -1224,49 +1227,6 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
     ScoreboardManager getScoreboardManager();
 
     /**
-     * Gets an instance of the server's default server-icon.
-     *
-     * @return the default server-icon; null values may be used by the
-     *     implementation to indicate no defined icon, but this behavior is
-     *     not guaranteed
-     */
-    @Nullable
-    CachedServerIcon getServerIcon();
-
-    /**
-     * Loads an image from a file, and returns a cached image for the specific
-     * server-icon.
-     * <p>
-     * Size and type are implementation defined. An incompatible file is
-     * guaranteed to throw an implementation-defined {@link Exception}.
-     *
-     * @param file the file to load the from
-     * @throws IllegalArgumentException if image is null
-     * @throws Exception if the image does not meet current server server-icon
-     *     specifications
-     * @return a cached server-icon that can be used for a {@link
-     *     ServerListPingEvent#setServerIcon(CachedServerIcon)}
-     */
-    @NotNull
-    CachedServerIcon loadServerIcon(@NotNull File file) throws IllegalArgumentException, Exception;
-
-    /**
-     * Creates a cached server-icon for the specific image.
-     * <p>
-     * Size and type are implementation defined. An incompatible file is
-     * guaranteed to throw an implementation-defined {@link Exception}.
-     *
-     * @param image the image to use
-     * @throws IllegalArgumentException if image is null
-     * @throws Exception if the image does not meet current server
-     *     server-icon specifications
-     * @return a cached server-icon that can be used for a {@link
-     *     ServerListPingEvent#setServerIcon(CachedServerIcon)}
-     */
-    @NotNull
-    CachedServerIcon loadServerIcon(@NotNull BufferedImage image) throws IllegalArgumentException, Exception;
-
-    /**
      * Set the idle kick timeout. Any players idle for the specified amount of
      * time will be automatically kicked.
      * <p>
@@ -1274,6 +1234,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      *
      * @param threshold the idle timeout in minutes
      */
+    @Deprecated(forRemoval = true)
     public void setIdleTimeout(int threshold);
 
     /**
@@ -1281,6 +1242,7 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      *
      * @return the idle timeout in minutes
      */
+    @Deprecated(forRemoval = true)
     public int getIdleTimeout();
 
     /**
@@ -1574,7 +1536,6 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      * @see UnsafeValues
      * @return the unsafe values instance
      */
-    @Deprecated
     @NotNull
     UnsafeValues getUnsafe();
 

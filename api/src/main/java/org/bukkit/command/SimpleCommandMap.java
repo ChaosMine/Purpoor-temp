@@ -12,6 +12,7 @@ import java.util.Map;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerCommandException;
 import com.destroystokyo.paper.exception.ServerTabCompleteException;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -207,7 +208,7 @@ public class SimpleCommandMap implements CommandMap {
         int spaceIndex = cmdLine.indexOf(' ');
 
         if (spaceIndex == -1) {
-            ArrayList<String> completions = new ArrayList<String>();
+            ObjectArrayList<String> completions = new ObjectArrayList<String>();
             Map<String, Command> knownCommands = this.knownCommands;
 
             final String prefix = (sender instanceof Player ? "/" : "");
@@ -270,7 +271,7 @@ public class SimpleCommandMap implements CommandMap {
             }
 
             String[] commandStrings = entry.getValue();
-            List<String> targets = new ArrayList<String>();
+            List<String> targets = new ObjectArrayList<String>();
             StringBuilder bad = new StringBuilder();
 
             for (String commandString : commandStrings) {

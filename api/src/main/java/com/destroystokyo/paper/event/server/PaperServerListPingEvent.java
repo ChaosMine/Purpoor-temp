@@ -4,13 +4,12 @@ import static java.util.Objects.requireNonNull;
 
 import com.destroystokyo.paper.network.StatusClient;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.util.CachedServerIcon;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,12 +28,10 @@ public class PaperServerListPingEvent extends ServerListPingEvent implements Can
 
     private int numPlayers;
     private boolean hidePlayers;
-    @NotNull private final List<PlayerProfile> playerSample = new ArrayList<>();
+    @NotNull private final List<PlayerProfile> playerSample = new ObjectArrayList<>();
 
     @NotNull private String version;
     private int protocolVersion;
-
-    @Nullable private CachedServerIcon favicon;
 
     private boolean cancelled;
 
@@ -43,23 +40,21 @@ public class PaperServerListPingEvent extends ServerListPingEvent implements Can
 
     @Deprecated
     public PaperServerListPingEvent(@NotNull StatusClient client, @NotNull String motd, int numPlayers, int maxPlayers,
-            @NotNull String version, int protocolVersion, @Nullable CachedServerIcon favicon) {
+            @NotNull String version, int protocolVersion) {
         super(client.getAddress().getAddress(), motd, numPlayers, maxPlayers);
         this.client = client;
         this.numPlayers = numPlayers;
         this.version = version;
         this.protocolVersion = protocolVersion;
-        setServerIcon(favicon);
     }
 
     public PaperServerListPingEvent(@NotNull StatusClient client, @NotNull net.kyori.adventure.text.Component motd, int numPlayers, int maxPlayers,
-                                    @NotNull String version, int protocolVersion, @Nullable CachedServerIcon favicon) {
+                                    @NotNull String version, int protocolVersion) {
         super(client.getAddress().getAddress(), motd, numPlayers, maxPlayers);
         this.client = client;
         this.numPlayers = numPlayers;
         this.version = version;
         this.protocolVersion = protocolVersion;
-        setServerIcon(favicon);
     }
 
     /**
@@ -197,31 +192,6 @@ public class PaperServerListPingEvent extends ServerListPingEvent implements Can
      */
     public void setProtocolVersion(int protocolVersion) {
         this.protocolVersion = protocolVersion;
-    }
-
-    /**
-     * Gets the server icon sent to the client.
-     *
-     * @return The icon to send to the client, or {@code null} for none
-     */
-    @Nullable
-    public CachedServerIcon getServerIcon() {
-        return this.favicon;
-    }
-
-    /**
-     * Sets the server icon sent to the client.
-     *
-     * @param icon The icon to send to the client, or {@code null} for none
-     */
-    @Override
-    public void setServerIcon(@Nullable CachedServerIcon icon) {
-        if (icon != null && icon.isEmpty()) {
-            // Represent empty icons as null
-            icon = null;
-        }
-
-        this.favicon = icon;
     }
 
     /**

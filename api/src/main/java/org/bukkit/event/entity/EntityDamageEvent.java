@@ -5,6 +5,8 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import java.util.EnumMap;
 import java.util.Map;
+
+import dev.kamillaova.paper.SimpleEnumMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EntityDamageEvent extends EntityEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private static final DamageModifier[] MODIFIERS = DamageModifier.values();
+    private static final DamageModifier[] MODIFIERS = DamageModifier.VALUES;
     private static final Function<? super Double, Double> ZERO = Functions.constant(-0.0);
     private final Map<DamageModifier, Double> modifiers;
     private final Map<DamageModifier, ? extends Function<? super Double, Double>> modifierFunctions;
@@ -32,12 +34,7 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
 
     public EntityDamageEvent(@NotNull final Entity damagee, @NotNull final DamageCause cause, @NotNull final Map<DamageModifier, Double> modifiers, @NotNull final Map<DamageModifier, ? extends Function<? super Double, Double>> modifierFunctions) {
         super(damagee);
-        Validate.isTrue(modifiers.containsKey(DamageModifier.BASE), "BASE DamageModifier missing");
-        Validate.isTrue(!modifiers.containsKey(null), "Cannot have null DamageModifier");
-        Validate.noNullElements(modifiers.values(), "Cannot have null modifier values");
-        Validate.isTrue(modifiers.keySet().equals(modifierFunctions.keySet()), "Must have a modifier function for each DamageModifier");
-        Validate.noNullElements(modifierFunctions.values(), "Cannot have null modifier function");
-        this.originals = new EnumMap<DamageModifier, Double>(modifiers);
+        this.originals = modifiers;
         this.cause = cause;
         this.modifiers = modifiers;
         this.modifierFunctions = modifierFunctions;
@@ -252,6 +249,8 @@ public class EntityDamageEvent extends EntityEvent implements Cancellable {
          */
         ABSORPTION,
         ;
+
+        public static final DamageModifier[] VALUES = values();
     }
 
     /**

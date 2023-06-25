@@ -2,6 +2,8 @@ package org.bukkit.map;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * MapCursorCollection is linked to a specific {@link MapRenderer}.
  */
 public final class MapCursorCollection {
-    private List<MapCursor> cursors = new ArrayList<MapCursor>();
+    private List<MapCursor> cursors = new ObjectArrayList<>();
 
     /**
      * Get the amount of cursors in this collection.

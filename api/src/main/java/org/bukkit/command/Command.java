@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +37,7 @@ public abstract class Command {
     private String permissionMessage;
 
     protected Command(@NotNull String name) {
-        this(name, "", "/" + name, new ArrayList<String>());
+        this(name, "", "/" + name, new ObjectArrayList<>());
     }
 
     protected Command(@NotNull String name, @NotNull String description, @NotNull String usageMessage, @NotNull List<String> aliases) {
@@ -45,7 +47,7 @@ public abstract class Command {
         this.description = (description == null) ? "" : description;
         this.usageMessage = (usageMessage == null) ? "/" + name : usageMessage;
         this.aliases = aliases;
-        this.activeAliases = new ArrayList<String>(aliases);
+        this.activeAliases = new ObjectArrayList<String>(aliases);
     }
 
     /**
@@ -105,7 +107,7 @@ public abstract class Command {
 
         Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
-        ArrayList<String> matchedPlayers = new ArrayList<String>();
+        ObjectArrayList<String> matchedPlayers = new ObjectArrayList<String>();
         for (Player player : sender.getServer().getOnlinePlayers()) {
             String name = player.getName();
             if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
@@ -282,7 +284,7 @@ public abstract class Command {
     public boolean unregister(@NotNull CommandMap commandMap) {
         if (allowChangesFrom(commandMap)) {
             this.commandMap = null;
-            this.activeAliases = new ArrayList<String>(this.aliases);
+            this.activeAliases = new ObjectArrayList<String>(this.aliases);
             this.label = this.nextLabel;
             return true;
         }
@@ -357,7 +359,7 @@ public abstract class Command {
     public Command setAliases(@NotNull List<String> aliases) {
         this.aliases = aliases;
         if (!isRegistered()) {
-            this.activeAliases = new ArrayList<String>(aliases);
+            this.activeAliases = new ObjectArrayList<String>(aliases);
         }
         return this;
     }

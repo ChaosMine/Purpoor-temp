@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -35,7 +36,7 @@ public final class PaperComponents {
      *
      * @return a serializer to plain text
      */
-    public static @NonNull PlainComponentSerializer plainSerializer() {
+    public static @NonNull PlainTextComponentSerializer plainSerializer() {
         return Bukkit.getUnsafe().plainComponentSerializer();
     }
 

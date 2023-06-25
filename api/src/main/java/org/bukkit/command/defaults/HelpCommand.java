@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -119,7 +121,7 @@ public class HelpCommand extends BukkitCommand {
         Validate.notNull(alias, "Alias cannot be null");
 
         if (args.length == 1) {
-            List<String> matchedTopics = new ArrayList<String>();
+            List<String> matchedTopics = new ObjectArrayList<>();
             String searchString = args[0];
             for (HelpTopic topic : Bukkit.getServer().getHelpMap().getHelpTopics()) {
                 String trimmedTopic = topic.getName().startsWith("/") ? topic.getName().substring(1) : topic.getName();

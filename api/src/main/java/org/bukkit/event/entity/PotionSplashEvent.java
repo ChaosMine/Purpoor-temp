@@ -3,6 +3,8 @@ package org.bukkit.event.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
@@ -47,7 +49,7 @@ public class PotionSplashEvent extends ProjectileHitEvent implements Cancellable
      */
     @NotNull
     public Collection<LivingEntity> getAffectedEntities() {
-        return new ArrayList<LivingEntity>(affectedEntities.keySet());
+        return new ObjectArrayList<>(affectedEntities.keySet());
     }
 
     /**

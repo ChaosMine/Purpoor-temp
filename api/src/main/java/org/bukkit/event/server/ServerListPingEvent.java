@@ -3,10 +3,8 @@ package org.bukkit.event.server;
 import java.net.InetAddress;
 import java.util.Iterator;
 import org.apache.commons.lang.Validate;
-import org.bukkit.UndefinedNullability;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.util.CachedServerIcon;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,7 +20,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
     private int maxPlayers;
 
     @Deprecated // Paper
-    public ServerListPingEvent(@NotNull final InetAddress address, @NotNull final String motd, final int numPlayers, final int maxPlayers) {
+    public ServerListPingEvent(@NotNull InetAddress address, @NotNull String motd, int numPlayers, int maxPlayers) {
         super(true);
         Validate.isTrue(numPlayers >= 0, "Cannot have negative number of players online", numPlayers);
         this.address = address;
@@ -42,7 +40,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @deprecated in favour of {@link #ServerListPingEvent(java.net.InetAddress, net.kyori.adventure.text.Component, int)}
      */
     @Deprecated // Paper
-    protected ServerListPingEvent(@NotNull final InetAddress address, @NotNull final String motd, final int maxPlayers) {
+    protected ServerListPingEvent(@NotNull InetAddress address, @NotNull String motd, int maxPlayers) {
         super(true);
         this.numPlayers = MAGIC_PLAYER_COUNT;
         this.address = address;
@@ -50,7 +48,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
         this.maxPlayers = maxPlayers;
     }
     // Paper start
-    public ServerListPingEvent(@NotNull final InetAddress address, @NotNull final net.kyori.adventure.text.Component motd, final int numPlayers, final int maxPlayers) {
+    public ServerListPingEvent(@NotNull InetAddress address, @NotNull net.kyori.adventure.text.Component motd, int numPlayers, int maxPlayers) {
         super(true);
         Validate.isTrue(numPlayers >= 0, "Cannot have negative number of players online", numPlayers);
         this.address = address;
@@ -67,7 +65,7 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @param motd the message of the day
      * @param maxPlayers the max number of players
      */
-    protected ServerListPingEvent(@NotNull final InetAddress address, @NotNull final net.kyori.adventure.text.Component motd, final int maxPlayers) {
+    protected ServerListPingEvent(@NotNull InetAddress address, @NotNull net.kyori.adventure.text.Component motd, int maxPlayers) {
         super(true);
         this.numPlayers = MAGIC_PLAYER_COUNT;
         this.address = address;
@@ -131,10 +129,10 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
      * @return the number of players
      */
     public int getNumPlayers() {
-        int numPlayers = this.numPlayers;
+        var numPlayers = this.numPlayers;
         if (numPlayers == MAGIC_PLAYER_COUNT) {
             numPlayers = 0;
-            for (@SuppressWarnings("unused") final Player player : this) {
+            for (@SuppressWarnings("unused") var player : this) {
                 numPlayers++;
             }
         }
@@ -159,19 +157,6 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
         this.maxPlayers = maxPlayers;
     }
 
-    /**
-     * Sets the server-icon sent to the client.
-     *
-     * @param icon the icon to send to the client
-     * @throws IllegalArgumentException if the {@link CachedServerIcon} is not
-     *     created by the caller of this event; null may be accepted for some
-     *     implementations
-     * @throws UnsupportedOperationException if the caller of this event does
-     *     not support setting the server icon
-     */
-    public void setServerIcon(@UndefinedNullability("implementation dependent") CachedServerIcon icon) throws IllegalArgumentException, UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
 
     @NotNull
     @Override

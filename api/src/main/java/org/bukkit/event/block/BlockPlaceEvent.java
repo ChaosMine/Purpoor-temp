@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockPlaceEvent extends BlockEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     protected boolean cancel;
+    @Deprecated(forRemoval = true)
     protected boolean canBuild;
     protected Block placedAgainst;
     protected BlockState replacedBlockState;
@@ -25,11 +26,11 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
     protected EquipmentSlot hand;
 
     @Deprecated
-    public BlockPlaceEvent(@NotNull final Block placedBlock, @NotNull final BlockState replacedBlockState, @NotNull final Block placedAgainst, @NotNull final ItemStack itemInHand, @NotNull final Player thePlayer, final boolean canBuild) {
+    public BlockPlaceEvent(@NotNull final Block placedBlock, @NotNull final BlockState replacedBlockState, @NotNull final Block placedAgainst, @NotNull final ItemStack itemInHand, @NotNull final Player thePlayer, @Deprecated(forRemoval = true) final boolean canBuild) {
         this(placedBlock, replacedBlockState, placedAgainst, itemInHand, thePlayer, canBuild, EquipmentSlot.HAND);
     }
 
-    public BlockPlaceEvent(@NotNull final Block placedBlock, @NotNull final BlockState replacedBlockState, @NotNull final Block placedAgainst, @NotNull final ItemStack itemInHand, @NotNull final Player thePlayer, final boolean canBuild, @NotNull final EquipmentSlot hand) {
+    public BlockPlaceEvent(@NotNull final Block placedBlock, @NotNull final BlockState replacedBlockState, @NotNull final Block placedAgainst, @NotNull final ItemStack itemInHand, @NotNull final Player thePlayer, @Deprecated(forRemoval = true) final boolean canBuild, @NotNull final EquipmentSlot hand) {
         super(placedBlock);
         this.placedAgainst = placedAgainst;
         this.itemInHand = itemInHand;
@@ -121,6 +122,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
      *
      * @return boolean whether the server would allow a player to build here
      */
+    @Deprecated(forRemoval = true)
     public boolean canBuild() {
         return this.canBuild;
     }
@@ -131,6 +133,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
      *
      * @param canBuild true if you want the player to be able to build
      */
+    @Deprecated(forRemoval = true)
     public void setBuild(boolean canBuild) {
         this.canBuild = canBuild;
     }

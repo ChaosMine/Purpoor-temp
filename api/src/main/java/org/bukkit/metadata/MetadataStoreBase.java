@@ -8,6 +8,8 @@ import java.util.Iterator; // Paper
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +75,7 @@ public abstract class MetadataStoreBase<T> {
         Map<Plugin, MetadataValue> entry = metadataMap.get(key);
         if (entry != null) {
             Collection<MetadataValue> values = entry.values();
-            return Collections.unmodifiableList(new ArrayList<MetadataValue>(values));
+            return Collections.unmodifiableList(new ObjectArrayList<>(values));
         } else {
             return Collections.emptyList();
         }

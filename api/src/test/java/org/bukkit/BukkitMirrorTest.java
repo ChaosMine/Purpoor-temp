@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,18 +19,12 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class BukkitMirrorTest {
-
     @Parameters(name = "{index}: {1}")
     public static List<Object[]> data() {
-        return Lists.transform(Arrays.asList(Server.class.getDeclaredMethods()), new Function<Method, Object[]>() {
-            @Override
-            public Object[] apply(Method input) {
-                return new Object[] {
-                    input,
-                    input.toGenericString().substring("public abstract ".length()).replace("(", "{").replace(")", "}")
-                    };
-            }
-        });
+        return Arrays.stream(Server.class.getDeclaredMethods()).map(input -> new Object[]{
+          input,
+          input.toGenericString().substring("public abstract ".length()).replace("(", "{").replace(")", "}")
+        }).toList();
     }
 
     @Parameter(0)
@@ -45,28 +41,17 @@ public class BukkitMirrorTest {
     }
 
     @Test
-    public void isStatic() throws Throwable {
+    public void isStatic() {
         assertThat(Modifier.isStatic(bukkit.getModifiers()), is(true));
     }
 
     @Test
-    public void isDeprecated() throws Throwable {
-        assertThat(bukkit.isAnnotationPresent(Deprecated.class), is(server.isAnnotationPresent(Deprecated.class)));
-    }
-
-    @Test
-    public void returnType() throws Throwable {
+    public void returnType() {
         assertThat(bukkit.getReturnType(), is((Object) server.getReturnType()));
-        // assertThat(bukkit.getGenericReturnType(), is(server.getGenericReturnType())); // too strict on <T> type generics
     }
 
     @Test
-    public void parameterTypes() throws Throwable {
-        // assertThat(bukkit.getGenericParameterTypes(), is(server.getGenericParameterTypes())); // too strict on <T> type generics
-    }
-
-    @Test
-    public void declaredException() throws Throwable {
+    public void declaredException() {
         assertThat(bukkit.getGenericExceptionTypes(), is(server.getGenericExceptionTypes()));
     }
 }

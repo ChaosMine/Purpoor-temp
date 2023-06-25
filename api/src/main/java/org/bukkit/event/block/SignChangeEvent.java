@@ -1,5 +1,6 @@
 package org.bukkit.event.block;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -30,7 +31,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable {
         super(theBlock);
         this.player = thePlayer;
         // Paper start
-        this.adventure$lines = new java.util.ArrayList<>();
+        this.adventure$lines = new ObjectArrayList<>();
         for (String theLine : theLines) {
             this.adventure$lines.add(org.bukkit.Bukkit.getUnsafe().legacyComponentSerializer().deserialize(theLine));
         }

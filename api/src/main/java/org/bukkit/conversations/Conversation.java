@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,8 +73,8 @@ public class Conversation {
         this.modal = true;
         this.localEchoEnabled = true;
         this.prefix = new NullConversationPrefix();
-        this.cancellers = new ArrayList<ConversationCanceller>();
-        this.abandonedListeners = new ArrayList<ConversationAbandonedListener>();
+        this.cancellers = new ObjectArrayList<>();
+        this.abandonedListeners = new ObjectArrayList<ConversationAbandonedListener>();
     }
 
     /**

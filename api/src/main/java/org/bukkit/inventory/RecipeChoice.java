@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +61,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
          */
         public MaterialChoice(@NotNull Tag<Material> choices) {
             Preconditions.checkArgument(choices != null, "choices");
-            this.choices = new ArrayList<>(choices.getValues());
+            this.choices = new ObjectArrayList<>(choices.getValues());
         }
 
         public MaterialChoice(@NotNull List<Material> choices) {
@@ -69,7 +71,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
                 Preconditions.checkArgument(choice != null, "Cannot have null choice");
             }
 
-            this.choices = new ArrayList<>(choices);
+            this.choices = new ObjectArrayList<>(choices);
         }
 
         @Override
@@ -106,7 +108,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
         public MaterialChoice clone() {
             try {
                 MaterialChoice clone = (MaterialChoice) super.clone();
-                clone.choices = new ArrayList<>(choices);
+                clone.choices = new ObjectArrayList<>(choices);
                 return clone;
             } catch (CloneNotSupportedException ex) {
                 throw new AssertionError(ex);
@@ -170,7 +172,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
                 Preconditions.checkArgument(choice != null, "Cannot have null choice");
             }
 
-            this.choices = new ArrayList<>(choices);
+            this.choices = new ObjectArrayList<>(choices);
         }
 
         @NotNull
@@ -189,7 +191,7 @@ public interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
         public ExactChoice clone() {
             try {
                 ExactChoice clone = (ExactChoice) super.clone();
-                clone.choices = new ArrayList<>(choices);
+                clone.choices = new ObjectArrayList<>(choices);
                 return clone;
             } catch (CloneNotSupportedException ex) {
                 throw new AssertionError(ex);

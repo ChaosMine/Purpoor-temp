@@ -2,6 +2,7 @@ package org.bukkit.event.entity;
 
 import java.util.List;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,7 @@ public class PlayerDeathEvent extends EntityDeathEvent {
 
     @Deprecated // Paper
     // Paper start
-    private List<ItemStack> itemsToKeep = new java.util.ArrayList<>();
+    private List<ItemStack> itemsToKeep = new ObjectArrayList<>();
 
     /**
      * A mutable collection to add items that the player should retain in their inventory on death (Similar to KeepInventory game rule)

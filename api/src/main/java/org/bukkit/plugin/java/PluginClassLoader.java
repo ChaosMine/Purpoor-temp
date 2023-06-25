@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public final class PluginClassLoader extends URLClassLoader { // Spigot
     public JavaPlugin getPlugin() { return plugin; } // Spigot
     private final JavaPluginLoader loader;
-    private final Map<String, Class<?>> classes = new ConcurrentHashMap<String, Class<?>>();
+    private final Map<String, Class<?>> classes = new ConcurrentHashMap<>();
     private final PluginDescriptionFile description; PluginDescriptionFile getDescription() { return description; } // Paper
     private final File dataFolder;
     private final File file;
@@ -189,8 +189,6 @@ public final class PluginClassLoader extends URLClassLoader { // Spigot
                     throw new ClassNotFoundException(name, ex);
                 }
 
-                classBytes = loader.server.getUnsafe().processClass(description, path, classBytes);
-
                 int dot = name.lastIndexOf('.');
                 if (dot != -1) {
                     String pkgName = name.substring(0, dot);
@@ -232,6 +230,7 @@ public final class PluginClassLoader extends URLClassLoader { // Spigot
             super.close();
         } finally {
             jar.close();
+            classes.clear();
         }
     }
 

@@ -3,6 +3,8 @@ package org.bukkit.inventory;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class MerchantRecipe implements Recipe {
 
     private ItemStack result;
-    private List<ItemStack> ingredients = new ArrayList<ItemStack>();
+    private List<ItemStack> ingredients = new ObjectArrayList<>();
     private int uses;
     private int maxUses;
     private boolean experienceReward;
@@ -70,7 +72,7 @@ public class MerchantRecipe implements Recipe {
 
     public void setIngredients(@NotNull List<ItemStack> ingredients) {
         Preconditions.checkState(ingredients.size() <= 2, "MerchantRecipe can only have maximum 2 ingredients");
-        this.ingredients = new ArrayList<ItemStack>();
+        this.ingredients = new ObjectArrayList<ItemStack>();
         for (ItemStack item : ingredients) {
             this.ingredients.add(item.clone());
         }
@@ -78,7 +80,7 @@ public class MerchantRecipe implements Recipe {
 
     @NotNull
     public List<ItemStack> getIngredients() {
-        List<ItemStack> copy = new ArrayList<ItemStack>();
+        List<ItemStack> copy = new ObjectArrayList<ItemStack>();
         for (ItemStack item : ingredients) {
             copy.add(item.clone());
         }
