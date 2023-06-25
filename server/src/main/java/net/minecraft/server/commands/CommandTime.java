@@ -10,6 +10,11 @@ import net.minecraft.commands.arguments.ArgumentTime;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.level.WorldServer;
 
+// CraftBukkit start
+import org.bukkit.Bukkit;
+import org.bukkit.event.world.TimeSkipEvent;
+// CraftBukkit end
+
 public class CommandTime {
 
     public static void a(CommandDispatcher<CommandListenerWrapper> commanddispatcher) {
@@ -51,7 +56,13 @@ public class CommandTime {
         while (iterator.hasNext()) {
             WorldServer worldserver = (WorldServer) iterator.next();
 
-            worldserver.setDayTime((long) i);
+            // CraftBukkit start
+            TimeSkipEvent event = new TimeSkipEvent(worldserver.getWorld(), TimeSkipEvent.SkipReason.COMMAND, i - worldserver.getDayTime());
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                worldserver.setDayTime((long) worldserver.getDayTime() + event.getSkipAmount());
+            }
+            // CraftBukkit end
         }
 
         commandlistenerwrapper.sendMessage(new ChatMessage("commands.time.set", new Object[]{i}), true);
@@ -64,7 +75,13 @@ public class CommandTime {
         while (iterator.hasNext()) {
             WorldServer worldserver = (WorldServer) iterator.next();
 
-            worldserver.setDayTime(worldserver.getDayTime() + (long) i);
+            // CraftBukkit start
+            TimeSkipEvent event = new TimeSkipEvent(worldserver.getWorld(), TimeSkipEvent.SkipReason.COMMAND, i);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                worldserver.setDayTime(worldserver.getDayTime() + event.getSkipAmount());
+            }
+            // CraftBukkit end
         }
 
         int j = a(commandlistenerwrapper.getWorld());

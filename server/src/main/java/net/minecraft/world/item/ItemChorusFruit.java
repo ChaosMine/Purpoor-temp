@@ -33,7 +33,16 @@ public class ItemChorusFruit extends Item {
                     entityliving.stopRiding();
                 }
 
-                if (entityliving.a(d3, d4, d5, true)) {
+                // CraftBukkit start - handle canceled status of teleport event
+                java.util.Optional<Boolean> status = entityliving.safeTeleport(d3, d4, d5, true, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT);
+
+                if (!status.isPresent()) {
+                    // teleport event was canceled, no more tries
+                    break;
+                }
+
+                if (status.get()) {
+                    // CraftBukkit end
                     SoundEffect soundeffect = entityliving instanceof EntityFox ? SoundEffects.ENTITY_FOX_TELEPORT : SoundEffects.ITEM_CHORUS_FRUIT_TELEPORT;
 
                     world.playSound((EntityHuman) null, d0, d1, d2, soundeffect, SoundCategory.PLAYERS, 1.0F, 1.0F);

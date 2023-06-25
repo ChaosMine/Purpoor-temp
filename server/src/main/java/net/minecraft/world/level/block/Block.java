@@ -248,7 +248,13 @@ public class Block extends BlockBase implements IMaterial {
             EntityItem entityitem = new EntityItem(world, (double) blockposition.getX() + d0, (double) blockposition.getY() + d1, (double) blockposition.getZ() + d2, itemstack);
 
             entityitem.defaultPickupDelay();
-            world.addEntity(entityitem);
+            // CraftBukkit start
+            if (world.captureDrops != null) {
+                world.captureDrops.add(entityitem);
+            } else {
+                world.addEntity(entityitem);
+            }
+            // CraftBukkit end
         }
     }
 
@@ -279,7 +285,7 @@ public class Block extends BlockBase implements IMaterial {
 
     public void a(World world, EntityHuman entityhuman, BlockPosition blockposition, IBlockData iblockdata, @Nullable TileEntity tileentity, ItemStack itemstack) {
         entityhuman.b(StatisticList.BLOCK_MINED.b(this));
-        entityhuman.applyExhaustion(0.005F);
+        entityhuman.applyExhaustion(0.005F, org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.BLOCK_MINED); // CraftBukkit - EntityExhaustionEvent
         dropItems(iblockdata, world, blockposition, tileentity, entityhuman, itemstack);
     }
 
@@ -374,6 +380,12 @@ public class Block extends BlockBase implements IMaterial {
     protected Block p() {
         return this;
     }
+
+    // CraftBukkit start
+    public int getExpDrop(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, ItemStack itemstack) {
+        return 0;
+    }
+    // CraftBukkit end
 
     public static final class a {
 

@@ -99,7 +99,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     }
 
     protected void c(WorldServer worldserver) {
-        EntityPigZombie entitypigzombie = (EntityPigZombie) this.a(EntityTypes.ZOMBIFIED_PIGLIN, true);
+        EntityPigZombie entitypigzombie = (EntityPigZombie) this.a(EntityTypes.ZOMBIFIED_PIGLIN, true, org.bukkit.event.entity.EntityTransformEvent.TransformReason.PIGLIN_ZOMBIFIED, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.PIGLIN_ZOMBIFIED); // CraftBukkit - add spawn and transform reasons
 
         if (entitypigzombie != null) {
             entitypigzombie.addEffect(new MobEffect(MobEffects.CONFUSION, 200, 0));
@@ -114,7 +114,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     @Nullable
     @Override
     public EntityLiving getGoalTarget() {
-        return (EntityLiving) this.bg.getMemory(MemoryModuleType.ATTACK_TARGET).orElse((Object) null);
+        return (EntityLiving) this.bg.getMemory(MemoryModuleType.ATTACK_TARGET).orElse(null); // CraftBukkit - decompile error
     }
 
     protected boolean eO() {

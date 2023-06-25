@@ -21,6 +21,7 @@ public class LootTableRegistry extends ResourceDataJson {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson b = LootSerialization.c().create();
     private Map<MinecraftKey, LootTable> keyToLootTable = ImmutableMap.of();
+    public Map<LootTable, MinecraftKey> lootTableToKey = ImmutableMap.of(); // CraftBukkit
     private final LootPredicateManager d;
 
     public LootTableRegistry(LootPredicateManager lootpredicatemanager) {
@@ -56,7 +57,7 @@ public class LootTableRegistry extends ResourceDataJson {
         LootPredicateManager lootpredicatemanager = this.d;
 
         this.d.getClass();
-        Function function = lootpredicatemanager::a;
+        Function<MinecraftKey, net.minecraft.world.level.storage.loot.predicates.LootItemCondition> function = lootpredicatemanager::a; // CraftBukkit - decompile error
 
         immutablemap.getClass();
         LootCollector lootcollector = new LootCollector(lootcontextparameterset, function, immutablemap::get);
@@ -68,6 +69,11 @@ public class LootTableRegistry extends ResourceDataJson {
             LootTableRegistry.LOGGER.warn("Found validation problem in " + s + ": " + s1);
         });
         this.keyToLootTable = immutablemap;
+        // CraftBukkit start - build a reversed registry map
+        ImmutableMap.Builder<LootTable, MinecraftKey> lootTableToKeyBuilder = ImmutableMap.builder();
+        this.keyToLootTable.forEach((lootTable, key) -> lootTableToKeyBuilder.put(key, lootTable));
+        this.lootTableToKey = lootTableToKeyBuilder.build();
+        // CraftBukkit end
     }
 
     public static void a(LootCollector lootcollector, MinecraftKey minecraftkey, LootTable loottable) {

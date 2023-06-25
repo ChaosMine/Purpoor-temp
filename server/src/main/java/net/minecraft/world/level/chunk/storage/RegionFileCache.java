@@ -25,7 +25,7 @@ public final class RegionFileCache implements AutoCloseable {
         this.c = flag;
     }
 
-    private RegionFile getFile(ChunkCoordIntPair chunkcoordintpair) throws IOException {
+    private RegionFile getFile(ChunkCoordIntPair chunkcoordintpair, boolean existingOnly) throws IOException { // CraftBukkit
         long i = ChunkCoordIntPair.pair(chunkcoordintpair.getRegionX(), chunkcoordintpair.getRegionZ());
         RegionFile regionfile = (RegionFile) this.cache.getAndMoveToFirst(i);
 
@@ -41,6 +41,7 @@ public final class RegionFileCache implements AutoCloseable {
             }
 
             File file = new File(this.b, "r." + chunkcoordintpair.getRegionX() + "." + chunkcoordintpair.getRegionZ() + ".mca");
+            if (existingOnly && !file.exists()) return null; // CraftBukkit
             RegionFile regionfile1 = new RegionFile(file, this.b, this.c);
 
             this.cache.putAndMoveToFirst(i, regionfile1);
@@ -50,7 +51,12 @@ public final class RegionFileCache implements AutoCloseable {
 
     @Nullable
     public NBTTagCompound read(ChunkCoordIntPair chunkcoordintpair) throws IOException {
-        RegionFile regionfile = this.getFile(chunkcoordintpair);
+        // CraftBukkit start - SPIGOT-5680: There's no good reason to preemptively create files on read, save that for writing
+        RegionFile regionfile = this.getFile(chunkcoordintpair, true);
+        if (regionfile == null) {
+            return null;
+        }
+        // CraftBukkit end
         DataInputStream datainputstream = regionfile.a(chunkcoordintpair);
         Throwable throwable = null;
 
@@ -85,7 +91,7 @@ public final class RegionFileCache implements AutoCloseable {
     }
 
     protected void write(ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound) throws IOException {
-        RegionFile regionfile = this.getFile(chunkcoordintpair);
+        RegionFile regionfile = this.getFile(chunkcoordintpair, false); // CraftBukkit
         DataOutputStream dataoutputstream = regionfile.c(chunkcoordintpair);
         Throwable throwable = null;
 

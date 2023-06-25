@@ -20,7 +20,7 @@ public class PacketPlayInChat implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.a = packetdataserializer.e(256);
+        this.a = org.apache.commons.lang3.StringUtils.normalizeSpace(packetdataserializer.e(256)); // CraftBukkit - see PlayerConnection
     }
 
     @Override

@@ -36,6 +36,12 @@ public class CommandList {
     private static int a(CommandListenerWrapper commandlistenerwrapper, Function<EntityPlayer, IChatBaseComponent> function) {
         PlayerList playerlist = commandlistenerwrapper.getServer().getPlayerList();
         List<EntityPlayer> list = playerlist.getPlayers();
+        // CraftBukkit start
+        if (commandlistenerwrapper.getBukkitSender() instanceof org.bukkit.entity.Player) {
+            org.bukkit.entity.Player sender = (org.bukkit.entity.Player) commandlistenerwrapper.getBukkitSender();
+            list = list.stream().filter((ep) -> sender.canSee(ep.getBukkitEntity())).collect(java.util.stream.Collectors.toList());
+        }
+        // CraftBukkit end
         IChatMutableComponent ichatmutablecomponent = ChatComponentUtils.b(list, function);
 
         commandlistenerwrapper.sendMessage(new ChatMessage("commands.list.players", new Object[]{list.size(), playerlist.getMaxPlayers(), ichatmutablecomponent}), false);

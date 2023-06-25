@@ -13,6 +13,8 @@ import net.minecraft.world.level.pathfinder.PathEntity;
 import net.minecraft.world.level.pathfinder.PathPoint;
 import net.minecraft.world.scores.ScoreboardTeamBase;
 
+import org.bukkit.event.entity.EntityTargetEvent; // CraftBukkit
+
 public abstract class PathfinderGoalTarget extends PathfinderGoal {
 
     protected final EntityInsentient e;
@@ -70,7 +72,7 @@ public abstract class PathfinderGoalTarget extends PathfinderGoal {
                     if (entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.isInvulnerable) {
                         return false;
                     } else {
-                        this.e.setGoalTarget(entityliving);
+                        this.e.setGoalTarget(entityliving, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true); // CraftBukkit
                         return true;
                     }
                 }
@@ -91,7 +93,7 @@ public abstract class PathfinderGoalTarget extends PathfinderGoal {
 
     @Override
     public void d() {
-        this.e.setGoalTarget((EntityLiving) null);
+        this.e.setGoalTarget((EntityLiving) null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
         this.g = null;
     }
 

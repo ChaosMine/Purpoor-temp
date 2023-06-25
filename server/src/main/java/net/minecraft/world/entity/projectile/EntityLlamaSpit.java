@@ -34,7 +34,7 @@ public class EntityLlamaSpit extends IProjectile {
         MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
 
         if (movingobjectposition != null) {
-            this.a(movingobjectposition);
+            this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
         }
 
         double d0 = this.locX() + vec3d.x;

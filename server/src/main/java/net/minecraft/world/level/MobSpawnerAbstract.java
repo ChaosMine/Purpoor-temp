@@ -60,6 +60,7 @@ public abstract class MobSpawnerAbstract {
 
     public void setMobName(EntityTypes<?> entitytypes) {
         this.spawnData.getEntity().setString("id", IRegistry.ENTITY_TYPE.getKey(entitytypes).toString());
+        this.mobs.clear(); // CraftBukkit - SPIGOT-3496, MC-92282
     }
 
     private boolean h() {
@@ -149,7 +150,7 @@ public abstract class MobSpawnerAbstract {
                                 }
                             }
 
-                            if (!worldserver.addAllEntitiesSafely(entity)) {
+                            if (!worldserver.addAllEntitiesSafely(entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.SPAWNER)) { // CraftBukkit
                                 this.i();
                                 return;
                             }

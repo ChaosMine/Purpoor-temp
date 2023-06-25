@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.state.properties.IBlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapeCollision;
 
+import org.bukkit.event.entity.EntityInteractEvent; // CraftBukkit
+
 public class BlockTripwire extends Block {
 
     public static final BlockStateBoolean POWERED = BlockProperties.w;
@@ -149,6 +151,40 @@ public class BlockTripwire extends Block {
                 }
             }
         }
+
+        // CraftBukkit start - Call interact even when triggering connected tripwire
+        if (flag != flag1 && flag1 && (Boolean)iblockdata.get(ATTACHED)) {
+            org.bukkit.World bworld = world.getWorld();
+            org.bukkit.plugin.PluginManager manager = world.getServer().getPluginManager();
+            org.bukkit.block.Block block = bworld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+            boolean allowed = false;
+
+            // If all of the events are cancelled block the tripwire trigger, else allow
+            for (Object object : list) {
+                if (object != null) {
+                    org.bukkit.event.Cancellable cancellable;
+
+                    if (object instanceof EntityHuman) {
+                        cancellable = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerInteractEvent((EntityHuman) object, org.bukkit.event.block.Action.PHYSICAL, blockposition, null, null, null);
+                    } else if (object instanceof Entity) {
+                        cancellable = new EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
+                        manager.callEvent((EntityInteractEvent) cancellable);
+                    } else {
+                        continue;
+                    }
+
+                    if (!cancellable.isCancelled()) {
+                        allowed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!allowed) {
+                return;
+            }
+        }
+        // CraftBukkit end
 
         if (flag1 != flag) {
             iblockdata = (IBlockData) iblockdata.set(BlockTripwire.POWERED, flag1);

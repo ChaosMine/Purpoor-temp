@@ -1,3 +1,4 @@
+// mc-dev import
 package net.minecraft.world.level.chunk.storage;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -51,8 +52,8 @@ public class RegionFile implements AutoCloseable {
         } else {
             this.e = path1;
             this.h = this.g.asIntBuffer();
-            this.h.limit(1024);
-            this.g.position(4096);
+            ((java.nio.Buffer) this.h).limit(1024); // CraftBukkit - decompile error
+            ((java.nio.Buffer) this.g).position(4096); // CraftBukkit - decompile error
             this.i = this.g.asIntBuffer();
             if (flag) {
                 this.dataFile = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.DSYNC);
@@ -61,7 +62,7 @@ public class RegionFile implements AutoCloseable {
             }
 
             this.freeSectors.a(0, 2);
-            this.g.position(0);
+            ((java.nio.Buffer) this.g).position(0); // CraftBukkit - decompile error
             int i = this.dataFile.read(this.g, 0L);
 
             if (i != -1) {
@@ -116,7 +117,7 @@ public class RegionFile implements AutoCloseable {
             ByteBuffer bytebuffer = ByteBuffer.allocate(l);
 
             this.dataFile.read(bytebuffer, (long) (j * 4096));
-            bytebuffer.flip();
+            ((java.nio.Buffer) bytebuffer).flip(); // CraftBukkit - decompile error
             if (bytebuffer.remaining() < 5) {
                 RegionFile.LOGGER.error("Chunk {} header is truncated: expected {} but read {}", chunkcoordintpair, l, bytebuffer.remaining());
                 return null;
@@ -214,7 +215,7 @@ public class RegionFile implements AutoCloseable {
 
             try {
                 this.dataFile.read(bytebuffer, (long) (j * 4096));
-                bytebuffer.flip();
+                ((java.nio.Buffer) bytebuffer).flip(); // CraftBukkit - decompile error
                 if (bytebuffer.remaining() != 5) {
                     return false;
                 } else {
@@ -306,7 +307,7 @@ public class RegionFile implements AutoCloseable {
 
         bytebuffer.putInt(1);
         bytebuffer.put((byte) (this.f.a() | 128));
-        bytebuffer.flip();
+        ((java.nio.Buffer) bytebuffer).flip(); // CraftBukkit - decompile error
         return bytebuffer;
     }
 
@@ -316,7 +317,7 @@ public class RegionFile implements AutoCloseable {
         Throwable throwable = null;
 
         try {
-            bytebuffer.position(5);
+            ((java.nio.Buffer) bytebuffer).position(5); // CraftBukkit - decompile error
             filechannel.write(bytebuffer);
         } catch (Throwable throwable1) {
             throwable = throwable1;
@@ -342,7 +343,7 @@ public class RegionFile implements AutoCloseable {
     }
 
     private void c() throws IOException {
-        this.g.position(0);
+        ((java.nio.Buffer) this.g).position(0); // CraftBukkit - decompile error
         this.dataFile.write(this.g, 0L);
     }
 
@@ -378,7 +379,7 @@ public class RegionFile implements AutoCloseable {
         if (i != j) {
             ByteBuffer bytebuffer = RegionFile.c.duplicate();
 
-            bytebuffer.position(0);
+            ((java.nio.Buffer) bytebuffer).position(0); // CraftBukkit - decompile error
             this.dataFile.write(bytebuffer, (long) (j - 1));
         }
 

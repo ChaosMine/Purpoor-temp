@@ -15,11 +15,19 @@ import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.MovingObjectPositionEntity;
 import net.minecraft.world.phys.Vec3D;
 
+// CraftBukkit start
+import org.bukkit.projectiles.ProjectileSource;
+// CraftBukkit end
+
 public abstract class IProjectile extends Entity {
 
     private UUID shooter;
     private int c;
     private boolean d;
+
+    // CraftBukkit start
+    private boolean hitCancelled = false;
+    // CraftBukkit end
 
     IProjectile(EntityTypes<? extends IProjectile> entitytypes, World world) {
         super(entitytypes, world);
@@ -30,6 +38,7 @@ public abstract class IProjectile extends Entity {
             this.shooter = entity.getUniqueID();
             this.c = entity.getId();
         }
+        this.projectileSource = (entity != null && entity.getBukkitEntity() instanceof ProjectileSource) ? (ProjectileSource) entity.getBukkitEntity() : null; // CraftBukkit
 
     }
 
@@ -111,6 +120,16 @@ public abstract class IProjectile extends Entity {
         this.setMot(this.getMot().add(vec3d.x, entity.isOnGround() ? 0.0D : vec3d.y, vec3d.z));
     }
 
+    // CraftBukkit start - call projectile hit event
+    protected void preOnHit(MovingObjectPosition movingobjectposition) {
+        org.bukkit.event.entity.ProjectileHitEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileHitEvent(this, movingobjectposition);
+        this.hitCancelled = event != null && event.isCancelled();
+        if (movingobjectposition.getType() == MovingObjectPosition.EnumMovingObjectType.BLOCK || !this.hitCancelled) {
+            this.a(movingobjectposition); // PAIL rename onHit
+        }
+    }
+    // CraftBukkit end
+
     protected void a(MovingObjectPosition movingobjectposition) {
         MovingObjectPosition.EnumMovingObjectType movingobjectposition_enummovingobjecttype = movingobjectposition.getType();
 
@@ -125,6 +144,11 @@ public abstract class IProjectile extends Entity {
     protected void a(MovingObjectPositionEntity movingobjectpositionentity) {}
 
     protected void a(MovingObjectPositionBlock movingobjectpositionblock) {
+        // CraftBukkit start - cancellable hit event
+        if (hitCancelled) {
+            return;
+        }
+        // CraftBukkit end
         IBlockData iblockdata = this.world.getType(movingobjectpositionblock.getBlockPosition());
 
         iblockdata.a(this.world, iblockdata, movingobjectpositionblock, this);

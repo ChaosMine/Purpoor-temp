@@ -5,6 +5,11 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+// CraftBukkit start
+import net.minecraft.world.item.crafting.IRecipe;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+// CraftBukkit end
+
 public interface IInventory extends Clearable {
 
     int getSize();
@@ -19,9 +24,7 @@ public interface IInventory extends Clearable {
 
     void setItem(int i, ItemStack itemstack);
 
-    default int getMaxStackSize() {
-        return 64;
-    }
+    int getMaxStackSize(); // CraftBukkit
 
     void update();
 
@@ -60,4 +63,29 @@ public interface IInventory extends Clearable {
 
         return false;
     }
+
+    // CraftBukkit start
+    java.util.List<ItemStack> getContents();
+
+    void onOpen(CraftHumanEntity who);
+
+    void onClose(CraftHumanEntity who);
+
+    java.util.List<org.bukkit.entity.HumanEntity> getViewers();
+
+    org.bukkit.inventory.InventoryHolder getOwner();
+
+    void setMaxStackSize(int size);
+
+    org.bukkit.Location getLocation();
+
+    default IRecipe getCurrentRecipe() {
+        return null;
+    }
+
+    default void setCurrentRecipe(IRecipe recipe) {
+    }
+
+    int MAX_STACK = 64;
+    // CraftBukkit end
 }

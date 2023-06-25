@@ -7,12 +7,30 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.TileEntityEnderChest;
 
+// CraftBukkit start
+import org.bukkit.Location;
+import org.bukkit.inventory.InventoryHolder;
+// CraftBukkit end
+
 public class InventoryEnderChest extends InventorySubcontainer {
 
     private TileEntityEnderChest a;
+    // CraftBukkit start
+    private final EntityHuman owner;
 
-    public InventoryEnderChest() {
+    public InventoryHolder getBukkitOwner() {
+        return owner.getBukkitEntity();
+    }
+
+    @Override
+    public Location getLocation() {
+        return this.a != null ? new Location(this.a.getWorld().getWorld(), this.a.getPosition().getX(), this.a.getPosition().getY(), this.a.getPosition().getZ()) : null;
+    }
+
+    public InventoryEnderChest(EntityHuman owner) {
         super(27);
+        this.owner = owner;
+        // CraftBukkit end
     }
 
     public void a(TileEntityEnderChest tileentityenderchest) {

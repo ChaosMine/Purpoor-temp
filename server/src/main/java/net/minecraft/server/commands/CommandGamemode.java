@@ -63,6 +63,12 @@ public class CommandGamemode {
 
             if (entityplayer.playerInteractManager.getGameMode() != enumgamemode) {
                 entityplayer.a(enumgamemode);
+                // CraftBukkit start - handle event cancelling the change
+                if (entityplayer.playerInteractManager.getGameMode() != enumgamemode) {
+                    commandcontext.getSource().sendFailureMessage(new net.minecraft.network.chat.ChatComponentText("Failed to set the gamemode of '" + entityplayer.getName() + "'"));
+                    continue;
+                }
+                // CraftBukkit end
                 a((CommandListenerWrapper) commandcontext.getSource(), entityplayer, enumgamemode);
                 ++i;
             }

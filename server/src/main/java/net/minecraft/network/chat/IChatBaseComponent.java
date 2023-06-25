@@ -27,7 +27,23 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.util.ChatTypeAdapterFactory;
 
-public interface IChatBaseComponent extends Message, IChatFormatted {
+// CraftBukkit start
+import com.google.common.collect.Streams;
+import java.util.stream.Stream;
+// CraftBukkit end
+
+public interface IChatBaseComponent extends Message, IChatFormatted, Iterable<IChatBaseComponent> { // CraftBukkit
+
+    // CraftBukkit start
+    default Stream<IChatBaseComponent> stream() {
+        return Streams.concat(new Stream[]{Stream.of(this), this.getSiblings().stream().flatMap(IChatBaseComponent::stream)});
+    }
+
+    @Override
+    default Iterator<IChatBaseComponent> iterator() {
+        return this.stream().iterator();
+    }
+    // CraftBukkit end
 
     ChatModifier getChatModifier();
 

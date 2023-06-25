@@ -62,7 +62,7 @@ public class PathfinderGoalHurtByTarget extends PathfinderGoalTarget {
 
     @Override
     public void c() {
-        this.e.setGoalTarget(this.e.getLastDamager());
+        this.e.setGoalTarget(this.e.getLastDamager(), org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true); // CraftBukkit - reason
         this.g = this.e.getGoalTarget();
         this.c = this.e.da();
         this.h = 300;
@@ -109,6 +109,6 @@ public class PathfinderGoalHurtByTarget extends PathfinderGoalTarget {
     }
 
     protected void a(EntityInsentient entityinsentient, EntityLiving entityliving) {
-        entityinsentient.setGoalTarget(entityliving);
+        entityinsentient.setGoalTarget(entityliving, org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY, true); // CraftBukkit - reason
     }
 }

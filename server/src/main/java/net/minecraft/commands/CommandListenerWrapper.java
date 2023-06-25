@@ -36,6 +36,8 @@ import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.phys.Vec2F;
 import net.minecraft.world.phys.Vec3D;
 
+import com.mojang.brigadier.tree.CommandNode; // CraftBukkit
+
 public class CommandListenerWrapper implements ICompletionProvider {
 
     public static final SimpleCommandExceptionType a = new SimpleCommandExceptionType(new ChatMessage("permissions.requires.player"));
@@ -53,6 +55,7 @@ public class CommandListenerWrapper implements ICompletionProvider {
     private final ResultConsumer<CommandListenerWrapper> l;
     private final ArgumentAnchor.Anchor m;
     private final Vec2F n;
+    public volatile CommandNode currentCommand; // CraftBukkit
 
     public CommandListenerWrapper(ICommandListener icommandlistener, Vec3D vec3d, Vec2F vec2f, WorldServer worldserver, int i, String s, IChatBaseComponent ichatbasecomponent, MinecraftServer minecraftserver, @Nullable Entity entity) {
         this(icommandlistener, vec3d, vec2f, worldserver, i, s, ichatbasecomponent, minecraftserver, entity, false, (commandcontext, flag, j) -> {
@@ -149,8 +152,22 @@ public class CommandListenerWrapper implements ICompletionProvider {
 
     @Override
     public boolean hasPermission(int i) {
+        // CraftBukkit start
+        CommandNode currentCommand = this.currentCommand;
+        if (currentCommand != null) {
+            return hasPermission(i, org.bukkit.craftbukkit.command.VanillaCommandWrapper.getPermission(currentCommand));
+        }
+        // CraftBukkit end
+
         return this.f >= i;
     }
+
+    // CraftBukkit start
+    public boolean hasPermission(int i, String bukkitPermission) {
+        // World is null when loading functions
+        return ((getWorld() == null || !getWorld().getServer().ignoreVanillaPermissions) && this.f >= i) || getBukkitSender().hasPermission(bukkitPermission);
+    }
+    // CraftBukkit end
 
     public Vec3D getPosition() {
         return this.d;
@@ -213,7 +230,7 @@ public class CommandListenerWrapper implements ICompletionProvider {
             while (iterator.hasNext()) {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                if (entityplayer != this.base && this.i.getPlayerList().isOp(entityplayer.getProfile())) {
+                if (entityplayer != this.base && entityplayer.getBukkitEntity().hasPermission("minecraft.admin.command_feedback")) { // CraftBukkit
                     entityplayer.sendMessage(ichatmutablecomponent, SystemUtils.b);
                 }
             }
@@ -273,4 +290,10 @@ public class CommandListenerWrapper implements ICompletionProvider {
     public IRegistryCustom q() {
         return this.i.getCustomRegistry();
     }
+
+    // CraftBukkit start
+    public org.bukkit.command.CommandSender getBukkitSender() {
+        return base.getBukkitSender(this);
+    }
+    // CraftBukkit end
 }

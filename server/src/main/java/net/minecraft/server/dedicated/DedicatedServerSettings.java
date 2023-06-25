@@ -4,14 +4,21 @@ import java.nio.file.Path;
 import java.util.function.UnaryOperator;
 import net.minecraft.core.IRegistryCustom;
 
+// CraftBukkit start
+import java.io.File;
+import joptsimple.OptionSet;
+// CraftBukkit end
+
 public class DedicatedServerSettings {
 
     private final Path path;
     private DedicatedServerProperties properties;
 
-    public DedicatedServerSettings(IRegistryCustom iregistrycustom, Path path) {
-        this.path = path;
-        this.properties = DedicatedServerProperties.load(iregistrycustom, path);
+    // CraftBukkit start
+    public DedicatedServerSettings(IRegistryCustom iregistrycustom, OptionSet optionset) {
+        this.path = ((File) optionset.valueOf("config")).toPath();
+        this.properties = DedicatedServerProperties.load(iregistrycustom, path, optionset);
+        // CraftBukkit end
     }
 
     public DedicatedServerProperties getProperties() {

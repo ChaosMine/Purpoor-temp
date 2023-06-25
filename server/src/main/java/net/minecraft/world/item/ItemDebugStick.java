@@ -1,3 +1,4 @@
+// mc-dev import
 package net.minecraft.world.item;
 
 import java.util.Collection;
@@ -91,7 +92,7 @@ public class ItemDebugStick extends Item {
     }
 
     private static <T extends Comparable<T>> IBlockData a(IBlockData iblockdata, IBlockState<T> iblockstate, boolean flag) {
-        return (IBlockData) iblockdata.set(iblockstate, (Comparable) a((Iterable) iblockstate.getValues(), (Object) iblockdata.get(iblockstate), flag));
+        return (IBlockData) iblockdata.set(iblockstate, a(iblockstate.getValues(), iblockdata.get(iblockstate), flag)); // CraftBukkit - decompile error
     }
 
     private static <T> T a(Iterable<T> iterable, @Nullable T t0, boolean flag) {

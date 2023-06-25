@@ -57,4 +57,6 @@ public interface GeneratorAccess extends ICombinedAccess, IWorldTime {
     default void triggerEffect(int i, BlockPosition blockposition, int j) {
         this.a((EntityHuman) null, i, blockposition, j);
     }
+
+    net.minecraft.server.level.WorldServer getMinecraftWorld(); // CraftBukkit
 }

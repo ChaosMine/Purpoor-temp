@@ -26,6 +26,11 @@ public class BlockCoral extends Block {
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (!this.a((IBlockAccess) worldserver, blockposition)) {
+            // CraftBukkit start
+            if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, this.a.getBlockData()).isCancelled()) {
+                return;
+            }
+            // CraftBukkit end
             worldserver.setTypeAndData(blockposition, this.a.getBlockData(), 2);
         }
 

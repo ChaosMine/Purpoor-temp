@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateInteger;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 
+import org.bukkit.event.block.LeavesDecayEvent; // CraftBukkit
+
 public class BlockLeaves extends Block {
 
     public static final BlockStateInteger DISTANCE = BlockProperties.an;
@@ -42,6 +44,14 @@ public class BlockLeaves extends Block {
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (!(Boolean) iblockdata.get(BlockLeaves.PERSISTENT) && (Integer) iblockdata.get(BlockLeaves.DISTANCE) == 7) {
+            // CraftBukkit start
+            LeavesDecayEvent event = new LeavesDecayEvent(worldserver.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()));
+            worldserver.getServer().getPluginManager().callEvent(event);
+
+            if (event.isCancelled() || worldserver.getType(blockposition).getBlock() != this) {
+                return;
+            }
+            // CraftBukkit end
             c(iblockdata, (World) worldserver, blockposition);
             worldserver.a(blockposition, false);
         }

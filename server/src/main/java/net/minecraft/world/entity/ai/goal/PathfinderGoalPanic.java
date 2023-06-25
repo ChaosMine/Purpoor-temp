@@ -11,6 +11,10 @@ import net.minecraft.world.entity.ai.util.RandomPositionGenerator;
 import net.minecraft.world.level.IBlockAccess;
 import net.minecraft.world.phys.Vec3D;
 
+// CraftBukkit start
+import net.minecraft.world.entity.EntityLiving;
+// CraftBukkit end
+
 public class PathfinderGoalPanic extends PathfinderGoal {
 
     protected final EntityCreature a;
@@ -76,6 +80,12 @@ public class PathfinderGoalPanic extends PathfinderGoal {
 
     @Override
     public boolean b() {
+        // CraftBukkit start - introduce a temporary timeout hack until this is fixed properly
+        if ((this.a.ticksLived - this.a.hurtTimestamp) > 100) {
+            this.a.setLastDamager((EntityLiving) null);
+            return false;
+        }
+        // CraftBukkit end
         return !this.a.getNavigation().m();
     }
 

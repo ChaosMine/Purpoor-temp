@@ -186,6 +186,11 @@ public class BlockCampfire extends BlockTileEntity implements IBlockWaterlogged 
             if (flag && !(Boolean) iblockdata.get(BlockCampfire.LIT) && !(Boolean) iblockdata.get(BlockCampfire.d)) {
                 BlockPosition blockposition = movingobjectpositionblock.getBlockPosition();
 
+                // CraftBukkit start
+                if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(world, blockposition, iprojectile).isCancelled()) {
+                    return;
+                }
+                // CraftBukkit end
                 world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockProperties.r, true), 11);
             }
         }
