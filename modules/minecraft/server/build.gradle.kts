@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-	api(project(":api"))
+	api(project(":bukkit:api"))
 	api(libs.log4j.api)
 	implementation(libs.log4j.core)
 	annotationProcessor(libs.log4j.core)

@@ -8,14 +8,11 @@ fun includeFromModules(vararg projectPaths: String) {
 	}
 }
 
-include(
-	":api",
-	":server",
-)
-
 includeFromModules(
 	":paper:mojangapi",
 	":paper:log4j-plugin",
+	":bukkit:api",
+	":minecraft:server",
 )
 
 rootProject.name = "Purpoor"
