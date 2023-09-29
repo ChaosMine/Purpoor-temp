@@ -21,7 +21,7 @@ public class BlockIceFrost extends BlockIce {
 
     public BlockIceFrost(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockIceFrost.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockIceFrost.a, 0));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BlockIceFrost extends BlockIce {
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (!worldserver.paperConfig.frostedIceEnabled) return; // Paper - add ability to disable frosted ice
-        if ((random.nextInt(3) == 0 || this.a(worldserver, blockposition, 4)) && worldserver.getLightLevel(blockposition) > 11 - (Integer) iblockdata.get(BlockIceFrost.a) - iblockdata.b((IBlockAccess) worldserver, blockposition) && this.e(iblockdata, (World) worldserver, blockposition)) {
+        if ((random.nextInt(3) == 0 || this.a(worldserver, blockposition, 4)) && worldserver.getLightLevel(blockposition) > 11 - iblockdata.get(BlockIceFrost.a) - iblockdata.b((IBlockAccess) worldserver, blockposition) && this.e(iblockdata, worldserver, blockposition)) {
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
             EnumDirection[] aenumdirection = EnumDirection.values();
             int i = aenumdirection.length;
@@ -40,11 +40,11 @@ public class BlockIceFrost extends BlockIce {
             for (int j = 0; j < i; ++j) {
                 EnumDirection enumdirection = aenumdirection[j];
 
-                blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+                blockposition_mutableblockposition.a(blockposition, enumdirection);
                 IBlockData iblockdata1 = worldserver.getTypeIfLoaded(blockposition_mutableblockposition); // Paper
                 if (iblockdata1 == null) { continue; } // Paper
 
-                if (iblockdata1.a((Block) this) && !this.e(iblockdata1, (World) worldserver, blockposition_mutableblockposition)) {
+                if (iblockdata1.a(this) && !this.e(iblockdata1, worldserver, blockposition_mutableblockposition)) {
                     worldserver.getBlockTickList().a(blockposition_mutableblockposition, this, MathHelper.nextInt(random, worldserver.paperConfig.frostedIceDelayMin, worldserver.paperConfig.frostedIceDelayMax)); // Paper - use configurable min/max delay
                 }
             }
@@ -55,10 +55,10 @@ public class BlockIceFrost extends BlockIce {
     }
 
     private boolean e(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        int i = (Integer) iblockdata.get(BlockIceFrost.a);
+        int i = iblockdata.get(BlockIceFrost.a);
 
         if (i < 3) {
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockIceFrost.a, i + 1), 2);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockIceFrost.a, i + 1), 2);
             return false;
         } else {
             this.melt(iblockdata, world, blockposition);
@@ -84,10 +84,10 @@ public class BlockIceFrost extends BlockIce {
         for (int l = 0; l < k; ++l) {
             EnumDirection enumdirection = aenumdirection[l];
 
-            blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+            blockposition_mutableblockposition.a(blockposition, enumdirection);
             // Paper start
             IBlockData type = iblockaccess.getTypeIfLoaded(blockposition_mutableblockposition);
-            if (type != null && type.a((Block) this)) { // Paper end
+            if (type != null && type.a(this)) { // Paper end
                 ++j;
                 if (j >= i) {
                     return false;

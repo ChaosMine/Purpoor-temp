@@ -24,7 +24,12 @@ public class WorldGenFeatureDelta extends WorldGenerator<WorldGenFeatureDeltaCon
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureDeltaConfiguration worldgenfeaturedeltaconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureDeltaConfiguration worldgenfeaturedeltaconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturedeltaconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureDeltaConfiguration worldgenfeaturedeltaconfiguration) {
         boolean flag = false;
         boolean flag1 = random.nextDouble() < 0.9D;
         int i = flag1 ? worldgenfeaturedeltaconfiguration.e().a(random) : 0;
@@ -42,17 +47,17 @@ public class WorldGenFeatureDelta extends WorldGenerator<WorldGenFeatureDeltaCon
                 break;
             }
 
-            if (a((GeneratorAccess) generatoraccessseed, blockposition1, worldgenfeaturedeltaconfiguration)) {
+            if (a(generatoraccessseed, blockposition1, worldgenfeaturedeltaconfiguration)) {
                 if (flag2) {
                     flag = true;
-                    this.a((IWorldWriter) generatoraccessseed, blockposition1, worldgenfeaturedeltaconfiguration.c());
+                    this.a(generatoraccessseed, blockposition1, worldgenfeaturedeltaconfiguration.c());
                 }
 
                 BlockPosition blockposition2 = blockposition1.b(i, 0, j);
 
-                if (a((GeneratorAccess) generatoraccessseed, blockposition2, worldgenfeaturedeltaconfiguration)) {
+                if (a(generatoraccessseed, blockposition2, worldgenfeaturedeltaconfiguration)) {
                     flag = true;
-                    this.a((IWorldWriter) generatoraccessseed, blockposition2, worldgenfeaturedeltaconfiguration.b());
+                    this.a(generatoraccessseed, blockposition2, worldgenfeaturedeltaconfiguration.b());
                 }
             }
         }

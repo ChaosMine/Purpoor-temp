@@ -37,14 +37,14 @@ public class BlockLever extends BlockAttachable {
 
     protected BlockLever(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockLever.FACING, EnumDirection.NORTH)).set(BlockLever.POWERED, false)).set(BlockLever.FACE, BlockPropertyAttachPosition.WALL));
+        this.j(this.blockStateList.getBlockData().set(BlockLever.FACING, EnumDirection.NORTH).set(BlockLever.POWERED, false).set(BlockLever.FACE, BlockPropertyAttachPosition.WALL));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch ((BlockPropertyAttachPosition) iblockdata.get(BlockLever.FACE)) {
+        switch (iblockdata.get(BlockLever.FACE)) {
             case FLOOR:
-                switch (((EnumDirection) iblockdata.get(BlockLever.FACING)).n()) {
+                switch (iblockdata.get(BlockLever.FACING).n()) {
                     case X:
                         return BlockLever.g;
                     case Z:
@@ -52,7 +52,7 @@ public class BlockLever extends BlockAttachable {
                         return BlockLever.f;
                 }
             case WALL:
-                switch ((EnumDirection) iblockdata.get(BlockLever.FACING)) {
+                switch (iblockdata.get(BlockLever.FACING)) {
                     case EAST:
                         return BlockLever.e;
                     case WEST:
@@ -65,7 +65,7 @@ public class BlockLever extends BlockAttachable {
                 }
             case CEILING:
             default:
-                switch (((EnumDirection) iblockdata.get(BlockLever.FACING)).n()) {
+                switch (iblockdata.get(BlockLever.FACING).n()) {
                     case X:
                         return BlockLever.i;
                     case Z:
@@ -80,8 +80,8 @@ public class BlockLever extends BlockAttachable {
         IBlockData iblockdata1;
 
         if (world.isClientSide) {
-            iblockdata1 = (IBlockData) iblockdata.a((IBlockState) BlockLever.POWERED);
-            if ((Boolean) iblockdata1.get(BlockLever.POWERED)) {
+            iblockdata1 = iblockdata.a((IBlockState) BlockLever.POWERED);
+            if (iblockdata1.get(BlockLever.POWERED)) {
                 a(iblockdata1, world, blockposition, 1.0F);
             }
 
@@ -102,22 +102,22 @@ public class BlockLever extends BlockAttachable {
             // CraftBukkit end
 
             iblockdata1 = this.d(iblockdata, world, blockposition);
-            float f = (Boolean) iblockdata1.get(BlockLever.POWERED) ? 0.6F : 0.5F;
+            float f = iblockdata1.get(BlockLever.POWERED) ? 0.6F : 0.5F;
 
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+            world.playSound(null, blockposition, SoundEffects.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
             return EnumInteractionResult.CONSUME;
         }
     }
 
     public IBlockData d(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        iblockdata = (IBlockData) iblockdata.a((IBlockState) BlockLever.POWERED);
+        iblockdata = iblockdata.a((IBlockState) BlockLever.POWERED);
         world.setTypeAndData(blockposition, iblockdata, 3);
         this.e(iblockdata, world, blockposition);
         return iblockdata;
     }
 
     private static void a(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition, float f) {
-        EnumDirection enumdirection = ((EnumDirection) iblockdata.get(BlockLever.FACING)).opposite();
+        EnumDirection enumdirection = iblockdata.get(BlockLever.FACING).opposite();
         EnumDirection enumdirection1 = h(iblockdata).opposite();
         double d0 = (double) blockposition.getX() + 0.5D + 0.1D * (double) enumdirection.getAdjacentX() + 0.2D * (double) enumdirection1.getAdjacentX();
         double d1 = (double) blockposition.getY() + 0.5D + 0.1D * (double) enumdirection.getAdjacentY() + 0.2D * (double) enumdirection1.getAdjacentY();
@@ -129,7 +129,7 @@ public class BlockLever extends BlockAttachable {
     @Override
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!flag && !iblockdata.a(iblockdata1.getBlock())) {
-            if ((Boolean) iblockdata.get(BlockLever.POWERED)) {
+            if (iblockdata.get(BlockLever.POWERED)) {
                 this.e(iblockdata, world, blockposition);
             }
 
@@ -139,12 +139,12 @@ public class BlockLever extends BlockAttachable {
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockLever.POWERED) ? 15 : 0;
+        return iblockdata.get(BlockLever.POWERED) ? 15 : 0;
     }
 
     @Override
     public int b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockLever.POWERED) && h(iblockdata) == enumdirection ? 15 : 0;
+        return iblockdata.get(BlockLever.POWERED) && h(iblockdata) == enumdirection ? 15 : 0;
     }
 
     @Override

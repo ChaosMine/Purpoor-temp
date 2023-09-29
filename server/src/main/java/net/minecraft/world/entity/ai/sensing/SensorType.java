@@ -27,10 +27,10 @@ public class SensorType<U extends Sensor<?>> {
     }
 
     public U a() {
-        return (Sensor) this.o.get();
+        return this.o.get();
     }
 
     private static <U extends Sensor<?>> SensorType<U> a(String s, Supplier<U> supplier) {
-        return (SensorType) IRegistry.a((IRegistry) IRegistry.SENSOR_TYPE, new MinecraftKey(s), (Object) (new SensorType<>(supplier)));
+        return (SensorType) IRegistry.a((IRegistry) IRegistry.SENSOR_TYPE, new MinecraftKey(s), (new SensorType<>(supplier)));
     }
 }

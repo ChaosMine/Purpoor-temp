@@ -1,6 +1,5 @@
 package net.minecraft.world.phys.shapes;
 
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.world.entity.Entity;
@@ -11,66 +10,54 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidType;
 import net.minecraft.world.level.material.FluidTypeFlowing;
 
+import java.util.function.Predicate;
+
 public class VoxelShapeCollisionEntity implements VoxelShapeCollision {
+	protected static final VoxelShapeCollision a = new VoxelShapeCollisionEntity(false, -Double.MAX_VALUE, Items.AIR, var0 -> false) {
+		@Override
+		public boolean a(VoxelShape var0, BlockPosition var1, boolean var2) {
+			return var2;
+		}
+	};
+	private final boolean b;
+	private final double c;
+	private final Item d;
+	private final Predicate<FluidType> e;
 
-    protected static final VoxelShapeCollision a = new VoxelShapeCollisionEntity(false, -1.7976931348623157E308D, Items.AIR, (fluidtype) -> {
-        return false;
-    }) {
-        @Override
-        public boolean a(VoxelShape voxelshape, BlockPosition blockposition, boolean flag) {
-            return flag;
-        }
-    };
-    private final boolean b;
-    private final double c;
-    private final Item d;
-    private final Predicate<FluidType> e;
+	protected VoxelShapeCollisionEntity(boolean var0, double var1, Item var3, Predicate<FluidType> var4) {
+		this.b = var0;
+		this.c = var1;
+		this.d = var3;
+		this.e = var4;
+	}
 
-    protected VoxelShapeCollisionEntity(boolean flag, double d0, Item item, Predicate<FluidType> predicate) {
-        this.b = flag;
-        this.c = d0;
-        this.d = item;
-        this.e = predicate;
-    }
+	@Deprecated
+	protected VoxelShapeCollisionEntity(Entity var0) {
+		this(
+			var0.by(),
+			var0.locY(),
+			var0 instanceof EntityLiving ? ((EntityLiving) var0).getItemInMainHand().getItem() : Items.AIR,
+			var0 instanceof EntityLiving ? ((EntityLiving) var0)::a : var0x -> false
+		);
+	}
 
-    @Deprecated
-    protected VoxelShapeCollisionEntity(Entity entity) {
-        boolean flag = entity.by();
-        double d0 = entity.locY();
-        Item item = entity instanceof EntityLiving ? ((EntityLiving) entity).getItemInMainHand().getItem() : Items.AIR;
-        Predicate predicate;
+	@Override
+	public boolean a(Item var0) {
+		return this.d == var0;
+	}
 
-        if (entity instanceof EntityLiving) {
-            EntityLiving entityliving = (EntityLiving) entity;
+	@Override
+	public boolean a(Fluid var0, FluidTypeFlowing var1) {
+		return this.e.test(var1) && !var0.getType().a(var1);
+	}
 
-            ((EntityLiving) entity).getClass();
-            predicate = entityliving::a;
-        } else {
-            predicate = (fluidtype) -> {
-                return false;
-            };
-        }
+	@Override
+	public boolean b() {
+		return this.b;
+	}
 
-        this(flag, d0, item, predicate);
-    }
-
-    @Override
-    public boolean a(Item item) {
-        return this.d == item;
-    }
-
-    @Override
-    public boolean a(Fluid fluid, FluidTypeFlowing fluidtypeflowing) {
-        return this.e.test(fluidtypeflowing) && !fluid.getType().a((FluidType) fluidtypeflowing);
-    }
-
-    @Override
-    public boolean b() {
-        return this.b;
-    }
-
-    @Override
-    public boolean a(VoxelShape voxelshape, BlockPosition blockposition, boolean flag) {
-        return this.c > (double) blockposition.getY() + voxelshape.c(EnumDirection.EnumAxis.Y) - 9.999999747378752E-6D;
-    }
+	@Override
+	public boolean a(VoxelShape var0, BlockPosition var1, boolean var2) {
+		return this.c > (double) var1.getY() + var0.c(EnumDirection.EnumAxis.Y) - 1.0E-5F;
+	}
 }

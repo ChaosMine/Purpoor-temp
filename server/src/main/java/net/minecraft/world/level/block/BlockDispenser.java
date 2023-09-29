@@ -48,7 +48,7 @@ public class BlockDispenser extends BlockTileEntity {
 
     protected BlockDispenser(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockDispenser.FACING, EnumDirection.NORTH)).set(BlockDispenser.TRIGGERED, false));
+        this.j(this.blockStateList.getBlockData().set(BlockDispenser.FACING, EnumDirection.NORTH).set(BlockDispenser.TRIGGERED, false));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class BlockDispenser extends BlockTileEntity {
 
     public void dispense(WorldServer worldserver, BlockPosition blockposition) {
         SourceBlock sourceblock = new SourceBlock(worldserver, blockposition);
-        TileEntityDispenser tileentitydispenser = (TileEntityDispenser) sourceblock.getTileEntity();
+        TileEntityDispenser tileentitydispenser = sourceblock.getTileEntity();
         int i = tileentitydispenser.h();
 
         if (i < 0) {
@@ -93,19 +93,19 @@ public class BlockDispenser extends BlockTileEntity {
     }
 
     protected IDispenseBehavior a(ItemStack itemstack) {
-        return (IDispenseBehavior) BlockDispenser.REGISTRY.get(itemstack.getItem());
+        return BlockDispenser.REGISTRY.get(itemstack.getItem());
     }
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
         boolean flag1 = world.isBlockIndirectlyPowered(blockposition) || world.isBlockIndirectlyPowered(blockposition.up());
-        boolean flag2 = (Boolean) iblockdata.get(BlockDispenser.TRIGGERED);
+        boolean flag2 = iblockdata.get(BlockDispenser.TRIGGERED);
 
         if (flag1 && !flag2) {
             world.getBlockTickList().a(blockposition, this, 4);
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockDispenser.TRIGGERED, true), 4);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockDispenser.TRIGGERED, true), 4);
         } else if (!flag1 && flag2) {
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockDispenser.TRIGGERED, false), 4);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockDispenser.TRIGGERED, false), 4);
         }
 
     }
@@ -122,7 +122,7 @@ public class BlockDispenser extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockDispenser.FACING, blockactioncontext.d().opposite());
+        return this.getBlockData().set(BlockDispenser.FACING, blockactioncontext.d().opposite());
     }
 
     @Override
@@ -152,7 +152,7 @@ public class BlockDispenser extends BlockTileEntity {
     }
 
     public static IPosition a(ISourceBlock isourceblock) {
-        EnumDirection enumdirection = (EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING);
+        EnumDirection enumdirection = isourceblock.getBlockData().get(BlockDispenser.FACING);
         double d0 = isourceblock.getX() + 0.7D * (double) enumdirection.getAdjacentX();
         double d1 = isourceblock.getY() + 0.7D * (double) enumdirection.getAdjacentY();
         double d2 = isourceblock.getZ() + 0.7D * (double) enumdirection.getAdjacentZ();
@@ -177,12 +177,12 @@ public class BlockDispenser extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockDispenser.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockDispenser.FACING)));
+        return iblockdata.set(BlockDispenser.FACING, enumblockrotation.a(iblockdata.get(BlockDispenser.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockDispenser.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockDispenser.FACING)));
     }
 
     @Override

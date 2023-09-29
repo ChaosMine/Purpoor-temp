@@ -49,7 +49,7 @@ public class LootItemConditionTimeCheck implements LootItemCondition {
         @Override
         public LootItemConditionTimeCheck a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
             Long olong = jsonobject.has("period") ? ChatDeserializer.m(jsonobject, "period") : null;
-            LootValueBounds lootvaluebounds = (LootValueBounds) ChatDeserializer.a(jsonobject, "value", jsondeserializationcontext, LootValueBounds.class);
+            LootValueBounds lootvaluebounds = ChatDeserializer.a(jsonobject, "value", jsondeserializationcontext, LootValueBounds.class);
 
             return new LootItemConditionTimeCheck(olong, lootvaluebounds);
         }

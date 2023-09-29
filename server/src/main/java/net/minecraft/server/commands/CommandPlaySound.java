@@ -75,7 +75,7 @@ public class CommandPlaySound {
                     continue;
                 }
 
-                double d5 = (double) MathHelper.sqrt(d4);
+                double d5 = MathHelper.sqrt(d4);
 
                 vec3d1 = new Vec3D(entityplayer.locX() + d1 / d5 * 2.0D, entityplayer.locY() + d2 / d5 * 2.0D, entityplayer.locZ() + d3 / d5 * 2.0D);
                 f3 = f2;
@@ -89,7 +89,7 @@ public class CommandPlaySound {
             throw CommandPlaySound.a.create();
         } else {
             if (collection.size() == 1) {
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.playsound.success.single", new Object[]{minecraftkey, ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.playsound.success.single", new Object[]{minecraftkey, collection.iterator().next().getScoreboardDisplayName()}), true);
             } else {
                 commandlistenerwrapper.sendMessage(new ChatMessage("commands.playsound.success.multiple", new Object[]{minecraftkey, collection.size()}), true);
             }

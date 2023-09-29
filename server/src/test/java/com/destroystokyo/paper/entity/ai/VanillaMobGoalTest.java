@@ -45,7 +45,7 @@ public class VanillaMobGoalTest {
             .filter(VanillaMobGoalTest::hasNoEnclosingClass)
             .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
             .map(goalClass -> MobGoalHelper.getKey((Class<? extends PathfinderGoal>) goalClass))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList());;
 
         List<GoalKey<?>> missingFromAPI = new ArrayList<>(vanillaNames);
         missingFromAPI.removeAll(keys);

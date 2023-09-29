@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
 	java
 	`java-library`
@@ -11,7 +13,10 @@ subprojects {
 
 	repositories {
 		mavenCentral()
-		maven("https://oss.sonatype.org/content/repositories/snapshots/")
+		maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+		maven("https://libraries.minecraft.net") {
+			content { includeGroup("com.mojang") }
+		}
 	}
 
 	tasks {
@@ -34,6 +39,9 @@ subprojects {
 				)
 			}
 		}
+		withType<Test>().configureEach {
+			maxHeapSize = "4g"
+		}
 	}
 
 	testing {
@@ -44,6 +52,7 @@ subprojects {
 				dependencies {
 					implementation(libs.junit.vintage.engine)
 					implementation(libs.hamcrest)
+					implementation("io.github.classgraph:classgraph:4.8.162") // TODO: Only in :server
 				}
 			}
 		}

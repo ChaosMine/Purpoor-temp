@@ -21,7 +21,7 @@ public class LootItemFunctionExplosionDecay extends LootItemFunctionConditional 
 
     @Override
     public ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
-        Float ofloat = (Float) loottableinfo.getContextParameter(LootContextParameters.EXPLOSION_RADIUS);
+        Float ofloat = loottableinfo.getContextParameter(LootContextParameters.EXPLOSION_RADIUS);
 
         if (ofloat != null) {
             Random random = loottableinfo.a();

@@ -80,7 +80,7 @@ public class EntityLightning extends Entity {
             // this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.random.nextFloat() * 0.2F);
             float pitch = 0.8F + this.random.nextFloat() * 0.2F;
             //int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Tuinity - apply view distance patch
-            for (EntityPlayer player : (List<EntityPlayer>) (List) this.world.getPlayers()) {
+            for (EntityPlayer player : (List<EntityPlayer>) this.world.getPlayers()) {
                 final int viewDistance = player.getBukkitEntity().getViewDistance(); // Tuinity - apply view distance patch
                 double deltaX = this.locX() - player.locX();
                 double deltaZ = this.locZ() - player.locZ();
@@ -153,7 +153,7 @@ public class EntityLightning extends Entity {
     private void a(int i) {
         if (!this.isEffect && !this.world.isClientSide && this.world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK)) {
             BlockPosition blockposition = this.getChunkCoordinates();
-            IBlockData iblockdata = BlockFireAbstract.a((IBlockAccess) this.world, blockposition);
+            IBlockData iblockdata = BlockFireAbstract.a(this.world, blockposition);
 
             if (this.world.getType(blockposition).isAir() && iblockdata.canPlace(this.world, blockposition)) {
                 // CraftBukkit start - add "!isEffect"
@@ -166,7 +166,7 @@ public class EntityLightning extends Entity {
             for (int j = 0; j < i; ++j) {
                 BlockPosition blockposition1 = blockposition.b(this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
 
-                iblockdata = BlockFireAbstract.a((IBlockAccess) this.world, blockposition1);
+                iblockdata = BlockFireAbstract.a(this.world, blockposition1);
                 if (this.world.getType(blockposition1).isAir() && iblockdata.canPlace(this.world, blockposition1)) {
                     // CraftBukkit start - add "!isEffect"
                     if (!isEffect && !CraftEventFactory.callBlockIgniteEvent(world, blockposition1, this).isCancelled()) {

@@ -56,7 +56,7 @@ public class jk {
 
     public void a(Consumer<jf> consumer, MinecraftKey minecraftkey) {
         this.a(minecraftkey);
-        this.d.a(new MinecraftKey("recipes/root")).a("has_the_recipe", (CriterionInstance) CriterionTriggerRecipeUnlocked.a(minecraftkey)).a(AdvancementRewards.a.c(minecraftkey)).a(AdvancementRequirements.OR);
+        this.d.a(new MinecraftKey("recipes/root")).a("has_the_recipe", CriterionTriggerRecipeUnlocked.a(minecraftkey)).a(AdvancementRewards.a_.c(minecraftkey)).a(AdvancementRequirements.OR);
         consumer.accept(new jk.a(minecraftkey, this.f, this.e == null ? "" : this.e, this.b, this.a, this.c, this.d, new MinecraftKey(minecraftkey.getNamespace(), "recipes/" + this.a.q().b() + "/" + minecraftkey.getKey())));
     }
 

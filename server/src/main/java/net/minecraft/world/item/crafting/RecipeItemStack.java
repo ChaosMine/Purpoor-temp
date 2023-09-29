@@ -32,14 +32,14 @@ public final class RecipeItemStack implements Predicate<ItemStack> {
     public Predicate<org.bukkit.inventory.ItemStack> predicate; // Purpur
 
     public RecipeItemStack(Stream<? extends RecipeItemStack.Provider> stream) {
-        this.b = (RecipeItemStack.Provider[]) stream.toArray((i) -> {
-            return new RecipeItemStack.Provider[i];
+        this.b = stream.toArray((i) -> {
+            return new Provider[i];
         });
     }
 
     public void buildChoices() {
         if (this.choices == null) {
-            this.choices = (ItemStack[]) Arrays.stream(this.b).flatMap((recipeitemstack_provider) -> {
+            this.choices = Arrays.stream(this.b).flatMap((recipeitemstack_provider) -> {
                 return recipeitemstack_provider.a().stream();
             }).distinct().toArray((i) -> {
                 return new ItemStack[i];
@@ -165,7 +165,7 @@ public final class RecipeItemStack implements Predicate<ItemStack> {
 
         return b(Stream.generate(() -> {
             return new RecipeItemStack.StackProvider(packetdataserializer.n());
-        }).limit((long) i));
+        }).limit(i));
     }
 
     public static RecipeItemStack a(@Nullable JsonElement jsonelement) {
@@ -198,7 +198,7 @@ public final class RecipeItemStack implements Predicate<ItemStack> {
 
             if (jsonobject.has("item")) {
                 minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "item"));
-                Item item = (Item) IRegistry.ITEM.getOptional(minecraftkey).orElseThrow(() -> {
+                Item item = IRegistry.ITEM.getOptional(minecraftkey).orElseThrow(() -> {
                     return new JsonSyntaxException("Unknown item '" + minecraftkey + "'");
                 });
 

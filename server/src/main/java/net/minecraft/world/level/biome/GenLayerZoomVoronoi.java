@@ -59,13 +59,13 @@ public enum GenLayerZoomVoronoi implements GenLayerZoomer {
     }
 
     private static double a(long i, int j, int k, int l, double d0, double d1, double d2) {
-        long i1 = LinearCongruentialGenerator.a(i, (long) j);
+        long i1 = LinearCongruentialGenerator.a(i, j);
 
-        i1 = LinearCongruentialGenerator.a(i1, (long) k);
-        i1 = LinearCongruentialGenerator.a(i1, (long) l);
-        i1 = LinearCongruentialGenerator.a(i1, (long) j);
-        i1 = LinearCongruentialGenerator.a(i1, (long) k);
-        i1 = LinearCongruentialGenerator.a(i1, (long) l);
+        i1 = LinearCongruentialGenerator.a(i1, k);
+        i1 = LinearCongruentialGenerator.a(i1, l);
+        i1 = LinearCongruentialGenerator.a(i1, j);
+        i1 = LinearCongruentialGenerator.a(i1, k);
+        i1 = LinearCongruentialGenerator.a(i1, l);
         double d3 = a(i1);
 
         i1 = LinearCongruentialGenerator.a(i1, i);

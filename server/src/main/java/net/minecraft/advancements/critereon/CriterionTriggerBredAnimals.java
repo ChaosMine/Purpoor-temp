@@ -20,10 +20,10 @@ public class CriterionTriggerBredAnimals extends CriterionTriggerAbstract<Criter
     }
 
     @Override
-    public CriterionTriggerBredAnimals.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "parent", lootdeserializationcontext);
-        CriterionConditionEntity.b criterionconditionentity_b2 = CriterionConditionEntity.b.a(jsonobject, "partner", lootdeserializationcontext);
-        CriterionConditionEntity.b criterionconditionentity_b3 = CriterionConditionEntity.b.a(jsonobject, "child", lootdeserializationcontext);
+    public CriterionTriggerBredAnimals.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "parent", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b2 = CriterionConditionEntity.b_.a(jsonobject, "partner", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b3 = CriterionConditionEntity.b_.a(jsonobject, "child", lootdeserializationcontext);
 
         return new CriterionTriggerBredAnimals.a(criterionconditionentity_b, criterionconditionentity_b1, criterionconditionentity_b2, criterionconditionentity_b3);
     }
@@ -40,11 +40,11 @@ public class CriterionTriggerBredAnimals extends CriterionTriggerAbstract<Criter
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
-        private final CriterionConditionEntity.b b;
-        private final CriterionConditionEntity.b c;
+        private final CriterionConditionEntity.b_ a;
+        private final CriterionConditionEntity.b_ b;
+        private final CriterionConditionEntity.b_ c;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1, CriterionConditionEntity.b criterionconditionentity_b2, CriterionConditionEntity.b criterionconditionentity_b3) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1, CriterionConditionEntity.b_ criterionconditionentity_b2, CriterionConditionEntity.b_ criterionconditionentity_b3) {
             super(CriterionTriggerBredAnimals.a, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
             this.b = criterionconditionentity_b2;
@@ -52,19 +52,19 @@ public class CriterionTriggerBredAnimals extends CriterionTriggerAbstract<Criter
         }
 
         public static CriterionTriggerBredAnimals.a c() {
-            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a);
+            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a);
         }
 
-        public static CriterionTriggerBredAnimals.a a(CriterionConditionEntity.a criterionconditionentity_a) {
-            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity_a.b()));
+        public static CriterionTriggerBredAnimals.a a(CriterionConditionEntity.a_ criterionconditionentity_a) {
+            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity_a.b()));
         }
 
         public static CriterionTriggerBredAnimals.a a(CriterionConditionEntity criterionconditionentity, CriterionConditionEntity criterionconditionentity1, CriterionConditionEntity criterionconditionentity2) {
-            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity), CriterionConditionEntity.b.a(criterionconditionentity1), CriterionConditionEntity.b.a(criterionconditionentity2));
+            return new CriterionTriggerBredAnimals.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity), CriterionConditionEntity.b_.a(criterionconditionentity1), CriterionConditionEntity.b_.a(criterionconditionentity2));
         }
 
         public boolean a(LootTableInfo loottableinfo, LootTableInfo loottableinfo1, @Nullable LootTableInfo loottableinfo2) {
-            return this.c != CriterionConditionEntity.b.a && (loottableinfo2 == null || !this.c.a(loottableinfo2)) ? false : this.a.a(loottableinfo) && this.b.a(loottableinfo1) || this.a.a(loottableinfo1) && this.b.a(loottableinfo);
+            return this.c != CriterionConditionEntity.b_.a && (loottableinfo2 == null || !this.c.a(loottableinfo2)) ? false : this.a.a(loottableinfo) && this.b.a(loottableinfo1) || this.a.a(loottableinfo1) && this.b.a(loottableinfo);
         }
 
         @Override

@@ -99,10 +99,10 @@ public class MemoryModuleType<U> {
     }
 
     private static <U> MemoryModuleType<U> a(String s, Codec<U> codec) {
-        return (MemoryModuleType) IRegistry.a((IRegistry) IRegistry.MEMORY_MODULE_TYPE, new MinecraftKey(s), (Object) (new MemoryModuleType<>(Optional.of(codec))));
+        return (MemoryModuleType) IRegistry.a((IRegistry) IRegistry.MEMORY_MODULE_TYPE, new MinecraftKey(s), (new MemoryModuleType<>(Optional.of(codec))));
     }
 
     private static <U> MemoryModuleType<U> a(String s) {
-        return (MemoryModuleType) IRegistry.a((IRegistry) IRegistry.MEMORY_MODULE_TYPE, new MinecraftKey(s), (Object) (new MemoryModuleType<>(Optional.empty())));
+        return (MemoryModuleType) IRegistry.a((IRegistry) IRegistry.MEMORY_MODULE_TYPE, new MinecraftKey(s), (new MemoryModuleType<>(Optional.empty())));
     }
 }

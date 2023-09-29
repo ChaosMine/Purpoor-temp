@@ -29,6 +29,6 @@ public class WorldGenFeatureStateProviderRotatedBlock extends WorldGenFeatureSta
     public IBlockData a(Random random, BlockPosition blockposition) {
         EnumDirection.EnumAxis enumdirection_enumaxis = EnumDirection.EnumAxis.a(random);
 
-        return (IBlockData) this.c.getBlockData().set(BlockRotatable.AXIS, enumdirection_enumaxis);
+        return this.c.getBlockData().set(BlockRotatable.AXIS, enumdirection_enumaxis);
     }
 }

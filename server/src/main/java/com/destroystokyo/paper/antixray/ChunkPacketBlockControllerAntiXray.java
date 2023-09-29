@@ -184,7 +184,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
 
         if (!Bukkit.isPrimaryThread()) {
             // plugins?
-            MinecraftServer.getServer().scheduleOnMain(() -> {
+            MinecraftServer.SERVER.scheduleOnMain(() -> {
                 this.modifyBlocks(packetPlayOutMapChunk, chunkPacketInfo);
             });
             return;
@@ -193,7 +193,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
         Chunk chunk = chunkPacketInfo.getChunk();
         int x = chunk.getPos().x;
         int z = chunk.getPos().z;
-        WorldServer world = (WorldServer)chunk.world;
+        WorldServer world = chunk.world;
         ((ChunkPacketInfoAntiXray) chunkPacketInfo).setNearbyChunks(
             (Chunk) world.getChunkIfLoadedImmediately(x - 1, z),
             (Chunk) world.getChunkIfLoadedImmediately(x + 1, z),

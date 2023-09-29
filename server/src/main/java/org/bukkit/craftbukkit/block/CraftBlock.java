@@ -692,8 +692,8 @@ public class CraftBlock implements Block {
 
         // Modelled off EntityHuman#hasBlock
         if (item == null || isPreferredTool(iblockdata, nms)) {
-            return net.minecraft.world.level.block.Block.getDrops(iblockdata, (WorldServer) world.getMinecraftWorld(), position, world.getTileEntity(position), entity == null ? null : ((CraftEntity) entity).getHandle(), nms)
-                    .stream().map(CraftItemStack::asBukkitCopy).collect(Collectors.toList());
+            return net.minecraft.world.level.block.Block.getDrops(iblockdata, world.getMinecraftWorld(), position, world.getTileEntity(position), entity == null ? null : ((CraftEntity) entity).getHandle(), nms)
+                    .stream().map(CraftItemStack::asBukkitCopy).toList();
         } else {
             return Collections.emptyList();
         }

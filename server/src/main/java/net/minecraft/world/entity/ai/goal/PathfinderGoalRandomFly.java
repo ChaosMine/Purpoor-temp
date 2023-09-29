@@ -48,11 +48,11 @@ public class PathfinderGoalRandomFly extends PathfinderGoalRandomStrollLand {
             BlockPosition blockposition1 = (BlockPosition) iterator.next();
 
             if (!blockposition.equals(blockposition1)) {
-                Block block = this.a.world.getType(blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition1, EnumDirection.DOWN)).getBlock();
-                boolean flag = block instanceof BlockLeaves || block.a((Tag) TagsBlock.LOGS);
+                Block block = this.a.world.getType(blockposition_mutableblockposition1.a(blockposition1, EnumDirection.DOWN)).getBlock();
+                boolean flag = block instanceof BlockLeaves || block.a(TagsBlock.LOGS);
 
-                if (flag && this.a.world.isEmpty(blockposition1) && this.a.world.isEmpty(blockposition_mutableblockposition.a((BaseBlockPosition) blockposition1, EnumDirection.UP))) {
-                    return Vec3D.c((BaseBlockPosition) blockposition1);
+                if (flag && this.a.world.isEmpty(blockposition1) && this.a.world.isEmpty(blockposition_mutableblockposition.a(blockposition1, EnumDirection.UP))) {
+                    return Vec3D.c(blockposition1);
                 }
             }
         }

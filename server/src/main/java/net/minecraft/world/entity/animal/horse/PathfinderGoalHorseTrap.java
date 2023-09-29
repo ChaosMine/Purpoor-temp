@@ -37,7 +37,7 @@ public class PathfinderGoalHorseTrap extends PathfinderGoal {
         this.a.t(false);
         this.a.setTamed(true);
         this.a.setAgeRaw(0);
-        EntityLightning entitylightning = (EntityLightning) EntityTypes.LIGHTNING_BOLT.a((World) worldserver);
+        EntityLightning entitylightning = EntityTypes.LIGHTNING_BOLT.a(worldserver);
 
         entitylightning.teleportAndSync(this.a.locX(), this.a.locY(), this.a.locZ());
         entitylightning.setEffect(true);
@@ -60,9 +60,9 @@ public class PathfinderGoalHorseTrap extends PathfinderGoal {
     }
 
     private EntityHorseAbstract a(DifficultyDamageScaler difficultydamagescaler) {
-        EntityHorseSkeleton entityhorseskeleton = (EntityHorseSkeleton) EntityTypes.SKELETON_HORSE.a(this.a.world);
+        EntityHorseSkeleton entityhorseskeleton = EntityTypes.SKELETON_HORSE.a(this.a.world);
 
-        entityhorseskeleton.prepare((WorldServer) this.a.world, difficultydamagescaler, EnumMobSpawn.TRIGGERED, (GroupDataEntity) null, (NBTTagCompound) null);
+        entityhorseskeleton.prepare((WorldServer) this.a.world, difficultydamagescaler, EnumMobSpawn.TRIGGERED, null, null);
         entityhorseskeleton.setPosition(this.a.locX(), this.a.locY(), this.a.locZ());
         entityhorseskeleton.noDamageTicks = 60;
         entityhorseskeleton.setPersistent();
@@ -72,9 +72,9 @@ public class PathfinderGoalHorseTrap extends PathfinderGoal {
     }
 
     private EntitySkeleton a(DifficultyDamageScaler difficultydamagescaler, EntityHorseAbstract entityhorseabstract) {
-        EntitySkeleton entityskeleton = (EntitySkeleton) EntityTypes.SKELETON.a(entityhorseabstract.world);
+        EntitySkeleton entityskeleton = EntityTypes.SKELETON.a(entityhorseabstract.world);
 
-        entityskeleton.prepare((WorldServer) entityhorseabstract.world, difficultydamagescaler, EnumMobSpawn.TRIGGERED, (GroupDataEntity) null, (NBTTagCompound) null);
+        entityskeleton.prepare((WorldServer) entityhorseabstract.world, difficultydamagescaler, EnumMobSpawn.TRIGGERED, null, null);
         entityskeleton.setPosition(entityhorseabstract.locX(), entityhorseabstract.locY(), entityhorseabstract.locZ());
         entityskeleton.noDamageTicks = 60;
         entityskeleton.setPersistent();

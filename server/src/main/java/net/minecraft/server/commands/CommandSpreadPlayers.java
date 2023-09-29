@@ -50,13 +50,13 @@ public class CommandSpreadPlayers {
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, Vec2F vec2f, float f, float f1, int i, boolean flag, Collection<? extends Entity> collection) throws CommandSyntaxException {
         Random random = new Random();
-        double d0 = (double) (vec2f.i - f1);
-        double d1 = (double) (vec2f.j - f1);
-        double d2 = (double) (vec2f.i + f1);
-        double d3 = (double) (vec2f.j + f1);
+        double d0 = vec2f.i - f1;
+        double d1 = vec2f.j - f1;
+        double d2 = vec2f.i + f1;
+        double d3 = vec2f.j + f1;
         CommandSpreadPlayers.a[] acommandspreadplayers_a = a(random, flag ? a(collection) : collection.size(), d0, d1, d2, d3);
 
-        a(vec2f, (double) f, commandlistenerwrapper.getWorld(), random, d0, d1, d2, d3, i, acommandspreadplayers_a, flag);
+        a(vec2f, f, commandlistenerwrapper.getWorld(), random, d0, d1, d2, d3, i, acommandspreadplayers_a, flag);
         double d4 = a(collection, commandlistenerwrapper.getWorld(), acommandspreadplayers_a, i, flag);
 
         commandlistenerwrapper.sendMessage(new ChatMessage("commands.spreadplayers.success." + (flag ? "teams" : "entities"), new Object[]{acommandspreadplayers_a.length, vec2f.i, vec2f.j, String.format(Locale.ROOT, "%.2f", d4)}), true);
@@ -73,7 +73,7 @@ public class CommandSpreadPlayers {
             if (entity instanceof EntityHuman) {
                 set.add(entity.getScoreboardTeam());
             } else {
-                set.add((ScoreboardTeamBase) null); // CraftBukkit - decompile error
+                set.add(null); // CraftBukkit - decompile error
             }
         }
 
@@ -116,7 +116,7 @@ public class CommandSpreadPlayers {
                 if (k > 0) {
                     commandspreadplayers_a.a = commandspreadplayers_a.a / (double) k;
                     commandspreadplayers_a.b = commandspreadplayers_a.b / (double) k;
-                    double d7 = (double) commandspreadplayers_a.b();
+                    double d7 = commandspreadplayers_a.b();
 
                     if (d7 > 0.0D) {
                         commandspreadplayers_a.a();
@@ -178,12 +178,12 @@ public class CommandSpreadPlayers {
                     map.put(scoreboardteambase, acommandspreadplayers_a[j++]);
                 }
 
-                commandspreadplayers_a = (CommandSpreadPlayers.a) map.get(scoreboardteambase);
+                commandspreadplayers_a = map.get(scoreboardteambase);
             } else {
                 commandspreadplayers_a = acommandspreadplayers_a[j++];
             }
 
-            entity.enderTeleportAndLoad((double) MathHelper.floor(commandspreadplayers_a.a) + 0.5D, (double) commandspreadplayers_a.a(worldserver, i), (double) MathHelper.floor(commandspreadplayers_a.b) + 0.5D);
+            entity.enderTeleportAndLoad((double) MathHelper.floor(commandspreadplayers_a.a) + 0.5D, commandspreadplayers_a.a(worldserver, i), (double) MathHelper.floor(commandspreadplayers_a.b) + 0.5D);
             d1 = Double.MAX_VALUE;
             CommandSpreadPlayers.a[] acommandspreadplayers_a1 = acommandspreadplayers_a;
             int k = acommandspreadplayers_a.length;
@@ -202,7 +202,7 @@ public class CommandSpreadPlayers {
         if (collection.size() < 2) {
             return 0.0D;
         } else {
-            d0 /= (double) collection.size();
+            d0 /= collection.size();
             return d0;
         }
     }
@@ -235,7 +235,7 @@ public class CommandSpreadPlayers {
         }
 
         void a() {
-            double d0 = (double) this.b();
+            double d0 = this.b();
 
             this.a /= d0;
             this.b /= d0;
@@ -273,7 +273,7 @@ public class CommandSpreadPlayers {
         }
 
         public int a(IBlockAccess iblockaccess, int i) {
-            BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(this.a, (double) (i + 1), this.b);
+            BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(this.a, i + 1, this.b);
             boolean flag = iblockaccess.getType(blockposition_mutableblockposition).isAir();
 
             blockposition_mutableblockposition.c(EnumDirection.DOWN);
@@ -294,7 +294,7 @@ public class CommandSpreadPlayers {
         }
 
         public boolean b(IBlockAccess iblockaccess, int i) {
-            BlockPosition blockposition = new BlockPosition(this.a, (double) (this.a(iblockaccess, i) - 1), this.b);
+            BlockPosition blockposition = new BlockPosition(this.a, this.a(iblockaccess, i) - 1, this.b);
             IBlockData iblockdata = getType(iblockaccess, blockposition); // CraftBukkit
             Material material = iblockdata.getMaterial();
 

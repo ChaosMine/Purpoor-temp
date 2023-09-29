@@ -173,7 +173,7 @@ public class EntityTNTPrimed extends Entity {
     }
 
     public int h() {
-        return (Integer) this.datawatcher.get(EntityTNTPrimed.FUSE_TICKS);
+        return this.datawatcher.get(EntityTNTPrimed.FUSE_TICKS);
     }
 
     public int getFuseTicks() {

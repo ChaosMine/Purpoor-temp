@@ -17,7 +17,7 @@ public class CriterionTriggerFilledBucket extends CriterionTriggerAbstract<Crite
     }
 
     @Override
-    public CriterionTriggerFilledBucket.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerFilledBucket.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
 
         return new CriterionTriggerFilledBucket.a(criterionconditionentity_b, criterionconditionitem);
@@ -33,13 +33,13 @@ public class CriterionTriggerFilledBucket extends CriterionTriggerAbstract<Crite
 
         private final CriterionConditionItem a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerFilledBucket.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
         }
 
         public static CriterionTriggerFilledBucket.a a(CriterionConditionItem criterionconditionitem) {
-            return new CriterionTriggerFilledBucket.a(CriterionConditionEntity.b.a, criterionconditionitem);
+            return new CriterionTriggerFilledBucket.a(CriterionConditionEntity.b_.a, criterionconditionitem);
         }
 
         public boolean a(ItemStack itemstack) {

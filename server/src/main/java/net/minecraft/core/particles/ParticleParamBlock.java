@@ -20,7 +20,7 @@ public class ParticleParamBlock implements ParticleParam {
 
         @Override
         public ParticleParamBlock b(Particle<ParticleParamBlock> particle, PacketDataSerializer packetdataserializer) {
-            return new ParticleParamBlock(particle, (IBlockData) Block.REGISTRY_ID.fromId(packetdataserializer.i()));
+            return new ParticleParamBlock(particle, Block.REGISTRY_ID.fromId(packetdataserializer.i()));
         }
     };
     private final Particle<ParticleParamBlock> b;

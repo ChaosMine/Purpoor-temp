@@ -5,15 +5,6 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import net.minecraft.core.IRegistry;
 import net.minecraft.data.DebugReportGenerator;
 import net.minecraft.data.DebugReportProvider;
@@ -24,94 +15,104 @@ import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 public class ik implements DebugReportProvider {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson c = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
-    private final DebugReportGenerator d;
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Gson c = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
+	private final DebugReportGenerator d;
 
-    public ik(DebugReportGenerator debugreportgenerator) {
-        this.d = debugreportgenerator;
-    }
+	public ik(DebugReportGenerator debugreportgenerator) {
+		this.d = debugreportgenerator;
+	}
 
-    @Override
-    public void a(HashCache hashcache) {
-        Path path = this.d.b();
-        Map<Block, il> map = Maps.newHashMap();
-        Consumer<il> consumer = (il) -> {
-            Block block = il.a();
-            il il1 = (il) map.put(block, il);
+	private static Path a(Path path, Block block) {
+		MinecraftKey minecraftkey = IRegistry.BLOCK.getKey(block);
 
-            if (il1 != null) {
-                throw new IllegalStateException("Duplicate blockstate definition for " + block);
-            }
-        };
-        Map<MinecraftKey, Supplier<JsonElement>> map1 = Maps.newHashMap();
-        Set<Item> set = Sets.newHashSet();
-        BiConsumer<MinecraftKey, Supplier<JsonElement>> biconsumer = (minecraftkey, supplier) -> {
-            Supplier<JsonElement> supplier1 = (Supplier) map1.put(minecraftkey, supplier);
+		return path.resolve("assets/" + minecraftkey.getNamespace() + "/blockstates/" + minecraftkey.getKey() + ".json");
+	}
 
-            if (supplier1 != null) {
-                throw new IllegalStateException("Duplicate model definition for " + minecraftkey);
-            }
-        };
-        Consumer<Item> consumer1 = set::add;
+	private static Path a(Path path, MinecraftKey minecraftkey) {
+		return path.resolve("assets/" + minecraftkey.getNamespace() + "/models/" + minecraftkey.getKey() + ".json");
+	}
 
-        (new ii(consumer, biconsumer, consumer1)).a();
-        (new ij(biconsumer)).a();
-        List<Block> list = (List) IRegistry.BLOCK.g().filter((block) -> {
-            return !map.containsKey(block);
-        }).collect(Collectors.toList());
+	@Override
+	public void a(HashCache hashcache) {
+		Path path = this.d.b();
+		Map<Block, il> map = Maps.newHashMap();
+		Consumer<il> consumer = (il) -> {
+			Block block = il.a();
+			il il1 = map.put(block, il);
 
-        if (!list.isEmpty()) {
-            throw new IllegalStateException("Missing blockstate definitions for: " + list);
-        } else {
-            IRegistry.BLOCK.forEach((block) -> {
-                Item item = (Item) Item.e.get(block);
+			if (il1 != null) {
+				throw new IllegalStateException("Duplicate blockstate definition for " + block);
+			}
+		};
+		Map<MinecraftKey, Supplier<JsonElement>> map1 = Maps.newHashMap();
+		Set<Item> set = Sets.newHashSet();
+		BiConsumer<MinecraftKey, Supplier<JsonElement>> biconsumer = (minecraftkey, supplier) -> {
+			Supplier<JsonElement> supplier1 = map1.put(minecraftkey, supplier);
 
-                if (item != null) {
-                    if (set.contains(item)) {
-                        return;
-                    }
+			if (supplier1 != null) {
+				throw new IllegalStateException("Duplicate model definition for " + minecraftkey);
+			}
+		};
+		Consumer<Item> consumer1 = set::add;
 
-                    MinecraftKey minecraftkey = iw.a(item);
+		(new ii(consumer, biconsumer, consumer1)).a();
+		(new ij(biconsumer)).a();
+		List<Block> list = IRegistry.BLOCK.g().filter((block) -> {
+			return !map.containsKey(block);
+		}).toList();
 
-                    if (!map1.containsKey(minecraftkey)) {
-                        map1.put(minecraftkey, new iv(iw.a(block)));
-                    }
-                }
+		if (!list.isEmpty()) {
+			throw new IllegalStateException("Missing blockstate definitions for: " + list);
+		} else {
+			IRegistry.BLOCK.forEach((block) -> {
+				Item item = Item.e.get(block);
 
-            });
-            this.a(hashcache, path, (Map) map, ik::a);
-            this.a(hashcache, path, (Map) map1, ik::a);
-        }
-    }
+				if (item != null) {
+					if (set.contains(item)) {
+						return;
+					}
 
-    private <T> void a(HashCache hashcache, Path path, Map<T, ? extends Supplier<JsonElement>> map, BiFunction<Path, T, Path> bifunction) {
-        map.forEach((object, supplier) -> {
-            Path path1 = (Path) bifunction.apply(path, object);
+					MinecraftKey minecraftkey = iw.a(item);
 
-            try {
-                DebugReportProvider.a(ik.c, hashcache, (JsonElement) supplier.get(), path1);
-            } catch (Exception exception) {
-                ik.LOGGER.error("Couldn't save {}", path1, exception);
-            }
+					if (!map1.containsKey(minecraftkey)) {
+						map1.put(minecraftkey, new iv(iw.a(block)));
+					}
+				}
 
-        });
-    }
+			});
+			this.a(hashcache, path, map, ik::a);
+			this.a(hashcache, path, map1, ik::a);
+		}
+	}
 
-    private static Path a(Path path, Block block) {
-        MinecraftKey minecraftkey = IRegistry.BLOCK.getKey(block);
+	private <T> void a(HashCache hashcache, Path path, Map<T, ? extends Supplier<JsonElement>> map, BiFunction<Path, T, Path> bifunction) {
+		map.forEach((object, supplier) -> {
+			Path path1 = bifunction.apply(path, object);
 
-        return path.resolve("assets/" + minecraftkey.getNamespace() + "/blockstates/" + minecraftkey.getKey() + ".json");
-    }
+			try {
+				DebugReportProvider.a(ik.c, hashcache, supplier.get(), path1);
+			} catch (Exception exception) {
+				ik.LOGGER.error("Couldn't save {}", path1, exception);
+			}
 
-    private static Path a(Path path, MinecraftKey minecraftkey) {
-        return path.resolve("assets/" + minecraftkey.getNamespace() + "/models/" + minecraftkey.getKey() + ".json");
-    }
+		});
+	}
 
-    @Override
-    public String a() {
-        return "Block State Definitions";
-    }
+	@Override
+	public String a() {
+		return "Block State Definitions";
+	}
 }

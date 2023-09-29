@@ -57,7 +57,7 @@ public class PiglinAI {
         c(behaviorcontroller);
         e(behaviorcontroller);
         f(behaviorcontroller);
-        behaviorcontroller.a((Set) ImmutableSet.of(Activity.CORE));
+        behaviorcontroller.a(ImmutableSet.of(Activity.CORE));
         behaviorcontroller.b(Activity.IDLE);
         behaviorcontroller.e();
         return behaviorcontroller;
@@ -66,7 +66,7 @@ public class PiglinAI {
     protected static void a(EntityPiglin entitypiglin) {
         int i = PiglinAI.b.a(entitypiglin.world.random);
 
-        entitypiglin.getBehaviorController().a(MemoryModuleType.HUNTED_RECENTLY, true, (long) i);
+        entitypiglin.getBehaviorController().a(MemoryModuleType.HUNTED_RECENTLY, true, i);
     }
 
     private static void a(BehaviorController<EntityPiglin> behaviorcontroller) {
@@ -126,10 +126,10 @@ public class PiglinAI {
 
     protected static void b(EntityPiglin entitypiglin) {
         BehaviorController<EntityPiglin> behaviorcontroller = entitypiglin.getBehaviorController();
-        Activity activity = (Activity) behaviorcontroller.f().orElse(null); // CraftBukkit - decompile error
+        Activity activity = behaviorcontroller.f().orElse(null); // CraftBukkit - decompile error
 
-        behaviorcontroller.a((List) ImmutableList.of(Activity.ADMIRE_ITEM, Activity.FLIGHT, Activity.AVOID, Activity.CELEBRATE, Activity.RIDE, Activity.IDLE));
-        Activity activity1 = (Activity) behaviorcontroller.f().orElse(null); // CraftBukkit - decompile error
+        behaviorcontroller.a(ImmutableList.of(Activity.ADMIRE_ITEM, Activity.FLIGHT, Activity.AVOID, Activity.CELEBRATE, Activity.RIDE, Activity.IDLE));
+        Activity activity1 = behaviorcontroller.f().orElse(null); // CraftBukkit - decompile error
 
         if (activity != activity1) {
             d(entitypiglin).ifPresent(entitypiglin::a);
@@ -224,7 +224,7 @@ public class PiglinAI {
                 // CraftBukkit start
                 PiglinBarterEvent event = CraftEventFactory.callPiglinBarterEvent(entitypiglin, i(entitypiglin), itemstack);
                 if (!event.isCancelled()) {
-                    a(entitypiglin, event.getOutcome().stream().map(CraftItemStack::asNMSCopy).collect(Collectors.toList()));
+                    a(entitypiglin, event.getOutcome().stream().map(CraftItemStack::asNMSCopy).toList());
                 }
                 // CraftBukkit end
             } else if (!flag1) {
@@ -269,7 +269,7 @@ public class PiglinAI {
         Optional<EntityHuman> optional = entitypiglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
 
         if (optional.isPresent()) {
-            a(entitypiglin, (EntityHuman) optional.get(), list);
+            a(entitypiglin, optional.get(), list);
         } else {
             b(entitypiglin, list);
         }
@@ -292,7 +292,7 @@ public class PiglinAI {
             while (iterator.hasNext()) {
                 ItemStack itemstack = (ItemStack) iterator.next();
 
-                BehaviorUtil.a((EntityLiving) entitypiglin, itemstack, vec3d.add(0.0D, 1.0D, 0.0D));
+                BehaviorUtil.a(entitypiglin, itemstack, vec3d.add(0.0D, 1.0D, 0.0D));
             }
         }
 
@@ -312,7 +312,7 @@ public class PiglinAI {
     protected static boolean a(EntityPiglin entitypiglin, ItemStack itemstack) {
         Item item = itemstack.getItem();
 
-        if (item.a((Tag) TagsItem.PIGLIN_REPELLENTS)) {
+        if (item.a(TagsItem.PIGLIN_REPELLENTS)) {
             return false;
         } else if (x(entitypiglin) && entitypiglin.getBehaviorController().hasMemory(MemoryModuleType.ATTACK_TARGET)) {
             return false;
@@ -332,7 +332,7 @@ public class PiglinAI {
     // CraftBukkit end
 
     protected static boolean a(Item item) {
-        return item.a((Tag) TagsItem.PIGLIN_LOVED);
+        return item.a(TagsItem.PIGLIN_LOVED);
     }
 
     private static boolean a(EntityPiglin entitypiglin, Entity entity) {
@@ -341,7 +341,7 @@ public class PiglinAI {
         } else {
             EntityInsentient entityinsentient = (EntityInsentient) entity;
 
-            return !entityinsentient.isBaby() || !entityinsentient.isAlive() || h((EntityLiving) entitypiglin) || h((EntityLiving) entityinsentient) || entityinsentient instanceof EntityPiglin && entityinsentient.getVehicle() == null;
+            return !entityinsentient.isBaby() || !entityinsentient.isAlive() || h((EntityLiving) entitypiglin) || h(entityinsentient) || entityinsentient instanceof EntityPiglin && entityinsentient.getVehicle() == null;
         }
     }
 
@@ -355,9 +355,9 @@ public class PiglinAI {
         BehaviorController<EntityPiglin> behaviorcontroller = entitypiglin.getBehaviorController();
 
         if (behaviorcontroller.hasMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED)) {
-            EntityLiving entityliving = (EntityLiving) behaviorcontroller.getMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED).get();
+            EntityLiving entityliving = behaviorcontroller.getMemory(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED).get();
 
-            return entitypiglin.a((Entity) entityliving, 6.0D);
+            return entitypiglin.a(entityliving, 6.0D);
         } else {
             return false;
         }
@@ -369,9 +369,9 @@ public class PiglinAI {
         if (j(entitypiglin)) {
             return Optional.empty();
         } else {
-            Optional<EntityLiving> optional = BehaviorUtil.a((EntityLiving) entitypiglin, MemoryModuleType.ANGRY_AT);
+            Optional<EntityLiving> optional = BehaviorUtil.a(entitypiglin, MemoryModuleType.ANGRY_AT);
 
-            if (optional.isPresent() && e((EntityLiving) optional.get())) {
+            if (optional.isPresent() && e(optional.get())) {
                 return optional;
             } else {
                 Optional optional1;
@@ -389,7 +389,7 @@ public class PiglinAI {
                 } else {
                     Optional<EntityHuman> optional2 = behaviorcontroller.getMemory(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
 
-                    return optional2.isPresent() && e((EntityLiving) optional2.get()) ? optional2 : Optional.empty();
+                    return optional2.isPresent() && e(optional2.get()) ? optional2 : Optional.empty();
                 }
             }
         }
@@ -403,9 +403,9 @@ public class PiglinAI {
             return !flag || BehaviorUtil.c(entitypiglin, entityhuman);
         }).forEach((entitypiglin) -> {
             if (entitypiglin.world.getGameRules().getBoolean(GameRules.UNIVERSAL_ANGER)) {
-                d((EntityPiglinAbstract) entitypiglin, (EntityLiving) entityhuman);
+                d(entitypiglin, entityhuman);
             } else {
-                c((EntityPiglinAbstract) entitypiglin, (EntityLiving) entityhuman);
+                c(entitypiglin, entityhuman);
             }
 
         });
@@ -496,7 +496,7 @@ public class PiglinAI {
     private static boolean l(EntityPiglin entitypiglin) {
         BehaviorController<EntityPiglin> behaviorcontroller = entitypiglin.getBehaviorController();
 
-        return !behaviorcontroller.hasMemory(MemoryModuleType.AVOID_TARGET) ? false : ((EntityLiving) behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET).get()).a((Entity) entitypiglin, 12.0D);
+        return !behaviorcontroller.hasMemory(MemoryModuleType.AVOID_TARGET) ? false : behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET).get().a(entitypiglin, 12.0D);
     }
 
     protected static boolean e(EntityPiglin entitypiglin) {
@@ -506,11 +506,11 @@ public class PiglinAI {
     }
 
     private static List<EntityPiglinAbstract> m(EntityPiglin entitypiglin) {
-        return (List) entitypiglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLINS).orElse(ImmutableList.of());
+        return entitypiglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLINS).orElse(ImmutableList.of());
     }
 
     private static List<EntityPiglinAbstract> e(EntityPiglinAbstract entitypiglinabstract) {
-        return (List) entitypiglinabstract.getBehaviorController().getMemory(MemoryModuleType.NEARBY_ADULT_PIGLINS).orElse(ImmutableList.of());
+        return entitypiglinabstract.getBehaviorController().getMemory(MemoryModuleType.NEARBY_ADULT_PIGLINS).orElse(ImmutableList.of());
     }
 
     public static boolean a(EntityLiving entityliving) {
@@ -552,7 +552,7 @@ public class PiglinAI {
     protected static void a(EntityPiglinAbstract entitypiglinabstract) {
         e(entitypiglinabstract).forEach((entitypiglinabstract1) -> {
             b(entitypiglinabstract1).ifPresent((entityhuman) -> {
-                c(entitypiglinabstract1, (EntityLiving) entityhuman);
+                c(entitypiglinabstract1, entityhuman);
             });
         });
     }
@@ -580,7 +580,7 @@ public class PiglinAI {
         Optional<EntityHuman> optional = b(entitypiglinabstract);
 
         if (optional.isPresent()) {
-            c(entitypiglinabstract, (EntityLiving) optional.get());
+            c(entitypiglinabstract, optional.get());
         } else {
             c(entitypiglinabstract, entityliving);
         }
@@ -589,7 +589,7 @@ public class PiglinAI {
 
     private static void e(EntityPiglinAbstract entitypiglinabstract, EntityLiving entityliving) {
         Optional<EntityLiving> optional = f(entitypiglinabstract);
-        EntityLiving entityliving1 = BehaviorUtil.a((EntityLiving) entitypiglinabstract, optional, entityliving);
+        EntityLiving entityliving1 = BehaviorUtil.a(entitypiglinabstract, optional, entityliving);
 
         if (!optional.isPresent() || optional.get() != entityliving1) {
             c(entitypiglinabstract, entityliving1);
@@ -597,7 +597,7 @@ public class PiglinAI {
     }
 
     private static Optional<EntityLiving> f(EntityPiglinAbstract entitypiglinabstract) {
-        return BehaviorUtil.a((EntityLiving) entitypiglinabstract, MemoryModuleType.ANGRY_AT);
+        return BehaviorUtil.a(entitypiglinabstract, MemoryModuleType.ANGRY_AT);
     }
 
     public static Optional<EntityLiving> g(EntityPiglin entitypiglin) {
@@ -618,9 +618,9 @@ public class PiglinAI {
 
     private static void d(EntityPiglin entitypiglin, EntityLiving entityliving) {
         BehaviorController<EntityPiglin> behaviorcontroller = entitypiglin.getBehaviorController();
-        EntityLiving entityliving1 = BehaviorUtil.a((EntityLiving) entitypiglin, behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET), entityliving);
+        EntityLiving entityliving1 = BehaviorUtil.a(entitypiglin, behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET), entityliving);
 
-        entityliving1 = BehaviorUtil.a((EntityLiving) entitypiglin, behaviorcontroller.getMemory(MemoryModuleType.ATTACK_TARGET), entityliving1);
+        entityliving1 = BehaviorUtil.a(entitypiglin, behaviorcontroller.getMemory(MemoryModuleType.ATTACK_TARGET), entityliving1);
         e(entitypiglin, entityliving1);
     }
 
@@ -630,7 +630,7 @@ public class PiglinAI {
         if (!behaviorcontroller.hasMemory(MemoryModuleType.AVOID_TARGET)) {
             return true;
         } else {
-            EntityLiving entityliving = (EntityLiving) behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET).get();
+            EntityLiving entityliving = behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET).get();
             EntityTypes<?> entitytypes = entityliving.getEntityType();
 
             return entitytypes == EntityTypes.HOGLIN ? p(entitypiglin) : (a(entitytypes) ? !behaviorcontroller.b(MemoryModuleType.NEAREST_VISIBLE_ZOMBIFIED, entityliving) : false); // CraftBukkit - decompile error
@@ -642,8 +642,8 @@ public class PiglinAI {
     }
 
     private static boolean q(EntityPiglin entitypiglin) {
-        int i = (Integer) entitypiglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT).orElse(0) + 1;
-        int j = (Integer) entitypiglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT).orElse(0);
+        int i = entitypiglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT).orElse(0) + 1;
+        int j = entitypiglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT).orElse(0);
 
         return j > i;
     }
@@ -652,12 +652,12 @@ public class PiglinAI {
         entitypiglin.getBehaviorController().removeMemory(MemoryModuleType.ANGRY_AT);
         entitypiglin.getBehaviorController().removeMemory(MemoryModuleType.ATTACK_TARGET);
         entitypiglin.getBehaviorController().removeMemory(MemoryModuleType.WALK_TARGET);
-        entitypiglin.getBehaviorController().a(MemoryModuleType.AVOID_TARGET, entityliving, (long) PiglinAI.e.a(entitypiglin.world.random));
+        entitypiglin.getBehaviorController().a(MemoryModuleType.AVOID_TARGET, entityliving, PiglinAI.e.a(entitypiglin.world.random));
         c((EntityPiglinAbstract) entitypiglin);
     }
 
     protected static void c(EntityPiglinAbstract entitypiglinabstract) {
-        entitypiglinabstract.getBehaviorController().a(MemoryModuleType.HUNTED_RECENTLY, true, (long) PiglinAI.b.a(entitypiglinabstract.world.random));
+        entitypiglinabstract.getBehaviorController().a(MemoryModuleType.HUNTED_RECENTLY, true, PiglinAI.b.a(entitypiglinabstract.world.random));
     }
 
     private static void s(EntityPiglin entitypiglin) {

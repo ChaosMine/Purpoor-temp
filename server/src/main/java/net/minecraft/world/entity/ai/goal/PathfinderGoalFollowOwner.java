@@ -57,7 +57,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
             return false;
         } else if (this.a.isWillSit()) {
             return false;
-        } else if (this.a.h((Entity) entityliving) < (double) (this.h * this.h)) {
+        } else if (this.a.h(entityliving) < (double) (this.h * this.h)) {
             return false;
         } else {
             this.b = entityliving;
@@ -67,7 +67,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
 
     @Override
     public boolean b() {
-        return this.e.m() ? false : (this.a.isWillSit() ? false : this.a.h((Entity) this.b) > (double) (this.g * this.g));
+        return this.e.m() ? false : (this.a.isWillSit() ? false : this.a.h(this.b) > (double) (this.g * this.g));
     }
 
     @Override
@@ -90,10 +90,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
         if (--this.f <= 0) {
             this.f = 10;
             if (!this.a.isLeashed() && !this.a.isPassenger()) {
-                if (this.a.h((Entity) this.b) >= 144.0D) {
+                if (this.a.h(this.b) >= 144.0D) {
                     this.g();
                 } else {
-                    this.e.a((Entity) this.b, this.d);
+                    this.e.a(this.b, this.d);
                 }
 
             }
@@ -124,7 +124,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
         } else {
             // CraftBukkit start
             CraftEntity entity = this.a.getBukkitEntity();
-            Location to = new Location(entity.getWorld(), (double) i + 0.5D, (double) j, (double) k + 0.5D, this.a.yaw, this.a.pitch);
+            Location to = new Location(entity.getWorld(), (double) i + 0.5D, j, (double) k + 0.5D, this.a.yaw, this.a.pitch);
             EntityTeleportEvent event = new EntityTeleportEvent(entity, entity.getLocation(), to);
             this.a.world.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
@@ -140,7 +140,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal {
     }
 
     private boolean a(BlockPosition blockposition) {
-        PathType pathtype = PathfinderNormal.a((IBlockAccess) this.c, blockposition.i());
+        PathType pathtype = PathfinderNormal.a(this.c, blockposition.i());
 
         if (pathtype != PathType.WALKABLE) {
             return false;

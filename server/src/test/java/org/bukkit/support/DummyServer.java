@@ -18,102 +18,71 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public final class DummyServer implements InvocationHandler {
-    private static interface MethodHandler {
-        Object handle(DummyServer server, Object[] args);
-    }
-    private static final HashMap<Method, MethodHandler> methods = new HashMap<Method, MethodHandler>();
-    static {
-        try {
-            methods.put(
-                    Server.class.getMethod("getItemFactory"),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return CraftItemFactory.instance();
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("getName"),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return DummyServer.class.getName();
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("getVersion"),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return DummyServer.class.getPackage().getImplementationVersion();
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("getBukkitVersion"),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return Versioning.getBukkitVersion();
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("getLogger"),
-                    new MethodHandler() {
-                        final Logger logger = Logger.getLogger(DummyServer.class.getCanonicalName());
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return logger;
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("getUnsafe"),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return CraftMagicNumbers.INSTANCE;
-                        }
-                    }
-                );
-            methods.put(
-                    Server.class.getMethod("createBlockData", Material.class),
-                    new MethodHandler() {
-                        final Logger logger = Logger.getLogger(DummyServer.class.getCanonicalName());
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            return CraftBlockData.newData((Material) args[0], null);
-                        }
-                    }
-                );
-            methods.put(Server.class.getMethod("getLootTable", NamespacedKey.class),
-                    new MethodHandler() {
-                        @Override
-                        public Object handle(DummyServer server, Object[] args) {
-                            NamespacedKey key = (NamespacedKey) args[0];
-                            return new CraftLootTable(key, AbstractTestingBase.LOOT_TABLE_REGISTRY.getLootTable(CraftNamespacedKey.toMinecraft(key)));
-                        }
-                    }
-                );
-            Bukkit.setServer(Proxy.getProxyClass(Server.class.getClassLoader(), Server.class).asSubclass(Server.class).getConstructor(InvocationHandler.class).newInstance(new DummyServer()));
-        } catch (Throwable t) {
-            throw new Error(t);
-        }
-    }
+	private static final HashMap<Method, MethodHandler> methods = new HashMap<>();
 
-    public static void setup() {}
+	static {
+		try {
+			methods.put(
+				Server.class.getMethod("getItemFactory"),
+				(server, args) -> CraftItemFactory.instance()
+			);
+			methods.put(
+				Server.class.getMethod("getName"),
+				(server, args) -> DummyServer.class.getName()
+			);
+			methods.put(
+				Server.class.getMethod("getVersion"),
+				(server, args) -> DummyServer.class.getPackage().getImplementationVersion()
+			);
+			methods.put(
+				Server.class.getMethod("getBukkitVersion"),
+				(server, args) -> Versioning.getBukkitVersion()
+			);
+			methods.put(
+				Server.class.getMethod("getLogger"),
+				new MethodHandler() {
+					final Logger logger = Logger.getLogger(DummyServer.class.getCanonicalName());
 
-    private DummyServer() {};
+					@Override
+					public Object handle(DummyServer server, Object[] args) {
+						return logger;
+					}
+				}
+			);
+			methods.put(
+				Server.class.getMethod("getUnsafe"),
+				(server, args) -> CraftMagicNumbers.INSTANCE
+			);
+			methods.put(
+				Server.class.getMethod("createBlockData", Material.class),
+				(server, args) -> CraftBlockData.newData((Material) args[0], null)
+			);
+			methods.put(Server.class.getMethod("getLootTable", NamespacedKey.class),
+				(server, args) -> {
+					NamespacedKey key = (NamespacedKey) args[0];
+					return new CraftLootTable(key, AbstractTestingBase.LOOT_TABLE_REGISTRY.getLootTable(CraftNamespacedKey.toMinecraft(key)));
+				}
+			);
+			Bukkit.setServer(Proxy.getProxyClass(Server.class.getClassLoader(), Server.class).asSubclass(Server.class).getConstructor(InvocationHandler.class).newInstance(new DummyServer()));
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+	}
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
-        MethodHandler handler = methods.get(method);
-        if (handler != null) {
-            return handler.handle(this, args);
-        }
-        throw new UnsupportedOperationException(String.valueOf(method));
-    }
+	private DummyServer() {}
+
+	public static void init() {}
+
+	@Override
+	public Object invoke(Object proxy, Method method, Object[] args) {
+		MethodHandler handler = methods.get(method);
+		if (handler != null) {
+			return handler.handle(this, args);
+		}
+		throw new UnsupportedOperationException(String.valueOf(method));
+	}
+
+	private interface MethodHandler {
+		Object handle(DummyServer server, Object[] args);
+	}
 }

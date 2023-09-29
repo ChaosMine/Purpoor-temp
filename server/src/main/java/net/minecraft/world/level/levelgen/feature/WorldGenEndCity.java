@@ -38,7 +38,7 @@ public class WorldGenEndCity extends StructureGenerator<WorldGenFeatureEmptyConf
     }
 
     private static int b(int i, int j, ChunkGenerator chunkgenerator) {
-        Random random = new Random((long) (i + j * 10387313));
+        Random random = new Random(i + j * 10387313);
         EnumBlockRotation enumblockrotation = EnumBlockRotation.a(random);
         byte b0 = 5;
         byte b1 = 5;
@@ -69,7 +69,7 @@ public class WorldGenEndCity extends StructureGenerator<WorldGenFeatureEmptyConf
         }
 
         public void a(IRegistryCustom iregistrycustom, ChunkGenerator chunkgenerator, DefinedStructureManager definedstructuremanager, int i, int j, BiomeBase biomebase, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
-            EnumBlockRotation enumblockrotation = EnumBlockRotation.a((Random) this.d);
+            EnumBlockRotation enumblockrotation = EnumBlockRotation.a(this.d);
             int k = WorldGenEndCity.b(i, j, chunkgenerator);
 
             if (k >= 60) {

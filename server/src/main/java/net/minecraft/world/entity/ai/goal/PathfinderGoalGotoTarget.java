@@ -70,7 +70,7 @@ public abstract class PathfinderGoalGotoTarget extends PathfinderGoal {
     }
 
     protected void g() {
-        this.a.getNavigation().a((double) ((float) this.e.getX()) + 0.5D, (double) (this.e.getY() + 1), (double) ((float) this.e.getZ()) + 0.5D, this.b);
+        this.a.getNavigation().a((double) ((float) this.e.getX()) + 0.5D, this.e.getY() + 1, (double) ((float) this.e.getZ()) + 0.5D, this.b);
     }
 
     public double h() {
@@ -85,11 +85,11 @@ public abstract class PathfinderGoalGotoTarget extends PathfinderGoal {
     public void e() {
         BlockPosition blockposition = this.j();
 
-        if (!blockposition.a((IPosition) this.a.getPositionVector(), this.h())) {
+        if (!blockposition.a(this.a.getPositionVector(), this.h())) {
             this.h = false;
             ++this.d;
             if (this.k()) {
-                this.a.getNavigation().a((double) ((float) blockposition.getX()) + 0.5D, (double) blockposition.getY(), (double) ((float) blockposition.getZ()) + 0.5D, this.b);
+                this.a.getNavigation().a((double) ((float) blockposition.getX()) + 0.5D, blockposition.getY(), (double) ((float) blockposition.getZ()) + 0.5D, this.b);
             }
         } else {
             this.h = true;
@@ -117,7 +117,7 @@ public abstract class PathfinderGoalGotoTarget extends PathfinderGoal {
                 for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                     for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                         blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, i1, k - 1, j1);
-                        if (this.a.a((BlockPosition) blockposition_mutableblockposition) && this.a(this.a.world, blockposition_mutableblockposition)) {
+                        if (this.a.a(blockposition_mutableblockposition) && this.a(this.a.world, blockposition_mutableblockposition)) {
                             this.e = blockposition_mutableblockposition;
                             setTargetPosition(blockposition_mutableblockposition.immutableCopy()); // Paper
                             return true;

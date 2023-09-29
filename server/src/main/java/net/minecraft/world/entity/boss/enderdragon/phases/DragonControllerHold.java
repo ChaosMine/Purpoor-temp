@@ -65,7 +65,7 @@ public class DragonControllerHold extends AbstractDragonController {
             }
 
             double d0 = 64.0D;
-            EntityHuman entityhuman = this.a.world.a(DragonControllerHold.b, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
+            EntityHuman entityhuman = this.a.world.a(DragonControllerHold.b, blockposition.getX(), blockposition.getY(), blockposition.getZ());
 
             if (entityhuman != null) {
                 d0 = blockposition.a(entityhuman.getPositionVector(), true) / 512.0D;
@@ -103,7 +103,7 @@ public class DragonControllerHold extends AbstractDragonController {
                 i += 12;
             }
 
-            this.c = this.a.a(j, i, (PathPoint) null);
+            this.c = this.a.a(j, i, null);
             if (this.c != null) {
                 this.c.a();
             }
@@ -114,7 +114,7 @@ public class DragonControllerHold extends AbstractDragonController {
 
     private void a(EntityHuman entityhuman) {
         this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.STRAFE_PLAYER);
-        ((DragonControllerStrafe) this.a.getDragonControllerManager().b(DragonControllerPhase.STRAFE_PLAYER)).a(entityhuman);
+        this.a.getDragonControllerManager().b(DragonControllerPhase.STRAFE_PLAYER).a(entityhuman);
     }
 
     private void k() {
@@ -122,13 +122,13 @@ public class DragonControllerHold extends AbstractDragonController {
             BlockPosition blockposition = this.c.g();
 
             this.c.a();
-            double d0 = (double) blockposition.getX();
-            double d1 = (double) blockposition.getZ();
+            double d0 = blockposition.getX();
+            double d1 = blockposition.getZ();
 
             double d2;
 
             do {
-                d2 = (double) ((float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F);
+                d2 = (float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F;
             } while (d2 < (double) blockposition.getY());
 
             this.d = new Vec3D(d0, d2, d1);

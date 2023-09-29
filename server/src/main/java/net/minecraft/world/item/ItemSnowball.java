@@ -36,7 +36,7 @@ public class ItemSnowball extends Item {
                     ((net.minecraft.server.level.EntityPlayer) entityhuman).getBukkitEntity().updateInventory();  // Paper
                 }
 
-                world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemSnowball.RANDOM.nextFloat() * 0.4F + 0.8F));
+                world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemSnowball.RANDOM.nextFloat() * 0.4F + 0.8F));
             } else { // Paper
                 if (entityhuman instanceof net.minecraft.server.level.EntityPlayer) ((net.minecraft.server.level.EntityPlayer) entityhuman).getBukkitEntity().updateInventory(); // Paper
                 return new InteractionResultWrapper<ItemStack>(net.minecraft.world.EnumInteractionResult.FAIL, itemstack); // Paper

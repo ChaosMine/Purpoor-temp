@@ -27,12 +27,12 @@ public class BlockChain extends BlockRotatable implements IBlockWaterlogged {
 
     public BlockChain(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockChain.a, false)).set(BlockChain.AXIS, EnumDirection.EnumAxis.Y));
+        this.j(this.blockStateList.getBlockData().set(BlockChain.a, false).set(BlockChain.AXIS, EnumDirection.EnumAxis.Y));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch ((EnumDirection.EnumAxis) iblockdata.get(BlockChain.AXIS)) {
+        switch (iblockdata.get(BlockChain.AXIS)) {
             case X:
             default:
                 return BlockChain.d;
@@ -49,13 +49,13 @@ public class BlockChain extends BlockRotatable implements IBlockWaterlogged {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
         boolean flag = fluid.getType() == FluidTypes.WATER;
 
-        return (IBlockData) super.getPlacedState(blockactioncontext).set(BlockChain.a, flag);
+        return super.getPlacedState(blockactioncontext).set(BlockChain.a, flag);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockChain.a)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockChain.a)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -68,7 +68,7 @@ public class BlockChain extends BlockRotatable implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockChain.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockChain.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override

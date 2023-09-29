@@ -254,7 +254,7 @@ public class BlockPosition extends BaseBlockPosition {
 
                 protected BlockPosition computeNext() {
                     if (this.b <= 0) {
-                        return (BlockPosition) this.endOfData();
+                        return this.endOfData();
                     } else {
                         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = this.a.d(j + random.nextInt(l1), k + random.nextInt(i2), l + random.nextInt(j2));
 
@@ -296,7 +296,7 @@ public class BlockPosition extends BaseBlockPosition {
                                 if (this.l > this.j) {
                                     ++this.i;
                                     if (this.i > l_decompiled) { // Paper - use proper l above (first line of this method)
-                                        return (BlockPosition) this.endOfData();
+                                        return this.endOfData();
                                     }
 
                                     this.j = Math.min(p_i, this.i); // Paper - decompile issues
@@ -365,7 +365,7 @@ public class BlockPosition extends BaseBlockPosition {
 
                 protected BlockPosition computeNext() {
                     if (this.h == j2) {
-                        return (BlockPosition) this.endOfData();
+                        return this.endOfData();
                     } else {
                         int k2 = this.h % k1;
                         int l2 = this.h / k1;
@@ -407,7 +407,7 @@ public class BlockPosition extends BaseBlockPosition {
                     this.m = this.f.getZ();
                     if (this.j >= this.i) {
                         if (this.h >= this.g) {
-                            return (BlockPosition.MutableBlockPosition) this.endOfData();
+                            return this.endOfData();
                         }
 
                         ++this.h;
@@ -464,8 +464,8 @@ public class BlockPosition extends BaseBlockPosition {
         public final BlockPosition.MutableBlockPosition setValues(int i, int j, int k) { return d(i, j, k);} // Paper - OBFHELPER
         public final BlockPosition.MutableBlockPosition d(int i, int j, int k) { // Tuinity
             ((BaseBlockPosition)this).a = i; // Tuinity - force inline
-            ((BaseBlockPosition)this).b = j; // Tuinity - force inline
-            ((BaseBlockPosition)this).e = k; // Tuinity - force inline
+            this.b = j; // Tuinity - force inline
+            this.e = k; // Tuinity - force inline
             return this;
         }
 
@@ -477,15 +477,15 @@ public class BlockPosition extends BaseBlockPosition {
         public final BlockPosition.MutableBlockPosition setValues(final BaseBlockPosition baseblockposition) { return this.g(baseblockposition); } // Paper - OBFHELPER
         public final BlockPosition.MutableBlockPosition g(BaseBlockPosition baseblockposition) { // Tuinity
             ((BaseBlockPosition)this).a = baseblockposition.a; // Tuinity - force inline
-            ((BaseBlockPosition)this).b = baseblockposition.b; // Tuinity - force inline
-            ((BaseBlockPosition)this).e = baseblockposition.e; // Tuinity - force inline
+            this.b = baseblockposition.b; // Tuinity - force inline
+            this.e = baseblockposition.e; // Tuinity - force inline
             return this;
         }
 
         public final BlockPosition.MutableBlockPosition g(long i) { // Tuinity
             ((BaseBlockPosition)this).a = (int)(i >> 38); // Tuinity - force inline
-            ((BaseBlockPosition)this).b = (int)((i << 52) >> 52); // Tuinity - force inline
-            ((BaseBlockPosition)this).e = (int)((i << 26) >> 38); // Tuinity - force inline
+            this.b = (int)((i << 52) >> 52); // Tuinity - force inline
+            this.e = (int)((i << 26) >> 38); // Tuinity - force inline
             return this;
         }
 
@@ -503,8 +503,8 @@ public class BlockPosition extends BaseBlockPosition {
 
         public final BlockPosition.MutableBlockPosition c(EnumDirection enumdirection) { // Tuinity
             ((BaseBlockPosition)this).a += enumdirection.getAdjacentX(); // Tuinity - force inline
-            ((BaseBlockPosition)this).b += enumdirection.getAdjacentY(); // Tuinity - force inline
-            ((BaseBlockPosition)this).e += enumdirection.getAdjacentZ(); // Tuinity - force inline
+            this.b += enumdirection.getAdjacentY(); // Tuinity - force inline
+            this.e += enumdirection.getAdjacentZ(); // Tuinity - force inline
             return this;
         }
 
@@ -540,10 +540,10 @@ public class BlockPosition extends BaseBlockPosition {
             ((BaseBlockPosition)this).a = value;
         }
         public final void setY(int value) {
-            ((BaseBlockPosition)this).b = value;
+            this.b = value;
         }
         public final void setZ(int value) {
-            ((BaseBlockPosition)this).e = value;
+            this.e = value;
         }
 
         public final void o(int i) {
@@ -551,11 +551,11 @@ public class BlockPosition extends BaseBlockPosition {
         }
 
         public final void p(int i) {
-            ((BaseBlockPosition)this).b = i;
+            this.b = i;
         }
 
         public final void q(int i) {
-            ((BaseBlockPosition)this).e = i;
+            this.e = i;
         }
         // Tuinity end
 

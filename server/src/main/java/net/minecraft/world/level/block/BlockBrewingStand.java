@@ -31,7 +31,7 @@ public class BlockBrewingStand extends BlockTileEntity {
 
     public BlockBrewingStand(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBrewingStand.HAS_BOTTLE[0], false)).set(BlockBrewingStand.HAS_BOTTLE[1], false)).set(BlockBrewingStand.HAS_BOTTLE[2], false));
+        this.j(this.blockStateList.getBlockData().set(BlockBrewingStand.HAS_BOTTLE[0], false).set(BlockBrewingStand.HAS_BOTTLE[1], false).set(BlockBrewingStand.HAS_BOTTLE[2], false));
     }
 
     @Override

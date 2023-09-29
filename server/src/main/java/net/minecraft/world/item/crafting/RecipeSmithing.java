@@ -88,8 +88,8 @@ public class RecipeSmithing implements IRecipe<IInventory> {
 
         @Override
         public RecipeSmithing a(MinecraftKey minecraftkey, JsonObject jsonobject) {
-            RecipeItemStack recipeitemstack = RecipeItemStack.a((JsonElement) ChatDeserializer.t(jsonobject, "base"));
-            RecipeItemStack recipeitemstack1 = RecipeItemStack.a((JsonElement) ChatDeserializer.t(jsonobject, "addition"));
+            RecipeItemStack recipeitemstack = RecipeItemStack.a(ChatDeserializer.t(jsonobject, "base"));
+            RecipeItemStack recipeitemstack1 = RecipeItemStack.a(ChatDeserializer.t(jsonobject, "addition"));
             ItemStack itemstack = ShapedRecipes.a(ChatDeserializer.t(jsonobject, "result"));
 
             return new RecipeSmithing(minecraftkey, recipeitemstack, recipeitemstack1, itemstack);

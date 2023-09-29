@@ -28,7 +28,7 @@ public class PathfinderGoalDefendVillage extends PathfinderGoalTarget {
     public boolean a() {
         AxisAlignedBB axisalignedbb = this.a.getBoundingBox().grow(10.0D, 8.0D, 10.0D);
         List<EntityLiving> list = this.a.world.a(EntityVillager.class, this.c, this.a, axisalignedbb);
-        List<EntityHuman> list1 = this.a.world.a(this.c, (EntityLiving) this.a, axisalignedbb);
+        List<EntityHuman> list1 = this.a.world.a(this.c, this.a, axisalignedbb);
         Iterator iterator = list.iterator();
 
         while (iterator.hasNext()) {

@@ -12,10 +12,10 @@ public enum EnumColor implements INamable {
 
     WHITE(0, "white", 16383998, MaterialMapColor.j, 15790320, 16777215), ORANGE(1, "orange", 16351261, MaterialMapColor.q, 15435844, 16738335), MAGENTA(2, "magenta", 13061821, MaterialMapColor.r, 12801229, 16711935), LIGHT_BLUE(3, "light_blue", 3847130, MaterialMapColor.s, 6719955, 10141901), YELLOW(4, "yellow", 16701501, MaterialMapColor.t, 14602026, 16776960), LIME(5, "lime", 8439583, MaterialMapColor.u, 4312372, 12582656), PINK(6, "pink", 15961002, MaterialMapColor.v, 14188952, 16738740), GRAY(7, "gray", 4673362, MaterialMapColor.w, 4408131, 8421504), LIGHT_GRAY(8, "light_gray", 10329495, MaterialMapColor.x, 11250603, 13882323), CYAN(9, "cyan", 1481884, MaterialMapColor.y, 2651799, 65535), PURPLE(10, "purple", 8991416, MaterialMapColor.z, 8073150, 10494192), BLUE(11, "blue", 3949738, MaterialMapColor.A, 2437522, 255), BROWN(12, "brown", 8606770, MaterialMapColor.B, 5320730, 9127187), GREEN(13, "green", 6192150, MaterialMapColor.C, 3887386, 65280), RED(14, "red", 11546150, MaterialMapColor.D, 11743532, 16711680), BLACK(15, "black", 1908001, MaterialMapColor.E, 1973019, 0);
 
-    private static final EnumColor[] q = (EnumColor[]) Arrays.stream(values()).sorted(Comparator.comparingInt(EnumColor::getColorIndex)).toArray((i) -> {
+    private static final EnumColor[] q = Arrays.stream(values()).sorted(Comparator.comparingInt(EnumColor::getColorIndex)).toArray((i) -> {
         return new EnumColor[i];
     });
-    private static final Int2ObjectOpenHashMap<EnumColor> r = new Int2ObjectOpenHashMap((Map) Arrays.stream(values()).collect(Collectors.toMap((enumcolor) -> {
+    private static final Int2ObjectOpenHashMap<EnumColor> r = new Int2ObjectOpenHashMap(Arrays.stream(values()).collect(Collectors.toMap((enumcolor) -> {
         return enumcolor.y;
     }, (enumcolor) -> {
         return enumcolor;

@@ -1,6 +1,5 @@
 package net.minecraft.world.entity.npc;
 
-import javax.annotation.Nullable;
 import net.minecraft.sounds.SoundEffect;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.world.entity.player.EntityHuman;
@@ -10,6 +9,9 @@ import net.minecraft.world.item.trading.IMerchant;
 import net.minecraft.world.item.trading.MerchantRecipe;
 import net.minecraft.world.item.trading.MerchantRecipeList;
 import net.minecraft.world.level.World;
+import org.bukkit.craftbukkit.inventory.CraftMerchant;
+
+import javax.annotation.Nullable;
 
 public class MerchantWrapper implements IMerchant {
 
@@ -68,5 +70,10 @@ public class MerchantWrapper implements IMerchant {
     @Override
     public SoundEffect getTradeSound() {
         return SoundEffects.ENTITY_VILLAGER_YES;
+    }
+
+    @Override
+    public CraftMerchant getCraftMerchant() {
+        return new CraftMerchant(this);
     }
 }

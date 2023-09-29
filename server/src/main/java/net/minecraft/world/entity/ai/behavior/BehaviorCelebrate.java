@@ -68,7 +68,7 @@ public class BehaviorCelebrate extends Behavior<EntityVillager> {
         List<Integer> list = Lists.newArrayList();
 
         list.add(enumcolor.getFireworksColor());
-        nbttagcompound.b("Colors", (List) list);
+        nbttagcompound.b("Colors", list);
         nbttagcompound.setByte("Type", (byte) ItemFireworks.EffectType.BURST.a());
         NBTTagCompound nbttagcompound1 = itemstack.a("Fireworks");
         NBTTagList nbttaglist = new NBTTagList();

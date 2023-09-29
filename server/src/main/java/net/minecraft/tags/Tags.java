@@ -21,7 +21,7 @@ public interface Tags<T> {
 
     @Nullable
     default Tag<T> a(MinecraftKey minecraftkey) {
-        return (Tag) this.a().get(minecraftkey);
+        return this.a().get(minecraftkey);
     }
 
     Tag<T> b(MinecraftKey minecraftkey);
@@ -47,22 +47,15 @@ public interface Tags<T> {
         Map<MinecraftKey, Tag<T>> map = this.a();
 
         packetdataserializer.d(map.size());
-        Iterator iterator = map.entrySet().iterator();
 
-        while (iterator.hasNext()) {
-            Entry<MinecraftKey, Tag<T>> entry = (Entry) iterator.next();
+			for (Entry<MinecraftKey, Tag<T>> entry : map.entrySet()) {
+				packetdataserializer.a(entry.getKey());
+				packetdataserializer.d(entry.getValue().getTagged().size());
 
-            packetdataserializer.a((MinecraftKey) entry.getKey());
-            packetdataserializer.d(((Tag) entry.getValue()).getTagged().size());
-            Iterator iterator1 = ((Tag) entry.getValue()).getTagged().iterator();
-
-            while (iterator1.hasNext()) {
-                T t0 = iterator1.next();
-
-                packetdataserializer.d(registryblocks.a(t0));
-            }
-        }
-
+				for (T t0 : entry.getValue().getTagged()) {
+					packetdataserializer.d(registryblocks.a(t0));
+				}
+			}
     }
 
     static <T> Tags<T> a(PacketDataSerializer packetdataserializer, IRegistry<T> iregistry) {
@@ -96,13 +89,13 @@ public interface Tags<T> {
 
             @Override
             public Tag<T> b(MinecraftKey minecraftkey) {
-                return (Tag) bimap.getOrDefault(minecraftkey, this.b);
+                return bimap.getOrDefault(minecraftkey, this.b);
             }
 
             @Nullable
             @Override
             public MinecraftKey a(Tag<T> tag) {
-                return tag instanceof Tag.e ? ((Tag.e) tag).a() : (MinecraftKey) bimap.inverse().get(tag);
+                return tag instanceof Tag.e ? ((Tag.e) tag).a() : bimap.inverse().get(tag);
             }
 
             @Override

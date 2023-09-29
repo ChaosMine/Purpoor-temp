@@ -24,16 +24,16 @@ public class CriterionTriggerFishingRodHooked extends CriterionTriggerAbstract<C
     }
 
     @Override
-    public CriterionTriggerFishingRodHooked.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerFishingRodHooked.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("rod"));
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "entity", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "entity", lootdeserializationcontext);
         CriterionConditionItem criterionconditionitem1 = CriterionConditionItem.a(jsonobject.get("item"));
 
         return new CriterionTriggerFishingRodHooked.a(criterionconditionentity_b, criterionconditionitem, criterionconditionentity_b1, criterionconditionitem1);
     }
 
     public void a(EntityPlayer entityplayer, ItemStack itemstack, EntityFishingHook entityfishinghook, Collection<ItemStack> collection) {
-        LootTableInfo loottableinfo = CriterionConditionEntity.b(entityplayer, (Entity) (entityfishinghook.getHooked() != null ? entityfishinghook.getHooked() : entityfishinghook));
+        LootTableInfo loottableinfo = CriterionConditionEntity.b(entityplayer, entityfishinghook.getHooked() != null ? entityfishinghook.getHooked() : entityfishinghook);
 
         this.a(entityplayer, (criteriontriggerfishingrodhooked_a) -> {
             return criteriontriggerfishingrodhooked_a.a(itemstack, loottableinfo, collection);
@@ -43,10 +43,10 @@ public class CriterionTriggerFishingRodHooked extends CriterionTriggerAbstract<C
     public static class a extends CriterionInstanceAbstract {
 
         private final CriterionConditionItem a;
-        private final CriterionConditionEntity.b b;
+        private final CriterionConditionEntity.b_ b;
         private final CriterionConditionItem c;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionEntity.b criterionconditionentity_b1, CriterionConditionItem criterionconditionitem1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionEntity.b_ criterionconditionentity_b1, CriterionConditionItem criterionconditionitem1) {
             super(CriterionTriggerFishingRodHooked.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
             this.b = criterionconditionentity_b1;
@@ -54,7 +54,7 @@ public class CriterionTriggerFishingRodHooked extends CriterionTriggerAbstract<C
         }
 
         public static CriterionTriggerFishingRodHooked.a a(CriterionConditionItem criterionconditionitem, CriterionConditionEntity criterionconditionentity, CriterionConditionItem criterionconditionitem1) {
-            return new CriterionTriggerFishingRodHooked.a(CriterionConditionEntity.b.a, criterionconditionitem, CriterionConditionEntity.b.a(criterionconditionentity), criterionconditionitem1);
+            return new CriterionTriggerFishingRodHooked.a(CriterionConditionEntity.b_.a, criterionconditionitem, CriterionConditionEntity.b_.a(criterionconditionentity), criterionconditionitem1);
         }
 
         public boolean a(ItemStack itemstack, LootTableInfo loottableinfo, Collection<ItemStack> collection) {
@@ -65,7 +65,7 @@ public class CriterionTriggerFishingRodHooked extends CriterionTriggerAbstract<C
             } else {
                 if (this.c != CriterionConditionItem.a) {
                     boolean flag = false;
-                    Entity entity = (Entity) loottableinfo.getContextParameter(LootContextParameters.THIS_ENTITY);
+                    Entity entity = loottableinfo.getContextParameter(LootContextParameters.THIS_ENTITY);
 
                     if (entity instanceof EntityItem) {
                         EntityItem entityitem = (EntityItem) entity;

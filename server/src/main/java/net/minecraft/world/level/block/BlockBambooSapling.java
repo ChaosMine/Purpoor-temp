@@ -43,14 +43,14 @@ public class BlockBambooSapling extends Block implements IBlockFragilePlantEleme
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (random.nextInt(3) == 0 && worldserver.isEmpty(blockposition.up()) && worldserver.getLightLevel(blockposition.up(), 0) >= 9) {
-            this.a((World) worldserver, blockposition);
+            this.a(worldserver, blockposition);
         }
 
     }
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        return iworldreader.getType(blockposition.down()).a((Tag) TagsBlock.BAMBOO_PLANTABLE_ON);
+        return iworldreader.getType(blockposition.down()).a(TagsBlock.BAMBOO_PLANTABLE_ON);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class BlockBambooSapling extends Block implements IBlockFragilePlantEleme
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        this.a((World) worldserver, blockposition);
+        this.a(worldserver, blockposition);
     }
 
     @Override
@@ -87,6 +87,6 @@ public class BlockBambooSapling extends Block implements IBlockFragilePlantEleme
     }
 
     protected void a(World world, BlockPosition blockposition) {
-        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(world, blockposition, blockposition.up(), (IBlockData) Blocks.BAMBOO.getBlockData().set(BlockBamboo.e, BlockPropertyBambooSize.SMALL), 3); // CraftBukkit - BlockSpreadEvent
+        org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(world, blockposition, blockposition.up(), Blocks.BAMBOO.getBlockData().set(BlockBamboo.e, BlockPropertyBambooSize.SMALL), 3); // CraftBukkit - BlockSpreadEvent
     }
 }

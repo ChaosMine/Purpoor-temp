@@ -52,6 +52,6 @@ public class BlockBeetroot extends BlockCrops {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockBeetroot.c[(Integer) iblockdata.get(this.c())];
+        return BlockBeetroot.c[iblockdata.get(this.c())];
     }
 }

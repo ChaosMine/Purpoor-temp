@@ -46,7 +46,7 @@ public class ResourceManager implements IReloadableResourceManager {
             String s = (String) iterator.next();
 
             this.e.add(s);
-            resourcemanagerfallback = (ResourceManagerFallback) this.b.get(s);
+            resourcemanagerfallback = this.b.get(s);
             if (resourcemanagerfallback == null) {
                 resourcemanagerfallback = new ResourceManagerFallback(this.g, s);
                 this.b.put(s, resourcemanagerfallback);
@@ -57,7 +57,7 @@ public class ResourceManager implements IReloadableResourceManager {
 
     @Override
     public IResource a(MinecraftKey minecraftkey) throws IOException {
-        IResourceManager iresourcemanager = (IResourceManager) this.b.get(minecraftkey.getNamespace());
+        IResourceManager iresourcemanager = this.b.get(minecraftkey.getNamespace());
 
         if (iresourcemanager != null) {
             return iresourcemanager.a(minecraftkey);
@@ -68,7 +68,7 @@ public class ResourceManager implements IReloadableResourceManager {
 
     @Override
     public List<IResource> c(MinecraftKey minecraftkey) throws IOException {
-        IResourceManager iresourcemanager = (IResourceManager) this.b.get(minecraftkey.getNamespace());
+        IResourceManager iresourcemanager = this.b.get(minecraftkey.getNamespace());
 
         if (iresourcemanager != null) {
             return iresourcemanager.c(minecraftkey);

@@ -96,9 +96,9 @@ public class EntityItemFrame extends EntityHanging {
             if (entity != null) {
                 entity.setPositionRaw(d1, d2, d3);
             }
-            double d4 = (double) width;
-            double d5 = (double) height;
-            double d6 = (double) width;
+            double d4 = width;
+            double d5 = height;
+            double d6 = width;
             EnumDirection.EnumAxis enumdirection_enumaxis = direction.n();
 
             switch (enumdirection_enumaxis) {
@@ -260,7 +260,7 @@ public class EntityItemFrame extends EntityHanging {
     }
 
     public ItemStack getItem() {
-        return (ItemStack) this.getDataWatcher().get(EntityItemFrame.ITEM);
+        return this.getDataWatcher().get(EntityItemFrame.ITEM);
     }
 
     public void setItem(ItemStack itemstack) {
@@ -277,7 +277,7 @@ public class EntityItemFrame extends EntityHanging {
         if (!itemstack.isEmpty()) {
             itemstack = itemstack.cloneItemStack();
             itemstack.setCount(1);
-            itemstack.a((Entity) this);
+            itemstack.a(this);
         }
 
         this.getDataWatcher().set(EntityItemFrame.ITEM, itemstack);
@@ -307,14 +307,14 @@ public class EntityItemFrame extends EntityHanging {
             ItemStack itemstack = this.getItem();
 
             if (!itemstack.isEmpty() && itemstack.z() != this) {
-                itemstack.a((Entity) this);
+                itemstack.a(this);
             }
         }
 
     }
 
     public int getRotation() {
-        return (Integer) this.getDataWatcher().get(EntityItemFrame.g);
+        return this.getDataWatcher().get(EntityItemFrame.g);
     }
 
     public void setRotation(int i) {

@@ -60,7 +60,7 @@ public abstract class LootItemFunctionConditional implements LootItemFunction {
 
         @Override
         public final T a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
-            LootItemCondition[] alootitemcondition = (LootItemCondition[]) ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
+            LootItemCondition[] alootitemcondition = ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
 
             return this.b(jsonobject, jsondeserializationcontext, alootitemcondition);
         }
@@ -83,7 +83,7 @@ public abstract class LootItemFunctionConditional implements LootItemFunction {
 
         @Override
         public LootItemFunction b() {
-            return (LootItemFunction) this.a.apply(this.g());
+            return this.a.apply(this.g());
         }
     }
 
@@ -107,7 +107,7 @@ public abstract class LootItemFunctionConditional implements LootItemFunction {
         protected abstract T d();
 
         protected LootItemCondition[] g() {
-            return (LootItemCondition[]) this.a.toArray(new LootItemCondition[0]);
+            return this.a.toArray(new LootItemCondition[0]);
         }
     }
 }

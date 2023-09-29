@@ -23,7 +23,12 @@ public class WorldGenFeatureBasaltColumns extends WorldGenerator<WorldGenFeature
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBasaltColumnsConfiguration worldgenfeaturebasaltcolumnsconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBasaltColumnsConfiguration worldgenfeaturebasaltcolumnsconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturebasaltcolumnsconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBasaltColumnsConfiguration worldgenfeaturebasaltcolumnsconfiguration) {
         int i = chunkgenerator.getSeaLevel();
 
         if (!a(generatoraccessseed, i, blockposition.i())) {

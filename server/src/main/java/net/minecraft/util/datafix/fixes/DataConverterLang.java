@@ -18,7 +18,7 @@ public class DataConverterLang extends DataFix {
             return typed.update(DSL.remainderFinder(), (dynamic) -> {
                 Optional<String> optional = dynamic.get("lang").asString().result();
 
-                return optional.isPresent() ? dynamic.set("lang", dynamic.createString(((String) optional.get()).toLowerCase(Locale.ROOT))) : dynamic;
+                return optional.isPresent() ? dynamic.set("lang", dynamic.createString(optional.get().toLowerCase(Locale.ROOT))) : dynamic;
             });
         });
     }

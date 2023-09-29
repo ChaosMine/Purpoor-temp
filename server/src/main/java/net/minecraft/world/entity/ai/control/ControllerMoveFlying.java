@@ -43,7 +43,7 @@ public class ControllerMoveFlying extends ControllerMove {
             }
 
             this.a.q(f1);
-            double d4 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+            double d4 = MathHelper.sqrt(d0 * d0 + d2 * d2);
             float f2 = (float) (-(MathHelper.d(d1, d4) * 57.2957763671875D));
 
             this.a.pitch = this.a(this.a.pitch, f2, (float) this.i);

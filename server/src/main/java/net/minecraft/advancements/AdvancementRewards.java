@@ -18,7 +18,6 @@ import net.minecraft.sounds.SoundCategory;
 import net.minecraft.sounds.SoundEffects;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.entity.item.EntityItem;
-import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
@@ -54,7 +53,7 @@ public class AdvancementRewards {
                 ItemStack itemstack = (ItemStack) iterator.next();
 
                 if (entityplayer.g(itemstack)) {
-                    entityplayer.world.playSound((EntityHuman) null, entityplayer.locX(), entityplayer.locY(), entityplayer.locZ(), SoundEffects.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((entityplayer.getRandom().nextFloat() - entityplayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    entityplayer.world.playSound(null, entityplayer.locX(), entityplayer.locY(), entityplayer.locZ(), SoundEffects.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((entityplayer.getRandom().nextFloat() - entityplayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     flag = true;
                 } else {
                     EntityItem entityitem = entityplayer.drop(itemstack, false);
@@ -137,7 +136,7 @@ public class AdvancementRewards {
     }
 
     public static AdvancementRewards a(JsonObject jsonobject) throws JsonParseException {
-        int i = ChatDeserializer.a(jsonobject, "experience", (int) 0);
+        int i = ChatDeserializer.a(jsonobject, "experience", 0);
         JsonArray jsonarray = ChatDeserializer.a(jsonobject, "loot", new JsonArray());
         MinecraftKey[] aminecraftkey = new MinecraftKey[jsonarray.size()];
 
@@ -163,7 +162,7 @@ public class AdvancementRewards {
         return new AdvancementRewards(i, aminecraftkey, aminecraftkey1, customfunction_a);
     }
 
-    public static class a {
+    public static class a_ {
 
         private int a;
         private final List<MinecraftKey> b = Lists.newArrayList();
@@ -171,28 +170,28 @@ public class AdvancementRewards {
         @Nullable
         private MinecraftKey d;
 
-        public a() {}
+        public a_() {}
 
-        public static AdvancementRewards.a a(int i) {
-            return (new AdvancementRewards.a()).b(i);
+        public static a_ a(int i) {
+            return (new a_()).b(i);
         }
 
-        public AdvancementRewards.a b(int i) {
+        public a_ b(int i) {
             this.a += i;
             return this;
         }
 
-        public static AdvancementRewards.a c(MinecraftKey minecraftkey) {
-            return (new AdvancementRewards.a()).d(minecraftkey);
+        public static a_ c(MinecraftKey minecraftkey) {
+            return (new a_()).d(minecraftkey);
         }
 
-        public AdvancementRewards.a d(MinecraftKey minecraftkey) {
+        public a_ d(MinecraftKey minecraftkey) {
             this.c.add(minecraftkey);
             return this;
         }
 
         public AdvancementRewards a() {
-            return new AdvancementRewards(this.a, (MinecraftKey[]) this.b.toArray(new MinecraftKey[0]), (MinecraftKey[]) this.c.toArray(new MinecraftKey[0]), this.d == null ? CustomFunction.a.a : new CustomFunction.a(this.d));
+            return new AdvancementRewards(this.a, this.b.toArray(new MinecraftKey[0]), this.c.toArray(new MinecraftKey[0]), this.d == null ? CustomFunction.a.a : new CustomFunction.a(this.d));
         }
     }
 }

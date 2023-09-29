@@ -143,7 +143,7 @@ public class TileEntityStructure extends TileEntity {
             IBlockData iblockdata = this.world.getType(blockposition);
 
             if (iblockdata.a(Blocks.STRUCTURE_BLOCK)) {
-                this.world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockStructure.a, this.usageMode), 2);
+                this.world.setTypeAndData(blockposition, iblockdata.set(BlockStructure.a, this.usageMode), 2);
             }
 
         }
@@ -233,7 +233,7 @@ public class TileEntityStructure extends TileEntity {
         IBlockData iblockdata = this.world.getType(this.getPosition());
 
         if (iblockdata.a(Blocks.STRUCTURE_BLOCK)) {
-            this.world.setTypeAndData(this.getPosition(), (IBlockData) iblockdata.set(BlockStructure.a, blockpropertystructuremode), 2);
+            this.world.setTypeAndData(this.getPosition(), iblockdata.set(BlockStructure.a, blockpropertystructuremode), 2);
         }
 
     }
@@ -286,7 +286,7 @@ public class TileEntityStructure extends TileEntity {
             return tileentitystructure.usageMode == BlockPropertyStructureMode.CORNER && Objects.equals(this.structureName, tileentitystructure.structureName);
         };
 
-        return (List) list.stream().filter(predicate).collect(Collectors.toList());
+        return list.stream().filter(predicate).toList();
     }
 
     private List<TileEntityStructure> a(BlockPosition blockposition, BlockPosition blockposition1) {
@@ -313,7 +313,7 @@ public class TileEntityStructure extends TileEntity {
         StructureBoundingBox structureboundingbox;
 
         if (list.size() > 1) {
-            BlockPosition blockposition1 = ((TileEntityStructure) list.get(0)).getPosition();
+            BlockPosition blockposition1 = list.get(0).getPosition();
 
             structureboundingbox = new StructureBoundingBox(blockposition1, blockposition1);
         } else {
@@ -354,7 +354,7 @@ public class TileEntityStructure extends TileEntity {
 
     public boolean b(boolean flag) {
         if (this.usageMode == BlockPropertyStructureMode.SAVE && !this.world.isClientSide && this.structureName != null) {
-            BlockPosition blockposition = this.getPosition().a((BaseBlockPosition) this.relativePosition);
+            BlockPosition blockposition = this.getPosition().a(this.relativePosition);
             WorldServer worldserver = (WorldServer) this.world;
             DefinedStructureManager definedstructuremanager = worldserver.n();
 
@@ -432,12 +432,12 @@ public class TileEntityStructure extends TileEntity {
             DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.mirror).a(this.rotation).a(this.ignoreEntities).a((ChunkCoordIntPair) null);
 
             if (this.integrity < 1.0F) {
-                definedstructureinfo.b().a((DefinedStructureProcessor) (new DefinedStructureProcessorRotation(MathHelper.a(this.integrity, 0.0F, 1.0F)))).a(b(this.seed));
+                definedstructureinfo.b().a(new DefinedStructureProcessorRotation(MathHelper.a(this.integrity, 0.0F, 1.0F))).a(b(this.seed));
             }
 
-            BlockPosition blockposition2 = blockposition.a((BaseBlockPosition) this.relativePosition);
+            BlockPosition blockposition2 = blockposition.a(this.relativePosition);
 
-            definedstructure.a((WorldAccess) worldserver, blockposition2, definedstructureinfo, b(this.seed));
+            definedstructure.a(worldserver, blockposition2, definedstructureinfo, b(this.seed));
             return true;
         }
     }

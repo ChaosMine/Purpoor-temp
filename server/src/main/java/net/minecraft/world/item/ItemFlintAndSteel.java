@@ -30,7 +30,7 @@ public class ItemFlintAndSteel extends Item {
 
         if (BlockCampfire.h(iblockdata) && !org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(world, blockposition, entityhuman).isCancelled()) { // CraftBukkit
             world.playSound(entityhuman, blockposition, SoundEffects.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ItemFlintAndSteel.RANDOM.nextFloat() * 0.4F + 0.8F);
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockProperties.r, true), 11);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockProperties.r, true), 11);
             if (entityhuman != null) {
                 itemactioncontext.getItemStack().damage(1, entityhuman, (entityhuman1) -> {
                     entityhuman1.broadcastItemBreak(itemactioncontext.getHand());
@@ -51,7 +51,7 @@ public class ItemFlintAndSteel extends Item {
                 }
                 // CraftBukkit end
                 world.playSound(entityhuman, blockposition1, SoundEffects.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ItemFlintAndSteel.RANDOM.nextFloat() * 0.4F + 0.8F);
-                IBlockData iblockdata1 = BlockFireAbstract.a((IBlockAccess) world, blockposition1);
+                IBlockData iblockdata1 = BlockFireAbstract.a(world, blockposition1);
 
                 world.setTypeAndData(blockposition1, iblockdata1, 11);
                 ItemStack itemstack = itemactioncontext.getItemStack();

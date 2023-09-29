@@ -85,7 +85,7 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
     }
 
     public TileEntityShulkerBox() {
-        this((EnumColor) null);
+        this(null);
         this.m = true;
     }
 
@@ -132,31 +132,31 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
     }
 
     public AxisAlignedBB a(IBlockData iblockdata) {
-        return this.b((EnumDirection) iblockdata.get(BlockShulkerBox.a));
+        return this.b(iblockdata.get(BlockShulkerBox.a));
     }
 
     public AxisAlignedBB b(EnumDirection enumdirection) {
         float f = this.a(1.0F);
 
-        return VoxelShapes.b().getBoundingBox().b((double) (0.5F * f * (float) enumdirection.getAdjacentX()), (double) (0.5F * f * (float) enumdirection.getAdjacentY()), (double) (0.5F * f * (float) enumdirection.getAdjacentZ()));
+        return VoxelShapes.b().getBoundingBox().b(0.5F * f * (float) enumdirection.getAdjacentX(), 0.5F * f * (float) enumdirection.getAdjacentY(), 0.5F * f * (float) enumdirection.getAdjacentZ());
     }
 
     private AxisAlignedBB c(EnumDirection enumdirection) {
         EnumDirection enumdirection1 = enumdirection.opposite();
 
-        return this.b(enumdirection).a((double) enumdirection1.getAdjacentX(), (double) enumdirection1.getAdjacentY(), (double) enumdirection1.getAdjacentZ());
+        return this.b(enumdirection).a(enumdirection1.getAdjacentX(), enumdirection1.getAdjacentY(), enumdirection1.getAdjacentZ());
     }
 
     private void m() {
         IBlockData iblockdata = this.world.getType(this.getPosition());
 
         if (iblockdata.getBlock() instanceof BlockShulkerBox) {
-            EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockShulkerBox.a);
+            EnumDirection enumdirection = iblockdata.get(BlockShulkerBox.a);
             AxisAlignedBB axisalignedbb = this.c(enumdirection).a(this.position);
-            try (var list = this.world.getEntities((Entity) null, axisalignedbb)) {
+            try (var list = this.world.getEntities(null, axisalignedbb)) {
                 if (!list.isEmpty()) {
                     for (int i = 0; i < list.size(); ++i) {
-                        Entity entity = (Entity) list.get(i);
+                        Entity entity = list.get(i);
 
                         if (entity.getPushReaction() != EnumPistonReaction.IGNORE) {
                             double d0 = 0.0D;
@@ -242,7 +242,7 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
             if (opened) return; // CraftBukkit - only animate if the ShulkerBox hasn't been forced open already by an API call.
             this.world.playBlockAction(this.position, this.getBlock().getBlock(), 1, this.viewingCount);
             if (this.viewingCount == 1) {
-                this.world.playSound((EntityHuman) null, this.position, SoundEffects.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+                this.world.playSound(null, this.position, SoundEffects.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
 
@@ -255,7 +255,7 @@ public class TileEntityShulkerBox extends TileEntityLootable implements IWorldIn
             if (opened) return; // CraftBukkit - only animate if the ShulkerBox hasn't been forced open already by an API call.
             this.world.playBlockAction(this.position, this.getBlock().getBlock(), 1, this.viewingCount);
             if (this.viewingCount <= 0) {
-                this.world.playSound((EntityHuman) null, this.position, SoundEffects.BLOCK_SHULKER_BOX_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+                this.world.playSound(null, this.position, SoundEffects.BLOCK_SHULKER_BOX_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
             }
         }
 

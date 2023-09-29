@@ -30,7 +30,7 @@ public abstract class BlockFireAbstract extends Block {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return a((IBlockAccess) blockactioncontext.getWorld(), blockactioncontext.getClickPosition());
+        return a(blockactioncontext.getWorld(), blockactioncontext.getClickPosition());
     }
 
     public static IBlockData a(IBlockAccess iblockaccess, BlockPosition blockposition) {
@@ -76,10 +76,10 @@ public abstract class BlockFireAbstract extends Block {
         // Paper end
         if (!iblockdata1.a(iblockdata.getBlock())) {
             if (a(world)) {
-                Optional<BlockPortalShape> optional = BlockPortalShape.a((GeneratorAccess) world, blockposition, EnumDirection.EnumAxis.X);
+                Optional<BlockPortalShape> optional = BlockPortalShape.a(world, blockposition, EnumDirection.EnumAxis.X);
 
                 if (optional.isPresent()) {
-                    ((BlockPortalShape) optional.get()).createPortal(itemActionContext); // Paper - pass ItemActionContext param
+                    optional.get().createPortal(itemActionContext); // Paper - pass ItemActionContext param
                     return;
                 }
             }
@@ -98,7 +98,7 @@ public abstract class BlockFireAbstract extends Block {
     @Override
     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
         if (!world.s_()) {
-            world.a((EntityHuman) null, 1009, blockposition, 0);
+            world.a(null, 1009, blockposition, 0);
         }
 
     }
@@ -106,7 +106,7 @@ public abstract class BlockFireAbstract extends Block {
     public static boolean a(World world, BlockPosition blockposition, EnumDirection enumdirection) {
         IBlockData iblockdata = world.getType(blockposition);
 
-        return !iblockdata.isAir() ? false : a((IBlockAccess) world, blockposition).canPlace(world, blockposition) || b(world, blockposition, enumdirection);
+        return !iblockdata.isAir() ? false : a(world, blockposition).canPlace(world, blockposition) || b(world, blockposition, enumdirection);
     }
 
     private static boolean b(World world, BlockPosition blockposition, EnumDirection enumdirection) {
@@ -132,7 +132,7 @@ public abstract class BlockFireAbstract extends Block {
             } else {
                 EnumDirection.EnumAxis enumdirection_enumaxis = enumdirection.n().d() ? enumdirection.h().n() : EnumDirection.EnumDirectionLimit.HORIZONTAL.b(world.random);
 
-                return BlockPortalShape.a((GeneratorAccess) world, blockposition, enumdirection_enumaxis).isPresent();
+                return BlockPortalShape.a(world, blockposition, enumdirection_enumaxis).isPresent();
             }
         }
     }

@@ -51,7 +51,7 @@ public class Main {
             boolean flag5 = flag || optionset.has(optionspec5);
             DebugReportGenerator debugreportgenerator = a(path, (Collection) optionset.valuesOf(optionspec8).stream().map((s) -> {
                 return Paths.get(s);
-            }).collect(Collectors.toList()), flag1, flag2, flag3, flag4, flag5);
+            }).toList(), flag1, flag2, flag3, flag4, flag5);
 
             debugreportgenerator.c();
         } else {
@@ -63,7 +63,7 @@ public class Main {
         DebugReportGenerator debugreportgenerator = new DebugReportGenerator(path, collection);
 
         if (flag || flag1) {
-            debugreportgenerator.a((new jp(debugreportgenerator)).a((jp.a) (new jq())));
+            debugreportgenerator.a((new jp(debugreportgenerator)).a(new jq()));
         }
 
         if (flag) {

@@ -158,7 +158,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
         return EntityMonster.eR().a(GenericAttributes.MAX_HEALTH, 16.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.3499999940395355D).a(GenericAttributes.ATTACK_DAMAGE, 5.0D);
     }
 
-    public static boolean b(EntityTypes<EntityPiglin> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
+    public static boolean b_piglin(EntityTypes<EntityPiglin> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         return !generatoraccess.getType(blockposition.down()).a(Blocks.NETHER_WART_BLOCK);
     }
 
@@ -209,7 +209,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
 
     @Override
     protected BehaviorController.b<EntityPiglin> cK() {
-        return BehaviorController.a((Collection) EntityPiglin.bo, (Collection) EntityPiglin.d);
+        return BehaviorController.a(EntityPiglin.bo, (Collection) EntityPiglin.d);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
 
     @Override
     public boolean isBaby() {
-        return (Boolean) this.getDataWatcher().get(EntityPiglin.bp);
+        return this.getDataWatcher().get(EntityPiglin.bp);
     }
 
     private void v(boolean flag) {
@@ -278,7 +278,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     @Override
     protected void mobTick() {
         if (getPurpurRider() == null) // Purpur - only use brain if no rider
-        this.getBehaviorController().a((WorldServer) this.world, (EntityPiglin) this); // CraftBukkit - decompile error
+        this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error
         PiglinAI.b(this);
         super.mobTick();
     }
@@ -300,7 +300,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     }
 
     private boolean eW() {
-        return (Boolean) this.datawatcher.get(EntityPiglin.bq);
+        return this.datawatcher.get(EntityPiglin.bq);
     }
 
     @Override
@@ -318,7 +318,7 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     }
 
     public boolean eU() {
-        return (Boolean) this.datawatcher.get(EntityPiglin.br);
+        return this.datawatcher.get(EntityPiglin.br);
     }
 
     public void u(boolean flag) {
@@ -411,12 +411,12 @@ public class EntityPiglin extends EntityPiglinAbstract implements ICrossbow {
     private Entity b(Entity entity, int i) {
         List<Entity> list = entity.getPassengers();
 
-        return i != 1 && !list.isEmpty() ? this.b((Entity) list.get(0), i - 1) : entity;
+        return i != 1 && !list.isEmpty() ? this.b(list.get(0), i - 1) : entity;
     }
 
     @Override
     protected SoundEffect getSoundAmbient() {
-        return this.world.isClientSide ? null : (SoundEffect) PiglinAI.d(this).orElse(null); // CraftBukkit - Decompile error
+        return this.world.isClientSide ? null : PiglinAI.d(this).orElse(null); // CraftBukkit - Decompile error
     }
 
     @Override

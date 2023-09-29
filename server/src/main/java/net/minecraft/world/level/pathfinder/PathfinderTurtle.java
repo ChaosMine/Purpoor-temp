@@ -159,7 +159,7 @@ public class PathfinderTurtle extends PathfinderNormal {
                 }
 
                 if (pathtype == PathType.OPEN) {
-                    AxisAlignedBB axisalignedbb = new AxisAlignedBB((double) i - d2 + 0.5D, (double) j + 0.001D, (double) k - d2 + 0.5D, (double) i + d2 + 0.5D, (double) ((float) j + this.b.getHeight()), (double) k + d2 + 0.5D);
+                    AxisAlignedBB axisalignedbb = new AxisAlignedBB((double) i - d2 + 0.5D, (double) j + 0.001D, (double) k - d2 + 0.5D, (double) i + d2 + 0.5D, (float) j + this.b.getHeight(), (double) k + d2 + 0.5D);
 
                     if (!this.b.world.getCubes(this.b, axisalignedbb)) {
                         return null;
@@ -262,7 +262,7 @@ public class PathfinderTurtle extends PathfinderNormal {
                     pathtype = PathType.OPEN;
                 }
 
-                if (pathtype2 == PathType.DAMAGE_FIRE || iblockdata.a(Blocks.MAGMA_BLOCK) || iblockdata.a((Tag) TagsBlock.CAMPFIRES)) {
+                if (pathtype2 == PathType.DAMAGE_FIRE || iblockdata.a(Blocks.MAGMA_BLOCK) || iblockdata.a(TagsBlock.CAMPFIRES)) {
                     pathtype = PathType.DAMAGE_FIRE;
                 }
 

@@ -170,7 +170,7 @@ public class EntityEvoker extends EntityIllagerWizard {
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    EntityEvoker.this.a((EntitySheep) list.get(EntityEvoker.this.random.nextInt(list.size())));
+                    EntityEvoker.this.a(list.get(EntityEvoker.this.random.nextInt(list.size())));
                     return true;
                 }
             }
@@ -260,11 +260,11 @@ public class EntityEvoker extends EntityIllagerWizard {
 
             for (int i = 0; i < 3; ++i) {
                 BlockPosition blockposition = EntityEvoker.this.getChunkCoordinates().b(-2 + EntityEvoker.this.random.nextInt(5), 1, -2 + EntityEvoker.this.random.nextInt(5));
-                EntityVex entityvex = (EntityVex) EntityTypes.VEX.a(EntityEvoker.this.world);
+                EntityVex entityvex = EntityTypes.VEX.a(EntityEvoker.this.world);
 
                 entityvex.setPositionRotation(blockposition, 0.0F, 0.0F);
-                entityvex.prepare(worldserver, EntityEvoker.this.world.getDamageScaler(blockposition), EnumMobSpawn.MOB_SUMMONED, (GroupDataEntity) null, (NBTTagCompound) null);
-                entityvex.a((EntityInsentient) EntityEvoker.this);
+                entityvex.prepare(worldserver, EntityEvoker.this.world.getDamageScaler(blockposition), EnumMobSpawn.MOB_SUMMONED, null, null);
+                entityvex.a(EntityEvoker.this);
                 entityvex.g(blockposition);
                 entityvex.a(20 * (30 + EntityEvoker.this.random.nextInt(90)));
                 worldserver.addAllEntities(entityvex);
@@ -308,7 +308,7 @@ public class EntityEvoker extends EntityIllagerWizard {
             float f = (float) MathHelper.d(entityliving.locZ() - EntityEvoker.this.locZ(), entityliving.locX() - EntityEvoker.this.locX());
             int i;
 
-            if (EntityEvoker.this.h((Entity) entityliving) < 9.0D) {
+            if (EntityEvoker.this.h(entityliving) < 9.0D) {
                 float f1;
 
                 for (i = 0; i < 5; ++i) {

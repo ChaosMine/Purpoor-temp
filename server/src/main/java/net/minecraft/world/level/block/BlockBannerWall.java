@@ -25,7 +25,7 @@ public class BlockBannerWall extends BlockBannerAbstract {
 
     public BlockBannerWall(EnumColor enumcolor, BlockBase.Info blockbase_info) {
         super(enumcolor, blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBannerWall.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockBannerWall.a, EnumDirection.NORTH));
     }
 
     @Override
@@ -35,17 +35,17 @@ public class BlockBannerWall extends BlockBannerAbstract {
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        return iworldreader.getType(blockposition.shift(((EnumDirection) iblockdata.get(BlockBannerWall.a)).opposite())).getMaterial().isBuildable();
+        return iworldreader.getType(blockposition.shift(iblockdata.get(BlockBannerWall.a).opposite())).getMaterial().isBuildable();
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        return enumdirection == ((EnumDirection) iblockdata.get(BlockBannerWall.a)).opposite() && !iblockdata.canPlace(generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
+        return enumdirection == iblockdata.get(BlockBannerWall.a).opposite() && !iblockdata.canPlace(generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) BlockBannerWall.b.get(iblockdata.get(BlockBannerWall.a));
+        return BlockBannerWall.b.get(iblockdata.get(BlockBannerWall.a));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BlockBannerWall extends BlockBannerAbstract {
             if (enumdirection.n().d()) {
                 EnumDirection enumdirection1 = enumdirection.opposite();
 
-                iblockdata = (IBlockData) iblockdata.set(BlockBannerWall.a, enumdirection1);
+                iblockdata = iblockdata.set(BlockBannerWall.a, enumdirection1);
                 if (iblockdata.canPlace(world, blockposition)) {
                     return iblockdata;
                 }
@@ -75,12 +75,12 @@ public class BlockBannerWall extends BlockBannerAbstract {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockBannerWall.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockBannerWall.a)));
+        return iblockdata.set(BlockBannerWall.a, enumblockrotation.a(iblockdata.get(BlockBannerWall.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockBannerWall.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockBannerWall.a)));
     }
 
     @Override

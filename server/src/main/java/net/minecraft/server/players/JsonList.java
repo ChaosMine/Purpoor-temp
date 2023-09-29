@@ -67,7 +67,7 @@ public abstract class JsonList<K, V extends JsonListEntry<K>> {
         // Paper start
         // this.g();
         // return (V) this.d.get(this.a(k0)); // CraftBukkit - fix decompile error
-        return (V) this.getBackingMap().computeIfPresent(this.getMappingKey(k0), (k, v) -> {
+        return this.getBackingMap().computeIfPresent(this.getMappingKey(k0), (k, v) -> {
             return v.hasExpired() ? null : v;
         });
         // Paper end
@@ -89,7 +89,7 @@ public abstract class JsonList<K, V extends JsonListEntry<K>> {
     }
 
     public String[] getEntries() {
-        return (String[]) this.d.keySet().toArray(new String[this.d.size()]);
+        return this.d.keySet().toArray(new String[this.d.size()]);
     }
 
     // CraftBukkit start
@@ -151,7 +151,7 @@ public abstract class JsonList<K, V extends JsonListEntry<K>> {
             JsonObject jsonobject = new JsonObject();
 
             jsonlistentry.getClass();
-            return (JsonObject) SystemUtils.a(jsonobject, jsonlistentry::a); // CraftBukkit - decompile error
+            return SystemUtils.a(jsonobject, jsonlistentry::a); // CraftBukkit - decompile error
         }).forEach(jsonarray::add);
         BufferedWriter bufferedwriter = Files.newWriter(this.c, StandardCharsets.UTF_8);
         Throwable throwable = null;
@@ -184,7 +184,7 @@ public abstract class JsonList<K, V extends JsonListEntry<K>> {
             Throwable throwable = null;
 
             try {
-                JsonArray jsonarray = (JsonArray) JsonList.b.fromJson(bufferedreader, JsonArray.class);
+                JsonArray jsonarray = JsonList.b.fromJson(bufferedreader, JsonArray.class);
                 com.google.common.base.Preconditions.checkState(jsonarray != null, "The file \"" + this.c.getName() + "\" is either empty or corrupt"); // Paper
 
                 this.d.clear();

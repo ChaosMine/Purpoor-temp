@@ -13,7 +13,7 @@ public class ItemElytra extends Item implements ItemWearable {
 
     public ItemElytra(Item.Info item_info) {
         super(item_info);
-        BlockDispenser.a((IMaterial) this, ItemArmor.a);
+        BlockDispenser.a(this, ItemArmor.a);
     }
 
     public static boolean d(ItemStack itemstack) {

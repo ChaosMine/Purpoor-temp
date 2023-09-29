@@ -14,7 +14,7 @@ public class TrunkPlacers<P extends TrunkPlacer> {
     private final Codec<P> g;
 
     private static <P extends TrunkPlacer> TrunkPlacers<P> a(String s, Codec<P> codec) {
-        return (TrunkPlacers) IRegistry.a(IRegistry.TRUNK_PLACER_TYPE, s, (Object) (new TrunkPlacers<>(codec)));
+        return IRegistry.a(IRegistry.TRUNK_PLACER_TYPE, s, new TrunkPlacers<>(codec));
     }
 
     private TrunkPlacers(Codec<P> codec) {

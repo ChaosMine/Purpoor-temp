@@ -45,7 +45,7 @@ public class TileEntityEnderChest extends TileEntity { // Paper - Remove ITickab
             double d1 = (double) i + 0.5D;
 
             d0 = (double) k + 0.5D;
-            this.world.playSound((EntityHuman) null, d1, (double) j + 0.5D, d0, SoundEffects.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+            this.world.playSound(null, d1, (double) j + 0.5D, d0, SoundEffects.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
         }
         // Paper start
     }
@@ -79,7 +79,7 @@ public class TileEntityEnderChest extends TileEntity { // Paper - Remove ITickab
                 double d2 = (double) k + 0.5D;
 
             MCUtil.scheduleTask(10, () -> {
-                this.world.playSound((EntityHuman) null, d0, (double) j + 0.5D, d2, SoundEffects.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+                this.world.playSound(null, d0, (double) j + 0.5D, d2, SoundEffects.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
             }, "Chest Sounds");
 
             if (this.a < 0.0F) {

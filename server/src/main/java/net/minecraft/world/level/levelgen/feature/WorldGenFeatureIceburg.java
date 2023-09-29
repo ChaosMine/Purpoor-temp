@@ -20,7 +20,12 @@ public class WorldGenFeatureIceburg extends WorldGenerator<WorldGenFeatureLakeCo
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldgenfeaturelakeconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldgenfeaturelakeconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturelakeconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldgenfeaturelakeconfiguration) {
         blockposition = new BlockPosition(blockposition.getX(), chunkgenerator.getSeaLevel(), blockposition.getZ());
         boolean flag = random.nextDouble() > 0.7D;
         IBlockData iblockdata = worldgenfeaturelakeconfiguration.b;
@@ -60,7 +65,7 @@ public class WorldGenFeatureIceburg extends WorldGenerator<WorldGenFeatureLakeCo
         for (i2 = -j1; i2 < j1; ++i2) {
             for (j2 = -j1; j2 < j1; ++j2) {
                 for (l1 = -1; l1 > -l; --l1) {
-                    k1 = flag1 ? MathHelper.f((float) j1 * (1.0F - (float) Math.pow((double) l1, 2.0D) / ((float) l * 8.0F))) : j1;
+                    k1 = flag1 ? MathHelper.f((float) j1 * (1.0F - (float) Math.pow(l1, 2.0D) / ((float) l * 8.0F))) : j1;
                     int k2 = this.b(random, -l1, l, i1);
 
                     if (i2 < k2) {
@@ -194,7 +199,7 @@ public class WorldGenFeatureIceburg extends WorldGenerator<WorldGenFeatureLakeCo
     private double a(int i, int j, BlockPosition blockposition, int k, Random random) {
         float f = 10.0F * MathHelper.a(random.nextFloat(), 0.2F, 0.8F) / (float) k;
 
-        return (double) f + Math.pow((double) (i - blockposition.getX()), 2.0D) + Math.pow((double) (j - blockposition.getZ()), 2.0D) - Math.pow((double) k, 2.0D);
+        return (double) f + Math.pow(i - blockposition.getX(), 2.0D) + Math.pow(j - blockposition.getZ(), 2.0D) - Math.pow(k, 2.0D);
     }
 
     private double a(int i, int j, BlockPosition blockposition, int k, int l, double d0) {
@@ -203,7 +208,7 @@ public class WorldGenFeatureIceburg extends WorldGenerator<WorldGenFeatureLakeCo
 
     private int a(Random random, int i, int j, int k) {
         float f = 3.5F - random.nextFloat();
-        float f1 = (1.0F - (float) Math.pow((double) i, 2.0D) / ((float) j * f)) * (float) k;
+        float f1 = (1.0F - (float) Math.pow(i, 2.0D) / ((float) j * f)) * (float) k;
 
         if (j > 15 + random.nextInt(5)) {
             int l = i < 3 + random.nextInt(6) ? i / 2 : i;
@@ -216,7 +221,7 @@ public class WorldGenFeatureIceburg extends WorldGenerator<WorldGenFeatureLakeCo
 
     private int b(int i, int j, int k) {
         float f = 1.0F;
-        float f1 = (1.0F - (float) Math.pow((double) i, 2.0D) / ((float) j * 1.0F)) * (float) k;
+        float f1 = (1.0F - (float) Math.pow(i, 2.0D) / ((float) j * 1.0F)) * (float) k;
 
         return MathHelper.f(f1 / 2.0F);
     }

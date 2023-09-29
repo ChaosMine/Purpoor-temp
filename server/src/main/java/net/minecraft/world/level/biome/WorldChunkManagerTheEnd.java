@@ -48,11 +48,11 @@ public class WorldChunkManagerTheEnd extends WorldChunkManager {
     // Paper end
 
     public WorldChunkManagerTheEnd(IRegistry<BiomeBase> iregistry, long i) {
-        this(iregistry, i, (BiomeBase) iregistry.d(Biomes.THE_END), (BiomeBase) iregistry.d(Biomes.END_HIGHLANDS), (BiomeBase) iregistry.d(Biomes.END_MIDLANDS), (BiomeBase) iregistry.d(Biomes.SMALL_END_ISLANDS), (BiomeBase) iregistry.d(Biomes.END_BARRENS));
+        this(iregistry, i, iregistry.d(Biomes.THE_END), iregistry.d(Biomes.END_HIGHLANDS), iregistry.d(Biomes.END_MIDLANDS), iregistry.d(Biomes.SMALL_END_ISLANDS), iregistry.d(Biomes.END_BARRENS));
     }
 
     private WorldChunkManagerTheEnd(IRegistry<BiomeBase> iregistry, long i, BiomeBase biomebase, BiomeBase biomebase1, BiomeBase biomebase2, BiomeBase biomebase3, BiomeBase biomebase4) {
-        super((List) ImmutableList.of(biomebase, biomebase1, biomebase2, biomebase3, biomebase4));
+        super(ImmutableList.of(biomebase, biomebase1, biomebase2, biomebase3, biomebase4));
         this.g = iregistry;
         this.h = i;
         this.i = biomebase;
@@ -103,8 +103,8 @@ public class WorldChunkManagerTheEnd extends WorldChunkManager {
         NoiseCache cache = noiseCache.get().computeIfAbsent(noisegenerator3handler, m -> new NoiseCache()); // Paper
         for (int k1 = -12; k1 <= 12; ++k1) {
             for (int l1 = -12; l1 <= 12; ++l1) {
-                long i2 = (long) (k + k1);
-                long j2 = (long) (l + l1);
+                long i2 = k + k1;
+                long j2 = l + l1;
 
                 // Paper start - Significantly improve end generation performance by using a noise cache
                 long key = ChunkCoordIntPair.pair((int) i2, (int) j2);

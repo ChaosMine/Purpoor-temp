@@ -58,7 +58,7 @@ public abstract class PathfinderGoalTarget extends PathfinderGoal {
             } else {
                 double d0 = this.k();
 
-                if (this.e.h((Entity) entityliving) > d0 * d0) {
+                if (this.e.h(entityliving) > d0 * d0) {
                     return false;
                 } else {
                     if (this.f) {
@@ -93,7 +93,7 @@ public abstract class PathfinderGoalTarget extends PathfinderGoal {
 
     @Override
     public void d() {
-        this.e.setGoalTarget((EntityLiving) null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
+        this.e.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
         this.g = null;
     }
 
@@ -125,7 +125,7 @@ public abstract class PathfinderGoalTarget extends PathfinderGoal {
 
     private boolean a(EntityLiving entityliving) {
         this.c = 10 + this.e.getRandom().nextInt(5);
-        PathEntity pathentity = this.e.getNavigation().a((Entity) entityliving, 0);
+        PathEntity pathentity = this.e.getNavigation().a(entityliving, 0);
 
         if (pathentity == null) {
             return false;

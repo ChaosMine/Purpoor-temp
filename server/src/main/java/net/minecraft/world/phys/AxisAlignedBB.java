@@ -24,8 +24,8 @@ public class AxisAlignedBB {
     }
 
     public static AxisAlignedBB getBoxForChunk(int chunkX, int chunkZ) {
-        double x = (double)(chunkX << 4);
-        double z = (double)(chunkZ << 4);
+        double x = chunkX << 4;
+        double z = chunkZ << 4;
         // use a bounding box bigger than the chunk to prevent entities from entering it on move
         return new AxisAlignedBB(x - 3*net.minecraft.server.MCUtil.COLLISION_EPSILON, Double.NEGATIVE_INFINITY, z - 3*net.minecraft.server.MCUtil.COLLISION_EPSILON, x + (16.0 + 3*net.minecraft.server.MCUtil.COLLISION_EPSILON), Double.POSITIVE_INFINITY, z + (16.0 + 3*net.minecraft.server.MCUtil.COLLISION_EPSILON), false);
     }
@@ -179,11 +179,11 @@ public class AxisAlignedBB {
     }
 
     public AxisAlignedBB(BlockPosition blockposition) {
-        this((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), (double) (blockposition.getX() + 1), (double) (blockposition.getY() + 1), (double) (blockposition.getZ() + 1));
+        this(blockposition.getX(), blockposition.getY(), blockposition.getZ(), blockposition.getX() + 1, blockposition.getY() + 1, blockposition.getZ() + 1);
     }
 
     public AxisAlignedBB(BlockPosition blockposition, BlockPosition blockposition1) {
-        this((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), (double) blockposition1.getX(), (double) blockposition1.getY(), (double) blockposition1.getZ());
+        this(blockposition.getX(), blockposition.getY(), blockposition.getZ(), blockposition1.getX(), blockposition1.getY(), blockposition1.getZ());
     }
 
     public AxisAlignedBB(Vec3D vec3d, Vec3D vec3d1) {
@@ -191,7 +191,7 @@ public class AxisAlignedBB {
     }
 
     public static AxisAlignedBB a(StructureBoundingBox structureboundingbox) {
-        return new AxisAlignedBB((double) structureboundingbox.a, (double) structureboundingbox.b, (double) structureboundingbox.c, (double) (structureboundingbox.d + 1), (double) (structureboundingbox.e + 1), (double) (structureboundingbox.f + 1));
+        return new AxisAlignedBB(structureboundingbox.a, structureboundingbox.b, structureboundingbox.c, structureboundingbox.d + 1, structureboundingbox.e + 1, structureboundingbox.f + 1);
     }
 
     public static AxisAlignedBB a(Vec3D vec3d) {
@@ -406,7 +406,7 @@ public class AxisAlignedBB {
         double d0 = vec3d1.x - vec3d.x;
         double d1 = vec3d1.y - vec3d.y;
         double d2 = vec3d1.z - vec3d.z;
-        EnumDirection enumdirection = a(this, vec3d, adouble, (EnumDirection) null, d0, d1, d2);
+        EnumDirection enumdirection = a(this, vec3d, adouble, null, d0, d1, d2);
 
         if (enumdirection == null) {
             return Optional.empty();

@@ -56,7 +56,7 @@ public class LootItemConditionInverted implements LootItemCondition {
 
         @Override
         public LootItemConditionInverted a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
-            LootItemCondition lootitemcondition = (LootItemCondition) ChatDeserializer.a(jsonobject, "term", jsondeserializationcontext, LootItemCondition.class);
+            LootItemCondition lootitemcondition = ChatDeserializer.a(jsonobject, "term", jsondeserializationcontext, LootItemCondition.class);
 
             return new LootItemConditionInverted(lootitemcondition);
         }

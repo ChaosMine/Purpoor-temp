@@ -6,11 +6,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.List;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.level.IMaterial;
 
 public class CriterionTriggerInventoryChanged extends CriterionTriggerAbstract<CriterionTriggerInventoryChanged.a> {
@@ -25,7 +23,7 @@ public class CriterionTriggerInventoryChanged extends CriterionTriggerAbstract<C
     }
 
     @Override
-    public CriterionTriggerInventoryChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerInventoryChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         JsonObject jsonobject1 = ChatDeserializer.a(jsonobject, "slots", new JsonObject());
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject1.get("occupied"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1 = CriterionConditionValue.IntegerRange.a(jsonobject1.get("full"));
@@ -69,7 +67,7 @@ public class CriterionTriggerInventoryChanged extends CriterionTriggerAbstract<C
         private final CriterionConditionValue.IntegerRange c;
         private final CriterionConditionItem[] d;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange2, CriterionConditionItem[] acriterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange2, CriterionConditionItem[] acriterionconditionitem) {
             super(CriterionTriggerInventoryChanged.a, criterionconditionentity_b);
             this.a = criterionconditionvalue_integerrange;
             this.b = criterionconditionvalue_integerrange1;
@@ -78,14 +76,14 @@ public class CriterionTriggerInventoryChanged extends CriterionTriggerAbstract<C
         }
 
         public static CriterionTriggerInventoryChanged.a a(CriterionConditionItem... acriterionconditionitem) {
-            return new CriterionTriggerInventoryChanged.a(CriterionConditionEntity.b.a, CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, acriterionconditionitem);
+            return new CriterionTriggerInventoryChanged.a(CriterionConditionEntity.b_.a, CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, acriterionconditionitem);
         }
 
         public static CriterionTriggerInventoryChanged.a a(IMaterial... aimaterial) {
             CriterionConditionItem[] acriterionconditionitem = new CriterionConditionItem[aimaterial.length];
 
             for (int i = 0; i < aimaterial.length; ++i) {
-                acriterionconditionitem[i] = new CriterionConditionItem((Tag) null, aimaterial[i].getItem(), CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionEnchantments.b, CriterionConditionEnchantments.b, (PotionRegistry) null, CriterionConditionNBT.a);
+                acriterionconditionitem[i] = new CriterionConditionItem(null, aimaterial[i].getItem(), CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionEnchantments.b, CriterionConditionEnchantments.b, null, CriterionConditionNBT.a);
             }
 
             return a(acriterionconditionitem);

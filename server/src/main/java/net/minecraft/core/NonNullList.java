@@ -19,10 +19,9 @@ public class NonNullList<E> extends AbstractList<E> {
 
     public static <E> NonNullList<E> a(int i, E e0) {
         Validate.notNull(e0);
-        Object[] aobject = new Object[i];
-
+        E[] aobject = (E[]) new Object[i];
         Arrays.fill(aobject, e0);
-        return new NonNullList<>(Arrays.asList(aobject), e0);
+        return new NonNullList<E>(Arrays.asList(aobject), e0);
     }
 
     @SafeVarargs
@@ -31,7 +30,7 @@ public class NonNullList<E> extends AbstractList<E> {
     }
 
     protected NonNullList() {
-        this(Lists.newArrayList(), (Object) null);
+        this(Lists.newArrayList(), null);
     }
 
     protected NonNullList(List<E> list, @Nullable E e0) {

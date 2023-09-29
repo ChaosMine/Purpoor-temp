@@ -32,7 +32,7 @@ public class LootPredicateManager extends ResourceDataJson {
 
     @Nullable
     public LootItemCondition a(MinecraftKey minecraftkey) {
-        return (LootItemCondition) this.c.get(minecraftkey);
+        return this.c.get(minecraftkey);
     }
 
     protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
@@ -41,11 +41,11 @@ public class LootPredicateManager extends ResourceDataJson {
         map.forEach((minecraftkey, jsonelement) -> {
             try {
                 if (jsonelement.isJsonArray()) {
-                    LootItemCondition[] alootitemcondition = (LootItemCondition[]) LootPredicateManager.b.fromJson(jsonelement, LootItemCondition[].class);
+                    LootItemCondition[] alootitemcondition = LootPredicateManager.b.fromJson(jsonelement, LootItemCondition[].class);
 
                     builder.put(minecraftkey, new LootPredicateManager.a(alootitemcondition));
                 } else {
-                    LootItemCondition lootitemcondition = (LootItemCondition) LootPredicateManager.b.fromJson(jsonelement, LootItemCondition.class);
+                    LootItemCondition lootitemcondition = LootPredicateManager.b.fromJson(jsonelement, LootItemCondition.class);
 
                     builder.put(minecraftkey, lootitemcondition);
                 }

@@ -50,7 +50,7 @@ public class PathfinderGoalWaterJump extends PathfinderGoalWaterJumpAbstract {
     private boolean a(BlockPosition blockposition, int i, int j, int k) {
         BlockPosition blockposition1 = blockposition.b(i * k, 0, j * k);
 
-        return this.b.world.getFluid(blockposition1).a((Tag) TagsFluid.WATER) && !this.b.world.getType(blockposition1).getMaterial().isSolid();
+        return this.b.world.getFluid(blockposition1).a(TagsFluid.WATER) && !this.b.world.getType(blockposition1).getMaterial().isSolid();
     }
 
     private boolean b(BlockPosition blockposition, int i, int j, int k) {
@@ -89,7 +89,7 @@ public class PathfinderGoalWaterJump extends PathfinderGoalWaterJumpAbstract {
         if (!flag) {
             Fluid fluid = this.b.world.getFluid(this.b.getChunkCoordinates());
 
-            this.d = fluid.a((Tag) TagsFluid.WATER);
+            this.d = fluid.a(TagsFluid.WATER);
         }
 
         if (this.d && !flag) {

@@ -37,9 +37,9 @@ public class BlockMonsterEggs extends Block {
     }
 
     private void a(WorldServer worldserver, BlockPosition blockposition) {
-        EntitySilverfish entitysilverfish = (EntitySilverfish) EntityTypes.SILVERFISH.a((World) worldserver);
+        EntitySilverfish entitysilverfish = EntityTypes.SILVERFISH.a(worldserver);
 
-        entitysilverfish.setPositionRotation((double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, 0.0F, 0.0F);
+        entitysilverfish.setPositionRotation((double) blockposition.getX() + 0.5D, blockposition.getY(), (double) blockposition.getZ() + 0.5D, 0.0F, 0.0F);
         worldserver.addEntity(entitysilverfish, SpawnReason.SILVERFISH_BLOCK); // CraftBukkit - add SpawnReason
         entitysilverfish.doSpawnEffect();
     }
@@ -62,6 +62,6 @@ public class BlockMonsterEggs extends Block {
     }
 
     public static IBlockData c(Block block) {
-        return ((Block) BlockMonsterEggs.b.get(block)).getBlockData();
+        return BlockMonsterEggs.b.get(block).getBlockData();
     }
 }

@@ -4,8 +4,8 @@ version: 1.0.0
 website: https://www.bukkit.org
 author: The Bukkit Team
 description: >
-             Miscellaneous administrative commands for Bukkit.
-             This plugin is one of the default plugins shipped with Bukkit.
+  Miscellaneous administrative commands for Bukkit.
+  This plugin is one of the default plugins shipped with Bukkit.
 # commands: snipped
 
 permissions:
@@ -56,9 +56,9 @@ permissions:
           scrapbukkit.clear.other:
             description: Allows the player to clear other players inventory
 
-      scrapbukkit.some.standard.perm: {}
+      scrapbukkit.some.standard.perm: { }
       scrapbukkit.some.other.perm: true
       scrapbukkit.some.bad.perm: false
   # This is defined here individually, as simply giving it an association will not cause it to exist at runtime
-  scrapbukkit.some.bad.perm: {}
-  scrapbukkit.some.other.perm: {}
+  scrapbukkit.some.bad.perm: { }
+  scrapbukkit.some.other.perm: { }

@@ -37,7 +37,7 @@ public class MobEffect implements Comparable<MobEffect> {
     }
 
     public MobEffect(MobEffectList mobeffectlist, int i, int j, boolean flag, boolean flag1, boolean flag2) {
-        this(mobeffectlist, i, j, flag, flag1, flag2, (MobEffect) null);
+        this(mobeffectlist, i, j, flag, flag1, flag2, null);
     }
 
     public MobEffect(MobEffectList mobeffectlist, int i, int j, boolean flag, boolean flag1, boolean flag2, @Nullable MobEffect mobeffect) {

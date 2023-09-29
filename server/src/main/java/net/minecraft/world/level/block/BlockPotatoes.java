@@ -17,6 +17,6 @@ public class BlockPotatoes extends BlockCrops {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockPotatoes.a[(Integer) iblockdata.get(this.c())];
+        return BlockPotatoes.a[iblockdata.get(this.c())];
     }
 }

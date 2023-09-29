@@ -2,19 +2,6 @@ package net.minecraft.server;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import javax.annotation.Nullable;
 import net.minecraft.SystemUtils;
 import net.minecraft.data.DebugReportGenerator;
 import net.minecraft.data.DebugReportProvider;
@@ -27,190 +14,172 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+
 public class jp implements DebugReportProvider {
+	@Nullable
+	private static final java.nio.file.Path b = null;
+	private static final Logger LOGGER = LogManager.getLogger();
+	private final DebugReportGenerator d;
+	private final List<jp.a> e = Lists.newArrayList();
 
-    @Nullable
-    private static final Path b = null;
-    private static final Logger LOGGER = LogManager.getLogger();
-    private final DebugReportGenerator d;
-    private final List<jp.a> e = Lists.newArrayList();
+	public jp(DebugReportGenerator var0) {
+		this.d = var0;
+	}
 
-    public jp(DebugReportGenerator debugreportgenerator) {
-        this.d = debugreportgenerator;
-    }
+	public jp a(jp.a var0) {
+		this.e.add(var0);
+		return this;
+	}
 
-    public jp a(jp.a jp_a) {
-        this.e.add(jp_a);
-        return this;
-    }
+	private NBTTagCompound a(String var0, NBTTagCompound var1) {
+		NBTTagCompound var2 = var1;
 
-    private NBTTagCompound a(String s, NBTTagCompound nbttagcompound) {
-        NBTTagCompound nbttagcompound1 = nbttagcompound;
+		for (jp.a var4 : this.e) {
+			var2 = var4.a(var0, var2);
+		}
 
-        jp.a jp_a;
+		return var2;
+	}
 
-        for (Iterator iterator = this.e.iterator(); iterator.hasNext(); nbttagcompound1 = jp_a.a(s, nbttagcompound1)) {
-            jp_a = (jp.a) iterator.next();
-        }
+	@Override
+	public void a(HashCache var0) throws IOException {
+		java.nio.file.Path var1 = this.d.b();
+		List<CompletableFuture<jp.b>> var2 = Lists.newArrayList();
 
-        return nbttagcompound1;
-    }
+		for (java.nio.file.Path var4 : this.d.a()) {
+			try (var st = Files.walk(var4)) {
+				st.filter(var0x -> var0x.toString().endsWith(".snbt"))
+					.forEach(var2x -> var2.add(CompletableFuture.supplyAsync(() -> this.a(var2x, this.a(var4, var2x)), SystemUtils.f())));
+			}
+		}
 
-    @Override
-    public void a(HashCache hashcache) throws IOException {
-        Path path = this.d.b();
-        List<CompletableFuture<jp.b>> list = Lists.newArrayList();
-        Iterator iterator = this.d.a().iterator();
+		SystemUtils.b(var2).join().stream().filter(Objects::nonNull).forEach(var2x -> this.a(var0, var2x, var1));
+	}
 
-        while (iterator.hasNext()) {
-            Path path1 = (Path) iterator.next();
+	@Override
+	public String a() {
+		return "SNBT -> NBT";
+	}
 
-            Files.walk(path1).filter((path2) -> {
-                return path2.toString().endsWith(".snbt");
-            }).forEach((path2) -> {
-                list.add(CompletableFuture.supplyAsync(() -> {
-                    return this.a(path2, this.a(path1, path2));
-                }, SystemUtils.f()));
-            });
-        }
+	private String a(java.nio.file.Path var0, java.nio.file.Path var1) {
+		String var2 = var0.relativize(var1).toString().replaceAll("\\\\", "/");
+		return var2.substring(0, var2.length() - ".snbt".length());
+	}
 
-        ((List) SystemUtils.b((List) list).join()).stream().filter(Objects::nonNull).forEach((jp_b) -> {
-            this.a(hashcache, jp_b, path);
-        });
-    }
+	@Nullable
+	private jp.b a(java.nio.file.Path var0, String var1) {
+		try {
+			BufferedReader var2 = Files.newBufferedReader(var0);
+			Throwable var4 = null;
 
-    @Override
-    public String a() {
-        return "SNBT -> NBT";
-    }
+			jp.b var11;
+			try {
+				String var4x = IOUtils.toString(var2);
+				NBTTagCompound var5 = this.a(var1, MojangsonParser.parse(var4x));
+				ByteArrayOutputStream var6 = new ByteArrayOutputStream();
+				NBTCompressedStreamTools.a(var5, var6);
+				byte[] var7 = var6.toByteArray();
+				String var8 = a.hashBytes(var7).toString();
 
-    private String a(Path path, Path path1) {
-        String s = path.relativize(path1).toString().replaceAll("\\\\", "/");
+				var11 = new jp.b(var1, var7, null, var8);
+			} catch (Throwable var22) {
+				var4 = var22;
+				throw var22;
+			} finally {
+				if (var4 != null) {
+					try {
+						var2.close();
+					} catch (Throwable var21) {
+						var4.addSuppressed(var21);
+					}
+				} else {
+					var2.close();
+				}
+			}
 
-        return s.substring(0, s.length() - ".snbt".length());
-    }
+			return var11;
+		} catch (CommandSyntaxException var24) {
+			LOGGER.error("Couldn't convert {} from SNBT to NBT at {} as it's invalid SNBT", var1, var0, var24);
+		} catch (IOException var25) {
+			LOGGER.error("Couldn't convert {} from SNBT to NBT at {}", var1, var0, var25);
+		}
 
-    @Nullable
-    private jp.b a(Path path, String s) {
-        try {
-            BufferedReader bufferedreader = Files.newBufferedReader(path);
-            Throwable throwable = null;
+		return null;
+	}
 
-            jp.b jp_b;
+	private void a(HashCache var0, jp.b var1, java.nio.file.Path var2) {
+		if (var1.c != null) {
+			java.nio.file.Path var3 = b.resolve(var1.a + ".snbt");
 
-            try {
-                String s1 = IOUtils.toString(bufferedreader);
-                NBTTagCompound nbttagcompound = this.a(s, MojangsonParser.parse(s1));
-                ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+			try {
+				FileUtils.write(var3.toFile(), var1.c, StandardCharsets.UTF_8);
+			} catch (IOException var18) {
+				LOGGER.error("Couldn't write structure SNBT {} at {}", var1.a, var3, var18);
+			}
+		}
 
-                NBTCompressedStreamTools.a(nbttagcompound, (OutputStream) bytearrayoutputstream);
-                byte[] abyte = bytearrayoutputstream.toByteArray();
-                String s2 = jp.a.hashBytes(abyte).toString();
-                String s3;
+		java.nio.file.Path var3 = var2.resolve(var1.a + ".nbt");
 
-                if (jp.b != null) {
-                    s3 = nbttagcompound.a("    ", 0).getString() + "\n";
-                } else {
-                    s3 = null;
-                }
+		try {
+			if (!Objects.equals(var0.a(var3), var1.d) || !Files.exists(var3)) {
+				Files.createDirectories(var3.getParent());
+				OutputStream var4 = Files.newOutputStream(var3);
+				Throwable var6 = null;
 
-                jp_b = new jp.b(s, abyte, s3, s2);
-            } catch (Throwable throwable1) {
-                throwable = throwable1;
-                throw throwable1;
-            } finally {
-                if (bufferedreader != null) {
-                    if (throwable != null) {
-                        try {
-                            bufferedreader.close();
-                        } catch (Throwable throwable2) {
-                            throwable.addSuppressed(throwable2);
-                        }
-                    } else {
-                        bufferedreader.close();
-                    }
-                }
+				try {
+					var4.write(var1.b);
+				} catch (Throwable var17) {
+					var6 = var17;
+					throw var17;
+				} finally {
+					if (var4 != null) {
+						if (var6 != null) {
+							try {
+								var4.close();
+							} catch (Throwable var16) {
+								var6.addSuppressed(var16);
+							}
+						} else {
+							var4.close();
+						}
+					}
+				}
+			}
 
-            }
+			var0.a(var3, var1.d);
+		} catch (IOException var20) {
+			LOGGER.error("Couldn't write structure {} at {}", var1.a, var3, var20);
+		}
+	}
 
-            return jp_b;
-        } catch (CommandSyntaxException commandsyntaxexception) {
-            jp.LOGGER.error("Couldn't convert {} from SNBT to NBT at {} as it's invalid SNBT", s, path, commandsyntaxexception);
-        } catch (IOException ioexception) {
-            jp.LOGGER.error("Couldn't convert {} from SNBT to NBT at {}", s, path, ioexception);
-        }
+	@FunctionalInterface
+	public interface a {
+		NBTTagCompound a(String var1, NBTTagCompound var2);
+	}
 
-        return null;
-    }
+	static class b {
+		private final String a;
+		private final byte[] b;
+		@Nullable
+		private final String c;
+		private final String d;
 
-    private void a(HashCache hashcache, jp.b jp_b, Path path) {
-        Path path1;
-
-        if (jp_b.c != null) {
-            path1 = jp.b.resolve(jp_b.a + ".snbt");
-
-            try {
-                FileUtils.write(path1.toFile(), jp_b.c, StandardCharsets.UTF_8);
-            } catch (IOException ioexception) {
-                jp.LOGGER.error("Couldn't write structure SNBT {} at {}", jp_b.a, path1, ioexception);
-            }
-        }
-
-        path1 = path.resolve(jp_b.a + ".nbt");
-
-        try {
-            if (!Objects.equals(hashcache.a(path1), jp_b.d) || !Files.exists(path1, new LinkOption[0])) {
-                Files.createDirectories(path1.getParent());
-                OutputStream outputstream = Files.newOutputStream(path1);
-                Throwable throwable = null;
-
-                try {
-                    outputstream.write(jp_b.b);
-                } catch (Throwable throwable1) {
-                    throwable = throwable1;
-                    throw throwable1;
-                } finally {
-                    if (outputstream != null) {
-                        if (throwable != null) {
-                            try {
-                                outputstream.close();
-                            } catch (Throwable throwable2) {
-                                throwable.addSuppressed(throwable2);
-                            }
-                        } else {
-                            outputstream.close();
-                        }
-                    }
-
-                }
-            }
-
-            hashcache.a(path1, jp_b.d);
-        } catch (IOException ioexception1) {
-            jp.LOGGER.error("Couldn't write structure {} at {}", jp_b.a, path1, ioexception1);
-        }
-
-    }
-
-    @FunctionalInterface
-    public interface a {
-
-        NBTTagCompound a(String s, NBTTagCompound nbttagcompound);
-    }
-
-    static class b {
-
-        private final String a;
-        private final byte[] b;
-        @Nullable
-        private final String c;
-        private final String d;
-
-        public b(String s, byte[] abyte, @Nullable String s1, String s2) {
-            this.a = s;
-            this.b = abyte;
-            this.c = s1;
-            this.d = s2;
-        }
-    }
+		public b(String var0, byte[] var1, @Nullable String var2, String var3) {
+			this.a = var0;
+			this.b = var1;
+			this.c = var2;
+			this.d = var3;
+		}
+	}
 }

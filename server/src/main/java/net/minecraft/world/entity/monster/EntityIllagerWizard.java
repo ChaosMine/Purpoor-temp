@@ -45,7 +45,7 @@ public abstract class EntityIllagerWizard extends EntityIllagerAbstract {
     }
 
     public boolean eW() {
-        return this.world.isClientSide ? (Byte) this.datawatcher.get(EntityIllagerWizard.bo) > 0 : this.b > 0;
+        return this.world.isClientSide ? this.datawatcher.get(EntityIllagerWizard.bo) > 0 : this.b > 0;
     }
 
     public void setSpell(EntityIllagerWizard.Spell entityillagerwizard_spell) {
@@ -54,7 +54,7 @@ public abstract class EntityIllagerWizard extends EntityIllagerAbstract {
     }
 
     public EntityIllagerWizard.Spell getSpell() {
-        return !this.world.isClientSide ? this.bp : EntityIllagerWizard.Spell.a((Byte) this.datawatcher.get(EntityIllagerWizard.bo));
+        return !this.world.isClientSide ? this.bp : EntityIllagerWizard.Spell.a(this.datawatcher.get(EntityIllagerWizard.bo));
     }
 
     @Override

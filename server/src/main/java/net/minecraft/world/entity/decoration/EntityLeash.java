@@ -145,7 +145,7 @@ public class EntityLeash extends EntityHanging {
 
     @Override
     public boolean survives() {
-        return this.world.getType(this.blockPosition).getBlock().a((Tag) TagsBlock.FENCES);
+        return this.world.getType(this.blockPosition).getBlock().a(TagsBlock.FENCES);
     }
 
     public static EntityLeash a(World world, BlockPosition blockposition) {

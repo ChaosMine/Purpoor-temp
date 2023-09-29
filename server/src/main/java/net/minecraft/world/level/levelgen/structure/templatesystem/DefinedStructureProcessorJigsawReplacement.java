@@ -35,7 +35,7 @@ public class DefinedStructureProcessorJigsawReplacement extends DefinedStructure
                 throw new RuntimeException(commandsyntaxexception);
             }
 
-            return argumentblock.getBlockData().a(Blocks.STRUCTURE_VOID) ? null : new DefinedStructure.BlockInfo(definedstructure_blockinfo1.a, argumentblock.getBlockData(), (NBTTagCompound) null);
+            return argumentblock.getBlockData().a(Blocks.STRUCTURE_VOID) ? null : new DefinedStructure.BlockInfo(definedstructure_blockinfo1.a, argumentblock.getBlockData(), null);
         } else {
             return definedstructure_blockinfo1;
         }

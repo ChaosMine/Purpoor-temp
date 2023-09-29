@@ -15,11 +15,11 @@ public class jt extends jw<EntityTypes<?>> {
 
     @Override
     protected void b() {
-        this.a(TagsEntity.SKELETONS).a((Object[])(EntityTypes.SKELETON, EntityTypes.STRAY, EntityTypes.WITHER_SKELETON));
-        this.a(TagsEntity.RADIERS).a((Object[])(EntityTypes.EVOKER, EntityTypes.PILLAGER, EntityTypes.RAVAGER, EntityTypes.VINDICATOR, EntityTypes.ILLUSIONER, EntityTypes.WITCH));
-        this.a(TagsEntity.BEEHIVE_INHABITORS).a((Object)EntityTypes.BEE);
-        this.a(TagsEntity.ARROWS).a((Object[])(EntityTypes.ARROW, EntityTypes.SPECTRAL_ARROW));
-        this.a(TagsEntity.IMPACT_PROJECTILES).a(TagsEntity.ARROWS).a((Object[])(EntityTypes.SNOWBALL, EntityTypes.FIREBALL, EntityTypes.SMALL_FIREBALL, EntityTypes.EGG, EntityTypes.TRIDENT, EntityTypes.DRAGON_FIREBALL, EntityTypes.WITHER_SKULL));
+        this.a(TagsEntity.SKELETONS).a(EntityTypes.SKELETON, EntityTypes.STRAY, EntityTypes.WITHER_SKELETON);
+        this.a(TagsEntity.RADIERS).a(EntityTypes.EVOKER, EntityTypes.PILLAGER, EntityTypes.RAVAGER, EntityTypes.VINDICATOR, EntityTypes.ILLUSIONER, EntityTypes.WITCH);
+        this.a(TagsEntity.BEEHIVE_INHABITORS).a(EntityTypes.BEE);
+        this.a(TagsEntity.ARROWS).a(EntityTypes.ARROW, EntityTypes.SPECTRAL_ARROW);
+        this.a(TagsEntity.IMPACT_PROJECTILES).a(TagsEntity.ARROWS).a(EntityTypes.SNOWBALL, EntityTypes.FIREBALL, EntityTypes.SMALL_FIREBALL, EntityTypes.EGG, EntityTypes.TRIDENT, EntityTypes.DRAGON_FIREBALL, EntityTypes.WITHER_SKULL);
     }
 
     @Override

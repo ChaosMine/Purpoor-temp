@@ -78,7 +78,7 @@ public class PurpurConfig {
 
     public static void registerCommands() {
         for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Purpoor", entry.getValue());
+            MinecraftServer.SERVER.server.getCommandMap().register(entry.getKey(), "Purpoor", entry.getValue());
         }
     }
 

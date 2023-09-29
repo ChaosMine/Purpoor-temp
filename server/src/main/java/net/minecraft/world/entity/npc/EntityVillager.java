@@ -163,7 +163,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
     @Override
     protected BehaviorController.b<EntityVillager> cK() {
-        return BehaviorController.a((Collection) EntityVillager.bG, (Collection) EntityVillager.bH);
+        return BehaviorController.a(EntityVillager.bG, (Collection) EntityVillager.bH);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         behaviorcontroller.a(Activity.PRE_RAID, Behaviors.g(villagerprofession, 0.5F));
         behaviorcontroller.a(Activity.RAID, Behaviors.h(villagerprofession, 0.5F));
         behaviorcontroller.a(Activity.HIDE, Behaviors.i(villagerprofession, 0.5F));
-        behaviorcontroller.a((Set) ImmutableSet.of(Activity.CORE));
+        behaviorcontroller.a(ImmutableSet.of(Activity.CORE));
         behaviorcontroller.b(Activity.IDLE);
         behaviorcontroller.a(Activity.IDLE);
         behaviorcontroller.a(this.world.getDayTime(), this.world.getTime());
@@ -295,7 +295,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         }
 
         if (this.bv != null && this.world instanceof WorldServer) {
-            ((WorldServer) this.world).a(ReputationEvent.e, (Entity) this.bv, (ReputationHandler) this);
+            ((WorldServer) this.world).a(ReputationEvent.e, this.bv, this);
             this.world.broadcastEntityEffect(this, (byte) 14);
             this.bv = null;
         }
@@ -644,7 +644,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
     @Override
     public VillagerData getVillagerData() {
-        return (VillagerData) this.datawatcher.get(EntityVillager.br);
+        return this.datawatcher.get(EntityVillager.br);
     }
 
     @Override
@@ -668,7 +668,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     @Override
     public void setLastDamager(@Nullable EntityLiving entityliving) {
         if (entityliving != null && this.world instanceof WorldServer) {
-            ((WorldServer) this.world).a(ReputationEvent.c, (Entity) entityliving, (ReputationHandler) this);
+            ((WorldServer) this.world).a(ReputationEvent.c, entityliving, this);
             if (this.isAlive() && entityliving instanceof EntityHuman) {
                 this.world.broadcastEntityEffect(this, (byte) 13);
             }
@@ -723,7 +723,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                 if (worldserver != null) {
                     VillagePlace villageplace = worldserver.y();
                     Optional<VillagePlaceType> optional = villageplace.c(globalpos.getBlockPosition());
-                    BiPredicate<EntityVillager, VillagePlaceType> bipredicate = (BiPredicate) EntityVillager.bq.get(memorymoduletype);
+                    BiPredicate<EntityVillager, VillagePlaceType> bipredicate = EntityVillager.bq.get(memorymoduletype);
 
                     if (optional.isPresent() && bipredicate.test(this, optional.get())) {
                         villageplace.b(globalpos.getBlockPosition());
@@ -750,7 +750,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                 ItemStack itemstack = this.getInventory().getItem(i);
 
                 if (!itemstack.isEmpty()) {
-                    Integer integer = (Integer) EntityVillager.bp.get(itemstack.getItem());
+                    Integer integer = EntityVillager.bp.get(itemstack.getItem());
 
                     if (integer != null) {
                         int j = itemstack.getCount();
@@ -837,7 +837,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
 
         EntityVillager entityvillager = new EntityVillager(EntityTypes.VILLAGER, worldserver, villagertype);
 
-        entityvillager.prepare(worldserver, worldserver.getDamageScaler(entityvillager.getChunkCoordinates()), EnumMobSpawn.BREEDING, (GroupDataEntity) null, (NBTTagCompound) null);
+        entityvillager.prepare(worldserver, worldserver.getDamageScaler(entityvillager.getChunkCoordinates()), EnumMobSpawn.BREEDING, null, null);
         return entityvillager;
     }
 
@@ -845,7 +845,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     public void onLightningStrike(WorldServer worldserver, EntityLightning entitylightning) {
         if (worldserver.getDifficulty() != EnumDifficulty.PEACEFUL) {
             EntityVillager.LOGGER.info("Villager {} was struck by lightning {}.", this, entitylightning);
-            EntityWitch entitywitch = (EntityWitch) EntityTypes.WITCH.a((World) worldserver);
+            EntityWitch entitywitch = EntityTypes.WITCH.a(worldserver);
 
             // Paper start
             if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityZapEvent(this, entitylightning, entitywitch).isCancelled()) {
@@ -854,7 +854,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
             // Paper end
 
             entitywitch.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
-            entitywitch.prepare(worldserver, worldserver.getDamageScaler(entitywitch.getChunkCoordinates()), EnumMobSpawn.CONVERSION, (GroupDataEntity) null, (NBTTagCompound) null);
+            entitywitch.prepare(worldserver, worldserver.getDamageScaler(entitywitch.getChunkCoordinates()), EnumMobSpawn.CONVERSION, null, null);
             entitywitch.setNoAI(this.isNoAI());
             if (this.hasCustomName()) {
                 entitywitch.setCustomName(this.getCustomName());
@@ -931,7 +931,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         InventorySubcontainer inventorysubcontainer = this.getInventory();
 
         return EntityVillager.bp.entrySet().stream().mapToInt((entry) -> {
-            return inventorysubcontainer.a((Item) entry.getKey()) * (Integer) entry.getValue();
+            return inventorysubcontainer.a(entry.getKey()) * entry.getValue();
         }).sum();
     }
 
@@ -941,16 +941,16 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
             return this.getInventory().containsAny(ImmutableSet.of(Items.NETHER_WART));
         }
         // Purpur end
-        return this.getInventory().a((Set) ImmutableSet.of(Items.WHEAT_SEEDS, Items.POTATO, Items.CARROT, Items.BEETROOT_SEEDS));
+        return this.getInventory().a(ImmutableSet.of(Items.WHEAT_SEEDS, Items.POTATO, Items.CARROT, Items.BEETROOT_SEEDS));
     }
 
     @Override
     protected void eW() {
         VillagerData villagerdata = this.getVillagerData();
-        Int2ObjectMap<VillagerTrades.IMerchantRecipeOption[]> int2objectmap = (Int2ObjectMap) VillagerTrades.a.get(villagerdata.getProfession());
+        Int2ObjectMap<VillagerTrades.IMerchantRecipeOption[]> int2objectmap = VillagerTrades.a.get(villagerdata.getProfession());
 
         if (int2objectmap != null && !int2objectmap.isEmpty()) {
-            VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption = (VillagerTrades.IMerchantRecipeOption[]) int2objectmap.get(villagerdata.getLevel());
+            VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption = int2objectmap.get(villagerdata.getLevel());
 
             if (avillagertrades_imerchantrecipeoption != null) {
                 MerchantRecipeList merchantrecipelist = this.getOffers();
@@ -985,9 +985,9 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         if (this.a(i)) {
             AxisAlignedBB axisalignedbb = this.getBoundingBox().grow(10.0D, 10.0D, 10.0D);
             List<EntityVillager> list = worldserver.a(EntityVillager.class, axisalignedbb);
-            List<EntityVillager> list1 = (List) list.stream().filter((entityvillager) -> {
+            List<EntityVillager> list1 = list.stream().filter((entityvillager) -> {
                 return entityvillager.a(i);
-            }).limit(5L).collect(Collectors.toList());
+            }).limit(5L).toList();
 
             if (list1.size() >= j) {
                 EntityIronGolem entityirongolem = this.d(worldserver);
@@ -1009,8 +1009,8 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
         BlockPosition blockposition = this.getChunkCoordinates();
 
         for (int i = 0; i < 10; ++i) {
-            double d0 = (double) (worldserver.random.nextInt(16) - 8);
-            double d1 = (double) (worldserver.random.nextInt(16) - 8);
+            double d0 = worldserver.random.nextInt(16) - 8;
+            double d1 = worldserver.random.nextInt(16) - 8;
             BlockPosition blockposition1 = this.a(blockposition, d0, d1);
 
             if (blockposition1 != null) {
@@ -1029,10 +1029,10 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                     break;
                 }
                 // Paper end
-                EntityIronGolem entityirongolem = (EntityIronGolem) EntityTypes.IRON_GOLEM.createCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition1, EnumMobSpawn.MOB_SUMMONED, false, false);
+                EntityIronGolem entityirongolem = EntityTypes.IRON_GOLEM.createCreature(worldserver, null, null, null, blockposition1, EnumMobSpawn.MOB_SUMMONED, false, false);
 
                 if (entityirongolem != null) {
-                    if (entityirongolem.a((GeneratorAccess) worldserver, EnumMobSpawn.MOB_SUMMONED) && entityirongolem.a((IWorldReader) worldserver)) {
+                    if (entityirongolem.a(worldserver, EnumMobSpawn.MOB_SUMMONED) && entityirongolem.a((IWorldReader) worldserver)) {
                         worldserver.addAllEntities(entityirongolem, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.VILLAGE_DEFENSE); // CraftBukkit
                         return entityirongolem;
                     }
@@ -1115,7 +1115,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     @Override
     protected void M() {
         super.M();
-        PacketDebug.a((EntityLiving) this);
+        PacketDebug.a(this);
     }
 
     @Override
@@ -1135,6 +1135,6 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
     private boolean b(long i) {
         Optional<Long> optional = this.bg.getMemory(MemoryModuleType.LAST_SLEPT);
 
-        return optional.isPresent() ? i - (Long) optional.get() < 24000L : false;
+        return optional.isPresent() ? i - optional.get() < 24000L : false;
     }
 }

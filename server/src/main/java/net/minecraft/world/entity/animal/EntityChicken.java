@@ -157,7 +157,7 @@ public class EntityChicken extends EntityAnimal {
 
     @Override
     public EntityChicken createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityChicken) EntityTypes.CHICKEN.a((World) worldserver);
+        return EntityTypes.CHICKEN.a(worldserver);
     }
 
     @Override

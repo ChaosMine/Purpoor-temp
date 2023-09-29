@@ -35,7 +35,7 @@ public class Containers<T extends Container> {
     private final Containers.Supplier<T> y;
 
     private static <T extends Container> Containers<T> a(String s, Containers.Supplier<T> containers_supplier) {
-        return (Containers) IRegistry.a(IRegistry.MENU, s, (new Containers<>(containers_supplier))); // CraftBukkit - decompile error
+        return IRegistry.a(IRegistry.MENU, s, (new Containers<>(containers_supplier))); // CraftBukkit - decompile error
     }
 
     private Containers(Containers.Supplier<T> containers_supplier) {

@@ -49,7 +49,7 @@ public class ContainerCartography extends Container {
         this.inventory = new InventorySubcontainer(2) {
             @Override
             public void update() {
-                ContainerCartography.this.a((IInventory) this);
+                ContainerCartography.this.a(this);
                 super.update();
             }
 
@@ -63,7 +63,7 @@ public class ContainerCartography extends Container {
         this.resultInventory = new InventoryCraftResult() {
             @Override
             public void update() {
-                ContainerCartography.this.a((IInventory) this);
+                ContainerCartography.this.a(this);
                 super.update();
             }
 
@@ -97,14 +97,14 @@ public class ContainerCartography extends Container {
 
             @Override
             public ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
-                ((Slot) ContainerCartography.this.slots.get(0)).a(1);
-                ((Slot) ContainerCartography.this.slots.get(1)).a(1);
+                ContainerCartography.this.slots.get(0).a(1);
+                ContainerCartography.this.slots.get(1).a(1);
                 itemstack.getItem().b(itemstack, entityhuman.world, entityhuman);
                 containeraccess.a((world, blockposition) -> {
                     long j = world.getTime();
 
                     if (ContainerCartography.this.e != j) {
-                        world.playSound((EntityHuman) null, blockposition, SoundEffects.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, blockposition, SoundEffects.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         ContainerCartography.this.e = j;
                     }
 
@@ -196,7 +196,7 @@ public class ContainerCartography extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

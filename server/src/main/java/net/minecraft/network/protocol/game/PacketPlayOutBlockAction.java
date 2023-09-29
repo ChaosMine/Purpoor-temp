@@ -28,7 +28,7 @@ public class PacketPlayOutBlockAction implements Packet<PacketListenerPlayOut> {
         this.a = packetdataserializer.e();
         this.b = packetdataserializer.readUnsignedByte();
         this.c = packetdataserializer.readUnsignedByte();
-        this.d = (Block) IRegistry.BLOCK.fromId(packetdataserializer.i());
+        this.d = IRegistry.BLOCK.fromId(packetdataserializer.i());
     }
 
     @Override

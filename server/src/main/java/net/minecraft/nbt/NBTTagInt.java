@@ -1,127 +1,124 @@
 package net.minecraft.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 public class NBTTagInt extends NBTNumber {
+	private final int data;	public static final NBTTagType<NBTTagInt> a = new NBTTagType<>() {
+		@Override
+		public NBTTagInt b(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
+			nbtreadlimiter.a(96L);
+			return NBTTagInt.a(datainput.readInt());
+		}
 
-    public static final NBTTagType<NBTTagInt> a = new NBTTagType<NBTTagInt>() {
-        @Override
-        public NBTTagInt b(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) throws IOException {
-            nbtreadlimiter.a(96L);
-            return NBTTagInt.a(datainput.readInt());
-        }
+		@Override
+		public String a() {
+			return "INT";
+		}
 
-        @Override
-        public String a() {
-            return "INT";
-        }
+		@Override
+		public String b() {
+			return "TAG_Int";
+		}
 
-        @Override
-        public String b() {
-            return "TAG_Int";
-        }
+		@Override
+		public boolean c() {
+			return true;
+		}
+	};
+	private NBTTagInt(int i) {
+		this.data = i;
+	}
 
-        @Override
-        public boolean c() {
-            return true;
-        }
-    };
-    private final int data;
+	public static NBTTagInt a(int i) {
+		return i >= -128 && i <= 1024 ? NBTTagInt.a_.a[i + 128] : new NBTTagInt(i);
+	}
 
-    private NBTTagInt(int i) {
-        this.data = i;
-    }
+	@Override
+	public void write(DataOutput dataoutput) throws IOException {
+		dataoutput.writeInt(this.data);
+	}
 
-    public static NBTTagInt a(int i) {
-        return i >= -128 && i <= 1024 ? NBTTagInt.a.a[i + 128] : new NBTTagInt(i);
-    }
+	@Override
+	public byte getTypeId() {
+		return 3;
+	}
 
-    @Override
-    public void write(DataOutput dataoutput) throws IOException {
-        dataoutput.writeInt(this.data);
-    }
+	@Override
+	public NBTTagType<NBTTagInt> b() {
+		return NBTTagInt.a;
+	}
 
-    @Override
-    public byte getTypeId() {
-        return 3;
-    }
+	@Override
+	public String toString() {
+		return String.valueOf(this.data);
+	}
 
-    @Override
-    public NBTTagType<NBTTagInt> b() {
-        return NBTTagInt.a;
-    }
+	@Override
+	public NBTTagInt clone() {
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return String.valueOf(this.data);
-    }
+	public boolean equals(Object object) {
+		return this == object || object instanceof NBTTagInt && this.data == ((NBTTagInt) object).data;
+	}
 
-    @Override
-    public NBTTagInt clone() {
-        return this;
-    }
+	public int hashCode() {
+		return this.data;
+	}
 
-    public boolean equals(Object object) {
-        return this == object ? true : object instanceof NBTTagInt && this.data == ((NBTTagInt) object).data;
-    }
+	@Override
+	public IChatBaseComponent a(String s, int i) {
+		return (new ChatComponentText(String.valueOf(this.data))).a(NBTTagInt.f);
+	}
 
-    public int hashCode() {
-        return this.data;
-    }
+	@Override
+	public long asLong() {
+		return this.data;
+	}
 
-    @Override
-    public IChatBaseComponent a(String s, int i) {
-        return (new ChatComponentText(String.valueOf(this.data))).a(NBTTagInt.f);
-    }
+	@Override
+	public int asInt() {
+		return this.data;
+	}
 
-    @Override
-    public long asLong() {
-        return (long) this.data;
-    }
+	@Override
+	public short asShort() {
+		return (short) (this.data & '\uffff');
+	}
 
-    @Override
-    public int asInt() {
-        return this.data;
-    }
+	@Override
+	public byte asByte() {
+		return (byte) (this.data & 255);
+	}
 
-    @Override
-    public short asShort() {
-        return (short) (this.data & '\uffff');
-    }
+	@Override
+	public double asDouble() {
+		return this.data;
+	}
 
-    @Override
-    public byte asByte() {
-        return (byte) (this.data & 255);
-    }
+	@Override
+	public float asFloat() {
+		return (float) this.data;
+	}
 
-    @Override
-    public double asDouble() {
-        return (double) this.data;
-    }
+	@Override
+	public Number k() {
+		return this.data;
+	}
 
-    @Override
-    public float asFloat() {
-        return (float) this.data;
-    }
+	static class a_ {
+		static final NBTTagInt[] a = new NBTTagInt[1153];
 
-    @Override
-    public Number k() {
-        return this.data;
-    }
+		static {
+			for (int i = 0; i < a.length; ++i) {
+				a[i] = new NBTTagInt(-128 + i);
+			}
 
-    static class a {
-
-        static final NBTTagInt[] a = new NBTTagInt[1153];
-
-        static {
-            for (int i = 0; i < NBTTagInt.a.a.length; ++i) {
-                NBTTagInt.a.a[i] = new NBTTagInt(-128 + i);
-            }
-
-        }
-    }
+		}
+	}
 }

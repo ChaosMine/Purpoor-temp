@@ -274,7 +274,7 @@ public class EntityPillager extends EntityIllagerAbstract implements ICrossbow {
             }
 
             map.put(Enchantments.MULTISHOT, 1);
-            EnchantmentManager.a((Map) map, itemstack);
+            EnchantmentManager.a(map, itemstack);
             this.setSlot(EnumItemSlot.MAINHAND, itemstack);
         }
 

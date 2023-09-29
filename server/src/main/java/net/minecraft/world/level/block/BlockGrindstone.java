@@ -95,7 +95,7 @@ public class BlockGrindstone extends BlockAttachable {
 
     protected BlockGrindstone(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockGrindstone.FACING, EnumDirection.NORTH)).set(BlockGrindstone.FACE, BlockPropertyAttachPosition.WALL));
+        this.j(this.blockStateList.getBlockData().set(BlockGrindstone.FACING, EnumDirection.NORTH).set(BlockGrindstone.FACE, BlockPropertyAttachPosition.WALL));
     }
 
     @Override
@@ -104,9 +104,9 @@ public class BlockGrindstone extends BlockAttachable {
     }
 
     private VoxelShape l(IBlockData iblockdata) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockGrindstone.FACING);
+        EnumDirection enumdirection = iblockdata.get(BlockGrindstone.FACING);
 
-        switch ((BlockPropertyAttachPosition) iblockdata.get(BlockGrindstone.FACE)) {
+        switch (iblockdata.get(BlockGrindstone.FACE)) {
             case FLOOR:
                 if (enumdirection != EnumDirection.NORTH && enumdirection != EnumDirection.SOUTH) {
                     return BlockGrindstone.s;
@@ -171,12 +171,12 @@ public class BlockGrindstone extends BlockAttachable {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockGrindstone.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockGrindstone.FACING)));
+        return iblockdata.set(BlockGrindstone.FACING, enumblockrotation.a(iblockdata.get(BlockGrindstone.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockGrindstone.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockGrindstone.FACING)));
     }
 
     @Override

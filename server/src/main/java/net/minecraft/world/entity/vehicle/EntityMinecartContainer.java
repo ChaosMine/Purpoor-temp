@@ -130,7 +130,7 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
     @Override
     public ItemStack getItem(int i) {
         this.d((EntityHuman) null);
-        return (ItemStack) this.items.get(i);
+        return this.items.get(i);
     }
 
     @Override
@@ -142,7 +142,7 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
     @Override
     public ItemStack splitWithoutUpdate(int i) {
         this.d((EntityHuman) null);
-        ItemStack itemstack = (ItemStack) this.items.get(i);
+        ItemStack itemstack = this.items.get(i);
 
         if (itemstack.isEmpty()) {
             return ItemStack.b;
@@ -177,7 +177,7 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
 
     @Override
     public boolean a(EntityHuman entityhuman) {
-        return this.dead ? false : entityhuman.h((Entity) this) <= 64.0D;
+        return this.dead ? false : entityhuman.h(this) <= 64.0D;
     }
 
     @Nullable
@@ -241,12 +241,12 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
         float f = 0.98F;
 
         if (this.lootTable == null) {
-            int i = 15 - Container.b((IInventory) this);
+            int i = 15 - Container.b(this);
 
             f += (float) i * 0.001F;
         }
 
-        this.setMot(this.getMot().d((double) f, 0.0D, (double) f));
+        this.setMot(this.getMot().d(f, 0.0D, f));
     }
 
     public void d(@Nullable EntityHuman entityhuman) {

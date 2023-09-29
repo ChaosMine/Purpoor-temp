@@ -80,7 +80,7 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
 
         @Override
         public InventoryHolder getOwner() {
-            return (Lectern) TileEntityLectern.this.getOwner();
+            return TileEntityLectern.this.getOwner();
         }
 
         public TileEntityLectern getLectern() {
@@ -205,7 +205,7 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
     }
 
     public void setBook(ItemStack itemstack) {
-        this.a(itemstack, (EntityHuman) null);
+        this.a(itemstack, null);
     }
 
     private void k() {
@@ -283,7 +283,7 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
             object = entityhuman.getScoreboardDisplayName();
         }
 
-        Vec3D vec3d = Vec3D.a((BaseBlockPosition) this.position);
+        Vec3D vec3d = Vec3D.a(this.position);
 
         // CraftBukkit - this
         return new CommandListenerWrapper(this, vec3d, Vec2F.a, (WorldServer) this.world, 2, s, (IChatBaseComponent) object, this.world.getMinecraftServer(), entityhuman);
@@ -298,7 +298,7 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
     public void load(IBlockData iblockdata, NBTTagCompound nbttagcompound) {
         super.load(iblockdata, nbttagcompound);
         if (nbttagcompound.hasKeyOfType("Book", 10)) {
-            this.book = this.b(ItemStack.a(nbttagcompound.getCompound("Book")), (EntityHuman) null);
+            this.book = this.b(ItemStack.a(nbttagcompound.getCompound("Book")), null);
         } else {
             this.book = ItemStack.b;
         }

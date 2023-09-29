@@ -46,7 +46,7 @@ public class BlockLoom extends BlockFacingHorizontal {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockLoom.FACING, blockactioncontext.f().opposite());
+        return this.getBlockData().set(BlockLoom.FACING, blockactioncontext.f().opposite());
     }
 
     @Override

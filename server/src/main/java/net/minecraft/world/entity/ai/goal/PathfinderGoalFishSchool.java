@@ -34,7 +34,7 @@ public class PathfinderGoalFishSchool extends PathfinderGoal {
                 return entityfishschool.eQ() || !entityfishschool.eO();
             };
             List<EntityFishSchool> list = this.a.world.a(this.a.getClass(), this.a.getBoundingBox().grow(8.0D, 8.0D, 8.0D), predicate);
-            EntityFishSchool entityfishschool = (EntityFishSchool) list.stream().filter(EntityFishSchool::eQ).findAny().orElse(this.a);
+            EntityFishSchool entityfishschool = list.stream().filter(EntityFishSchool::eQ).findAny().orElse(this.a);
 
             entityfishschool.a(list.stream().filter((entityfishschool1) -> {
                 return !entityfishschool1.eO();

@@ -38,6 +38,6 @@ public class WorldGenFeatureStateProviderWeighted extends WorldGenFeatureStatePr
 
     @Override
     public IBlockData a(Random random, BlockPosition blockposition) {
-        return (IBlockData) this.c.b(random);
+        return this.c.b(random);
     }
 }

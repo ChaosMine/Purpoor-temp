@@ -6,119 +6,95 @@ import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import java.util.Iterator;
+import net.minecraft.world.level.ChunkCoordIntPair;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import net.minecraft.world.level.ChunkCoordIntPair;
 
 public class ChunkTaskQueue<T> {
-
     public static final int a = PlayerChunkMap.GOLDEN_TICKET + 2;
-    private final List<Long2ObjectLinkedOpenHashMap<List<Optional<T>>>> b;
-    private volatile int c;
+    private final List<Long2ObjectLinkedOpenHashMap<List<Optional<T>>>> b = IntStream.range(0, a)
+      .mapToObj(var0x -> new Long2ObjectLinkedOpenHashMap<List<Optional<T>>>())
+      .toList();
+    private volatile int c = a;
     private final String d;
-    private final LongSet e;
+    private final LongSet e = new LongOpenHashSet();
     private final int f;
 
-    public ChunkTaskQueue(String s, int i) {
-        this.b = (List) IntStream.range(0, ChunkTaskQueue.a).mapToObj((j) -> {
-            return new Long2ObjectLinkedOpenHashMap();
-        }).collect(Collectors.toList());
-        this.c = ChunkTaskQueue.a;
-        this.e = new LongOpenHashSet();
-        this.d = s;
-        this.f = i;
+    public ChunkTaskQueue(String var0, int var1) {
+        this.d = var0;
+        this.f = var1;
     }
 
-    protected void a(int i, ChunkCoordIntPair chunkcoordintpair, int j) {
-        if (i < ChunkTaskQueue.a) {
-            Long2ObjectLinkedOpenHashMap<List<Optional<T>>> long2objectlinkedopenhashmap = (Long2ObjectLinkedOpenHashMap) this.b.get(i);
-            List<Optional<T>> list = (List) long2objectlinkedopenhashmap.remove(chunkcoordintpair.pair());
-
-            if (i == this.c) {
-                while (this.c < ChunkTaskQueue.a && ((Long2ObjectLinkedOpenHashMap) this.b.get(this.c)).isEmpty()) {
+    protected void a(int var0, ChunkCoordIntPair var1, int var2) {
+        if (var0 < a) {
+            Long2ObjectLinkedOpenHashMap<List<Optional<T>>> var3 = this.b.get(var0);
+            List<Optional<T>> var4 = var3.remove(var1.pair());
+            if (var0 == this.c) {
+                while(this.c < a && this.b.get(this.c).isEmpty()) {
                     ++this.c;
                 }
             }
 
-            if (list != null && !list.isEmpty()) {
-                ((List) ((Long2ObjectLinkedOpenHashMap) this.b.get(j)).computeIfAbsent(chunkcoordintpair.pair(), (k) -> {
-                    return Lists.newArrayList();
-                })).addAll(list);
-                this.c = Math.min(this.c, j);
+            if (var4 != null && !var4.isEmpty()) {
+                this.b.get(var2).computeIfAbsent(var1.pair(), var0x -> Lists.newArrayList()).addAll(var4);
+                this.c = Math.min(this.c, var2);
             }
-
         }
     }
 
-    protected void a(Optional<T> optional, long i, int j) {
-        ((List) ((Long2ObjectLinkedOpenHashMap) this.b.get(j)).computeIfAbsent(i, (k) -> {
-            return Lists.newArrayList();
-        })).add(optional);
-        this.c = Math.min(this.c, j);
+    protected void a(Optional<T> var0, long var1, int var3) {
+        this.b.get(var3).computeIfAbsent(var1, var0x -> Lists.newArrayList()).add(var0);
+        this.c = Math.min(this.c, var3);
     }
 
-    protected void a(long i, boolean flag) {
-        Iterator iterator = this.b.iterator();
-
-        while (iterator.hasNext()) {
-            Long2ObjectLinkedOpenHashMap<List<Optional<T>>> long2objectlinkedopenhashmap = (Long2ObjectLinkedOpenHashMap) iterator.next();
-            List<Optional<T>> list = (List) long2objectlinkedopenhashmap.get(i);
-
-            if (list != null) {
-                if (flag) {
-                    list.clear();
+    protected void a(long var0, boolean var2) {
+        for(Long2ObjectLinkedOpenHashMap<List<Optional<T>>> var4 : this.b) {
+            List<Optional<T>> var5 = var4.get(var0);
+            if (var5 != null) {
+                if (var2) {
+                    var5.clear();
                 } else {
-                    list.removeIf((optional) -> {
-                        return !optional.isPresent();
-                    });
+                    var5.removeIf(var0x -> var0x.isEmpty());
                 }
 
-                if (list.isEmpty()) {
-                    long2objectlinkedopenhashmap.remove(i);
+                if (var5.isEmpty()) {
+                    var4.remove(var0);
                 }
             }
         }
 
-        while (this.c < ChunkTaskQueue.a && ((Long2ObjectLinkedOpenHashMap) this.b.get(this.c)).isEmpty()) {
+        while(this.c < a && this.b.get(this.c).isEmpty()) {
             ++this.c;
         }
 
-        this.e.remove(i);
+        this.e.remove(var0);
     }
 
-    private Runnable a(long i) {
-        return () -> {
-            this.e.add(i);
-        };
+    private Runnable a(long var0) {
+        return () -> this.e.add(var0);
     }
 
     @Nullable
     public Stream<Either<T, Runnable>> a() {
         if (this.e.size() >= this.f) {
             return null;
-        } else if (this.c >= ChunkTaskQueue.a) {
+        } else if (this.c >= a) {
             return null;
         } else {
-            int i = this.c;
-            Long2ObjectLinkedOpenHashMap<List<Optional<T>>> long2objectlinkedopenhashmap = (Long2ObjectLinkedOpenHashMap) this.b.get(i);
-            long j = long2objectlinkedopenhashmap.firstLongKey();
+            int var0 = this.c;
+            Long2ObjectLinkedOpenHashMap<List<Optional<T>>> var1 = this.b.get(var0);
+            long var2 = var1.firstLongKey();
+            List<Optional<T>> var4 = var1.removeFirst();
 
-            List list;
-
-            for (list = (List) long2objectlinkedopenhashmap.removeFirst(); this.c < ChunkTaskQueue.a && ((Long2ObjectLinkedOpenHashMap) this.b.get(this.c)).isEmpty(); ++this.c) {
-                ;
+            while(this.c < a && this.b.get(this.c).isEmpty()) {
+                ++this.c;
             }
 
-            return list.stream().map((optional) -> {
-                return (Either) optional.map(Either::left).orElseGet(() -> {
-                    return Either.right(this.a(j));
-                });
-            });
+            return var4.stream().map(var2x -> (Either)var2x.map(Either::left).orElseGet(() -> Either.right(this.a(var2))));
         }
     }
 

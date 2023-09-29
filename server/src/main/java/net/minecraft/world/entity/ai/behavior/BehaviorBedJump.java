@@ -74,7 +74,7 @@ public class BehaviorBedJump extends Behavior<EntityInsentient> {
     }
 
     private void a(EntityInsentient entityinsentient, BlockPosition blockposition) {
-        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(blockposition, this.b, 0)));
+        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(blockposition, this.b, 0)));
     }
 
     private boolean b(WorldServer worldserver, EntityInsentient entityinsentient) {
@@ -93,7 +93,7 @@ public class BehaviorBedJump extends Behavior<EntityInsentient> {
     }
 
     private boolean a(WorldServer worldserver, BlockPosition blockposition) {
-        return worldserver.getType(blockposition).a((Tag) TagsBlock.BEDS);
+        return worldserver.getType(blockposition).a(TagsBlock.BEDS);
     }
 
     private Optional<BlockPosition> a(EntityInsentient entityinsentient) {

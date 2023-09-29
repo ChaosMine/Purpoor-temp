@@ -66,7 +66,7 @@ public class CompositeSerialization extends AbstractTestingBase {
         assertThat(stacks, hasSize(raw.size()));
 
         for (int i = 0; i < raw.size(); i++) {
-            assertThat(String.valueOf(i), (Object) stacks.get(i), is((Object) raw.get(i)));
+            assertThat(String.valueOf(i), (Object) stacks.get(i), is(raw.get(i)));
         }
     }
 }

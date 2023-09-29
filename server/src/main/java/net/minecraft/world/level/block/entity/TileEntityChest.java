@@ -183,7 +183,7 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
     public static int a(World world, TileEntityContainer tileentitycontainer, int i, int j, int k) {
         int l = 0;
         float f = 5.0F;
-        List<EntityHuman> list = world.a(EntityHuman.class, new AxisAlignedBB((double) ((float) i - 5.0F), (double) ((float) j - 5.0F), (double) ((float) k - 5.0F), (double) ((float) (i + 1) + 5.0F), (double) ((float) (j + 1) + 5.0F), (double) ((float) (k + 1) + 5.0F)));
+        List<EntityHuman> list = world.a(EntityHuman.class, new AxisAlignedBB((float) i - 5.0F, (float) j - 5.0F, (float) k - 5.0F, (float) (i + 1) + 5.0F, (float) (j + 1) + 5.0F, (float) (k + 1) + 5.0F));
         Iterator iterator = list.iterator();
 
         while (iterator.hasNext()) {
@@ -192,7 +192,7 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
             if (entityhuman.activeContainer instanceof ContainerChest) {
                 IInventory iinventory = ((ContainerChest) entityhuman.activeContainer).e();
 
-                if (iinventory == tileentitycontainer || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).a((IInventory) tileentitycontainer)) {
+                if (iinventory == tileentitycontainer || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest) iinventory).a(tileentitycontainer)) {
                     ++l;
                 }
             }
@@ -203,7 +203,7 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
 
     public void playOpenSound(SoundEffect soundeffect) {
         if (!this.getBlock().contains(BlockChest.CHEST_TYPE_PROPERTY)) { return; } // Paper - this can be delayed, double check exists - Fixes GH-2074
-        BlockPropertyChestType blockpropertychesttype = (BlockPropertyChestType) this.getBlock().get(BlockChest.c);
+        BlockPropertyChestType blockpropertychesttype = this.getBlock().get(BlockChest.c);
 
         if (blockpropertychesttype != BlockPropertyChestType.LEFT) {
             double d0 = (double) this.position.getX() + 0.5D;
@@ -217,7 +217,7 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
                 d2 += (double) enumdirection.getAdjacentZ() * 0.5D;
             }
 
-            this.world.playSound((EntityHuman) null, d0, d1, d2, soundeffect, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+            this.world.playSound(null, d0, d1, d2, soundeffect, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
         }
     }
 

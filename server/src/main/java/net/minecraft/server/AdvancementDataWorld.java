@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.server;
 
 import com.google.common.collect.Maps;
@@ -54,7 +53,7 @@ public class AdvancementDataWorld extends ResourceDataJson {
         });
         Advancements advancements = new Advancements();
 
-        advancements.a((Map) map1);
+        advancements.a(map1);
         Iterator iterator = advancements.b().iterator();
 
         while (iterator.hasNext()) {

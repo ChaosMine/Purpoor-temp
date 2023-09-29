@@ -47,7 +47,7 @@ public class ChatComponentUtils {
         ChatHoverable chathoverable = chatmodifier.getHoverEvent();
 
         if (chathoverable != null) {
-            IChatBaseComponent ichatbasecomponent = (IChatBaseComponent) chathoverable.a(ChatHoverable.EnumHoverAction.SHOW_TEXT);
+            IChatBaseComponent ichatbasecomponent = chathoverable.a(ChatHoverable.EnumHoverAction.SHOW_TEXT);
 
             if (ichatbasecomponent != null) {
                 ChatHoverable chathoverable1 = new ChatHoverable(ChatHoverable.EnumHoverAction.SHOW_TEXT, filterForDisplay(commandlistenerwrapper, ichatbasecomponent, entity, i + 1));
@@ -73,7 +73,7 @@ public class ChatComponentUtils {
         if (collection.isEmpty()) {
             return ChatComponentText.d;
         } else if (collection.size() == 1) {
-            return (IChatBaseComponent) function.apply(collection.iterator().next());
+            return function.apply(collection.iterator().next());
         } else {
             List<T> list = Lists.newArrayList(collection);
 
@@ -86,7 +86,7 @@ public class ChatComponentUtils {
         if (collection.isEmpty()) {
             return new ChatComponentText("");
         } else if (collection.size() == 1) {
-            return ((IChatBaseComponent) function.apply(collection.iterator().next())).mutableCopy();
+            return function.apply(collection.iterator().next()).mutableCopy();
         } else {
             ChatComponentText chatcomponenttext = new ChatComponentText("");
             boolean flag = true;
@@ -98,7 +98,7 @@ public class ChatComponentUtils {
                     chatcomponenttext.addSibling((new ChatComponentText(", ")).a(EnumChatFormat.GRAY));
                 }
 
-                chatcomponenttext.addSibling((IChatBaseComponent) function.apply(t0));
+                chatcomponenttext.addSibling(function.apply(t0));
             }
 
             return chatcomponenttext;
@@ -110,6 +110,6 @@ public class ChatComponentUtils {
     }
 
     public static IChatBaseComponent a(Message message) { return fromMessage(message); } public static IChatBaseComponent fromMessage(final @org.checkerframework.checker.nullness.qual.NonNull Message message) { // Paper - OBFHELPER
-        return (IChatBaseComponent) (message instanceof IChatBaseComponent ? (IChatBaseComponent) message : new ChatComponentText(message.getString()));
+        return message instanceof IChatBaseComponent ? (IChatBaseComponent) message : new ChatComponentText(message.getString());
     }
 }

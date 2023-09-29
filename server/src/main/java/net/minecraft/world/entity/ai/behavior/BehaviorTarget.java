@@ -12,7 +12,7 @@ public class BehaviorTarget implements BehaviorPosition {
 
     public BehaviorTarget(BlockPosition blockposition) {
         this.a = blockposition;
-        this.b = Vec3D.a((BaseBlockPosition) blockposition);
+        this.b = Vec3D.a(blockposition);
     }
 
     @Override

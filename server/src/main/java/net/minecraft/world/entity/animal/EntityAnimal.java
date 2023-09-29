@@ -28,46 +28,30 @@ import java.util.UUID;
 // CraftBukkit end
 
 public abstract class EntityAnimal extends EntityAgeable {
+	public int loveTicks;
+	public UUID breedCause;
+	public ItemStack breedItem; // CraftBukkit - Add breedItem variable
 
-    public int loveTicks;
-    public UUID breedCause;
-    public ItemStack breedItem; // CraftBukkit - Add breedItem variable
-    public abstract int getPurpurBreedTime(); // Purpur
+	protected EntityAnimal(EntityTypes<? extends EntityAnimal> entitytypes, World world) {
+		super(entitytypes, world);
+		this.a(PathType.DANGER_FIRE, 16.0F);
+		this.a(PathType.DAMAGE_FIRE, -1.0F);
+	}
 
-    protected EntityAnimal(EntityTypes<? extends EntityAnimal> entitytypes, World world) {
-        super(entitytypes, world);
-        this.a(PathType.DANGER_FIRE, 16.0F);
-        this.a(PathType.DAMAGE_FIRE, -1.0F);
-    }
+	public static boolean b(EntityTypes<? extends EntityAnimal> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
+		return generatoraccess.getType(blockposition.down()).a(Blocks.GRASS_BLOCK) && generatoraccess.getLightLevel(blockposition, 0) > 8;
+	}
 
-    @Override
-    protected void mobTick() {
-        if (this.getAge() != 0) {
-            this.loveTicks = 0;
-        }
+	public abstract int getPurpurBreedTime(); // Purpur
 
-        super.mobTick();
-    }
+	@Override
+	protected void mobTick() {
+		if (this.getAge() != 0) {
+			this.loveTicks = 0;
+		}
 
-    @Override
-    public void movementTick() {
-        super.movementTick();
-        if (this.getAge() != 0) {
-            this.loveTicks = 0;
-        }
-
-        if (this.loveTicks > 0) {
-            --this.loveTicks;
-            if (this.loveTicks % 10 == 0) {
-                double d0 = this.random.nextGaussian() * 0.02D;
-                double d1 = this.random.nextGaussian() * 0.02D;
-                double d2 = this.random.nextGaussian() * 0.02D;
-
-                this.world.addParticle(Particles.HEART, this.d(1.0D), this.cF() + 0.5D, this.g(1.0D), d0, d1, d2);
-            }
-        }
-
-    }
+		super.mobTick();
+	}
 
     /* CraftBukkit start
     // Function disabled as it has no special function anymore after
@@ -83,195 +67,207 @@ public abstract class EntityAnimal extends EntityAgeable {
     }
     // CraftBukkit end */
 
-    @Override
-    public float a(BlockPosition blockposition, IWorldReader iworldreader) {
-        return iworldreader.getType(blockposition.down()).a(Blocks.GRASS_BLOCK) ? 10.0F : iworldreader.y(blockposition) - 0.5F;
-    }
+	@Override
+	public void movementTick() {
+		super.movementTick();
+		if (this.getAge() != 0) {
+			this.loveTicks = 0;
+		}
 
-    @Override
-    public void saveData(NBTTagCompound nbttagcompound) {
-        super.saveData(nbttagcompound);
-        nbttagcompound.setInt("InLove", this.loveTicks);
-        if (this.breedCause != null) {
-            nbttagcompound.a("LoveCause", this.breedCause);
-        }
+		if (this.loveTicks > 0) {
+			--this.loveTicks;
+			if (this.loveTicks % 10 == 0) {
+				double d0 = this.random.nextGaussian() * 0.02D;
+				double d1 = this.random.nextGaussian() * 0.02D;
+				double d2 = this.random.nextGaussian() * 0.02D;
 
-    }
+				this.world.addParticle(Particles.HEART, this.d(1.0D), this.cF() + 0.5D, this.g(1.0D), d0, d1, d2);
+			}
+		}
+	}
 
-    @Override
-    public double bb() {
-        return 0.14D;
-    }
+	@Override
+	public float a(BlockPosition blockposition, IWorldReader iworldreader) {
+		return iworldreader.getType(blockposition.down()).a(Blocks.GRASS_BLOCK) ? 10.0F : iworldreader.y(blockposition) - 0.5F;
+	}
 
-    @Override
-    public void loadData(NBTTagCompound nbttagcompound) {
-        super.loadData(nbttagcompound);
-        this.loveTicks = nbttagcompound.getInt("InLove");
-        this.breedCause = nbttagcompound.b("LoveCause") ? nbttagcompound.a("LoveCause") : null;
-    }
+	@Override
+	public void saveData(NBTTagCompound nbttagcompound) {
+		super.saveData(nbttagcompound);
+		nbttagcompound.setInt("InLove", this.loveTicks);
+		if (this.breedCause != null) {
+			nbttagcompound.a("LoveCause", this.breedCause);
+		}
+	}
 
-    public static boolean b(EntityTypes<? extends EntityAnimal> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
-        return generatoraccess.getType(blockposition.down()).a(Blocks.GRASS_BLOCK) && generatoraccess.getLightLevel(blockposition, 0) > 8;
-    }
+	@Override
+	public double bb() {
+		return 0.14D;
+	}
 
-    @Override
-    public int D() {
-        return 120;
-    }
+	@Override
+	public void loadData(NBTTagCompound nbttagcompound) {
+		super.loadData(nbttagcompound);
+		this.loveTicks = nbttagcompound.getInt("InLove");
+		this.breedCause = nbttagcompound.b("LoveCause") ? nbttagcompound.a("LoveCause") : null;
+	}
 
-    @Override
-    public boolean isTypeNotPersistent(double d0) {
-        return false;
-    }
+	@Override
+	public int D() {
+		return 120;
+	}
 
-    @Override
-    protected int getExpValue(EntityHuman entityhuman) {
-        return 1 + this.world.random.nextInt(3);
-    }
+	@Override
+	public boolean isTypeNotPersistent(double d0) {
+		return false;
+	}
 
-    public boolean k(ItemStack itemstack) {
-        return itemstack.getItem() == Items.WHEAT;
-    }
+	@Override
+	protected int getExpValue(EntityHuman entityhuman) {
+		return 1 + this.world.random.nextInt(3);
+	}
 
-    @Override
-    public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
-        ItemStack itemstack = entityhuman.b(enumhand);
+	public boolean k(ItemStack itemstack) {
+		return itemstack.getItem() == Items.WHEAT;
+	}
 
-        if (this.k(itemstack)) {
-            int i = this.getAge();
+	@Override
+	public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
+		ItemStack itemstack = entityhuman.b(enumhand);
 
-            if (!this.world.isClientSide && i == 0 && this.eP() && (this.world.purpurConfig.animalBreedingCooldownSeconds <= 0 || !this.world.hasBreedingCooldown(entityhuman.getUniqueID(), this.getClass()))) { // Purpur
-                this.a(entityhuman, itemstack);
-                this.g(entityhuman);
-                return EnumInteractionResult.SUCCESS;
-            }
+		if (this.k(itemstack)) {
+			int i = this.getAge();
 
-            if (this.isBaby()) {
-                this.a(entityhuman, itemstack);
-                this.setAge((int) ((float) (-i / 20) * 0.1F), true);
-                return EnumInteractionResult.a(this.world.isClientSide);
-            }
+			if (!this.world.isClientSide && i == 0 && this.eP() && (this.world.purpurConfig.animalBreedingCooldownSeconds <= 0 || !this.world.hasBreedingCooldown(entityhuman.getUniqueID(), this.getClass()))) { // Purpur
+				this.a(entityhuman, itemstack);
+				this.g(entityhuman);
+				return EnumInteractionResult.SUCCESS;
+			}
 
-            if (this.world.isClientSide) {
-                return EnumInteractionResult.CONSUME;
-            }
-        }
+			if (this.isBaby()) {
+				this.a(entityhuman, itemstack);
+				this.setAge((int) ((float) (-i / 20) * 0.1F), true);
+				return EnumInteractionResult.a(this.world.isClientSide);
+			}
 
-        return super.b(entityhuman, enumhand);
-    }
+			if (this.world.isClientSide) {
+				return EnumInteractionResult.CONSUME;
+			}
+		}
 
-    protected void a(EntityHuman entityhuman, ItemStack itemstack) {
-        if (!entityhuman.abilities.canInstantlyBuild) {
-            itemstack.subtract(1);
-        }
+		return super.b(entityhuman, enumhand);
+	}
 
-    }
+	protected void a(EntityHuman entityhuman, ItemStack itemstack) {
+		if (!entityhuman.abilities.canInstantlyBuild) {
+			itemstack.subtract(1);
+		}
+	}
 
-    public boolean eP() {
-        return this.loveTicks <= 0;
-    }
+	public boolean eP() {
+		return this.loveTicks <= 0;
+	}
 
-    public void g(@Nullable EntityHuman entityhuman) {
-        // CraftBukkit start
-        EntityEnterLoveModeEvent entityEnterLoveModeEvent = CraftEventFactory.callEntityEnterLoveModeEvent(entityhuman, this, 600);
-        if (entityEnterLoveModeEvent.isCancelled()) {
-            return;
-        }
-        this.loveTicks = entityEnterLoveModeEvent.getTicksInLove();
-        // CraftBukkit end
-        if (entityhuman != null) {
-            this.breedCause = entityhuman.getUniqueID();
-        }
-        this.breedItem = entityhuman.inventory.getItemInHand(); // CraftBukkit
+	public void g(@Nullable EntityHuman entityhuman) {
+		// CraftBukkit start
+		EntityEnterLoveModeEvent entityEnterLoveModeEvent = CraftEventFactory.callEntityEnterLoveModeEvent(entityhuman, this, 600);
+		if (entityEnterLoveModeEvent.isCancelled()) {
+			return;
+		}
+		this.loveTicks = entityEnterLoveModeEvent.getTicksInLove();
+		// CraftBukkit end
+		if (entityhuman != null) {
+			this.breedCause = entityhuman.getUniqueID();
+		}
+		this.breedItem = entityhuman.inventory.getItemInHand(); // CraftBukkit
 
-        this.world.broadcastEntityEffect(this, (byte) 18);
-    }
+		this.world.broadcastEntityEffect(this, (byte) 18);
+	}
 
-    public void setLoveTicks(int i) {
-        this.loveTicks = i;
-    }
+	public void setLoveTicks(int i) {
+		this.loveTicks = i;
+	}
 
-    public int eQ() {
-        return this.loveTicks;
-    }
+	public int eQ() {
+		return this.loveTicks;
+	}
 
-    @Nullable
-    public EntityPlayer getBreedCause() {
-        if (this.breedCause == null) {
-            return null;
-        } else {
-            EntityHuman entityhuman = this.world.b(this.breedCause);
+	@Nullable
+	public EntityPlayer getBreedCause() {
+		if (this.breedCause == null) {
+			return null;
+		} else {
+			EntityHuman entityhuman = this.world.b(this.breedCause);
 
-            return entityhuman instanceof EntityPlayer ? (EntityPlayer) entityhuman : null;
-        }
-    }
+			return entityhuman instanceof EntityPlayer ? (EntityPlayer) entityhuman : null;
+		}
+	}
 
-    public boolean isInLove() {
-        return this.loveTicks > 0;
-    }
+	public boolean isInLove() {
+		return this.loveTicks > 0;
+	}
 
-    public void resetLove() {
-        this.loveTicks = 0;
-    }
+	public void resetLove() {
+		this.loveTicks = 0;
+	}
 
-    public boolean mate(EntityAnimal entityanimal) {
-        return entityanimal == this ? false : (entityanimal.getClass() != this.getClass() ? false : this.isInLove() && entityanimal.isInLove());
-    }
+	public boolean mate(EntityAnimal entityanimal) {
+		return entityanimal != this && (entityanimal.getClass() == this.getClass() && this.isInLove() && entityanimal.isInLove());
+	}
 
-    public void a(WorldServer worldserver, EntityAnimal entityanimal) {
-        EntityAgeable entityageable = this.createChild(worldserver, entityanimal);
+	public void a(WorldServer worldserver, EntityAnimal entityanimal) {
+		EntityAgeable entityageable = this.createChild(worldserver, entityanimal);
 
-        if (entityageable != null) {
-            // CraftBukkit start - set persistence for tame animals
-            if (entityageable instanceof EntityTameableAnimal && ((EntityTameableAnimal) entityageable).isTamed()) {
-                entityageable.persistent = true;
-            }
-            // CraftBukkit end
-            EntityPlayer entityplayer = this.getBreedCause();
+		if (entityageable != null) {
+			// CraftBukkit start - set persistence for tame animals
+			if (entityageable instanceof EntityTameableAnimal && ((EntityTameableAnimal) entityageable).isTamed()) {
+				entityageable.persistent = true;
+			}
+			// CraftBukkit end
+			EntityPlayer entityplayer = this.getBreedCause();
 
-            if (entityplayer == null && entityanimal.getBreedCause() != null) {
-                entityplayer = entityanimal.getBreedCause();
-            }
-            // Purpur start
-            if (entityplayer != null && worldserver.purpurConfig.animalBreedingCooldownSeconds > 0) {
-                if (worldserver.hasBreedingCooldown(entityplayer.getUniqueID(), this.getClass())) {
-                    return;
-                }
-                worldserver.addBreedingCooldown(entityplayer.getUniqueID(), this.getClass());
-            }
-            // Purpur end
-            // CraftBukkit start - call EntityBreedEvent
-            entityageable.setBaby(true);
-            entityageable.setPositionRotation(this.locX(), this.locY(), this.locZ(), 0.0F, 0.0F);
-            int experience = this.getRandom().nextInt(7) + 1;
-            org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityBreedEvent(entityageable, this, entityanimal, entityplayer, this.breedItem, experience);
-            if (entityBreedEvent.isCancelled()) {
-                return;
-            }
-            experience = entityBreedEvent.getExperience();
-            // CraftBukkit end
+			if (entityplayer == null && entityanimal.getBreedCause() != null) {
+				entityplayer = entityanimal.getBreedCause();
+			}
+			// Purpur start
+			if (entityplayer != null && worldserver.purpurConfig.animalBreedingCooldownSeconds > 0) {
+				if (worldserver.hasBreedingCooldown(entityplayer.getUniqueID(), this.getClass())) {
+					return;
+				}
+				worldserver.addBreedingCooldown(entityplayer.getUniqueID(), this.getClass());
+			}
+			// Purpur end
+			// CraftBukkit start - call EntityBreedEvent
+			entityageable.setBaby(true);
+			entityageable.setPositionRotation(this.locX(), this.locY(), this.locZ(), 0.0F, 0.0F);
+			int experience = this.getRandom().nextInt(7) + 1;
+			org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityBreedEvent(entityageable, this, entityanimal, entityplayer, this.breedItem, experience);
+			if (entityBreedEvent.isCancelled()) {
+				return;
+			}
+			experience = entityBreedEvent.getExperience();
+			// CraftBukkit end
 
-            if (entityplayer != null) {
-                entityplayer.a(StatisticList.ANIMALS_BRED);
-                CriterionTriggers.o.a(entityplayer, this, entityanimal, entityageable);
-            }
+			if (entityplayer != null) {
+				entityplayer.a(StatisticList.ANIMALS_BRED);
+				CriterionTriggers.o.a(entityplayer, this, entityanimal, entityageable);
+			}
 
-            // Purpur start
-            this.setAgeRaw(this.getPurpurBreedTime());
-            entityanimal.setAgeRaw(entityanimal.getPurpurBreedTime());
-            // Purpur end
-            this.resetLove();
-            entityanimal.resetLove();
-            worldserver.addAllEntities(entityageable, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING); // CraftBukkit - added SpawnReason
-            worldserver.broadcastEntityEffect(this, (byte) 18);
-            if (worldserver.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
-                // CraftBukkit start - use event experience
-                if (experience > 0) {
-                    worldserver.addEntity(new EntityExperienceOrb(worldserver, this.locX(), this.locY(), this.locZ(), experience, org.bukkit.entity.ExperienceOrb.SpawnReason.BREED, entityplayer, entityageable)); // Paper
-                }
-                // CraftBukkit end
-            }
-
-        }
-    }
+			// Purpur start
+			this.setAgeRaw(this.getPurpurBreedTime());
+			entityanimal.setAgeRaw(entityanimal.getPurpurBreedTime());
+			// Purpur end
+			this.resetLove();
+			entityanimal.resetLove();
+			worldserver.addAllEntities(entityageable, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING); // CraftBukkit - added SpawnReason
+			worldserver.broadcastEntityEffect(this, (byte) 18);
+			if (worldserver.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
+				// CraftBukkit start - use event experience
+				if (experience > 0) {
+					worldserver.addEntity(new EntityExperienceOrb(worldserver, this.locX(), this.locY(), this.locZ(), experience, org.bukkit.entity.ExperienceOrb.SpawnReason.BREED, entityplayer, entityageable)); // Paper
+				}
+				// CraftBukkit end
+			}
+		}
+	}
 }

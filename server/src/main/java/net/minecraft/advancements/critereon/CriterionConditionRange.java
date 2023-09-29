@@ -9,7 +9,7 @@ import net.minecraft.network.chat.ChatMessage;
 
 public class CriterionConditionRange {
 
-    public static final CriterionConditionRange a = new CriterionConditionRange((Float) null, (Float) null);
+    public static final CriterionConditionRange a = new CriterionConditionRange(null, null);
     public static final SimpleCommandExceptionType b = new SimpleCommandExceptionType(new ChatMessage("argument.range.ints"));
     private final Float c;
     private final Float d;
@@ -96,6 +96,6 @@ public class CriterionConditionRange {
 
     @Nullable
     private static Float a(@Nullable Float ofloat, Function<Float, Float> function) {
-        return ofloat == null ? null : (Float) function.apply(ofloat);
+        return ofloat == null ? null : function.apply(ofloat);
     }
 }

@@ -14,7 +14,7 @@ public class BlockRotatable extends Block {
 
     public BlockRotatable(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) this.getBlockData().set(BlockRotatable.AXIS, EnumDirection.EnumAxis.Y));
+        this.j(this.getBlockData().set(BlockRotatable.AXIS, EnumDirection.EnumAxis.Y));
     }
 
     @Override
@@ -22,11 +22,11 @@ public class BlockRotatable extends Block {
         switch (enumblockrotation) {
             case COUNTERCLOCKWISE_90:
             case CLOCKWISE_90:
-                switch ((EnumDirection.EnumAxis) iblockdata.get(BlockRotatable.AXIS)) {
+                switch (iblockdata.get(BlockRotatable.AXIS)) {
                     case X:
-                        return (IBlockData) iblockdata.set(BlockRotatable.AXIS, EnumDirection.EnumAxis.Z);
+                        return iblockdata.set(BlockRotatable.AXIS, EnumDirection.EnumAxis.Z);
                     case Z:
-                        return (IBlockData) iblockdata.set(BlockRotatable.AXIS, EnumDirection.EnumAxis.X);
+                        return iblockdata.set(BlockRotatable.AXIS, EnumDirection.EnumAxis.X);
                     default:
                         return iblockdata;
                 }
@@ -42,6 +42,6 @@ public class BlockRotatable extends Block {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockRotatable.AXIS, blockactioncontext.getClickedFace().n());
+        return this.getBlockData().set(BlockRotatable.AXIS, blockactioncontext.getClickedFace().n());
     }
 }

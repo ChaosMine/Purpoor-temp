@@ -37,7 +37,7 @@ public class BlockCommand extends BlockTileEntity {
 
     public BlockCommand(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCommand.a, EnumDirection.NORTH)).set(BlockCommand.b, false));
+        this.j(this.blockStateList.getBlockData().set(BlockCommand.a, EnumDirection.NORTH).set(BlockCommand.b, false));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BlockCommand extends BlockTileEntity {
             commandblocklistenerabstract.a(0);
         }
 
-        a(world, blockposition, (EnumDirection) iblockdata.get(BlockCommand.a));
+        a(world, blockposition, iblockdata.get(BlockCommand.a));
     }
 
     @Override
@@ -183,12 +183,12 @@ public class BlockCommand extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockCommand.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockCommand.a)));
+        return iblockdata.set(BlockCommand.a, enumblockrotation.a(iblockdata.get(BlockCommand.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockCommand.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockCommand.a)));
     }
 
     @Override
@@ -198,7 +198,7 @@ public class BlockCommand extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockCommand.a, blockactioncontext.d().opposite());
+        return this.getBlockData().set(BlockCommand.a, blockactioncontext.d().opposite());
     }
 
     private static void a(World world, BlockPosition blockposition, EnumDirection enumdirection) {
@@ -208,7 +208,7 @@ public class BlockCommand extends BlockTileEntity {
         IBlockData iblockdata;
         int i;
 
-        for (i = gamerules.getInt(GameRules.MAX_COMMAND_CHAIN_LENGTH); i-- > 0; enumdirection = (EnumDirection) iblockdata.get(BlockCommand.a)) {
+        for (i = gamerules.getInt(GameRules.MAX_COMMAND_CHAIN_LENGTH); i-- > 0; enumdirection = iblockdata.get(BlockCommand.a)) {
             blockposition_mutableblockposition.c(enumdirection);
             iblockdata = world.getType(blockposition_mutableblockposition);
             Block block = iblockdata.getBlock();

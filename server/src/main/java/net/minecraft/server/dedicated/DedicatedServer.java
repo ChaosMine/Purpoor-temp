@@ -21,11 +21,8 @@ import net.minecraft.server.ServerCommand;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.level.progress.WorldLoadListenerFactory;
-import net.minecraft.server.network.ITextFilter;
-import net.minecraft.server.network.TextFilter;
 import net.minecraft.server.packs.repository.ResourcePackRepository;
 import net.minecraft.server.players.UserCache;
-import net.minecraft.server.rcon.RemoteControlCommandListener;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.CreativeModeTab;
@@ -58,18 +55,13 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
   private static final Logger LOGGER = LogManager.getLogger();
   private static final Pattern k = Pattern.compile("^[a-fA-F0-9]{40}$");
   private final java.util.Queue<ServerCommand> serverCommandQueue = new java.util.concurrent.ConcurrentLinkedQueue<>(); // Paper - use a proper queue
-  public final RemoteControlCommandListener remoteControlCommandListener;
   public DedicatedServerSettings propertyManager;
-  @Nullable
-  private final TextFilter r;
 
   // CraftBukkit start - Signature changed
   public DedicatedServer(joptsimple.OptionSet options, DataPackConfiguration datapackconfiguration, Thread thread, IRegistryCustom.Dimension iregistrycustom_dimension, Convertable.ConversionSession convertable_conversionsession, ResourcePackRepository resourcepackrepository, DataPackResources datapackresources, SaveData savedata, DedicatedServerSettings dedicatedserversettings, DataFixer datafixer, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache, WorldLoadListenerFactory worldloadlistenerfactory) {
     super(options, datapackconfiguration, thread, iregistrycustom_dimension, convertable_conversionsession, savedata, resourcepackrepository, Proxy.NO_PROXY, datafixer, datapackresources, minecraftsessionservice, gameprofilerepository, usercache, worldloadlistenerfactory);
     // CraftBukkit end
     this.propertyManager = dedicatedserversettings;
-    this.remoteControlCommandListener = new RemoteControlCommandListener(this);
-    this.r = null;
   }
 
   @Override
@@ -80,50 +72,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
         if (!org.bukkit.craftbukkit.Main.useConsole) {
           return;
         }
-        // Paper start - Use TerminalConsoleAppender
         new com.destroystokyo.paper.console.PaperConsole(DedicatedServer.this).start();
-                /*
-                jline.console.ConsoleReader bufferedreader = reader;
-
-                // MC-33041, SPIGOT-5538: if System.in is not valid due to javaw, then return
-                try {
-                    System.in.available();
-                } catch (IOException ex) {
-                    return;
-                }
-                // CraftBukkit end
-
-                String s;
-
-                try {
-                    // CraftBukkit start - JLine disabling compatibility
-                    while (!DedicatedServer.this.isStopped() && DedicatedServer.this.isRunning()) {
-                        if (org.bukkit.craftbukkit.Main.useJline) {
-                            s = bufferedreader.readLine(">", null);
-                        } else {
-                            s = bufferedreader.readLine();
-                        }
-
-                        // SPIGOT-5220: Throttle if EOF (ctrl^d) or stdin is /dev/null
-                        if (s == null) {
-                            try {
-                                Thread.sleep(50L);
-                            } catch (InterruptedException ex) {
-                                Thread.currentThread().interrupt();
-                            }
-                            continue;
-                        }
-                        if (s.trim().length() > 0) { // Trim to filter lines which are just spaces
-                            DedicatedServer.this.issueCommand(s, DedicatedServer.this.getServerCommandListener());
-                        }
-                        // CraftBukkit end
-                    }
-                } catch (IOException ioexception) {
-                    DedicatedServer.LOGGER.error("Exception handling console input", ioexception);
-                }
-
-                */
-        // Paper end
       }
     };
 
@@ -135,19 +84,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
     }
     global.addHandler(new org.bukkit.craftbukkit.util.ForwardLogHandler());
 
-    // Paper start - Not needed with TerminalConsoleAppender
     var logger = LogManager.getRootLogger();
-        /*
-        final org.apache.logging.log4j.core.Logger logger = ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger());
-        for (org.apache.logging.log4j.core.Appender appender : logger.getAppenders().values()) {
-            if (appender instanceof org.apache.logging.log4j.core.appender.ConsoleAppender) {
-                logger.removeAppender(appender);
-            }
-        }
-
-        new org.bukkit.craftbukkit.util.TerminalConsoleWriterThread(System.out, this.reader).start();
-        */
-    // Paper end
 
     System.setOut(IoBuilder.forLogger(logger).setLevel(Level.INFO).buildPrintStream());
     System.setErr(IoBuilder.forLogger(logger).setLevel(Level.WARN).buildPrintStream());
@@ -356,10 +293,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
 
   @Override
   public void exit() {
-    if (this.r != null) {
-      this.r.close();
-    }
-
     hasFullyShutdown = true; // Paper
     System.exit(this.abnormalExit ? 70 : 0); // CraftBukkit // Paper
   }
@@ -540,12 +473,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
   @Override
   public boolean isSyncChunkWrites() {
     return this.propertyManager.getProperties().syncChunkWrites;
-  }
-
-  @Nullable
-  @Override
-  public ITextFilter a(EntityPlayer entityplayer) {
-    return this.r != null ? this.r.a(entityplayer.getProfile()) : null;
   }
 
   // CraftBukkit start

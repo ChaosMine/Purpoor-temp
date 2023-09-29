@@ -23,7 +23,7 @@ public class DispenseBehaviorShulkerBox extends DispenseBehaviorMaybe {
         Item item = itemstack.getItem();
 
         if (item instanceof ItemBlock) {
-            EnumDirection enumdirection = (EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING);
+            EnumDirection enumdirection = isourceblock.getBlockData().get(BlockDispenser.FACING);
             BlockPosition blockposition = isourceblock.getBlockPosition().shift(enumdirection);
             EnumDirection enumdirection1 = isourceblock.getWorld().isEmpty(blockposition.down()) ? enumdirection : EnumDirection.UP;
 
@@ -43,7 +43,7 @@ public class DispenseBehaviorShulkerBox extends DispenseBehaviorMaybe {
             if (!event.getItem().equals(craftItem)) {
                 // Chain to handler for new item
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
-                IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.REGISTRY.get(eventStack.getItem());
+                IDispenseBehavior idispensebehavior = BlockDispenser.REGISTRY.get(eventStack.getItem());
                 if (idispensebehavior != IDispenseBehavior.NONE && idispensebehavior != this) {
                     idispensebehavior.dispense(isourceblock, eventStack);
                     return itemstack;
@@ -51,7 +51,7 @@ public class DispenseBehaviorShulkerBox extends DispenseBehaviorMaybe {
             }
             // CraftBukkit end
 
-            this.a(((ItemBlock) item).a((BlockActionContext) (new BlockActionContextDirectional(isourceblock.getWorld(), blockposition, enumdirection, itemstack, enumdirection1))).a());
+            this.a(((ItemBlock) item).a(new BlockActionContextDirectional(isourceblock.getWorld(), blockposition, enumdirection, itemstack, enumdirection1)).a());
         }
 
         return itemstack;

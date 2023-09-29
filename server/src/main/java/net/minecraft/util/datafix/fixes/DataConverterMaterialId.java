@@ -339,7 +339,7 @@ public class DataConverterMaterialId extends DataFix {
     }
 
     public static String a(int i) {
-        return (String) DataConverterMaterialId.ID_MAPPING.get(i);
+        return DataConverterMaterialId.ID_MAPPING.get(i);
     }
 
     public TypeRewriteRule makeRule() {

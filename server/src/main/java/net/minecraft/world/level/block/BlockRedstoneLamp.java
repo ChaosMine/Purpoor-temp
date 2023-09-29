@@ -20,19 +20,19 @@ public class BlockRedstoneLamp extends Block {
 
     public BlockRedstoneLamp(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) this.getBlockData().set(BlockRedstoneLamp.a, false));
+        this.j(this.getBlockData().set(BlockRedstoneLamp.a, false));
     }
 
     @Nullable
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockRedstoneLamp.a, blockactioncontext.getWorld().isBlockIndirectlyPowered(blockactioncontext.getClickPosition()));
+        return this.getBlockData().set(BlockRedstoneLamp.a, blockactioncontext.getWorld().isBlockIndirectlyPowered(blockactioncontext.getClickPosition()));
     }
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
         if (!world.isClientSide) {
-            boolean flag1 = (Boolean) iblockdata.get(BlockRedstoneLamp.a);
+            boolean flag1 = iblockdata.get(BlockRedstoneLamp.a);
 
             if (flag1 != world.isBlockIndirectlyPowered(blockposition)) {
                 if (flag1) {
@@ -43,7 +43,7 @@ public class BlockRedstoneLamp extends Block {
                         return;
                     }
                     // CraftBukkit end
-                    world.setTypeAndData(blockposition, (IBlockData) iblockdata.a((IBlockState) BlockRedstoneLamp.a), 2);
+                    world.setTypeAndData(blockposition, iblockdata.a((IBlockState) BlockRedstoneLamp.a), 2);
                 }
             }
 
@@ -52,13 +52,13 @@ public class BlockRedstoneLamp extends Block {
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Boolean) iblockdata.get(BlockRedstoneLamp.a) && !worldserver.isBlockIndirectlyPowered(blockposition)) {
+        if (iblockdata.get(BlockRedstoneLamp.a) && !worldserver.isBlockIndirectlyPowered(blockposition)) {
             // CraftBukkit start
             if (CraftEventFactory.callRedstoneChange(worldserver, blockposition, 15, 0).getNewCurrent() != 0) {
                 return;
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.a((IBlockState) BlockRedstoneLamp.a), 2);
+            worldserver.setTypeAndData(blockposition, iblockdata.a((IBlockState) BlockRedstoneLamp.a), 2);
         }
 
     }

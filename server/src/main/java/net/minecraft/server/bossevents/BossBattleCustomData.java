@@ -18,7 +18,7 @@ public class BossBattleCustomData {
 
     @Nullable
     public BossBattleCustom a(MinecraftKey minecraftkey) {
-        return (BossBattleCustom) this.a.get(minecraftkey);
+        return this.a.get(minecraftkey);
     }
 
     public BossBattleCustom register(MinecraftKey minecraftkey, IChatBaseComponent ichatbasecomponent) {

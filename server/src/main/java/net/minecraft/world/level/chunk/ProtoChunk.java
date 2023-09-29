@@ -115,7 +115,7 @@ public class ProtoChunk implements IChunkAccess {
     @Deprecated public ProtoChunk(ChunkCoordIntPair chunkcoordintpair, ChunkConverter chunkconverter) { this(chunkcoordintpair, chunkconverter, null); } // Notice for updates: Please make sure this constructor isn't used anywhere
     public ProtoChunk(ChunkCoordIntPair chunkcoordintpair, ChunkConverter chunkconverter, World world) {
         // Paper end
-        this(chunkcoordintpair, chunkconverter, (ChunkSection[]) null, new ProtoChunkTickList<>((block) -> {
+        this(chunkcoordintpair, chunkconverter, null, new ProtoChunkTickList<>((block) -> {
             return block == null || block.getBlockData().isAir();
         }, chunkcoordintpair), new ProtoChunkTickList<>((fluidtype) -> {
             return fluidtype == null || fluidtype == FluidTypes.EMPTY;
@@ -236,7 +236,7 @@ public class ProtoChunk implements IChunkAccess {
                 ChunkSection chunksection = this.a(j >> 4);
                 IBlockData iblockdata1 = chunksection.setType(i & 15, j & 15, k & 15, iblockdata);
 
-                if ((com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (this.g.b(ChunkStatus.LIGHT)) : (this.g.b(ChunkStatus.FEATURES))) && iblockdata != iblockdata1 && (iblockdata.b((IBlockAccess) this, blockposition) != iblockdata1.b((IBlockAccess) this, blockposition) || iblockdata.f() != iblockdata1.f() || iblockdata.e() || iblockdata1.e())) { // Tuinity - move block updates to only happen after lighting occurs (or during, thanks chunk system)
+                if ((com.tuinity.tuinity.config.TuinityConfig.useNewLightEngine ? (this.g.b(ChunkStatus.LIGHT)) : (this.g.b(ChunkStatus.FEATURES))) && iblockdata != iblockdata1 && (iblockdata.b(this, blockposition) != iblockdata1.b(this, blockposition) || iblockdata.f() != iblockdata1.f() || iblockdata.e() || iblockdata1.e())) { // Tuinity - move block updates to only happen after lighting occurs (or during, thanks chunk system)
                     LightEngine lightengine = this.e();
 
                     lightengine.a(blockposition);
@@ -247,7 +247,7 @@ public class ProtoChunk implements IChunkAccess {
                 // Tuinity - reduce iterator creation
 
                 for (HeightMap.Type heightmap_type : enumset) { // Tuinity - reduce iterator creation
-                    HeightMap heightmap = (HeightMap) this.f.get(heightmap_type);
+                    HeightMap heightmap = this.f.get(heightmap_type);
 
                     if (heightmap == null) {
                         if (enumset1 == null) {
@@ -265,7 +265,7 @@ public class ProtoChunk implements IChunkAccess {
                 // Tuinity start - reduce iterator creation
                 for (HeightMap.Type heightmap_type : enumset) {
                     // Tuinity end - reduce iterator creation
-                    ((HeightMap) this.f.get(heightmap_type)).a(i & 15, j, k & 15, iblockdata);
+                    this.f.get(heightmap_type).a(i & 15, j, k & 15, iblockdata);
                 }
 
                 return iblockdata1;
@@ -300,7 +300,7 @@ public class ProtoChunk implements IChunkAccess {
     @Nullable
     @Override
     public TileEntity getTileEntity(BlockPosition blockposition) {
-        return (TileEntity) this.h.get(blockposition);
+        return this.h.get(blockposition);
     }
 
     public Map<BlockPosition, TileEntity> x() {
@@ -377,18 +377,18 @@ public class ProtoChunk implements IChunkAccess {
 
     @Override
     public HeightMap a(HeightMap.Type heightmap_type) {
-        return (HeightMap) this.f.computeIfAbsent(heightmap_type, (heightmap_type1) -> {
+        return this.f.computeIfAbsent(heightmap_type, (heightmap_type1) -> {
             return new HeightMap(this, heightmap_type1);
         });
     }
 
     @Override
     public int getHighestBlock(HeightMap.Type heightmap_type, int i, int j) {
-        HeightMap heightmap = (HeightMap) this.f.get(heightmap_type);
+        HeightMap heightmap = this.f.get(heightmap_type);
 
         if (heightmap == null) {
             HeightMap.a(this, EnumSet.of(heightmap_type));
-            heightmap = (HeightMap) this.f.get(heightmap_type);
+            heightmap = this.f.get(heightmap_type);
         }
 
         return heightmap.a(i & 15, j & 15) - 1;
@@ -405,7 +405,7 @@ public class ProtoChunk implements IChunkAccess {
     @Nullable
     @Override
     public StructureStart<?> a(StructureGenerator<?> structuregenerator) {
-        return (StructureStart) this.n.get(structuregenerator);
+        return this.n.get(structuregenerator);
     }
 
     @Override
@@ -428,16 +428,16 @@ public class ProtoChunk implements IChunkAccess {
 
     @Override
     public LongSet b(StructureGenerator<?> structuregenerator) {
-        return (LongSet) this.o.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
+        return this.o.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
             return new LongOpenHashSet();
         });
     }
 
     @Override
     public void a(StructureGenerator<?> structuregenerator, long i) {
-        ((LongSet) this.o.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
+        this.o.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
             return new LongOpenHashSet();
-        })).add(i);
+        }).add(i);
         this.c = true;
     }
 
@@ -526,7 +526,7 @@ public class ProtoChunk implements IChunkAccess {
 
     @Override
     public NBTTagCompound i(BlockPosition blockposition) {
-        return (NBTTagCompound) this.i.get(blockposition);
+        return this.i.get(blockposition);
     }
 
     @Nullable
@@ -534,7 +534,7 @@ public class ProtoChunk implements IChunkAccess {
     public NBTTagCompound j(BlockPosition blockposition) {
         TileEntity tileentity = this.getTileEntity(blockposition);
 
-        return tileentity != null ? tileentity.save(new NBTTagCompound()) : (NBTTagCompound) this.i.get(blockposition);
+        return tileentity != null ? tileentity.save(new NBTTagCompound()) : this.i.get(blockposition);
     }
 
     @Override
@@ -545,11 +545,11 @@ public class ProtoChunk implements IChunkAccess {
 
     @Nullable
     public BitSet a(WorldGenStage.Features worldgenstage_features) {
-        return (BitSet) this.t.get(worldgenstage_features);
+        return this.t.get(worldgenstage_features);
     }
 
     public BitSet b(WorldGenStage.Features worldgenstage_features) {
-        return (BitSet) this.t.computeIfAbsent(worldgenstage_features, (worldgenstage_features1) -> {
+        return this.t.computeIfAbsent(worldgenstage_features, (worldgenstage_features1) -> {
             return new BitSet(65536);
         });
     }

@@ -31,6 +31,6 @@ public class BehaviorExpirableMemory<E extends EntityInsentient, T> extends Beha
     protected void a(WorldServer worldserver, E e0, long i) {
         BehaviorController<?> behaviorcontroller = e0.getBehaviorController();
 
-        behaviorcontroller.a(this.d, behaviorcontroller.getMemory(this.c).get(), (long) this.e.a(worldserver.random));
+        behaviorcontroller.a(this.d, behaviorcontroller.getMemory(this.c).get(), this.e.a(worldserver.random));
     }
 }

@@ -44,7 +44,7 @@ public class InventoryMerchant implements IInventory {
 
     public void onClose(CraftHumanEntity who) {
         transaction.remove(who);
-        merchant.setTradingPlayer((EntityHuman) null); // SPIGOT-4860
+        merchant.setTradingPlayer(null); // SPIGOT-4860
     }
 
     public List<HumanEntity> getViewers() {
@@ -99,12 +99,12 @@ public class InventoryMerchant implements IInventory {
 
     @Override
     public ItemStack getItem(int i) {
-        return (ItemStack) this.itemsInSlots.get(i);
+        return this.itemsInSlots.get(i);
     }
 
     @Override
     public ItemStack splitStack(int i, int j) {
-        ItemStack itemstack = (ItemStack) this.itemsInSlots.get(i);
+        ItemStack itemstack = this.itemsInSlots.get(i);
 
         if (i == 2 && !itemstack.isEmpty()) {
             return ContainerUtil.a(this.itemsInSlots, i, itemstack.getCount());
@@ -156,12 +156,12 @@ public class InventoryMerchant implements IInventory {
         ItemStack itemstack;
         ItemStack itemstack1;
 
-        if (((ItemStack) this.itemsInSlots.get(0)).isEmpty()) {
-            itemstack = (ItemStack) this.itemsInSlots.get(1);
+        if (this.itemsInSlots.get(0).isEmpty()) {
+            itemstack = this.itemsInSlots.get(1);
             itemstack1 = ItemStack.b;
         } else {
-            itemstack = (ItemStack) this.itemsInSlots.get(0);
-            itemstack1 = (ItemStack) this.itemsInSlots.get(1);
+            itemstack = this.itemsInSlots.get(0);
+            itemstack1 = this.itemsInSlots.get(1);
         }
 
         if (itemstack.isEmpty()) {

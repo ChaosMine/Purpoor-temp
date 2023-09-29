@@ -36,7 +36,7 @@ public class DragonControllerDying extends AbstractDragonController {
         if (this.b == null) {
             BlockPosition blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, WorldGenEndTrophy.a);
 
-            this.b = Vec3D.c((BaseBlockPosition) blockposition);
+            this.b = Vec3D.c(blockposition);
         }
 
         double d0 = this.b.c(this.a.locX(), this.a.locY(), this.a.locZ());

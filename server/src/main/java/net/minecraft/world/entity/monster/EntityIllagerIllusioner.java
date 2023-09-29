@@ -131,7 +131,7 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
 
                 for (j = 0; j < 4; ++j) {
                     this.bp[0][j] = this.bp[1][j];
-                    this.bp[1][j] = new Vec3D((double) (-6.0F + (float) this.random.nextInt(13)) * 0.5D, (double) Math.max(0, this.random.nextInt(6) - 4), (double) (-6.0F + (float) this.random.nextInt(13)) * 0.5D);
+                    this.bp[1][j] = new Vec3D((double) (-6.0F + (float) this.random.nextInt(13)) * 0.5D, Math.max(0, this.random.nextInt(6) - 4), (double) (-6.0F + (float) this.random.nextInt(13)) * 0.5D);
                 }
 
                 for (j = 0; j < 16; ++j) {
@@ -179,12 +179,12 @@ public class EntityIllagerIllusioner extends EntityIllagerWizard implements IRan
 
     @Override
     public void a(EntityLiving entityliving, float f) {
-        ItemStack itemstack = this.f(this.b(ProjectileHelper.a((EntityLiving) this, Items.BOW)));
+        ItemStack itemstack = this.f(this.b(ProjectileHelper.a(this, Items.BOW)));
         EntityArrow entityarrow = ProjectileHelper.a(this, itemstack, f);
         double d0 = entityliving.locX() - this.locX();
         double d1 = entityliving.e(0.3333333333333333D) - entityarrow.locY();
         double d2 = entityliving.locZ() - this.locZ();
-        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 
         entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
         // Paper start

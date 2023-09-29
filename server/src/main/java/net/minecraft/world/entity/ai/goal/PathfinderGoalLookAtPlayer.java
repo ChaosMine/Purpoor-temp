@@ -29,11 +29,11 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
         this.d = f1;
         this.a(EnumSet.of(PathfinderGoal.Type.LOOK));
         if (oclass == EntityHuman.class) {
-            this.f = (new PathfinderTargetCondition()).a((double) f).b().a().d().a((entityliving) -> {
+            this.f = (new PathfinderTargetCondition()).a(f).b().a().d().a((entityliving) -> {
                 return IEntitySelector.b(entityinsentient).test(entityliving);
             });
         } else {
-            this.f = (new PathfinderTargetCondition()).a((double) f).b().a().d();
+            this.f = (new PathfinderTargetCondition()).a(f).b().a().d();
         }
 
     }
@@ -50,7 +50,7 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
             if (this.e == EntityHuman.class) {
                 this.b = this.a.world.a(this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ());
             } else {
-                this.b = this.a.world.b(this.e, this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ(), this.a.getBoundingBox().grow((double) this.c, 3.0D, (double) this.c));
+                this.b = this.a.world.b(this.e, this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ(), this.a.getBoundingBox().grow(this.c, 3.0D, this.c));
             }
 
             return this.b != null;

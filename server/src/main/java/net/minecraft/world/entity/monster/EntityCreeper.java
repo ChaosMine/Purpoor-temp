@@ -186,7 +186,7 @@ public class EntityCreeper extends EntityMonster {
     @Override
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
-        if ((Boolean) this.datawatcher.get(EntityCreeper.POWERED)) {
+        if (this.datawatcher.get(EntityCreeper.POWERED)) {
             nbttagcompound.setBoolean("powered", true);
         }
 
@@ -273,11 +273,11 @@ public class EntityCreeper extends EntityMonster {
     }
 
     public boolean isPowered() {
-        return (Boolean) this.datawatcher.get(EntityCreeper.POWERED);
+        return this.datawatcher.get(EntityCreeper.POWERED);
     }
 
     public int eK() {
-        return (Integer) this.datawatcher.get(EntityCreeper.b);
+        return this.datawatcher.get(EntityCreeper.b);
     }
 
     public void setSwellDirection(int i) { a(i); } // Purpur - OBFHELPER
@@ -371,7 +371,7 @@ public class EntityCreeper extends EntityMonster {
     }
 
     public boolean isIgnited() {
-        return (Boolean) this.datawatcher.get(EntityCreeper.d);
+        return this.datawatcher.get(EntityCreeper.d);
     }
 
     public void ignite() {

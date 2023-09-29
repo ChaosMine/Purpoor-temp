@@ -46,7 +46,7 @@ public class ChunkSection {
     }
 
     public Fluid b(int i, int j, int k) {
-        return ((IBlockData) this.blockIds.a(i, j, k)).getFluid(); // Paper - diff on change - we expect this to be effectively just getType(x, y, z).getFluid(). If this changes we need to check other patches that use IBlockData#getFluid.
+        return this.blockIds.a(i, j, k).getFluid(); // Paper - diff on change - we expect this to be effectively just getType(x, y, z).getFluid(). If this changes we need to check other patches that use IBlockData#getFluid.
     }
 
     public void a() {
@@ -65,9 +65,9 @@ public class ChunkSection {
         IBlockData iblockdata1;
 
         if (flag) {
-            iblockdata1 = (IBlockData) this.blockIds.setBlock(i, j, k, iblockdata);
+            iblockdata1 = this.blockIds.setBlock(i, j, k, iblockdata);
         } else {
-            iblockdata1 = (IBlockData) this.blockIds.b(i, j, k, iblockdata);
+            iblockdata1 = this.blockIds.b(i, j, k, iblockdata);
         }
 
         Fluid fluid = iblockdata1.getFluid();

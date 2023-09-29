@@ -96,6 +96,6 @@ public class FurnaceRecipe extends CookingRecipe<FurnaceRecipe> {
     @NotNull
     @Override
     public FurnaceRecipe setInputChoice(@NotNull RecipeChoice input) {
-        return (FurnaceRecipe) super.setInputChoice(input);
+        return super.setInputChoice(input);
     }
 }

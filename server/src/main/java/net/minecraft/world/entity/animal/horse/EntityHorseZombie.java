@@ -93,7 +93,7 @@ public class EntityHorseZombie extends EntityHorseAbstract {
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityAgeable) EntityTypes.ZOMBIE_HORSE.a((World) worldserver);
+        return EntityTypes.ZOMBIE_HORSE.a(worldserver);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class EntityHorseZombie extends EntityHorseAbstract {
                     return EnumInteractionResult.a(this.world.isClientSide);
                 }
 
-                EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, (EntityLiving) this, enumhand);
+                EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, this, enumhand);
 
                 if (enuminteractionresult.a()) {
                     return enuminteractionresult;

@@ -53,7 +53,7 @@ public class ScoreboardTeam extends ScoreboardTeamBase {
     }
 
     public IChatMutableComponent d() {
-        IChatMutableComponent ichatmutablecomponent = ChatComponentUtils.a((IChatBaseComponent) this.d.mutableCopy().c(this.m));
+        IChatMutableComponent ichatmutablecomponent = ChatComponentUtils.a(this.d.mutableCopy().c(this.m));
         EnumChatFormat enumchatformat = this.getColor();
 
         if (enumchatformat != EnumChatFormat.RESET) {

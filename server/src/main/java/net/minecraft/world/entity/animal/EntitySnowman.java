@@ -189,7 +189,7 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
 
     @Override
     public void shear(SoundCategory soundcategory) {
-        this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_SNOW_GOLEM_SHEAR, soundcategory, 1.0F, 1.0F);
+        this.world.playSound(null, this, SoundEffects.ENTITY_SNOW_GOLEM_SHEAR, soundcategory, 1.0F, 1.0F);
         if (!this.world.s_()) {
             this.setHasPumpkin(false);
             if (world.purpurConfig.snowGolemDropsPumpkin) // Purpur
@@ -204,11 +204,11 @@ public class EntitySnowman extends EntityGolem implements IShearable, IRangedEnt
     }
 
     public boolean hasPumpkin() {
-        return ((Byte) this.datawatcher.get(EntitySnowman.b) & 16) != 0;
+        return (this.datawatcher.get(EntitySnowman.b) & 16) != 0;
     }
 
     public void setHasPumpkin(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntitySnowman.b);
+        byte b0 = this.datawatcher.get(EntitySnowman.b);
 
         if (flag) {
             this.datawatcher.set(EntitySnowman.b, (byte) (b0 | 16));

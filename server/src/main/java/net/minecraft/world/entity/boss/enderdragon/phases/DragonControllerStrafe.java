@@ -44,7 +44,7 @@ public class DragonControllerStrafe extends AbstractDragonController {
                 double d3 = d0 - this.a.locX();
                 double d4 = d1 - this.a.locZ();
 
-                d2 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4);
+                d2 = MathHelper.sqrt(d3 * d3 + d4 * d4);
                 double d5 = Math.min(0.4000000059604645D + d2 / 80.0D - 1.0D, 10.0D);
 
                 this.e = new Vec3D(d0, this.f.locY() + d5, d1);
@@ -56,13 +56,13 @@ public class DragonControllerStrafe extends AbstractDragonController {
             }
 
             d1 = 64.0D;
-            if (this.f.h((Entity) this.a) < 4096.0D) {
+            if (this.f.h(this.a) < 4096.0D) {
                 if (this.a.hasLineOfSight(this.f)) {
                     ++this.c;
                     Vec3D vec3d = (new Vec3D(this.f.locX() - this.a.locX(), 0.0D, this.f.locZ() - this.a.locZ())).d();
-                    Vec3D vec3d1 = (new Vec3D((double) MathHelper.sin(this.a.yaw * 0.017453292F), 0.0D, (double) (-MathHelper.cos(this.a.yaw * 0.017453292F)))).d();
+                    Vec3D vec3d1 = (new Vec3D(MathHelper.sin(this.a.yaw * 0.017453292F), 0.0D, -MathHelper.cos(this.a.yaw * 0.017453292F))).d();
                     float f = (float) vec3d1.b(vec3d);
-                    float f1 = (float) (Math.acos((double) f) * 57.2957763671875D);
+                    float f1 = (float) (Math.acos(f) * 57.2957763671875D);
 
                     f1 += 0.5F;
                     if (this.c >= 5 && f1 >= 0.0F && f1 < 10.0F) {
@@ -76,7 +76,7 @@ public class DragonControllerStrafe extends AbstractDragonController {
                         double d11 = this.f.locZ() - d8;
 
                         if (!this.a.isSilent()) {
-                            this.a.world.a((EntityHuman) null, 1017, this.a.getChunkCoordinates(), 0);
+                            this.a.world.a(null, 1017, this.a.getChunkCoordinates(), 0);
                         }
 
                         EntityDragonFireball entitydragonfireball = new EntityDragonFireball(this.a.world, this.a, d9, d10, d11);
@@ -131,7 +131,7 @@ public class DragonControllerStrafe extends AbstractDragonController {
                 j += 12;
             }
 
-            this.d = this.a.a(i, j, (PathPoint) null);
+            this.d = this.a.a(i, j, null);
             if (this.d != null) {
                 this.d.a();
             }
@@ -145,13 +145,13 @@ public class DragonControllerStrafe extends AbstractDragonController {
             BlockPosition blockposition = this.d.g();
 
             this.d.a();
-            double d0 = (double) blockposition.getX();
-            double d1 = (double) blockposition.getZ();
+            double d0 = blockposition.getX();
+            double d1 = blockposition.getZ();
 
             double d2;
 
             do {
-                d2 = (double) ((float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F);
+                d2 = (float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F;
             } while (d2 < (double) blockposition.getY());
 
             this.e = new Vec3D(d0, d2, d1);
@@ -175,7 +175,7 @@ public class DragonControllerStrafe extends AbstractDragonController {
         int l = MathHelper.floor(this.f.locZ());
         double d0 = (double) k - this.a.locX();
         double d1 = (double) l - this.a.locZ();
-        double d2 = (double) MathHelper.sqrt(d0 * d0 + d1 * d1);
+        double d2 = MathHelper.sqrt(d0 * d0 + d1 * d1);
         double d3 = Math.min(0.4000000059604645D + d2 / 80.0D - 1.0D, 10.0D);
         int i1 = MathHelper.floor(this.f.locY() + d3);
         PathPoint pathpoint = new PathPoint(k, i1, l);

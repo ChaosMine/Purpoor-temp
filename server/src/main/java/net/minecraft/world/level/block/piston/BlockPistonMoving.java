@@ -39,7 +39,7 @@ public class BlockPistonMoving extends BlockTileEntity {
 
     public BlockPistonMoving(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockPistonMoving.a, EnumDirection.NORTH)).set(BlockPistonMoving.b, BlockPropertyPistonType.DEFAULT));
+        this.j(this.blockStateList.getBlockData().set(BlockPistonMoving.a, EnumDirection.NORTH).set(BlockPistonMoving.b, BlockPropertyPistonType.DEFAULT));
     }
 
     @Nullable
@@ -66,10 +66,10 @@ public class BlockPistonMoving extends BlockTileEntity {
 
     @Override
     public void postBreak(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata) {
-        BlockPosition blockposition1 = blockposition.shift(((EnumDirection) iblockdata.get(BlockPistonMoving.a)).opposite());
+        BlockPosition blockposition1 = blockposition.shift(iblockdata.get(BlockPistonMoving.a).opposite());
         IBlockData iblockdata1 = generatoraccess.getType(blockposition1);
 
-        if (iblockdata1.getBlock() instanceof BlockPiston && (Boolean) iblockdata1.get(BlockPiston.EXTENDED)) {
+        if (iblockdata1.getBlock() instanceof BlockPiston && iblockdata1.get(BlockPiston.EXTENDED)) {
             generatoraccess.a(blockposition1, false);
         }
 
@@ -87,7 +87,7 @@ public class BlockPistonMoving extends BlockTileEntity {
 
     @Override
     public List<ItemStack> a(IBlockData iblockdata, LootTableInfo.Builder loottableinfo_builder) {
-        TileEntityPiston tileentitypiston = this.a((IBlockAccess) loottableinfo_builder.a(), new BlockPosition((Vec3D) loottableinfo_builder.a(LootContextParameters.ORIGIN)));
+        TileEntityPiston tileentitypiston = this.a(loottableinfo_builder.a(), new BlockPosition(loottableinfo_builder.a(LootContextParameters.ORIGIN)));
 
         return tileentitypiston == null ? Collections.emptyList() : tileentitypiston.k().a(loottableinfo_builder);
     }
@@ -113,12 +113,12 @@ public class BlockPistonMoving extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockPistonMoving.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockPistonMoving.a)));
+        return iblockdata.set(BlockPistonMoving.a, enumblockrotation.a(iblockdata.get(BlockPistonMoving.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockPistonMoving.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockPistonMoving.a)));
     }
 
     @Override

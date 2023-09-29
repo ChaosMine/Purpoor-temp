@@ -17,4 +17,6 @@ public abstract class NBTNumber implements NBTBase {
     public abstract float asFloat();
 
     public abstract Number k();
+
+    public abstract NBTNumber clone();
 }

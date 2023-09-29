@@ -36,7 +36,7 @@ public abstract class PathfinderGoalDoorInteract extends PathfinderGoal {
                 this.f = false;
                 return false;
             } else {
-                return (Boolean) iblockdata.get(BlockDoor.OPEN);
+                return iblockdata.get(BlockDoor.OPEN);
             }
         }
     }
@@ -67,7 +67,7 @@ public abstract class PathfinderGoalDoorInteract extends PathfinderGoal {
                     PathPoint pathpoint = pathentity.a(i);
 
                     this.door = new BlockPosition(pathpoint.a, pathpoint.b + 1, pathpoint.c);
-                    if (this.entity.h((double) this.door.getX(), this.entity.locY(), (double) this.door.getZ()) <= 2.25D) {
+                    if (this.entity.h(this.door.getX(), this.entity.locY(), this.door.getZ()) <= 2.25D) {
                         this.f = BlockDoor.a(this.entity.world, this.door);
                         if (this.f) {
                             return true;

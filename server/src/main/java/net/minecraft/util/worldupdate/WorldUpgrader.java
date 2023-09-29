@@ -120,11 +120,11 @@ public class WorldUpgrader {
 
                 for (UnmodifiableIterator unmodifiableiterator2 = this.c.iterator(); unmodifiableiterator2.hasNext(); f1 += f2) {
                     ResourceKey<DimensionManager> resourcekey2 = (ResourceKey) unmodifiableiterator2.next(); // CraftBukkit
-                    ListIterator<ChunkCoordIntPair> listiterator = (ListIterator) immutablemap.get(resourcekey2);
-                    IChunkLoader ichunkloader = (IChunkLoader) immutablemap1.get(resourcekey2);
+                    ListIterator<ChunkCoordIntPair> listiterator = immutablemap.get(resourcekey2);
+                    IChunkLoader ichunkloader = immutablemap1.get(resourcekey2);
 
                     if (listiterator.hasNext()) {
-                        ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) listiterator.next();
+                        ChunkCoordIntPair chunkcoordintpair = listiterator.next();
                         boolean flag1 = false;
 
                         try {

@@ -108,7 +108,7 @@ public class LootItemFunctionSetLore extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetLore lootitemfunctionsetlore, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetlore, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetlore, jsonserializationcontext);
             jsonobject.addProperty("replace", lootitemfunctionsetlore.a);
             JsonArray jsonarray = new JsonArray();
             Iterator iterator = lootitemfunctionsetlore.b.iterator();
@@ -129,7 +129,7 @@ public class LootItemFunctionSetLore extends LootItemFunctionConditional {
         @Override
         public LootItemFunctionSetLore b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
             boolean flag = ChatDeserializer.a(jsonobject, "replace", false);
-            List<IChatBaseComponent> list = (List) Streams.stream(ChatDeserializer.u(jsonobject, "lore")).map(IChatBaseComponent.ChatSerializer::a).collect(ImmutableList.toImmutableList());
+            List<IChatBaseComponent> list = Streams.stream(ChatDeserializer.u(jsonobject, "lore")).map(IChatBaseComponent.ChatSerializer::a).collect(ImmutableList.toImmutableList());
             LootTableInfo.EntityTarget loottableinfo_entitytarget = (LootTableInfo.EntityTarget) ChatDeserializer.a(jsonobject, "entity", (Object) null, jsondeserializationcontext, LootTableInfo.EntityTarget.class);
 
             return new LootItemFunctionSetLore(alootitemcondition, flag, list, loottableinfo_entitytarget);

@@ -89,7 +89,7 @@ public class WeightedList<U> {
         }
 
         private void a(float f) {
-            this.c = -Math.pow((double) f, (double) (1.0F / (float) this.b));
+            this.c = -Math.pow(f, 1.0F / (float) this.b);
         }
 
         public T a() {
@@ -101,20 +101,16 @@ public class WeightedList<U> {
         }
 
         public static <E> Codec<WeightedList.a<E>> a(final Codec<E> codec) {
-            return new Codec<WeightedList.a<E>>() {
-                public <T> DataResult<Pair<WeightedList.a<E>, T>> decode(DynamicOps<T> dynamicops, T t0) {
-                    Dynamic<T> dynamic = new Dynamic(dynamicops, t0);
-                    return dynamic.get("data").flatMap(codec::parse).map((object) -> { // Paper - decompile error
-                        return new WeightedList.a<>(object, dynamic.get("weight").asInt(1));
-                    }).map((weightedlist_a) -> {
-                        return Pair.of(weightedlist_a, dynamicops.empty());
-                    });
-                }
+            return new Codec<>() {
+							public <T> DataResult<Pair<WeightedList.a<E>, T>> decode(DynamicOps<T> dynamicops, T t0) {
+								var dynamic = new Dynamic<T>(dynamicops, t0);
+								return dynamic.get("data").flatMap(codec::parse).map(object -> new a<>(object, dynamic.get("weight").asInt(1))).map((weightedlist_a) -> Pair.of(weightedlist_a, dynamicops.empty()));
+							}
 
-                public <T> DataResult<T> encode(WeightedList.a<E> weightedlist_a, DynamicOps<T> dynamicops, T t0) {
-                    return dynamicops.mapBuilder().add("weight", dynamicops.createInt(weightedlist_a.b)).add("data", codec.encodeStart(dynamicops, weightedlist_a.a)).build(t0);
-                }
-            };
+							public <T> DataResult<T> encode(WeightedList.a<E> weightedlist_a, DynamicOps<T> dynamicops, T t0) {
+								return dynamicops.mapBuilder().add("weight", dynamicops.createInt(weightedlist_a.b)).add("data", codec.encodeStart(dynamicops, weightedlist_a.a)).build(t0);
+							}
+						};
         }
     }
 }

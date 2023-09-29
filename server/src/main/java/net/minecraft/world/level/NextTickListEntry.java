@@ -20,7 +20,7 @@ public class NextTickListEntry<T> {
     }
 
     public NextTickListEntry(BlockPosition blockposition, T t0, long i, TickListPriority ticklistpriority) {
-        this.f = (long) (NextTickListEntry.COUNTER.getAndIncrement()); // Paper - async chunk loading
+        this.f = NextTickListEntry.COUNTER.getAndIncrement(); // Paper - async chunk loading
         this.a = blockposition.immutableCopy();
         this.e = t0;
         this.b = i;

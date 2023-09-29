@@ -42,9 +42,9 @@ public class BlockAttachable extends BlockFacingHorizontal {
             IBlockData iblockdata;
 
             if (enumdirection.n() == EnumDirection.EnumAxis.Y) {
-                iblockdata = (IBlockData) ((IBlockData) this.getBlockData().set(BlockAttachable.FACE, enumdirection == EnumDirection.UP ? BlockPropertyAttachPosition.CEILING : BlockPropertyAttachPosition.FLOOR)).set(BlockAttachable.FACING, blockactioncontext.f());
+                iblockdata = this.getBlockData().set(BlockAttachable.FACE, enumdirection == EnumDirection.UP ? BlockPropertyAttachPosition.CEILING : BlockPropertyAttachPosition.FLOOR).set(BlockAttachable.FACING, blockactioncontext.f());
             } else {
-                iblockdata = (IBlockData) ((IBlockData) this.getBlockData().set(BlockAttachable.FACE, BlockPropertyAttachPosition.WALL)).set(BlockAttachable.FACING, enumdirection.opposite());
+                iblockdata = this.getBlockData().set(BlockAttachable.FACE, BlockPropertyAttachPosition.WALL).set(BlockAttachable.FACING, enumdirection.opposite());
             }
 
             if (iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
@@ -61,13 +61,13 @@ public class BlockAttachable extends BlockFacingHorizontal {
     }
 
     protected static EnumDirection h(IBlockData iblockdata) {
-        switch ((BlockPropertyAttachPosition) iblockdata.get(BlockAttachable.FACE)) {
+        switch (iblockdata.get(BlockAttachable.FACE)) {
             case CEILING:
                 return EnumDirection.DOWN;
             case FLOOR:
                 return EnumDirection.UP;
             default:
-                return (EnumDirection) iblockdata.get(BlockAttachable.FACING);
+                return iblockdata.get(BlockAttachable.FACING);
         }
     }
 }

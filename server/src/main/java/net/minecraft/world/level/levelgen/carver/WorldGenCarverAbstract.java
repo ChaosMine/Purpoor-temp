@@ -69,8 +69,8 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
     protected boolean a(IChunkAccess ichunkaccess, Function<BlockPosition, BiomeBase> function, long i, int j, int k, int l, double d0, double d1, double d2, double d3, double d4, BitSet bitset) {
         var random = new SeededRandom(0);
         random.secureseed_setSeed(Globals.worldSeed, k, l, Globals.dimension.get(), Globals.REGION_CARVER_SALT, i);
-        double d5 = (double) (k * 16 + 8);
-        double d6 = (double) (l * 16 + 8);
+        double d5 = k * 16 + 8;
+        double d6 = l * 16 + 8;
 
         if (d0 >= d5 - 16.0D - d3 * 2.0D && d2 >= d6 - 16.0D - d3 * 2.0D && d0 <= d5 + 16.0D + d3 * 2.0D && d2 <= d6 + 16.0D + d3 * 2.0D) {
             int i1 = Math.max(MathHelper.floor(d0 - d3) - k * 16 - 1, 0);
@@ -126,7 +126,7 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
             bitset.set(i2);
             blockposition_mutableblockposition.d(l, k1, i1);
             IBlockData iblockdata = ichunkaccess.getType(blockposition_mutableblockposition);
-            IBlockData iblockdata1 = ichunkaccess.getType(blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.UP));
+            IBlockData iblockdata1 = ichunkaccess.getType(blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.UP));
 
             if (iblockdata.a(Blocks.GRASS_BLOCK) || iblockdata.a(Blocks.MYCELIUM)) {
                 mutableboolean.setTrue();
@@ -140,9 +140,9 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
                 } else {
                     ichunkaccess.setType(blockposition_mutableblockposition, WorldGenCarverAbstract.g, false);
                     if (mutableboolean.isTrue()) {
-                        blockposition_mutableblockposition2.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.DOWN);
+                        blockposition_mutableblockposition2.a(blockposition_mutableblockposition, EnumDirection.DOWN);
                         if (ichunkaccess.getType(blockposition_mutableblockposition2).a(Blocks.DIRT)) {
-                            ichunkaccess.setType(blockposition_mutableblockposition2, ((BiomeBase) function.apply(blockposition_mutableblockposition)).e().e().a(), false);
+                            ichunkaccess.setType(blockposition_mutableblockposition2, function.apply(blockposition_mutableblockposition).e().e().a(), false);
                         }
                     }
                 }
@@ -161,7 +161,7 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
     }
 
     protected boolean a(IBlockData iblockdata, IBlockData iblockdata1) {
-        return this.a(iblockdata) || (iblockdata.a(Blocks.SAND) || iblockdata.a(Blocks.GRAVEL)) && !iblockdata1.getFluid().a((Tag) TagsFluid.WATER);
+        return this.a(iblockdata) || (iblockdata.a(Blocks.SAND) || iblockdata.a(Blocks.GRAVEL)) && !iblockdata1.getFluid().a(TagsFluid.WATER);
     }
 
     protected boolean a(IChunkAccess ichunkaccess, int i, int j, int k, int l, int i1, int j1, int k1, int l1) {
@@ -189,12 +189,12 @@ public abstract class WorldGenCarverAbstract<C extends WorldGenCarverConfigurati
     }
 
     protected boolean a(int i, int j, double d0, double d1, int k, int l, float f) {
-        double d2 = (double) (i * 16 + 8);
-        double d3 = (double) (j * 16 + 8);
+        double d2 = i * 16 + 8;
+        double d3 = j * 16 + 8;
         double d4 = d0 - d2;
         double d5 = d1 - d3;
-        double d6 = (double) (l - k);
-        double d7 = (double) (f + 2.0F + 16.0F);
+        double d6 = l - k;
+        double d7 = f + 2.0F + 16.0F;
 
         return d4 * d4 + d5 * d5 - d6 * d6 <= d7 * d7;
     }

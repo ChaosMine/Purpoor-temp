@@ -32,7 +32,7 @@ public class Activity {
     }
 
     private static Activity a(String s) {
-        return (Activity) IRegistry.a(IRegistry.ACTIVITY, s, (Object) (new Activity(s)));
+        return IRegistry.a(IRegistry.ACTIVITY, s, new Activity(s));
     }
 
     public boolean equals(Object object) {

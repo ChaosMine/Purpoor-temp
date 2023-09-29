@@ -84,7 +84,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
             a(itemstack, true);
             SoundCategory soundcategory = entityliving instanceof EntityHuman ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
 
-            world.playSound((EntityHuman) null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), SoundEffects.ITEM_CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (ItemCrossbow.RANDOM.nextFloat() * 0.5F + 1.0F) + 0.2F);
+            world.playSound(null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), SoundEffects.ITEM_CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (ItemCrossbow.RANDOM.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
 
     }
@@ -234,7 +234,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
                 Vector3fa vector3fa = new Vector3fa(vec3d1);
 
                 vector3fa.a(quaternion);
-                ((IProjectile) object).shoot((double) vector3fa.a(), (double) vector3fa.b(), (double) vector3fa.c(), f1, f2);
+                ((IProjectile) object).shoot(vector3fa.a(), vector3fa.b(), vector3fa.c(), f1, f2);
             }
             // CraftBukkit start
             org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(entityliving, itemstack, itemstack1, (Entity) object, entityliving.getRaisedHand(), f, true);
@@ -257,12 +257,12 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
                 }
             }
             // CraftBukkit end
-            world.playSound((EntityHuman) null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), SoundEffects.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, f);
+            world.playSound(null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), SoundEffects.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, f);
         }
     }
 
     private static EntityArrow a(World world, EntityLiving entityliving, ItemStack itemstack, ItemStack itemstack1) {
-        ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW));
+        ItemArrow itemarrow = (ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW);
         EntityArrow entityarrow = itemarrow.a(world, itemstack1, entityliving);
 
         if (entityliving instanceof EntityHuman) {
@@ -285,7 +285,7 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
         float[] afloat = a(entityliving.getRandom());
 
         for (int i = 0; i < list.size(); ++i) {
-            ItemStack itemstack1 = (ItemStack) list.get(i);
+            ItemStack itemstack1 = list.get(i);
             boolean flag = entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.canInstantlyBuild || (net.pl3x.purpur.PurpurConfig.allowCrossbowInfinity && EnchantmentManager.getEnchantmentLevel(Enchantments.ARROW_INFINITE, itemstack) > 0); // Purpur
 
             if (!itemstack1.isEmpty()) {
@@ -343,12 +343,12 @@ public class ItemCrossbow extends ItemProjectileWeapon implements ItemVanishable
 
             if (f >= 0.2F && !this.c) {
                 this.c = true;
-                world.playSound((EntityHuman) null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), soundeffect, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound(null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), soundeffect, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
 
             if (f >= 0.5F && soundeffect1 != null && !this.d) {
                 this.d = true;
-                world.playSound((EntityHuman) null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), soundeffect1, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                world.playSound(null, entityliving.locX(), entityliving.locY(), entityliving.locZ(), soundeffect1, SoundCategory.PLAYERS, 0.5F, 1.0F);
             }
         }
 

@@ -85,7 +85,7 @@ public class Convertable {
             Optional<? extends Dynamic<?>> optional = dynamic.get(s).result();
 
             if (optional.isPresent()) {
-                dynamic1 = dynamic1.set(s, (Dynamic) optional.get());
+                dynamic1 = dynamic1.set(s, optional.get());
             }
         }
 
@@ -261,7 +261,7 @@ public class Convertable {
         }
 
         public Path getWorldFolder(SavedFile savedfile) {
-            return (Path) this.e.computeIfAbsent(savedfile, (savedfile1) -> {
+            return this.e.computeIfAbsent(savedfile, (savedfile1) -> {
                 return this.folder.resolve(savedfile1.a());
             });
         }
@@ -295,25 +295,25 @@ public class Convertable {
         @Nullable
         public WorldInfo d() {
             this.checkSession();
-            return (WorldInfo) Convertable.this.a(this.folder.toFile(), Convertable.this.a(this.folder.toFile(), false));
+            return Convertable.this.a(this.folder.toFile(), Convertable.this.a(this.folder.toFile(), false));
         }
 
         @Nullable
         public SaveData a(DynamicOps<NBTBase> dynamicops, DataPackConfiguration datapackconfiguration) {
             this.checkSession();
-            return (SaveData) Convertable.this.a(this.folder.toFile(), Convertable.b(dynamicops, datapackconfiguration));
+            return Convertable.this.a(this.folder.toFile(), Convertable.b(dynamicops, datapackconfiguration));
         }
 
         @Nullable
         public DataPackConfiguration e() {
             this.checkSession();
-            return (DataPackConfiguration) Convertable.this.a(this.folder.toFile(), (file, datafixer) -> {
+            return Convertable.this.a(this.folder.toFile(), (file, datafixer) -> {
                 return Convertable.b(file, datafixer);
             });
         }
 
         public void a(IRegistryCustom iregistrycustom, SaveData savedata) {
-            this.a(iregistrycustom, savedata, (NBTTagCompound) null);
+            this.a(iregistrycustom, savedata, null);
         }
 
         public void a(IRegistryCustom iregistrycustom, SaveData savedata, @Nullable NBTTagCompound nbttagcompound) {

@@ -123,7 +123,7 @@ public class AdvancementDisplay {
         packetdataserializer.a(this.a);
         packetdataserializer.a(this.b);
         packetdataserializer.a(this.c);
-        packetdataserializer.writeEnum((Enum) this.e);
+        packetdataserializer.writeEnum(this.e);
         int i = 0;
 
         if (this.d != null) {

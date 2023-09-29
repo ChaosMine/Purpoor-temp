@@ -42,7 +42,7 @@ public class ItemExpBottle extends Item {
                     ((EntityPlayer) entityhuman).getBukkitEntity().updateInventory();
                 }
 
-                world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EXPERIENCE_BOTTLE_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (Entity.SHARED_RANDOM.nextFloat() * 0.4F + 0.8F));
+                world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EXPERIENCE_BOTTLE_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (Entity.SHARED_RANDOM.nextFloat() * 0.4F + 0.8F));
                 entityhuman.b(StatisticList.ITEM_USED.b(this));
             } else {
                 if (entityhuman instanceof EntityPlayer) {

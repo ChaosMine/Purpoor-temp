@@ -13,8 +13,8 @@ public interface AreaTransformer3 extends AreaTransformer {
             R r1 = areafactory1.make();
 
             return areacontexttransformed.a((i, j) -> {
-                areacontexttransformed.a((long) i, (long) j);
-                return this.a((WorldGenContext) areacontexttransformed, r0, r1, i, j);
+                areacontexttransformed.a(i, (long) j);
+                return this.a(areacontexttransformed, r0, r1, i, j);
             }, r0, r1);
         };
     }

@@ -18,7 +18,7 @@ public class CriterionTriggerRecipeUnlocked extends CriterionTriggerAbstract<Cri
     }
 
     @Override
-    public CriterionTriggerRecipeUnlocked.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerRecipeUnlocked.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "recipe"));
 
         return new CriterionTriggerRecipeUnlocked.a(criterionconditionentity_b, minecraftkey);
@@ -31,14 +31,14 @@ public class CriterionTriggerRecipeUnlocked extends CriterionTriggerAbstract<Cri
     }
 
     public static CriterionTriggerRecipeUnlocked.a a(MinecraftKey minecraftkey) {
-        return new CriterionTriggerRecipeUnlocked.a(CriterionConditionEntity.b.a, minecraftkey);
+        return new CriterionTriggerRecipeUnlocked.a(CriterionConditionEntity.b_.a, minecraftkey);
     }
 
     public static class a extends CriterionInstanceAbstract {
 
         private final MinecraftKey a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, MinecraftKey minecraftkey) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, MinecraftKey minecraftkey) {
             super(CriterionTriggerRecipeUnlocked.a, criterionconditionentity_b);
             this.a = minecraftkey;
         }

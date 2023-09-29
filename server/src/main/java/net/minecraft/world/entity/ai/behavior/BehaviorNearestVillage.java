@@ -34,8 +34,8 @@ public class BehaviorNearestVillage extends Behavior<EntityVillager> {
         Vec3D vec3d = null;
 
         for (int k = 0; k < 5; ++k) {
-            Vec3D vec3d1 = RandomPositionGenerator.a((EntityCreature) entityvillager, 15, 7, (blockposition) -> {
-                return (double) (-worldserver.b(SectionPosition.a(blockposition)));
+            Vec3D vec3d1 = RandomPositionGenerator.a(entityvillager, 15, 7, (blockposition) -> {
+                return -worldserver.b(SectionPosition.a(blockposition));
             });
 
             if (vec3d1 != null) {
@@ -53,7 +53,7 @@ public class BehaviorNearestVillage extends Behavior<EntityVillager> {
         }
 
         if (vec3d != null) {
-            entityvillager.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(vec3d, this.b, this.c)));
+            entityvillager.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(vec3d, this.b, this.c)));
         }
 
     }

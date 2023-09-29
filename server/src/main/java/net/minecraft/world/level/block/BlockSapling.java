@@ -32,7 +32,7 @@ public class BlockSapling extends BlockPlant implements IBlockFragilePlantElemen
     protected BlockSapling(WorldGenTreeProvider worldgentreeprovider, BlockBase.Info blockbase_info) {
         super(blockbase_info);
         this.c = worldgentreeprovider;
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSapling.STAGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockSapling.STAGE, 0));
     }
 
     @Override
@@ -72,8 +72,8 @@ public class BlockSapling extends BlockPlant implements IBlockFragilePlantElemen
     }
 
     public void grow(WorldServer worldserver, BlockPosition blockposition, IBlockData iblockdata, Random random) {
-        if ((Integer) iblockdata.get(BlockSapling.STAGE) == 0) {
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.a((IBlockState) BlockSapling.STAGE), 4);
+        if (iblockdata.get(BlockSapling.STAGE) == 0) {
+            worldserver.setTypeAndData(blockposition, iblockdata.a((IBlockState) BlockSapling.STAGE), 4);
         } else {
             this.c.a(worldserver, worldserver.getChunkProvider().getChunkGenerator(), blockposition, iblockdata, random);
         }

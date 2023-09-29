@@ -26,7 +26,7 @@ public class BlockJigsaw extends Block implements ITileEntity {
 
     protected BlockJigsaw(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockJigsaw.a, BlockPropertyJigsawOrientation.NORTH_UP));
+        this.j(this.blockStateList.getBlockData().set(BlockJigsaw.a, BlockPropertyJigsawOrientation.NORTH_UP));
     }
 
     @Override
@@ -36,12 +36,12 @@ public class BlockJigsaw extends Block implements ITileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockJigsaw.a, enumblockrotation.a().a((BlockPropertyJigsawOrientation) iblockdata.get(BlockJigsaw.a)));
+        return iblockdata.set(BlockJigsaw.a, enumblockrotation.a().a(iblockdata.get(BlockJigsaw.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return (IBlockData) iblockdata.set(BlockJigsaw.a, enumblockmirror.a().a((BlockPropertyJigsawOrientation) iblockdata.get(BlockJigsaw.a)));
+        return iblockdata.set(BlockJigsaw.a, enumblockmirror.a().a(iblockdata.get(BlockJigsaw.a)));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BlockJigsaw extends Block implements ITileEntity {
             enumdirection1 = EnumDirection.UP;
         }
 
-        return (IBlockData) this.getBlockData().set(BlockJigsaw.a, BlockPropertyJigsawOrientation.a(enumdirection, enumdirection1));
+        return this.getBlockData().set(BlockJigsaw.a, BlockPropertyJigsawOrientation.a(enumdirection, enumdirection1));
     }
 
     @Nullable
@@ -81,7 +81,7 @@ public class BlockJigsaw extends Block implements ITileEntity {
         EnumDirection enumdirection1 = h(definedstructure_blockinfo1.b);
         EnumDirection enumdirection2 = l(definedstructure_blockinfo.b);
         EnumDirection enumdirection3 = l(definedstructure_blockinfo1.b);
-        TileEntityJigsaw.JointType tileentityjigsaw_jointtype = (TileEntityJigsaw.JointType) TileEntityJigsaw.JointType.a(definedstructure_blockinfo.c.getString("joint")).orElseGet(() -> {
+        TileEntityJigsaw.JointType tileentityjigsaw_jointtype = TileEntityJigsaw.JointType.a(definedstructure_blockinfo.c.getString("joint")).orElseGet(() -> {
             return enumdirection.n().d() ? TileEntityJigsaw.JointType.ALIGNED : TileEntityJigsaw.JointType.ROLLABLE;
         });
         boolean flag = tileentityjigsaw_jointtype == TileEntityJigsaw.JointType.ROLLABLE;
@@ -90,10 +90,10 @@ public class BlockJigsaw extends Block implements ITileEntity {
     }
 
     public static EnumDirection h(IBlockData iblockdata) {
-        return ((BlockPropertyJigsawOrientation) iblockdata.get(BlockJigsaw.a)).b();
+        return iblockdata.get(BlockJigsaw.a).b();
     }
 
     public static EnumDirection l(IBlockData iblockdata) {
-        return ((BlockPropertyJigsawOrientation) iblockdata.get(BlockJigsaw.a)).c();
+        return iblockdata.get(BlockJigsaw.a).c();
     }
 }

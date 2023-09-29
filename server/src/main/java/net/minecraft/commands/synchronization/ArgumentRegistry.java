@@ -56,8 +56,6 @@ import net.minecraft.commands.arguments.item.ArgumentItemPredicate;
 import net.minecraft.commands.arguments.item.ArgumentItemStack;
 import net.minecraft.commands.arguments.item.ArgumentTag;
 import net.minecraft.commands.synchronization.brigadier.ArgumentSerializers;
-import net.minecraft.gametest.framework.GameTestHarnessTestClassArgument;
-import net.minecraft.gametest.framework.GameTestHarnessTestFunctionArgument;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.resources.MinecraftKey;
 import org.apache.logging.log4j.LogManager;
@@ -198,7 +196,7 @@ public class ArgumentRegistry {
 		JsonObject jsonobject1 = new JsonObject();
 
 		for (CommandNode<S> sCommandNode : commandnode.getChildren()) {
-			CommandNode<S> commandnode1 = (CommandNode) sCommandNode;
+			CommandNode<S> commandnode1 = sCommandNode;
 
 			jsonobject1.add(commandnode1.getName(), a(commanddispatcher, commandnode1));
 		}

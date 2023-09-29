@@ -163,8 +163,8 @@ public class RegistryID<K> implements Registry<K> {
     }
 
     public void a() {
-        Arrays.fill(this.b, (Object) null);
-        Arrays.fill(this.d, (Object) null);
+        Arrays.fill(this.b, null);
+        Arrays.fill(this.d, null);
         this.e = 0;
         this.f = 0;
         this.usedIds.clear(); // Paper

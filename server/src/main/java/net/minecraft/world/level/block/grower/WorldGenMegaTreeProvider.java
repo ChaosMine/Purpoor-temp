@@ -39,7 +39,7 @@ public abstract class WorldGenMegaTreeProvider extends WorldGenTreeProvider {
         if (worldgenfeatureconfigured == null) {
             return false;
         } else {
-            ((WorldGenFeatureTreeConfiguration) worldgenfeatureconfigured.f).b();
+            worldgenfeatureconfigured.f.b();
             setTreeType(worldgenfeatureconfigured); // CraftBukkit
             IBlockData iblockdata1 = Blocks.AIR.getBlockData();
 

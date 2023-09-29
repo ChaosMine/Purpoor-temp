@@ -17,7 +17,7 @@ public interface IWorldWriter {
     boolean a(BlockPosition blockposition, boolean flag);
 
     default boolean b(BlockPosition blockposition, boolean flag) {
-        return this.a(blockposition, flag, (Entity) null);
+        return this.a(blockposition, flag, null);
     }
 
     default boolean a(BlockPosition blockposition, boolean flag, @Nullable Entity entity) {

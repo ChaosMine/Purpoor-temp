@@ -126,7 +126,7 @@ public class LootTable {
         if (event.isCancelled()) {
             return;
         }
-        list = event.getLoot().stream().map(CraftItemStack::asNMSCopy).collect(Collectors.toList());
+        list = event.getLoot().stream().map(CraftItemStack::asNMSCopy).toList();
         // CraftBukkit end
         List<Integer> list1 = this.a(iinventory, random);
 
@@ -142,9 +142,9 @@ public class LootTable {
             }
 
             if (itemstack.isEmpty()) {
-                iinventory.setItem((Integer) list1.remove(list1.size() - 1), ItemStack.b);
+                iinventory.setItem(list1.remove(list1.size() - 1), ItemStack.b);
             } else {
-                iinventory.setItem((Integer) list1.remove(list1.size() - 1), itemstack);
+                iinventory.setItem(list1.remove(list1.size() - 1), itemstack);
             }
         }
 
@@ -166,7 +166,7 @@ public class LootTable {
         }
 
         while (i - list.size() - list1.size() > 0 && !list1.isEmpty()) {
-            ItemStack itemstack1 = (ItemStack) list1.remove(MathHelper.nextInt(random, 0, list1.size() - 1));
+            ItemStack itemstack1 = list1.remove(MathHelper.nextInt(random, 0, list1.size() - 1));
             int j = MathHelper.nextInt(random, 1, itemstack1.getCount() / 2);
             ItemStack itemstack2 = itemstack1.cloneAndSubtract(j);
 
@@ -210,7 +210,7 @@ public class LootTable {
 
         public LootTable deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
             JsonObject jsonobject = ChatDeserializer.m(jsonelement, "loot table");
-            LootSelector[] alootselector = (LootSelector[]) ChatDeserializer.a(jsonobject, "pools", new LootSelector[0], jsondeserializationcontext, LootSelector[].class);
+            LootSelector[] alootselector = ChatDeserializer.a(jsonobject, "pools", new LootSelector[0], jsondeserializationcontext, LootSelector[].class);
             LootContextParameterSet lootcontextparameterset = null;
 
             if (jsonobject.has("type")) {
@@ -219,7 +219,7 @@ public class LootTable {
                 lootcontextparameterset = LootContextParameterSets.a(new MinecraftKey(s));
             }
 
-            LootItemFunction[] alootitemfunction = (LootItemFunction[]) ChatDeserializer.a(jsonobject, "functions", new LootItemFunction[0], jsondeserializationcontext, LootItemFunction[].class);
+            LootItemFunction[] alootitemfunction = ChatDeserializer.a(jsonobject, "functions", new LootItemFunction[0], jsondeserializationcontext, LootItemFunction[].class);
 
             return new LootTable(lootcontextparameterset != null ? lootcontextparameterset : LootContextParameterSets.GENERIC, alootselector, alootitemfunction);
         }
@@ -281,7 +281,7 @@ public class LootTable {
         }
 
         public LootTable b() {
-            return new LootTable(this.c, (LootSelector[]) this.a.toArray(new LootSelector[0]), (LootItemFunction[]) this.b.toArray(new LootItemFunction[0]));
+            return new LootTable(this.c, this.a.toArray(new LootSelector[0]), this.b.toArray(new LootItemFunction[0]));
         }
     }
 }

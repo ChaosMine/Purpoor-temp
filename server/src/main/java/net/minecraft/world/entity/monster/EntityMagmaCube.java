@@ -57,13 +57,13 @@ public class EntityMagmaCube extends EntitySlime {
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this) && !iworldreader.containsLiquid(this.getBoundingBox());
+        return iworldreader.j(this) && !iworldreader.containsLiquid(this.getBoundingBox());
     }
 
     @Override
     public void setSize(int i, boolean flag) {
         super.setSize(i, flag);
-        this.getAttributeInstance(GenericAttributes.ARMOR).setValue((double) (i * 3));
+        this.getAttributeInstance(GenericAttributes.ARMOR).setValue(i * 3);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EntityMagmaCube extends EntitySlime {
     public void jump() { // Purpur - protected -> public
         Vec3D vec3d = this.getMot();
 
-        this.setMot(vec3d.x, (double) (this.dJ() + (float) this.getSize() * 0.1F), vec3d.z);
+        this.setMot(vec3d.x, this.dJ() + (float) this.getSize() * 0.1F, vec3d.z);
         this.impulse = true;
         this.actualJump = false; // Purpur
     }
@@ -110,7 +110,7 @@ public class EntityMagmaCube extends EntitySlime {
         if (tag == TagsFluid.LAVA) {
             Vec3D vec3d = this.getMot();
 
-            this.setMot(vec3d.x, (double) (0.22F + (float) this.getSize() * 0.05F), vec3d.z);
+            this.setMot(vec3d.x, 0.22F + (float) this.getSize() * 0.05F, vec3d.z);
             this.impulse = true;
         } else {
             super.c(tag);

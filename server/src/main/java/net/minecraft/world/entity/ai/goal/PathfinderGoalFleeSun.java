@@ -63,7 +63,7 @@ public class PathfinderGoalFleeSun extends PathfinderGoal {
             BlockPosition blockposition1 = blockposition.b(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 
             if (!this.f.e(blockposition1) && this.a.f(blockposition1) < 0.0F) {
-                return Vec3D.c((BaseBlockPosition) blockposition1);
+                return Vec3D.c(blockposition1);
             }
         }
 

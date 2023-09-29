@@ -62,7 +62,7 @@ public class EntityThrownTrident extends EntityArrow {
         Entity entity = this.getShooter();
 
         if ((this.ai || this.t() || (world.purpurConfig.tridentLoyaltyVoidReturnHeight < 0.0D && locY() < world.purpurConfig.tridentLoyaltyVoidReturnHeight)) && entity != null) { // Purpur
-            byte b0 = (Byte) this.datawatcher.get(EntityThrownTrident.g);
+            byte b0 = this.datawatcher.get(EntityThrownTrident.g);
 
             if (b0 > 0 && !this.z()) {
                 if (!this.world.isClientSide && this.fromPlayer == EntityArrow.PickupStatus.ALLOWED) {
@@ -122,7 +122,7 @@ public class EntityThrownTrident extends EntityArrow {
         }
 
         Entity entity1 = this.getShooter();
-        DamageSource damagesource = DamageSource.a((Entity) this, (Entity) (entity1 == null ? this : entity1));
+        DamageSource damagesource = DamageSource.a(this, entity1 == null ? this : entity1);
 
         this.ai = true;
         SoundEffect soundeffect = SoundEffects.ITEM_TRIDENT_HIT;
@@ -137,7 +137,7 @@ public class EntityThrownTrident extends EntityArrow {
 
                 if (entity1 instanceof EntityLiving) {
                     EnchantmentManager.a(entityliving1, entity1);
-                    EnchantmentManager.b((EntityLiving) entity1, (Entity) entityliving1);
+                    EnchantmentManager.b((EntityLiving) entity1, entityliving1);
                 }
 
                 this.a(entityliving1);
@@ -151,9 +151,9 @@ public class EntityThrownTrident extends EntityArrow {
             BlockPosition blockposition = entity.getChunkCoordinates();
 
             if (this.world.e(blockposition)) {
-                EntityLightning entitylightning = (EntityLightning) EntityTypes.LIGHTNING_BOLT.a(this.world);
+                EntityLightning entitylightning = EntityTypes.LIGHTNING_BOLT.a(this.world);
 
-                entitylightning.d(Vec3D.c((BaseBlockPosition) blockposition));
+                entitylightning.d(Vec3D.c(blockposition));
                 entitylightning.d(entity1 instanceof EntityPlayer ? (EntityPlayer) entity1 : null);
                 ((WorldServer) this.world).strikeLightning(entitylightning, org.bukkit.event.weather.LightningStrikeEvent.Cause.TRIDENT); // CraftBukkit
                 soundeffect = SoundEffects.ITEM_TRIDENT_THUNDER;
@@ -198,7 +198,7 @@ public class EntityThrownTrident extends EntityArrow {
 
     @Override
     public void h() {
-        byte b0 = (Byte) this.datawatcher.get(EntityThrownTrident.g);
+        byte b0 = this.datawatcher.get(EntityThrownTrident.g);
 
         if (this.fromPlayer != EntityArrow.PickupStatus.ALLOWED || b0 <= 0) {
             super.h();

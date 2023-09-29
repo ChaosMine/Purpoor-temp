@@ -15,12 +15,12 @@ public class RecipeSerializerComplex<T extends IRecipe<?>> implements RecipeSeri
 
     @Override
     public T a(MinecraftKey minecraftkey, JsonObject jsonobject) {
-        return (IRecipe) this.v.apply(minecraftkey);
+        return this.v.apply(minecraftkey);
     }
 
     @Override
     public T a(MinecraftKey minecraftkey, PacketDataSerializer packetdataserializer) {
-        return (IRecipe) this.v.apply(minecraftkey);
+        return this.v.apply(minecraftkey);
     }
 
     @Override

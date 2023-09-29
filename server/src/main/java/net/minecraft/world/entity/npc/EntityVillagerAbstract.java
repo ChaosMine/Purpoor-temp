@@ -67,12 +67,12 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
             groupdataentity = new EntityAgeable.a(false);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     public final int getUnhappy() { return eK(); } // Paper - OBFHELPER
     public int eK() {
-        return (Integer) this.datawatcher.get(EntityVillagerAbstract.bp);
+        return this.datawatcher.get(EntityVillagerAbstract.bp);
     }
 
     public final void setUnhappy(int i) { s(i); } // Paper - OBFHELPER
@@ -212,7 +212,7 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
     }
 
     protected void eT() {
-        this.setTradingPlayer((EntityHuman) null);
+        this.setTradingPlayer(null);
     }
 
     @Override

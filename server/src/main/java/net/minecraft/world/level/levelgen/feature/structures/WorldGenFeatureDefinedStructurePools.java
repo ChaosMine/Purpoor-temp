@@ -14,8 +14,6 @@ public interface WorldGenFeatureDefinedStructurePools<P extends WorldGenFeatureD
     Codec<P> codec();
 
     static <P extends WorldGenFeatureDefinedStructurePoolStructure> WorldGenFeatureDefinedStructurePools<P> a(String s, Codec<P> codec) {
-        return (WorldGenFeatureDefinedStructurePools) IRegistry.a(IRegistry.STRUCTURE_POOL_ELEMENT, s, (Object) (() -> {
-            return codec;
-        }));
+        return IRegistry.a(IRegistry.STRUCTURE_POOL_ELEMENT, s, () -> codec);
     }
 }

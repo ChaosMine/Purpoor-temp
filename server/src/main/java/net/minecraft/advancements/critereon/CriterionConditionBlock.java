@@ -7,7 +7,6 @@ import com.google.gson.JsonSyntaxException;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.WorldServer;
@@ -20,7 +19,7 @@ import net.minecraft.world.level.block.state.IBlockData;
 
 public class CriterionConditionBlock {
 
-    public static final CriterionConditionBlock a = new CriterionConditionBlock((Tag) null, (Block) null, CriterionTriggerProperties.a, CriterionConditionNBT.a);
+    public static final CriterionConditionBlock a = new CriterionConditionBlock(null, null, CriterionTriggerProperties.a, CriterionConditionNBT.a);
     @Nullable
     private final Tag<Block> b;
     @Nullable
@@ -54,7 +53,7 @@ public class CriterionConditionBlock {
                 if (this.e != CriterionConditionNBT.a) {
                     TileEntity tileentity = worldserver.getTileEntity(blockposition);
 
-                    if (tileentity == null || !this.e.a((NBTBase) tileentity.save(new NBTTagCompound()))) {
+                    if (tileentity == null || !this.e.a(tileentity.save(new NBTTagCompound()))) {
                         return false;
                     }
                 }
@@ -73,7 +72,7 @@ public class CriterionConditionBlock {
             if (jsonobject.has("block")) {
                 MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
 
-                block = (Block) IRegistry.BLOCK.get(minecraftkey);
+                block = IRegistry.BLOCK.get(minecraftkey);
             }
 
             Tag<Block> tag = null;
@@ -115,7 +114,7 @@ public class CriterionConditionBlock {
         }
     }
 
-    public static class a {
+    public static class a_ {
 
         @Nullable
         private Block a;
@@ -124,26 +123,26 @@ public class CriterionConditionBlock {
         private CriterionTriggerProperties c;
         private CriterionConditionNBT d;
 
-        private a() {
+        private a_() {
             this.c = CriterionTriggerProperties.a;
             this.d = CriterionConditionNBT.a;
         }
 
-        public static CriterionConditionBlock.a a() {
-            return new CriterionConditionBlock.a();
+        public static a_ a() {
+            return new a_();
         }
 
-        public CriterionConditionBlock.a a(Block block) {
+        public a_ a(Block block) {
             this.a = block;
             return this;
         }
 
-        public CriterionConditionBlock.a a(Tag<Block> tag) {
+        public a_ a(Tag<Block> tag) {
             this.b = tag;
             return this;
         }
 
-        public CriterionConditionBlock.a a(CriterionTriggerProperties criteriontriggerproperties) {
+        public a_ a(CriterionTriggerProperties criteriontriggerproperties) {
             this.c = criteriontriggerproperties;
             return this;
         }

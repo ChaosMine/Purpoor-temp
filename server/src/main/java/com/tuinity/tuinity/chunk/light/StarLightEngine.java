@@ -70,9 +70,9 @@ public abstract class StarLightEngine {
             this.y = y;
             this.z = z;
             this.nms = EnumDirection.from(x, y, z);
-            this.everythingButThisDirection = (long)(ALL_DIRECTIONS_BITSET ^ (1 << this.ordinal()));
+            this.everythingButThisDirection = ALL_DIRECTIONS_BITSET ^ (1 << this.ordinal());
             // positive is always even, negative is always odd. Flip the 1 bit to get the negative direction.
-            this.everythingButTheOppositeDirection = (long)(ALL_DIRECTIONS_BITSET ^ (1 << (this.ordinal() ^ 1)));
+            this.everythingButTheOppositeDirection = ALL_DIRECTIONS_BITSET ^ (1 << (this.ordinal() ^ 1));
         }
 
         public AxisDirection getOpposite() {

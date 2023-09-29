@@ -417,12 +417,12 @@ public final class ChunkTaskManager {
         drainChunkWaitQueue();
 
         if (this.workers == null) {
-            if (Bukkit.isPrimaryThread() || MinecraftServer.getServer().hasStopped()) {
-                ((IAsyncTaskHandler<Runnable>)this.world.getChunkProvider().serverThreadQueue).executeAll();
+            if (Bukkit.isPrimaryThread() || MinecraftServer.SERVER.hasStopped()) {
+                this.world.getChunkProvider().serverThreadQueue.executeAll();
             } else {
                 CompletableFuture<Void> wait = new CompletableFuture<>();
-                MinecraftServer.getServer().scheduleOnMain(() -> {
-                    ((IAsyncTaskHandler<Runnable>)this.world.getChunkProvider().serverThreadQueue).executeAll();
+                MinecraftServer.SERVER.scheduleOnMain(() -> {
+                    this.world.getChunkProvider().serverThreadQueue.executeAll();
                 });
                 wait.join();
             }

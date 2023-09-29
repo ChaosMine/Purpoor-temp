@@ -27,7 +27,7 @@ public class PacketPlayOutBlockChange implements Packet<PacketListenerPlayOut> {
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
         this.a = packetdataserializer.e();
-        this.block = (IBlockData) Block.REGISTRY_ID.fromId(packetdataserializer.i());
+        this.block = Block.REGISTRY_ID.fromId(packetdataserializer.i());
     }
 
     @Override

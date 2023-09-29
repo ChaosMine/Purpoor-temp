@@ -21,7 +21,7 @@ public interface IOglin {
         boolean flag = entityliving1.damageEntity(DamageSource.mobAttack(entityliving), f1);
 
         if (flag) {
-            entityliving.a(entityliving, (Entity) entityliving1);
+            entityliving.a(entityliving, entityliving1);
             if (!entityliving.isBaby()) {
                 b(entityliving, entityliving1);
             }

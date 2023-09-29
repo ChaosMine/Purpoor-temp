@@ -8,11 +8,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public interface aci extends IReloadListener {
+	@Override
+	default CompletableFuture<Void> a(IReloadListener.a ira, IResourceManager iresourcemanager, Executor executor, Executor executor1) {
+		return ira.a(Unit.INSTANCE).thenRunAsync(() -> this.a(iresourcemanager), executor1);
+	}
 
-    @Override
-    default CompletableFuture<Void> a(IReloadListener.a ireloadlistener_a, IResourceManager iresourcemanager, Executor executor, Executor executor1) {
-        return ireloadlistener_a.a(Unit.INSTANCE).thenRunAsync(() -> this.a(iresourcemanager), executor1);
-    }
-
-    void a(IResourceManager iresourcemanager);
+	void a(IResourceManager iresourcemanager);
 }

@@ -51,7 +51,7 @@ public class LootContextParameterSets {
         consumer.accept(lootcontextparameterset_builder);
         LootContextParameterSet lootcontextparameterset = lootcontextparameterset_builder.build();
         MinecraftKey minecraftkey = new MinecraftKey(s);
-        LootContextParameterSet lootcontextparameterset1 = (LootContextParameterSet) LootContextParameterSets.m.put(minecraftkey, lootcontextparameterset);
+        LootContextParameterSet lootcontextparameterset1 = LootContextParameterSets.m.put(minecraftkey, lootcontextparameterset);
 
         if (lootcontextparameterset1 != null) {
             throw new IllegalStateException("Loot table parameter set " + minecraftkey + " is already registered");
@@ -62,11 +62,11 @@ public class LootContextParameterSets {
 
     @Nullable
     public static LootContextParameterSet a(MinecraftKey minecraftkey) {
-        return (LootContextParameterSet) LootContextParameterSets.m.get(minecraftkey);
+        return LootContextParameterSets.m.get(minecraftkey);
     }
 
     @Nullable
     public static MinecraftKey a(LootContextParameterSet lootcontextparameterset) {
-        return (MinecraftKey) LootContextParameterSets.m.inverse().get(lootcontextparameterset);
+        return LootContextParameterSets.m.inverse().get(lootcontextparameterset);
     }
 }

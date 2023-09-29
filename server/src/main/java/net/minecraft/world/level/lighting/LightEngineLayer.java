@@ -97,7 +97,7 @@ public abstract class LightEngineLayer<M extends LightEngineStorageArray<M>, S e
 
     private void d() {
         Arrays.fill(this.g, ChunkCoordIntPair.a);
-        Arrays.fill(this.h, (Object) null);
+        Arrays.fill(this.h, null);
     }
 
     // Paper start - comment out, see getBlockOptimized

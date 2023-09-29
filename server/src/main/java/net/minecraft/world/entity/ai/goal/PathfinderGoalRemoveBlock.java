@@ -74,7 +74,7 @@ public class PathfinderGoalRemoveBlock extends PathfinderGoalGotoTarget {
         super.e();
         World world = this.entity.world;
         BlockPosition blockposition = this.entity.getChunkCoordinates();
-        BlockPosition blockposition1 = this.a(blockposition, (IBlockAccess) world);
+        BlockPosition blockposition1 = this.a(blockposition, world);
         Random random = this.entity.getRandom();
 
         if (this.l() && blockposition1 != null) {
@@ -101,7 +101,7 @@ public class PathfinderGoalRemoveBlock extends PathfinderGoalGotoTarget {
             if (this.i > 60) {
                 // CraftBukkit start - Step on eggs
                 EntityInteractEvent event = new EntityInteractEvent(this.entity.getBukkitEntity(), CraftBlock.at(world, blockposition1));
-                world.getServer().getPluginManager().callEvent((EntityInteractEvent) event);
+                world.getServer().getPluginManager().callEvent(event);
 
                 if (event.isCancelled()) {
                     return;
@@ -114,7 +114,7 @@ public class PathfinderGoalRemoveBlock extends PathfinderGoalGotoTarget {
                         double d1 = random.nextGaussian() * 0.02D;
                         double d2 = random.nextGaussian() * 0.02D;
 
-                        ((WorldServer) world).a(Particles.POOF, (double) blockposition1.getX() + 0.5D, (double) blockposition1.getY(), (double) blockposition1.getZ() + 0.5D, 1, d0, d1, d2, 0.15000000596046448D);
+                        ((WorldServer) world).a(Particles.POOF, (double) blockposition1.getX() + 0.5D, blockposition1.getY(), (double) blockposition1.getZ() + 0.5D, 1, d0, d1, d2, 0.15000000596046448D);
                     }
 
                     this.a(world, blockposition1);

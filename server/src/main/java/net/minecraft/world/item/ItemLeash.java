@@ -28,7 +28,7 @@ public class ItemLeash extends Item {
         BlockPosition blockposition = itemactioncontext.getClickPosition();
         Block block = world.getType(blockposition).getBlock();
 
-        if (block.a((Tag) TagsBlock.FENCES)) {
+        if (block.a(TagsBlock.FENCES)) {
             EntityHuman entityhuman = itemactioncontext.getEntity();
 
             if (!world.isClientSide && entityhuman != null) {

@@ -62,7 +62,7 @@ public abstract class EntityAgeable extends EntityCreature {
         }
 
         entityageable_a.b();
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     @Nullable
@@ -79,7 +79,7 @@ public abstract class EntityAgeable extends EntityCreature {
     }
 
     public int getAge() {
-        return this.world.isClientSide ? ((Boolean) this.datawatcher.get(EntityAgeable.bo) ? -1 : 1) : this.b;
+        return this.world.isClientSide ? (this.datawatcher.get(EntityAgeable.bo) ? -1 : 1) : this.b;
     }
 
     public void setAge(int i, boolean flag) {

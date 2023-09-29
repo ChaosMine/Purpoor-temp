@@ -44,7 +44,7 @@ public final class ja {
     private final ja K;
 
     private static ja a(String s) {
-        return new ja(s, (ja) null);
+        return new ja(s, null);
     }
 
     private static ja a(String s, ja ja) {

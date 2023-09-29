@@ -36,7 +36,7 @@ public class WorldGenHugeMushroomBrown extends WorldGenMushrooms {
                         boolean flag8 = flag2 || flag4 && l == 1 - j;
                         boolean flag9 = flag3 || flag4 && l == j - 1;
 
-                        this.a(generatoraccess, blockposition_mutableblockposition, (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) worldgenfeaturemushroomconfiguration.b.a(random, blockposition).set(BlockHugeMushroom.d, flag6)).set(BlockHugeMushroom.b, flag7)).set(BlockHugeMushroom.a, flag8)).set(BlockHugeMushroom.c, flag9));
+                        this.a(generatoraccess, blockposition_mutableblockposition, worldgenfeaturemushroomconfiguration.b.a(random, blockposition).set(BlockHugeMushroom.d, flag6).set(BlockHugeMushroom.b, flag7).set(BlockHugeMushroom.a, flag8).set(BlockHugeMushroom.c, flag9));
                     }
                 }
             }

@@ -22,7 +22,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 
     protected BlockRedstoneTorch(BlockBase.Info blockbase_info) {
         super(blockbase_info, ParticleParamRedstone.a);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockRedstoneTorch.LIT, true));
+        this.j(this.blockStateList.getBlockData().set(BlockRedstoneTorch.LIT, true));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockRedstoneTorch.LIT) && EnumDirection.UP != enumdirection ? 15 : 0;
+        return iblockdata.get(BlockRedstoneTorch.LIT) && EnumDirection.UP != enumdirection ? 15 : 0;
     }
 
     protected boolean a(World world, BlockPosition blockposition, IBlockData iblockdata) {
@@ -64,7 +64,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        boolean flag = this.a((World) worldserver, blockposition, iblockdata);
+        boolean flag = this.a(worldserver, blockposition, iblockdata);
         // Paper start
         java.util.ArrayDeque<BlockRedstoneTorch.RedstoneUpdateInfo> redstoneUpdateInfos = worldserver.redstoneUpdateInfos;
         if (redstoneUpdateInfos != null) {
@@ -78,11 +78,11 @@ public class BlockRedstoneTorch extends BlockTorch {
         // CraftBukkit start
         org.bukkit.plugin.PluginManager manager = worldserver.getServer().getPluginManager();
         org.bukkit.block.Block block = worldserver.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
-        int oldCurrent = ((Boolean) iblockdata.get(BlockRedstoneTorch.LIT)).booleanValue() ? 15 : 0;
+        int oldCurrent = iblockdata.get(BlockRedstoneTorch.LIT).booleanValue() ? 15 : 0;
 
         BlockRedstoneEvent event = new BlockRedstoneEvent(block, oldCurrent, oldCurrent);
         // CraftBukkit end
-        if ((Boolean) iblockdata.get(BlockRedstoneTorch.LIT)) {
+        if (iblockdata.get(BlockRedstoneTorch.LIT)) {
             if (flag) {
                 // CraftBukkit start
                 if (oldCurrent != 0) {
@@ -93,7 +93,7 @@ public class BlockRedstoneTorch extends BlockTorch {
                     }
                 }
                 // CraftBukkit end
-                worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneTorch.LIT, false), 3);
+                worldserver.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneTorch.LIT, false), 3);
                 if (a(worldserver, blockposition, true)) {
                     worldserver.triggerEffect(1502, blockposition, 0);
                     worldserver.getBlockTickList().a(blockposition, worldserver.getType(blockposition).getBlock(), 160);
@@ -109,14 +109,14 @@ public class BlockRedstoneTorch extends BlockTorch {
                 }
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneTorch.LIT, true), 3);
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneTorch.LIT, true), 3);
         }
 
     }
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
-        if ((Boolean) iblockdata.get(BlockRedstoneTorch.LIT) == this.a(world, blockposition, iblockdata) && !world.getBlockTickList().b(blockposition, this)) {
+        if (iblockdata.get(BlockRedstoneTorch.LIT) == this.a(world, blockposition, iblockdata) && !world.getBlockTickList().b(blockposition, this)) {
             world.getBlockTickList().a(blockposition, this, 2);
         }
 

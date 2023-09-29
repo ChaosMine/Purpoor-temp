@@ -18,7 +18,7 @@ public class WorldGenFeatureSeaGrass extends WorldGenerator<WorldGenFeatureConfi
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
+    public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
         boolean flag = false;
         int i = random.nextInt(8) - random.nextInt(8);
         int j = random.nextInt(8) - random.nextInt(8);
@@ -31,7 +31,7 @@ public class WorldGenFeatureSeaGrass extends WorldGenerator<WorldGenFeatureConfi
 
             if (iblockdata.canPlace(generatoraccessseed, blockposition1)) {
                 if (flag1) {
-                    IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockTallSeaGrass.b, BlockPropertyDoubleBlockHalf.UPPER);
+                    IBlockData iblockdata1 = iblockdata.set(BlockTallSeaGrass.b, BlockPropertyDoubleBlockHalf.UPPER);
                     BlockPosition blockposition2 = blockposition1.up();
 
                     if (generatoraccessseed.getType(blockposition2).a(Blocks.WATER)) {

@@ -52,9 +52,9 @@ public class BehaviorLookTarget extends Behavior<EntityLiving> {
 
         behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).ifPresent((list) -> {
             list.stream().filter(this.b).filter((entityliving1) -> {
-                return entityliving1.h((Entity) entityliving) <= (double) this.c;
+                return entityliving1.h(entityliving) <= (double) this.c;
             }).findFirst().ifPresent((entityliving1) -> {
-                behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityliving1, true)));
+                behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorPositionEntity(entityliving1, true)));
             });
         });
     }

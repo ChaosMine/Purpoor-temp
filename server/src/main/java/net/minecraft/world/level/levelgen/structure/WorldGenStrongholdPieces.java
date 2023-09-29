@@ -260,8 +260,8 @@ public class WorldGenStrongholdPieces {
             this.a(generatoraccessseed, structureboundingbox, 9, 1, 1, 9, 1, 3, Blocks.LAVA.getBlockData(), Blocks.LAVA.getBlockData(), false);
             this.a(generatoraccessseed, structureboundingbox, 3, 1, 8, 7, 1, 12, false, random, WorldGenStrongholdPieces.e);
             this.a(generatoraccessseed, structureboundingbox, 4, 1, 9, 6, 1, 11, Blocks.LAVA.getBlockData(), Blocks.LAVA.getBlockData(), false);
-            IBlockData iblockdata = (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true);
-            IBlockData iblockdata1 = (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true)).set(BlockIronBars.EAST, true);
+            IBlockData iblockdata = Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true);
+            IBlockData iblockdata1 = Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true).set(BlockIronBars.EAST, true);
 
             int i;
 
@@ -274,7 +274,7 @@ public class WorldGenStrongholdPieces {
                 this.a(generatoraccessseed, structureboundingbox, i, 3, 15, i, 4, 15, iblockdata1, iblockdata1, false);
             }
 
-            IBlockData iblockdata2 = (IBlockData) Blocks.STONE_BRICK_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.NORTH);
+            IBlockData iblockdata2 = Blocks.STONE_BRICK_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.NORTH);
 
             this.a(generatoraccessseed, structureboundingbox, 4, 1, 5, 6, 1, 7, false, random, WorldGenStrongholdPieces.e);
             this.a(generatoraccessseed, structureboundingbox, 4, 2, 6, 6, 2, 7, false, random, WorldGenStrongholdPieces.e);
@@ -286,10 +286,10 @@ public class WorldGenStrongholdPieces {
                 this.a(generatoraccessseed, iblockdata2, j, 3, 6, structureboundingbox);
             }
 
-            IBlockData iblockdata3 = (IBlockData) Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.NORTH);
-            IBlockData iblockdata4 = (IBlockData) Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.SOUTH);
-            IBlockData iblockdata5 = (IBlockData) Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.EAST);
-            IBlockData iblockdata6 = (IBlockData) Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.WEST);
+            IBlockData iblockdata3 = Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.NORTH);
+            IBlockData iblockdata4 = Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.SOUTH);
+            IBlockData iblockdata5 = Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.EAST);
+            IBlockData iblockdata6 = Blocks.END_PORTAL_FRAME.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.WEST);
             boolean flag = true;
             boolean[] aboolean = new boolean[12];
 
@@ -298,18 +298,18 @@ public class WorldGenStrongholdPieces {
                 flag &= aboolean[k];
             }
 
-            this.a(generatoraccessseed, (IBlockData) iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[0]), 4, 3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[1]), 5, 3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[2]), 6, 3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[3]), 4, 3, 12, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[4]), 5, 3, 12, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[5]), 6, 3, 12, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[6]), 3, 3, 9, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[7]), 3, 3, 10, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[8]), 3, 3, 11, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[9]), 7, 3, 9, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[10]), 7, 3, 10, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[11]), 7, 3, 11, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[0]), 4, 3, 8, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[1]), 5, 3, 8, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata3.set(BlockEnderPortalFrame.EYE, aboolean[2]), 6, 3, 8, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[3]), 4, 3, 12, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[4]), 5, 3, 12, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata4.set(BlockEnderPortalFrame.EYE, aboolean[5]), 6, 3, 12, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[6]), 3, 3, 9, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[7]), 3, 3, 10, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata5.set(BlockEnderPortalFrame.EYE, aboolean[8]), 3, 3, 11, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[9]), 7, 3, 9, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[10]), 7, 3, 10, structureboundingbox);
+            this.a(generatoraccessseed, iblockdata6.set(BlockEnderPortalFrame.EYE, aboolean[11]), 7, 3, 11, structureboundingbox);
             if (flag) {
                 IBlockData iblockdata7 = Blocks.END_PORTAL.getBlockData();
 
@@ -328,7 +328,7 @@ public class WorldGenStrongholdPieces {
                 int l = this.d(3);
                 BlockPosition blockposition1 = new BlockPosition(this.a(5, 6), l, this.b(5, 6));
 
-                if (structureboundingbox.b((BaseBlockPosition) blockposition1)) {
+                if (structureboundingbox.b(blockposition1)) {
                     this.a = true;
                     generatoraccessseed.setTypeAndData(blockposition1, Blocks.SPAWNER.getBlockData(), 2);
                     TileEntity tileentity = generatoraccessseed.getTileEntity(blockposition1);
@@ -447,8 +447,8 @@ public class WorldGenStrongholdPieces {
             this.a(generatoraccessseed, structureboundingbox, 5, 2, 7, 7, 2, 7, Blocks.SMOOTH_STONE_SLAB.getBlockData(), Blocks.SMOOTH_STONE_SLAB.getBlockData(), false);
             this.a(generatoraccessseed, structureboundingbox, 4, 5, 7, 4, 5, 9, Blocks.SMOOTH_STONE_SLAB.getBlockData(), Blocks.SMOOTH_STONE_SLAB.getBlockData(), false);
             this.a(generatoraccessseed, structureboundingbox, 8, 5, 7, 8, 5, 9, Blocks.SMOOTH_STONE_SLAB.getBlockData(), Blocks.SMOOTH_STONE_SLAB.getBlockData(), false);
-            this.a(generatoraccessseed, structureboundingbox, 5, 5, 7, 7, 5, 9, (IBlockData) Blocks.SMOOTH_STONE_SLAB.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE), (IBlockData) Blocks.SMOOTH_STONE_SLAB.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE), false);
-            this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH), 6, 5, 6, structureboundingbox);
+            this.a(generatoraccessseed, structureboundingbox, 5, 5, 7, 7, 5, 9, Blocks.SMOOTH_STONE_SLAB.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE), Blocks.SMOOTH_STONE_SLAB.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE), false);
+            this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH), 6, 5, 6, structureboundingbox);
             return true;
         }
     }
@@ -509,8 +509,8 @@ public class WorldGenStrongholdPieces {
                 if ((i - 1) % 4 == 0) {
                     this.a(generatoraccessseed, structureboundingbox, 1, 1, i, 1, 4, i, Blocks.OAK_PLANKS.getBlockData(), Blocks.OAK_PLANKS.getBlockData(), false);
                     this.a(generatoraccessseed, structureboundingbox, 12, 1, i, 12, 4, i, Blocks.OAK_PLANKS.getBlockData(), Blocks.OAK_PLANKS.getBlockData(), false);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST), 2, 3, i, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST), 11, 3, i, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST), 2, 3, i, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST), 11, 3, i, structureboundingbox);
                     if (this.a) {
                         this.a(generatoraccessseed, structureboundingbox, 1, 6, i, 1, 9, i, Blocks.OAK_PLANKS.getBlockData(), Blocks.OAK_PLANKS.getBlockData(), false);
                         this.a(generatoraccessseed, structureboundingbox, 12, 6, i, 12, 9, i, Blocks.OAK_PLANKS.getBlockData(), Blocks.OAK_PLANKS.getBlockData(), false);
@@ -539,25 +539,25 @@ public class WorldGenStrongholdPieces {
                 this.a(generatoraccessseed, Blocks.OAK_PLANKS.getBlockData(), 9, 5, 11, structureboundingbox);
                 this.a(generatoraccessseed, Blocks.OAK_PLANKS.getBlockData(), 8, 5, 11, structureboundingbox);
                 this.a(generatoraccessseed, Blocks.OAK_PLANKS.getBlockData(), 9, 5, 10, structureboundingbox);
-                IBlockData iblockdata = (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.WEST, true)).set(BlockFence.EAST, true);
-                IBlockData iblockdata1 = (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true)).set(BlockFence.SOUTH, true);
+                IBlockData iblockdata = Blocks.OAK_FENCE.getBlockData().set(BlockFence.WEST, true).set(BlockFence.EAST, true);
+                IBlockData iblockdata1 = Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true).set(BlockFence.SOUTH, true);
 
                 this.a(generatoraccessseed, structureboundingbox, 3, 6, 3, 3, 6, 11, iblockdata1, iblockdata1, false);
                 this.a(generatoraccessseed, structureboundingbox, 10, 6, 3, 10, 6, 9, iblockdata1, iblockdata1, false);
                 this.a(generatoraccessseed, structureboundingbox, 4, 6, 2, 9, 6, 2, iblockdata, iblockdata, false);
                 this.a(generatoraccessseed, structureboundingbox, 4, 6, 12, 7, 6, 12, iblockdata, iblockdata, false);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true)).set(BlockFence.EAST, true), 3, 6, 2, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.SOUTH, true)).set(BlockFence.EAST, true), 3, 6, 12, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true)).set(BlockFence.WEST, true), 10, 6, 2, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true).set(BlockFence.EAST, true), 3, 6, 2, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.OAK_FENCE.getBlockData().set(BlockFence.SOUTH, true).set(BlockFence.EAST, true), 3, 6, 12, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true).set(BlockFence.WEST, true), 10, 6, 2, structureboundingbox);
 
                 for (int j = 0; j <= 2; ++j) {
-                    this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.SOUTH, true)).set(BlockFence.WEST, true), 8 + j, 6, 12 - j, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.OAK_FENCE.getBlockData().set(BlockFence.SOUTH, true).set(BlockFence.WEST, true), 8 + j, 6, 12 - j, structureboundingbox);
                     if (j != 2) {
-                        this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true)).set(BlockFence.EAST, true), 8 + j, 6, 11 - j, structureboundingbox);
+                        this.a(generatoraccessseed, Blocks.OAK_FENCE.getBlockData().set(BlockFence.NORTH, true).set(BlockFence.EAST, true), 8 + j, 6, 11 - j, structureboundingbox);
                     }
                 }
 
-                IBlockData iblockdata2 = (IBlockData) Blocks.LADDER.getBlockData().set(BlockLadder.FACING, EnumDirection.SOUTH);
+                IBlockData iblockdata2 = Blocks.LADDER.getBlockData().set(BlockLadder.FACING, EnumDirection.SOUTH);
 
                 this.a(generatoraccessseed, iblockdata2, 10, 1, 13, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata2, 10, 2, 13, structureboundingbox);
@@ -568,24 +568,24 @@ public class WorldGenStrongholdPieces {
                 this.a(generatoraccessseed, iblockdata2, 10, 7, 13, structureboundingbox);
                 boolean flag2 = true;
                 boolean flag3 = true;
-                IBlockData iblockdata3 = (IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.EAST, true);
+                IBlockData iblockdata3 = Blocks.OAK_FENCE.getBlockData().set(BlockFence.EAST, true);
 
                 this.a(generatoraccessseed, iblockdata3, 6, 9, 7, structureboundingbox);
-                IBlockData iblockdata4 = (IBlockData) Blocks.OAK_FENCE.getBlockData().set(BlockFence.WEST, true);
+                IBlockData iblockdata4 = Blocks.OAK_FENCE.getBlockData().set(BlockFence.WEST, true);
 
                 this.a(generatoraccessseed, iblockdata4, 7, 9, 7, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata3, 6, 8, 7, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata4, 7, 8, 7, structureboundingbox);
-                IBlockData iblockdata5 = (IBlockData) ((IBlockData) iblockdata1.set(BlockFence.WEST, true)).set(BlockFence.EAST, true);
+                IBlockData iblockdata5 = iblockdata1.set(BlockFence.WEST, true).set(BlockFence.EAST, true);
 
                 this.a(generatoraccessseed, iblockdata5, 6, 7, 7, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata5, 7, 7, 7, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata3, 5, 7, 7, structureboundingbox);
                 this.a(generatoraccessseed, iblockdata4, 8, 7, 7, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) iblockdata3.set(BlockFence.NORTH, true), 6, 7, 6, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) iblockdata3.set(BlockFence.SOUTH, true), 6, 7, 8, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) iblockdata4.set(BlockFence.NORTH, true), 7, 7, 6, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) iblockdata4.set(BlockFence.SOUTH, true), 7, 7, 8, structureboundingbox);
+                this.a(generatoraccessseed, iblockdata3.set(BlockFence.NORTH, true), 6, 7, 6, structureboundingbox);
+                this.a(generatoraccessseed, iblockdata3.set(BlockFence.SOUTH, true), 6, 7, 8, structureboundingbox);
+                this.a(generatoraccessseed, iblockdata4.set(BlockFence.NORTH, true), 7, 7, 6, structureboundingbox);
+                this.a(generatoraccessseed, iblockdata4.set(BlockFence.SOUTH, true), 7, 7, 8, structureboundingbox);
                 IBlockData iblockdata6 = Blocks.TORCH.getBlockData();
 
                 this.a(generatoraccessseed, iblockdata6, 5, 8, 7, structureboundingbox);
@@ -641,18 +641,18 @@ public class WorldGenStrongholdPieces {
             this.a(generatoraccessseed, structureboundingbox, 4, 1, 9, 4, 3, 9, false, random, WorldGenStrongholdPieces.e);
 
             for (int i = 1; i <= 3; ++i) {
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true), 4, i, 4, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true)).set(BlockIronBars.EAST, true), 4, i, 5, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true), 4, i, 6, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true)).set(BlockIronBars.EAST, true), 5, i, 5, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true)).set(BlockIronBars.EAST, true), 6, i, 5, structureboundingbox);
-                this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true)).set(BlockIronBars.EAST, true), 7, i, 5, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true), 4, i, 4, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true).set(BlockIronBars.EAST, true), 4, i, 5, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true), 4, i, 6, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true).set(BlockIronBars.EAST, true), 5, i, 5, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true).set(BlockIronBars.EAST, true), 6, i, 5, structureboundingbox);
+                this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true).set(BlockIronBars.EAST, true), 7, i, 5, structureboundingbox);
             }
 
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true), 4, 3, 2, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true)).set(BlockIronBars.SOUTH, true), 4, 3, 8, structureboundingbox);
-            IBlockData iblockdata = (IBlockData) Blocks.IRON_DOOR.getBlockData().set(BlockDoor.FACING, EnumDirection.WEST);
-            IBlockData iblockdata1 = (IBlockData) ((IBlockData) Blocks.IRON_DOOR.getBlockData().set(BlockDoor.FACING, EnumDirection.WEST)).set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER);
+            this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true), 4, 3, 2, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.NORTH, true).set(BlockIronBars.SOUTH, true), 4, 3, 8, structureboundingbox);
+            IBlockData iblockdata = Blocks.IRON_DOOR.getBlockData().set(BlockDoor.FACING, EnumDirection.WEST);
+            IBlockData iblockdata1 = Blocks.IRON_DOOR.getBlockData().set(BlockDoor.FACING, EnumDirection.WEST).set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER);
 
             this.a(generatoraccessseed, iblockdata, 4, 1, 2, structureboundingbox);
             this.a(generatoraccessseed, iblockdata1, 4, 2, 2, structureboundingbox);
@@ -712,10 +712,10 @@ public class WorldGenStrongholdPieces {
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), 5, 1, 5, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), 5, 2, 5, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), 5, 3, 5, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST), 4, 3, 5, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST), 6, 3, 5, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH), 5, 3, 4, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.NORTH), 5, 3, 6, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST), 4, 3, 5, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST), 6, 3, 5, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH), 5, 3, 4, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.NORTH), 5, 3, 6, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.SMOOTH_STONE_SLAB.getBlockData(), 4, 1, 4, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.SMOOTH_STONE_SLAB.getBlockData(), 4, 1, 5, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.SMOOTH_STONE_SLAB.getBlockData(), 4, 1, 6, structureboundingbox);
@@ -780,7 +780,7 @@ public class WorldGenStrongholdPieces {
                         this.a(generatoraccessseed, Blocks.OAK_PLANKS.getBlockData(), 8, 3, i, structureboundingbox);
                     }
 
-                    IBlockData iblockdata = (IBlockData) Blocks.LADDER.getBlockData().set(BlockLadder.FACING, EnumDirection.WEST);
+                    IBlockData iblockdata = Blocks.LADDER.getBlockData().set(BlockLadder.FACING, EnumDirection.WEST);
 
                     this.a(generatoraccessseed, iblockdata, 9, 1, 3, structureboundingbox);
                     this.a(generatoraccessseed, iblockdata, 9, 2, 3, structureboundingbox);
@@ -926,7 +926,7 @@ public class WorldGenStrongholdPieces {
             this.a(generatoraccessseed, structureboundingbox, 0, 0, 0, 4, 10, 7, true, random, WorldGenStrongholdPieces.e);
             this.a(generatoraccessseed, random, structureboundingbox, this.d, 1, 7, 0);
             this.a(generatoraccessseed, random, structureboundingbox, WorldGenStrongholdPieces.WorldGenStrongholdPiece.WorldGenStrongholdDoorType.OPENING, 1, 1, 7);
-            IBlockData iblockdata = (IBlockData) Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.SOUTH);
+            IBlockData iblockdata = Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.SOUTH);
 
             for (int i = 0; i < 6; ++i) {
                 this.a(generatoraccessseed, iblockdata, 1, 6 - i, 1 + i, structureboundingbox);
@@ -991,7 +991,7 @@ public class WorldGenStrongholdPieces {
                 this.a(generatoraccessseed, Blocks.STONE_BRICK_SLAB.getBlockData(), 2, 1, i, structureboundingbox);
             }
 
-            if (!this.a && structureboundingbox.b((BaseBlockPosition) (new BlockPosition(this.a(3, 3), this.d(2), this.b(3, 3))))) {
+            if (!this.a && structureboundingbox.b(new BlockPosition(this.a(3, 3), this.d(2), this.b(3, 3)))) {
                 this.a = true;
                 this.a(generatoraccessseed, structureboundingbox, random, 3, 2, 3, LootTables.y);
             }
@@ -1051,8 +1051,8 @@ public class WorldGenStrongholdPieces {
             this.a(generatoraccessseed, structureboundingbox, 0, 0, 0, 4, 4, 6, true, random, WorldGenStrongholdPieces.e);
             this.a(generatoraccessseed, random, structureboundingbox, this.d, 1, 1, 0);
             this.a(generatoraccessseed, random, structureboundingbox, WorldGenStrongholdPieces.WorldGenStrongholdPiece.WorldGenStrongholdDoorType.OPENING, 1, 1, 6);
-            IBlockData iblockdata = (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST);
-            IBlockData iblockdata1 = (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST);
+            IBlockData iblockdata = Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.EAST);
+            IBlockData iblockdata1 = Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.WEST);
 
             this.a(generatoraccessseed, structureboundingbox, random, 0.1F, 1, 2, 1, iblockdata);
             this.a(generatoraccessseed, structureboundingbox, random, 0.1F, 3, 2, 1, iblockdata1);
@@ -1272,18 +1272,18 @@ public class WorldGenStrongholdPieces {
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), i + 2, j + 1, k, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), i + 2, j, k, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.OAK_DOOR.getBlockData(), i + 1, j, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.OAK_DOOR.getBlockData().set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER), i + 1, j + 1, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.OAK_DOOR.getBlockData().set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER), i + 1, j + 1, k, structureboundingbox);
                     break;
                 case GRATES:
                     this.a(generatoraccessseed, Blocks.CAVE_AIR.getBlockData(), i + 1, j, k, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.CAVE_AIR.getBlockData(), i + 1, j + 1, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true), i, j, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true), i, j + 1, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true)).set(BlockIronBars.WEST, true), i, j + 2, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true)).set(BlockIronBars.WEST, true), i + 1, j + 2, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true)).set(BlockIronBars.WEST, true), i + 2, j + 2, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true), i + 2, j + 1, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true), i + 2, j, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true), i, j, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.WEST, true), i, j + 1, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true).set(BlockIronBars.WEST, true), i, j + 2, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true).set(BlockIronBars.WEST, true), i + 1, j + 2, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true).set(BlockIronBars.WEST, true), i + 2, j + 2, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true), i + 2, j + 1, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_BARS.getBlockData().set(BlockIronBars.EAST, true), i + 2, j, k, structureboundingbox);
                     break;
                 case IRON_DOOR:
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), i, j, k, structureboundingbox);
@@ -1294,9 +1294,9 @@ public class WorldGenStrongholdPieces {
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), i + 2, j + 1, k, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.STONE_BRICKS.getBlockData(), i + 2, j, k, structureboundingbox);
                     this.a(generatoraccessseed, Blocks.IRON_DOOR.getBlockData(), i + 1, j, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.IRON_DOOR.getBlockData().set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER), i + 1, j + 1, k, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.STONE_BUTTON.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.NORTH), i + 2, j + 1, k + 1, structureboundingbox);
-                    this.a(generatoraccessseed, (IBlockData) Blocks.STONE_BUTTON.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.SOUTH), i + 2, j + 1, k - 1, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.IRON_DOOR.getBlockData().set(BlockDoor.HALF, BlockPropertyDoubleBlockHalf.UPPER), i + 1, j + 1, k, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.STONE_BUTTON.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.NORTH), i + 2, j + 1, k + 1, structureboundingbox);
+                    this.a(generatoraccessseed, Blocks.STONE_BUTTON.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.SOUTH), i + 2, j + 1, k - 1, structureboundingbox);
             }
 
         }

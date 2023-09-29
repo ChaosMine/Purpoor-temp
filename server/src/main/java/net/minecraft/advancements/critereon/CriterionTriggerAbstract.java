@@ -48,11 +48,11 @@ public abstract class CriterionTriggerAbstract<T extends CriterionInstanceAbstra
         advancementdataplayer.criterionData.remove(this); // Paper - fix AdvancementDataPlayer leak
     }
 
-    protected abstract T b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext);
+    protected abstract T b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext);
 
     @Override
     public final T a(JsonObject jsonobject, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b = CriterionConditionEntity.b.a(jsonobject, "player", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b = CriterionConditionEntity.b_.a(jsonobject, "player", lootdeserializationcontext);
 
         return this.b(jsonobject, criterionconditionentity_b, lootdeserializationcontext);
     }

@@ -37,7 +37,7 @@ public class ItemFishBucket extends ItemBucket {
     }
 
     private void a(WorldServer worldserver, ItemStack itemstack, BlockPosition blockposition) {
-        Entity entity = this.a.spawnCreature(worldserver, itemstack, (EntityHuman) null, blockposition, EnumMobSpawn.BUCKET, true, false);
+        Entity entity = this.a.spawnCreature(worldserver, itemstack, null, blockposition, EnumMobSpawn.BUCKET, true, false);
 
         if (entity != null) {
             ((EntityFish) entity).setFromBucket(true);

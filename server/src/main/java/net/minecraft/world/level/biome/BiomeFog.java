@@ -79,7 +79,7 @@ public class BiomeFog {
 
         private final String e;
         public static final Codec<BiomeFog.GrassColor> d = INamable.a(BiomeFog.GrassColor::values, BiomeFog.GrassColor::a);
-        private static final Map<String, BiomeFog.GrassColor> f = (Map) Arrays.stream(values()).collect(Collectors.toMap(BiomeFog.GrassColor::b, (biomefog_grasscolor) -> {
+        private static final Map<String, BiomeFog.GrassColor> f = Arrays.stream(values()).collect(Collectors.toMap(GrassColor::b, (biomefog_grasscolor) -> {
             return biomefog_grasscolor;
         }));
 
@@ -97,7 +97,7 @@ public class BiomeFog {
         }
 
         public static BiomeFog.GrassColor a(String s) {
-            return (BiomeFog.GrassColor) BiomeFog.GrassColor.f.get(s);
+            return GrassColor.f.get(s);
         }
     }
 

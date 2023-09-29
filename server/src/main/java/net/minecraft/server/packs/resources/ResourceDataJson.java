@@ -52,10 +52,10 @@ public abstract class ResourceDataJson extends ResourceDataAbstract<Map<Minecraf
                         Throwable throwable2 = null;
 
                         try {
-                            JsonElement jsonelement = (JsonElement) ChatDeserializer.a(this.c, (Reader) bufferedreader, JsonElement.class);
+                            JsonElement jsonelement = ChatDeserializer.a(this.c, bufferedreader, JsonElement.class);
 
                             if (jsonelement != null) {
-                                JsonElement jsonelement1 = (JsonElement) map.put(minecraftkey1, jsonelement);
+                                JsonElement jsonelement1 = map.put(minecraftkey1, jsonelement);
 
                                 if (jsonelement1 != null) {
                                     throw new IllegalStateException("Duplicate data file ignored with ID " + minecraftkey1);

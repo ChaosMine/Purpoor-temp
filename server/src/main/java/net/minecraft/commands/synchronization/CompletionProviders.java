@@ -24,16 +24,16 @@ public class CompletionProviders {
         return ((ICompletionProvider) commandcontext.getSource()).a(commandcontext, suggestionsbuilder);
     });
     public static final SuggestionProvider<CommandListenerWrapper> b = a(new MinecraftKey("all_recipes"), (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.a(((ICompletionProvider) commandcontext.getSource()).o(), suggestionsbuilder);
+        return ICompletionProvider.a((commandcontext.getSource()).o(), suggestionsbuilder);
     });
     public static final SuggestionProvider<CommandListenerWrapper> c = a(new MinecraftKey("available_sounds"), (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.a((Iterable) ((ICompletionProvider) commandcontext.getSource()).n(), suggestionsbuilder);
+        return ICompletionProvider.a((commandcontext.getSource()).n(), suggestionsbuilder);
     });
     public static final SuggestionProvider<CommandListenerWrapper> d = a(new MinecraftKey("available_biomes"), (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.a((Iterable) ((ICompletionProvider) commandcontext.getSource()).q().b(IRegistry.ay).keySet(), suggestionsbuilder);
+        return ICompletionProvider.a((commandcontext.getSource()).q().b(IRegistry.ay).keySet(), suggestionsbuilder);
     });
     public static final SuggestionProvider<CommandListenerWrapper> e = a(new MinecraftKey("summonable_entities"), (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.a(IRegistry.ENTITY_TYPE.g().filter(EntityTypes::b), suggestionsbuilder, EntityTypes::getName, (entitytypes) -> {
+        return ICompletionProvider.a(IRegistry.ENTITY_TYPE.g().filter(EntityTypes::b), suggestionsbuilder, EntityTypes::getName__ET, (entitytypes) -> {
             return new ChatMessage(SystemUtils.a("entity", EntityTypes.getName(entitytypes)));
         });
     });
@@ -43,12 +43,12 @@ public class CompletionProviders {
             throw new IllegalArgumentException("A command suggestion provider is already registered with the name " + minecraftkey);
         } else {
             CompletionProviders.f.put(minecraftkey, suggestionprovider);
-            return new CompletionProviders.a(minecraftkey, suggestionprovider);
+            return (SuggestionProvider<S>) new a(minecraftkey, suggestionprovider);
         }
     }
 
     public static SuggestionProvider<ICompletionProvider> a(MinecraftKey minecraftkey) {
-        return (SuggestionProvider) CompletionProviders.f.getOrDefault(minecraftkey, CompletionProviders.a);
+        return CompletionProviders.f.getOrDefault(minecraftkey, CompletionProviders.a);
     }
 
     public static MinecraftKey a(SuggestionProvider<ICompletionProvider> suggestionprovider) {

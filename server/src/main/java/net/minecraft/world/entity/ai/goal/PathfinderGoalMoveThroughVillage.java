@@ -66,7 +66,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
                         } else {
                             Optional<BlockPosition> optional = worldserver.y().c(VillagePlaceType.b, this::a, blockposition1, 10, VillagePlace.Occupancy.IS_OCCUPIED);
 
-                            return !optional.isPresent() ? Double.NEGATIVE_INFINITY : -((BlockPosition) optional.get()).j(blockposition);
+                            return !optional.isPresent() ? Double.NEGATIVE_INFINITY : -optional.get().j(blockposition);
                         }
                     });
 
@@ -78,7 +78,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
                         if (!optional.isPresent()) {
                             return false;
                         } else {
-                            this.d = ((BlockPosition) optional.get()).immutableCopy();
+                            this.d = optional.get().immutableCopy();
                             Navigation navigation = (Navigation) this.a.getNavigation();
                             boolean flag = navigation.f();
 
@@ -86,7 +86,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
                             this.c = navigation.a(this.d, 0);
                             navigation.a(flag);
                             if (this.c == null) {
-                                Vec3D vec3d1 = RandomPositionGenerator.b(this.a, 10, 7, Vec3D.c((BaseBlockPosition) this.d));
+                                Vec3D vec3d1 = RandomPositionGenerator.b(this.a, 10, 7, Vec3D.c(this.d));
 
                                 if (vec3d1 == null) {
                                     return false;
@@ -105,7 +105,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
                                 BlockPosition blockposition1 = new BlockPosition(pathpoint.a, pathpoint.b + 1, pathpoint.c);
 
                                 if (BlockDoor.a(this.a.world, blockposition1)) {
-                                    this.c = this.a.getNavigation().a((double) pathpoint.a, (double) pathpoint.b, (double) pathpoint.c, 0);
+                                    this.c = this.a.getNavigation().a(pathpoint.a, pathpoint.b, pathpoint.c, 0);
                                     break;
                                 }
                             }
@@ -120,7 +120,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
 
     @Override
     public boolean b() {
-        return this.a.getNavigation().m() ? false : !this.d.a((IPosition) this.a.getPositionVector(), (double) (this.a.getWidth() + (float) this.g));
+        return this.a.getNavigation().m() ? false : !this.d.a(this.a.getPositionVector(), this.a.getWidth() + (float) this.g);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class PathfinderGoalMoveThroughVillage extends PathfinderGoal {
 
     @Override
     public void d() {
-        if (this.a.getNavigation().m() || this.d.a((IPosition) this.a.getPositionVector(), (double) this.g)) {
+        if (this.a.getNavigation().m() || this.d.a(this.a.getPositionVector(), this.g)) {
             this.f.add(this.d);
         }
 

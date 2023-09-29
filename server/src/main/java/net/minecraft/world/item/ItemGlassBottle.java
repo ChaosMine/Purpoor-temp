@@ -33,10 +33,10 @@ public class ItemGlassBottle extends Item {
         ItemStack itemstack = entityhuman.b(enumhand);
 
         if (!list.isEmpty()) {
-            EntityAreaEffectCloud entityareaeffectcloud = (EntityAreaEffectCloud) list.get(0);
+            EntityAreaEffectCloud entityareaeffectcloud = list.get(0);
 
             entityareaeffectcloud.setRadius(entityareaeffectcloud.getRadius() - 0.5F);
-            world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+            world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
             return InteractionResultWrapper.a(this.a(itemstack, entityhuman, new ItemStack(Items.DRAGON_BREATH)), world.s_());
         } else {
             MovingObjectPositionBlock movingobjectpositionblock = a(world, entityhuman, RayTrace.FluidCollisionOption.SOURCE_ONLY);
@@ -45,13 +45,13 @@ public class ItemGlassBottle extends Item {
                 return InteractionResultWrapper.pass(itemstack);
             } else {
                 if (movingobjectpositionblock.getType() == MovingObjectPosition.EnumMovingObjectType.BLOCK) {
-                    BlockPosition blockposition = ((MovingObjectPositionBlock) movingobjectpositionblock).getBlockPosition();
+                    BlockPosition blockposition = movingobjectpositionblock.getBlockPosition();
 
                     if (!world.a(entityhuman, blockposition)) {
                         return InteractionResultWrapper.pass(itemstack);
                     }
 
-                    if (world.getFluid(blockposition).a((Tag) TagsFluid.WATER)) {
+                    if (world.getFluid(blockposition).a(TagsFluid.WATER)) {
                         world.playSound(entityhuman, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
                         return InteractionResultWrapper.a(this.a(itemstack, entityhuman, PotionUtil.a(new ItemStack(Items.POTION), Potions.WATER)), world.s_());
                     }

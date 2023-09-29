@@ -27,11 +27,11 @@ public class it<T> {
         private final T b;
 
         public a(Object object) {
-            this.b = object;
+            this.b = (T) object;
         }
 
         public void a(JsonObject jsonobject) {
-            jsonobject.add(it.this.a, (JsonElement) it.this.b.apply(this.b));
+            jsonobject.add(it.this.a, it.this.b.apply(this.b));
         }
 
         public String toString() {

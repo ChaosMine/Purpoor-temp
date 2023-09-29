@@ -27,12 +27,12 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
 
     protected BlockCrops(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(this.c(), 0));
+        this.j(this.blockStateList.getBlockData().set(this.c(), 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockCrops.a[(Integer) iblockdata.get(this.c())];
+        return BlockCrops.a[iblockdata.get(this.c())];
     }
 
     @Override
@@ -49,15 +49,15 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
     }
 
     protected int g(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(this.c());
+        return iblockdata.get(this.c());
     }
 
     public IBlockData setAge(int i) {
-        return (IBlockData) this.getBlockData().set(this.c(), i);
+        return this.getBlockData().set(this.c(), i);
     }
 
     public boolean isRipe(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(this.c()) >= this.d();
+        return iblockdata.get(this.c()) >= this.d();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
             int i = this.g(iblockdata);
 
             if (i < this.d()) {
-                float f = a((Block) this, (IBlockAccess) worldserver, blockposition);
+                float f = a(this, worldserver, blockposition);
 
                 // Spigot start
                 int modifier;
@@ -120,7 +120,7 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
 
                 if (iblockdata.a(Blocks.FARMLAND)) {
                     f1 = 1.0F;
-                    if ((Integer) iblockdata.get(BlockSoil.MOISTURE) > 0) {
+                    if (iblockdata.get(BlockSoil.MOISTURE) > 0) {
                         f1 = 3.0F;
                     }
                 }
@@ -180,7 +180,7 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement 
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        this.a((World) worldserver, blockposition, iblockdata);
+        this.a(worldserver, blockposition, iblockdata);
     }
 
     @Override

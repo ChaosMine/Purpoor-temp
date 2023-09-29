@@ -38,7 +38,7 @@ public class PacketPlayOutWorldParticles implements Packet<PacketListenerPlayOut
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        Particle<?> particle = (Particle) IRegistry.PARTICLE_TYPE.fromId(packetdataserializer.readInt());
+        Particle<?> particle = IRegistry.PARTICLE_TYPE.fromId(packetdataserializer.readInt());
 
         if (particle == null) {
             particle = Particles.BARRIER;

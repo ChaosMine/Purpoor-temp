@@ -26,12 +26,12 @@ public enum EnumAxisCycle {
 
         @Override
         public EnumDirection.EnumAxis a(EnumDirection.EnumAxis enumdirection_enumaxis) {
-            return null.d[Math.floorMod(enumdirection_enumaxis.ordinal() + 1, 3)];
+            return d[Math.floorMod(enumdirection_enumaxis.ordinal() + 1, 3)];
         }
 
         @Override
         public EnumAxisCycle a() {
-            return null.BACKWARD;
+            return BACKWARD;
         }
     },
     BACKWARD {
@@ -42,12 +42,12 @@ public enum EnumAxisCycle {
 
         @Override
         public EnumDirection.EnumAxis a(EnumDirection.EnumAxis enumdirection_enumaxis) {
-            return null.d[Math.floorMod(enumdirection_enumaxis.ordinal() - 1, 3)];
+            return d[Math.floorMod(enumdirection_enumaxis.ordinal() - 1, 3)];
         }
 
         @Override
         public EnumAxisCycle a() {
-            return null.FORWARD;
+            return FORWARD;
         }
     };
 

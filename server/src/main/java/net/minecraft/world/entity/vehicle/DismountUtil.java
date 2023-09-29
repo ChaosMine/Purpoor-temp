@@ -54,7 +54,7 @@ public class DismountUtil {
     public static VoxelShape a(IBlockAccess iblockaccess, BlockPosition blockposition) {
         IBlockData iblockdata = iblockaccess.getType(blockposition);
 
-        return !iblockdata.a((Tag) TagsBlock.CLIMBABLE) && (!(iblockdata.getBlock() instanceof BlockTrapdoor) || !(Boolean) iblockdata.get(BlockTrapdoor.OPEN)) ? iblockdata.getCollisionShape(iblockaccess, blockposition) : VoxelShapes.a();
+        return !iblockdata.a(TagsBlock.CLIMBABLE) && (!(iblockdata.getBlock() instanceof BlockTrapdoor) || !(Boolean) iblockdata.get(BlockTrapdoor.OPEN)) ? iblockdata.getCollisionShape(iblockaccess, blockposition) : VoxelShapes.a();
     }
 
     public static double a(BlockPosition blockposition, int i, Function<BlockPosition, VoxelShape> function) {
@@ -62,7 +62,7 @@ public class DismountUtil {
         int j = 0;
 
         while (j < i) {
-            VoxelShape voxelshape = (VoxelShape) function.apply(blockposition_mutableblockposition);
+            VoxelShape voxelshape = function.apply(blockposition_mutableblockposition);
 
             if (!voxelshape.isEmpty()) {
                 return (double) (blockposition.getY() + j) + voxelshape.b(EnumDirection.EnumAxis.Y);
@@ -80,8 +80,8 @@ public class DismountUtil {
         if (flag && entitytypes.a(icollisionaccess.getType(blockposition))) {
             return null;
         } else {
-            double d0 = icollisionaccess.a(a((IBlockAccess) icollisionaccess, blockposition), () -> {
-                return a((IBlockAccess) icollisionaccess, blockposition.down());
+            double d0 = icollisionaccess.a(a(icollisionaccess, blockposition), () -> {
+                return a(icollisionaccess, blockposition.down());
             });
 
             if (!a(d0)) {
@@ -89,9 +89,9 @@ public class DismountUtil {
             } else if (flag && d0 <= 0.0D && entitytypes.a(icollisionaccess.getType(blockposition.down()))) {
                 return null;
             } else {
-                Vec3D vec3d = Vec3D.a((BaseBlockPosition) blockposition, d0);
+                Vec3D vec3d = Vec3D.a(blockposition, d0);
 
-                return icollisionaccess.b((Entity) null, entitytypes.l().a(vec3d)).allMatch(VoxelShape::isEmpty) ? vec3d : null;
+                return icollisionaccess.b(null, entitytypes.l().a(vec3d)).allMatch(VoxelShape::isEmpty) ? vec3d : null;
             }
         }
     }

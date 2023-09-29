@@ -38,12 +38,12 @@ public class DataPackResources implements AutoCloseable {
         this.h = new AdvancementDataWorld(this.f);
         this.commandDispatcher = new CommandDispatcher(commanddispatcher_servertype);
         this.i = new CustomFunctionManager(i, this.commandDispatcher.a());
-        this.b.a((IReloadListener) this.e);
-        this.b.a((IReloadListener) this.f);
-        this.b.a((IReloadListener) this.d);
-        this.b.a((IReloadListener) this.g);
-        this.b.a((IReloadListener) this.i);
-        this.b.a((IReloadListener) this.h);
+        this.b.a(this.e);
+        this.b.a(this.f);
+        this.b.a(this.d);
+        this.b.a(this.g);
+        this.b.a(this.i);
+        this.b.a(this.h);
     }
 
     public CustomFunctionManager a() {

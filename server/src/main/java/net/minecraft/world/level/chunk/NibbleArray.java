@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.level.chunk;
 
 import com.destroystokyo.paper.util.pooled.PooledObjects;

@@ -34,16 +34,16 @@ public class CommandFill {
     private static final Dynamic2CommandExceptionType a = new Dynamic2CommandExceptionType((object, object1) -> {
         return new ChatMessage("commands.fill.toobig", new Object[]{object, object1});
     });
-    private static final ArgumentTileLocation b = new ArgumentTileLocation(Blocks.AIR.getBlockData(), Collections.emptySet(), (NBTTagCompound) null);
+    private static final ArgumentTileLocation b = new ArgumentTileLocation(Blocks.AIR.getBlockData(), Collections.emptySet(), null);
     private static final SimpleCommandExceptionType c = new SimpleCommandExceptionType(new ChatMessage("commands.fill.failed"));
 
     public static void a(CommandDispatcher<CommandListenerWrapper> commanddispatcher) {
         commanddispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("fill").requires((commandlistenerwrapper) -> {
             return commandlistenerwrapper.hasPermission(2);
         })).then(net.minecraft.commands.CommandDispatcher.a("from", (ArgumentType) ArgumentPosition.a()).then(net.minecraft.commands.CommandDispatcher.a("to", (ArgumentType) ArgumentPosition.a()).then(((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("block", (ArgumentType) ArgumentTile.a()).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.REPLACE, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.REPLACE, null);
         })).then(((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("replace").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.REPLACE, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.REPLACE, null);
         })).then(net.minecraft.commands.CommandDispatcher.a("filter", (ArgumentType) ArgumentBlockPredicate.a()).executes((commandcontext) -> {
             return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.REPLACE, ArgumentBlockPredicate.a(commandcontext, "filter"));
         })))).then(net.minecraft.commands.CommandDispatcher.a("keep").executes((commandcontext) -> {
@@ -51,11 +51,11 @@ public class CommandFill {
                 return shapedetectorblock.c().isEmpty(shapedetectorblock.getPosition());
             });
         }))).then(net.minecraft.commands.CommandDispatcher.a("outline").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.OUTLINE, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.OUTLINE, null);
         }))).then(net.minecraft.commands.CommandDispatcher.a("hollow").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.HOLLOW, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.HOLLOW, null);
         }))).then(net.minecraft.commands.CommandDispatcher.a("destroy").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.DESTROY, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), new StructureBoundingBox(ArgumentPosition.a(commandcontext, "from"), ArgumentPosition.a(commandcontext, "to")), ArgumentTile.a(commandcontext, "block"), CommandFill.Mode.DESTROY, null);
         }))))));
     }
 

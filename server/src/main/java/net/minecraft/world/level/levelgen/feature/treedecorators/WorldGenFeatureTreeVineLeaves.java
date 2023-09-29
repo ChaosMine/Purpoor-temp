@@ -35,28 +35,28 @@ public class WorldGenFeatureTreeVineLeaves extends WorldGenFeatureTree {
             if (random.nextInt(4) == 0) {
                 blockposition1 = blockposition.west();
                 if (WorldGenerator.b(generatoraccessseed, blockposition1)) {
-                    this.a((VirtualLevelWritable) generatoraccessseed, blockposition1, BlockVine.EAST, set, structureboundingbox);
+                    this.a(generatoraccessseed, blockposition1, BlockVine.EAST, set, structureboundingbox);
                 }
             }
 
             if (random.nextInt(4) == 0) {
                 blockposition1 = blockposition.east();
                 if (WorldGenerator.b(generatoraccessseed, blockposition1)) {
-                    this.a((VirtualLevelWritable) generatoraccessseed, blockposition1, BlockVine.WEST, set, structureboundingbox);
+                    this.a(generatoraccessseed, blockposition1, BlockVine.WEST, set, structureboundingbox);
                 }
             }
 
             if (random.nextInt(4) == 0) {
                 blockposition1 = blockposition.north();
                 if (WorldGenerator.b(generatoraccessseed, blockposition1)) {
-                    this.a((VirtualLevelWritable) generatoraccessseed, blockposition1, BlockVine.SOUTH, set, structureboundingbox);
+                    this.a(generatoraccessseed, blockposition1, BlockVine.SOUTH, set, structureboundingbox);
                 }
             }
 
             if (random.nextInt(4) == 0) {
                 blockposition1 = blockposition.south();
                 if (WorldGenerator.b(generatoraccessseed, blockposition1)) {
-                    this.a((VirtualLevelWritable) generatoraccessseed, blockposition1, BlockVine.NORTH, set, structureboundingbox);
+                    this.a(generatoraccessseed, blockposition1, BlockVine.NORTH, set, structureboundingbox);
                 }
             }
 

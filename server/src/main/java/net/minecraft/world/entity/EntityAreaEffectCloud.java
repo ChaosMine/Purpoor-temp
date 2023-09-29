@@ -98,7 +98,7 @@ public class EntityAreaEffectCloud extends Entity {
     }
 
     public float getRadius() {
-        return (Float) this.getDataWatcher().get(EntityAreaEffectCloud.c);
+        return this.getDataWatcher().get(EntityAreaEffectCloud.c);
     }
 
     public void a(PotionRegistry potionregistry) {
@@ -113,7 +113,7 @@ public class EntityAreaEffectCloud extends Entity {
         if (this.potionRegistry == Potions.EMPTY && this.effects.isEmpty()) {
             this.getDataWatcher().set(EntityAreaEffectCloud.COLOR, 0);
         } else {
-            this.getDataWatcher().set(EntityAreaEffectCloud.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects)));
+            this.getDataWatcher().set(EntityAreaEffectCloud.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects)));
         }
 
     }
@@ -129,12 +129,12 @@ public class EntityAreaEffectCloud extends Entity {
     // CraftBukkit start accessor methods
     public void refreshEffects() {
         if (!this.hasColor) {
-            this.getDataWatcher().set(EntityAreaEffectCloud.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects))); // PAIL: rename
+            this.getDataWatcher().set(EntityAreaEffectCloud.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects))); // PAIL: rename
         }
     }
 
     public String getType() {
-        return ((MinecraftKey) IRegistry.POTION.getKey(this.potionRegistry)).toString();
+        return IRegistry.POTION.getKey(this.potionRegistry).toString();
     }
 
     public void setType(String string) {
@@ -143,7 +143,7 @@ public class EntityAreaEffectCloud extends Entity {
     // CraftBukkit end
 
     public int getColor() {
-        return (Integer) this.getDataWatcher().get(EntityAreaEffectCloud.COLOR);
+        return this.getDataWatcher().get(EntityAreaEffectCloud.COLOR);
     }
 
     public void setColor(int i) {
@@ -152,7 +152,7 @@ public class EntityAreaEffectCloud extends Entity {
     }
 
     public ParticleParam getParticle() {
-        return (ParticleParam) this.getDataWatcher().get(EntityAreaEffectCloud.f);
+        return this.getDataWatcher().get(EntityAreaEffectCloud.f);
     }
 
     public void setParticle(ParticleParam particleparam) {
@@ -164,7 +164,7 @@ public class EntityAreaEffectCloud extends Entity {
     }
 
     public boolean k() {
-        return (Boolean) this.getDataWatcher().get(EntityAreaEffectCloud.e);
+        return this.getDataWatcher().get(EntityAreaEffectCloud.e);
     }
 
     public int getDuration() {
@@ -222,7 +222,7 @@ public class EntityAreaEffectCloud extends Entity {
                             i = i1 >> 16 & 255;
                             j = i1 >> 8 & 255;
                             k = i1 & 255;
-                            this.world.b(particleparam, this.locX() + (double) f2, this.locY(), this.locZ() + (double) f3, (double) ((float) i / 255.0F), (double) ((float) j / 255.0F), (double) ((float) k / 255.0F));
+                            this.world.b(particleparam, this.locX() + (double) f2, this.locY(), this.locZ() + (double) f3, (float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F);
                         } else {
                             this.world.b(particleparam, this.locX() + (double) f2, this.locY(), this.locZ() + (double) f3, 0.0D, 0.0D, 0.0D);
                         }
@@ -243,7 +243,7 @@ public class EntityAreaEffectCloud extends Entity {
                         k = i >> 8 & 255;
                         int k1 = i & 255;
 
-                        this.world.b(particleparam, this.locX() + (double) f3, this.locY(), this.locZ() + (double) f6, (double) ((float) j / 255.0F), (double) ((float) k / 255.0F), (double) ((float) k1 / 255.0F));
+                        this.world.b(particleparam, this.locX() + (double) f3, this.locY(), this.locZ() + (double) f6, (float) j / 255.0F, (float) k / 255.0F, (float) k1 / 255.0F);
                     } else {
                         this.world.b(particleparam, this.locX() + (double) f3, this.locY(), this.locZ() + (double) f6, (0.5D - this.random.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.random.nextDouble()) * 0.15D);
                     }
@@ -281,7 +281,7 @@ public class EntityAreaEffectCloud extends Entity {
                 while (iterator.hasNext()) {
                     Entry<Entity, Integer> entry = (Entry) iterator.next();
 
-                    if (this.ticksLived >= (Integer) entry.getValue()) {
+                    if (this.ticksLived >= entry.getValue()) {
                         iterator.remove();
                     }
                 }

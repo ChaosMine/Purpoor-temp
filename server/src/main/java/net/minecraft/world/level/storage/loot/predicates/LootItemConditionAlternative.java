@@ -54,7 +54,7 @@ public class LootItemConditionAlternative implements LootItemCondition {
 
         @Override
         public LootItemConditionAlternative a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
-            LootItemCondition[] alootitemcondition = (LootItemCondition[]) ChatDeserializer.a(jsonobject, "terms", jsondeserializationcontext, LootItemCondition[].class);
+            LootItemCondition[] alootitemcondition = ChatDeserializer.a(jsonobject, "terms", jsondeserializationcontext, LootItemCondition[].class);
 
             return new LootItemConditionAlternative(alootitemcondition);
         }
@@ -84,7 +84,7 @@ public class LootItemConditionAlternative implements LootItemCondition {
 
         @Override
         public LootItemCondition build() {
-            return new LootItemConditionAlternative((LootItemCondition[]) this.a.toArray(new LootItemCondition[0]));
+            return new LootItemConditionAlternative(this.a.toArray(new LootItemCondition[0]));
         }
     }
 }

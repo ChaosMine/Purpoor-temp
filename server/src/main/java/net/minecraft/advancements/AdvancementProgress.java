@@ -105,7 +105,7 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
     }
 
     public boolean a(String s) {
-        CriterionProgress criterionprogress = (CriterionProgress) this.a.get(s);
+        CriterionProgress criterionprogress = this.a.get(s);
 
         if (criterionprogress != null && !criterionprogress.a()) {
             criterionprogress.b();
@@ -116,7 +116,7 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
     }
 
     public boolean b(String s) {
-        CriterionProgress criterionprogress = (CriterionProgress) this.a.get(s);
+        CriterionProgress criterionprogress = this.a.get(s);
 
         if (criterionprogress != null && criterionprogress.a()) {
             criterionprogress.c();
@@ -137,8 +137,8 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
         while (iterator.hasNext()) {
             Entry<String, CriterionProgress> entry = (Entry) iterator.next();
 
-            packetdataserializer.a((String) entry.getKey());
-            ((CriterionProgress) entry.getValue()).a(packetdataserializer);
+            packetdataserializer.a(entry.getKey());
+            entry.getValue().a(packetdataserializer);
         }
 
     }
@@ -156,7 +156,7 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
 
     @Nullable
     public CriterionProgress getCriterionProgress(String s) {
-        return (CriterionProgress) this.a.get(s);
+        return this.a.get(s);
     }
 
     public Iterable<String> getRemainingCriteria() {
@@ -166,7 +166,7 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
         while (iterator.hasNext()) {
             Entry<String, CriterionProgress> entry = (Entry) iterator.next();
 
-            if (!((CriterionProgress) entry.getValue()).a()) {
+            if (!entry.getValue().a()) {
                 list.add(entry.getKey());
             }
         }
@@ -181,7 +181,7 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
         while (iterator.hasNext()) {
             Entry<String, CriterionProgress> entry = (Entry) iterator.next();
 
-            if (((CriterionProgress) entry.getValue()).a()) {
+            if (entry.getValue().a()) {
                 list.add(entry.getKey());
             }
         }
@@ -223,10 +223,10 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
 
             while (iterator.hasNext()) {
                 Entry<String, CriterionProgress> entry = (Entry) iterator.next();
-                CriterionProgress criterionprogress = (CriterionProgress) entry.getValue();
+                CriterionProgress criterionprogress = entry.getValue();
 
                 if (criterionprogress.a()) {
-                    jsonobject1.add((String) entry.getKey(), criterionprogress.e());
+                    jsonobject1.add(entry.getKey(), criterionprogress.e());
                 }
             }
 
@@ -246,9 +246,9 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
 
             while (iterator.hasNext()) {
                 Entry<String, JsonElement> entry = (Entry) iterator.next();
-                String s = (String) entry.getKey();
+                String s = entry.getKey();
 
-                advancementprogress.a.put(s, CriterionProgress.a(ChatDeserializer.a((JsonElement) entry.getValue(), s)));
+                advancementprogress.a.put(s, CriterionProgress.a(ChatDeserializer.a(entry.getValue(), s)));
             }
 
             return advancementprogress;

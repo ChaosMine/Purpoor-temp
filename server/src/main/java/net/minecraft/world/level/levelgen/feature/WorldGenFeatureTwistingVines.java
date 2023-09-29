@@ -20,7 +20,12 @@ public class WorldGenFeatureTwistingVines extends WorldGenerator<WorldGenFeature
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         return a(generatoraccessseed, random, blockposition, 8, 4, 8);
     }
 
@@ -74,7 +79,7 @@ public class WorldGenFeatureTwistingVines extends WorldGenerator<WorldGenFeature
         for (int l = 1; l <= i; ++l) {
             if (generatoraccess.isEmpty(blockposition_mutableblockposition)) {
                 if (l == i || !generatoraccess.isEmpty(blockposition_mutableblockposition.up())) {
-                    generatoraccess.setTypeAndData(blockposition_mutableblockposition, (IBlockData) Blocks.TWISTING_VINES.getBlockData().set(BlockGrowingTop.d, MathHelper.nextInt(random, j, k)), 2);
+                    generatoraccess.setTypeAndData(blockposition_mutableblockposition, Blocks.TWISTING_VINES.getBlockData().set(BlockGrowingTop.d, MathHelper.nextInt(random, j, k)), 2);
                     break;
                 }
 

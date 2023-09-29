@@ -64,11 +64,11 @@ public class BlockDragonEgg extends BlockFalling {
                         float f = (world.random.nextFloat() - 0.5F) * 0.2F;
                         float f1 = (world.random.nextFloat() - 0.5F) * 0.2F;
                         float f2 = (world.random.nextFloat() - 0.5F) * 0.2F;
-                        double d1 = MathHelper.d(d0, (double) blockposition1.getX(), (double) blockposition.getX()) + (world.random.nextDouble() - 0.5D) + 0.5D;
-                        double d2 = MathHelper.d(d0, (double) blockposition1.getY(), (double) blockposition.getY()) + world.random.nextDouble() - 0.5D;
-                        double d3 = MathHelper.d(d0, (double) blockposition1.getZ(), (double) blockposition.getZ()) + (world.random.nextDouble() - 0.5D) + 0.5D;
+                        double d1 = MathHelper.d(d0, blockposition1.getX(), blockposition.getX()) + (world.random.nextDouble() - 0.5D) + 0.5D;
+                        double d2 = MathHelper.d(d0, blockposition1.getY(), blockposition.getY()) + world.random.nextDouble() - 0.5D;
+                        double d3 = MathHelper.d(d0, blockposition1.getZ(), blockposition.getZ()) + (world.random.nextDouble() - 0.5D) + 0.5D;
 
-                        world.addParticle(Particles.PORTAL, d1, d2, d3, (double) f, (double) f1, (double) f2);
+                        world.addParticle(Particles.PORTAL, d1, d2, d3, f, f1, f2);
                     }
                 } else {
                     world.setTypeAndData(blockposition1, iblockdata, 2);

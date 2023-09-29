@@ -43,7 +43,7 @@ public class AttributeModifier {
     }
 
     public String getName() {
-        return (String) this.d.get();
+        return this.d.get();
     }
 
     public AttributeModifier.Operation getOperation() {
@@ -71,7 +71,7 @@ public class AttributeModifier {
     }
 
     public String toString() {
-        return "AttributeModifier{amount=" + this.b + ", operation=" + this.c + ", name='" + (String) this.d.get() + '\'' + ", id=" + this.e + '}';
+        return "AttributeModifier{amount=" + this.b + ", operation=" + this.c + ", name='" + this.d.get() + '\'' + ", id=" + this.e + '}';
     }
 
     public NBTTagCompound save() {

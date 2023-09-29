@@ -28,7 +28,7 @@ public class WorldGenMineshaft extends StructureGenerator<WorldGenMineshaftConfi
 
     protected boolean a(ChunkGenerator chunkgenerator, WorldChunkManager worldchunkmanager, long i, SeededRandom seededrandom, int j, int k, BiomeBase biomebase, ChunkCoordIntPair chunkcoordintpair, WorldGenMineshaftConfiguration worldgenmineshaftconfiguration) {
         seededrandom.c(i, j, k);
-        double d0 = (double) worldgenmineshaftconfiguration.b;
+        double d0 = worldgenmineshaftconfiguration.b;
 
         return seededrandom.nextDouble() < d0;
     }
@@ -48,7 +48,7 @@ public class WorldGenMineshaft extends StructureGenerator<WorldGenMineshaftConfi
             WorldGenMineshaftPieces.WorldGenMineshaftRoom worldgenmineshaftpieces_worldgenmineshaftroom = new WorldGenMineshaftPieces.WorldGenMineshaftRoom(0, this.d, (i << 4) + 2, (j << 4) + 2, worldgenmineshaftconfiguration.c);
 
             this.b.add(worldgenmineshaftpieces_worldgenmineshaftroom);
-            worldgenmineshaftpieces_worldgenmineshaftroom.a((StructurePiece) worldgenmineshaftpieces_worldgenmineshaftroom, this.b, (Random) this.d);
+            worldgenmineshaftpieces_worldgenmineshaftroom.a(worldgenmineshaftpieces_worldgenmineshaftroom, this.b, this.d);
             this.b();
             if (worldgenmineshaftconfiguration.c == WorldGenMineshaft.Type.MESA) {
                 boolean flag = true;
@@ -74,7 +74,7 @@ public class WorldGenMineshaft extends StructureGenerator<WorldGenMineshaftConfi
         NORMAL("normal"), MESA("mesa");
 
         public static final Codec<WorldGenMineshaft.Type> c = INamable.a(WorldGenMineshaft.Type::values, WorldGenMineshaft.Type::a);
-        private static final Map<String, WorldGenMineshaft.Type> d = (Map) Arrays.stream(values()).collect(Collectors.toMap(WorldGenMineshaft.Type::b, (worldgenmineshaft_type) -> {
+        private static final Map<String, WorldGenMineshaft.Type> d = Arrays.stream(values()).collect(Collectors.toMap(Type::b, (worldgenmineshaft_type) -> {
             return worldgenmineshaft_type;
         }));
         private final String e;
@@ -88,7 +88,7 @@ public class WorldGenMineshaft extends StructureGenerator<WorldGenMineshaftConfi
         }
 
         private static WorldGenMineshaft.Type a(String s) {
-            return (WorldGenMineshaft.Type) WorldGenMineshaft.Type.d.get(s);
+            return Type.d.get(s);
         }
 
         public static WorldGenMineshaft.Type a(int i) {

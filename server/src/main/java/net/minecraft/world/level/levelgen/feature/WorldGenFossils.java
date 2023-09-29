@@ -44,7 +44,12 @@ public class WorldGenFossils extends WorldGenerator<WorldGenFeatureEmptyConfigur
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         EnumBlockRotation enumblockrotation = EnumBlockRotation.a(random);
         int i = random.nextInt(WorldGenFossils.aq.length);
         DefinedStructureManager definedstructuremanager = generatoraccessseed.getMinecraftWorld().getMinecraftServer().getDefinedStructureManager();
@@ -52,7 +57,7 @@ public class WorldGenFossils extends WorldGenerator<WorldGenFeatureEmptyConfigur
         DefinedStructure definedstructure1 = definedstructuremanager.a(WorldGenFossils.ar[i]);
         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(blockposition);
         StructureBoundingBox structureboundingbox = new StructureBoundingBox(chunkcoordintpair.d(), 0, chunkcoordintpair.e(), chunkcoordintpair.f(), 256, chunkcoordintpair.g());
-        DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(enumblockrotation).a(structureboundingbox).a(random).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+        DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(enumblockrotation).a(structureboundingbox).a(random).a(DefinedStructureProcessorBlockIgnore.d);
         BlockPosition blockposition1 = definedstructure.a(enumblockrotation);
         int j = random.nextInt(16 - blockposition1.getX());
         int k = random.nextInt(16 - blockposition1.getZ());
@@ -70,12 +75,12 @@ public class WorldGenFossils extends WorldGenerator<WorldGenFeatureEmptyConfigur
         BlockPosition blockposition2 = definedstructure.a(blockposition.b(j, i1, k), EnumBlockMirror.NONE, enumblockrotation);
         DefinedStructureProcessorRotation definedstructureprocessorrotation = new DefinedStructureProcessorRotation(0.9F);
 
-        definedstructureinfo.b().a((DefinedStructureProcessor) definedstructureprocessorrotation);
+        definedstructureinfo.b().a(definedstructureprocessorrotation);
         definedstructure.a(generatoraccessseed, blockposition2, blockposition2, definedstructureinfo, random, 4);
-        definedstructureinfo.b((DefinedStructureProcessor) definedstructureprocessorrotation);
+        definedstructureinfo.b(definedstructureprocessorrotation);
         DefinedStructureProcessorRotation definedstructureprocessorrotation1 = new DefinedStructureProcessorRotation(0.1F);
 
-        definedstructureinfo.b().a((DefinedStructureProcessor) definedstructureprocessorrotation1);
+        definedstructureinfo.b().a(definedstructureprocessorrotation1);
         definedstructure1.a(generatoraccessseed, blockposition2, blockposition2, definedstructureinfo, random, 4);
         return true;
     }

@@ -315,7 +315,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                 double d4 = entity1.locX() - d1;
                 double d5 = entity1.getHeadY() - d2;
                 double d6 = entity1.locZ() - d3;
-                double d7 = (double) MathHelper.sqrt(d4 * d4 + d6 * d6);
+                double d7 = MathHelper.sqrt(d4 * d4 + d6 * d6);
                 float f = (float) (MathHelper.d(d6, d4) * 57.2957763671875D) - 90.0F;
                 float f1 = (float) (-(MathHelper.d(d5, d7) * 57.2957763671875D));
 
@@ -447,7 +447,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                         List<EntityLiving> list = this.world.a(EntityLiving.class, EntityWither.bz, this, this.getBoundingBox().grow(20.0D, 8.0D, 20.0D));
 
                         for (int i1 = 0; i1 < 10 && !list.isEmpty(); ++i1) {
-                            EntityLiving entityliving = (EntityLiving) list.get(this.random.nextInt(list.size()));
+                            EntityLiving entityliving = list.get(this.random.nextInt(list.size()));
 
                             if (entityliving != this && entityliving.isAlive() && this.hasLineOfSight(entityliving)) {
                                 if (entityliving instanceof EntityHuman) {
@@ -504,7 +504,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                     }
 
                     if (flag) {
-                        this.world.a((EntityHuman) null, 1022, this.getChunkCoordinates(), 0);
+                        this.world.a(null, 1022, this.getChunkCoordinates(), 0);
                     }
                 }
             }
@@ -590,7 +590,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
 
     private void a(int i, double d0, double d1, double d2, boolean flag) {
         if (!this.isSilent()) {
-            this.world.a((EntityHuman) null, 1024, this.getChunkCoordinates(), 0);
+            this.world.a(null, 1024, this.getChunkCoordinates(), 0);
         }
 
         double d3 = this.u(i);
@@ -687,7 +687,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
     }
 
     public int getInvul() {
-        return (Integer) this.datawatcher.get(EntityWither.bp);
+        return this.datawatcher.get(EntityWither.bp);
     }
 
     public void setInvul(int i) {

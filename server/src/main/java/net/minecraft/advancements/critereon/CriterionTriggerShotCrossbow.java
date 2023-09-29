@@ -18,7 +18,7 @@ public class CriterionTriggerShotCrossbow extends CriterionTriggerAbstract<Crite
     }
 
     @Override
-    public CriterionTriggerShotCrossbow.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerShotCrossbow.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
 
         return new CriterionTriggerShotCrossbow.a(criterionconditionentity_b, criterionconditionitem);
@@ -34,13 +34,13 @@ public class CriterionTriggerShotCrossbow extends CriterionTriggerAbstract<Crite
 
         private final CriterionConditionItem a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerShotCrossbow.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
         }
 
         public static CriterionTriggerShotCrossbow.a a(IMaterial imaterial) {
-            return new CriterionTriggerShotCrossbow.a(CriterionConditionEntity.b.a, CriterionConditionItem.a.a().a(imaterial).b());
+            return new CriterionTriggerShotCrossbow.a(CriterionConditionEntity.b_.a, CriterionConditionItem.a_.a().a(imaterial).b());
         }
 
         public boolean a(ItemStack itemstack) {

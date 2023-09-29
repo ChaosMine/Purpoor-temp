@@ -37,7 +37,7 @@ public class ItemDye extends Item {
                         return EnumInteractionResult.PASS;
                     }
 
-                    entitysheep.setColor(EnumColor.fromColorIndex((byte) event.getColor().getWoolData()));
+                    entitysheep.setColor(EnumColor.fromColorIndex(event.getColor().getWoolData()));
                     // CraftBukkit end
                     itemstack.subtract(1);
                 }
@@ -54,6 +54,6 @@ public class ItemDye extends Item {
     }
 
     public static ItemDye a(EnumColor enumcolor) {
-        return (ItemDye) ItemDye.a.get(enumcolor);
+        return ItemDye.a.get(enumcolor);
     }
 }

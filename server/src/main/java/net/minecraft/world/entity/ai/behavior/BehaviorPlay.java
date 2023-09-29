@@ -2,12 +2,6 @@ package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.EntityCreature;
@@ -19,103 +13,108 @@ import net.minecraft.world.entity.ai.memory.MemoryTarget;
 import net.minecraft.world.entity.ai.util.RandomPositionGenerator;
 import net.minecraft.world.phys.Vec3D;
 
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+
 public class BehaviorPlay extends Behavior<EntityCreature> {
+	public BehaviorPlay() {
+		super(ImmutableMap.of(MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryStatus.VALUE_PRESENT, MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT, MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED, MemoryModuleType.INTERACTION_TARGET, MemoryStatus.REGISTERED));
+	}
 
-    public BehaviorPlay() {
-        super(ImmutableMap.of(MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryStatus.VALUE_PRESENT, MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT, MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED, MemoryModuleType.INTERACTION_TARGET, MemoryStatus.REGISTERED));
-    }
+	private static void a(EntityCreature entitycreature, EntityLiving entityliving) {
+		BehaviorController<?> behaviorcontroller = entitycreature.getBehaviorController();
 
-    protected boolean a(WorldServer worldserver, EntityCreature entitycreature) {
-        return worldserver.getRandom().nextInt(10) == 0 && this.e(entitycreature);
-    }
+		behaviorcontroller.setMemory(MemoryModuleType.INTERACTION_TARGET, entityliving);
+		behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, new BehaviorPositionEntity(entityliving, true));
+		behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, new MemoryTarget(new BehaviorPositionEntity(entityliving, false), 0.6F, 1));
+	}
 
-    protected void a(WorldServer worldserver, EntityCreature entitycreature, long i) {
-        EntityLiving entityliving = this.b((EntityLiving) entitycreature);
+	protected boolean a(WorldServer worldserver, EntityCreature entitycreature) {
+		return worldserver.getRandom().nextInt(10) == 0 && this.e(entitycreature);
+	}
 
-        if (entityliving != null) {
-            this.a(worldserver, entitycreature, entityliving);
-        } else {
-            Optional<EntityLiving> optional = this.b(entitycreature);
+	protected void a(WorldServer worldserver, EntityCreature entitycreature, long i) {
+		EntityLiving entityliving = this.b((EntityLiving) entitycreature);
 
-            if (optional.isPresent()) {
-                a(entitycreature, (EntityLiving) optional.get());
-            } else {
-                this.a(entitycreature).ifPresent((entityliving1) -> {
-                    a(entitycreature, entityliving1);
-                });
-            }
-        }
-    }
+		if (entityliving != null) {
+			this.a(worldserver, entitycreature, entityliving);
+		} else {
+			Optional<EntityLiving> optional = this.b(entitycreature);
 
-    private void a(WorldServer worldserver, EntityCreature entitycreature, EntityLiving entityliving) {
-        for (int i = 0; i < 10; ++i) {
-            Vec3D vec3d = RandomPositionGenerator.b(entitycreature, 20, 8);
+			if (optional.isPresent()) {
+				a(entitycreature, optional.get());
+			} else {
+				this.a(entitycreature).ifPresent(entityliving1 -> {
+					a(entitycreature, entityliving1);
+				});
+			}
+		}
+	}
 
-            if (vec3d != null && worldserver.a_(new BlockPosition(vec3d))) {
-                entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(vec3d, 0.6F, 0)));
-                return;
-            }
-        }
+	private void a(WorldServer worldserver, EntityCreature entitycreature, EntityLiving entityliving) {
+		for (int i = 0; i < 10; ++i) {
+			Vec3D vec3d = RandomPositionGenerator.b(entitycreature, 20, 8);
 
-    }
+			if (vec3d != null && worldserver.a_(new BlockPosition(vec3d))) {
+				entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, new MemoryTarget(vec3d, 0.6F, 0));
+				return;
+			}
+		}
+	}
 
-    private static void a(EntityCreature entitycreature, EntityLiving entityliving) {
-        BehaviorController<?> behaviorcontroller = entitycreature.getBehaviorController();
+	private Optional<EntityLiving> a(EntityCreature entitycreature) {
+		return this.d(entitycreature).stream().findAny();
+	}
 
-        behaviorcontroller.setMemory(MemoryModuleType.INTERACTION_TARGET, (Object) entityliving);
-        behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityliving, true)));
-        behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(new BehaviorPositionEntity(entityliving, false), 0.6F, 1)));
-    }
+	private Optional<EntityLiving> b(EntityCreature entitycreature) {
+		Map<EntityLiving, Integer> map = this.c(entitycreature);
 
-    private Optional<EntityLiving> a(EntityCreature entitycreature) {
-        return this.d(entitycreature).stream().findAny();
-    }
+		return map.entrySet().stream().sorted(Comparator.comparingInt(Entry::getValue)).filter(entry -> {
+			return false;
+		}).map(Entry::getKey).findFirst();
+	}
 
-    private Optional<EntityLiving> b(EntityCreature entitycreature) {
-        Map<EntityLiving, Integer> map = this.c(entitycreature);
+	private Map<EntityLiving, Integer> c(EntityCreature entitycreature) {
+		Map<EntityLiving, Integer> map = Maps.newHashMap();
 
-        return map.entrySet().stream().sorted(Comparator.comparingInt(Entry::getValue)).filter((entry) -> {
-            return (Integer) entry.getValue() > 0 && (Integer) entry.getValue() <= 5;
-        }).map(Entry::getKey).findFirst();
-    }
+		this.d(entitycreature).stream().filter(this::c).forEach(entityliving -> {
+			Integer integer = map.compute(this.a(entityliving), (entityliving1, integer1) -> {
+				return integer1 == null ? 1 : integer1 + 1;
+			});
+		});
+		return map;
+	}
 
-    private Map<EntityLiving, Integer> c(EntityCreature entitycreature) {
-        Map<EntityLiving, Integer> map = Maps.newHashMap();
+	private List<EntityLiving> d(EntityCreature entitycreature) {
+		return entitycreature.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES).get();
+	}
 
-        this.d(entitycreature).stream().filter(this::c).forEach((entityliving) -> {
-            Integer integer = (Integer) map.compute(this.a(entityliving), (entityliving1, integer1) -> {
-                return integer1 == null ? 1 : integer1 + 1;
-            });
-        });
-        return map;
-    }
+	private EntityLiving a(EntityLiving entityliving) {
+		return entityliving.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).get();
+	}
 
-    private List<EntityLiving> d(EntityCreature entitycreature) {
-        return (List) entitycreature.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES).get();
-    }
+	@Nullable
+	private EntityLiving b(EntityLiving entityliving) {
+		return entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES).get().stream().filter(entityliving1 -> {
+			return this.a(entityliving, entityliving1);
+		}).findAny().orElse(null);
+	}
 
-    private EntityLiving a(EntityLiving entityliving) {
-        return (EntityLiving) entityliving.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).get();
-    }
+	private boolean c(EntityLiving entityliving) {
+		return entityliving.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).isPresent();
+	}
 
-    @Nullable
-    private EntityLiving b(EntityLiving entityliving) {
-        return (EntityLiving) ((List) entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES).get()).stream().filter((entityliving1) -> {
-            return this.a(entityliving, entityliving1);
-        }).findAny().orElse((Object) null);
-    }
+	private boolean a(EntityLiving entityliving, EntityLiving entityliving1) {
+		return entityliving1.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).filter(entityliving2 -> {
+			return entityliving2 == entityliving;
+		}).isPresent();
+	}
 
-    private boolean c(EntityLiving entityliving) {
-        return entityliving.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).isPresent();
-    }
-
-    private boolean a(EntityLiving entityliving, EntityLiving entityliving1) {
-        return entityliving1.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).filter((entityliving2) -> {
-            return entityliving2 == entityliving;
-        }).isPresent();
-    }
-
-    private boolean e(EntityCreature entitycreature) {
-        return entitycreature.getBehaviorController().hasMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES);
-    }
+	private boolean e(EntityCreature entitycreature) {
+		return entitycreature.getBehaviorController().hasMemory(MemoryModuleType.VISIBLE_VILLAGER_BABIES);
+	}
 }

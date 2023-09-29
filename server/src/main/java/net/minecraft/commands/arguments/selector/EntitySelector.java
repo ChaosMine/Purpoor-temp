@@ -90,7 +90,7 @@ public class EntitySelector {
         } else if (list.size() > 1) {
             throw ArgumentEntity.a.create();
         } else {
-            return (Entity) list.get(0);
+            return list.get(0);
         }
     }
 
@@ -101,7 +101,7 @@ public class EntitySelector {
         } else if (this.j != null) {
             EntityPlayer entityplayer = commandlistenerwrapper.getServer().getPlayerList().getPlayer(this.j);
 
-            return (List) (entityplayer == null ? Collections.emptyList() : Lists.newArrayList(new EntityPlayer[]{entityplayer}));
+            return entityplayer == null ? Collections.emptyList() : Lists.newArrayList(new EntityPlayer[]{entityplayer});
         } else if (this.k != null) {
             Iterator iterator = commandlistenerwrapper.getServer().getWorlds().iterator();
 
@@ -119,11 +119,11 @@ public class EntitySelector {
 
             return Lists.newArrayList(new Entity[]{entity});
         } else {
-            Vec3D vec3d = (Vec3D) this.f.apply(commandlistenerwrapper.getPosition());
+            Vec3D vec3d = this.f.apply(commandlistenerwrapper.getPosition());
             Predicate<Entity> predicate = this.a(vec3d);
 
             if (this.i) {
-                return (List) (commandlistenerwrapper.getEntity() != null && predicate.test(commandlistenerwrapper.getEntity()) ? Lists.newArrayList(new Entity[]{commandlistenerwrapper.getEntity()}) : Collections.emptyList());
+                return commandlistenerwrapper.getEntity() != null && predicate.test(commandlistenerwrapper.getEntity()) ? Lists.newArrayList(new Entity[]{commandlistenerwrapper.getEntity()}) : Collections.emptyList();
             } else {
                 List<Entity> list = Lists.newArrayList();
 
@@ -139,7 +139,7 @@ public class EntitySelector {
                     }
                 }
 
-                return this.a(vec3d, (List) list);
+                return this.a(vec3d, list);
             }
         }
     }
@@ -160,7 +160,7 @@ public class EntitySelector {
         if (list.size() != 1) {
             throw ArgumentEntity.e.create();
         } else {
-            return (EntityPlayer) list.get(0);
+            return list.get(0);
         }
     }
 
@@ -175,7 +175,7 @@ public class EntitySelector {
             entityplayer = commandlistenerwrapper.getServer().getPlayerList().getPlayer(this.k);
             return entityplayer == null || !canSee(commandlistenerwrapper, entityplayer) ? Collections.emptyList() : Lists.newArrayList(entityplayer); // Purpur
         } else {
-            Vec3D vec3d = (Vec3D) this.f.apply(commandlistenerwrapper.getPosition());
+            Vec3D vec3d = this.f.apply(commandlistenerwrapper.getPosition());
             Predicate<Entity> predicate = this.a(vec3d);
 
             if (this.i) {

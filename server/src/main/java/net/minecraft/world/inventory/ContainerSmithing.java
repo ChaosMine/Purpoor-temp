@@ -70,10 +70,10 @@ public class ContainerSmithing extends ContainerAnvilAbstract {
         if (list.isEmpty()) {
             org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareSmithingEvent(getBukkitView(), ItemStack.b); // CraftBukkit
         } else {
-            this.h = (RecipeSmithing) list.get(0);
+            this.h = list.get(0);
             ItemStack itemstack = this.h.a(this.repairInventory);
 
-            this.resultInventory.a((IRecipe) this.h);
+            this.resultInventory.a(this.h);
             // CraftBukkit start
             org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareSmithingEvent(getBukkitView(), itemstack);
             // CraftBukkit end

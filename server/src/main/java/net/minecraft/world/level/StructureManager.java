@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.level;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

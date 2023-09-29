@@ -26,7 +26,7 @@ public class hw implements DebugReportProvider {
         Path path = this.c.b().resolve("reports/commands.json");
         CommandDispatcher<CommandListenerWrapper> commanddispatcher = (new net.minecraft.commands.CommandDispatcher(net.minecraft.commands.CommandDispatcher.ServerType.ALL)).a();
 
-        DebugReportProvider.a(hw.b, hashcache, ArgumentRegistry.a(commanddispatcher, (CommandNode) commanddispatcher.getRoot()), path);
+        DebugReportProvider.a(hw.b, hashcache, ArgumentRegistry.a(commanddispatcher, commanddispatcher.getRoot()), path);
     }
 
     @Override

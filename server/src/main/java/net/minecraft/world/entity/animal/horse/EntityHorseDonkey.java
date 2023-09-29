@@ -82,7 +82,7 @@ public class EntityHorseDonkey extends EntityHorseChestedAbstract {
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
         EntityTypes<? extends EntityHorseAbstract> entitytypes = entityageable instanceof EntityHorse ? EntityTypes.MULE : EntityTypes.DONKEY;
-        EntityHorseAbstract entityhorseabstract = (EntityHorseAbstract) entitytypes.a((World) worldserver);
+        EntityHorseAbstract entityhorseabstract = entitytypes.a(worldserver);
 
         this.a(entityageable, entityhorseabstract);
         return entityhorseabstract;

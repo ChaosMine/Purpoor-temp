@@ -61,7 +61,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
     };
     private static final Item bw = Items.COOKIE;
     private static final Set<Item> bx = Sets.newHashSet(new Item[]{Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS}); public static Set<Item> temptItems() { return bx; } // Purpur - OBFHELPER
-    private static final Map<EntityTypes<?>, SoundEffect> by = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
+    private static final Map<EntityTypes<?>, SoundEffect> by = SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
         hashmap.put(EntityTypes.BLAZE, SoundEffects.ENTITY_PARROT_IMITATE_BLAZE);
         hashmap.put(EntityTypes.CAVE_SPIDER, SoundEffects.ENTITY_PARROT_IMITATE_SPIDER);
         hashmap.put(EntityTypes.CREEPER, SoundEffects.ENTITY_PARROT_IMITATE_CREEPER);
@@ -176,7 +176,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             groupdataentity = new EntityAgeable.a(false);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     @Override
@@ -220,13 +220,13 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
 
     @Override
     public void movementTick() {
-        if (this.bB == null || !this.bB.a((IPosition) this.getPositionVector(), 3.46D) || !this.world.getType(this.bB).a(Blocks.JUKEBOX)) {
+        if (this.bB == null || !this.bB.a(this.getPositionVector(), 3.46D) || !this.world.getType(this.bB).a(Blocks.JUKEBOX)) {
             this.bA = false;
             this.bB = null;
         }
 
         if (this.world.random.nextInt(400) == 0) {
-            a(this.world, (Entity) this);
+            a(this.world, this);
         }
 
         super.movementTick();
@@ -257,12 +257,12 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             List<EntityInsentient> list = world.a(EntityInsentient.class, entity.getBoundingBox().g(20.0D), EntityParrot.bv);
 
             if (!list.isEmpty()) {
-                EntityInsentient entityinsentient = (EntityInsentient) list.get(world.random.nextInt(list.size()));
+                EntityInsentient entityinsentient = list.get(world.random.nextInt(list.size()));
 
                 if (!entityinsentient.isSilent()) {
                     SoundEffect soundeffect = b(entityinsentient.getEntityType());
 
-                    world.playSound((EntityHuman) null, entity.locX(), entity.locY(), entity.locZ(), soundeffect, entity.getSoundCategory(), 0.7F, a(world.random));
+                    world.playSound(null, entity.locX(), entity.locY(), entity.locZ(), soundeffect, entity.getSoundCategory(), 0.7F, a(world.random));
                     return true;
                 }
             }
@@ -283,7 +283,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             }
 
             if (!this.isSilent()) {
-                this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_PARROT_EAT, this.getSoundCategory(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+                this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_PARROT_EAT, this.getSoundCategory(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
             }
 
             if (!this.world.isClientSide) {
@@ -308,7 +308,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
             }
 
             return EnumInteractionResult.a(this.world.isClientSide);
-        } else if (!this.fa() && this.isTamed() && this.i((EntityLiving) entityhuman)) {
+        } else if (!this.fa() && this.isTamed() && this.i(entityhuman)) {
             if (!this.world.isClientSide) {
                 this.setWillSit(!this.isWillSit());
             }
@@ -327,7 +327,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
     public static boolean c(EntityTypes<EntityParrot> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         IBlockData iblockdata = generatoraccess.getType(blockposition.down());
 
-        return (iblockdata.a((Tag) TagsBlock.LEAVES) || iblockdata.a(Blocks.GRASS_BLOCK) || iblockdata.a((Tag) TagsBlock.LOGS) || iblockdata.a(Blocks.AIR)) && generatoraccess.getLightLevel(blockposition, 0) > 8;
+        return (iblockdata.a(TagsBlock.LEAVES) || iblockdata.a(Blocks.GRASS_BLOCK) || iblockdata.a(TagsBlock.LOGS) || iblockdata.a(Blocks.AIR)) && generatoraccess.getLightLevel(blockposition, 0) > 8;
     }
 
     @Override
@@ -364,14 +364,14 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
         if (world.getDifficulty() != EnumDifficulty.PEACEFUL && random.nextInt(1000) == 0) {
             List<EntityTypes<?>> list = Lists.newArrayList(EntityParrot.by.keySet());
 
-            return b((EntityTypes) list.get(random.nextInt(list.size())));
+            return b(list.get(random.nextInt(list.size())));
         } else {
             return SoundEffects.ENTITY_PARROT_AMBIENT;
         }
     }
 
     private static SoundEffect b(EntityTypes<?> entitytypes) {
-        return (SoundEffect) EntityParrot.by.getOrDefault(entitytypes, SoundEffects.ENTITY_PARROT_AMBIENT);
+        return EntityParrot.by.getOrDefault(entitytypes, SoundEffects.ENTITY_PARROT_AMBIENT);
     }
 
     @Override
@@ -437,7 +437,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
     }
 
     public int getVariant() {
-        return MathHelper.clamp((Integer) this.datawatcher.get(EntityParrot.bu), 0, 4);
+        return MathHelper.clamp(this.datawatcher.get(EntityParrot.bu), 0, 4);
     }
 
     public void setVariant(int i) {

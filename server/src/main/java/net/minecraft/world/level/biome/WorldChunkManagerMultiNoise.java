@@ -121,7 +121,7 @@ public class WorldChunkManagerMultiNoise extends WorldChunkManager {
     @Override
     public BiomeBase getBiome(int i, int j, int k) {
         int l = this.q ? j : 0;
-        BiomeBase._c biomebase_c = new BiomeBase._c((float) this.l.a((double) i, (double) l, (double) k), (float) this.m.a((double) i, (double) l, (double) k), (float) this.n.a((double) i, (double) l, (double) k), (float) this.o.a((double) i, (double) l, (double) k), 0.0F);
+        BiomeBase._c biomebase_c = new BiomeBase._c((float) this.l.a(i, l, k), (float) this.m.a(i, l, k), (float) this.n.a(i, l, k), (float) this.o.a(i, l, k), 0.0F);
 
         return (BiomeBase) this.p.stream().min(Comparator.comparing((pair) -> {
             return ((BiomeBase._c) pair.getFirst()).a(biomebase_c);

@@ -172,7 +172,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         d0 = this.c[j][1];
         d1 = this.c[k][1] - d0;
         adouble[1] = d0 + d1 * (double) f;
-        adouble[2] = MathHelper.d((double) f, this.c[j][2], this.c[k][2]);
+        adouble[2] = MathHelper.d(f, this.c[j][2], this.c[k][2]);
         return adouble;
     }
 
@@ -256,7 +256,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
             } else {
                 if (this.d < 0) {
                     for (int i = 0; i < this.c.length; ++i) {
-                        this.c[i][0] = (double) this.yaw;
+                        this.c[i][0] = this.yaw;
                         this.c[i][1] = this.locY();
                     }
                 }
@@ -265,7 +265,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                     this.d = 0;
                 }
 
-                this.c[this.d][0] = (double) this.yaw;
+                this.c[this.d][0] = this.yaw;
                 this.c[this.d][1] = this.locY();
                 double d0;
                 double d1;
@@ -305,17 +305,17 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                         d2 = vec3d1.z - this.locZ();
                         double d4 = d0 * d0 + d1 * d1 + d2 * d2;
                         float f5 = idragoncontroller.f();
-                        double d5 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+                        double d5 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 
                         if (d5 > 0.0D) {
-                            d1 = MathHelper.a(d1 / d5, (double) (-f5), (double) f5);
+                            d1 = MathHelper.a(d1 / d5, -f5, f5);
                         }
 
                         this.setMot(this.getMot().add(0.0D, d1 * 0.01D, 0.0D));
                         this.yaw = MathHelper.g(this.yaw);
                         double d6 = MathHelper.a(MathHelper.g(180.0D - MathHelper.d(d0, d2) * 57.2957763671875D - (double) this.yaw), -50.0D, 50.0D);
                         Vec3D vec3d2 = vec3d1.a(this.locX(), this.locY(), this.locZ()).d();
-                        Vec3D vec3d3 = (new Vec3D((double) MathHelper.sin(this.yaw * 0.017453292F), this.getMot().y, (double) (-MathHelper.cos(this.yaw * 0.017453292F)))).d();
+                        Vec3D vec3d3 = (new Vec3D(MathHelper.sin(this.yaw * 0.017453292F), this.getMot().y, -MathHelper.cos(this.yaw * 0.017453292F))).d();
 
                         f3 = Math.max(((float) vec3d3.b(vec3d2) + 0.5F) / 1.5F, 0.0F);
                         this.bt *= 0.8F;
@@ -352,9 +352,9 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 float f11 = MathHelper.sin(f10);
                 float f12 = MathHelper.cos(f10);
 
-                this.a(this.bz, (double) (f11 * 0.5F), 0.0D, (double) (-f12 * 0.5F));
-                this.a(this.bD, (double) (f12 * 4.5F), 2.0D, (double) (f11 * 4.5F));
-                this.a(this.bE, (double) (f12 * -4.5F), 2.0D, (double) (f11 * -4.5F));
+                this.a(this.bz, f11 * 0.5F, 0.0D, -f12 * 0.5F);
+                this.a(this.bD, f12 * 4.5F, 2.0D, f11 * 4.5F);
+                this.a(this.bE, f12 * -4.5F, 2.0D, f11 * -4.5F);
                 if (!hasRider && !this.world.isClientSide && this.hurtTicks == 0) { // Purpur
                     try (var list = this.world.getEntities(this, this.bD.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D), IEntitySelector.e)) {
                         this.a(list);
@@ -374,8 +374,8 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 float f14 = MathHelper.cos(this.yaw * 0.017453292F - this.bt * 0.01F);
                 float f15 = this.eM();
 
-                this.a(this.bo, (double) (f13 * 6.5F * f8), (double) (f15 + f9 * 6.5F), (double) (-f14 * 6.5F * f8));
-                this.a(this.by, (double) (f13 * 5.5F * f8), (double) (f15 + f9 * 5.5F), (double) (-f14 * 5.5F * f8));
+                this.a(this.bo, f13 * 6.5F * f8, f15 + f9 * 6.5F, -f14 * 6.5F * f8);
+                this.a(this.by, f13 * 5.5F * f8, f15 + f9 * 5.5F, -f14 * 5.5F * f8);
                 double[] adouble = this.a(5, 1.0F);
 
                 int k;
@@ -402,7 +402,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
                     f3 = 1.5F;
                     f4 = (float) (k + 1) * 2.0F;
-                    this.a(entitycomplexpart, (double) (-(f11 * 1.5F + f17 * f4) * f8), adouble1[1] - adouble[1] - (double) ((f4 + 1.5F) * f9) + 1.5D, (double) ((f12 * 1.5F + f18 * f4) * f8));
+                    this.a(entitycomplexpart, -(f11 * 1.5F + f17 * f4) * f8, adouble1[1] - adouble[1] - (double) ((f4 + 1.5F) * f9) + 1.5D, (f12 * 1.5F + f18 * f4) * f8);
                 }
 
                 if (!this.world.isClientSide) {
@@ -505,7 +505,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
 
             if (entity instanceof EntityLiving) {
                 entity.damageEntity(DamageSource.mobAttack(this), 10.0F);
-                this.a((EntityLiving) this, entity);
+                this.a(this, entity);
             }
         }
 
@@ -698,7 +698,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                 // CraftBukkit start - Use relative location for far away sounds
                 // this.world.b(1028, this.getChunkCoordinates(), 0);
                 //int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API // Tuinity - apply view distance patch
-                for (net.minecraft.server.level.EntityPlayer player : (List<net.minecraft.server.level.EntityPlayer>) ((WorldServer)world).getPlayers()) {
+                for (net.minecraft.server.level.EntityPlayer player : ((WorldServer)world).getPlayers()) {
                     final int viewDistance = player.getBukkitEntity().getViewDistance(); // Tuinity - apply view distance patch
                     // Paper end
                     double deltaX = this.locX() - player.locX();
@@ -1035,7 +1035,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
         if (damagesource.getEntity() instanceof EntityHuman) {
             entityhuman = (EntityHuman) damagesource.getEntity();
         } else {
-            entityhuman = this.world.a(EntityEnderDragon.bw, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
+            entityhuman = this.world.a(EntityEnderDragon.bw, blockposition.getX(), blockposition.getY(), blockposition.getZ());
         }
 
         if (entityendercrystal == this.currentEnderCrystal) {
@@ -1048,7 +1048,7 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
     @Override
     public void a(DataWatcherObject<?> datawatcherobject) {
         if (EntityEnderDragon.PHASE.equals(datawatcherobject) && this.world.isClientSide) {
-            this.bG.setControllerPhase(DragonControllerPhase.getById((Integer) this.getDataWatcher().get(EntityEnderDragon.PHASE)));
+            this.bG.setControllerPhase(DragonControllerPhase.getById(this.getDataWatcher().get(EntityEnderDragon.PHASE)));
         }
 
         super.a(datawatcherobject);

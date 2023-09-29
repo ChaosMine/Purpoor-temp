@@ -16,7 +16,7 @@ public interface ISteerable {
         if (!entityinsentient.isAlive()) {
             return false;
         } else {
-            Entity entity = entityinsentient.getPassengers().isEmpty() ? null : (Entity) entityinsentient.getPassengers().get(0);
+            Entity entity = entityinsentient.getPassengers().isEmpty() ? null : entityinsentient.getPassengers().get(0);
 
             if (entityinsentient.isVehicle() && entityinsentient.er() && entity instanceof EntityHuman) {
                 entityinsentient.yaw = entity.yaw;
@@ -42,7 +42,7 @@ public interface ISteerable {
                     this.a_(new Vec3D(0.0D, 0.0D, 1.0D));
                     entityinsentient.aU = 0;
                 } else {
-                    entityinsentient.a((EntityLiving) entityinsentient, false);
+                    entityinsentient.a(entityinsentient, false);
                     entityinsentient.setMot(Vec3D.ORIGIN);
                 }
 

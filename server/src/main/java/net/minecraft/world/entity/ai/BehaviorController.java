@@ -83,29 +83,17 @@ public class BehaviorController<E extends EntityLiving> {
                         return this.a(memorymoduletype, dynamicops, pair.getSecond());
                     });
 
-                    mutableobject1.setValue(((DataResult) mutableobject1.getValue()).apply2(Builder::add, dataresult1));
+                    mutableobject1.setValue((mutableobject1.getValue().apply2(Builder::add, dataresult1)));
                 });
-                DataResult dataresult = (DataResult) mutableobject1.getValue();
-                Logger logger = BehaviorController.LOGGER;
+                var dataresult = mutableobject1.getValue();
 
-                logger.getClass();
-                ImmutableList<BehaviorController.a<?>> immutablelist = (ImmutableList) dataresult.resultOrPartial(logger::error).map(Builder::build).orElseGet(ImmutableList::of);
-                Collection collection2 = collection;
-                Collection collection3 = collection1;
-                MutableObject mutableobject2 = mutableobject;
+							ImmutableList<BehaviorController.a<?>> immutablelist = dataresult.resultOrPartial(BehaviorController.LOGGER::error).map(Builder::build).orElseGet(ImmutableList::of);
 
-                mutableobject.getClass();
-                return DataResult.success(new BehaviorController<>(collection2, collection3, immutablelist, mutableobject2::getValue));
+							return DataResult.success(new BehaviorController<>(collection, collection1, immutablelist, mutableobject::getValue));
             }
 
             private <T, U> DataResult<BehaviorController.a<U>> a(MemoryModuleType<U> memorymoduletype, DynamicOps<T> dynamicops, T t0) {
-                return ((DataResult) memorymoduletype.getSerializer().map(DataResult::success).orElseGet(() -> {
-                    return DataResult.error("No codec for memory: " + memorymoduletype);
-                })).flatMap((codec) -> {
-                    return codec.parse(dynamicops, t0);
-                }).map((expirablememory) -> {
-                    return new BehaviorController.a<>(memorymoduletype, Optional.of(expirablememory));
-                });
+                return (memorymoduletype.getSerializer().map(DataResult::success).orElseGet(() -> DataResult.error("No codec for memory: " + memorymoduletype))).flatMap((codec) -> codec.parse(dynamicops, t0)).map((expirablememory) -> new a<>(memorymoduletype, Optional.of(expirablememory)));
             }
 
             public <T> RecordBuilder<T> encode(BehaviorController<E> behaviorcontroller, DynamicOps<T> dynamicops, RecordBuilder<T> recordbuilder) {
@@ -115,7 +103,7 @@ public class BehaviorController<E extends EntityLiving> {
                 return recordbuilder;
             }
         }).fieldOf("memories").codec());
-        return (Codec) mutableobject.getValue();
+        return mutableobject.getValue();
     }
 
     public BehaviorController(Collection<? extends MemoryModuleType<?>> collection, Collection<? extends SensorType<? extends Sensor<? super E>>> collection1, ImmutableList<BehaviorController.a<?>> immutablelist, Supplier<Codec<BehaviorController<E>>> supplier) {
@@ -208,19 +196,16 @@ public class BehaviorController<E extends EntityLiving> {
     }
 
     public <U> Optional<U> getMemory(MemoryModuleType<U> memorymoduletype) {
-        return ((Optional) this.memories.get(memorymoduletype)).map(ExpirableMemory::c);
+        return (Optional<U>) this.memories.get(memorymoduletype).map(ExpirableMemory::c);
     }
 
     public <U> boolean b(MemoryModuleType<U> memorymoduletype, U u0) {
-        return !this.hasMemory(memorymoduletype) ? false : this.getMemory(memorymoduletype).filter((object) -> {
-            return object.equals(u0);
-        }).isPresent();
+        return this.hasMemory(memorymoduletype) && this.getMemory(memorymoduletype).filter(object -> object.equals(u0)).isPresent();
     }
 
     public boolean a(MemoryModuleType<?> memorymoduletype, MemoryStatus memorystatus) {
-        Optional<? extends ExpirableMemory<?>> optional = (Optional) this.memories.get(memorymoduletype);
-
-        return optional == null ? false : memorystatus == MemoryStatus.REGISTERED || memorystatus == MemoryStatus.VALUE_PRESENT && optional.isPresent() || memorystatus == MemoryStatus.VALUE_ABSENT && !optional.isPresent();
+        Optional<? extends ExpirableMemory<?>> optional = this.memories.get(memorymoduletype);
+        return optional != null && (memorystatus == MemoryStatus.REGISTERED || memorystatus == MemoryStatus.VALUE_PRESENT && optional.isPresent() || memorystatus == MemoryStatus.VALUE_ABSENT && !optional.isPresent());
     }
 
     public Schedule getSchedule() {
@@ -306,7 +291,7 @@ public class BehaviorController<E extends EntityLiving> {
             Activity activity1 = (Activity) iterator.next();
 
             if (activity1 != activity) {
-                Set<MemoryModuleType<?>> set = (Set) this.h.get(activity1);
+                Set<MemoryModuleType<?>> set = this.h.get(activity1);
 
                 if (set != null) {
                     Iterator iterator1 = set.iterator();
@@ -401,9 +386,9 @@ public class BehaviorController<E extends EntityLiving> {
 
         while (iterator.hasNext()) {
             Entry<MemoryModuleType<?>, Optional<? extends ExpirableMemory<?>>> entry = (Entry) iterator.next();
-            MemoryModuleType<?> memorymoduletype = (MemoryModuleType) entry.getKey();
+            MemoryModuleType<?> memorymoduletype = entry.getKey();
 
-            if (((Optional) entry.getValue()).isPresent()) {
+            if (entry.getValue().isPresent()) {
                 behaviorcontroller.memories.put(memorymoduletype, entry.getValue());
             }
         }
@@ -435,7 +420,7 @@ public class BehaviorController<E extends EntityLiving> {
         while (iterator.hasNext()) {
             Entry<MemoryModuleType<?>, Optional<? extends ExpirableMemory<?>>> entry = (Entry) iterator.next();
 
-            if (((Optional) entry.getValue()).isPresent()) {
+            if (entry.getValue().isPresent()) {
                 ExpirableMemory<?> expirablememory = (ExpirableMemory) ((Optional) entry.getValue()).get();
 
                 expirablememory.a();
@@ -469,10 +454,10 @@ public class BehaviorController<E extends EntityLiving> {
 
             while (iterator1.hasNext()) {
                 Entry<Activity, Set<Behavior<? super E>>> entry = (Entry) iterator1.next();
-                Activity activity = (Activity) entry.getKey();
+                Activity activity = entry.getKey();
 
                 if (this.j.contains(activity)) {
-                    Set<Behavior<? super E>> set = (Set) entry.getValue();
+                    Set<Behavior<? super E>> set = entry.getValue();
                     Iterator iterator2 = set.iterator();
 
                     while (iterator2.hasNext()) {
@@ -516,8 +501,8 @@ public class BehaviorController<E extends EntityLiving> {
 
                 Pair<MemoryModuleType<?>, MemoryStatus> pair = (Pair) iterator.next();
 
-                memorymoduletype = (MemoryModuleType) pair.getFirst();
-                memorystatus = (MemoryStatus) pair.getSecond();
+                memorymoduletype = pair.getFirst();
+                memorystatus = pair.getSecond();
             } while (this.a(memorymoduletype, memorystatus));
 
             return false;
@@ -548,7 +533,7 @@ public class BehaviorController<E extends EntityLiving> {
         private final Optional<? extends ExpirableMemory<U>> b;
 
         private static <U> BehaviorController.a<U> b(MemoryModuleType<U> memorymoduletype, Optional<? extends ExpirableMemory<?>> optional) {
-            return new BehaviorController.a<>(memorymoduletype, optional);
+            return new BehaviorController.a<>(memorymoduletype, (Optional<? extends ExpirableMemory<U>>) optional);
         }
 
         private a(MemoryModuleType<U> memorymoduletype, Optional<? extends ExpirableMemory<U>> optional) {

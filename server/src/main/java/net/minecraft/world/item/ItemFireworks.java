@@ -82,10 +82,10 @@ public class ItemFireworks extends Item {
 
         SMALL_BALL(0, "small_ball"), LARGE_BALL(1, "large_ball"), STAR(2, "star"), CREEPER(3, "creeper"), BURST(4, "burst");
 
-        private static final ItemFireworks.EffectType[] f = (ItemFireworks.EffectType[]) Arrays.stream(values()).sorted(Comparator.comparingInt((itemfireworks_effecttype) -> {
+        private static final ItemFireworks.EffectType[] f = Arrays.stream(values()).sorted(Comparator.comparingInt((itemfireworks_effecttype) -> {
             return itemfireworks_effecttype.g;
         })).toArray((i) -> {
-            return new ItemFireworks.EffectType[i];
+            return new EffectType[i];
         });
         private final int g;
         private final String h;

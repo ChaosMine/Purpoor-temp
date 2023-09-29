@@ -47,7 +47,7 @@ public class BlockShulkerBox extends BlockTileEntity {
     public BlockShulkerBox(@Nullable EnumColor enumcolor, BlockBase.Info blockbase_info) {
         super(blockbase_info);
         this.color = enumcolor;
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockShulkerBox.a, EnumDirection.UP));
+        this.j(this.blockStateList.getBlockData().set(BlockShulkerBox.a, EnumDirection.UP));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BlockShulkerBox extends BlockTileEntity {
                 boolean flag;
 
                 if (tileentityshulkerbox.j() == TileEntityShulkerBox.AnimationPhase.CLOSED) {
-                    EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockShulkerBox.a);
+                    EnumDirection enumdirection = iblockdata.get(BlockShulkerBox.a);
 
                     flag = world.b(ShulkerUtil.a(blockposition, enumdirection));
                 } else {
@@ -96,7 +96,7 @@ public class BlockShulkerBox extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockShulkerBox.a, blockactioncontext.getClickedFace());
+        return this.getBlockData().set(BlockShulkerBox.a, blockactioncontext.getClickedFace());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BlockShulkerBox extends BlockTileEntity {
                 NBTTagCompound nbttagcompound = tileentityshulkerbox.e(new NBTTagCompound());
 
                 if (!nbttagcompound.isEmpty()) {
-                    itemstack.a("BlockEntityTag", (NBTBase) nbttagcompound);
+                    itemstack.a("BlockEntityTag", nbttagcompound);
                 }
 
                 if (tileentityshulkerbox.hasCustomName()) {
@@ -137,7 +137,7 @@ public class BlockShulkerBox extends BlockTileEntity {
 
     @Override
     public List<ItemStack> a(IBlockData iblockdata, LootTableInfo.Builder loottableinfo_builder) {
-        TileEntity tileentity = (TileEntity) loottableinfo_builder.b(LootContextParameters.BLOCK_ENTITY);
+        TileEntity tileentity = loottableinfo_builder.b(LootContextParameters.BLOCK_ENTITY);
 
         if (tileentity instanceof TileEntityShulkerBox) {
             TileEntityShulkerBox tileentityshulkerbox = (TileEntityShulkerBox) tileentity;
@@ -253,11 +253,11 @@ public class BlockShulkerBox extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockShulkerBox.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockShulkerBox.a)));
+        return iblockdata.set(BlockShulkerBox.a, enumblockrotation.a(iblockdata.get(BlockShulkerBox.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockShulkerBox.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockShulkerBox.a)));
     }
 }

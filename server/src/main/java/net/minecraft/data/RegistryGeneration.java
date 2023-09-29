@@ -64,7 +64,7 @@ public class RegistryGeneration {
         RegistryGeneration.k.put(minecraftkey, supplier);
         IRegistryWritable<R> iregistrywritable = (IRegistryWritable<R>) RegistryGeneration.l; // Paper - decompile fix
 
-        return (R) iregistrywritable.a((ResourceKey<R>) resourcekey, r0, lifecycle); // Paper - decompile fix
+        return iregistrywritable.a((ResourceKey<R>) resourcekey, r0, lifecycle); // Paper - decompile fix
     }
 
     public static <T> T a(IRegistry<? super T> iregistry, String s, T t0) {
@@ -88,6 +88,6 @@ public class RegistryGeneration {
             }
 
         });
-        IRegistry.a(RegistryGeneration.l);
+        IRegistry.a___(RegistryGeneration.l);
     }
 }

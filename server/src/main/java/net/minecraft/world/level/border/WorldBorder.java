@@ -217,7 +217,7 @@ public class WorldBorder {
         }
         WorldBorderBoundsChangeEvent event = new WorldBorderBoundsChangeEvent(world.getWorld(), world.getWorld().getWorldBorder(), type, d0, d1, i);
         if (!event.callEvent()) return;
-        this.j = (WorldBorder.a) (d0 == event.getNewSize() ? new WorldBorder.d(event.getNewSize()) : new WorldBorder.b(d0, event.getNewSize(), event.getDuration()));
+        this.j = d0 == event.getNewSize() ? new d(event.getNewSize()) : new b(d0, event.getNewSize(), event.getDuration());
         // Paper end
         Iterator iterator = this.l().iterator();
 
@@ -427,8 +427,8 @@ public class WorldBorder {
             nbttagcompound.setDouble("BorderSafeZone", this.d);
             nbttagcompound.setDouble("BorderDamagePerBlock", this.c);
             nbttagcompound.setDouble("BorderSizeLerpTarget", this.i);
-            nbttagcompound.setDouble("BorderWarningBlocks", (double) this.e);
-            nbttagcompound.setDouble("BorderWarningTime", (double) this.f);
+            nbttagcompound.setDouble("BorderWarningBlocks", this.e);
+            nbttagcompound.setDouble("BorderWarningTime", this.f);
         }
     }
 
@@ -482,10 +482,10 @@ public class WorldBorder {
         }
 
         private void n() {
-            this.c = Math.max(WorldBorder.this.getCenterX() - this.b / 2.0D, (double) (-WorldBorder.this.i));
-            this.d = Math.max(WorldBorder.this.getCenterZ() - this.b / 2.0D, (double) (-WorldBorder.this.i));
-            this.e = Math.min(WorldBorder.this.getCenterX() + this.b / 2.0D, (double) WorldBorder.this.i);
-            this.f = Math.min(WorldBorder.this.getCenterZ() + this.b / 2.0D, (double) WorldBorder.this.i);
+            this.c = Math.max(WorldBorder.this.getCenterX() - this.b / 2.0D, -WorldBorder.this.i);
+            this.d = Math.max(WorldBorder.this.getCenterZ() - this.b / 2.0D, -WorldBorder.this.i);
+            this.e = Math.min(WorldBorder.this.getCenterX() + this.b / 2.0D, WorldBorder.this.i);
+            this.f = Math.min(WorldBorder.this.getCenterZ() + this.b / 2.0D, WorldBorder.this.i);
             this.g = VoxelShapes.a(VoxelShapes.a, VoxelShapes.create(Math.floor(this.a()), Double.NEGATIVE_INFINITY, Math.floor(this.c()), Math.ceil(this.b()), Double.POSITIVE_INFINITY, Math.ceil(this.d())), OperatorBoolean.ONLY_FIRST);
         }
 
@@ -528,22 +528,22 @@ public class WorldBorder {
 
         @Override
         public double a() {
-            return Math.max(WorldBorder.this.getCenterX() - this.e() / 2.0D, (double) (-WorldBorder.this.i));
+            return Math.max(WorldBorder.this.getCenterX() - this.e() / 2.0D, -WorldBorder.this.i);
         }
 
         @Override
         public double c() {
-            return Math.max(WorldBorder.this.getCenterZ() - this.e() / 2.0D, (double) (-WorldBorder.this.i));
+            return Math.max(WorldBorder.this.getCenterZ() - this.e() / 2.0D, -WorldBorder.this.i);
         }
 
         @Override
         public double b() {
-            return Math.min(WorldBorder.this.getCenterX() + this.e() / 2.0D, (double) WorldBorder.this.i);
+            return Math.min(WorldBorder.this.getCenterX() + this.e() / 2.0D, WorldBorder.this.i);
         }
 
         @Override
         public double d() {
-            return Math.min(WorldBorder.this.getCenterZ() + this.e() / 2.0D, (double) WorldBorder.this.i);
+            return Math.min(WorldBorder.this.getCenterZ() + this.e() / 2.0D, WorldBorder.this.i);
         }
 
         @Override
@@ -572,7 +572,7 @@ public class WorldBorder {
         @Override
         public WorldBorder.a l() {
             if (this.getLerpTimeRemaining() <= 0L) new WorldBorderBoundsChangeFinishEvent(world.getWorld(), world.getWorld().getWorldBorder(), getOldSize(), getNewSize(), getDuration()).callEvent(); // Paper
-            return (WorldBorder.a) (this.g() <= 0L ? WorldBorder.this.new d(this.c) : this);
+            return this.g() <= 0L ? WorldBorder.this.new d(this.c) : this;
         }
 
         @Override

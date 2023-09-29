@@ -56,9 +56,9 @@ public class BlockSponge extends Block {
         BlockStateListPopulator blockList = new BlockStateListPopulator(world); // CraftBukkit - Use BlockStateListPopulator
 
         while (!queue.isEmpty()) {
-            Tuple<BlockPosition, Integer> tuple = (Tuple) queue.poll();
-            BlockPosition blockposition1 = (BlockPosition) tuple.a();
-            int j = (Integer) tuple.b();
+            Tuple<BlockPosition, Integer> tuple = queue.poll();
+            BlockPosition blockposition1 = tuple.a();
+            int j = tuple.b();
             EnumDirection[] aenumdirection = EnumDirection.values();
             int k = aenumdirection.length;
 
@@ -71,7 +71,7 @@ public class BlockSponge extends Block {
                 // CraftBukkit end
                 Material material = iblockdata.getMaterial();
 
-                if (fluid.a((Tag) TagsFluid.WATER)) {
+                if (fluid.a(TagsFluid.WATER)) {
                     if (iblockdata.getBlock() instanceof IFluidSource && ((IFluidSource) iblockdata.getBlock()).removeFluid(blockList, blockposition2, iblockdata) != FluidTypes.EMPTY) { // CraftBukkit
                         ++i;
                         if (j < world.purpurConfig.spongeAbsorptionRadius) { // Purpur

@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
 
+import java.util.function.Consumer;
+
 public class CriterionTriggerPlacedBlock extends CriterionTriggerAbstract<CriterionTriggerPlacedBlock.a> {
 
     private static final MinecraftKey a = new MinecraftKey("placed_block");
@@ -25,12 +27,12 @@ public class CriterionTriggerPlacedBlock extends CriterionTriggerAbstract<Criter
     }
 
     @Override
-    public CriterionTriggerPlacedBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerPlacedBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         Block block = a(jsonobject);
         CriterionTriggerProperties criteriontriggerproperties = CriterionTriggerProperties.a(jsonobject.get("state"));
 
         if (block != null) {
-            criteriontriggerproperties.a(block.getStates(), (s) -> {
+            criteriontriggerproperties.a(block.getStates(), (Consumer<String>) (s) -> {
                 throw new JsonSyntaxException("Block " + block + " has no property " + s + ":");
             });
         }
@@ -46,7 +48,7 @@ public class CriterionTriggerPlacedBlock extends CriterionTriggerAbstract<Criter
         if (jsonobject.has("block")) {
             MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
 
-            return (Block) IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
+            return IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
                 return new JsonSyntaxException("Unknown block type '" + minecraftkey + "'");
             });
         } else {
@@ -69,7 +71,7 @@ public class CriterionTriggerPlacedBlock extends CriterionTriggerAbstract<Criter
         private final CriterionConditionLocation c;
         private final CriterionConditionItem d;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, @Nullable Block block, CriterionTriggerProperties criteriontriggerproperties, CriterionConditionLocation criterionconditionlocation, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, @Nullable Block block, CriterionTriggerProperties criteriontriggerproperties, CriterionConditionLocation criterionconditionlocation, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerPlacedBlock.a, criterionconditionentity_b);
             this.a = block;
             this.b = criteriontriggerproperties;
@@ -78,7 +80,7 @@ public class CriterionTriggerPlacedBlock extends CriterionTriggerAbstract<Criter
         }
 
         public static CriterionTriggerPlacedBlock.a a(Block block) {
-            return new CriterionTriggerPlacedBlock.a(CriterionConditionEntity.b.a, block, CriterionTriggerProperties.a, CriterionConditionLocation.a, CriterionConditionItem.a);
+            return new CriterionTriggerPlacedBlock.a(CriterionConditionEntity.b_.a, block, CriterionTriggerProperties.a, CriterionConditionLocation.a, CriterionConditionItem.a);
         }
 
         public boolean a(IBlockData iblockdata, BlockPosition blockposition, WorldServer worldserver, ItemStack itemstack) {

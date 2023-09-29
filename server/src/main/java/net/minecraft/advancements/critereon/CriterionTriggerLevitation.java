@@ -17,7 +17,7 @@ public class CriterionTriggerLevitation extends CriterionTriggerAbstract<Criteri
     }
 
     @Override
-    public CriterionTriggerLevitation.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerLevitation.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionDistance criterionconditiondistance = CriterionConditionDistance.a(jsonobject.get("distance"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("duration"));
 
@@ -35,14 +35,14 @@ public class CriterionTriggerLevitation extends CriterionTriggerAbstract<Criteri
         private final CriterionConditionDistance a;
         private final CriterionConditionValue.IntegerRange b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionDistance criterionconditiondistance, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionDistance criterionconditiondistance, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             super(CriterionTriggerLevitation.a, criterionconditionentity_b);
             this.a = criterionconditiondistance;
             this.b = criterionconditionvalue_integerrange;
         }
 
         public static CriterionTriggerLevitation.a a(CriterionConditionDistance criterionconditiondistance) {
-            return new CriterionTriggerLevitation.a(CriterionConditionEntity.b.a, criterionconditiondistance, CriterionConditionValue.IntegerRange.e);
+            return new CriterionTriggerLevitation.a(CriterionConditionEntity.b_.a, criterionconditiondistance, CriterionConditionValue.IntegerRange.e);
         }
 
         public boolean a(EntityPlayer entityplayer, Vec3D vec3d, int i) {

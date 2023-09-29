@@ -44,7 +44,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
     public static final StructureGenerator<WorldGenFeatureEmptyConfiguration> IGLOO = a("Igloo", new WorldGenFeatureIgloo(WorldGenFeatureEmptyConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
     public static final StructureGenerator<WorldGenFeatureRuinedPortalConfiguration> RUINED_PORTAL = a("Ruined_Portal", new WorldGenFeatureRuinedPortal(WorldGenFeatureRuinedPortalConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
     public static final StructureGenerator<WorldGenFeatureShipwreckConfiguration> SHIPWRECK = a("Shipwreck", new WorldGenFeatureShipwreck(WorldGenFeatureShipwreckConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
-    public static final WorldGenFeatureSwampHut SWAMP_HUT = (WorldGenFeatureSwampHut) a("Swamp_Hut", new WorldGenFeatureSwampHut(WorldGenFeatureEmptyConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
+    public static final WorldGenFeatureSwampHut SWAMP_HUT = a("Swamp_Hut", new WorldGenFeatureSwampHut(WorldGenFeatureEmptyConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
     public static final StructureGenerator<WorldGenFeatureEmptyConfiguration> STRONGHOLD = a("Stronghold", new WorldGenStronghold(WorldGenFeatureEmptyConfiguration.a), WorldGenStage.Decoration.STRONGHOLDS);
     public static final StructureGenerator<WorldGenFeatureEmptyConfiguration> MONUMENT = a("Monument", new WorldGenMonument(WorldGenFeatureEmptyConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
     public static final StructureGenerator<WorldGenFeatureOceanRuinConfiguration> OCEAN_RUIN = a("Ocean_Ruin", new WorldGenFeatureOceanRuin(WorldGenFeatureOceanRuinConfiguration.a), WorldGenStage.Decoration.SURFACE_STRUCTURES);
@@ -74,7 +74,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
     }
 
     public WorldGenStage.Decoration f() {
-        return (WorldGenStage.Decoration) StructureGenerator.u.get(this);
+        return StructureGenerator.u.get(this);
     }
 
     public static void g() {}
@@ -86,7 +86,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
         if ("INVALID".equals(s)) {
             return StructureStart.a;
         } else {
-            StructureGenerator<?> structuregenerator = (StructureGenerator) IRegistry.STRUCTURE_FEATURE.get(new MinecraftKey(s.toLowerCase(Locale.ROOT)));
+            StructureGenerator<?> structuregenerator = IRegistry.STRUCTURE_FEATURE.get(new MinecraftKey(s.toLowerCase(Locale.ROOT)));
 
             if (structuregenerator == null) {
                 StructureGenerator.LOGGER.error("Unknown feature id: {}", s);
@@ -105,8 +105,8 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                         NBTTagCompound nbttagcompound1 = nbttaglist.getCompound(i1);
                         String s1 = nbttagcompound1.getString("id").toLowerCase(Locale.ROOT);
                         MinecraftKey minecraftkey = new MinecraftKey(s1);
-                        MinecraftKey minecraftkey1 = (MinecraftKey) StructureGenerator.x.getOrDefault(minecraftkey, minecraftkey);
-                        WorldGenFeatureStructurePieceType worldgenfeaturestructurepiecetype = (WorldGenFeatureStructurePieceType) IRegistry.STRUCTURE_PIECE.get(minecraftkey1);
+                        MinecraftKey minecraftkey1 = StructureGenerator.x.getOrDefault(minecraftkey, minecraftkey);
+                        WorldGenFeatureStructurePieceType worldgenfeaturestructurepiecetype = IRegistry.STRUCTURE_PIECE.get(minecraftkey1);
 
                         if (worldgenfeaturestructurepiecetype == null) {
                             StructureGenerator.LOGGER.error("Unknown structure piece id: {}", minecraftkey1);
@@ -264,7 +264,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
 
     public final String getRegistryKey() { return this.i(); } // Purpur - OBFHELPER
     public String i() {
-        return (String) StructureGenerator.a.inverse().get(this);
+        return StructureGenerator.a.inverse().get(this);
     }
 
     public List<BiomeSettingsMobs.c> c() {

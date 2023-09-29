@@ -75,7 +75,7 @@ public class PortalTravelAgent {
             this.world.getChunkProvider().addTicket(TicketType.PORTAL, new ChunkCoordIntPair(blockposition1), 3, blockposition1);
             IBlockData iblockdata = this.world.getType(blockposition1);
 
-            return BlockUtil.a(blockposition1, (EnumDirection.EnumAxis) iblockdata.get(BlockProperties.E), 21, EnumDirection.EnumAxis.Y, 21, (blockposition2) -> {
+            return BlockUtil.a(blockposition1, iblockdata.get(BlockProperties.E), 21, EnumDirection.EnumAxis.Y, 21, (blockposition2) -> {
                 return this.world.getType(blockposition2) == iblockdata;
             });
         });
@@ -106,7 +106,7 @@ public class PortalTravelAgent {
             j = Math.min(i, this.world.a(HeightMap.Type.MOTION_BLOCKING, blockposition_mutableblockposition1.getX(), blockposition_mutableblockposition1.getZ()));
             boolean flag = true;
 
-            if (worldborder.a((BlockPosition) blockposition_mutableblockposition1) && worldborder.a((BlockPosition) blockposition_mutableblockposition1.c(enumdirection, 1))) {
+            if (worldborder.a(blockposition_mutableblockposition1) && worldborder.a(blockposition_mutableblockposition1.c(enumdirection, 1))) {
                 blockposition_mutableblockposition1.c(enumdirection.opposite(), 1);
 
                 for (int k = j; k >= 0; --k) {
@@ -180,7 +180,7 @@ public class PortalTravelAgent {
             }
         }
 
-        IBlockData iblockdata1 = (IBlockData) Blocks.NETHER_PORTAL.getBlockData().set(BlockPortal.AXIS, enumdirection_enumaxis);
+        IBlockData iblockdata1 = Blocks.NETHER_PORTAL.getBlockData().set(BlockPortal.AXIS, enumdirection_enumaxis);
 
         for (j1 = 0; j1 < 2; ++j1) {
             for (j = 0; j < 3; ++j) {

@@ -17,17 +17,22 @@ public class WorldGenMinable extends WorldGenerator<WorldGenFeatureOreConfigurat
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureOreConfiguration worldgenfeatureoreconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureOreConfiguration worldgenfeatureoreconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureoreconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureOreConfiguration worldgenfeatureoreconfiguration) {
         float f = random.nextFloat() * 3.1415927F;
         float f1 = (float) worldgenfeatureoreconfiguration.c / 8.0F;
         int i = MathHelper.f(((float) worldgenfeatureoreconfiguration.c / 16.0F * 2.0F + 1.0F) / 2.0F);
-        double d0 = (double) blockposition.getX() + Math.sin((double) f) * (double) f1;
-        double d1 = (double) blockposition.getX() - Math.sin((double) f) * (double) f1;
-        double d2 = (double) blockposition.getZ() + Math.cos((double) f) * (double) f1;
-        double d3 = (double) blockposition.getZ() - Math.cos((double) f) * (double) f1;
+        double d0 = (double) blockposition.getX() + Math.sin(f) * (double) f1;
+        double d1 = (double) blockposition.getX() - Math.sin(f) * (double) f1;
+        double d2 = (double) blockposition.getZ() + Math.cos(f) * (double) f1;
+        double d3 = (double) blockposition.getZ() - Math.cos(f) * (double) f1;
         boolean flag = true;
-        double d4 = (double) (blockposition.getY() + random.nextInt(3) - 2);
-        double d5 = (double) (blockposition.getY() + random.nextInt(3) - 2);
+        double d4 = blockposition.getY() + random.nextInt(3) - 2;
+        double d5 = blockposition.getY() + random.nextInt(3) - 2;
         int j = blockposition.getX() - MathHelper.f(f1) - i;
         int k = blockposition.getY() - 2 - i;
         int l = blockposition.getZ() - MathHelper.f(f1) - i;
@@ -61,9 +66,9 @@ public class WorldGenMinable extends WorldGenerator<WorldGenFeatureOreConfigurat
         for (l1 = 0; l1 < k1; ++l1) {
             float f = (float) l1 / (float) k1;
 
-            d6 = MathHelper.d((double) f, d0, d1);
-            d7 = MathHelper.d((double) f, d4, d5);
-            d8 = MathHelper.d((double) f, d2, d3);
+            d6 = MathHelper.d(f, d0, d1);
+            d7 = MathHelper.d(f, d4, d5);
+            d8 = MathHelper.d(f, d2, d3);
             d9 = random.nextDouble() * (double) k1 / 16.0D;
             double d10 = ((double) (MathHelper.sin(3.1415927F * f) + 1.0F) * d9 + 1.0D) / 2.0D;
 

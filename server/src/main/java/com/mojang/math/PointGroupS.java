@@ -9,7 +9,7 @@ public enum PointGroupS {
 
     private final int[] g;
     private final Matrix3f h;
-    private static final PointGroupS[][] i = (PointGroupS[][]) SystemUtils.a((Object) (new PointGroupS[values().length][values().length]), (apointgroups) -> {
+    private static final PointGroupS[][] i = SystemUtils.a(new PointGroupS[values().length][values().length], (apointgroups) -> {
         PointGroupS[] apointgroups1 = values();
         int i = apointgroups1.length;
 
@@ -26,7 +26,7 @@ public enum PointGroupS {
                     aint[i1] = pointgroups.g[pointgroups1.g[i1]];
                 }
 
-                PointGroupS pointgroups2 = (PointGroupS) Arrays.stream(values()).filter((pointgroups3) -> {
+                PointGroupS pointgroups2 = Arrays.stream(values()).filter((pointgroups3) -> {
                     return Arrays.equals(pointgroups3.g, aint);
                 }).findFirst().get();
 

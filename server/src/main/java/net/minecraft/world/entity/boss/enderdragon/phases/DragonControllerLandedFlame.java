@@ -73,7 +73,7 @@ public class DragonControllerLandedFlame extends AbstractDragonControllerLanded 
                 blockposition_mutableblockposition.c(d0, d3, d1);
             }
 
-            d3 = (double) (MathHelper.floor(d3) + 1);
+            d3 = MathHelper.floor(d3) + 1;
             this.d = new EntityAreaEffectCloud(this.a.world, d0, d3, d1);
             this.d.setSource(this.a);
             this.d.setRadius(5.0F);

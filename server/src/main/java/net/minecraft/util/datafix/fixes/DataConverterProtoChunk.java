@@ -57,7 +57,7 @@ public class DataConverterProtoChunk extends DataFix {
                     Optional<ByteBuffer> optional1 = dynamic.get("Biomes").asByteBufferOpt().result();
 
                     if (optional1.isPresent()) {
-                        ByteBuffer bytebuffer = (ByteBuffer) optional1.get();
+                        ByteBuffer bytebuffer = optional1.get();
                         int[] aint = new int[256];
 
                         for (int i = 0; i < aint.length; ++i) {
@@ -69,9 +69,9 @@ public class DataConverterProtoChunk extends DataFix {
                         dynamic = dynamic.set("Biomes", dynamic.createIntList(Arrays.stream(aint)));
                     }
 
-                    List<ShortList> list = (List) IntStream.range(0, 16).mapToObj((j) -> {
+                    List<ShortList> list = IntStream.range(0, 16).mapToObj((j) -> {
                         return new ShortArrayList();
-                    }).collect(Collectors.toList());
+                    }).collect(Collectors.toList());;
 
                     if (optional.isPresent()) {
                         optional.get().forEach((dynamic2) -> { // Paper - decompile fix
@@ -80,7 +80,7 @@ public class DataConverterProtoChunk extends DataFix {
                             int l = dynamic2.get("z").asInt(0);
                             short short0 = a(j, k, l);
 
-                            ((ShortList) list.get(k >> 4)).add(short0);
+                            list.get(k >> 4).add(short0);
                         });
                         Dynamic<?> finalDynamic = dynamic; // Paper - decompile fix
                         dynamic = dynamic.set("ToBeTicked", dynamic.createList(list.stream().map((shortlist) -> {

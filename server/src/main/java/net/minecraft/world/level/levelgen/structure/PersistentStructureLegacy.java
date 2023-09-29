@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class PersistentStructureLegacy {
 
-    private static final Map<String, String> a = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
+    private static final Map<String, String> a = SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
         hashmap.put("Village", "Village");
         hashmap.put("Mineshaft", "Mineshaft");
         hashmap.put("Mansion", "Mansion");
@@ -37,7 +37,7 @@ public class PersistentStructureLegacy {
         hashmap.put("Fortress", "Fortress");
         hashmap.put("EndCity", "EndCity");
     });
-    private static final Map<String, String> b = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
+    private static final Map<String, String> b = SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
         hashmap.put("Iglu", "Igloo");
         hashmap.put("TeDP", "Desert_Pyramid");
         hashmap.put("TeJP", "Jungle_Pyramid");
@@ -69,7 +69,7 @@ public class PersistentStructureLegacy {
 
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
-            PersistentIndexed persistentindexed = (PersistentIndexed) this.e.get(s);
+            PersistentIndexed persistentindexed = this.e.get(s);
 
             if (persistentindexed != null && persistentindexed.c(i)) {
                 persistentindexed.d(i);
@@ -93,7 +93,7 @@ public class PersistentStructureLegacy {
 
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
-            StructureGenerator<?> structuregenerator = (StructureGenerator) StructureGenerator.a.get(s.toLowerCase(Locale.ROOT));
+            StructureGenerator<?> structuregenerator = StructureGenerator.a.get(s.toLowerCase(Locale.ROOT));
 
             if (!nbttagcompound3.hasKeyOfType(s, 12) && structuregenerator != null) {
                 boolean flag = true;
@@ -107,7 +107,7 @@ public class PersistentStructureLegacy {
                     }
                 }
 
-                nbttagcompound3.c(s, (List) longarraylist);
+                nbttagcompound3.c(s, longarraylist);
             }
         }
 
@@ -118,7 +118,7 @@ public class PersistentStructureLegacy {
     }
 
     private boolean a(int i, int j, String s) {
-        return !this.c ? false : this.d.get(s) != null && ((PersistentIndexed) this.e.get(PersistentStructureLegacy.a.get(s))).b(ChunkCoordIntPair.pair(i, j));
+        return !this.c ? false : this.d.get(s) != null && this.e.get(PersistentStructureLegacy.a.get(s)).b(ChunkCoordIntPair.pair(i, j));
     }
 
     private boolean a(int i, int j) {
@@ -135,7 +135,7 @@ public class PersistentStructureLegacy {
                 }
 
                 s = (String) iterator.next();
-            } while (this.d.get(s) == null || !((PersistentIndexed) this.e.get(PersistentStructureLegacy.a.get(s))).c(ChunkCoordIntPair.pair(i, j)));
+            } while (this.d.get(s) == null || !this.e.get(PersistentStructureLegacy.a.get(s)).c(ChunkCoordIntPair.pair(i, j)));
 
             return true;
         }
@@ -149,13 +149,13 @@ public class PersistentStructureLegacy {
 
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
-            Long2ObjectMap<NBTTagCompound> long2objectmap = (Long2ObjectMap) this.d.get(s);
+            Long2ObjectMap<NBTTagCompound> long2objectmap = this.d.get(s);
 
             if (long2objectmap != null) {
                 long i = chunkcoordintpair.pair();
 
-                if (((PersistentIndexed) this.e.get(PersistentStructureLegacy.a.get(s))).c(i)) {
-                    NBTTagCompound nbttagcompound4 = (NBTTagCompound) long2objectmap.get(i);
+                if (this.e.get(PersistentStructureLegacy.a.get(s)).c(i)) {
+                    NBTTagCompound nbttagcompound4 = long2objectmap.get(i);
 
                     if (nbttagcompound4 != null) {
                         nbttagcompound3.set(s, nbttagcompound4);
@@ -198,7 +198,7 @@ public class PersistentStructureLegacy {
 
                     if (!nbttaglist.isEmpty()) {
                         s2 = nbttaglist.getCompound(0).getString("id");
-                        String s3 = (String) PersistentStructureLegacy.b.get(s2);
+                        String s3 = PersistentStructureLegacy.b.get(s2);
 
                         if (s3 != null) {
                             nbttagcompound1.setString("id", s3);
@@ -212,7 +212,7 @@ public class PersistentStructureLegacy {
                 }
 
                 String s4 = s + "_index";
-                PersistentIndexed persistentindexed = (PersistentIndexed) worldpersistentdata.a(() -> {
+                PersistentIndexed persistentindexed = worldpersistentdata.a(() -> {
                     return new PersistentIndexed(s4);
                 }, s4);
 

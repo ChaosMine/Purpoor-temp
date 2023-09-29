@@ -117,7 +117,7 @@ public class ChatMessage extends ChatBaseComponent implements ChatComponentConte
         } else {
             Object object = this.args[i];
 
-            return (IChatFormatted) (object instanceof IChatBaseComponent ? (IChatBaseComponent) object : (object == null ? ChatMessage.f : IChatFormatted.b(object.toString())));
+            return object instanceof IChatBaseComponent ? (IChatBaseComponent) object : (object == null ? ChatMessage.f : IChatFormatted.b(object.toString()));
         }
     }
 

@@ -28,15 +28,15 @@ public class CommandSetBlock {
         commanddispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("setblock").requires((commandlistenerwrapper) -> {
             return commandlistenerwrapper.hasPermission(2);
         })).then(net.minecraft.commands.CommandDispatcher.a("pos", (ArgumentType) ArgumentPosition.a()).then(((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("block", (ArgumentType) ArgumentTile.a()).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.REPLACE, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.REPLACE, null);
         })).then(net.minecraft.commands.CommandDispatcher.a("destroy").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.DESTROY, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.DESTROY, null);
         }))).then(net.minecraft.commands.CommandDispatcher.a("keep").executes((commandcontext) -> {
             return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.REPLACE, (shapedetectorblock) -> {
                 return shapedetectorblock.c().isEmpty(shapedetectorblock.getPosition());
             });
         }))).then(net.minecraft.commands.CommandDispatcher.a("replace").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.REPLACE, (Predicate) null);
+            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentPosition.a(commandcontext, "pos"), ArgumentTile.a(commandcontext, "block"), CommandSetBlock.Mode.REPLACE, null);
         })))));
     }
 

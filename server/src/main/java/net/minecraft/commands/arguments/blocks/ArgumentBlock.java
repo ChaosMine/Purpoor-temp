@@ -330,15 +330,15 @@ public class ArgumentBlock {
     }
 
     private CompletableFuture<Suggestions> k(SuggestionsBuilder suggestionsbuilder, Tags<Block> tags) {
-        return ICompletionProvider.a((Iterable) tags.b(), suggestionsbuilder.createOffset(this.r).add(suggestionsbuilder));
+        return ICompletionProvider.a(tags.b(), suggestionsbuilder.createOffset(this.r).add(suggestionsbuilder));
     }
 
     private CompletableFuture<Suggestions> l(SuggestionsBuilder suggestionsbuilder, Tags<Block> tags) {
         if (this.j) {
-            ICompletionProvider.a((Iterable) tags.b(), suggestionsbuilder, String.valueOf('#'));
+            ICompletionProvider.a(tags.b(), suggestionsbuilder, String.valueOf('#'));
         }
 
-        ICompletionProvider.a((Iterable) IRegistry.BLOCK.keySet(), suggestionsbuilder);
+        ICompletionProvider.a(IRegistry.BLOCK.keySet(), suggestionsbuilder);
         return suggestionsbuilder.buildFuture();
     }
 
@@ -499,7 +499,7 @@ public class ArgumentBlock {
         Optional<T> optional = iblockstate.b(s);
 
         if (optional.isPresent()) {
-            this.o = (IBlockData) this.o.set(iblockstate, (T) optional.get()); // CraftBukkit - decompile error
+            this.o = this.o.set(iblockstate, optional.get()); // CraftBukkit - decompile error
             this.k.put(iblockstate, optional.get());
         } else {
             this.i.setCursor(i);
@@ -522,7 +522,7 @@ public class ArgumentBlock {
                     stringbuilder.append(',');
                 }
 
-                a(stringbuilder, (IBlockState) entry.getKey(), (Comparable) entry.getValue());
+                a(stringbuilder, (IBlockState) entry.getKey(), entry.getValue());
             }
 
             stringbuilder.append(']');
@@ -538,7 +538,7 @@ public class ArgumentBlock {
     }
 
     public CompletableFuture<Suggestions> a(SuggestionsBuilder suggestionsbuilder, Tags<Block> tags) {
-        return (CompletableFuture) this.s.apply(suggestionsbuilder.createOffset(this.i.getCursor()), tags);
+        return this.s.apply(suggestionsbuilder.createOffset(this.i.getCursor()), tags);
     }
 
     public Map<String, String> j() {

@@ -39,7 +39,7 @@ public abstract class EntityFireball extends IProjectile {
 
     public void setDirection(double d3, double d4, double d5) {
         // CraftBukkit end
-        double d6 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+        double d6 = MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
 
         if (d6 != 0.0D) {
             this.dirX = d3 / d6 * 0.1D;
@@ -70,7 +70,7 @@ public abstract class EntityFireball extends IProjectile {
                 this.setOnFire(1);
             }
 
-            MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
+            MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, this::a);
 
             // Paper start - Call ProjectileCollideEvent
             if (movingobjectposition instanceof MovingObjectPositionEntity) {

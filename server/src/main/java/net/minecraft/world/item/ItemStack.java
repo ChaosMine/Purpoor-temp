@@ -87,7 +87,7 @@ public final class ItemStack {
     });
     private static final Logger LOGGER = LogManager.getLogger();
     public static final ItemStack b = new ItemStack((Item) null);public static final ItemStack NULL_ITEM = b; // Paper - OBFHELPER
-    public static final DecimalFormat c = (DecimalFormat) SystemUtils.a((new DecimalFormat("#.##")), (decimalformat) -> { // CraftBukkit - decompile error
+    public static final DecimalFormat c = SystemUtils.a((new DecimalFormat("#.##")), (decimalformat) -> { // CraftBukkit - decompile error
         decimalformat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
     });
     private static final ChatModifier e = ChatModifier.a.setColor(EnumChatFormat.DARK_PURPLE).setItalic(true);
@@ -181,7 +181,7 @@ public final class ItemStack {
         if (0 < version && version < CraftMagicNumbers.INSTANCE.getDataVersion()) {
             NBTTagCompound savedStack = new NBTTagCompound();
             this.save(savedStack);
-            savedStack = (NBTTagCompound) MinecraftServer.getServer().dataConverterManager.update(DataConverterTypes.ITEM_STACK, new Dynamic(DynamicOpsNBT.a, savedStack), version, CraftMagicNumbers.INSTANCE.getDataVersion()).getValue();
+            savedStack = (NBTTagCompound) MinecraftServer.SERVER.dataConverterManager.update(DataConverterTypes.ITEM_STACK, new Dynamic(DynamicOpsNBT.a, savedStack), version, CraftMagicNumbers.INSTANCE.getDataVersion()).getValue();
             this.load(savedStack);
         }
     }
@@ -194,11 +194,11 @@ public final class ItemStack {
 
     // CraftBukkit - break into own method
     private void load(NBTTagCompound nbttagcompound) {
-        this.item = (Item) IRegistry.ITEM.get(new MinecraftKey(nbttagcompound.getString("id")));
+        this.item = IRegistry.ITEM.get(new MinecraftKey(nbttagcompound.getString("id")));
         this.count = nbttagcompound.getByte("Count");
         if (nbttagcompound.hasKeyOfType("tag", 10)) {
             // CraftBukkit start - make defensive copy as this data may be coming from the save thread
-            this.tag = (NBTTagCompound) nbttagcompound.getCompound("tag").clone();
+            this.tag = nbttagcompound.getCompound("tag").clone();
             processEnchantOrder(this.tag); // Paper
             processText(); // Paper
             this.getItem().b(this.tag);
@@ -357,7 +357,7 @@ public final class ItemStack {
                     // PAIL: checkme on updates.
                     if (this.item instanceof ItemRecord) {
                         ((BlockJukeBox) Blocks.JUKEBOX).a(world, blockposition, world.getType(blockposition), this);
-                        world.a((EntityHuman) null, 1010, blockposition, Item.getId(this.item));
+                        world.a(null, 1010, blockposition, Item.getId(this.item));
                         this.subtract(1);
                         entityhuman.a(StatisticList.PLAY_RECORD);
                     }
@@ -552,7 +552,7 @@ public final class ItemStack {
     public void a(EntityLiving entityliving, EntityHuman entityhuman) {
         Item item = this.getItem();
 
-        if (item.a(this, entityliving, (EntityLiving) entityhuman)) {
+        if (item.a(this, entityliving, entityhuman)) {
             entityhuman.b(StatisticList.ITEM_USED.b(item));
         }
 
@@ -692,7 +692,7 @@ public final class ItemStack {
         } else {
             NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-            this.a(s, (NBTBase) nbttagcompound);
+            this.a(s, nbttagcompound);
             return nbttagcompound;
         }
     }
@@ -827,7 +827,7 @@ public final class ItemStack {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
 
         nbttagcompound.setString("id", String.valueOf(IRegistry.ENCHANTMENT.getKey(enchantment)));
-        nbttagcompound.setShort("lvl", (short) ((byte) i));
+        nbttagcompound.setShort("lvl", (byte) i);
         nbttaglist.add(nbttagcompound);
         processEnchantOrder(nbttagcompound); // Paper
     }
@@ -942,11 +942,11 @@ public final class ItemStack {
             ichatmutablecomponent.a(EnumChatFormat.ITALIC);
         }
 
-        IChatMutableComponent ichatmutablecomponent1 = ChatComponentUtils.a((IChatBaseComponent) ichatmutablecomponent);
+        IChatMutableComponent ichatmutablecomponent1 = ChatComponentUtils.a(ichatmutablecomponent);
 
         if (!this.j) {
             ichatmutablecomponent1.a(this.v().e).format((chatmodifier) -> {
-                return chatmodifier.setChatHoverable(new ChatHoverable(ChatHoverable.EnumHoverAction.SHOW_ITEM, new ChatHoverable.c(this)));
+                return chatmodifier.setChatHoverable(new ChatHoverable(ChatHoverable.EnumHoverAction.SHOW_ITEM, new ChatHoverable.c_(this)));
             });
         }
 

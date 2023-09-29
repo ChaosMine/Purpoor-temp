@@ -63,7 +63,7 @@ public class CommandEnchant {
                     ItemStack itemstack = entityliving.getItemInMainHand();
 
                     if (!itemstack.isEmpty()) {
-                        if ((enchantment.canEnchant(itemstack) && EnchantmentManager.a((Collection) EnchantmentManager.a(itemstack).keySet(), enchantment)) || (net.pl3x.purpur.PurpurConfig.allowUnsafeEnchants && !itemstack.hasEnchantment(enchantment))) { // Purpur
+                        if ((enchantment.canEnchant(itemstack) && EnchantmentManager.a(EnchantmentManager.a(itemstack).keySet(), enchantment)) || (net.pl3x.purpur.PurpurConfig.allowUnsafeEnchants && !itemstack.hasEnchantment(enchantment))) { // Purpur
                             itemstack.addEnchantment(enchantment, i);
                             ++j;
                         } else if (collection.size() == 1) {
@@ -81,7 +81,7 @@ public class CommandEnchant {
                 throw CommandEnchant.e.create();
             } else {
                 if (collection.size() == 1) {
-                    commandlistenerwrapper.sendMessage(new ChatMessage("commands.enchant.success.single", new Object[]{enchantment.d(i), ((Entity) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                    commandlistenerwrapper.sendMessage(new ChatMessage("commands.enchant.success.single", new Object[]{enchantment.d(i), collection.iterator().next().getScoreboardDisplayName()}), true);
                 } else {
                     commandlistenerwrapper.sendMessage(new ChatMessage("commands.enchant.success.multiple", new Object[]{enchantment.d(i), collection.size()}), true);
                 }

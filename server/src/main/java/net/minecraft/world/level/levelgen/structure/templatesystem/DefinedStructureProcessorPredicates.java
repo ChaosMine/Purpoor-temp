@@ -44,7 +44,7 @@ public class DefinedStructureProcessorPredicates {
         this.c = definedstructureruletest1;
         this.d = posruletest;
         this.e = iblockdata;
-        this.f = (NBTTagCompound) optional.orElse((Object) null);
+        this.f = optional.orElse(null);
     }
 
     public boolean a(IBlockData iblockdata, IBlockData iblockdata1, BlockPosition blockposition, BlockPosition blockposition1, BlockPosition blockposition2, Random random) {

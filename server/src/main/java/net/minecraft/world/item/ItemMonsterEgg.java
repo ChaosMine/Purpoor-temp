@@ -114,7 +114,7 @@ public class ItemMonsterEgg extends Item {
         } else if (!(world instanceof WorldServer)) {
             return InteractionResultWrapper.success(itemstack);
         } else {
-            MovingObjectPositionBlock movingobjectpositionblock1 = (MovingObjectPositionBlock) movingobjectpositionblock;
+            MovingObjectPositionBlock movingobjectpositionblock1 = movingobjectpositionblock;
             BlockPosition blockposition = movingobjectpositionblock1.getBlockPosition();
 
             if (!(world.getType(blockposition).getBlock() instanceof BlockFluids)) {
@@ -151,7 +151,7 @@ public class ItemMonsterEgg extends Item {
             NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("EntityTag");
 
             if (nbttagcompound1.hasKeyOfType("id", 8)) {
-                return (EntityTypes) EntityTypes.a(nbttagcompound1.getString("id")).orElse(this.d);
+                return EntityTypes.a(nbttagcompound1.getString("id")).orElse(this.d);
             }
         }
 
@@ -167,7 +167,7 @@ public class ItemMonsterEgg extends Item {
             if (entityinsentient instanceof EntityAgeable) {
                 object = ((EntityAgeable) entityinsentient).createChild(worldserver, (EntityAgeable) entityinsentient);
             } else {
-                object = (EntityInsentient) entitytypes.a((World) worldserver);
+                object = entitytypes.a(worldserver);
             }
 
             if (object == null) {

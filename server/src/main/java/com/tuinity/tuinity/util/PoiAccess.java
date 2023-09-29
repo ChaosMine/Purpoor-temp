@@ -291,7 +291,7 @@ public final class PoiAccess {
                     (sectionX << 4) + 15.5,
                     (sectionY << 4) + 15.5,
                     (sectionZ << 4) + 15.5,
-                    (double)sourcePosition.getX(), (double)sourcePosition.getY(), (double)sourcePosition.getZ()
+                    sourcePosition.getX(), sourcePosition.getY(), sourcePosition.getZ()
             );
             if (sectionDistanceSquared > closestDistanceSquared) {
                 continue;
@@ -513,7 +513,7 @@ public final class PoiAccess {
                     (sectionX << 4) + 15.5,
                     (sectionY << 4) + 15.5,
                     (sectionZ << 4) + 15.5,
-                    (double) sourcePosition.getX(), (double) sourcePosition.getY(), (double) sourcePosition.getZ()
+                    sourcePosition.getX(), sourcePosition.getY(), sourcePosition.getZ()
             );
 
             if (sectionDistanceSquared > (totalRecords >= max ? furthestDistanceSquared : maxDistanceSquared)) {

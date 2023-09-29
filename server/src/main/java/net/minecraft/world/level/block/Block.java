@@ -101,7 +101,7 @@ public class Block extends BlockBase implements IMaterial {
     }
 
     public static IBlockData getByCombinedId(int i) {
-        IBlockData iblockdata = (IBlockData) Block.REGISTRY_ID.fromId(i);
+        IBlockData iblockdata = Block.REGISTRY_ID.fromId(i);
 
         return iblockdata == null ? Blocks.AIR.getBlockData() : iblockdata;
     }
@@ -111,8 +111,8 @@ public class Block extends BlockBase implements IMaterial {
     }
 
     public static IBlockData a(IBlockData iblockdata, IBlockData iblockdata1, World world, BlockPosition blockposition) {
-        VoxelShape voxelshape = VoxelShapes.b(iblockdata.getCollisionShape(world, blockposition), iblockdata1.getCollisionShape(world, blockposition), OperatorBoolean.ONLY_SECOND).a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
-        try (var list = world.getEntities((Entity) null, voxelshape.getBoundingBox())) {
+        VoxelShape voxelshape = VoxelShapes.b(iblockdata.getCollisionShape(world, blockposition), iblockdata1.getCollisionShape(world, blockposition), OperatorBoolean.ONLY_SECOND).a(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+        try (var list = world.getEntities(null, voxelshape.getBoundingBox())) {
             for (Entity entity : list) {
                 double d0 = VoxelShapes.a(EnumDirection.EnumAxis.Y, entity.getBoundingBox().d(0.0D, 1.0D, 0.0D), Stream.of(voxelshape), -1.0D);
 
@@ -145,7 +145,7 @@ public class Block extends BlockBase implements IMaterial {
         for (int j = 0; j < i; ++j) {
             EnumDirection enumdirection = aenumdirection[j];
 
-            blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+            blockposition_mutableblockposition.a(blockposition, enumdirection);
             iblockdata1 = iblockdata1.updateState(enumdirection, generatoraccess.getType(blockposition_mutableblockposition), generatoraccess, blockposition, blockposition_mutableblockposition);
         }
 
@@ -160,7 +160,7 @@ public class Block extends BlockBase implements IMaterial {
         if (iblockdata1 != iblockdata) {
             if (iblockdata1.isAir()) {
                 if (!generatoraccess.s_()) {
-                    generatoraccess.a(blockposition, (i & 32) == 0, (Entity) null, j);
+                    generatoraccess.a(blockposition, (i & 32) == 0, null, j);
                 }
             } else {
                 generatoraccess.a(blockposition, iblockdata1, i & -33, j);
@@ -175,11 +175,11 @@ public class Block extends BlockBase implements IMaterial {
 
         this.a(blockstatelist_a);
         this.blockStateList = blockstatelist_a.a(Block::getBlockData, IBlockData::new);
-        this.j((IBlockData) this.blockStateList.getBlockData());
+        this.j(this.blockStateList.getBlockData());
     }
 
     public static boolean b(Block block) {
-        return block instanceof BlockLeaves || block == Blocks.BARRIER || block == Blocks.CARVED_PUMPKIN || block == Blocks.JACK_O_LANTERN || block == Blocks.MELON || block == Blocks.PUMPKIN || block.a((Tag) TagsBlock.SHULKER_BOXES);
+        return block instanceof BlockLeaves || block == Blocks.BARRIER || block == Blocks.CARVED_PUMPKIN || block == Blocks.JACK_O_LANTERN || block == Blocks.MELON || block == Blocks.PUMPKIN || block.a(TagsBlock.SHULKER_BOXES);
     }
 
     public boolean isTicking(IBlockData iblockdata) {
@@ -193,7 +193,7 @@ public class Block extends BlockBase implements IMaterial {
     public static boolean a(IWorldReader iworldreader, BlockPosition blockposition, EnumDirection enumdirection) {
         IBlockData iblockdata = iworldreader.getType(blockposition);
 
-        return enumdirection == EnumDirection.DOWN && iblockdata.a((Tag) TagsBlock.aC) ? false : iblockdata.a((IBlockAccess) iworldreader, blockposition, enumdirection, EnumBlockSupport.CENTER);
+        return enumdirection == EnumDirection.DOWN && iblockdata.a(TagsBlock.aC) ? false : iblockdata.a(iworldreader, blockposition, enumdirection, EnumBlockSupport.CENTER);
     }
 
     public static boolean a(VoxelShape voxelshape, EnumDirection enumdirection) {
@@ -203,7 +203,7 @@ public class Block extends BlockBase implements IMaterial {
     }
 
     public static boolean a(VoxelShape voxelshape) {
-        return (Boolean) Block.a.getUnchecked(voxelshape);
+        return Block.a.getUnchecked(voxelshape);
     }
 
     public boolean b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
@@ -213,13 +213,13 @@ public class Block extends BlockBase implements IMaterial {
     public void postBreak(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata) {}
 
     public static List<ItemStack> a(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, @Nullable TileEntity tileentity) {
-        LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder(worldserver)).a(worldserver.random).set(LootContextParameters.ORIGIN, Vec3D.a((BaseBlockPosition) blockposition)).set(LootContextParameters.TOOL, ItemStack.b).setOptional(LootContextParameters.BLOCK_ENTITY, tileentity);
+        LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder(worldserver)).a(worldserver.random).set(LootContextParameters.ORIGIN, Vec3D.a(blockposition)).set(LootContextParameters.TOOL, ItemStack.b).setOptional(LootContextParameters.BLOCK_ENTITY, tileentity);
 
         return iblockdata.a(loottableinfo_builder);
     }
 
     public static List<ItemStack> getDrops(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, @Nullable TileEntity tileentity, @Nullable Entity entity, ItemStack itemstack) {
-        LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder(worldserver)).a(worldserver.random).set(LootContextParameters.ORIGIN, Vec3D.a((BaseBlockPosition) blockposition)).set(LootContextParameters.TOOL, itemstack).setOptional(LootContextParameters.THIS_ENTITY, entity).setOptional(LootContextParameters.BLOCK_ENTITY, tileentity);
+        LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder(worldserver)).a(worldserver.random).set(LootContextParameters.ORIGIN, Vec3D.a(blockposition)).set(LootContextParameters.TOOL, itemstack).setOptional(LootContextParameters.THIS_ENTITY, entity).setOptional(LootContextParameters.BLOCK_ENTITY, tileentity);
 
         return iblockdata.a(loottableinfo_builder);
     }
@@ -388,7 +388,7 @@ public class Block extends BlockBase implements IMaterial {
 
     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
         world.a(entityhuman, 2001, blockposition, getCombinedId(iblockdata));
-        if (this.a((Tag) TagsBlock.GUARDED_BY_PIGLINS)) {
+        if (this.a(TagsBlock.GUARDED_BY_PIGLINS)) {
             PiglinAI.a(entityhuman, false);
         }
 

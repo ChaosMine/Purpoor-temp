@@ -19,7 +19,7 @@ public class Schedule {
     public Schedule() {}
 
     protected static ScheduleBuilder a(String s) {
-        Schedule schedule = (Schedule) IRegistry.a(IRegistry.SCHEDULE, s, (Object) (new Schedule()));
+        Schedule schedule = IRegistry.a(IRegistry.SCHEDULE, s, new Schedule());
 
         return new ScheduleBuilder(schedule);
     }
@@ -32,18 +32,18 @@ public class Schedule {
     }
 
     protected ScheduleActivity b(Activity activity) {
-        return (ScheduleActivity) this.e.get(activity);
+        return this.e.get(activity);
     }
 
     protected List<ScheduleActivity> c(Activity activity) {
-        return (List) this.e.entrySet().stream().filter((entry) -> {
+        return this.e.entrySet().stream().filter((entry) -> {
             return entry.getKey() != activity;
-        }).map(Entry::getValue).collect(Collectors.toList());
+        }).map(Entry::getValue).toList();
     }
 
     public Activity a(int i) {
-        return (Activity) this.e.entrySet().stream().max(Comparator.comparingDouble((entry) -> {
-            return (double) ((ScheduleActivity) entry.getValue()).a(i);
+        return this.e.entrySet().stream().max(Comparator.comparingDouble((entry) -> {
+            return entry.getValue().a(i);
         })).map(Entry::getKey).orElse(Activity.IDLE);
     }
 }

@@ -14,7 +14,7 @@ public interface IChatMutableComponent extends IChatBaseComponent {
     IChatMutableComponent addSibling(IChatBaseComponent ichatbasecomponent);
 
     default IChatMutableComponent format(UnaryOperator<ChatModifier> unaryoperator) {
-        this.setChatModifier((ChatModifier) unaryoperator.apply(this.getChatModifier()));
+        this.setChatModifier(unaryoperator.apply(this.getChatModifier()));
         return this;
     }
 

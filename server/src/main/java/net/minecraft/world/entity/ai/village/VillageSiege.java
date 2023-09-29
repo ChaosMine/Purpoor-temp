@@ -118,7 +118,7 @@ public class VillageSiege implements MobSpawner {
 
             try {
                 entityzombie = new EntityZombie(worldserver);
-                entityzombie.prepare(worldserver, worldserver.getDamageScaler(entityzombie.getChunkCoordinates()), EnumMobSpawn.EVENT, (GroupDataEntity) null, (NBTTagCompound) null);
+                entityzombie.prepare(worldserver, worldserver.getDamageScaler(entityzombie.getChunkCoordinates()), EnumMobSpawn.EVENT, null, null);
             } catch (Exception exception) {
                 VillageSiege.LOGGER.warn("Failed to create zombie for village siege at {}", vec3d, exception);
                 ServerInternalException.reportInternalException(exception); // Paper
@@ -139,7 +139,7 @@ public class VillageSiege implements MobSpawner {
             BlockPosition blockposition1 = new BlockPosition(j, l, k);
 
             if (worldserver.a_(blockposition1) && EntityMonster.b(EntityTypes.ZOMBIE, worldserver, EnumMobSpawn.EVENT, blockposition1, worldserver.random)) {
-                return Vec3D.c((BaseBlockPosition) blockposition1);
+                return Vec3D.c(blockposition1);
             }
         }
 

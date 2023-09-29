@@ -103,9 +103,9 @@ public class EntityItem extends Entity {
             Vec3D vec3d = this.getMot();
             float f = this.getHeadHeight() - 0.11111111F;
 
-            if (this.isInWater() && this.b((Tag) TagsFluid.WATER) > (double) f) {
+            if (this.isInWater() && this.b(TagsFluid.WATER) > (double) f) {
                 this.u();
-            } else if (this.aQ() && this.b((Tag) TagsFluid.LAVA) > (double) f) {
+            } else if (this.aQ() && this.b(TagsFluid.LAVA) > (double) f) {
                 this.v();
             } else if (!this.isNoGravity()) {
                 this.setMot(this.getMot().add(0.0D, -0.04D, 0.0D));
@@ -128,7 +128,7 @@ public class EntityItem extends Entity {
                     f1 = this.world.getType(new BlockPosition(this.locX(), this.locY() - 1.0D, this.locZ())).getBlock().getFrictionFactor() * 0.98F;
                 }
 
-                this.setMot(this.getMot().d((double) f1, 0.98D, (double) f1));
+                this.setMot(this.getMot().d(f1, 0.98D, f1));
                 if (this.onGround) {
                     Vec3D vec3d1 = this.getMot();
 
@@ -142,7 +142,7 @@ public class EntityItem extends Entity {
             int i = flag ? 2 : 40;
 
             if (this.ticksLived % i == 0) {
-                if (this.world.getFluid(this.getChunkCoordinates()).a((Tag) TagsFluid.LAVA) && !this.isFireProof()) {
+                if (this.world.getFluid(this.getChunkCoordinates()).a(TagsFluid.LAVA) && !this.isFireProof()) {
                     this.playSound(SoundEffects.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
                 }
 
@@ -429,7 +429,7 @@ public class EntityItem extends Entity {
                 }
 
                 // Call newer event afterwards
-                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
+                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent(entityhuman.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
                 entityEvent.setCancelled(!entityhuman.canPickUpLoot);
                 this.world.getServer().getPluginManager().callEvent(entityEvent);
                 if (entityEvent.isCancelled()) {
@@ -475,7 +475,7 @@ public class EntityItem extends Entity {
     public IChatBaseComponent getDisplayName() {
         IChatBaseComponent ichatbasecomponent = this.getCustomName();
 
-        return (IChatBaseComponent) (ichatbasecomponent != null ? ichatbasecomponent : new ChatMessage(this.getItemStack().j()));
+        return ichatbasecomponent != null ? ichatbasecomponent : new ChatMessage(this.getItemStack().j());
     }
 
     @Override
@@ -496,7 +496,7 @@ public class EntityItem extends Entity {
     }
 
     public ItemStack getItemStack() {
-        return (ItemStack) this.getDataWatcher().get(EntityItem.ITEM);
+        return this.getDataWatcher().get(EntityItem.ITEM);
     }
 
     public void setItemStack(ItemStack itemstack) {
@@ -515,7 +515,7 @@ public class EntityItem extends Entity {
     public void a(DataWatcherObject<?> datawatcherobject) {
         super.a(datawatcherobject);
         if (EntityItem.ITEM.equals(datawatcherobject)) {
-            this.getItemStack().a((Entity) this);
+            this.getItemStack().a(this);
         }
 
     }

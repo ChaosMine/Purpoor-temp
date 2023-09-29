@@ -41,7 +41,7 @@ public class ResourceManagerFallback implements IResourceManager {
         MinecraftKey minecraftkey1 = d(minecraftkey);
 
         for (int i = this.a.size() - 1; i >= 0; --i) {
-            IResourcePack iresourcepack1 = (IResourcePack) this.a.get(i);
+            IResourcePack iresourcepack1 = this.a.get(i);
 
             if (iresourcepack == null && iresourcepack1.b(this.c, minecraftkey1)) {
                 iresourcepack = iresourcepack1;
@@ -64,7 +64,7 @@ public class ResourceManagerFallback implements IResourceManager {
     protected InputStream a(MinecraftKey minecraftkey, IResourcePack iresourcepack) throws IOException {
         InputStream inputstream = iresourcepack.a(this.c, minecraftkey);
 
-        return (InputStream) (ResourceManagerFallback.LOGGER.isDebugEnabled() ? new ResourceManagerFallback.a(inputstream, minecraftkey, iresourcepack.a()) : inputstream);
+        return ResourceManagerFallback.LOGGER.isDebugEnabled() ? new a(inputstream, minecraftkey, iresourcepack.a()) : inputstream;
     }
 
     private void e(MinecraftKey minecraftkey) throws IOException {

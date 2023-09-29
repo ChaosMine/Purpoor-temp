@@ -66,15 +66,15 @@ public abstract class ChatComponentNBT extends ChatBaseComponent implements Chat
         if (commandlistenerwrapper != null && this.f != null) {
             Stream<String> stream = this.a(commandlistenerwrapper).flatMap((nbttagcompound) -> {
                 try {
-                    return this.f.a((NBTBase) nbttagcompound).stream();
+                    return this.f.a(nbttagcompound).stream();
                 } catch (CommandSyntaxException commandsyntaxexception) {
                     return Stream.empty();
                 }
             }).map(NBTBase::asString);
 
-            return (IChatMutableComponent) (this.d ? (IChatMutableComponent) stream.flatMap((s) -> {
+            return this.d ? stream.flatMap((s) -> {
                 try {
-                    IChatMutableComponent ichatmutablecomponent = IChatBaseComponent.ChatSerializer.a(s);
+                    IChatMutableComponent ichatmutablecomponent = ChatSerializer.a(s);
 
                     return Stream.of(ChatComponentUtils.filterForDisplay(commandlistenerwrapper, ichatmutablecomponent, entity, i));
                 } catch (Exception exception) {
@@ -83,7 +83,7 @@ public abstract class ChatComponentNBT extends ChatBaseComponent implements Chat
                 }
             }).reduce((ichatmutablecomponent, ichatmutablecomponent1) -> {
                 return ichatmutablecomponent.c(", ").addSibling(ichatmutablecomponent1);
-            }).orElse(new ChatComponentText("")) : new ChatComponentText(Joiner.on(", ").join(stream.iterator())));
+            }).orElse(new ChatComponentText("")) : new ChatComponentText(Joiner.on(", ").join(stream.iterator()));
         } else {
             return new ChatComponentText("");
         }

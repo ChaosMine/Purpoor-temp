@@ -71,7 +71,7 @@ public class EntityOcelot extends EntityAnimal {
     // Purpur end
 
     private boolean isTrusting() {
-        return (Boolean) this.datawatcher.get(EntityOcelot.bp);
+        return this.datawatcher.get(EntityOcelot.bp);
     }
 
     private void setTrusting(boolean flag) {
@@ -188,7 +188,7 @@ public class EntityOcelot extends EntityAnimal {
     public EnumInteractionResult b(EntityHuman entityhuman, EnumHand enumhand) {
         ItemStack itemstack = entityhuman.b(enumhand);
 
-        if ((this.br == null || this.br.h()) && !this.isTrusting() && this.k(itemstack) && entityhuman.h((Entity) this) < 9.0D) {
+        if ((this.br == null || this.br.h()) && !this.isTrusting() && this.k(itemstack) && entityhuman.h(this) < 9.0D) {
             this.a(entityhuman, itemstack);
             if (!this.world.isClientSide) {
                 // CraftBukkit - added event call and isCancelled check
@@ -230,7 +230,7 @@ public class EntityOcelot extends EntityAnimal {
             this.bq = new EntityOcelot.a<>(this, EntityHuman.class, 16.0F, 0.8D, 1.33D);
         }
 
-        this.goalSelector.a((PathfinderGoal) this.bq);
+        this.goalSelector.a(this.bq);
         if (!this.isTrusting()) {
             this.goalSelector.a(4, this.bq);
         }
@@ -239,7 +239,7 @@ public class EntityOcelot extends EntityAnimal {
 
     @Override
     public EntityOcelot createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityOcelot) EntityTypes.OCELOT.a((World) worldserver);
+        return EntityTypes.OCELOT.a(worldserver);
     }
 
     @Override
@@ -253,7 +253,7 @@ public class EntityOcelot extends EntityAnimal {
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        if (iworldreader.j((Entity) this) && !iworldreader.containsLiquid(this.getBoundingBox())) {
+        if (iworldreader.j(this) && !iworldreader.containsLiquid(this.getBoundingBox())) {
             BlockPosition blockposition = this.getChunkCoordinates();
 
             if (blockposition.getY() < iworldreader.getSeaLevel()) {
@@ -262,7 +262,7 @@ public class EntityOcelot extends EntityAnimal {
 
             IBlockData iblockdata = iworldreader.getType(blockposition.down());
 
-            if (iblockdata.a(Blocks.GRASS_BLOCK) || iblockdata.a((Tag) TagsBlock.LEAVES)) {
+            if (iblockdata.a(Blocks.GRASS_BLOCK) || iblockdata.a(TagsBlock.LEAVES)) {
                 return true;
             }
         }
@@ -277,7 +277,7 @@ public class EntityOcelot extends EntityAnimal {
             groupdataentity = new EntityAgeable.a(1.0F);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     static class b extends PathfinderGoalTempt {

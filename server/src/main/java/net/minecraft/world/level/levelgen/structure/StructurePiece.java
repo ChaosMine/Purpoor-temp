@@ -43,7 +43,19 @@ public abstract class StructurePiece {
     private EnumBlockRotation c;
     protected int o;
     private final WorldGenFeatureStructurePieceType d;
-    private static final Set<Block> e = ImmutableSet.builder().add(Blocks.NETHER_BRICK_FENCE).add(Blocks.TORCH).add(Blocks.WALL_TORCH).add(Blocks.OAK_FENCE).add(Blocks.SPRUCE_FENCE).add(Blocks.DARK_OAK_FENCE).add(Blocks.ACACIA_FENCE).add(Blocks.BIRCH_FENCE).add(Blocks.JUNGLE_FENCE).add(Blocks.LADDER).add(Blocks.IRON_BARS).build();
+    private static final Set<Block> e = ImmutableSet.<Block>builder()
+      .add(Blocks.NETHER_BRICK_FENCE)
+      .add(Blocks.TORCH)
+      .add(Blocks.WALL_TORCH)
+      .add(Blocks.OAK_FENCE)
+      .add(Blocks.SPRUCE_FENCE)
+      .add(Blocks.DARK_OAK_FENCE)
+      .add(Blocks.ACACIA_FENCE)
+      .add(Blocks.BIRCH_FENCE)
+      .add(Blocks.JUNGLE_FENCE)
+      .add(Blocks.LADDER)
+      .add(Blocks.IRON_BARS)
+      .build();
 
     protected StructurePiece(WorldGenFeatureStructurePieceType worldgenfeaturestructurepiecetype, int i) {
         this.d = worldgenfeaturestructurepiecetype;
@@ -209,7 +221,7 @@ public abstract class StructurePiece {
     protected void a(GeneratorAccessSeed generatoraccessseed, IBlockData iblockdata, int i, int j, int k, StructureBoundingBox structureboundingbox) {
         BlockPosition blockposition = new BlockPosition(this.a(i, k), this.d(j), this.b(i, k));
 
-        if (structureboundingbox.b((BaseBlockPosition) blockposition)) {
+        if (structureboundingbox.b(blockposition)) {
             if (this.b != EnumBlockMirror.NONE) {
                 iblockdata = iblockdata.a(this.b);
             }
@@ -238,7 +250,7 @@ public abstract class StructurePiece {
         int j1 = this.b(i, k);
         BlockPosition blockposition = new BlockPosition(l, i1, j1);
 
-        return !structureboundingbox.b((BaseBlockPosition) blockposition) ? Blocks.AIR.getBlockData() : iblockaccess.getType(blockposition);
+        return !structureboundingbox.b(blockposition) ? Blocks.AIR.getBlockData() : iblockaccess.getType(blockposition);
     }
 
     protected boolean a(IWorldReader iworldreader, int i, int j, int k, StructureBoundingBox structureboundingbox) {
@@ -247,7 +259,7 @@ public abstract class StructurePiece {
         int j1 = this.b(i, k);
         BlockPosition blockposition = new BlockPosition(l, i1, j1);
 
-        return !structureboundingbox.b((BaseBlockPosition) blockposition) ? false : i1 < iworldreader.a(HeightMap.Type.OCEAN_FLOOR_WG, l, j1);
+        return !structureboundingbox.b(blockposition) ? false : i1 < iworldreader.a(HeightMap.Type.OCEAN_FLOOR_WG, l, j1);
     }
 
     protected void b(GeneratorAccessSeed generatoraccessseed, StructureBoundingBox structureboundingbox, int i, int j, int k, int l, int i1, int j1) {
@@ -296,7 +308,7 @@ public abstract class StructurePiece {
         for (int k1 = j; k1 <= i1; ++k1) {
             for (int l1 = i; l1 <= l; ++l1) {
                 for (int i2 = k; i2 <= j1; ++i2) {
-                    if (random.nextFloat() <= f && (!flag || !this.a((IBlockAccess) generatoraccessseed, l1, k1, i2, structureboundingbox).isAir()) && (!flag1 || this.a((IWorldReader) generatoraccessseed, l1, k1, i2, structureboundingbox))) {
+                    if (random.nextFloat() <= f && (!flag || !this.a((IBlockAccess) generatoraccessseed, l1, k1, i2, structureboundingbox).isAir()) && (!flag1 || this.a(generatoraccessseed, l1, k1, i2, structureboundingbox))) {
                         if (k1 != j && k1 != i1 && l1 != i && l1 != l && i2 != k && i2 != j1) {
                             this.a(generatoraccessseed, iblockdata1, l1, k1, i2, structureboundingbox);
                         } else {
@@ -350,7 +362,7 @@ public abstract class StructurePiece {
         int i1 = this.d(j);
         int j1 = this.b(i, k);
 
-        if (structureboundingbox.b((BaseBlockPosition) (new BlockPosition(l, i1, j1)))) {
+        if (structureboundingbox.b(new BlockPosition(l, i1, j1))) {
             while ((generatoraccessseed.isEmpty(new BlockPosition(l, i1, j1)) || generatoraccessseed.getType(new BlockPosition(l, i1, j1)).getMaterial().isLiquid()) && i1 > 1) {
                 generatoraccessseed.setTypeAndData(new BlockPosition(l, i1, j1), iblockdata, 2);
                 --i1;
@@ -362,7 +374,7 @@ public abstract class StructurePiece {
     protected boolean a(GeneratorAccessSeed generatoraccessseed, StructureBoundingBox structureboundingbox, Random random, int i, int j, int k, MinecraftKey minecraftkey) {
         BlockPosition blockposition = new BlockPosition(this.a(i, k), this.d(j), this.b(i, k));
 
-        return this.a(generatoraccessseed, structureboundingbox, random, blockposition, minecraftkey, (IBlockData) null);
+        return this.a(generatoraccessseed, structureboundingbox, random, blockposition, minecraftkey, null);
     }
 
     public static IBlockData a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata) {
@@ -389,9 +401,9 @@ public abstract class StructurePiece {
         }
 
         if (enumdirection != null) {
-            return (IBlockData) iblockdata.set(BlockFacingHorizontal.FACING, enumdirection.opposite());
+            return iblockdata.set(BlockFacingHorizontal.FACING, enumdirection.opposite());
         } else {
-            EnumDirection enumdirection2 = (EnumDirection) iblockdata.get(BlockFacingHorizontal.FACING);
+            EnumDirection enumdirection2 = iblockdata.get(BlockFacingHorizontal.FACING);
             BlockPosition blockposition2 = blockposition.shift(enumdirection2);
 
             if (iblockaccess.getType(blockposition2).i(iblockaccess, blockposition2)) {
@@ -409,14 +421,14 @@ public abstract class StructurePiece {
                 blockposition.shift(enumdirection2);
             }
 
-            return (IBlockData) iblockdata.set(BlockFacingHorizontal.FACING, enumdirection2);
+            return iblockdata.set(BlockFacingHorizontal.FACING, enumdirection2);
         }
     }
 
     protected boolean a(WorldAccess worldaccess, StructureBoundingBox structureboundingbox, Random random, BlockPosition blockposition, MinecraftKey minecraftkey, @Nullable IBlockData iblockdata) {
-        if (structureboundingbox.b((BaseBlockPosition) blockposition) && !worldaccess.getType(blockposition).a(Blocks.CHEST)) {
+        if (structureboundingbox.b(blockposition) && !worldaccess.getType(blockposition).a(Blocks.CHEST)) {
             if (iblockdata == null) {
-                iblockdata = a((IBlockAccess) worldaccess, blockposition, Blocks.CHEST.getBlockData());
+                iblockdata = a(worldaccess, blockposition, Blocks.CHEST.getBlockData());
             }
 
             worldaccess.setTypeAndData(blockposition, iblockdata, 2);
@@ -435,8 +447,8 @@ public abstract class StructurePiece {
     protected boolean a(GeneratorAccessSeed generatoraccessseed, StructureBoundingBox structureboundingbox, Random random, int i, int j, int k, EnumDirection enumdirection, MinecraftKey minecraftkey) {
         BlockPosition blockposition = new BlockPosition(this.a(i, k), this.d(j), this.b(i, k));
 
-        if (structureboundingbox.b((BaseBlockPosition) blockposition) && !generatoraccessseed.getType(blockposition).a(Blocks.DISPENSER)) {
-            this.a(generatoraccessseed, (IBlockData) Blocks.DISPENSER.getBlockData().set(BlockDispenser.FACING, enumdirection), i, j, k, structureboundingbox);
+        if (structureboundingbox.b(blockposition) && !generatoraccessseed.getType(blockposition).a(Blocks.DISPENSER)) {
+            this.a(generatoraccessseed, Blocks.DISPENSER.getBlockData().set(BlockDispenser.FACING, enumdirection), i, j, k, structureboundingbox);
             TileEntity tileentity = generatoraccessseed.getTileEntity(blockposition);
 
             if (tileentity instanceof TileEntityDispenser) {

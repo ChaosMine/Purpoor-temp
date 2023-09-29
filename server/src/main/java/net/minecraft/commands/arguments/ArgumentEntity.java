@@ -140,7 +140,7 @@ public class ArgumentEntity implements ArgumentType<EntitySelector> {
                 Collection<String> collection = icompletionprovider.l();
                 Iterable<String> iterable = this.i ? collection : Iterables.concat(collection, icompletionprovider.r());
 
-                ICompletionProvider.b((Iterable) iterable, suggestionsbuilder1);
+                ICompletionProvider.b(iterable, suggestionsbuilder1);
             });
         } else {
             return Suggestions.empty();

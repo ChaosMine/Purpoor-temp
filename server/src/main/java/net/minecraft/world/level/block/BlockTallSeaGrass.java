@@ -46,7 +46,7 @@ public class BlockTallSeaGrass extends BlockTallPlant implements IFluidContainer
         if (iblockdata != null) {
             Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition().up());
 
-            if (fluid.a((Tag) TagsFluid.WATER) && fluid.e() == 8) {
+            if (fluid.a(TagsFluid.WATER) && fluid.e() == 8) {
                 return iblockdata;
             }
         }
@@ -59,11 +59,11 @@ public class BlockTallSeaGrass extends BlockTallPlant implements IFluidContainer
         if (iblockdata.get(BlockTallSeaGrass.b) == BlockPropertyDoubleBlockHalf.UPPER) {
             IBlockData iblockdata1 = iworldreader.getType(blockposition.down());
 
-            return iblockdata1.a((Block) this) && iblockdata1.get(BlockTallSeaGrass.b) == BlockPropertyDoubleBlockHalf.LOWER;
+            return iblockdata1.a(this) && iblockdata1.get(BlockTallSeaGrass.b) == BlockPropertyDoubleBlockHalf.LOWER;
         } else {
             Fluid fluid = iworldreader.getFluid(blockposition);
 
-            return super.canPlace(iblockdata, iworldreader, blockposition) && fluid.a((Tag) TagsFluid.WATER) && fluid.e() == 8;
+            return super.canPlace(iblockdata, iworldreader, blockposition) && fluid.a(TagsFluid.WATER) && fluid.e() == 8;
         }
     }
 

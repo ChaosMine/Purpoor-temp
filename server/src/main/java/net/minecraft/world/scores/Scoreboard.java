@@ -30,12 +30,12 @@ public class Scoreboard {
     public Scoreboard() {}
 
     public ScoreboardObjective c(String s) {
-        return (ScoreboardObjective) this.objectivesByName.get(s);
+        return this.objectivesByName.get(s);
     }
 
     @Nullable
     public ScoreboardObjective getObjective(@Nullable String s) {
-        return (ScoreboardObjective) this.objectivesByName.get(s);
+        return this.objectivesByName.get(s);
     }
 
     public ScoreboardObjective registerObjective(String s, IScoreboardCriteria iscoreboardcriteria, IChatBaseComponent ichatbasecomponent, IScoreboardCriteria.EnumScoreboardHealthDisplay iscoreboardcriteria_enumscoreboardhealthdisplay) {
@@ -46,9 +46,9 @@ public class Scoreboard {
         } else {
             ScoreboardObjective scoreboardobjective = new ScoreboardObjective(this, s, iscoreboardcriteria, ichatbasecomponent, iscoreboardcriteria_enumscoreboardhealthdisplay);
 
-            ((List) this.objectivesByCriteria.computeIfAbsent(iscoreboardcriteria, (iscoreboardcriteria1) -> {
+            this.objectivesByCriteria.computeIfAbsent(iscoreboardcriteria, (iscoreboardcriteria1) -> {
                 return Lists.newArrayList();
-            })).add(scoreboardobjective);
+            }).add(scoreboardobjective);
             this.objectivesByName.put(s, scoreboardobjective);
             this.handleObjectiveAdded(scoreboardobjective);
             return scoreboardobjective;
@@ -56,18 +56,18 @@ public class Scoreboard {
     }
 
     public final void getObjectivesForCriteria(IScoreboardCriteria iscoreboardcriteria, String s, Consumer<ScoreboardScore> consumer) {
-        ((List) this.objectivesByCriteria.getOrDefault(iscoreboardcriteria, Collections.emptyList())).forEach((scoreboardobjective) -> {
+        this.objectivesByCriteria.getOrDefault(iscoreboardcriteria, Collections.emptyList()).forEach((scoreboardobjective) -> {
             consumer.accept(this.getPlayerScoreForObjective(s, scoreboardobjective));
         });
     }
 
     public boolean b(String s, ScoreboardObjective scoreboardobjective) {
-        Map<ScoreboardObjective, ScoreboardScore> map = (Map) this.playerScores.get(s);
+        Map<ScoreboardObjective, ScoreboardScore> map = this.playerScores.get(s);
 
         if (map == null) {
             return false;
         } else {
-            ScoreboardScore scoreboardscore = (ScoreboardScore) map.get(scoreboardobjective);
+            ScoreboardScore scoreboardscore = map.get(scoreboardobjective);
 
             return scoreboardscore != null;
         }
@@ -77,11 +77,11 @@ public class Scoreboard {
         if (s.length() > 40) {
             throw new IllegalArgumentException("The player name '" + s + "' is too long!");
         } else {
-            Map<ScoreboardObjective, ScoreboardScore> map = (Map) this.playerScores.computeIfAbsent(s, (s1) -> {
+            Map<ScoreboardObjective, ScoreboardScore> map = this.playerScores.computeIfAbsent(s, (s1) -> {
                 return Maps.newHashMap();
             });
 
-            return (ScoreboardScore) map.computeIfAbsent(scoreboardobjective, (scoreboardobjective1) -> {
+            return map.computeIfAbsent(scoreboardobjective, (scoreboardobjective1) -> {
                 ScoreboardScore scoreboardscore = new ScoreboardScore(this, scoreboardobjective1, s);
 
                 scoreboardscore.setScore(0);
@@ -96,7 +96,7 @@ public class Scoreboard {
 
         while (iterator.hasNext()) {
             Map<ScoreboardObjective, ScoreboardScore> map = (Map) iterator.next();
-            ScoreboardScore scoreboardscore = (ScoreboardScore) map.get(scoreboardobjective);
+            ScoreboardScore scoreboardscore = map.get(scoreboardobjective);
 
             if (scoreboardscore != null) {
                 list.add(scoreboardscore);
@@ -123,17 +123,17 @@ public class Scoreboard {
         Map map;
 
         if (scoreboardobjective == null) {
-            map = (Map) this.playerScores.remove(s);
+            map = this.playerScores.remove(s);
             if (map != null) {
                 this.handlePlayerRemoved(s);
             }
         } else {
-            map = (Map) this.playerScores.get(s);
+            map = this.playerScores.get(s);
             if (map != null) {
                 ScoreboardScore scoreboardscore = (ScoreboardScore) map.remove(scoreboardobjective);
 
                 if (map.size() < 1) {
-                    Map<ScoreboardObjective, ScoreboardScore> map1 = (Map) this.playerScores.remove(s);
+                    Map<ScoreboardObjective, ScoreboardScore> map1 = this.playerScores.remove(s);
 
                     if (map1 != null) {
                         this.handlePlayerRemoved(s);
@@ -147,13 +147,13 @@ public class Scoreboard {
     }
 
     public Map<ScoreboardObjective, ScoreboardScore> getPlayerObjectives(String s) {
-        Map<ScoreboardObjective, ScoreboardScore> map = (Map) this.playerScores.get(s);
+        Map<ScoreboardObjective, ScoreboardScore> map = this.playerScores.get(s);
 
         if (map == null) {
             map = Maps.newHashMap();
         }
 
-        return (Map) map;
+        return map;
     }
 
     public void unregisterObjective(ScoreboardObjective scoreboardobjective) {
@@ -161,11 +161,11 @@ public class Scoreboard {
 
         for (int i = 0; i < 19; ++i) {
             if (this.getObjectiveForSlot(i) == scoreboardobjective) {
-                this.setDisplaySlot(i, (ScoreboardObjective) null);
+                this.setDisplaySlot(i, null);
             }
         }
 
-        List<ScoreboardObjective> list = (List) this.objectivesByCriteria.get(scoreboardobjective.getCriteria());
+        List<ScoreboardObjective> list = this.objectivesByCriteria.get(scoreboardobjective.getCriteria());
 
         if (list != null) {
             list.remove(scoreboardobjective);
@@ -192,7 +192,7 @@ public class Scoreboard {
     }
 
     public ScoreboardTeam getTeam(String s) {
-        return (ScoreboardTeam) this.teamsByName.get(s);
+        return this.teamsByName.get(s);
     }
 
     public ScoreboardTeam createTeam(String s) {
@@ -268,7 +268,7 @@ public class Scoreboard {
 
     @Nullable
     public ScoreboardTeam getPlayerTeam(String s) {
-        return (ScoreboardTeam) this.teamsByPlayer.get(s);
+        return this.teamsByPlayer.get(s);
     }
 
     public void handleObjectiveAdded(ScoreboardObjective scoreboardobjective) {}
@@ -347,7 +347,7 @@ public class Scoreboard {
         if (entity != null && !(entity instanceof EntityHuman) && !entity.isAlive()) {
             String s = entity.getUniqueIDString();
 
-            this.resetPlayerScores(s, (ScoreboardObjective) null);
+            this.resetPlayerScores(s, null);
             this.removePlayerFromTeam(s);
         }
     }

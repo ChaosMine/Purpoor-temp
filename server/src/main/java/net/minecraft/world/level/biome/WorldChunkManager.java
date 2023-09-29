@@ -27,7 +27,7 @@ public abstract class WorldChunkManager implements BiomeManager.Provider {
     protected final List<BiomeBase> d;
 
     protected WorldChunkManager(Stream<Supplier<BiomeBase>> stream) {
-        this((List) stream.map(Supplier::get).collect(ImmutableList.toImmutableList()));
+        this(stream.map(Supplier::get).collect(ImmutableList.toImmutableList()));
     }
 
     protected WorldChunkManager(List<BiomeBase> list) {
@@ -118,7 +118,7 @@ public abstract class WorldChunkManager implements BiomeManager.Provider {
     }
 
     public boolean a(StructureGenerator<?> structuregenerator) {
-        return (Boolean) this.b.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
+        return this.b.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
             return this.d.stream().anyMatch((biomebase) -> {
                 return biomebase.e().a(structuregenerator1);
             });
@@ -140,11 +140,11 @@ public abstract class WorldChunkManager implements BiomeManager.Provider {
     }
 
     static {
-        IRegistry.a(IRegistry.BIOME_SOURCE, "fixed", (Object) WorldChunkManagerHell.e);
-        IRegistry.a(IRegistry.BIOME_SOURCE, "multi_noise", (Object) WorldChunkManagerMultiNoise.f);
-        IRegistry.a(IRegistry.BIOME_SOURCE, "checkerboard", (Object) WorldChunkManagerCheckerBoard.e);
-        IRegistry.a(IRegistry.BIOME_SOURCE, "vanilla_layered", (Object) WorldChunkManagerOverworld.e);
-        IRegistry.a(IRegistry.BIOME_SOURCE, "the_end", (Object) WorldChunkManagerTheEnd.e);
+        IRegistry.a(IRegistry.BIOME_SOURCE, "fixed", WorldChunkManagerHell.e);
+        IRegistry.a(IRegistry.BIOME_SOURCE, "multi_noise", WorldChunkManagerMultiNoise.f);
+        IRegistry.a(IRegistry.BIOME_SOURCE, "checkerboard", WorldChunkManagerCheckerBoard.e);
+        IRegistry.a(IRegistry.BIOME_SOURCE, "vanilla_layered", WorldChunkManagerOverworld.e);
+        IRegistry.a(IRegistry.BIOME_SOURCE, "the_end", WorldChunkManagerTheEnd.e);
         a = IRegistry.BIOME_SOURCE.dispatchStable(WorldChunkManager::a, Function.identity());
     }
 }

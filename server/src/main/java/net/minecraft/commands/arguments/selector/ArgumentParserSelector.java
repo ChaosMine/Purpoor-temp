@@ -123,9 +123,9 @@ public class ArgumentParserSelector {
 
         if (this.v == null && this.w == null && this.x == null) {
             if (this.q.b() != null) {
-                float f = (Float) this.q.b();
+                float f = this.q.b();
 
-                axisalignedbb = new AxisAlignedBB((double) (-f), (double) (-f), (double) (-f), (double) (f + 1.0F), (double) (f + 1.0F), (double) (f + 1.0F));
+                axisalignedbb = new AxisAlignedBB(-f, -f, -f, f + 1.0F, f + 1.0F, f + 1.0F);
             } else {
                 axisalignedbb = null;
             }
@@ -165,13 +165,13 @@ public class ArgumentParserSelector {
     private void I() {
         if (this.y != CriterionConditionRange.a) {
             this.A = this.A.and(this.a(this.y, (entity) -> {
-                return (double) entity.pitch;
+                return entity.pitch;
             }));
         }
 
         if (this.z != CriterionConditionRange.a) {
             this.A = this.A.and(this.a(this.z, (entity) -> {
-                return (double) entity.yaw;
+                return entity.yaw;
             }));
         }
 
@@ -184,8 +184,8 @@ public class ArgumentParserSelector {
     }
 
     private Predicate<Entity> a(CriterionConditionRange criterionconditionrange, ToDoubleFunction<Entity> todoublefunction) {
-        double d0 = (double) MathHelper.g(criterionconditionrange.a() == null ? 0.0F : criterionconditionrange.a());
-        double d1 = (double) MathHelper.g(criterionconditionrange.b() == null ? 359.0F : criterionconditionrange.b());
+        double d0 = MathHelper.g(criterionconditionrange.a() == null ? 0.0F : criterionconditionrange.a());
+        double d1 = MathHelper.g(criterionconditionrange.b() == null ? 359.0F : criterionconditionrange.b());
 
         return (entity) -> {
             double d2 = MathHelper.g(todoublefunction.applyAsDouble(entity));
@@ -537,7 +537,7 @@ public class ArgumentParserSelector {
     }
 
     public CompletableFuture<Suggestions> a(SuggestionsBuilder suggestionsbuilder, Consumer<SuggestionsBuilder> consumer) {
-        return (CompletableFuture) this.G.apply(suggestionsbuilder.createOffset(this.l.getCursor()), consumer);
+        return this.G.apply(suggestionsbuilder.createOffset(this.l.getCursor()), consumer);
     }
 
     public boolean v() {

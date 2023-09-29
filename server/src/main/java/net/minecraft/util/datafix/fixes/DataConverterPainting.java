@@ -27,9 +27,9 @@ public class DataConverterPainting extends DataConverterNamedEntity {
         Optional<String> optional = dynamic.get("Motive").asString().result();
 
         if (optional.isPresent()) {
-            String s = ((String) optional.get()).toLowerCase(Locale.ROOT);
+            String s = optional.get().toLowerCase(Locale.ROOT);
 
-            return dynamic.set("Motive", dynamic.createString((new MinecraftKey((String) DataConverterPainting.a.getOrDefault(s, s))).toString()));
+            return dynamic.set("Motive", dynamic.createString((new MinecraftKey(DataConverterPainting.a.getOrDefault(s, s))).toString()));
         } else {
             return dynamic;
         }

@@ -187,7 +187,7 @@ public class LightEngineThreaded extends LightEngine implements AutoCloseable {
 
     // Tuinity start - replace light engine impl
     protected final IChunkAccess getChunk(final int chunkX, final int chunkZ) {
-        final WorldServer world = (WorldServer)this.theLightEngine.getWorld();
+        final WorldServer world = this.theLightEngine.getWorld();
         return world.getChunkProvider().getChunkAtImmediately(chunkX, chunkZ);
     }
 
@@ -399,8 +399,8 @@ public class LightEngineThreaded extends LightEngine implements AutoCloseable {
             int i;
 
             for (i = -1; i < 17; ++i) {
-                super.a(EnumSkyBlock.BLOCK, SectionPosition.a(chunkcoordintpair, i), (NibbleArray) null, true);
-                super.a(EnumSkyBlock.SKY, SectionPosition.a(chunkcoordintpair, i), (NibbleArray) null, true);
+                super.a(EnumSkyBlock.BLOCK, SectionPosition.a(chunkcoordintpair, i), null, true);
+                super.a(EnumSkyBlock.SKY, SectionPosition.a(chunkcoordintpair, i), null, true);
             }
 
             for (i = 0; i < 16; ++i) {

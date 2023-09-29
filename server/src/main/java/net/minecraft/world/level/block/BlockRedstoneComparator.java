@@ -36,7 +36,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
 
     public BlockRedstoneComparator(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockRedstoneComparator.FACING, EnumDirection.NORTH)).set(BlockRedstoneComparator.c, false)).set(BlockRedstoneComparator.MODE, BlockPropertyComparatorMode.COMPARE));
+        this.j(this.blockStateList.getBlockData().set(BlockRedstoneComparator.FACING, EnumDirection.NORTH).set(BlockRedstoneComparator.c, false).set(BlockRedstoneComparator.MODE, BlockPropertyComparatorMode.COMPARE));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
     @Override
     protected int b(World world, BlockPosition blockposition, IBlockData iblockdata) {
         int i = super.b(world, blockposition, iblockdata);
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockRedstoneComparator.FACING);
+        EnumDirection enumdirection = iblockdata.get(BlockRedstoneComparator.FACING);
         BlockPosition blockposition1 = blockposition.shift(enumdirection);
         IBlockData iblockdata1 = world.getType(blockposition1);
 
@@ -94,11 +94,11 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
     @Nullable
     private EntityItemFrame a(World world, EnumDirection enumdirection, BlockPosition blockposition) {
         // CraftBukkit - decompile error
-        List<EntityItemFrame> list = world.a(EntityItemFrame.class, new AxisAlignedBB((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), (double) (blockposition.getX() + 1), (double) (blockposition.getY() + 1), (double) (blockposition.getZ() + 1)), (java.util.function.Predicate<EntityItemFrame>) (entityitemframe) -> {
+        List<EntityItemFrame> list = world.a(EntityItemFrame.class, new AxisAlignedBB(blockposition.getX(), blockposition.getY(), blockposition.getZ(), blockposition.getX() + 1, blockposition.getY() + 1, blockposition.getZ() + 1), (entityitemframe) -> {
             return entityitemframe != null && entityitemframe.getDirection() == enumdirection;
         });
 
-        return list.size() == 1 ? (EntityItemFrame) list.get(0) : null;
+        return list.size() == 1 ? list.get(0) : null;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
         if (!entityhuman.abilities.mayBuild) {
             return EnumInteractionResult.PASS;
         } else {
-            iblockdata = (IBlockData) iblockdata.a((IBlockState) BlockRedstoneComparator.MODE);
+            iblockdata = iblockdata.a((IBlockState) BlockRedstoneComparator.MODE);
             float f = iblockdata.get(BlockRedstoneComparator.MODE) == BlockPropertyComparatorMode.SUBTRACT ? 0.55F : 0.5F;
 
             world.playSound(entityhuman, blockposition, SoundEffects.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
@@ -123,7 +123,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
             TileEntity tileentity = world.getTileEntity(blockposition);
             int j = tileentity instanceof TileEntityComparator ? ((TileEntityComparator) tileentity).d() : 0;
 
-            if (i != j || (Boolean) iblockdata.get(BlockRedstoneComparator.c) != this.a(world, blockposition, iblockdata)) {
+            if (i != j || iblockdata.get(BlockRedstoneComparator.c) != this.a(world, blockposition, iblockdata)) {
                 TickListPriority ticklistpriority = this.c((IBlockAccess) world, blockposition, iblockdata) ? TickListPriority.HIGH : TickListPriority.NORMAL;
 
                 world.getBlockTickList().a(blockposition, this, 2, ticklistpriority);
@@ -146,7 +146,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
 
         if (j != i || iblockdata.get(BlockRedstoneComparator.MODE) == BlockPropertyComparatorMode.COMPARE) {
             boolean flag = this.a(world, blockposition, iblockdata);
-            boolean flag1 = (Boolean) iblockdata.get(BlockRedstoneComparator.c);
+            boolean flag1 = iblockdata.get(BlockRedstoneComparator.c);
 
             if (flag1 && !flag) {
                 // CraftBukkit start
@@ -154,14 +154,14 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
                     return;
                 }
                 // CraftBukkit end
-                world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneComparator.c, false), 2);
+                world.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneComparator.c, false), 2);
             } else if (!flag1 && flag) {
                 // CraftBukkit start
                 if (CraftEventFactory.callRedstoneChange(world, blockposition, 0, 15).getNewCurrent() != 15) {
                     return;
                 }
                 // CraftBukkit end
-                world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneComparator.c, true), 2);
+                world.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneComparator.c, true), 2);
             }
 
             this.d(world, blockposition, iblockdata);
@@ -171,7 +171,7 @@ public class BlockRedstoneComparator extends BlockDiodeAbstract implements ITile
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        this.f((World) worldserver, blockposition, iblockdata);
+        this.f(worldserver, blockposition, iblockdata);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class CommandTime {
             TimeSkipEvent event = new TimeSkipEvent(worldserver.getWorld(), TimeSkipEvent.SkipReason.COMMAND, i - worldserver.getDayTime());
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                worldserver.setDayTime((long) worldserver.getDayTime() + event.getSkipAmount());
+                worldserver.setDayTime(worldserver.getDayTime() + event.getSkipAmount());
             }
             // CraftBukkit end
         }

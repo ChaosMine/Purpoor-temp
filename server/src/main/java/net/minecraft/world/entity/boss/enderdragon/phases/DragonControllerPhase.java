@@ -32,7 +32,7 @@ public class DragonControllerPhase<T extends IDragonController> {
         try {
             Constructor<? extends IDragonController> constructor = this.a();
 
-            return (IDragonController) constructor.newInstance(entityenderdragon);
+            return constructor.newInstance(entityenderdragon);
         } catch (Exception exception) {
             throw new Error(exception);
         }
@@ -61,7 +61,7 @@ public class DragonControllerPhase<T extends IDragonController> {
     private static <T extends IDragonController> DragonControllerPhase<T> a(Class<T> oclass, String s) {
         DragonControllerPhase<T> dragoncontrollerphase = new DragonControllerPhase<>(DragonControllerPhase.l.length, oclass, s);
 
-        DragonControllerPhase.l = (DragonControllerPhase[]) Arrays.copyOf(DragonControllerPhase.l, DragonControllerPhase.l.length + 1);
+        DragonControllerPhase.l = Arrays.copyOf(DragonControllerPhase.l, DragonControllerPhase.l.length + 1);
         DragonControllerPhase.l[dragoncontrollerphase.b()] = dragoncontrollerphase;
         return dragoncontrollerphase;
     }

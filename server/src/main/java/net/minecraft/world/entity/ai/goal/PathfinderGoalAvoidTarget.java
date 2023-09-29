@@ -41,7 +41,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
         this.h = predicate1;
         this.e = entitycreature.getNavigation();
         this.a(EnumSet.of(PathfinderGoal.Type.MOVE));
-        this.k = (new PathfinderTargetCondition()).a((double) f).a(predicate1.and(predicate));
+        this.k = (new PathfinderTargetCondition()).a(f).a(predicate1.and(predicate));
     }
 
     public PathfinderGoalAvoidTarget(EntityCreature entitycreature, Class<T> oclass, float f, double d0, double d1, Predicate<EntityLiving> predicate) {
@@ -52,7 +52,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
 
     @Override
     public boolean a() {
-        this.b = this.a.world.b(this.f, this.k, this.a, this.a.locX(), this.a.locY(), this.a.locZ(), this.a.getBoundingBox().grow((double) this.c, 3.0D, (double) this.c));
+        this.b = this.a.world.b(this.f, this.k, this.a, this.a.locX(), this.a.locY(), this.a.locZ(), this.a.getBoundingBox().grow(this.c, 3.0D, this.c));
         if (this.b == null) {
             return false;
         } else {
@@ -60,7 +60,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
 
             if (vec3d == null) {
                 return false;
-            } else if (this.b.h(vec3d.x, vec3d.y, vec3d.z) < this.b.h((Entity) this.a)) {
+            } else if (this.b.h(vec3d.x, vec3d.y, vec3d.z) < this.b.h(this.a)) {
                 return false;
             } else {
                 this.d = this.e.a(vec3d.x, vec3d.y, vec3d.z, 0);
@@ -86,7 +86,7 @@ public class PathfinderGoalAvoidTarget<T extends EntityLiving> extends Pathfinde
 
     @Override
     public void e() {
-        if (this.a.h((Entity) this.b) < 49.0D) {
+        if (this.a.h(this.b) < 49.0D) {
             this.a.getNavigation().a(this.j);
         } else {
             this.a.getNavigation().a(this.i);

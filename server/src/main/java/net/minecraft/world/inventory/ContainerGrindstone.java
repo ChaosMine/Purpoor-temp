@@ -55,7 +55,7 @@ public class ContainerGrindstone extends Container {
             @Override
             public void update() {
                 super.update();
-                ContainerGrindstone.this.a((IInventory) this);
+                ContainerGrindstone.this.a(this);
             }
 
             // CraftBukkit start
@@ -93,7 +93,7 @@ public class ContainerGrindstone extends Container {
                         int k = EntityExperienceOrb.getOrbValue(j);
 
                         j -= k;
-                        world.addEntity(new EntityExperienceOrb(world, (double) blockposition.getX(), (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, k, org.bukkit.entity.ExperienceOrb.SpawnReason.GRINDSTONE, entityhuman)); // Paper
+                        world.addEntity(new EntityExperienceOrb(world, blockposition.getX(), (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, k, org.bukkit.entity.ExperienceOrb.SpawnReason.GRINDSTONE, entityhuman)); // Paper
                     }
 
                     world.triggerEffect(1042, blockposition, 0);
@@ -124,8 +124,8 @@ public class ContainerGrindstone extends Container {
 
                 while (iterator.hasNext()) {
                     Entry<Enchantment, Integer> entry = (Entry) iterator.next();
-                    Enchantment enchantment = (Enchantment) entry.getKey();
-                    Integer integer = (Integer) entry.getValue();
+                    Enchantment enchantment = entry.getKey();
+                    Integer integer = entry.getValue();
 
                     if (!enchantment.c()) {
                         j += enchantment.a(integer);
@@ -225,10 +225,10 @@ public class ContainerGrindstone extends Container {
 
         while (iterator.hasNext()) {
             Entry<Enchantment, Integer> entry = (Entry) iterator.next();
-            Enchantment enchantment = (Enchantment) entry.getKey();
+            Enchantment enchantment = entry.getKey();
 
             if (!enchantment.c() || EnchantmentManager.getEnchantmentLevel(enchantment, itemstack2) == 0) {
-                itemstack2.addEnchantment(enchantment, (Integer) entry.getValue());
+                itemstack2.addEnchantment(enchantment, entry.getValue());
             }
         }
 
@@ -247,8 +247,8 @@ public class ContainerGrindstone extends Container {
         }
 
         itemstack1.setCount(j);
-        Map<Enchantment, Integer> map = (Map) EnchantmentManager.a(itemstack).entrySet().stream().filter((entry) -> {
-            return ((Enchantment) entry.getKey()).c();
+        Map<Enchantment, Integer> map = EnchantmentManager.a(itemstack).entrySet().stream().filter((entry) -> {
+            return entry.getKey().c();
         }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         EnchantmentManager.a(map, itemstack1);
@@ -284,7 +284,7 @@ public class ContainerGrindstone extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

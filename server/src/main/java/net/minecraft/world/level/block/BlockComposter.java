@@ -42,9 +42,9 @@ public class BlockComposter extends Block implements IInventoryHolder {
     public static final BlockStateInteger a = BlockProperties.as; public static BlockStateInteger level() { return BlockComposter.a; } // Purpur - OBFHELPER
     public static final Object2FloatMap<IMaterial> b = new Object2FloatOpenHashMap();
     private static final VoxelShape c = VoxelShapes.b();
-    private static final VoxelShape[] d = (VoxelShape[]) SystemUtils.a((new VoxelShape[9]), (avoxelshape) -> { // CraftBukkit - decompile error
+    private static final VoxelShape[] d = SystemUtils.a((new VoxelShape[9]), (avoxelshape) -> { // CraftBukkit - decompile error
         for (int i = 0; i < 8; ++i) {
-            avoxelshape[i] = VoxelShapes.a(BlockComposter.c, Block.a(2.0D, (double) Math.max(2, 1 + i * 2), 2.0D, 14.0D, 16.0D, 14.0D), OperatorBoolean.ONLY_FIRST);
+            avoxelshape[i] = VoxelShapes.a(BlockComposter.c, Block.a(2.0D, Math.max(2, 1 + i * 2), 2.0D, 14.0D, 16.0D, 14.0D), OperatorBoolean.ONLY_FIRST);
         }
 
         avoxelshape[8] = avoxelshape[7];
@@ -145,12 +145,12 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     public BlockComposter(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockComposter.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockComposter.a, 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockComposter.d[(Integer) iblockdata.get(BlockComposter.a)];
+        return BlockComposter.d[iblockdata.get(BlockComposter.a)];
     }
 
     @Override
@@ -165,7 +165,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     @Override
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        if ((Integer) iblockdata.get(BlockComposter.a) == 7) {
+        if (iblockdata.get(BlockComposter.a) == 7) {
             world.getBlockTickList().a(blockposition, iblockdata.getBlock(), 20);
         }
 
@@ -173,12 +173,12 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     @Override
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
-        int i = (Integer) iblockdata.get(BlockComposter.a);
+        int i = iblockdata.get(BlockComposter.a);
         ItemStack itemstack = entityhuman.b(enumhand);
 
         if (i < 8 && BlockComposter.b.containsKey(itemstack.getItem())) {
             if (i < 7 && !world.isClientSide) {
-                IBlockData iblockdata1 = b(iblockdata, (GeneratorAccess) world, blockposition, itemstack);
+                IBlockData iblockdata1 = b(iblockdata, world, blockposition, itemstack);
 
                 world.triggerEffect(1500, blockposition, iblockdata != iblockdata1 ? 1 : 0);
                 if (!entityhuman.abilities.canInstantlyBuild) {
@@ -188,7 +188,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
             return EnumInteractionResult.a(world.isClientSide);
         } else if (i == 8) {
-            d(iblockdata, world, blockposition, (Entity) null); // CraftBukkit - no event for players
+            d(iblockdata, world, blockposition, null); // CraftBukkit - no event for players
             return EnumInteractionResult.a(world.isClientSide);
         } else {
             return EnumInteractionResult.PASS;
@@ -196,7 +196,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
     }
 
     public static IBlockData a(IBlockData iblockdata, WorldServer worldserver, ItemStack itemstack, BlockPosition blockposition, Entity entity) { // CraftBukkit
-        int i = (Integer) iblockdata.get(BlockComposter.a);
+        int i = iblockdata.get(BlockComposter.a);
 
         // Purpur start
         IBlockData newState = process(i, iblockdata, worldserver, itemstack, blockposition, entity);
@@ -224,7 +224,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
             if (iblockdata == iblockdata1 || org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(entity, blockposition, iblockdata1).isCancelled()) {
                 return iblockdata;
             }
-            iblockdata1 = b(iblockdata, (GeneratorAccess) worldserver, blockposition, itemstack, rand);
+            iblockdata1 = b(iblockdata, worldserver, blockposition, itemstack, rand);
             // CraftBukkit end
 
             itemstack.subtract(1);
@@ -254,14 +254,14 @@ public class BlockComposter extends Block implements IInventoryHolder {
             world.addEntity(entityitem);
         }
 
-        IBlockData iblockdata1 = d(iblockdata, (GeneratorAccess) world, blockposition);
+        IBlockData iblockdata1 = d(iblockdata, world, blockposition);
 
-        world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_COMPOSTER_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, blockposition, SoundEffects.BLOCK_COMPOSTER_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
         return iblockdata1;
     }
 
     private static IBlockData d(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockComposter.a, 0);
+        IBlockData iblockdata1 = iblockdata.set(BlockComposter.a, 0);
 
         generatoraccess.setTypeAndData(blockposition, iblockdata1, 3);
         return iblockdata1;
@@ -274,14 +274,14 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     private static IBlockData b(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition, ItemStack itemstack, double rand) {
         // CraftBukkit end
-        int i = (Integer) iblockdata.get(BlockComposter.a);
+        int i = iblockdata.get(BlockComposter.a);
         float f = BlockComposter.b.getFloat(itemstack.getItem());
 
         if ((i != 0 || f <= 0.0F) && rand >= (double) f) {
             return iblockdata;
         } else {
             int j = i + 1;
-            IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockComposter.a, j);
+            IBlockData iblockdata1 = iblockdata.set(BlockComposter.a, j);
 
             generatoraccess.setTypeAndData(blockposition, iblockdata1, 3);
             if (j == 7) {
@@ -294,9 +294,9 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Integer) iblockdata.get(BlockComposter.a) == 7) {
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.a((IBlockState) BlockComposter.a), 3);
-            worldserver.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_COMPOSTER_READY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        if (iblockdata.get(BlockComposter.a) == 7) {
+            worldserver.setTypeAndData(blockposition, iblockdata.a((IBlockState) BlockComposter.a), 3);
+            worldserver.playSound(null, blockposition, SoundEffects.BLOCK_COMPOSTER_READY, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
     }
@@ -308,7 +308,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     @Override
     public int a(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        return (Integer) iblockdata.get(BlockComposter.a);
+        return iblockdata.get(BlockComposter.a);
     }
 
     @Override
@@ -323,10 +323,10 @@ public class BlockComposter extends Block implements IInventoryHolder {
 
     @Override
     public IWorldInventory a(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        int i = (Integer) iblockdata.get(BlockComposter.a);
+        int i = iblockdata.get(BlockComposter.a);
 
         // CraftBukkit - empty generatoraccess, blockposition
-        return (IWorldInventory) (i == 8 ? new BlockComposter.ContainerOutput(iblockdata, generatoraccess, blockposition, new ItemStack(Items.BONE_MEAL)) : (i < 7 ? new BlockComposter.ContainerInput(iblockdata, generatoraccess, blockposition) : new BlockComposter.ContainerEmpty(generatoraccess, blockposition)));
+        return i == 8 ? new ContainerOutput(iblockdata, generatoraccess, blockposition, new ItemStack(Items.BONE_MEAL)) : (i < 7 ? new ContainerInput(iblockdata, generatoraccess, blockposition) : new ContainerEmpty(generatoraccess, blockposition));
     }
 
     static class ContainerInput extends InventorySubcontainer implements IWorldInventory {

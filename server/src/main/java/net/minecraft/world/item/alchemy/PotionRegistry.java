@@ -14,11 +14,11 @@ public class PotionRegistry {
     private final ImmutableList<MobEffect> b;
 
     public static PotionRegistry a(String s) {
-        return (PotionRegistry) IRegistry.POTION.get(MinecraftKey.a(s));
+        return IRegistry.POTION.get(MinecraftKey.a(s));
     }
 
     public PotionRegistry(MobEffect... amobeffect) {
-        this((String) null, amobeffect);
+        this(null, amobeffect);
     }
 
     public PotionRegistry(@Nullable String s, MobEffect... amobeffect) {

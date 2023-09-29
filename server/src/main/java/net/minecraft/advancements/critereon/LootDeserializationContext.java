@@ -24,7 +24,7 @@ public class LootDeserializationContext {
     }
 
     public final LootItemCondition[] a(JsonArray jsonarray, String s, LootContextParameterSet lootcontextparameterset) {
-        LootItemCondition[] alootitemcondition = (LootItemCondition[]) this.d.fromJson(jsonarray, LootItemCondition[].class);
+        LootItemCondition[] alootitemcondition = this.d.fromJson(jsonarray, LootItemCondition[].class);
         LootPredicateManager lootpredicatemanager = this.c;
 
         this.c.getClass();

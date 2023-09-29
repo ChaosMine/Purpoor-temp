@@ -122,7 +122,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 
 	public static final BlockPosition a = new BlockPosition(100, 50, 0);
 	private static final Logger LOGGER = LogManager.getLogger();
-	public final Int2ObjectMap<Entity> entitiesById = new Int2ObjectLinkedOpenHashMap();
+	public final Int2ObjectMap<Entity> entitiesById = new Int2ObjectLinkedOpenHashMap<>();
 	final com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<Entity> entitiesForIteration = new com.tuinity.tuinity.util.maplist.IteratorSafeOrderedReferenceSet<>(2048, 0.5f, 2048, 0.2, true); // Tuinity - make removing entities while ticking safe
 	private final Map<UUID, Entity> entitiesByUUID = Maps.newHashMap();
 	private final Queue<Entity> entitiesToAdd = Queues.newArrayDeque();
@@ -1163,7 +1163,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
 	}
 
 	private void wakeupPlayers() {
-		(this.players.stream().filter(EntityLiving::isSleeping).collect(Collectors.toList())).forEach((entityplayer) -> { // CraftBukkit - decompile error
+		(this.players.stream().filter(EntityLiving::isSleeping).toList()).forEach((entityplayer) -> { // CraftBukkit - decompile error
 			entityplayer.wakeup(false, false);
 		});
 	}

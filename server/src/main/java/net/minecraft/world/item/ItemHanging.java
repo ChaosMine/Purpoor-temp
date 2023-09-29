@@ -52,7 +52,7 @@ public class ItemHanging extends Item {
             NBTTagCompound nbttagcompound = itemstack.getTag();
 
             if (nbttagcompound != null) {
-                EntityTypes.a(world, entityhuman, (Entity) object, nbttagcompound);
+                EntityTypes.a(world, entityhuman, object, nbttagcompound);
                 // Purpur start
                 if (itemactioncontext.getWorld().purpurConfig.persistentDroppableEntityDisplayNames && itemactioncontext.getItemStack().hasName()) {
                     object.setCustomName(itemactioncontext.getItemStack().getName());
@@ -67,7 +67,7 @@ public class ItemHanging extends Item {
                     org.bukkit.block.Block blockClicked = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
                     org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.block.CraftBlock.notchToBlockFace(enumdirection);
 
-                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) ((EntityHanging) object).getBukkitEntity(), who, blockClicked, blockFace);
+                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) object.getBukkitEntity(), who, blockClicked, blockFace);
                     world.getServer().getPluginManager().callEvent(event);
 
                     if (event.isCancelled()) {
@@ -75,7 +75,7 @@ public class ItemHanging extends Item {
                     }
                     // CraftBukkit end
                     ((EntityHanging) object).playPlaceSound();
-                    world.addEntity((Entity) object);
+                    world.addEntity(object);
                 }
 
                 itemstack.subtract(1);

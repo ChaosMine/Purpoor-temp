@@ -13,7 +13,12 @@ public class WorldGenFeatureReplaceBlock extends WorldGenerator<WorldGenFeatureR
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureReplaceBlockConfiguration worldgenfeaturereplaceblockconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureReplaceBlockConfiguration worldgenfeaturereplaceblockconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturereplaceblockconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureReplaceBlockConfiguration worldgenfeaturereplaceblockconfiguration) {
         if (generatoraccessseed.getType(blockposition).a(worldgenfeaturereplaceblockconfiguration.b.getBlock())) {
             generatoraccessseed.setTypeAndData(blockposition, worldgenfeaturereplaceblockconfiguration.c, 2);
         }

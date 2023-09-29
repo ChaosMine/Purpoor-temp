@@ -34,7 +34,7 @@ public abstract class WorldGenTreeProvider {
         } else {
             setTreeType(worldgenfeatureconfigured); // CraftBukkit
             worldserver.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 4);
-            ((WorldGenFeatureTreeConfiguration) worldgenfeatureconfigured.f).b();
+            worldgenfeatureconfigured.f.b();
             if (worldgenfeatureconfigured.a(worldserver, chunkgenerator, random, blockposition)) {
                 return true;
             } else {
@@ -55,7 +55,7 @@ public abstract class WorldGenTreeProvider {
             }
 
             blockposition1 = (BlockPosition) iterator.next();
-        } while (!generatoraccess.getType(blockposition1).a((Tag) TagsBlock.FLOWERS));
+        } while (!generatoraccess.getType(blockposition1).a(TagsBlock.FLOWERS));
 
         return true;
     }

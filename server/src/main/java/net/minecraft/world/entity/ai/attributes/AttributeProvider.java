@@ -18,7 +18,7 @@ public class AttributeProvider {
     }
 
     private AttributeModifiable d(AttributeBase attributebase) {
-        AttributeModifiable attributemodifiable = (AttributeModifiable) this.a.get(attributebase);
+        AttributeModifiable attributemodifiable = this.a.get(attributebase);
 
         if (attributemodifiable == null) {
             throw new IllegalArgumentException("Can't find attribute " + IRegistry.ATTRIBUTE.getKey(attributebase));
@@ -47,7 +47,7 @@ public class AttributeProvider {
 
     @Nullable
     public AttributeModifiable a(Consumer<AttributeModifiable> consumer, AttributeBase attributebase) {
-        AttributeModifiable attributemodifiable = (AttributeModifiable) this.a.get(attributebase);
+        AttributeModifiable attributemodifiable = this.a.get(attributebase);
 
         if (attributemodifiable == null) {
             return null;
@@ -68,7 +68,7 @@ public class AttributeProvider {
     }
 
     public boolean b(AttributeBase attributebase, UUID uuid) {
-        AttributeModifiable attributemodifiable = (AttributeModifiable) this.a.get(attributebase);
+        AttributeModifiable attributemodifiable = this.a.get(attributebase);
 
         return attributemodifiable != null && attributemodifiable.a(uuid) != null;
     }

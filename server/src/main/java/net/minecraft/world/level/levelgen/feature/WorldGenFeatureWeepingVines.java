@@ -22,7 +22,12 @@ public class WorldGenFeatureWeepingVines extends WorldGenerator<WorldGenFeatureE
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         if (!generatoraccessseed.isEmpty(blockposition)) {
             return false;
         } else {
@@ -31,7 +36,7 @@ public class WorldGenFeatureWeepingVines extends WorldGenerator<WorldGenFeatureE
             if (!iblockdata.a(Blocks.NETHERRACK) && !iblockdata.a(Blocks.NETHER_WART_BLOCK)) {
                 return false;
             } else {
-                this.a((GeneratorAccess) generatoraccessseed, random, blockposition);
+                this.a(generatoraccessseed, random, blockposition);
                 this.b(generatoraccessseed, random, blockposition);
                 return true;
             }
@@ -52,7 +57,7 @@ public class WorldGenFeatureWeepingVines extends WorldGenerator<WorldGenFeatureE
 
                 for (int l = 0; l < k; ++l) {
                     EnumDirection enumdirection = aenumdirection[l];
-                    IBlockData iblockdata = generatoraccess.getType(blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, enumdirection));
+                    IBlockData iblockdata = generatoraccess.getType(blockposition_mutableblockposition1.a(blockposition_mutableblockposition, enumdirection));
 
                     if (iblockdata.a(Blocks.NETHERRACK) || iblockdata.a(Blocks.NETHER_WART_BLOCK)) {
                         ++j;
@@ -104,7 +109,7 @@ public class WorldGenFeatureWeepingVines extends WorldGenerator<WorldGenFeatureE
         for (int l = 0; l <= i; ++l) {
             if (generatoraccess.isEmpty(blockposition_mutableblockposition)) {
                 if (l == i || !generatoraccess.isEmpty(blockposition_mutableblockposition.down())) {
-                    generatoraccess.setTypeAndData(blockposition_mutableblockposition, (IBlockData) Blocks.WEEPING_VINES.getBlockData().set(BlockGrowingTop.d, MathHelper.nextInt(random, j, k)), 2);
+                    generatoraccess.setTypeAndData(blockposition_mutableblockposition, Blocks.WEEPING_VINES.getBlockData().set(BlockGrowingTop.d, MathHelper.nextInt(random, j, k)), 2);
                     break;
                 }
 

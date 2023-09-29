@@ -32,7 +32,7 @@ public class ItemHoe extends ItemTool {
         BlockPosition blockposition = itemactioncontext.getClickPosition();
 
         if (itemactioncontext.getClickedFace() != EnumDirection.DOWN && world.getType(blockposition.up()).isAir()) {
-            IBlockData iblockdata = (IBlockData) ItemHoe.a.get(world.getType(blockposition).getBlock());
+            IBlockData iblockdata = ItemHoe.a.get(world.getType(blockposition).getBlock());
 
             if (iblockdata != null) {
                 EntityHuman entityhuman = itemactioncontext.getEntity();

@@ -116,7 +116,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     @Override
     public NBTBase remove(int i) {
-        NBTBase nbtbase = (NBTBase) this.list.remove(i);
+        NBTBase nbtbase = this.list.remove(i);
 
         this.g();
         return nbtbase;
@@ -128,7 +128,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public NBTTagCompound getCompound(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 10) {
                 return (NBTTagCompound) nbtbase;
@@ -140,7 +140,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public NBTTagList b(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 9) {
                 return (NBTTagList) nbtbase;
@@ -152,7 +152,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public short d(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 2) {
                 return ((NBTTagShort) nbtbase).asShort();
@@ -164,7 +164,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public int e(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 3) {
                 return ((NBTTagInt) nbtbase).asInt();
@@ -176,7 +176,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public int[] f(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 11) {
                 return ((NBTTagIntArray) nbtbase).getInts();
@@ -189,7 +189,7 @@ public class NBTTagList extends NBTList<NBTBase> {
     public final double getDoubleAt(int i) { return this.h(i); } // Paper - OBFHELPER
     public double h(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 6) {
                 return ((NBTTagDouble) nbtbase).asDouble();
@@ -201,7 +201,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public float i(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             if (nbtbase.getTypeId() == 5) {
                 return ((NBTTagFloat) nbtbase).asFloat();
@@ -213,7 +213,7 @@ public class NBTTagList extends NBTList<NBTBase> {
 
     public String getString(int i) {
         if (i >= 0 && i < this.list.size()) {
-            NBTBase nbtbase = (NBTBase) this.list.get(i);
+            NBTBase nbtbase = this.list.get(i);
 
             return nbtbase.getTypeId() == 8 ? nbtbase.asString() : nbtbase.toString();
         } else {
@@ -226,7 +226,7 @@ public class NBTTagList extends NBTList<NBTBase> {
     }
 
     public NBTBase get(int i) {
-        return (NBTBase) this.list.get(i);
+        return this.list.get(i);
     }
 
     @Override
@@ -310,7 +310,7 @@ public class NBTTagList extends NBTList<NBTBase> {
                         chatcomponenttext.c(", ");
                     }
 
-                    chatcomponenttext.addSibling(((NBTBase) this.list.get(j)).l());
+                    chatcomponenttext.addSibling(this.list.get(j).l());
                 }
 
                 chatcomponenttext.c("]");
@@ -327,7 +327,7 @@ public class NBTTagList extends NBTList<NBTBase> {
                 for (j = 0; j < this.list.size(); ++j) {
                     ChatComponentText chatcomponenttext2 = new ChatComponentText(Strings.repeat(s, i + 1));
 
-                    chatcomponenttext2.addSibling(((NBTBase) this.list.get(j)).a(s, i + 1));
+                    chatcomponenttext2.addSibling(this.list.get(j).a(s, i + 1));
                     if (j != this.list.size() - 1) {
                         chatcomponenttext2.c(s2).c(s.isEmpty() ? " " : "\n");
                     }

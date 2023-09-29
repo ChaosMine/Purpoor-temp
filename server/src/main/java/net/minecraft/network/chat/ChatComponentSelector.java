@@ -38,7 +38,7 @@ public class ChatComponentSelector extends ChatBaseComponent implements ChatComp
 
     @Override
     public IChatMutableComponent a(@Nullable CommandListenerWrapper commandlistenerwrapper, @Nullable Entity entity, int i) throws CommandSyntaxException {
-        return (IChatMutableComponent) (commandlistenerwrapper != null && this.f != null ? EntitySelector.a(this.f.getEntities(commandlistenerwrapper)) : new ChatComponentText(""));
+        return commandlistenerwrapper != null && this.f != null ? EntitySelector.a(this.f.getEntities(commandlistenerwrapper)) : new ChatComponentText("");
     }
 
     @Override

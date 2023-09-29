@@ -30,7 +30,7 @@ public abstract class BlockFurnace extends BlockTileEntity {
 
     protected BlockFurnace(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockFurnace.FACING, EnumDirection.NORTH)).set(BlockFurnace.LIT, false));
+        this.j(this.blockStateList.getBlockData().set(BlockFurnace.FACING, EnumDirection.NORTH).set(BlockFurnace.LIT, false));
     }
 
     @Override
@@ -47,7 +47,7 @@ public abstract class BlockFurnace extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockFurnace.FACING, blockactioncontext.f().opposite());
+        return this.getBlockData().set(BlockFurnace.FACING, blockactioncontext.f().opposite());
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class BlockFurnace extends BlockTileEntity {
 
             if (tileentity instanceof TileEntityFurnace) {
                 InventoryUtils.dropInventory(world, blockposition, (TileEntityFurnace) tileentity);
-                ((TileEntityFurnace) tileentity).a(world, Vec3D.a((BaseBlockPosition) blockposition));
+                ((TileEntityFurnace) tileentity).a(world, Vec3D.a(blockposition));
                 world.updateAdjacentComparators(blockposition, this);
             }
 
@@ -94,12 +94,12 @@ public abstract class BlockFurnace extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockFurnace.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockFurnace.FACING)));
+        return iblockdata.set(BlockFurnace.FACING, enumblockrotation.a(iblockdata.get(BlockFurnace.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockFurnace.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockFurnace.FACING)));
     }
 
     @Override

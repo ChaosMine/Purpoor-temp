@@ -70,7 +70,7 @@ public class jh {
     }
 
     public jh a(String s) {
-        if (!this.d.isEmpty() && s.length() != ((String) this.d.get(0)).length()) {
+        if (!this.d.isEmpty() && s.length() != this.d.get(0).length()) {
             throw new IllegalArgumentException("Pattern must be the same width on every line!");
         } else {
             this.d.add(s);
@@ -104,7 +104,7 @@ public class jh {
 
     public void a(Consumer<jf> consumer, MinecraftKey minecraftkey) {
         this.a(minecraftkey);
-        this.f.a(new MinecraftKey("recipes/root")).a("has_the_recipe", (CriterionInstance) CriterionTriggerRecipeUnlocked.a(minecraftkey)).a(AdvancementRewards.a.c(minecraftkey)).a(AdvancementRequirements.OR);
+        this.f.a(new MinecraftKey("recipes/root")).a("has_the_recipe", CriterionTriggerRecipeUnlocked.a(minecraftkey)).a(AdvancementRewards.a_.c(minecraftkey)).a(AdvancementRequirements.OR);
         consumer.accept(new jh.a(minecraftkey, this.b, this.c, this.g == null ? "" : this.g, this.d, this.e, this.f, new MinecraftKey(minecraftkey.getNamespace(), "recipes/" + this.b.q().b() + "/" + minecraftkey.getKey())));
     }
 
@@ -133,7 +133,7 @@ public class jh {
 
             if (!set.isEmpty()) {
                 throw new IllegalStateException("Ingredients are defined but not used in pattern for recipe " + minecraftkey);
-            } else if (this.d.size() == 1 && ((String) this.d.get(0)).length() == 1) {
+            } else if (this.d.size() == 1 && this.d.get(0).length() == 1) {
                 throw new IllegalStateException("Shaped recipe " + minecraftkey + " only takes in a single item - should it be a shapeless recipe instead?");
             } else if (this.f.c().isEmpty()) {
                 throw new IllegalStateException("No way of obtaining recipe " + minecraftkey);
@@ -185,7 +185,7 @@ public class jh {
             while (iterator1.hasNext()) {
                 Entry<Character, RecipeItemStack> entry = (Entry) iterator1.next();
 
-                jsonobject1.add(String.valueOf(entry.getKey()), ((RecipeItemStack) entry.getValue()).c());
+                jsonobject1.add(String.valueOf(entry.getKey()), entry.getValue().c());
             }
 
             jsonobject.add("key", jsonobject1);

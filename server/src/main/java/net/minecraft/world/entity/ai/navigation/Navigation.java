@@ -35,7 +35,7 @@ public class Navigation extends NavigationAbstract {
 
     @Override
     protected Vec3D b() {
-        return new Vec3D(this.a.locX(), (double) this.u(), this.a.locZ());
+        return new Vec3D(this.a.locX(), this.u(), this.a.locZ());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Navigation extends NavigationAbstract {
     private int u() {
         if (this.a.isInWater() && this.r()) {
             int i = MathHelper.floor(this.a.locY());
-            Block block = this.b.getType(new BlockPosition(this.a.locX(), (double) i, this.a.locZ())).getBlock();
+            Block block = this.b.getType(new BlockPosition(this.a.locX(), i, this.a.locZ())).getBlock();
             int j = 0;
 
             do {
@@ -86,7 +86,7 @@ public class Navigation extends NavigationAbstract {
                 }
 
                 ++i;
-                block = this.b.getType(new BlockPosition(this.a.locX(), (double) i, this.a.locZ())).getBlock();
+                block = this.b.getType(new BlockPosition(this.a.locX(), i, this.a.locZ())).getBlock();
                 ++j;
             } while (j <= 16);
 
@@ -237,7 +237,7 @@ public class Navigation extends NavigationAbstract {
             blockposition = (BlockPosition) iterator.next();
             d2 = (double) blockposition.getX() + 0.5D - vec3d.x;
             d3 = (double) blockposition.getZ() + 0.5D - vec3d.z;
-        } while (d2 * d0 + d3 * d1 < 0.0D || this.b.getType(blockposition).a((IBlockAccess) this.b, blockposition, PathMode.LAND));
+        } while (d2 * d0 + d3 * d1 < 0.0D || this.b.getType(blockposition).a(this.b, blockposition, PathMode.LAND));
 
         return false;
     }

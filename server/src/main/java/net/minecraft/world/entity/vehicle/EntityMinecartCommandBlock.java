@@ -86,12 +86,12 @@ public class EntityMinecartCommandBlock extends EntityMinecartAbstract {
         super.a(datawatcherobject);
         if (EntityMinecartCommandBlock.c.equals(datawatcherobject)) {
             try {
-                this.d.b((IChatBaseComponent) this.getDataWatcher().get(EntityMinecartCommandBlock.c));
+                this.d.b(this.getDataWatcher().get(EntityMinecartCommandBlock.c));
             } catch (Throwable throwable) {
                 ;
             }
         } else if (EntityMinecartCommandBlock.COMMAND.equals(datawatcherobject)) {
-            this.d.setCommand((String) this.getDataWatcher().get(EntityMinecartCommandBlock.COMMAND));
+            this.d.setCommand(this.getDataWatcher().get(EntityMinecartCommandBlock.COMMAND));
         }
 
     }
@@ -124,7 +124,7 @@ public class EntityMinecartCommandBlock extends EntityMinecartAbstract {
         // CraftBukkit start
         @Override
         public org.bukkit.command.CommandSender getBukkitSender(CommandListenerWrapper wrapper) {
-            return (org.bukkit.craftbukkit.entity.CraftMinecartCommand) EntityMinecartCommandBlock.this.getBukkitEntity();
+            return EntityMinecartCommandBlock.this.getBukkitEntity();
         }
         // CraftBukkit end
     }

@@ -21,7 +21,7 @@ public class BlockFloorSign extends BlockSign {
 
     public BlockFloorSign(BlockBase.Info blockbase_info, BlockPropertyWood blockpropertywood) {
         super(blockbase_info, blockpropertywood);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockFloorSign.ROTATION, 0)).set(BlockFloorSign.a, false));
+        this.j(this.blockStateList.getBlockData().set(BlockFloorSign.ROTATION, 0).set(BlockFloorSign.a, false));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class BlockFloorSign extends BlockSign {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
 
-        return (IBlockData) ((IBlockData) this.getBlockData().set(BlockFloorSign.ROTATION, MathHelper.floor((double) ((180.0F + blockactioncontext.h()) * 16.0F / 360.0F) + 0.5D) & 15)).set(BlockFloorSign.a, fluid.getType() == FluidTypes.WATER);
+        return this.getBlockData().set(BlockFloorSign.ROTATION, MathHelper.floor((double) ((180.0F + blockactioncontext.h()) * 16.0F / 360.0F) + 0.5D) & 15).set(BlockFloorSign.a, fluid.getType() == FluidTypes.WATER);
     }
 
     @Override
@@ -43,12 +43,12 @@ public class BlockFloorSign extends BlockSign {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockFloorSign.ROTATION, enumblockrotation.a((Integer) iblockdata.get(BlockFloorSign.ROTATION), 16));
+        return iblockdata.set(BlockFloorSign.ROTATION, enumblockrotation.a(iblockdata.get(BlockFloorSign.ROTATION), 16));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return (IBlockData) iblockdata.set(BlockFloorSign.ROTATION, enumblockmirror.a((Integer) iblockdata.get(BlockFloorSign.ROTATION), 16));
+        return iblockdata.set(BlockFloorSign.ROTATION, enumblockmirror.a(iblockdata.get(BlockFloorSign.ROTATION), 16));
     }
 
     @Override

@@ -17,7 +17,7 @@ public class BehaviorPacify extends Behavior<EntityLiving> {
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
-        entityliving.getBehaviorController().a(MemoryModuleType.PACIFIED, true, (long) this.b);
+        entityliving.getBehaviorController().a(MemoryModuleType.PACIFIED, true, this.b);
         entityliving.getBehaviorController().removeMemory(MemoryModuleType.ATTACK_TARGET);
     }
 }

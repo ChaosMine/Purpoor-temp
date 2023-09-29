@@ -32,7 +32,7 @@ public class BlockEnderPortalFrame extends Block {
 
     public BlockEnderPortalFrame(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockEnderPortalFrame.FACING, EnumDirection.NORTH)).set(BlockEnderPortalFrame.EYE, false));
+        this.j(this.blockStateList.getBlockData().set(BlockEnderPortalFrame.FACING, EnumDirection.NORTH).set(BlockEnderPortalFrame.EYE, false));
     }
 
     @Override
@@ -42,12 +42,12 @@ public class BlockEnderPortalFrame extends Block {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (Boolean) iblockdata.get(BlockEnderPortalFrame.EYE) ? BlockEnderPortalFrame.e : BlockEnderPortalFrame.c;
+        return iblockdata.get(BlockEnderPortalFrame.EYE) ? BlockEnderPortalFrame.e : BlockEnderPortalFrame.c;
     }
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) ((IBlockData) this.getBlockData().set(BlockEnderPortalFrame.FACING, blockactioncontext.f().opposite())).set(BlockEnderPortalFrame.EYE, false);
+        return this.getBlockData().set(BlockEnderPortalFrame.FACING, blockactioncontext.f().opposite()).set(BlockEnderPortalFrame.EYE, false);
     }
 
     @Override
@@ -57,17 +57,17 @@ public class BlockEnderPortalFrame extends Block {
 
     @Override
     public int a(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        return (Boolean) iblockdata.get(BlockEnderPortalFrame.EYE) ? 15 : 0;
+        return iblockdata.get(BlockEnderPortalFrame.EYE) ? 15 : 0;
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockEnderPortalFrame.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockEnderPortalFrame.FACING)));
+        return iblockdata.set(BlockEnderPortalFrame.FACING, enumblockrotation.a(iblockdata.get(BlockEnderPortalFrame.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockEnderPortalFrame.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockEnderPortalFrame.FACING)));
     }
 
     @Override

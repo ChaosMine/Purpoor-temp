@@ -72,7 +72,7 @@ public class SpigotConfig {
 
 	public static void registerCommands() {
 		for (var entry : commands.entrySet()) {
-			MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "spigot", entry.getValue());
+			MinecraftServer.SERVER.server.getCommandMap().register(entry.getKey(), "spigot", entry.getValue());
 		}
 	}
 

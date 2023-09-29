@@ -53,8 +53,8 @@ public abstract class ContainerFurnace extends ContainerRecipeBook<IInventory> {
         this.e = icontainerproperties;
         this.c = playerinventory.player.world;
         this.a(new Slot(iinventory, 0, 56, 17));
-        this.a((Slot) (new SlotFurnaceFuel(this, iinventory, 1, 56, 53)));
-        this.a((Slot) (new SlotFurnaceResult(playerinventory.player, iinventory, 2, 116, 35)));
+        this.a(new SlotFurnaceFuel(this, iinventory, 1, 56, 53));
+        this.a(new SlotFurnaceResult(playerinventory.player, iinventory, 2, 116, 35));
         this.player = playerinventory; // CraftBukkit - save player
 
         int j;
@@ -114,7 +114,7 @@ public abstract class ContainerFurnace extends ContainerRecipeBook<IInventory> {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

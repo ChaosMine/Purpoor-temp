@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.network.protocol.handshake;
 
 import net.minecraft.network.EnumProtocol;

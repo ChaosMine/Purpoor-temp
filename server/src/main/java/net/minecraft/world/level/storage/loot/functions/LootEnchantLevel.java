@@ -44,7 +44,7 @@ public class LootEnchantLevel extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootEnchantLevel lootenchantlevel, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootenchantlevel, jsonserializationcontext);
+            super.a(jsonobject, lootenchantlevel, jsonserializationcontext);
             jsonobject.add("levels", LootValueGenerators.a(lootenchantlevel.a, jsonserializationcontext));
             jsonobject.addProperty("treasure", lootenchantlevel.b);
         }

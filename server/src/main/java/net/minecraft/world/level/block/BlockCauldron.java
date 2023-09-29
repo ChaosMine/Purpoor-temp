@@ -38,7 +38,7 @@ public class BlockCauldron extends Block {
 
     public BlockCauldron(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCauldron.LEVEL, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockCauldron.LEVEL, 0));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class BlockCauldron extends Block {
     @Override
     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
-        int i = (Integer) iblockdata.get(BlockCauldron.LEVEL);
+        int i = iblockdata.get(BlockCauldron.LEVEL);
         float f = (float) blockposition.getY() + (6.0F + (float) (3 * i)) / 16.0F;
 
         if (!world.isClientSide && entity.isBurning() && i > 0 && entity.locY() <= (double) f) {
@@ -76,7 +76,7 @@ public class BlockCauldron extends Block {
         if (itemstack.isEmpty()) {
             return EnumInteractionResult.PASS;
         } else {
-            int i = (Integer) iblockdata.get(BlockCauldron.LEVEL);
+            int i = iblockdata.get(BlockCauldron.LEVEL);
             Item item = itemstack.getItem();
 
             if (item == Items.WATER_BUCKET) {
@@ -92,7 +92,7 @@ public class BlockCauldron extends Block {
                     entityhuman.a(StatisticList.FILL_CAULDRON);
                     // this.a(world, blockposition, iblockdata, 3);
                     // CraftBukkit end
-                    world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, blockposition, SoundEffects.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
 
                 return EnumInteractionResult.a(world.isClientSide);
@@ -114,7 +114,7 @@ public class BlockCauldron extends Block {
                     entityhuman.a(StatisticList.USE_CAULDRON);
                     // this.a(world, blockposition, iblockdata, 0);
                     // CraftBukkit end
-                    world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, blockposition, SoundEffects.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
 
                 return EnumInteractionResult.a(world.isClientSide);
@@ -140,7 +140,7 @@ public class BlockCauldron extends Block {
                             }
                         }
 
-                        world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, blockposition, SoundEffects.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         // this.a(world, blockposition, iblockdata, i - 1);
                         // CraftBukkit end
                     }
@@ -161,7 +161,7 @@ public class BlockCauldron extends Block {
                             }
                         }
 
-                        world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, blockposition, SoundEffects.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         // this.a(world, blockposition, iblockdata, i + 1);
                         // CraftBukkit end
                     }
@@ -250,7 +250,7 @@ public class BlockCauldron extends Block {
         if (event.isCancelled()) {
             return false;
         }
-        world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockCauldron.LEVEL, event.getNewLevel()), 2);
+        world.setTypeAndData(blockposition, iblockdata.set(BlockCauldron.LEVEL, event.getNewLevel()), 2);
         world.updateAdjacentComparators(blockposition, this);
         return true;
         // CraftBukkit end
@@ -264,8 +264,8 @@ public class BlockCauldron extends Block {
             if (f >= 0.15F) {
                 IBlockData iblockdata = world.getType(blockposition);
 
-                if ((Integer) iblockdata.get(BlockCauldron.LEVEL) < 3) {
-                    this.a(world, blockposition, (IBlockData) iblockdata.a((IBlockState) BlockCauldron.LEVEL), 2); // CraftBukkit
+                if (iblockdata.get(BlockCauldron.LEVEL) < 3) {
+                    this.a(world, blockposition, iblockdata.a((IBlockState) BlockCauldron.LEVEL), 2); // CraftBukkit
                 }
 
             }
@@ -279,7 +279,7 @@ public class BlockCauldron extends Block {
 
     @Override
     public int a(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        return (Integer) iblockdata.get(BlockCauldron.LEVEL);
+        return iblockdata.get(BlockCauldron.LEVEL);
     }
 
     @Override

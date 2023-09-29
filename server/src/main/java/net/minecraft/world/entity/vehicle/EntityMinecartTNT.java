@@ -87,7 +87,7 @@ public class EntityMinecartTNT extends EntityMinecartAbstract {
         if (!damagesource.isFire() && !damagesource.isExplosion() && d0 < 0.009999999776482582D) {
             super.a(damagesource);
             if (!damagesource.isExplosion() && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                this.a((IMaterial) Blocks.TNT);
+                this.a(Blocks.TNT);
             }
 
         } else {
@@ -137,7 +137,7 @@ public class EntityMinecartTNT extends EntityMinecartAbstract {
         if (!this.world.isClientSide) {
             this.world.broadcastEntityEffect(this, (byte) 10);
             if (!this.isSilent()) {
-                this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
 
@@ -149,12 +149,12 @@ public class EntityMinecartTNT extends EntityMinecartAbstract {
 
     @Override
     public float a(Explosion explosion, IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, Fluid fluid, float f) {
-        return this.x() && (iblockdata.a((Tag) TagsBlock.RAILS) || iblockaccess.getType(blockposition.up()).a((Tag) TagsBlock.RAILS)) ? 0.0F : super.a(explosion, iblockaccess, blockposition, iblockdata, fluid, f);
+        return this.x() && (iblockdata.a(TagsBlock.RAILS) || iblockaccess.getType(blockposition.up()).a(TagsBlock.RAILS)) ? 0.0F : super.a(explosion, iblockaccess, blockposition, iblockdata, fluid, f);
     }
 
     @Override
     public boolean a(Explosion explosion, IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, float f) {
-        return this.x() && (iblockdata.a((Tag) TagsBlock.RAILS) || iblockaccess.getType(blockposition.up()).a((Tag) TagsBlock.RAILS)) ? false : super.a(explosion, iblockaccess, blockposition, iblockdata, f);
+        return this.x() && (iblockdata.a(TagsBlock.RAILS) || iblockaccess.getType(blockposition.up()).a(TagsBlock.RAILS)) ? false : super.a(explosion, iblockaccess, blockposition, iblockdata, f);
     }
 
     @Override

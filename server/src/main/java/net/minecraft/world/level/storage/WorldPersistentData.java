@@ -96,7 +96,7 @@ public class WorldPersistentData {
                 NBTTagCompound nbttagcompound;
 
                 if (this.a(pushbackinputstream)) {
-                    nbttagcompound = NBTCompressedStreamTools.a((InputStream) pushbackinputstream);
+                    nbttagcompound = NBTCompressedStreamTools.a(pushbackinputstream);
                 } else {
                     DataInputStream datainputstream = new DataInputStream(pushbackinputstream);
 

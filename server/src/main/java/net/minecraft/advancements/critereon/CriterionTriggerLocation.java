@@ -1,6 +1,5 @@
 package net.minecraft.advancements.critereon;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.CriterionTriggers;
 import net.minecraft.resources.MinecraftKey;
@@ -22,9 +21,9 @@ public class CriterionTriggerLocation extends CriterionTriggerAbstract<Criterion
     }
 
     @Override
-    public CriterionTriggerLocation.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerLocation.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         JsonObject jsonobject1 = ChatDeserializer.a(jsonobject, "location", jsonobject);
-        CriterionConditionLocation criterionconditionlocation = CriterionConditionLocation.a((JsonElement) jsonobject1);
+        CriterionConditionLocation criterionconditionlocation = CriterionConditionLocation.a(jsonobject1);
 
         return new CriterionTriggerLocation.a(this.a, criterionconditionentity_b, criterionconditionlocation);
     }
@@ -39,21 +38,21 @@ public class CriterionTriggerLocation extends CriterionTriggerAbstract<Criterion
 
         private final CriterionConditionLocation a;
 
-        public a(MinecraftKey minecraftkey, CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation) {
+        public a(MinecraftKey minecraftkey, CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation) {
             super(minecraftkey, criterionconditionentity_b);
             this.a = criterionconditionlocation;
         }
 
         public static CriterionTriggerLocation.a a(CriterionConditionLocation criterionconditionlocation) {
-            return new CriterionTriggerLocation.a(CriterionTriggers.p.a, CriterionConditionEntity.b.a, criterionconditionlocation);
+            return new CriterionTriggerLocation.a(CriterionTriggers.p.a, CriterionConditionEntity.b_.a, criterionconditionlocation);
         }
 
         public static CriterionTriggerLocation.a c() {
-            return new CriterionTriggerLocation.a(CriterionTriggers.q.a, CriterionConditionEntity.b.a, CriterionConditionLocation.a);
+            return new CriterionTriggerLocation.a(CriterionTriggers.q.a, CriterionConditionEntity.b_.a, CriterionConditionLocation.a);
         }
 
         public static CriterionTriggerLocation.a d() {
-            return new CriterionTriggerLocation.a(CriterionTriggers.H.a, CriterionConditionEntity.b.a, CriterionConditionLocation.a);
+            return new CriterionTriggerLocation.a(CriterionTriggers.H.a, CriterionConditionEntity.b_.a, CriterionConditionLocation.a);
         }
 
         public boolean a(WorldServer worldserver, double d0, double d1, double d2) {

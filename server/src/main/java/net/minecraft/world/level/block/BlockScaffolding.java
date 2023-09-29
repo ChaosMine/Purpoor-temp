@@ -37,7 +37,7 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
     protected BlockScaffolding(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockScaffolding.a, 7)).set(BlockScaffolding.b, false)).set(BlockScaffolding.c, false));
+        this.j(this.blockStateList.getBlockData().set(BlockScaffolding.a, 7).set(BlockScaffolding.b, false).set(BlockScaffolding.c, false));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return !voxelshapecollision.a(iblockdata.getBlock().getItem()) ? ((Boolean) iblockdata.get(BlockScaffolding.c) ? BlockScaffolding.e : BlockScaffolding.d) : VoxelShapes.b();
+        return !voxelshapecollision.a(iblockdata.getBlock().getItem()) ? (iblockdata.get(BlockScaffolding.c) ? BlockScaffolding.e : BlockScaffolding.d) : VoxelShapes.b();
     }
 
     @Override
@@ -64,9 +64,9 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         BlockPosition blockposition = blockactioncontext.getClickPosition();
         World world = blockactioncontext.getWorld();
-        int i = a((IBlockAccess) world, blockposition);
+        int i = a(world, blockposition);
 
-        return (IBlockData) ((IBlockData) ((IBlockData) this.getBlockData().set(BlockScaffolding.b, world.getFluid(blockposition).getType() == FluidTypes.WATER)).set(BlockScaffolding.a, i)).set(BlockScaffolding.c, this.a(world, blockposition, i));
+        return this.getBlockData().set(BlockScaffolding.b, world.getFluid(blockposition).getType() == FluidTypes.WATER).set(BlockScaffolding.a, i).set(BlockScaffolding.c, this.a(world, blockposition, i));
     }
 
     @Override
@@ -79,8 +79,8 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockScaffolding.b)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockScaffolding.b)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         if (!generatoraccess.s_()) {
@@ -92,12 +92,12 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        int i = a((IBlockAccess) worldserver, blockposition);
-        IBlockData iblockdata1 = (IBlockData) ((IBlockData) iblockdata.set(BlockScaffolding.a, i)).set(BlockScaffolding.c, this.a(worldserver, blockposition, i));
+        int i = a(worldserver, blockposition);
+        IBlockData iblockdata1 = iblockdata.set(BlockScaffolding.a, i).set(BlockScaffolding.c, this.a(worldserver, blockposition, i));
 
-        if ((Integer) iblockdata1.get(BlockScaffolding.a) == 7 && !org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, Blocks.AIR.getBlockData()).isCancelled()) { // CraftBukkit - BlockFadeEvent
-            if ((Integer) iblockdata.get(BlockScaffolding.a) == 7) {
-                worldserver.addEntity(new EntityFallingBlock(worldserver, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, (IBlockData) iblockdata1.set(BlockScaffolding.b, false)));
+        if (iblockdata1.get(BlockScaffolding.a) == 7 && !org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, Blocks.AIR.getBlockData()).isCancelled()) { // CraftBukkit - BlockFadeEvent
+            if (iblockdata.get(BlockScaffolding.a) == 7) {
+                worldserver.addEntity(new EntityFallingBlock(worldserver, (double) blockposition.getX() + 0.5D, blockposition.getY(), (double) blockposition.getZ() + 0.5D, iblockdata1.set(BlockScaffolding.b, false)));
             } else {
                 worldserver.b(blockposition, true);
             }
@@ -109,21 +109,21 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        return a((IBlockAccess) iworldreader, blockposition) < 7;
+        return a(iworldreader, blockposition) < 7;
     }
 
     @Override
     public VoxelShape c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return voxelshapecollision.a(VoxelShapes.b(), blockposition, true) && !voxelshapecollision.b() ? BlockScaffolding.d : ((Integer) iblockdata.get(BlockScaffolding.a) != 0 && (Boolean) iblockdata.get(BlockScaffolding.c) && voxelshapecollision.a(BlockScaffolding.g, blockposition, true) ? BlockScaffolding.f : VoxelShapes.a());
+        return voxelshapecollision.a(VoxelShapes.b(), blockposition, true) && !voxelshapecollision.b() ? BlockScaffolding.d : (iblockdata.get(BlockScaffolding.a) != 0 && iblockdata.get(BlockScaffolding.c) && voxelshapecollision.a(BlockScaffolding.g, blockposition, true) ? BlockScaffolding.f : VoxelShapes.a());
     }
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockScaffolding.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockScaffolding.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     private boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, int i) {
-        return i > 0 && !iblockaccess.getType(blockposition.down()).a((Block) this);
+        return i > 0 && !iblockaccess.getType(blockposition.down()).a(this);
     }
 
     public static int a(IBlockAccess iblockaccess, BlockPosition blockposition) {
@@ -132,7 +132,7 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
         int i = 7;
 
         if (iblockdata.a(Blocks.SCAFFOLDING)) {
-            i = (Integer) iblockdata.get(BlockScaffolding.a);
+            i = iblockdata.get(BlockScaffolding.a);
         } else if (iblockdata.d(iblockaccess, blockposition_mutableblockposition, EnumDirection.UP)) {
             return 0;
         }
@@ -141,10 +141,10 @@ public class BlockScaffolding extends Block implements IBlockWaterlogged {
 
         while (iterator.hasNext()) {
             EnumDirection enumdirection = (EnumDirection) iterator.next();
-            IBlockData iblockdata1 = iblockaccess.getType(blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection));
+            IBlockData iblockdata1 = iblockaccess.getType(blockposition_mutableblockposition.a(blockposition, enumdirection));
 
             if (iblockdata1.a(Blocks.SCAFFOLDING)) {
-                i = Math.min(i, (Integer) iblockdata1.get(BlockScaffolding.a) + 1);
+                i = Math.min(i, iblockdata1.get(BlockScaffolding.a) + 1);
                 if (i == 1) {
                     break;
                 }

@@ -33,7 +33,7 @@ public class BlockFalling extends Block {
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (canFallThrough(worldserver.getType(blockposition.down())) && blockposition.getY() >= 0) {
-            EntityFallingBlock entityfallingblock = new EntityFallingBlock(worldserver, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, worldserver.getType(blockposition));
+            EntityFallingBlock entityfallingblock = new EntityFallingBlock(worldserver, (double) blockposition.getX() + 0.5D, blockposition.getY(), (double) blockposition.getZ() + 0.5D, worldserver.getType(blockposition));
 
             this.a(entityfallingblock);
             worldserver.addEntity(entityfallingblock);
@@ -49,7 +49,7 @@ public class BlockFalling extends Block {
     public static boolean canFallThrough(IBlockData iblockdata) {
         Material material = iblockdata.getMaterial();
 
-        return iblockdata.isAir() || iblockdata.a((Tag) TagsBlock.FIRE) || material.isLiquid() || material.isReplaceable();
+        return iblockdata.isAir() || iblockdata.a(TagsBlock.FIRE) || material.isLiquid() || material.isReplaceable();
     }
 
     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, EntityFallingBlock entityfallingblock) {}

@@ -68,14 +68,14 @@ public class TagDataPack<T> {
                                 Throwable throwable1 = null;
 
                                 try {
-                                    JsonObject jsonobject = (JsonObject) ChatDeserializer.a(TagDataPack.b, (Reader) bufferedreader, JsonObject.class);
+                                    JsonObject jsonobject = ChatDeserializer.a(TagDataPack.b, bufferedreader, JsonObject.class);
 
                                     if (jsonobject == null) {
                                         TagDataPack.LOGGER.error("Couldn't load {} tag list {} from {} in data pack {} as it is empty or null", this.f, minecraftkey1, minecraftkey, iresource.d());
                                     } else {
-                                        ((Tag.a) map.computeIfAbsent(minecraftkey1, (minecraftkey2) -> {
+                                        map.computeIfAbsent(minecraftkey1, (minecraftkey2) -> {
                                             return Tag.a.a();
-                                        })).a(jsonobject, iresource.d());
+                                        }).a(jsonobject, iresource.d());
                                     }
                                 } catch (Throwable throwable2) {
                                     throwable1 = throwable2;
@@ -129,17 +129,15 @@ public class TagDataPack<T> {
     public Tags<T> a(Map<MinecraftKey, Tag.a> map) {
         Map<MinecraftKey, Tag<T>> map1 = Maps.newHashMap();
         Function<MinecraftKey, Tag<T>> function = map1::get;
-        Function function1 = (minecraftkey) -> {
-            return ((Optional) this.d.apply(minecraftkey)).orElse((Object) null);
-        };
+        Function<MinecraftKey, T> function1 = minecraftkey -> this.d.apply(minecraftkey).orElse(null);
 
         while (!map.isEmpty()) {
             boolean flag = false;
-            Iterator iterator = map.entrySet().iterator();
+            var iterator = map.entrySet().iterator();
 
             while (iterator.hasNext()) {
-                Entry<MinecraftKey, Tag.a> entry = (Entry) iterator.next();
-                Optional<Tag<T>> optional = ((Tag.a) entry.getValue()).a(function, function1);
+                Entry<MinecraftKey, Tag.a> entry = iterator.next();
+                Optional<Tag<T>> optional = entry.getValue().a(function, function1);
 
                 if (optional.isPresent()) {
                     map1.put(entry.getKey(), optional.get());
@@ -153,9 +151,7 @@ public class TagDataPack<T> {
             }
         }
 
-        map.forEach((minecraftkey, tag_a) -> {
-            TagDataPack.LOGGER.error("Couldn't load {} tag {} as it is missing following references: {}", this.f, minecraftkey, tag_a.b(function, function1).map(Objects::toString).collect(Collectors.joining(",")));
-        });
-        return Tags.a((Map) map1);
+        map.forEach((minecraftkey, tag_a) -> TagDataPack.LOGGER.error("Couldn't load {} tag {} as it is missing following references: {}", this.f, minecraftkey, tag_a.b(function, function1).map(Objects::toString).collect(Collectors.joining(","))));
+        return Tags.a(map1);
     }
 }

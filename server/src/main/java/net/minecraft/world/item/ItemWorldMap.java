@@ -169,7 +169,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
                                                         ++k3;
                                                     } while (l4 > 0 && !iblockdata1.getFluid().isEmpty());
 
-                                                    iblockdata = this.a(world, iblockdata, (BlockPosition) blockposition_mutableblockposition);
+                                                    iblockdata = this.a(world, iblockdata, blockposition_mutableblockposition);
                                                 }
                                             } else {
                                                 iblockdata = Blocks.BEDROCK.getBlockData();
@@ -194,7 +194,7 @@ public class ItemWorldMap extends ItemWorldMapBase {
                                     b0 = 0;
                                 }
 
-                                MaterialMapColor materialmapcolor = (MaterialMapColor) Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MaterialMapColor.b);
+                                MaterialMapColor materialmapcolor = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MaterialMapColor.b);
 
                                 if (materialmapcolor == MaterialMapColor.n) {
                                     d2 = (double) k3 * 0.1D + (double) (k1 + l1 & 1) * 0.2D;
@@ -403,11 +403,11 @@ public class ItemWorldMap extends ItemWorldMapBase {
     public EnumInteractionResult a(ItemActionContext itemactioncontext) {
         IBlockData iblockdata = itemactioncontext.getWorld().getType(itemactioncontext.getClickPosition());
 
-        if (iblockdata.a((Tag) TagsBlock.BANNERS)) {
+        if (iblockdata.a(TagsBlock.BANNERS)) {
             if (!itemactioncontext.getWorld().isClientSide) {
                 WorldMap worldmap = getSavedMap(itemactioncontext.getItemStack(), itemactioncontext.getWorld());
 
-                worldmap.a((GeneratorAccess) itemactioncontext.getWorld(), itemactioncontext.getClickPosition());
+                worldmap.a(itemactioncontext.getWorld(), itemactioncontext.getClickPosition());
             }
 
             return EnumInteractionResult.a(itemactioncontext.getWorld().isClientSide);

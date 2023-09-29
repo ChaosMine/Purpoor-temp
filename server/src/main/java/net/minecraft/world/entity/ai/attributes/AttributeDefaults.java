@@ -104,7 +104,7 @@ public class AttributeDefaults {
             .build();
 
     public static AttributeProvider a(EntityTypes<? extends EntityLiving> entitytypes) {
-        return (AttributeProvider) AttributeDefaults.b.get(entitytypes);
+        return AttributeDefaults.b.get(entitytypes);
     }
 
     public static boolean b(EntityTypes<?> entitytypes) {

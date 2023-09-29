@@ -42,7 +42,7 @@ public class RecipeBookServer extends RecipeBook {
             }
         }
 
-        this.a(PacketPlayOutRecipes.Action.ADD, entityplayer, (List) list);
+        this.a(PacketPlayOutRecipes.Action.ADD, entityplayer, list);
         return i;
     }
 
@@ -62,7 +62,7 @@ public class RecipeBookServer extends RecipeBook {
             }
         }
 
-        this.a(PacketPlayOutRecipes.Action.REMOVE, entityplayer, (List) list);
+        this.a(PacketPlayOutRecipes.Action.REMOVE, entityplayer, list);
         return i;
     }
 

@@ -16,7 +16,7 @@ public abstract class ContainerAnvilAbstract extends Container {
         @Override
         public void update() {
             super.update();
-            ContainerAnvilAbstract.this.a((IInventory) this);
+            ContainerAnvilAbstract.this.a(this);
         }
     };
     protected final ContainerAccess containerAccess;
@@ -88,7 +88,7 @@ public abstract class ContainerAnvilAbstract extends Container {
     @Override
     public boolean canUse(EntityHuman entityhuman) {
         if (!this.checkReachable) return true; // CraftBukkit
-        return (Boolean) this.containerAccess.a((world, blockposition) -> {
+        return this.containerAccess.a((world, blockposition) -> {
             return !this.a(world.getType(blockposition)) ? false : entityhuman.h((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D) <= 64.0D;
         }, true);
     }
@@ -100,7 +100,7 @@ public abstract class ContainerAnvilAbstract extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

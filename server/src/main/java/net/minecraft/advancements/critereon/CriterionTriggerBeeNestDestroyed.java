@@ -22,7 +22,7 @@ public class CriterionTriggerBeeNestDestroyed extends CriterionTriggerAbstract<C
     }
 
     @Override
-    public CriterionTriggerBeeNestDestroyed.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerBeeNestDestroyed.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         Block block = a(jsonobject);
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("num_bees_inside"));
@@ -35,7 +35,7 @@ public class CriterionTriggerBeeNestDestroyed extends CriterionTriggerAbstract<C
         if (jsonobject.has("block")) {
             MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
 
-            return (Block) IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
+            return IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
                 return new JsonSyntaxException("Unknown block type '" + minecraftkey + "'");
             });
         } else {
@@ -56,15 +56,15 @@ public class CriterionTriggerBeeNestDestroyed extends CriterionTriggerAbstract<C
         private final CriterionConditionItem b;
         private final CriterionConditionValue.IntegerRange c;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, @Nullable Block block, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, @Nullable Block block, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             super(CriterionTriggerBeeNestDestroyed.a, criterionconditionentity_b);
             this.a = block;
             this.b = criterionconditionitem;
             this.c = criterionconditionvalue_integerrange;
         }
 
-        public static CriterionTriggerBeeNestDestroyed.a a(Block block, CriterionConditionItem.a criterionconditionitem_a, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
-            return new CriterionTriggerBeeNestDestroyed.a(CriterionConditionEntity.b.a, block, criterionconditionitem_a.b(), criterionconditionvalue_integerrange);
+        public static CriterionTriggerBeeNestDestroyed.a a(Block block, CriterionConditionItem.a_ criterionconditionitem_a, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+            return new CriterionTriggerBeeNestDestroyed.a(CriterionConditionEntity.b_.a, block, criterionconditionitem_a.b(), criterionconditionvalue_integerrange);
         }
 
         public boolean a(Block block, ItemStack itemstack, int i) {

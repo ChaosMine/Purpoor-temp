@@ -16,11 +16,11 @@ public class NoiseGenerator3 implements NoiseGenerator {
     private final double c;
 
     public NoiseGenerator3(SeededRandom seededrandom, IntStream intstream) {
-        this(seededrandom, (List) intstream.boxed().collect(ImmutableList.toImmutableList()));
+        this(seededrandom, intstream.boxed().collect(ImmutableList.toImmutableList()));
     }
 
     public NoiseGenerator3(SeededRandom seededrandom, List<Integer> list) {
-        this(seededrandom, (IntSortedSet) (new IntRBTreeSet(list)));
+        this(seededrandom, new IntRBTreeSet(list));
     }
 
     private NoiseGenerator3(SeededRandom seededrandom, IntSortedSet intsortedset) {
@@ -63,8 +63,8 @@ public class NoiseGenerator3 implements NoiseGenerator {
                     }
                 }
 
-                this.c = Math.pow(2.0D, (double) j);
-                this.b = 1.0D / (Math.pow(2.0D, (double) k) - 1.0D);
+                this.c = Math.pow(2.0D, j);
+                this.b = 1.0D / (Math.pow(2.0D, k) - 1.0D);
             }
         }
     }

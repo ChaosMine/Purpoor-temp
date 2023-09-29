@@ -54,7 +54,7 @@ public abstract class FluidTypeWater extends FluidTypeFlowing {
 
     @Override
     public IBlockData b(Fluid fluid) {
-        return (IBlockData) Blocks.WATER.getBlockData().set(BlockFluids.LEVEL, e(fluid));
+        return Blocks.WATER.getBlockData().set(BlockFluids.LEVEL, e(fluid));
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract class FluidTypeWater extends FluidTypeFlowing {
 
     @Override
     public boolean a(Fluid fluid, IBlockAccess iblockaccess, BlockPosition blockposition, FluidType fluidtype, EnumDirection enumdirection) {
-        return enumdirection == EnumDirection.DOWN && !fluidtype.a((Tag) TagsFluid.WATER);
+        return enumdirection == EnumDirection.DOWN && !fluidtype.a(TagsFluid.WATER);
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class FluidTypeWater extends FluidTypeFlowing {
 
         @Override
         public int d(Fluid fluid) {
-            return (Integer) fluid.get(FluidTypeWater.a.LEVEL);
+            return fluid.get(FluidTypeWater.a.LEVEL);
         }
 
         @Override

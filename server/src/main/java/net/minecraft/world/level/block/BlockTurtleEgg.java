@@ -45,7 +45,7 @@ public class BlockTurtleEgg extends Block {
 
     public BlockTurtleEgg(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockTurtleEgg.a, 0)).set(BlockTurtleEgg.b, 1));
+        this.j(this.blockStateList.getBlockData().set(BlockTurtleEgg.a, 0).set(BlockTurtleEgg.b, 1));
     }
 
     @Override
@@ -90,13 +90,13 @@ public class BlockTurtleEgg extends Block {
     }
 
     private void a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-        world.playSound((EntityHuman) null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_BREAK, SoundCategory.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
-        int i = (Integer) iblockdata.get(BlockTurtleEgg.b);
+        world.playSound(null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_BREAK, SoundCategory.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
+        int i = iblockdata.get(BlockTurtleEgg.b);
 
         if (i <= 1) {
             world.b(blockposition, false);
         } else {
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockTurtleEgg.b, i - 1), 2);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockTurtleEgg.b, i - 1), 2);
             world.triggerEffect(2001, blockposition, Block.getCombinedId(iblockdata));
         }
 
@@ -104,8 +104,8 @@ public class BlockTurtleEgg extends Block {
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if (this.a((World) worldserver) && a((IBlockAccess) worldserver, blockposition)) {
-            int i = (Integer) iblockdata.get(BlockTurtleEgg.a);
+        if (this.a(worldserver) && a(worldserver, blockposition)) {
+            int i = iblockdata.get(BlockTurtleEgg.a);
 
             if (i < 2) {
                 // CraftBukkit start - Call BlockGrowEvent
@@ -113,7 +113,7 @@ public class BlockTurtleEgg extends Block {
                     return;
                 }
                 // CraftBukkit end
-                worldserver.playSound((EntityHuman) null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_CRACK, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
+                worldserver.playSound(null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_CRACK, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
                 // worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockTurtleEgg.a, i + 1), 2); // CraftBukkit - handled above
             } else {
                 // CraftBukkit start - Call BlockFadeEvent
@@ -121,16 +121,16 @@ public class BlockTurtleEgg extends Block {
                     return;
                 }
                 // CraftBukkit end
-                worldserver.playSound((EntityHuman) null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_HATCH, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
+                worldserver.playSound(null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_HATCH, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
                 worldserver.a(blockposition, false);
 
-                for (int j = 0; j < (Integer) iblockdata.get(BlockTurtleEgg.b); ++j) {
+                for (int j = 0; j < iblockdata.get(BlockTurtleEgg.b); ++j) {
                     worldserver.triggerEffect(2001, blockposition, Block.getCombinedId(iblockdata));
-                    EntityTurtle entityturtle = (EntityTurtle) EntityTypes.TURTLE.a((World) worldserver);
+                    EntityTurtle entityturtle = EntityTypes.TURTLE.a(worldserver);
 
                     entityturtle.setAgeRaw(-24000);
                     entityturtle.setHomePos(blockposition);
-                    entityturtle.setPositionRotation((double) blockposition.getX() + 0.3D + (double) j * 0.2D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.3D, 0.0F, 0.0F);
+                    entityturtle.setPositionRotation((double) blockposition.getX() + 0.3D + (double) j * 0.2D, blockposition.getY(), (double) blockposition.getZ() + 0.3D, 0.0F, 0.0F);
                     worldserver.addEntity(entityturtle, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.EGG); // CraftBukkit
                 }
             }
@@ -143,12 +143,12 @@ public class BlockTurtleEgg extends Block {
     }
 
     public static boolean b(IBlockAccess iblockaccess, BlockPosition blockposition) {
-        return iblockaccess.getType(blockposition).a((Tag) TagsBlock.SAND);
+        return iblockaccess.getType(blockposition).a(TagsBlock.SAND);
     }
 
     @Override
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
-        if (a((IBlockAccess) world, blockposition) && !world.isClientSide) {
+        if (a(world, blockposition) && !world.isClientSide) {
             world.triggerEffect(2005, blockposition, 0);
         }
 
@@ -168,7 +168,7 @@ public class BlockTurtleEgg extends Block {
 
     @Override
     public boolean a(IBlockData iblockdata, BlockActionContext blockactioncontext) {
-        return blockactioncontext.getItemStack().getItem() == this.getItem() && (Integer) iblockdata.get(BlockTurtleEgg.b) < 4 ? true : super.a(iblockdata, blockactioncontext);
+        return blockactioncontext.getItemStack().getItem() == this.getItem() && iblockdata.get(BlockTurtleEgg.b) < 4 ? true : super.a(iblockdata, blockactioncontext);
     }
 
     @Nullable
@@ -176,12 +176,12 @@ public class BlockTurtleEgg extends Block {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition());
 
-        return iblockdata.a((Block) this) ? (IBlockData) iblockdata.set(BlockTurtleEgg.b, Math.min(4, (Integer) iblockdata.get(BlockTurtleEgg.b) + 1)) : super.getPlacedState(blockactioncontext);
+        return iblockdata.a(this) ? iblockdata.set(BlockTurtleEgg.b, Math.min(4, iblockdata.get(BlockTurtleEgg.b) + 1)) : super.getPlacedState(blockactioncontext);
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (Integer) iblockdata.get(BlockTurtleEgg.b) > 1 ? BlockTurtleEgg.d : BlockTurtleEgg.c;
+        return iblockdata.get(BlockTurtleEgg.b) > 1 ? BlockTurtleEgg.d : BlockTurtleEgg.c;
     }
 
     @Override

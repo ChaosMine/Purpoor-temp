@@ -30,15 +30,15 @@ public class WorldGenFeatureTreeAlterGround extends WorldGenFeatureTree {
 
     @Override
     public void a(GeneratorAccessSeed generatoraccessseed, Random random, List<BlockPosition> list, List<BlockPosition> list1, Set<BlockPosition> set, StructureBoundingBox structureboundingbox) {
-        int i = ((BlockPosition) list.get(0)).getY();
+        int i = list.get(0).getY();
 
         list.stream().filter((blockposition) -> {
             return blockposition.getY() == i;
         }).forEach((blockposition) -> {
-            this.a((VirtualLevelWritable) generatoraccessseed, random, blockposition.west().north());
-            this.a((VirtualLevelWritable) generatoraccessseed, random, blockposition.east(2).north());
-            this.a((VirtualLevelWritable) generatoraccessseed, random, blockposition.west().south(2));
-            this.a((VirtualLevelWritable) generatoraccessseed, random, blockposition.east(2).south(2));
+            this.a(generatoraccessseed, random, blockposition.west().north());
+            this.a(generatoraccessseed, random, blockposition.east(2).north());
+            this.a(generatoraccessseed, random, blockposition.west().south(2));
+            this.a(generatoraccessseed, random, blockposition.east(2).south(2));
 
             for (int j = 0; j < 5; ++j) {
                 int k = random.nextInt(64);
@@ -46,7 +46,7 @@ public class WorldGenFeatureTreeAlterGround extends WorldGenFeatureTree {
                 int i1 = k / 8;
 
                 if (l == 0 || l == 7 || i1 == 0 || i1 == 7) {
-                    this.a((VirtualLevelWritable) generatoraccessseed, random, blockposition.b(-3 + l, 0, -3 + i1));
+                    this.a(generatoraccessseed, random, blockposition.b(-3 + l, 0, -3 + i1));
                 }
             }
 
@@ -68,7 +68,7 @@ public class WorldGenFeatureTreeAlterGround extends WorldGenFeatureTree {
         for (int i = 2; i >= -3; --i) {
             BlockPosition blockposition1 = blockposition.up(i);
 
-            if (WorldGenerator.a((VirtualLevelReadable) virtuallevelwritable, blockposition1)) {
+            if (WorldGenerator.a(virtuallevelwritable, blockposition1)) {
                 virtuallevelwritable.setTypeAndData(blockposition1, this.b.a(random, blockposition), 19);
                 break;
             }

@@ -38,8 +38,8 @@ public class IOWorker implements AutoCloseable {
 
     public CompletableFuture<Void> a(ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound) {
         return this.a(() -> {
-            IOWorker.a ioworker_a = (IOWorker.a) this.e.computeIfAbsent(chunkcoordintpair, (chunkcoordintpair1) -> {
-                return new IOWorker.a(nbttagcompound);
+            IOWorker.a ioworker_a = this.e.computeIfAbsent(chunkcoordintpair, (chunkcoordintpair1) -> {
+                return new a(nbttagcompound);
             });
 
             ioworker_a.a = nbttagcompound;
@@ -50,7 +50,7 @@ public class IOWorker implements AutoCloseable {
     @Nullable
     public NBTTagCompound a(ChunkCoordIntPair chunkcoordintpair) throws IOException {
         CompletableFuture completablefuture = this.a(() -> {
-            IOWorker.a ioworker_a = (IOWorker.a) this.e.get(chunkcoordintpair);
+            IOWorker.a ioworker_a = this.e.get(chunkcoordintpair);
 
             if (ioworker_a != null) {
                 return Either.left(ioworker_a.a);
@@ -79,7 +79,7 @@ public class IOWorker implements AutoCloseable {
 
     public CompletableFuture<Void> a() {
         CompletableFuture<Void> completablefuture = this.a(() -> {
-            return Either.left(CompletableFuture.allOf((CompletableFuture[]) this.e.values().stream().map((ioworker_a) -> {
+            return Either.left(CompletableFuture.allOf(this.e.values().stream().map((ioworker_a) -> {
                 return ioworker_a.b;
             }).toArray((i) -> {
                 return new CompletableFuture[i];
@@ -115,10 +115,10 @@ public class IOWorker implements AutoCloseable {
         Iterator<Entry<ChunkCoordIntPair, IOWorker.a>> iterator = this.e.entrySet().iterator();
 
         if (iterator.hasNext()) {
-            Entry<ChunkCoordIntPair, IOWorker.a> entry = (Entry) iterator.next();
+            Entry<ChunkCoordIntPair, IOWorker.a> entry = iterator.next();
 
             iterator.remove();
-            this.a((ChunkCoordIntPair) entry.getKey(), (IOWorker.a) entry.getValue());
+            this.a(entry.getKey(), entry.getValue());
             this.c();
         }
     }

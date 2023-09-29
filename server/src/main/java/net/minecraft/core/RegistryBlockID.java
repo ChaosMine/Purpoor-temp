@@ -50,7 +50,7 @@ public class RegistryBlockID<T> implements Registry<T> {
     // Paper end
 
     public int getId(T t0) {
-        Integer integer = (Integer) this.b.get(t0);
+        Integer integer = this.b.get(t0);
 
         return integer == null ? -1 : integer;
     }

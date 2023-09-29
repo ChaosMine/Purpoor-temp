@@ -71,7 +71,7 @@ public class WorldGenShipwreck {
 
         private void a(DefinedStructureManager definedstructuremanager) {
             DefinedStructure definedstructure = definedstructuremanager.a(this.e);
-            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.d).a(EnumBlockMirror.NONE).a(WorldGenShipwreck.a).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.d).a(EnumBlockMirror.NONE).a(WorldGenShipwreck.a).a(DefinedStructureProcessorBlockIgnore.d);
 
             this.a(definedstructure, this.c, definedstructureinfo);
         }
@@ -79,11 +79,11 @@ public class WorldGenShipwreck {
         @Override
         protected void a(String s, BlockPosition blockposition, WorldAccess worldaccess, Random random, StructureBoundingBox structureboundingbox) {
             if ("map_chest".equals(s)) {
-                TileEntityLootable.a((IBlockAccess) worldaccess, random, blockposition.down(), LootTables.H);
+                TileEntityLootable.a(worldaccess, random, blockposition.down(), LootTables.H);
             } else if ("treasure_chest".equals(s)) {
-                TileEntityLootable.a((IBlockAccess) worldaccess, random, blockposition.down(), LootTables.J);
+                TileEntityLootable.a(worldaccess, random, blockposition.down(), LootTables.J);
             } else if ("supply_chest".equals(s)) {
-                TileEntityLootable.a((IBlockAccess) worldaccess, random, blockposition.down(), LootTables.I);
+                TileEntityLootable.a(worldaccess, random, blockposition.down(), LootTables.I);
             }
 
         }

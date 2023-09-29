@@ -40,7 +40,7 @@ public class Advancements {
                 MinecraftKey minecraftkey = (MinecraftKey) entry.getKey();
                 Advancement.SerializedAdvancement advancement_serializedadvancement = (Advancement.SerializedAdvancement) entry.getValue();
 
-                if (advancement_serializedadvancement.a((java.util.function.Function) function)) {
+                if (advancement_serializedadvancement.a(function)) {
                     Advancement advancement = advancement_serializedadvancement.b(minecraftkey);
 
                     this.advancements.put(minecraftkey, advancement);
@@ -87,7 +87,7 @@ public class Advancements {
 
     @Nullable
     public Advancement a(MinecraftKey minecraftkey) {
-        return (Advancement) this.advancements.get(minecraftkey);
+        return this.advancements.get(minecraftkey);
     }
 
     public interface a {

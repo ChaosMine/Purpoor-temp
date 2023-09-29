@@ -145,7 +145,7 @@ public class ShapeDetector {
         }
 
         public ShapeDetectorBlock a(int i, int j, int k) {
-            return (ShapeDetectorBlock) this.d.getUnchecked(ShapeDetector.a(this.a, this.getFacing(), this.c(), i, j, k));
+            return this.d.getUnchecked(ShapeDetector.a(this.a, this.getFacing(), this.c(), i, j, k));
         }
 
         public String toString() {

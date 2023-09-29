@@ -10,7 +10,7 @@ import net.minecraft.world.entity.EntityLiving;
 
 public class CriterionConditionEntityFlags {
 
-    public static final CriterionConditionEntityFlags a = (new CriterionConditionEntityFlags.a()).b();
+    public static final CriterionConditionEntityFlags a = (new a_()).b();
     @Nullable
     private final Boolean b;
     @Nullable
@@ -76,7 +76,7 @@ public class CriterionConditionEntityFlags {
         }
     }
 
-    public static class a {
+    public static class a_ {
 
         @Nullable
         private Boolean a;
@@ -89,18 +89,18 @@ public class CriterionConditionEntityFlags {
         @Nullable
         private Boolean e;
 
-        public a() {}
+        public a_() {}
 
-        public static CriterionConditionEntityFlags.a a() {
-            return new CriterionConditionEntityFlags.a();
+        public static a_ a() {
+            return new a_();
         }
 
-        public CriterionConditionEntityFlags.a a(@Nullable Boolean obool) {
+        public a_ a(@Nullable Boolean obool) {
             this.a = obool;
             return this;
         }
 
-        public CriterionConditionEntityFlags.a e(@Nullable Boolean obool) {
+        public a_ e(@Nullable Boolean obool) {
             this.e = obool;
             return this;
         }

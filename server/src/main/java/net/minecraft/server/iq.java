@@ -1,52 +1,50 @@
 package net.minecraft.server;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.world.level.block.state.properties.IBlockState;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.world.level.block.state.properties.IBlockState;
 
 public final class iq {
+	private static final iq a = new iq(ImmutableList.of());
+	private static final Comparator<IBlockState.a<?>> b = Comparator.comparing(var0 -> var0.a().getName());
+	private final List<IBlockState.a<?>> c;
 
-    private static final iq a = new iq(ImmutableList.of());
-    private static final Comparator<IBlockState.a<?>> b = Comparator.comparing((iblockstate_a) -> {
-        return iblockstate_a.a().getName();
-    });
-    private final List<IBlockState.a<?>> c;
+	private iq(List<IBlockState.a<?>> var0) {
+		this.c = var0;
+	}
 
-    public iq a(IBlockState.a<?> iblockstate_a) {
-        return new iq(ImmutableList.builder().addAll(this.c).add(iblockstate_a).build());
-    }
+	public static iq a() {
+		return a;
+	}
 
-    public iq a(iq iq) {
-        return new iq(ImmutableList.builder().addAll(this.c).addAll(iq.c).build());
-    }
+	public static iq a(IBlockState.a<?>... var0) {
+		return new iq(ImmutableList.copyOf(var0));
+	}
 
-    private iq(List<IBlockState.a<?>> list) {
-        this.c = list;
-    }
+	public iq a(IBlockState.a<?> var0) {
+		return new iq((List) ImmutableList.builder().addAll(this.c).add(var0).build());
+	}
 
-    public static iq a() {
-        return iq.a;
-    }
+	public iq a(iq var0) {
+		return new iq((List) ImmutableList.builder().addAll(this.c).addAll(var0.c).build());
+	}
 
-    public static iq a(IBlockState.a<?>... aiblockstate_a) {
-        return new iq(ImmutableList.copyOf(aiblockstate_a));
-    }
+	public boolean equals(Object var0) {
+		return this == var0 || var0 instanceof iq && this.c.equals(((iq) var0).c);
+	}
 
-    public boolean equals(Object object) {
-        return this == object || object instanceof iq && this.c.equals(((iq) object).c);
-    }
+	public int hashCode() {
+		return this.c.hashCode();
+	}
 
-    public int hashCode() {
-        return this.c.hashCode();
-    }
+	public String b() {
+		return this.c.stream().sorted(b).map(IBlockState.a::toString).collect(Collectors.joining(","));
+	}
 
-    public String b() {
-        return (String) this.c.stream().sorted(iq.b).map(IBlockState.a::toString).collect(Collectors.joining(","));
-    }
-
-    public String toString() {
-        return this.b();
-    }
+	public String toString() {
+		return this.b();
+	}
 }

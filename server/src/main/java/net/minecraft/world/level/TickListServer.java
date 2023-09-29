@@ -72,7 +72,7 @@ public class TickListServer<T> implements TickList<T> {
             NextTickListEntry nextticklistentry;
 
             while (i > 0 && iterator.hasNext()) {
-                nextticklistentry = (NextTickListEntry) iterator.next();
+                nextticklistentry = iterator.next();
                 if (nextticklistentry.b > this.e.getTime()) {
                     break;
                 }
@@ -85,7 +85,7 @@ public class TickListServer<T> implements TickList<T> {
                 }
             }
 
-            while ((nextticklistentry = (NextTickListEntry) this.f.poll()) != null) {
+            while ((nextticklistentry = this.f.poll()) != null) {
                 if (chunkproviderserver.a(nextticklistentry.a)) {
                     try {
                         this.g.add(nextticklistentry);
@@ -94,7 +94,7 @@ public class TickListServer<T> implements TickList<T> {
                         CrashReport crashreport = CrashReport.a(throwable, "Exception while ticking");
                         CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Block being ticked");
 
-                        CrashReportSystemDetails.a(crashreportsystemdetails, nextticklistentry.a, (IBlockData) null);
+                        CrashReportSystemDetails.a(crashreportsystemdetails, nextticklistentry.a, null);
                         throw new ReportedException(crashreport);
                     }
                 } else {
@@ -137,7 +137,7 @@ public class TickListServer<T> implements TickList<T> {
     }
     public List<NextTickListEntry<T>> getEntriesInBoundingBox(StructureBoundingBox structureboundingbox, boolean flag, boolean flag1) {
         // Paper end
-        List<NextTickListEntry<T>> list = this.a((List) null, this.nextTickList, structureboundingbox, flag);
+        List<NextTickListEntry<T>> list = this.a(null, this.nextTickList, structureboundingbox, flag);
 
         if (flag && list != null) {
             this.nextTickListHash.removeAll(list);
@@ -168,11 +168,11 @@ public class TickListServer<T> implements TickList<T> {
                     list = Lists.newArrayList();
                 }
 
-                ((List) list).add(nextticklistentry);
+                list.add(nextticklistentry);
             }
         }
 
-        return (List) list;
+        return list;
     }
 
     public void a(StructureBoundingBox structureboundingbox, BlockPosition blockposition) {
@@ -187,8 +187,8 @@ public class TickListServer<T> implements TickList<T> {
         while (iterator.hasNext()) {
             NextTickListEntry<T> nextticklistentry = (NextTickListEntry) iterator.next();
 
-            if (structureboundingbox.b((BaseBlockPosition) nextticklistentry.a)) {
-                BlockPosition blockposition1 = nextticklistentry.a.a((BaseBlockPosition) blockposition);
+            if (structureboundingbox.b(nextticklistentry.a)) {
+                BlockPosition blockposition1 = nextticklistentry.a.a(blockposition);
                 T t0 = nextticklistentry.b();
 
                 this.a(new NextTickListEntry<>(blockposition1, t0, nextticklistentry.b, nextticklistentry.c));
@@ -217,7 +217,7 @@ public class TickListServer<T> implements TickList<T> {
             NextTickListEntry<T> nextticklistentry = (NextTickListEntry) iterator.next();
             NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-            nbttagcompound.setString("i", ((MinecraftKey) function.apply(nextticklistentry.b())).toString());
+            nbttagcompound.setString("i", function.apply(nextticklistentry.b()).toString());
             nbttagcompound.setInt("x", nextticklistentry.a.getX());
             nbttagcompound.setInt("y", nextticklistentry.a.getY());
             nbttagcompound.setInt("z", nextticklistentry.a.getZ());

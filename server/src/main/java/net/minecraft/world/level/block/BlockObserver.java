@@ -22,7 +22,7 @@ public class BlockObserver extends BlockDirectional {
 
     public BlockObserver(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockObserver.FACING, EnumDirection.SOUTH)).set(BlockObserver.b, false));
+        this.j(this.blockStateList.getBlockData().set(BlockObserver.FACING, EnumDirection.SOUTH).set(BlockObserver.b, false));
     }
 
     @Override
@@ -32,34 +32,34 @@ public class BlockObserver extends BlockDirectional {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockObserver.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockObserver.FACING)));
+        return iblockdata.set(BlockObserver.FACING, enumblockrotation.a(iblockdata.get(BlockObserver.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockObserver.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockObserver.FACING)));
     }
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Boolean) iblockdata.get(BlockObserver.b)) {
+        if (iblockdata.get(BlockObserver.b)) {
             // CraftBukkit start
             if (CraftEventFactory.callRedstoneChange(worldserver, blockposition, 15, 0).getNewCurrent() != 0) {
                 return;
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockObserver.b, false), 2);
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockObserver.b, false), 2);
         } else {
             // CraftBukkit start
             if (CraftEventFactory.callRedstoneChange(worldserver, blockposition, 0, 15).getNewCurrent() != 15) {
                 return;
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockObserver.b, true), 2);
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockObserver.b, true), 2);
             worldserver.getBlockTickList().a(blockposition, this, 2);
         }
 
-        this.a((World) worldserver, blockposition, iblockdata);
+        this.a(worldserver, blockposition, iblockdata);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class BlockObserver extends BlockDirectional {
     }
 
     protected void a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockObserver.FACING);
+        EnumDirection enumdirection = iblockdata.get(BlockObserver.FACING);
         BlockPosition blockposition1 = blockposition.shift(enumdirection.opposite());
 
-        world.a(blockposition1, (Block) this, blockposition);
-        world.a(blockposition1, (Block) this, enumdirection);
+        world.a(blockposition1, this, blockposition);
+        world.a(blockposition1, this, enumdirection);
     }
 
     @Override
@@ -98,14 +98,14 @@ public class BlockObserver extends BlockDirectional {
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockObserver.b) && iblockdata.get(BlockObserver.FACING) == enumdirection ? 15 : 0;
+        return iblockdata.get(BlockObserver.b) && iblockdata.get(BlockObserver.FACING) == enumdirection ? 15 : 0;
     }
 
     @Override
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
-            if (!world.s_() && (Boolean) iblockdata.get(BlockObserver.b) && !world.getBlockTickList().a(blockposition, this)) {
-                IBlockData iblockdata2 = (IBlockData) iblockdata.set(BlockObserver.b, false);
+            if (!world.s_() && iblockdata.get(BlockObserver.b) && !world.getBlockTickList().a(blockposition, this)) {
+                IBlockData iblockdata2 = iblockdata.set(BlockObserver.b, false);
 
                 world.setTypeAndData(blockposition, iblockdata2, 18);
                 this.a(world, blockposition, iblockdata2);
@@ -117,8 +117,8 @@ public class BlockObserver extends BlockDirectional {
     @Override
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
-            if (!world.isClientSide && (Boolean) iblockdata.get(BlockObserver.b) && world.getBlockTickList().a(blockposition, this)) {
-                this.a(world, blockposition, (IBlockData) iblockdata.set(BlockObserver.b, false));
+            if (!world.isClientSide && iblockdata.get(BlockObserver.b) && world.getBlockTickList().a(blockposition, this)) {
+                this.a(world, blockposition, iblockdata.set(BlockObserver.b, false));
             }
 
         }
@@ -126,6 +126,6 @@ public class BlockObserver extends BlockDirectional {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockObserver.FACING, blockactioncontext.d().opposite().opposite());
+        return this.getBlockData().set(BlockObserver.FACING, blockactioncontext.d().opposite().opposite());
     }
 }

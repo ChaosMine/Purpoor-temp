@@ -1,16 +1,16 @@
 package net.minecraft.world.entity.ai.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.MemoryTarget;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class BehaviorInteract<E extends EntityLiving, T extends EntityLiving> extends Behavior<E> {
 
@@ -47,31 +47,27 @@ public class BehaviorInteract<E extends EntityLiving, T extends EntityLiving> ex
     }
 
     private boolean a(E e0) {
-        List<EntityLiving> list = (List) e0.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).get();
+        List<EntityLiving> list = e0.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).get();
 
         return list.stream().anyMatch(this::b);
     }
 
     private boolean b(EntityLiving entityliving) {
-        return this.d.equals(entityliving.getEntityType()) && this.f.test(entityliving);
+        return this.d.equals(entityliving.getEntityType()) && this.f.test((T) entityliving);
     }
 
     @Override
     protected void a(WorldServer worldserver, E e0, long i) {
         BehaviorController<?> behaviorcontroller = e0.getBehaviorController();
 
-        behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).ifPresent((list) -> {
-            list.stream().filter((entityliving) -> {
-                return this.d.equals(entityliving.getEntityType());
-            }).map((entityliving) -> {
-                return entityliving;
-            }).filter((entityliving) -> {
-                return entityliving.h((Entity) e0) <= (double) this.e;
-            }).filter(this.f).findFirst().ifPresent((entityliving) -> {
-                behaviorcontroller.setMemory(this.h, (Object) entityliving);
-                behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityliving, true)));
-                behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(new BehaviorPositionEntity(entityliving, false), this.c, this.b)));
-            });
-        });
+        behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).flatMap(list -> list.stream().filter((entityliving) -> {
+					return this.d.equals(entityliving.getEntityType());
+				}).filter((entityliving) -> {
+					return entityliving.h(e0) <= (double) this.e;
+				}).filter((Predicate<EntityLiving>) this.f).findFirst()).ifPresent((entityliving) -> {
+					behaviorcontroller.setMemory((MemoryModuleType) this.h, entityliving);
+					behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorPositionEntity(entityliving, true)));
+					behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(new BehaviorPositionEntity(entityliving, false), this.c, this.b)));
+				});
     }
 }

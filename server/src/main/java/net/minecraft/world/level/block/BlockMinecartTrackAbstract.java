@@ -27,7 +27,7 @@ public abstract class BlockMinecartTrackAbstract extends Block {
     }
 
     public static boolean g(IBlockData iblockdata) {
-        return iblockdata.a((Tag) TagsBlock.RAILS) && iblockdata.getBlock() instanceof BlockMinecartTrackAbstract;
+        return iblockdata.a(TagsBlock.RAILS) && iblockdata.getBlock() instanceof BlockMinecartTrackAbstract;
     }
 
     protected BlockMinecartTrackAbstract(boolean flag, BlockBase.Info blockbase_info) {
@@ -41,14 +41,14 @@ public abstract class BlockMinecartTrackAbstract extends Block {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.a((Block) this) ? (BlockPropertyTrackPosition) iblockdata.get(this.d()) : null;
+        BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.a(this) ? iblockdata.get(this.d()) : null;
 
         return blockpropertytrackposition != null && blockpropertytrackposition.c() ? BlockMinecartTrackAbstract.b : BlockMinecartTrackAbstract.a;
     }
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        return c((IBlockAccess) iworldreader, blockposition.down());
+        return c(iworldreader, blockposition.down());
     }
 
     @Override
@@ -70,8 +70,8 @@ public abstract class BlockMinecartTrackAbstract extends Block {
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
-        if (!world.isClientSide && world.getType(blockposition).a((Block) this)) {
-            BlockPropertyTrackPosition blockpropertytrackposition = (BlockPropertyTrackPosition) iblockdata.get(this.d());
+        if (!world.isClientSide && world.getType(blockposition).a(this)) {
+            BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.get(this.d());
 
             if (a(blockposition, world, blockpropertytrackposition)) {
                 c(iblockdata, world, blockposition);
@@ -108,7 +108,7 @@ public abstract class BlockMinecartTrackAbstract extends Block {
         if (world.isClientSide) {
             return iblockdata;
         } else {
-            BlockPropertyTrackPosition blockpropertytrackposition = (BlockPropertyTrackPosition) iblockdata.get(this.d());
+            BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.get(this.d());
 
             return (new MinecartTrackLogic(world, blockposition, iblockdata)).a(world.isBlockIndirectlyPowered(blockposition), flag, blockpropertytrackposition).c();
         }
@@ -123,7 +123,7 @@ public abstract class BlockMinecartTrackAbstract extends Block {
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!flag) {
             super.remove(iblockdata, world, blockposition, iblockdata1, flag);
-            if (((BlockPropertyTrackPosition) iblockdata.get(this.d())).c()) {
+            if (iblockdata.get(this.d()).c()) {
                 world.applyPhysics(blockposition.up(), this);
             }
 
@@ -141,7 +141,7 @@ public abstract class BlockMinecartTrackAbstract extends Block {
         EnumDirection enumdirection = blockactioncontext.f();
         boolean flag = enumdirection == EnumDirection.EAST || enumdirection == EnumDirection.WEST;
 
-        return (IBlockData) iblockdata.set(this.d(), flag ? BlockPropertyTrackPosition.EAST_WEST : BlockPropertyTrackPosition.NORTH_SOUTH);
+        return iblockdata.set(this.d(), flag ? BlockPropertyTrackPosition.EAST_WEST : BlockPropertyTrackPosition.NORTH_SOUTH);
     }
 
     public abstract IBlockState<BlockPropertyTrackPosition> d();

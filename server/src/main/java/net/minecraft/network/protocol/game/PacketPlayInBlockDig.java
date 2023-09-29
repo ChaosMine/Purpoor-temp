@@ -23,7 +23,7 @@ public class PacketPlayInBlockDig implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.writeEnum((Enum) this.c);
+        packetdataserializer.writeEnum(this.c);
         packetdataserializer.a(this.a);
         packetdataserializer.writeByte(this.b.c());
     }

@@ -19,11 +19,11 @@ public class DataBits {
     private final int i;
 
     public DataBits(int i, int j) {
-        this(i, j, (long[]) null);
+        this(i, j, null);
     }
 
     public DataBits(int i, int j, @Nullable long[] along) {
-        Validate.inclusiveBetween(1L, 32L, (long) i);
+        Validate.inclusiveBetween(1L, 32L, i);
         this.e = j;
         this.c = i;
         this.d = (1L << i) - 1L;

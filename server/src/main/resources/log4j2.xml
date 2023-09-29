@@ -2,13 +2,14 @@
 <Configuration status="WARN" packages="com.mojang.util" shutdownHook="disable">
 	<Appenders>
 		<Queue name="ServerGuiConsole">
-			<PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n"/>
+			<PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n" />
 		</Queue>
 		<TerminalConsole name="TerminalConsole">
 			<PatternLayout>
 				<LoggerNamePatternSelector
 					defaultPattern="%highlightError{[%d{HH:mm:ss} %level]: [%logger] %paperMinecraftFormatting{%msg}%n%xEx{full}}">
-					<PatternMatch key="," pattern="[%d{HH:mm:ss}] [%t/%level]: %paperMinecraftFormatting{%msg}{strip}%n%xEx{full}" />
+					<PatternMatch key=","
+												pattern="[%d{HH:mm:ss}] [%t/%level]: %paperMinecraftFormatting{%msg}{strip}%n%xEx{full}" />
 				</LoggerNamePatternSelector>
 			</PatternLayout>
 		</TerminalConsole>
@@ -16,20 +17,21 @@
 			<PatternLayout>
 				<LoggerNamePatternSelector
 					defaultPattern="[%d{HH:mm:ss}] [%t/%level]: [%logger] %paperMinecraftFormatting{%msg}{strip}%n%xEx{full}">
-					<PatternMatch key="," pattern="[%d{HH:mm:ss}] [%t/%level]: %paperMinecraftFormatting{%msg}{strip}%n%xEx{full}" />
+					<PatternMatch key=","
+												pattern="[%d{HH:mm:ss}] [%t/%level]: %paperMinecraftFormatting{%msg}{strip}%n%xEx{full}" />
 				</LoggerNamePatternSelector>
 			</PatternLayout>
 			<Policies>
-				<TimeBasedTriggeringPolicy/>
-				<OnStartupTriggeringPolicy/>
+				<TimeBasedTriggeringPolicy />
+				<OnStartupTriggeringPolicy />
 			</Policies>
-			<DefaultRolloverStrategy max="1000"/>
+			<DefaultRolloverStrategy max="1000" />
 		</RollingRandomAccessFile>
 	</Appenders>
 	<Loggers>
 		<Root level="info">
-			<AppenderRef ref="File"/>
-			<AppenderRef ref="TerminalConsole" level="info"/>
+			<AppenderRef ref="File" />
+			<AppenderRef ref="TerminalConsole" level="info" />
 		</Root>
 	</Loggers>
 </Configuration>

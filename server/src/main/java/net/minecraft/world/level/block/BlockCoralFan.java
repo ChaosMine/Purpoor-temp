@@ -35,7 +35,7 @@ public class BlockCoralFan extends BlockCoralFanAbstract {
                 return;
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) this.a.getBlockData().set(BlockCoralFan.b, false), 2);
+            worldserver.setTypeAndData(blockposition, this.a.getBlockData().set(BlockCoralFan.b, false), 2);
         }
 
     }
@@ -46,8 +46,8 @@ public class BlockCoralFan extends BlockCoralFanAbstract {
             return Blocks.AIR.getBlockData();
         } else {
             this.a(iblockdata, generatoraccess, blockposition);
-            if ((Boolean) iblockdata.get(BlockCoralFan.b)) {
-                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+            if (iblockdata.get(BlockCoralFan.b)) {
+                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
             }
 
             return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);

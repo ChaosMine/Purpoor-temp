@@ -74,7 +74,7 @@ public class LootSelector {
 
         if (mutableint.intValue() != 0 && k != 0) {
             if (k == 1) {
-                ((LootEntry) list.get(0)).a(consumer, loottableinfo);
+                list.get(0).a(consumer, loottableinfo);
             } else {
                 i = random.nextInt(mutableint.intValue());
                 Iterator iterator = list.iterator();
@@ -135,11 +135,11 @@ public class LootSelector {
 
         public LootSelector deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
             JsonObject jsonobject = ChatDeserializer.m(jsonelement, "loot pool");
-            LootEntryAbstract[] alootentryabstract = (LootEntryAbstract[]) ChatDeserializer.a(jsonobject, "entries", jsondeserializationcontext, LootEntryAbstract[].class);
-            LootItemCondition[] alootitemcondition = (LootItemCondition[]) ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
-            LootItemFunction[] alootitemfunction = (LootItemFunction[]) ChatDeserializer.a(jsonobject, "functions", new LootItemFunction[0], jsondeserializationcontext, LootItemFunction[].class);
+            LootEntryAbstract[] alootentryabstract = ChatDeserializer.a(jsonobject, "entries", jsondeserializationcontext, LootEntryAbstract[].class);
+            LootItemCondition[] alootitemcondition = ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
+            LootItemFunction[] alootitemfunction = ChatDeserializer.a(jsonobject, "functions", new LootItemFunction[0], jsondeserializationcontext, LootItemFunction[].class);
             LootValue lootvalue = LootValueGenerators.a(jsonobject.get("rolls"), jsondeserializationcontext);
-            LootValueBounds lootvaluebounds = (LootValueBounds) ChatDeserializer.a(jsonobject, "bonus_rolls", new LootValueBounds(0.0F, 0.0F), jsondeserializationcontext, LootValueBounds.class);
+            LootValueBounds lootvaluebounds = ChatDeserializer.a(jsonobject, "bonus_rolls", new LootValueBounds(0.0F, 0.0F), jsondeserializationcontext, LootValueBounds.class);
 
             return new LootSelector(alootentryabstract, alootitemcondition, alootitemfunction, lootvalue, lootvaluebounds);
         }
@@ -206,7 +206,7 @@ public class LootSelector {
             if (this.d == null) {
                 throw new IllegalArgumentException("Rolls not set");
             } else {
-                return new LootSelector((LootEntryAbstract[]) this.a.toArray(new LootEntryAbstract[0]), (LootItemCondition[]) this.b.toArray(new LootItemCondition[0]), (LootItemFunction[]) this.c.toArray(new LootItemFunction[0]), this.d, this.e);
+                return new LootSelector(this.a.toArray(new LootEntryAbstract[0]), this.b.toArray(new LootItemCondition[0]), this.c.toArray(new LootItemFunction[0]), this.d, this.e);
             }
         }
     }

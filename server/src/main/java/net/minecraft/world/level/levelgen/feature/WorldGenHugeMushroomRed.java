@@ -33,7 +33,7 @@ public class WorldGenHugeMushroomRed extends WorldGenMushrooms {
                     if (j >= i || flag4 != flag5) {
                         blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, i1, j, j1);
                         if (!generatoraccess.getType(blockposition_mutableblockposition).i(generatoraccess, blockposition_mutableblockposition)) {
-                            this.a(generatoraccess, blockposition_mutableblockposition, (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) worldgenfeaturemushroomconfiguration.b.a(random, blockposition).set(BlockHugeMushroom.e, j >= i - 1)).set(BlockHugeMushroom.d, i1 < -l)).set(BlockHugeMushroom.b, i1 > l)).set(BlockHugeMushroom.a, j1 < -l)).set(BlockHugeMushroom.c, j1 > l));
+                            this.a(generatoraccess, blockposition_mutableblockposition, worldgenfeaturemushroomconfiguration.b.a(random, blockposition).set(BlockHugeMushroom.e, j >= i - 1).set(BlockHugeMushroom.d, i1 < -l).set(BlockHugeMushroom.b, i1 > l).set(BlockHugeMushroom.a, j1 < -l).set(BlockHugeMushroom.c, j1 > l));
                         }
                     }
                 }

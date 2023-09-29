@@ -104,7 +104,7 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
     }
 
     public static boolean b(EntityTypes<? extends EntityMonster> entitytypes, WorldAccess worldaccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
-        return worldaccess.getDifficulty() != EnumDifficulty.PEACEFUL && a(worldaccess, blockposition, random) && a(entitytypes, (GeneratorAccess) worldaccess, enummobspawn, blockposition, random);
+        return worldaccess.getDifficulty() != EnumDifficulty.PEACEFUL && a(worldaccess, blockposition, random) && a(entitytypes, worldaccess, enummobspawn, blockposition, random);
     }
 
     public static boolean c(EntityTypes<? extends EntityMonster> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
@@ -133,7 +133,7 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
     public ItemStack f(ItemStack itemstack) {
         if (itemstack.getItem() instanceof ItemProjectileWeapon) {
             Predicate<ItemStack> predicate = ((ItemProjectileWeapon) itemstack.getItem()).e();
-            ItemStack itemstack1 = ItemProjectileWeapon.a((EntityLiving) this, predicate);
+            ItemStack itemstack1 = ItemProjectileWeapon.a(this, predicate);
 
             return itemstack1.isEmpty() ? new ItemStack(Items.ARROW) : itemstack1;
         } else {

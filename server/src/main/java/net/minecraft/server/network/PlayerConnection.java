@@ -4,7 +4,6 @@ import com.destroystokyo.paper.PaperConfig;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
-import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -17,9 +16,7 @@ import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.*;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggers;
-import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.core.NonNullList;
@@ -28,7 +25,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketDataSerializer;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.chat.ChatMessage;
+import net.minecraft.network.chat.ChatMessageType;
+import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PlayerConnectionUtils;
 import net.minecraft.network.protocol.game.*;
@@ -36,7 +36,6 @@ import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.stats.RecipeBookServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.UtilColor;
 import net.minecraft.util.thread.IAsyncTaskHandler;
@@ -53,19 +52,20 @@ import net.minecraft.world.entity.projectile.EntityArrow;
 import net.minecraft.world.entity.vehicle.EntityBoat;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BlockCommand;
 import net.minecraft.world.level.block.BlockSign;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.entity.TileEntityCommand;
+import net.minecraft.world.level.block.entity.TileEntityJigsaw;
+import net.minecraft.world.level.block.entity.TileEntitySign;
+import net.minecraft.world.level.block.entity.TileEntityStructure;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.minecraft.world.phys.MovingObjectPosition;
 import net.minecraft.world.phys.MovingObjectPositionBlock;
 import net.minecraft.world.phys.Vec3D;
 import net.minecraft.world.phys.shapes.OperatorBoolean;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -95,9 +95,7 @@ import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -106,55 +104,19 @@ import java.util.stream.Stream;
 public class PlayerConnection implements PacketListenerPlayIn {
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	public final NetworkManager networkManager;
-	private final MinecraftServer minecraftServer;
-	public Runnable playerJoinReady; // Paper
-	public EntityPlayer player;
-	private int e;
-	private long lastKeepAlive = SystemUtils.getMonotonicMillis();
-
-	private void setLastPing(long lastPing) {
-		this.lastKeepAlive = lastPing;
-	}
-
-	private long getLastPing() {
-		return this.lastKeepAlive;
-	}
-
-	// Paper - OBFHELPER
-	private boolean awaitingKeepAlive;
-
-	private void setPendingPing(boolean isPending) {
-		this.awaitingKeepAlive = isPending;
-	}
-
-	private boolean isPendingPing() {
-		return this.awaitingKeepAlive;
-	}
-
-	// Paper - OBFHELPER
-	private long h;
-
-	private void setKeepAliveID(long keepAliveID) {
-		this.h = keepAliveID;
-	}
-
-	private long getKeepAliveID() {
-		return this.h;
-	}
-
-	// Paper - OBFHELPER
-	private final LongArrayList keepAlives = new LongArrayList(); // Purpur
-	@SuppressWarnings("unused")
-	private int chatThrottle;
-	@SuppressWarnings("FieldMayBeFinal")
-	private int tabSpamLimiter = 0;
-	@SuppressWarnings("FieldMayBeFinal")
-	private int recipeSpamPackets = 0;
-
 	private static final VarHandle VH__CHAT_THROTTLE;
 	private static final VarHandle VH__TAB_SPAM_LIMITER;
 	private static final VarHandle VH__RECIPE_SPAM_LIMITER;
+	private static final int MAX_SIGN_LINE_LENGTH = Integer.getInteger("Paper.maxSignLength", 80);
+	private static final long KEEPALIVE_LIMIT = Long.getLong("paper.playerconnection.keepalive", 30) * 1000; // Paper - provide property to set keepalive limit
+	private static final int SURVIVAL_PLACE_DISTANCE_SQUARED = 6 * 6;
+	private static final int CREATIVE_PLACE_DISTANCE_SQUARED = 7 * 7;
+	private static final double HARD_CODED_BORDER = 2.9999999E7D;
+	private static final int THRESHOLD = com.destroystokyo.paper.PaperConfig.packetInSpamThreshold; // Paper - Configurable threshold
+	// CraftBukkit start
+	private static final MinecraftKey CUSTOM_REGISTER = new MinecraftKey("register");
+	private static final MinecraftKey CUSTOM_UNREGISTER = new MinecraftKey("unregister");
+	private static final MinecraftKey MINECRAFT_BRAND = new MinecraftKey("brand"); // Paper - Brand support
 
 	static {
 		try {
@@ -169,8 +131,29 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		}
 	}
 
-	private int j;
+	public final NetworkManager networkManager;
+	private final MinecraftServer minecraftServer;
+	// Paper - OBFHELPER
+	private final LongArrayList keepAlives = new LongArrayList(); // Purpur
 	private final Int2ShortMap k = new Int2ShortOpenHashMap();
+	private final org.bukkit.craftbukkit.CraftServer server;
+	public Runnable playerJoinReady; // Paper
+	public EntityPlayer player;
+	public boolean processedDisconnect;
+	public int grim$E$noReminderTicks;
+	private int e;
+	private long lastKeepAlive = SystemUtils.getMonotonicMillis();
+	// Paper - OBFHELPER
+	private boolean awaitingKeepAlive;
+	// Paper - OBFHELPER
+	private long h;
+	@SuppressWarnings("unused")
+	private int chatThrottle;
+	@SuppressWarnings("FieldMayBeFinal")
+	private int tabSpamLimiter = 0;
+	@SuppressWarnings("FieldMayBeFinal")
+	private int recipeSpamPackets = 0;
+	private int j;
 	private double l;
 	private double m;
 	private double n;
@@ -193,37 +176,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	private int E;
 	private int receivedMovePackets;
 	private int processedMovePackets;
-	private static final int MAX_SIGN_LINE_LENGTH = Integer.getInteger("Paper.maxSignLength", 80);
-	private static final long KEEPALIVE_LIMIT = Long.getLong("paper.playerconnection.keepalive", 30) * 1000; // Paper - provide property to set keepalive limit
-
 	private String clientBrandName = null; // Paper - Brand name
-
-	public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
-		this.minecraftServer = minecraftserver;
-		this.networkManager = networkmanager;
-		networkmanager.setPacketListener(this);
-		this.player = entityplayer;
-		entityplayer.playerConnection = this;
-		var itextfilter = entityplayer.Q();
-
-		if (itextfilter != null) {
-			itextfilter.a();
-		}
-
-		// CraftBukkit start - add fields and methods
-		this.server = minecraftserver.server;
-	}
-
-	private final org.bukkit.craftbukkit.CraftServer server;
-	public boolean processedDisconnect;
 	private int lastTick = MinecraftServer.currentTick;
 	private int allowedPlayerTicks = 1;
 	private int lastDropTick = MinecraftServer.currentTick;
 	private int lastBookTick = MinecraftServer.currentTick;
 	private int dropCount = 0;
-	private static final int SURVIVAL_PLACE_DISTANCE_SQUARED = 6 * 6;
-	private static final int CREATIVE_PLACE_DISTANCE_SQUARED = 7 * 7;
-
 	// Get position of last block hit for BlockDamageLevel.STOPPED
 	private double lastPosX = Double.MAX_VALUE;
 	private double lastPosY = Double.MAX_VALUE;
@@ -232,11 +190,72 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	private float lastYaw = Float.MAX_VALUE;
 	private boolean justTeleported = false;
 	private boolean hasMoved; // Spigot
+	// Spigot start - limit place/interactions
+	private int limitedPackets;
+	private long lastLimitedPacket = -1;
+	// CraftBukkit end
+	//// BadPackets checks fields
+	private int grim$actions$totalFlyingPacketsSent = 0;
+	private int grim$H$lastSent = 0;
+	private boolean grim$F$lastSprinting;
+	private boolean grim$F$thanksMojang;
+
+	public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+		this.minecraftServer = minecraftserver;
+		this.networkManager = networkmanager;
+		networkmanager.setPacketListener(this);
+		this.player = entityplayer;
+		entityplayer.playerConnection = this;
+
+		// CraftBukkit start - add fields and methods
+		this.server = minecraftserver.server;
+	}
+
+	private static boolean b(PacketPlayInFlying packetplayinflying) {
+		return !Doubles.isFinite(packetplayinflying.a(0.0D)) || !Doubles.isFinite(packetplayinflying.b(0.0D)) || !Doubles.isFinite(packetplayinflying.c(0.0D)) || !Floats.isFinite(packetplayinflying.b(0.0F)) || !Floats.isFinite(packetplayinflying.a(0.0F)) || Math.abs(packetplayinflying.a(0.0D)) > 3.0E7D || Math.abs(packetplayinflying.b(0.0D)) > 3.0E7D || Math.abs(packetplayinflying.c(0.0D)) > 3.0E7D;
+	}
+
+	private static boolean b(PacketPlayInVehicleMove packetplayinvehiclemove) {
+		return !Doubles.isFinite(packetplayinvehiclemove.getX()) || !Doubles.isFinite(packetplayinvehiclemove.getY()) || !Doubles.isFinite(packetplayinvehiclemove.getZ()) || !Floats.isFinite(packetplayinvehiclemove.getPitch()) || !Floats.isFinite(packetplayinvehiclemove.getYaw());
+	}
+
+	private static boolean a(EntityPlayer entityplayer, ItemStack itemstack) {
+		if (itemstack.isEmpty()) {
+			return false;
+		} else {
+			var item = itemstack.getItem();
+
+			return (item instanceof ItemBlock || item instanceof ItemBucket) && !entityplayer.getCooldownTracker().hasCooldown(item);
+		}
+	}
+
+	private long getLastPing() {
+		return this.lastKeepAlive;
+	}
+
+	private void setLastPing(long lastPing) {
+		this.lastKeepAlive = lastPing;
+	}
+
+	private boolean isPendingPing() {
+		return this.awaitingKeepAlive;
+	}
+
+	private void setPendingPing(boolean isPending) {
+		this.awaitingKeepAlive = isPending;
+	}
+
+	private long getKeepAliveID() {
+		return this.h;
+	}
+
+	private void setKeepAliveID(long keepAliveID) {
+		this.h = keepAliveID;
+	}
 
 	public CraftPlayer getPlayer() {
 		return (this.player == null) ? null : this.player.getBukkitEntity();
 	}
-	// CraftBukkit end
 
 	public void tick() {
 		if (this.grim$E$noReminderTicks > 20) {
@@ -419,7 +438,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		minecraftserver.scheduleOnMain(networkmanager::handleDisconnection); // Paper
 	}
 
-	private <T> void a(T t0, Consumer<T> consumer, BiFunction<ITextFilter, T, CompletableFuture<Optional<T>>> bifunction) {
+	private <T> void a_cum(T t0, Consumer<T> consumer) {
 		IAsyncTaskHandler<?> iasynctaskhandler = this.player.getWorldServer().getMinecraftServer();
 		Consumer<T> consumer1 = (object) -> {
 			if (this.a().isConnected()) {
@@ -429,26 +448,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			}
 
 		};
-		var itextfilter = this.player.Q();
-
-		if (itextfilter != null) {
-			(bifunction.apply(itextfilter, t0)).thenAcceptAsync((optional) -> { // CraftBukkit - decompile error
-				optional.ifPresent(consumer1);
-			}, iasynctaskhandler);
-		} else {
-			iasynctaskhandler.execute(() -> {
-				consumer1.accept(t0);
-			});
-		}
-
-	}
-
-	private void a(String s, Consumer<String> consumer) {
-		this.a(s, consumer, ITextFilter::a);
-	}
-
-	private void a(List<String> list, Consumer<List<String>> consumer) {
-		this.a(list, consumer, ITextFilter::a);
+		iasynctaskhandler.execute(() -> consumer1.accept(t0));
 	}
 
 	@Override
@@ -473,14 +473,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			packetplayinsteervehicle.d(),
 			packetplayinsteervehicle.e()
 		);
-	}
-
-	private static boolean b(PacketPlayInFlying packetplayinflying) {
-		return !Doubles.isFinite(packetplayinflying.a(0.0D)) || !Doubles.isFinite(packetplayinflying.b(0.0D)) || !Doubles.isFinite(packetplayinflying.c(0.0D)) || !Floats.isFinite(packetplayinflying.b(0.0F)) || !Floats.isFinite(packetplayinflying.a(0.0F)) || Math.abs(packetplayinflying.a(0.0D)) > 3.0E7D || Math.abs(packetplayinflying.b(0.0D)) > 3.0E7D || Math.abs(packetplayinflying.c(0.0D)) > 3.0E7D;
-	}
-
-	private static boolean b(PacketPlayInVehicleMove packetplayinvehiclemove) {
-		return !Doubles.isFinite(packetplayinvehiclemove.getX()) || !Doubles.isFinite(packetplayinvehiclemove.getY()) || !Doubles.isFinite(packetplayinvehiclemove.getZ()) || !Floats.isFinite(packetplayinvehiclemove.getPitch()) || !Floats.isFinite(packetplayinvehiclemove.getYaw());
 	}
 
 	@Override
@@ -896,6 +888,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
 		}
 	}
+	// Purpur end
 
 	@Override
 	public void a(PacketPlayInSetCommandMinecart packetplayinsetcommandminecart) {
@@ -1015,6 +1008,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
 		}
 	}
+	// Tuinity end - optimise out extra getCubes
 
 	@Override
 	public void a(PacketPlayInSetJigsaw packetplayinsetjigsaw) {
@@ -1161,7 +1155,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 				var i = packetplayinbedit.d();
 				// CraftBukkit end
 				if (PlayerInventory.d(i) || i == 40) {
-					this.a(list, flag ? (list1) -> {
+					this.a_cum(list, flag ? (list1) -> {
 						this.a(list1.get(0), list1.subList(1, list1.size()), i);
 					} : (list1) -> {
 						this.a(list1, i);
@@ -1223,7 +1217,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	private String color(String str, boolean hasPerm, boolean parseHex) {
 		return hasPerm ? org.bukkit.ChatColor.color(str, parseHex) : str;
 	}
-	// Purpur end
 
 	@Override
 	public void a(PacketPlayInEntityNBTQuery packetplayinentitynbtquery) {
@@ -1250,8 +1243,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			this.player.playerConnection.sendPacket(new PacketPlayOutNBTQuery(packetplayintilenbtquery.b(), nbttagcompound));
 		}
 	}
-
-	private static final double HARD_CODED_BORDER = 2.9999999E7D;
 
 	@Override
 	public void a(PacketPlayInFlying packetplayinflying) {
@@ -1584,7 +1575,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			com.tuinity.tuinity.util.CachedLists.returnTempCollisionList(collisions);
 		}
 	}
-	// Tuinity end - optimise out extra getCubes
 
 	private boolean a(IWorldReader iworldreader, AxisAlignedBB axisalignedbb) {
 		var stream = iworldreader.d(this.player, this.player.getBoundingBox().shrink(9.999999747378752E-6D), (entity) -> {
@@ -1600,6 +1590,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	public void a(double d0, double d1, double d2, float f, float f1) {
 		this.a(d0, d1, d2, f, f1, Collections.emptySet());
 	}
+	// Spigot end
 
 	// CraftBukkit start - Delegate to teleport(Location)
 	public final void teleport(double d0, double d1, double d2, float f, float f1, PlayerTeleportEvent.TeleportCause cause) {
@@ -1647,6 +1638,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		this.internalTeleport(d0, d1, d2, f, f1, set);
 		return event.isCancelled(); // CraftBukkit - Return event status
 	}
+	// CraftBukkit end
 
 	public void teleport(Location dest) {
 		internalTeleport(dest.getX(), dest.getY(), dest.getZ(), dest.getYaw(), dest.getPitch(), Collections.emptySet());
@@ -1780,21 +1772,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		}
 	}
 
-	private static boolean a(EntityPlayer entityplayer, ItemStack itemstack) {
-		if (itemstack.isEmpty()) {
-			return false;
-		} else {
-			var item = itemstack.getItem();
-
-			return (item instanceof ItemBlock || item instanceof ItemBucket) && !entityplayer.getCooldownTracker().hasCooldown(item);
-		}
-	}
-
-	// Spigot start - limit place/interactions
-	private int limitedPackets;
-	private long lastLimitedPacket = -1;
-	private static final int THRESHOLD = com.destroystokyo.paper.PaperConfig.packetInSpamThreshold; // Paper - Configurable threshold
-
 	private boolean checkLimit(long timestamp) {
 		if (lastLimitedPacket != -1 && timestamp - lastLimitedPacket < THRESHOLD && limitedPackets++ >= 8) { // Paper - Use threshold, raise packet limit to 8
 			return false;
@@ -1808,7 +1785,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
 		return true;
 	}
-	// Spigot end
 
 	@Override
 	public void a(PacketPlayInUseItem packetplayinuseitem) {
@@ -1956,7 +1932,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		this.server.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(getPlayer(), packStatus));
 		// Paper end
 	}
-	// CraftBukkit end
 
 	@Override
 	public void a(PacketPlayInBoatMove packetplayinboatmove) {
@@ -1968,6 +1943,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		}
 
 	}
+	// CraftBukkit end
 
 	@Override
 	public void a(IChatBaseComponent ichatbasecomponent) {
@@ -1988,11 +1964,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			// Paper end
 		}
 		// CraftBukkit end
-		var itextfilter = this.player.Q();
-
-		if (itextfilter != null) {
-			itextfilter.b();
-		}
 
 		if (this.isExemptPlayer()) {
 			PlayerConnection.LOGGER.info("Stopping singleplayer server as player logged out");
@@ -2202,7 +2173,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			// Paper end
 		}
 	}
-	// CraftBukkit end
 
 	private void handleCommand(String s) {
 		// CraftBukkit start - whole method
@@ -3013,7 +2983,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			}
 		} else {
 			kickDoNot(-666); // TODO: Instaban
-			return;
 		}
 	}
 
@@ -3031,9 +3000,9 @@ public class PlayerConnection implements PacketListenerPlayIn {
 
 	@Override
 	public void a(PacketPlayInUpdateSign packetplayinupdatesign) {
-		var list = Stream.of(packetplayinupdatesign.c()).map(EnumChatFormat::a).collect(Collectors.toList());
+		var list = Stream.of(packetplayinupdatesign.c()).map(EnumChatFormat::a).toList();
 
-		this.a(list, (list1) -> {
+		this.a_cum(list, (list1) -> {
 			this.a(packetplayinupdatesign, list1);
 		});
 	}
@@ -3103,6 +3072,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		}
 
 	}
+	// Paper end
 
 	@Override
 	public void a(PacketPlayInKeepAlive packetplayinkeepalive) {
@@ -3131,6 +3101,7 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			}
 
 	}
+	// CraftBukkit end
 
 	@Override
 	public void a(PacketPlayInAbilities packetplayinabilities) {
@@ -3157,12 +3128,6 @@ public class PlayerConnection implements PacketListenerPlayIn {
 		PlayerConnectionUtils.ensureMainThread(packetplayinsettings, this, this.player.getWorldServer());
 		this.player.a(packetplayinsettings);
 	}
-
-	// CraftBukkit start
-	private static final MinecraftKey CUSTOM_REGISTER = new MinecraftKey("register");
-	private static final MinecraftKey CUSTOM_UNREGISTER = new MinecraftKey("unregister");
-
-	private static final MinecraftKey MINECRAFT_BRAND = new MinecraftKey("brand"); // Paper - Brand support
 
 	@Override
 	public void a(PacketPlayInCustomPayload packetplayincustompayload) {
@@ -3214,12 +3179,10 @@ public class PlayerConnection implements PacketListenerPlayIn {
 	public String getClientBrandName() {
 		return clientBrandName;
 	}
-	// Paper end
 
 	public final boolean isDisconnected() {
 		return (!this.player.joining && !this.networkManager.isConnected()) || this.processedDisconnect; // Paper
 	}
-	// CraftBukkit end
 
 	@Override
 	public void a(PacketPlayInDifficultyChange packetplayindifficultychange) {
@@ -3232,11 +3195,4 @@ public class PlayerConnection implements PacketListenerPlayIn {
 			this.minecraftServer.b(packetplayindifficultylock.b());
 		}
 	}
-
-	//// BadPackets checks fields
-	private int grim$actions$totalFlyingPacketsSent = 0;
-	private int grim$H$lastSent = 0;
-	private boolean grim$F$lastSprinting;
-	private boolean grim$F$thanksMojang;
-	public int grim$E$noReminderTicks;
 }

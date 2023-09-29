@@ -15,7 +15,7 @@ import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 
-public class ArgumentChat implements ArgumentType<ArgumentChat.a> {
+public class ArgumentChat implements ArgumentType<ArgumentChat.a_> {
 
     private static final Collection<String> a = Arrays.asList("Hello world!", "foo", "@e", "Hello @p :)");
 
@@ -26,11 +26,11 @@ public class ArgumentChat implements ArgumentType<ArgumentChat.a> {
     }
 
     public static IChatBaseComponent a(CommandContext<CommandListenerWrapper> commandcontext, String s) throws CommandSyntaxException {
-        return ((ArgumentChat.a) commandcontext.getArgument(s, ArgumentChat.a.class)).a((CommandListenerWrapper) commandcontext.getSource(), ((CommandListenerWrapper) commandcontext.getSource()).hasPermission(2));
+        return ((a_) commandcontext.getArgument(s, a_.class)).a((CommandListenerWrapper) commandcontext.getSource(), ((CommandListenerWrapper) commandcontext.getSource()).hasPermission(2));
     }
 
-    public ArgumentChat.a parse(StringReader stringreader) throws CommandSyntaxException {
-        return ArgumentChat.a.a(stringreader, true);
+    public a_ parse(StringReader stringreader) throws CommandSyntaxException {
+        return ArgumentChat.a_.a(stringreader, true);
     }
 
     public Collection<String> getExamples() {
@@ -63,12 +63,12 @@ public class ArgumentChat implements ArgumentType<ArgumentChat.a> {
         }
     }
 
-    public static class a {
+    public static class a_ {
 
         private final String a;
         private final ArgumentChat.b[] b;
 
-        public a(String s, ArgumentChat.b[] aargumentchat_b) {
+        public a_(String s, ArgumentChat.b[] aargumentchat_b) {
             this.a = s;
             this.b = aargumentchat_b;
         }
@@ -105,12 +105,12 @@ public class ArgumentChat implements ArgumentType<ArgumentChat.a> {
             }
         }
 
-        public static ArgumentChat.a a(StringReader stringreader, boolean flag) throws CommandSyntaxException {
+        public static a_ a(StringReader stringreader, boolean flag) throws CommandSyntaxException {
             String s = stringreader.getString().substring(stringreader.getCursor(), stringreader.getTotalLength());
 
             if (!flag) {
                 stringreader.setCursor(stringreader.getTotalLength());
-                return new ArgumentChat.a(s, new ArgumentChat.b[0]);
+                return new a_(s, new ArgumentChat.b[0]);
             } else {
                 List<ArgumentChat.b> list = Lists.newArrayList();
                 int i = stringreader.getCursor();
@@ -140,7 +140,7 @@ public class ArgumentChat implements ArgumentType<ArgumentChat.a> {
                     }
                 }
 
-                return new ArgumentChat.a(s, (ArgumentChat.b[]) list.toArray(new ArgumentChat.b[list.size()]));
+                return new a_(s, list.toArray(new b[list.size()]));
             }
         }
     }

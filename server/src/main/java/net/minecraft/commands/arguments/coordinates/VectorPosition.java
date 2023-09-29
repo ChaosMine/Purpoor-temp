@@ -29,7 +29,7 @@ public class VectorPosition implements IVectorPosition {
     public Vec2F b(CommandListenerWrapper commandlistenerwrapper) {
         Vec2F vec2f = commandlistenerwrapper.i();
 
-        return new Vec2F((float) this.a.a((double) vec2f.i), (float) this.b.a((double) vec2f.j));
+        return new Vec2F((float) this.a.a(vec2f.i), (float) this.b.a(vec2f.j));
     }
 
     @Override

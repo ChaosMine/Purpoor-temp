@@ -11,7 +11,7 @@ public class WeightedRandom {
         int j = 0;
 
         for (int k = list.size(); j < k; ++j) {
-            WeightedRandom.WeightedRandomChoice weightedrandom_weightedrandomchoice = (WeightedRandom.WeightedRandomChoice) list.get(j);
+            WeightedRandom.WeightedRandomChoice weightedrandom_weightedrandomchoice = list.get(j);
 
             i += weightedrandom_weightedrandomchoice.a;
         }
@@ -33,7 +33,7 @@ public class WeightedRandom {
         int j = 0;
 
         for (int k = list.size(); j < k; ++j) {
-            T t0 = (WeightedRandom.WeightedRandomChoice) list.get(j);
+            T t0 = list.get(j);
 
             i -= t0.a;
             if (i < 0) {

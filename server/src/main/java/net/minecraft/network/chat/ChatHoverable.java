@@ -84,7 +84,7 @@ public class ChatHoverable {
                 } else {
                     IChatMutableComponent ichatmutablecomponent = IChatBaseComponent.ChatSerializer.a(jsonobject.get("value"));
 
-                    return ichatmutablecomponent != null ? chathoverable_enumhoveraction.a((IChatBaseComponent) ichatmutablecomponent) : null;
+                    return ichatmutablecomponent != null ? chathoverable_enumhoveraction.a(ichatmutablecomponent) : null;
                 }
             }
         }
@@ -101,15 +101,15 @@ public class ChatHoverable {
     public static class EnumHoverAction<T> {
 
         public static final ChatHoverable.EnumHoverAction<IChatBaseComponent> SHOW_TEXT = new ChatHoverable.EnumHoverAction<>("show_text", true, IChatBaseComponent.ChatSerializer::a, IChatBaseComponent.ChatSerializer::b, Function.identity());
-        public static final ChatHoverable.EnumHoverAction<ChatHoverable.c> SHOW_ITEM = new ChatHoverable.EnumHoverAction<>("show_item", true, (jsonelement) -> {
-            return ChatHoverable.c.b(jsonelement);
+        public static final ChatHoverable.EnumHoverAction<c_> SHOW_ITEM = new ChatHoverable.EnumHoverAction<>("show_item", true, (jsonelement) -> {
+            return ChatHoverable.c_.b(jsonelement);
         }, (object) -> {
-            return ((ChatHoverable.c) object).b();
+            return object.b();
         }, (ichatbasecomponent) -> {
-            return ChatHoverable.c.b(ichatbasecomponent);
+            return ChatHoverable.c_.b(ichatbasecomponent);
         });
-        public static final ChatHoverable.EnumHoverAction<ChatHoverable.b> SHOW_ENTITY = new ChatHoverable.EnumHoverAction<>("show_entity", true, ChatHoverable.b::a, ChatHoverable.b::a, ChatHoverable.b::a);
-        private static final Map<String, ChatHoverable.EnumHoverAction> d = (Map) Stream.of(ChatHoverable.EnumHoverAction.SHOW_TEXT, ChatHoverable.EnumHoverAction.SHOW_ITEM, ChatHoverable.EnumHoverAction.SHOW_ENTITY).collect(ImmutableMap.toImmutableMap(ChatHoverable.EnumHoverAction::b, (chathoverable_enumhoveraction) -> {
+        public static final ChatHoverable.EnumHoverAction<b_> SHOW_ENTITY = new ChatHoverable.EnumHoverAction<>("show_entity", true, ChatHoverable.b_::a, ChatHoverable.b_::a, ChatHoverable.b_::a);
+        private static final Map<String, ChatHoverable.EnumHoverAction> d = Stream.of(EnumHoverAction.SHOW_TEXT, EnumHoverAction.SHOW_ITEM, EnumHoverAction.SHOW_ENTITY).collect(ImmutableMap.toImmutableMap(EnumHoverAction::b, (chathoverable_enumhoveraction) -> {
             return chathoverable_enumhoveraction;
         }));
         private final String e;
@@ -136,11 +136,11 @@ public class ChatHoverable {
 
         @Nullable
         public static ChatHoverable.EnumHoverAction a(String s) {
-            return (ChatHoverable.EnumHoverAction) ChatHoverable.EnumHoverAction.d.get(s);
+            return EnumHoverAction.d.get(s);
         }
 
         private T b(Object object) {
-            return object;
+            return (T) object;
         }
 
         @Nullable
@@ -158,7 +158,7 @@ public class ChatHoverable {
         }
 
         public JsonElement a(Object object) {
-            return (JsonElement) this.h.apply(this.b(object));
+            return this.h.apply(this.b(object));
         }
 
         public String toString() {
@@ -166,20 +166,20 @@ public class ChatHoverable {
         }
     }
 
-    public static class c {
+    public static class c_ {
 
         private final Item a;
         private final int b;
         @Nullable
         private final NBTTagCompound c;
 
-        c(Item item, int i, @Nullable NBTTagCompound nbttagcompound) {
+        c_(Item item, int i, @Nullable NBTTagCompound nbttagcompound) {
             this.a = item;
             this.b = i;
             this.c = nbttagcompound;
         }
 
-        public c(ItemStack itemstack) {
+        public c_(ItemStack itemstack) {
             this(itemstack.getItem(), itemstack.getCount(), itemstack.getTag() != null ? itemstack.getTag().clone() : null);
         }
 
@@ -187,7 +187,7 @@ public class ChatHoverable {
             if (this == object) {
                 return true;
             } else if (object != null && this.getClass() == object.getClass()) {
-                ChatHoverable.c chathoverable_c = (ChatHoverable.c) object;
+                c_ chathoverable_c = (c_) object;
 
                 return this.b == chathoverable_c.b && this.a.equals(chathoverable_c.a) && Objects.equals(this.c, chathoverable_c.c);
             } else {
@@ -203,13 +203,13 @@ public class ChatHoverable {
             return i;
         }
 
-        private static ChatHoverable.c b(JsonElement jsonelement) {
+        private static c_ b(JsonElement jsonelement) {
             if (jsonelement.isJsonPrimitive()) {
-                return new ChatHoverable.c((Item) IRegistry.ITEM.get(new MinecraftKey(jsonelement.getAsString())), 1, (NBTTagCompound) null);
+                return new c_(IRegistry.ITEM.get(new MinecraftKey(jsonelement.getAsString())), 1, null);
             } else {
                 JsonObject jsonobject = ChatDeserializer.m(jsonelement, "item");
-                Item item = (Item) IRegistry.ITEM.get(new MinecraftKey(ChatDeserializer.h(jsonobject, "id")));
-                int i = ChatDeserializer.a(jsonobject, "count", (int) 1);
+                Item item = IRegistry.ITEM.get(new MinecraftKey(ChatDeserializer.h(jsonobject, "id")));
+                int i = ChatDeserializer.a(jsonobject, "count", 1);
 
                 if (jsonobject.has("tag")) {
                     String s = ChatDeserializer.h(jsonobject, "tag");
@@ -217,22 +217,22 @@ public class ChatHoverable {
                     try {
                         NBTTagCompound nbttagcompound = MojangsonParser.parse(s);
 
-                        return new ChatHoverable.c(item, i, nbttagcompound);
+                        return new c_(item, i, nbttagcompound);
                     } catch (CommandSyntaxException commandsyntaxexception) {
                         ChatHoverable.LOGGER.warn("Failed to parse tag: {}", s, commandsyntaxexception);
                     }
                 }
 
-                return new ChatHoverable.c(item, i, (NBTTagCompound) null);
+                return new c_(item, i, null);
             }
         }
 
         @Nullable
-        private static ChatHoverable.c b(IChatBaseComponent ichatbasecomponent) {
+        private static c_ b(IChatBaseComponent ichatbasecomponent) {
             try {
                 NBTTagCompound nbttagcompound = MojangsonParser.parse(ichatbasecomponent.getString());
 
-                return new ChatHoverable.c(ItemStack.a(nbttagcompound));
+                return new c_(ItemStack.a(nbttagcompound));
             } catch (CommandSyntaxException commandsyntaxexception) {
                 ChatHoverable.LOGGER.warn("Failed to parse item tag: {}", ichatbasecomponent, commandsyntaxexception);
                 return null;
@@ -255,42 +255,42 @@ public class ChatHoverable {
         }
     }
 
-    public static class b {
+    public static class b_ {
 
         public final EntityTypes<?> a;
         public final UUID b;
         @Nullable
         public final IChatBaseComponent c;
 
-        public b(EntityTypes<?> entitytypes, UUID uuid, @Nullable IChatBaseComponent ichatbasecomponent) {
+        public b_(EntityTypes<?> entitytypes, UUID uuid, @Nullable IChatBaseComponent ichatbasecomponent) {
             this.a = entitytypes;
             this.b = uuid;
             this.c = ichatbasecomponent;
         }
 
         @Nullable
-        public static ChatHoverable.b a(JsonElement jsonelement) {
+        public static b_ a(JsonElement jsonelement) {
             if (!jsonelement.isJsonObject()) {
                 return null;
             } else {
                 JsonObject jsonobject = jsonelement.getAsJsonObject();
-                EntityTypes<?> entitytypes = (EntityTypes) IRegistry.ENTITY_TYPE.get(new MinecraftKey(ChatDeserializer.h(jsonobject, "type")));
+                EntityTypes<?> entitytypes = IRegistry.ENTITY_TYPE.get(new MinecraftKey(ChatDeserializer.h(jsonobject, "type")));
                 UUID uuid = UUID.fromString(ChatDeserializer.h(jsonobject, "id"));
                 IChatMutableComponent ichatmutablecomponent = IChatBaseComponent.ChatSerializer.a(jsonobject.get("name"));
 
-                return new ChatHoverable.b(entitytypes, uuid, ichatmutablecomponent);
+                return new b_(entitytypes, uuid, ichatmutablecomponent);
             }
         }
 
         @Nullable
-        public static ChatHoverable.b a(IChatBaseComponent ichatbasecomponent) {
+        public static b_ a(IChatBaseComponent ichatbasecomponent) {
             try {
                 NBTTagCompound nbttagcompound = MojangsonParser.parse(ichatbasecomponent.getString());
                 IChatMutableComponent ichatmutablecomponent = IChatBaseComponent.ChatSerializer.a(nbttagcompound.getString("name"));
-                EntityTypes<?> entitytypes = (EntityTypes) IRegistry.ENTITY_TYPE.get(new MinecraftKey(nbttagcompound.getString("type")));
+                EntityTypes<?> entitytypes = IRegistry.ENTITY_TYPE.get(new MinecraftKey(nbttagcompound.getString("type")));
                 UUID uuid = UUID.fromString(nbttagcompound.getString("id"));
 
-                return new ChatHoverable.b(entitytypes, uuid, ichatmutablecomponent);
+                return new b_(entitytypes, uuid, ichatmutablecomponent);
             } catch (CommandSyntaxException | JsonSyntaxException jsonsyntaxexception) {
                 return null;
             }
@@ -312,7 +312,7 @@ public class ChatHoverable {
             if (this == object) {
                 return true;
             } else if (object != null && this.getClass() == object.getClass()) {
-                ChatHoverable.b chathoverable_b = (ChatHoverable.b) object;
+                b_ chathoverable_b = (b_) object;
 
                 return this.a.equals(chathoverable_b.a) && this.b.equals(chathoverable_b.b) && Objects.equals(this.c, chathoverable_b.c);
             } else {

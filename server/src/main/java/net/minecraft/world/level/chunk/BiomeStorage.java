@@ -57,7 +57,7 @@ public class BiomeStorage implements BiomeManager.Provider {
 
         if (aint != null) {
             for (k = 0; k < aint.length; ++k) {
-                this.h[k] = (BiomeBase) registry.fromId(aint[k]);
+                this.h[k] = registry.fromId(aint[k]);
                 if (this.h[k] == null) {
                     l = k & BiomeStorage.b;
                     i1 = k >> BiomeStorage.e + BiomeStorage.e & BiomeStorage.c;

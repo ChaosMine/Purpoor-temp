@@ -21,7 +21,7 @@ public class RestartCommand extends Command
     {
         if ( testPermission( sender ) )
         {
-            MinecraftServer.getServer().processQueue.add( new Runnable()
+            MinecraftServer.SERVER.processQueue.add( new Runnable()
             {
                 @Override
                 public void run()
@@ -51,10 +51,10 @@ public class RestartCommand extends Command
     // Paper start - sync copied from above with minor changes, async added
     private static void shutdownServer(boolean isRestarting)
     {
-        if ( MinecraftServer.getServer().isMainThread() )
+        if ( MinecraftServer.SERVER.isMainThread() )
         {
             // Kick all players
-            for (var p : com.google.common.collect.ImmutableList.copyOf( MinecraftServer.getServer().getPlayerList().players ) )
+            for (var p : com.google.common.collect.ImmutableList.copyOf( MinecraftServer.SERVER.getPlayerList().players ) )
             {
                 p.playerConnection.disconnect(SpigotConfig.restartMessage, org.bukkit.event.player.PlayerKickEvent.Cause.RESTART_COMMAND); // Paper - kick event reason (cause is never used))
             }
@@ -71,7 +71,7 @@ public class RestartCommand extends Command
             // Actually shutdown
             try
             {
-                MinecraftServer.getServer().close(); // calls stop()
+                MinecraftServer.SERVER.close(); // calls stop()
             } catch ( Throwable t )
             {
             }
@@ -82,7 +82,7 @@ public class RestartCommand extends Command
         } else
         {
             // Mark the server to shutdown at the end of the tick
-            MinecraftServer.getServer().safeShutdown( false, isRestarting );
+            MinecraftServer.SERVER.safeShutdown( false, isRestarting );
 
             // wait 10 seconds to see if we're actually going to try shutdown
             try
@@ -95,7 +95,7 @@ public class RestartCommand extends Command
 
             // Check if we've actually hit a state where the server is going to safely shutdown
             // if we have, let the server stop as usual
-            if (MinecraftServer.getServer().isStopped()) return;
+            if (MinecraftServer.SERVER.isStopped()) return;
 
             // If the server hasn't stopped by now, assume worse case and kill
             closeSocket();
@@ -108,7 +108,7 @@ public class RestartCommand extends Command
     private static void closeSocket()
     {
         // Close the socket so we can rebind with the new process
-        MinecraftServer.getServer().getServerConnection().close();
+        MinecraftServer.SERVER.getServerConnection().close();
 
         // Give time for it to kick in
         try

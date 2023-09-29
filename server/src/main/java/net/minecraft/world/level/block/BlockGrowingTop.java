@@ -26,17 +26,17 @@ public abstract class BlockGrowingTop extends BlockGrowingAbstract implements IB
     protected BlockGrowingTop(BlockBase.Info blockbase_info, EnumDirection enumdirection, VoxelShape voxelshape, boolean flag, double d0) {
         super(blockbase_info, enumdirection, voxelshape, flag);
         this.e = d0;
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockGrowingTop.d, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockGrowingTop.d, 0));
     }
 
     @Override
     public IBlockData a(GeneratorAccess generatoraccess) {
-        return (IBlockData) this.getBlockData().set(BlockGrowingTop.d, generatoraccess.getRandom().nextInt(getMaxGrowthAge(generatoraccess.getMinecraftWorld()))); // Purpur
+        return this.getBlockData().set(BlockGrowingTop.d, generatoraccess.getRandom().nextInt(getMaxGrowthAge(generatoraccess.getMinecraftWorld()))); // Purpur
     }
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockGrowingTop.d) < 25;
+        return iblockdata.get(BlockGrowingTop.d) < 25;
     }
 
     public abstract double getGrowthModifier(WorldServer worldserver); // Purpur
@@ -45,11 +45,11 @@ public abstract class BlockGrowingTop extends BlockGrowingAbstract implements IB
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Integer) iblockdata.get(BlockGrowingTop.d) < getMaxGrowthAge(worldserver) && random.nextDouble() < (100.0D / getGrowthModifier(worldserver)) * this.e) { // Spigot // Purpur
+        if (iblockdata.get(BlockGrowingTop.d) < getMaxGrowthAge(worldserver) && random.nextDouble() < (100.0D / getGrowthModifier(worldserver)) * this.e) { // Spigot // Purpur
             BlockPosition blockposition1 = blockposition.shift(this.a);
 
             if (this.h(worldserver.getType(blockposition1))) {
-                org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(worldserver, blockposition, blockposition1, (IBlockData) iblockdata.a((IBlockState) BlockGrowingTop.d)); // CraftBukkit
+                org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockSpreadEvent(worldserver, blockposition, blockposition1, iblockdata.a((IBlockState) BlockGrowingTop.d)); // CraftBukkit
             }
         }
 
@@ -61,11 +61,11 @@ public abstract class BlockGrowingTop extends BlockGrowingAbstract implements IB
             generatoraccess.getBlockTickList().a(blockposition, this, 1);
         }
 
-        if (enumdirection == this.a && (iblockdata1.a((Block) this) || iblockdata1.a(this.d()))) {
+        if (enumdirection == this.a && (iblockdata1.a(this) || iblockdata1.a(this.d()))) {
             return this.d().getBlockData();
         } else {
             if (this.b) {
-                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
             }
 
             return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -90,11 +90,11 @@ public abstract class BlockGrowingTop extends BlockGrowingAbstract implements IB
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
         BlockPosition blockposition1 = blockposition.shift(this.a);
-        int i = Math.min((Integer) iblockdata.get(BlockGrowingTop.d) + 1, getMaxGrowthAge(worldserver)); // Purpur
+        int i = Math.min(iblockdata.get(BlockGrowingTop.d) + 1, getMaxGrowthAge(worldserver)); // Purpur
         int j = this.a(random);
 
         for (int k = 0; k < j && this.h(worldserver.getType(blockposition1)); ++k) {
-            worldserver.setTypeUpdate(blockposition1, (IBlockData) iblockdata.set(BlockGrowingTop.d, i));
+            worldserver.setTypeUpdate(blockposition1, iblockdata.set(BlockGrowingTop.d, i));
             blockposition1 = blockposition1.shift(this.a);
             i = Math.min(i + 1, getMaxGrowthAge(worldserver)); // Purpur
         }

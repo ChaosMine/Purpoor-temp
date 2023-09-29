@@ -32,13 +32,13 @@ public class LootItemConditionDamageSourceProperties implements LootItemConditio
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        DamageSource damagesource = (DamageSource) loottableinfo.getContextParameter(LootContextParameters.DAMAGE_SOURCE);
-        Vec3D vec3d = (Vec3D) loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
+        DamageSource damagesource = loottableinfo.getContextParameter(LootContextParameters.DAMAGE_SOURCE);
+        Vec3D vec3d = loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
 
         return vec3d != null && damagesource != null && this.a.a(loottableinfo.getWorld(), vec3d, damagesource);
     }
 
-    public static LootItemCondition.a a(CriterionConditionDamageSource.a criterionconditiondamagesource_a) {
+    public static LootItemCondition.a a(CriterionConditionDamageSource.a_ criterionconditiondamagesource_a) {
         return () -> {
             return new LootItemConditionDamageSourceProperties(criterionconditiondamagesource_a.b());
         };

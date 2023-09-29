@@ -23,7 +23,7 @@ public class BlockDataConversionTest extends AbstractTestingBase {
     @Parameterized.Parameters(name = "{index}: {0}")
     public static List<Object[]> args() {
         List<Object[]> list = new ArrayList<>();
-        for (Block block : (Iterable<Block>) IRegistry.BLOCK) {
+        for (Block block : IRegistry.BLOCK) {
             list.add(new Object[]{block.getBlockData()});
         }
         return list;

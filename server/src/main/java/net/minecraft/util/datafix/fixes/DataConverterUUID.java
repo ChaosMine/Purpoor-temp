@@ -19,7 +19,7 @@ public class DataConverterUUID extends DataFix {
                 Optional<String> optional = dynamic.get("UUID").asString().result();
 
                 if (optional.isPresent()) {
-                    UUID uuid = UUID.fromString((String) optional.get());
+                    UUID uuid = UUID.fromString(optional.get());
 
                     return dynamic.remove("UUID").set("UUIDMost", dynamic.createLong(uuid.getMostSignificantBits())).set("UUIDLeast", dynamic.createLong(uuid.getLeastSignificantBits()));
                 } else {

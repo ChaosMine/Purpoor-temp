@@ -410,7 +410,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             for (net.minecraft.world.level.chunk.IChunkAccess chunk : list) {
                 chunkProviderServer.addTicketAtLevel(net.minecraft.server.level.TicketType.POST_TELEPORT, chunk.getPos(), 33, CraftEntity.this.getEntityId());
             }
-            net.minecraft.server.MinecraftServer.getServer().scheduleOnMain(() -> {
+            net.minecraft.server.MinecraftServer.SERVER.scheduleOnMain(() -> {
                 try {
                     ret.complete(CraftEntity.this.teleport(locationClone, cause) ? Boolean.TRUE : Boolean.FALSE);
                 } catch (Throwable throwable) {

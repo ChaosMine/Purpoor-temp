@@ -114,9 +114,9 @@ public abstract class WorldGenFeatureDefinedStructurePoolStructure {
 
     public static Function<WorldGenFeatureDefinedStructurePoolTemplate.Matching, WorldGenFeatureDefinedStructurePoolList> a(List<Function<WorldGenFeatureDefinedStructurePoolTemplate.Matching, ? extends WorldGenFeatureDefinedStructurePoolStructure>> list) {
         return (worldgenfeaturedefinedstructurepooltemplate_matching) -> {
-            return new WorldGenFeatureDefinedStructurePoolList((List) list.stream().map((function) -> {
+            return new WorldGenFeatureDefinedStructurePoolList(list.stream().map((function) -> {
                 return (WorldGenFeatureDefinedStructurePoolStructure) function.apply(worldgenfeaturedefinedstructurepooltemplate_matching);
-            }).collect(Collectors.toList()), worldgenfeaturedefinedstructurepooltemplate_matching);
+            }).toList(), worldgenfeaturedefinedstructurepooltemplate_matching);
         };
     }
 }

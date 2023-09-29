@@ -3,16 +3,6 @@ package net.minecraft.server.packs;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.ResourceKeyInvalidException;
 import net.minecraft.SystemUtils;
 import net.minecraft.resources.MinecraftKey;
@@ -20,117 +10,106 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
+import java.io.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.function.Predicate;
+
 public class ResourcePackFolder extends ResourcePackAbstract {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final boolean c = SystemUtils.i() == SystemUtils.OS.WINDOWS;
+	private static final CharMatcher d = CharMatcher.is('\\');
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final boolean c = SystemUtils.i() == SystemUtils.OS.WINDOWS;
-    private static final CharMatcher d = CharMatcher.is('\\');
+	public ResourcePackFolder(File var0) {
+		super(var0);
+	}
 
-    public ResourcePackFolder(File file) {
-        super(file);
-    }
+	public static boolean a(File var0, String var1) throws IOException {
+		String var2 = var0.getCanonicalPath();
+		if (c) {
+			var2 = d.replaceFrom(var2, '/');
+		}
 
-    public static boolean a(File file, String s) throws IOException {
-        String s1 = file.getCanonicalPath();
+		return var2.endsWith(var1);
+	}
 
-        if (ResourcePackFolder.c) {
-            s1 = ResourcePackFolder.d.replaceFrom(s1, '/');
-        }
+	@Override
+	protected InputStream a(String var0) throws IOException {
+		File var1 = this.e(var0);
+		if (var1 == null) {
+			throw new ResourceNotFoundException(this.a, var0);
+		} else {
+			return new FileInputStream(var1);
+		}
+	}
 
-        return s1.endsWith(s);
-    }
+	@Override
+	protected boolean c(String var0) {
+		return this.e(var0) != null;
+	}
 
-    @Override
-    protected InputStream a(String s) throws IOException {
-        File file = this.e(s);
+	@Nullable
+	private File e(String var0) {
+		try {
+			File var1 = new File(this.a, var0);
+			if (var1.isFile() && a(var1, var0)) {
+				return var1;
+			}
+		} catch (IOException ignored) {}
 
-        if (file == null) {
-            throw new ResourceNotFoundException(this.a, s);
-        } else {
-            return new FileInputStream(file);
-        }
-    }
+		return null;
+	}
 
-    @Override
-    protected boolean c(String s) {
-        return this.e(s) != null;
-    }
+	@Override
+	public Set<String> a(EnumResourcePackType var0) {
+		Set<String> var1 = Sets.newHashSet();
+		File var2 = new File(this.a, var0.a());
+		File[] var3 = var2.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY);
+		if (var3 != null) {
+			for (File var7 : var3) {
+				String var8 = a(var2, var7);
+				if (var8.equals(var8.toLowerCase(Locale.ROOT))) {
+					var1.add(var8.substring(0, var8.length() - 1));
+				} else {
+					this.d(var8);
+				}
+			}
+		}
 
-    @Nullable
-    private File e(String s) {
-        try {
-            File file = new File(this.a, s);
+		return var1;
+	}
 
-            if (file.isFile() && a(file, s)) {
-                return file;
-            }
-        } catch (IOException ioexception) {
-            ;
-        }
+	@Override
+	public void close() {
+	}
 
-        return null;
-    }
+	@Override
+	public Collection<MinecraftKey> a(EnumResourcePackType var0, String var1, String var2, int var3, Predicate<String> var4) {
+		File var5 = new File(this.a, var0.a());
+		List<MinecraftKey> var6 = Lists.newArrayList();
+		this.a(new File(new File(var5, var1), var2), var3, var1, var6, var2 + "/", var4);
+		return var6;
+	}
 
-    @Override
-    public Set<String> a(EnumResourcePackType enumresourcepacktype) {
-        Set<String> set = Sets.newHashSet();
-        File file = new File(this.a, enumresourcepacktype.a());
-        File[] afile = file.listFiles(DirectoryFileFilter.DIRECTORY);
-
-        if (afile != null) {
-            File[] afile1 = afile;
-            int i = afile.length;
-
-            for (int j = 0; j < i; ++j) {
-                File file1 = afile1[j];
-                String s = a(file, file1);
-
-                if (s.equals(s.toLowerCase(Locale.ROOT))) {
-                    set.add(s.substring(0, s.length() - 1));
-                } else {
-                    this.d(s);
-                }
-            }
-        }
-
-        return set;
-    }
-
-    @Override
-    public void close() {}
-
-    @Override
-    public Collection<MinecraftKey> a(EnumResourcePackType enumresourcepacktype, String s, String s1, int i, Predicate<String> predicate) {
-        File file = new File(this.a, enumresourcepacktype.a());
-        List<MinecraftKey> list = Lists.newArrayList();
-
-        this.a(new File(new File(file, s), s1), i, s, list, s1 + "/", predicate);
-        return list;
-    }
-
-    private void a(File file, int i, String s, List<MinecraftKey> list, String s1, Predicate<String> predicate) {
-        File[] afile = file.listFiles();
-
-        if (afile != null) {
-            File[] afile1 = afile;
-            int j = afile.length;
-
-            for (int k = 0; k < j; ++k) {
-                File file1 = afile1[k];
-
-                if (file1.isDirectory()) {
-                    if (i > 0) {
-                        this.a(file1, i - 1, s, list, s1 + file1.getName() + "/", predicate);
-                    }
-                } else if (!file1.getName().endsWith(".mcmeta") && predicate.test(file1.getName())) {
-                    try {
-                        list.add(new MinecraftKey(s, s1 + file1.getName()));
-                    } catch (ResourceKeyInvalidException resourcekeyinvalidexception) {
-                        ResourcePackFolder.LOGGER.error(resourcekeyinvalidexception.getMessage());
-                    }
-                }
-            }
-        }
-
-    }
+	private void a(File var0, int var1, String var2, List<MinecraftKey> var3, String var4, Predicate<String> var5) {
+		File[] var6 = var0.listFiles();
+		if (var6 != null) {
+			for (File var10 : var6) {
+				if (var10.isDirectory()) {
+					if (var1 > 0) {
+						this.a(var10, var1 - 1, var2, var3, var4 + var10.getName() + "/", var5);
+					}
+				} else if (!var10.getName().endsWith(".mcmeta") && var5.test(var10.getName())) {
+					try {
+						var3.add(new MinecraftKey(var2, var4 + var10.getName()));
+					} catch (ResourceKeyInvalidException var13) {
+						LOGGER.error(var13.getMessage());
+					}
+				}
+			}
+		}
+	}
 }

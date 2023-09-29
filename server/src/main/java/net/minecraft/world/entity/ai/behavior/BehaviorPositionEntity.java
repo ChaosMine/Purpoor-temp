@@ -20,7 +20,7 @@ public class BehaviorPositionEntity implements BehaviorPosition {
 
     @Override
     public Vec3D a() {
-        return this.b ? this.a.getPositionVector().add(0.0D, (double) this.a.getHeadHeight(), 0.0D) : this.a.getPositionVector();
+        return this.b ? this.a.getPositionVector().add(0.0D, this.a.getHeadHeight(), 0.0D) : this.a.getPositionVector();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BehaviorPositionEntity implements BehaviorPosition {
         } else {
             Optional<List<EntityLiving>> optional = entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS);
 
-            return this.a.isAlive() && optional.isPresent() && ((List) optional.get()).contains(this.a);
+            return this.a.isAlive() && optional.isPresent() && optional.get().contains(this.a);
         }
     }
 

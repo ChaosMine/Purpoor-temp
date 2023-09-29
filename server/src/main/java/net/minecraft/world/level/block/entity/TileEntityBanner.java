@@ -41,7 +41,7 @@ public class TileEntityBanner extends TileEntity implements INamableTileEntity {
 
     @Override
     public IChatBaseComponent getDisplayName() {
-        return (IChatBaseComponent) (this.a != null ? this.a : new ChatMessage("block.minecraft.banner"));
+        return this.a != null ? this.a : new ChatMessage("block.minecraft.banner");
     }
 
     @Nullable
@@ -126,7 +126,7 @@ public class TileEntityBanner extends TileEntity implements INamableTileEntity {
 
     public EnumColor a(Supplier<IBlockData> supplier) {
         if (this.color == null) {
-            this.color = ((BlockBannerAbstract) ((IBlockData) supplier.get()).getBlock()).getColor();
+            this.color = ((BlockBannerAbstract) supplier.get().getBlock()).getColor();
         }
 
         return this.color;

@@ -38,11 +38,11 @@ public class ContainerBrewingStand extends Container {
         a(icontainerproperties, 2);
         this.brewingStand = iinventory;
         this.d = icontainerproperties;
-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 0, 56, 51)));
-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 1, 79, 58)));
-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 2, 102, 51)));
-        this.e = this.a((Slot) (new ContainerBrewingStand.SlotBrewing(iinventory, 3, 79, 17)));
-        this.a((Slot) (new ContainerBrewingStand.a(iinventory, 4, 17, 17)));
+        this.a(new SlotPotionBottle(iinventory, 0, 56, 51));
+        this.a(new SlotPotionBottle(iinventory, 1, 79, 58));
+        this.a(new SlotPotionBottle(iinventory, 2, 102, 51));
+        this.e = this.a(new SlotBrewing(iinventory, 3, 79, 17));
+        this.a(new a(iinventory, 4, 17, 17));
         this.a(icontainerproperties);
 
         int j;
@@ -68,7 +68,7 @@ public class ContainerBrewingStand extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

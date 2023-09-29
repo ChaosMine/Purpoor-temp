@@ -25,7 +25,7 @@ public class PacketPlayInSetJigsaw implements Packet<PacketListenerPlayIn> {
         this.c = packetdataserializer.p();
         this.d = packetdataserializer.p();
         this.e = packetdataserializer.e(32767);
-        this.f = (TileEntityJigsaw.JointType) TileEntityJigsaw.JointType.a(packetdataserializer.e(32767)).orElse(TileEntityJigsaw.JointType.ALIGNED);
+        this.f = TileEntityJigsaw.JointType.a(packetdataserializer.e(32767)).orElse(TileEntityJigsaw.JointType.ALIGNED);
     }
 
     @Override

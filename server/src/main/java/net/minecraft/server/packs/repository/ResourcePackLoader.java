@@ -33,7 +33,7 @@ public class ResourcePackLoader implements AutoCloseable {
     @Nullable
     public static ResourcePackLoader a(String s, boolean flag, Supplier<IResourcePack> supplier, ResourcePackLoader.a resourcepackloader_a, ResourcePackLoader.Position resourcepackloader_position, PackSource packsource) {
         try {
-            IResourcePack iresourcepack = (IResourcePack) supplier.get();
+            IResourcePack iresourcepack = supplier.get();
             Throwable throwable = null;
 
             ResourcePackLoader resourcepackloader;
@@ -105,7 +105,7 @@ public class ResourcePackLoader implements AutoCloseable {
     }
 
     public IResourcePack d() {
-        return (IResourcePack) this.d.get();
+        return this.d.get();
     }
 
     public final String getName() { return this.e(); } // Paper - OBFHELPER
@@ -156,7 +156,7 @@ public class ResourcePackLoader implements AutoCloseable {
 
             if (resourcepackloader_position == ResourcePackLoader.Position.BOTTOM) {
                 for (i = 0; i < list.size(); ++i) {
-                    resourcepackloader = (ResourcePackLoader) function.apply(list.get(i));
+                    resourcepackloader = function.apply(list.get(i));
                     if (!resourcepackloader.g() || resourcepackloader.h() != this) {
                         break;
                     }
@@ -166,7 +166,7 @@ public class ResourcePackLoader implements AutoCloseable {
                 return i;
             } else {
                 for (i = list.size() - 1; i >= 0; --i) {
-                    resourcepackloader = (ResourcePackLoader) function.apply(list.get(i));
+                    resourcepackloader = function.apply(list.get(i));
                     if (!resourcepackloader.g() || resourcepackloader.h() != this) {
                         break;
                     }

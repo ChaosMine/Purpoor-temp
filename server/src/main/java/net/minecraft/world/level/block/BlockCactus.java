@@ -33,7 +33,7 @@ public class BlockCactus extends Block {
 
     protected BlockCactus(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCactus.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockCactus.AGE, 0));
     }
 
     @Override
@@ -51,21 +51,21 @@ public class BlockCactus extends Block {
         if (worldserver.isEmpty(blockposition1)) {
             int i;
 
-            for (i = 1; worldserver.getType(blockposition.down(i)).a((Block) this); ++i) {
+            for (i = 1; worldserver.getType(blockposition.down(i)).a(this); ++i) {
                 ;
             }
 
             if (i < worldserver.paperConfig.cactusMaxHeight) { // Paper - Configurable growth height
-                int j = (Integer) iblockdata.get(BlockCactus.AGE);
+                int j = iblockdata.get(BlockCactus.AGE);
 
                 if (j >= (byte) range(3, ((100.0F / worldserver.spigotConfig.cactusModifier) * 15) + 0.5F, 15)) { // Spigot
                     CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition1, this.getBlockData()); // CraftBukkit
-                    IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockCactus.AGE, 0);
+                    IBlockData iblockdata1 = iblockdata.set(BlockCactus.AGE, 0);
 
                     worldserver.setTypeAndData(blockposition, iblockdata1, 4);
                     iblockdata1.doPhysics(worldserver, blockposition1, this, blockposition, false);
                 } else {
-                    worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockCactus.AGE, j + 1), 4);
+                    worldserver.setTypeAndData(blockposition, iblockdata.set(BlockCactus.AGE, j + 1), 4);
                 }
 
             }
@@ -109,7 +109,7 @@ public class BlockCactus extends Block {
             IBlockData iblockdata2 = iworldreader.getType(blockposition.shift(enumdirection));
 
             material = iblockdata2.getMaterial();
-        } while (!material.isBuildable() && !iworldreader.getFluid(blockposition.shift(enumdirection)).a((Tag) TagsFluid.LAVA));
+        } while (!material.isBuildable() && !iworldreader.getFluid(blockposition.shift(enumdirection)).a(TagsFluid.LAVA));
 
         return false;
     }

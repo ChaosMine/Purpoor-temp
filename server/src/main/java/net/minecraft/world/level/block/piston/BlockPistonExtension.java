@@ -51,7 +51,7 @@ public class BlockPistonExtension extends BlockDirectional {
     private static final VoxelShape[] z = a(false);
 
     private static VoxelShape[] a(boolean flag) {
-        return (VoxelShape[]) Arrays.stream(EnumDirection.values()).map((enumdirection) -> {
+        return Arrays.stream(EnumDirection.values()).map((enumdirection) -> {
             return a(enumdirection, flag);
         }).toArray((i) -> {
             return new VoxelShape[i];
@@ -78,7 +78,7 @@ public class BlockPistonExtension extends BlockDirectional {
 
     public BlockPistonExtension(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockPistonExtension.FACING, EnumDirection.NORTH)).set(BlockPistonExtension.TYPE, BlockPropertyPistonType.DEFAULT)).set(BlockPistonExtension.SHORT, false));
+        this.j(this.blockStateList.getBlockData().set(BlockPistonExtension.FACING, EnumDirection.NORTH).set(BlockPistonExtension.TYPE, BlockPropertyPistonType.DEFAULT).set(BlockPistonExtension.SHORT, false));
     }
 
     @Override
@@ -88,19 +88,19 @@ public class BlockPistonExtension extends BlockDirectional {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return ((Boolean) iblockdata.get(BlockPistonExtension.SHORT) ? BlockPistonExtension.y : BlockPistonExtension.z)[((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)).ordinal()];
+        return (iblockdata.get(BlockPistonExtension.SHORT) ? BlockPistonExtension.y : BlockPistonExtension.z)[iblockdata.get(BlockPistonExtension.FACING).ordinal()];
     }
 
     private boolean a(IBlockData iblockdata, IBlockData iblockdata1) {
         Block block = iblockdata.get(BlockPistonExtension.TYPE) == BlockPropertyPistonType.DEFAULT ? Blocks.PISTON : Blocks.STICKY_PISTON;
 
-        return iblockdata1.a(block) && (Boolean) iblockdata1.get(BlockPiston.EXTENDED) && iblockdata1.get(BlockPistonExtension.FACING) == iblockdata.get(BlockPistonExtension.FACING);
+        return iblockdata1.a(block) && iblockdata1.get(BlockPiston.EXTENDED) && iblockdata1.get(BlockPistonExtension.FACING) == iblockdata.get(BlockPistonExtension.FACING);
     }
 
     @Override
     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
         if (!world.isClientSide && entityhuman.abilities.canInstantlyBuild) {
-            BlockPosition blockposition1 = blockposition.shift(((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)).opposite());
+            BlockPosition blockposition1 = blockposition.shift(iblockdata.get(BlockPistonExtension.FACING).opposite());
 
             if (this.a(iblockdata, world.getType(blockposition1))) {
                 world.b(blockposition1, false);
@@ -114,7 +114,7 @@ public class BlockPistonExtension extends BlockDirectional {
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
             super.remove(iblockdata, world, blockposition, iblockdata1, flag);
-            BlockPosition blockposition1 = blockposition.shift(((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)).opposite());
+            BlockPosition blockposition1 = blockposition.shift(iblockdata.get(BlockPistonExtension.FACING).opposite());
 
             if (this.a(iblockdata, world.getType(blockposition1))) {
                 world.b(blockposition1, true);
@@ -130,7 +130,7 @@ public class BlockPistonExtension extends BlockDirectional {
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        IBlockData iblockdata1 = iworldreader.getType(blockposition.shift(((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)).opposite()));
+        IBlockData iblockdata1 = iworldreader.getType(blockposition.shift(iblockdata.get(BlockPistonExtension.FACING).opposite()));
 
         return this.a(iblockdata, iblockdata1) || iblockdata1.a(Blocks.MOVING_PISTON) && iblockdata1.get(BlockPistonExtension.FACING) == iblockdata.get(BlockPistonExtension.FACING);
     }
@@ -138,7 +138,7 @@ public class BlockPistonExtension extends BlockDirectional {
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
         if (iblockdata.canPlace(world, blockposition)) {
-            BlockPosition blockposition2 = blockposition.shift(((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)).opposite());
+            BlockPosition blockposition2 = blockposition.shift(iblockdata.get(BlockPistonExtension.FACING).opposite());
 
             world.getType(blockposition2).doPhysics(world, blockposition2, block, blockposition1, false);
         }
@@ -147,12 +147,12 @@ public class BlockPistonExtension extends BlockDirectional {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockPistonExtension.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)));
+        return iblockdata.set(BlockPistonExtension.FACING, enumblockrotation.a(iblockdata.get(BlockPistonExtension.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockPistonExtension.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockPistonExtension.FACING)));
     }
 
     @Override

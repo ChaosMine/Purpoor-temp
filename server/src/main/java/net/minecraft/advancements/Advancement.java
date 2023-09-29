@@ -190,7 +190,7 @@ public class Advancement {
 			return this;
 		}
 
-		public Advancement.SerializedAdvancement a(AdvancementRewards.a advancementrewards_a) {
+		public Advancement.SerializedAdvancement a(AdvancementRewards.a_ advancementrewards_a) {
 			return this.a(advancementrewards_a.a());
 		}
 

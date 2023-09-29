@@ -241,7 +241,7 @@ public final class SkyStarLightEngine extends StarLightEngine {
         final int chunkX = chunk.getPos().x;
         final int chunkZ = chunk.getPos().z;
         for (final ShortIterator iterator = sections.iterator(); iterator.hasNext();) {
-            final int y = (int)iterator.nextShort();
+            final int y = iterator.nextShort();
             this.checkNullSection(chunkX, y, chunkZ, true);
         }
 

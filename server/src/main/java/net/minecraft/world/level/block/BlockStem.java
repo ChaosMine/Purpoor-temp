@@ -26,12 +26,12 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
     protected BlockStem(BlockStemmed blockstemmed, BlockBase.Info blockbase_info) {
         super(blockbase_info);
         this.blockFruit = blockstemmed;
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockStem.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockStem.AGE, 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockStem.b[(Integer) iblockdata.get(BlockStem.AGE)];
+        return BlockStem.b[iblockdata.get(BlockStem.AGE)];
     }
 
     @Override
@@ -42,13 +42,13 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (worldserver.getLightLevel(blockposition, 0) >= 9) {
-            float f = BlockCrops.a((Block) this, (IBlockAccess) worldserver, blockposition);
+            float f = BlockCrops.a(this, worldserver, blockposition);
 
             if (random.nextInt((int) ((100.0F / (this == Blocks.PUMPKIN_STEM ? worldserver.spigotConfig.pumpkinModifier : worldserver.spigotConfig.melonModifier)) * (25.0F / f)) + 1) == 0) { // Spigot
-                int i = (Integer) iblockdata.get(BlockStem.AGE);
+                int i = iblockdata.get(BlockStem.AGE);
 
                 if (i < 7) {
-                    iblockdata = (IBlockData) iblockdata.set(BlockStem.AGE, i + 1);
+                    iblockdata = iblockdata.set(BlockStem.AGE, i + 1);
                     CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata, 2); // CraftBukkit
                 } else {
                     EnumDirection enumdirection = EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random);
@@ -61,7 +61,7 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
                             return;
                         }
                         // CraftBukkit end
-                        worldserver.setTypeUpdate(blockposition, (IBlockData) this.blockFruit.d().getBlockData().set(BlockFacingHorizontal.FACING, enumdirection));
+                        worldserver.setTypeUpdate(blockposition, this.blockFruit.d().getBlockData().set(BlockFacingHorizontal.FACING, enumdirection));
                     }
                 }
             }
@@ -71,7 +71,7 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
 
     @Override
     public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        return (Integer) iblockdata.get(BlockStem.AGE) != 7;
+        return iblockdata.get(BlockStem.AGE) != 7;
     }
 
     @Override
@@ -81,8 +81,8 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        int i = Math.min(7, (Integer) iblockdata.get(BlockStem.AGE) + MathHelper.nextInt(worldserver.random, 2, 5));
-        IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockStem.AGE, i);
+        int i = Math.min(7, iblockdata.get(BlockStem.AGE) + MathHelper.nextInt(worldserver.random, 2, 5));
+        IBlockData iblockdata1 = iblockdata.set(BlockStem.AGE, i);
 
         CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata1, 2); // CraftBukkit
         if (i == 7) {

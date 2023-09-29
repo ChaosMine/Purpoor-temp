@@ -27,7 +27,7 @@ public class WorldGenSurfaceNetherForest extends WorldGenSurface<WorldGenSurface
         int j1 = l;
         int k1 = i & 15;
         int l1 = j & 15;
-        double d1 = this.c.a((double) i * 0.1D, (double) l, (double) j * 0.1D);
+        double d1 = this.c.a((double) i * 0.1D, l, (double) j * 0.1D);
         boolean flag = d1 > 0.15D + random.nextDouble() * 0.35D;
         double d2 = this.c.a((double) i * 0.1D, 109.0D, (double) j * 0.1D);
         boolean flag1 = d2 > 0.25D + random.nextDouble() * 0.9D;

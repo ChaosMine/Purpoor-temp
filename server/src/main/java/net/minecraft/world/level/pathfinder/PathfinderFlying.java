@@ -38,11 +38,11 @@ public class PathfinderFlying extends PathfinderNormal {
 
         if (this.e() && this.b.isInWater()) {
             i = MathHelper.floor(this.b.locY());
-            BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(this.b.locX(), (double) i, this.b.locZ());
+            BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(this.b.locX(), i, this.b.locZ());
 
             for (Block block = this.a.getType(blockposition_mutableblockposition).getBlock(); block == Blocks.WATER; block = this.a.getType(blockposition_mutableblockposition).getBlock()) {
                 ++i;
-                blockposition_mutableblockposition.c(this.b.locX(), (double) i, this.b.locZ());
+                blockposition_mutableblockposition.c(this.b.locX(), i, this.b.locZ());
             }
         } else {
             i = MathHelper.floor(this.b.locY() + 0.5D);
@@ -54,10 +54,10 @@ public class PathfinderFlying extends PathfinderNormal {
         if (this.b.a(pathtype) < 0.0F) {
             Set<BlockPosition> set = Sets.newHashSet();
 
-            set.add(new BlockPosition(this.b.getBoundingBox().minX, (double) i, this.b.getBoundingBox().minZ));
-            set.add(new BlockPosition(this.b.getBoundingBox().minX, (double) i, this.b.getBoundingBox().maxZ));
-            set.add(new BlockPosition(this.b.getBoundingBox().maxX, (double) i, this.b.getBoundingBox().minZ));
-            set.add(new BlockPosition(this.b.getBoundingBox().maxX, (double) i, this.b.getBoundingBox().maxZ));
+            set.add(new BlockPosition(this.b.getBoundingBox().minX, i, this.b.getBoundingBox().minZ));
+            set.add(new BlockPosition(this.b.getBoundingBox().minX, i, this.b.getBoundingBox().maxZ));
+            set.add(new BlockPosition(this.b.getBoundingBox().maxX, i, this.b.getBoundingBox().minZ));
+            set.add(new BlockPosition(this.b.getBoundingBox().maxX, i, this.b.getBoundingBox().maxZ));
             Iterator iterator = set.iterator();
 
             while (iterator.hasNext()) {
@@ -309,7 +309,7 @@ public class PathfinderFlying extends PathfinderNormal {
             IBlockData iblockdata = iblockaccess.getType(blockposition_mutableblockposition.d(i, j - 1, k));
             PathType pathtype1 = b(iblockaccess, blockposition_mutableblockposition.d(i, j - 1, k));
 
-            if (pathtype1 != PathType.DAMAGE_FIRE && !iblockdata.a(Blocks.MAGMA_BLOCK) && pathtype1 != PathType.LAVA && !iblockdata.a((Tag) TagsBlock.CAMPFIRES)) {
+            if (pathtype1 != PathType.DAMAGE_FIRE && !iblockdata.a(Blocks.MAGMA_BLOCK) && pathtype1 != PathType.LAVA && !iblockdata.a(TagsBlock.CAMPFIRES)) {
                 if (pathtype1 == PathType.DAMAGE_CACTUS) {
                     pathtype = PathType.DAMAGE_CACTUS;
                 } else if (pathtype1 == PathType.DAMAGE_OTHER) {

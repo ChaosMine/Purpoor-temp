@@ -41,7 +41,7 @@ public class BlockFire extends BlockFireAbstract {
     public static final BlockStateBoolean SOUTH = BlockSprawling.c;
     public static final BlockStateBoolean WEST = BlockSprawling.d;
     public static final BlockStateBoolean UPPER = BlockSprawling.e;
-    private static final Map<EnumDirection, BlockStateBoolean> h = (Map) BlockSprawling.g.entrySet().stream().filter((entry) -> {
+    private static final Map<EnumDirection, BlockStateBoolean> h = BlockSprawling.g.entrySet().stream().filter((entry) -> {
         return entry.getKey() != EnumDirection.DOWN;
     }).collect(SystemUtils.a());
     private static final VoxelShape i = Block.a(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -55,32 +55,32 @@ public class BlockFire extends BlockFireAbstract {
 
     public BlockFire(BlockBase.Info blockbase_info) {
         super(blockbase_info, 1.0F);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockFire.AGE, 0)).set(BlockFire.NORTH, false)).set(BlockFire.EAST, false)).set(BlockFire.SOUTH, false)).set(BlockFire.WEST, false)).set(BlockFire.UPPER, false));
+        this.j(this.blockStateList.getBlockData().set(BlockFire.AGE, 0).set(BlockFire.NORTH, false).set(BlockFire.EAST, false).set(BlockFire.SOUTH, false).set(BlockFire.WEST, false).set(BlockFire.UPPER, false));
         this.q = ImmutableMap.copyOf((Map) this.blockStateList.a().stream().filter((iblockdata) -> {
-            return (Integer) iblockdata.get(BlockFire.AGE) == 0;
+            return iblockdata.get(BlockFire.AGE) == 0;
         }).collect(Collectors.toMap(Function.identity(), BlockFire::h)));
     }
 
     private static VoxelShape h(IBlockData iblockdata) {
         VoxelShape voxelshape = VoxelShapes.a();
 
-        if ((Boolean) iblockdata.get(BlockFire.UPPER)) {
+        if (iblockdata.get(BlockFire.UPPER)) {
             voxelshape = BlockFire.i;
         }
 
-        if ((Boolean) iblockdata.get(BlockFire.NORTH)) {
+        if (iblockdata.get(BlockFire.NORTH)) {
             voxelshape = VoxelShapes.a(voxelshape, BlockFire.o);
         }
 
-        if ((Boolean) iblockdata.get(BlockFire.SOUTH)) {
+        if (iblockdata.get(BlockFire.SOUTH)) {
             voxelshape = VoxelShapes.a(voxelshape, BlockFire.p);
         }
 
-        if ((Boolean) iblockdata.get(BlockFire.EAST)) {
+        if (iblockdata.get(BlockFire.EAST)) {
             voxelshape = VoxelShapes.a(voxelshape, BlockFire.k);
         }
 
-        if ((Boolean) iblockdata.get(BlockFire.WEST)) {
+        if (iblockdata.get(BlockFire.WEST)) {
             voxelshape = VoxelShapes.a(voxelshape, BlockFire.j);
         }
 
@@ -90,7 +90,7 @@ public class BlockFire extends BlockFireAbstract {
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
         // CraftBukkit start
-        if (!(generatoraccess instanceof WorldServer)) return this.canPlace(iblockdata, generatoraccess, blockposition) ? (IBlockData) this.a(generatoraccess, blockposition, (Integer) iblockdata.get(BlockFire.AGE)) : Blocks.AIR.getBlockData(); // Paper - don't fire events in world generation
+        if (!(generatoraccess instanceof WorldServer)) return this.canPlace(iblockdata, generatoraccess, blockposition) ? this.a(generatoraccess, blockposition, iblockdata.get(BlockFire.AGE)) : Blocks.AIR.getBlockData(); // Paper - don't fire events in world generation
         if (!this.canPlace(iblockdata, generatoraccess, blockposition)) {
             // Suppress during worldgen
             if (!(generatoraccess instanceof World)) {
@@ -106,13 +106,13 @@ public class BlockFire extends BlockFireAbstract {
                 return blockState.getHandle();
             }
         }
-        return this.a(generatoraccess, blockposition, (Integer) iblockdata.get(BlockFire.AGE)); // Paper - diff on change, see "don't fire events in world generation"
+        return this.a(generatoraccess, blockposition, iblockdata.get(BlockFire.AGE)); // Paper - diff on change, see "don't fire events in world generation"
         // CraftBukkit end
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) this.q.get(iblockdata.set(BlockFire.AGE, 0));
+        return this.q.get(iblockdata.set(BlockFire.AGE, 0));
     }
 
     @Override
@@ -131,10 +131,10 @@ public class BlockFire extends BlockFireAbstract {
 
             for (int j = 0; j < i; ++j) {
                 EnumDirection enumdirection = aenumdirection[j];
-                BlockStateBoolean blockstateboolean = (BlockStateBoolean) BlockFire.h.get(enumdirection);
+                BlockStateBoolean blockstateboolean = BlockFire.h.get(enumdirection);
 
                 if (blockstateboolean != null) {
-                    iblockdata1 = (IBlockData) iblockdata1.set(blockstateboolean, this.e(iblockaccess.getTypeIfLoaded(blockposition.shift(enumdirection)))); // Paper - prevent chunk loads
+                    iblockdata1 = iblockdata1.set(blockstateboolean, this.e(iblockaccess.getTypeIfLoaded(blockposition.shift(enumdirection)))); // Paper - prevent chunk loads
                 }
             }
 
@@ -161,15 +161,15 @@ public class BlockFire extends BlockFireAbstract {
 
             IBlockData iblockdata1 = worldserver.getType(blockposition.down());
             boolean flag = iblockdata1.a(worldserver.getDimensionManager().o());
-            int i = (Integer) iblockdata.get(BlockFire.AGE);
+            int i = iblockdata.get(BlockFire.AGE);
 
-            if (!flag && worldserver.isRaining() && this.a((World) worldserver, blockposition) && random.nextFloat() < 0.2F + (float) i * 0.03F) {
+            if (!flag && worldserver.isRaining() && this.a(worldserver, blockposition) && random.nextFloat() < 0.2F + (float) i * 0.03F) {
                 fireExtinguished(worldserver, blockposition); // CraftBukkit - extinguished by rain
             } else {
                 int j = Math.min(15, i + random.nextInt(3) / 2);
 
                 if (i != j) {
-                    iblockdata = (IBlockData) iblockdata.set(BlockFire.AGE, j);
+                    iblockdata = iblockdata.set(BlockFire.AGE, j);
                     worldserver.setTypeAndData(blockposition, iblockdata, 4);
                 }
 
@@ -215,7 +215,7 @@ public class BlockFire extends BlockFireAbstract {
 
                                 blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, l, j1, i1);
                                 if (blockposition_mutableblockposition.isInvalidYLocation() || !worldserver.isLoaded(blockposition_mutableblockposition)) continue; // Paper
-                                int l1 = this.a((IWorldReader) worldserver, (BlockPosition) blockposition_mutableblockposition);
+                                int l1 = this.a((IWorldReader) worldserver, blockposition_mutableblockposition);
 
                                 if (l1 > 0) {
                                     int i2 = (l1 + 40 + worldserver.getDifficulty().a() * 7) / (i + 30);
@@ -224,7 +224,7 @@ public class BlockFire extends BlockFireAbstract {
                                         i2 /= 2;
                                     }
 
-                                    if (i2 > 0 && random.nextInt(k1) <= i2 && (!worldserver.isRaining() || !this.a((World) worldserver, (BlockPosition) blockposition_mutableblockposition))) {
+                                    if (i2 > 0 && random.nextInt(k1) <= i2 && (!worldserver.isRaining() || !this.a(worldserver, blockposition_mutableblockposition))) {
                                         int j2 = Math.min(15, i + random.nextInt(5) / 4);
 
                                         // CraftBukkit start - Call to stop spread of fire
@@ -252,11 +252,11 @@ public class BlockFire extends BlockFireAbstract {
     }
 
     private int getBurnChance(IBlockData iblockdata) {
-        return iblockdata.b(BlockProperties.C) && (Boolean) iblockdata.get(BlockProperties.C) ? 0 : this.burnChances.getInt(iblockdata.getBlock());
+        return iblockdata.b(BlockProperties.C) && iblockdata.get(BlockProperties.C) ? 0 : this.burnChances.getInt(iblockdata.getBlock());
     }
 
     private int getFlameChance(IBlockData iblockdata) {
-        return iblockdata.b(BlockProperties.C) && (Boolean) iblockdata.get(BlockProperties.C) ? 0 : this.flameChances.getInt(iblockdata.getBlock());
+        return iblockdata.b(BlockProperties.C) && iblockdata.get(BlockProperties.C) ? 0 : this.flameChances.getInt(iblockdata.getBlock());
     }
 
     private void trySpread(World world, BlockPosition blockposition, int i, Random random, int j, BlockPosition sourceposition) { // CraftBukkit add sourceposition
@@ -312,7 +312,7 @@ public class BlockFire extends BlockFireAbstract {
     private IBlockData a(GeneratorAccess generatoraccess, BlockPosition blockposition, int i) {
         IBlockData iblockdata = a((IBlockAccess) generatoraccess, blockposition);
 
-        return iblockdata.a(Blocks.FIRE) ? (IBlockData) iblockdata.set(BlockFire.AGE, i) : iblockdata;
+        return iblockdata.a(Blocks.FIRE) ? iblockdata.set(BlockFire.AGE, i) : iblockdata;
     }
 
     private boolean canBurn(IBlockAccess iblockaccess, BlockPosition blockposition) {

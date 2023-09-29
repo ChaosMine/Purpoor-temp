@@ -32,7 +32,7 @@ public class MaterialSetTag extends BaseTag<Material, MaterialSetTag> {
      */
     @Deprecated
     public MaterialSetTag(@NotNull Predicate<Material> filter) {
-        this(null, Stream.of(Material.values()).filter(filter).collect(Collectors.toList()));
+        this(null, Stream.of(Material.values()).filter(filter).toList());
     }
 
     /**
@@ -54,7 +54,7 @@ public class MaterialSetTag extends BaseTag<Material, MaterialSetTag> {
     }
 
     public MaterialSetTag(@Nullable NamespacedKey key, @NotNull Predicate<Material> filter) {
-        this(key, Stream.of(Material.values()).filter(filter).collect(Collectors.toList()));
+        this(key, Stream.of(Material.values()).filter(filter).toList());
     }
 
     public MaterialSetTag(@Nullable NamespacedKey key, @NotNull Material... materials) {

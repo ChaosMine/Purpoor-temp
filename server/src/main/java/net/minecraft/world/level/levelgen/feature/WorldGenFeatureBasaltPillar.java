@@ -19,7 +19,12 @@ public class WorldGenFeatureBasaltPillar extends WorldGenerator<WorldGenFeatureE
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         if (generatoraccessseed.isEmpty(blockposition) && !generatoraccessseed.isEmpty(blockposition.up())) {
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition1 = blockposition.i();
@@ -34,18 +39,18 @@ public class WorldGenFeatureBasaltPillar extends WorldGenerator<WorldGenFeatureE
                 }
 
                 generatoraccessseed.setTypeAndData(blockposition_mutableblockposition, Blocks.BASALT.getBlockData(), 2);
-                flag = flag && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.NORTH));
-                flag1 = flag1 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.SOUTH));
-                flag2 = flag2 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.WEST));
-                flag3 = flag3 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.EAST));
+                flag = flag && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.NORTH));
+                flag1 = flag1 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.SOUTH));
+                flag2 = flag2 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.WEST));
+                flag3 = flag3 && this.b(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.EAST));
                 blockposition_mutableblockposition.c(EnumDirection.DOWN);
             }
 
             blockposition_mutableblockposition.c(EnumDirection.UP);
-            this.a((GeneratorAccess) generatoraccessseed, random, (BlockPosition) blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.NORTH));
-            this.a((GeneratorAccess) generatoraccessseed, random, (BlockPosition) blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.SOUTH));
-            this.a((GeneratorAccess) generatoraccessseed, random, (BlockPosition) blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.WEST));
-            this.a((GeneratorAccess) generatoraccessseed, random, (BlockPosition) blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, EnumDirection.EAST));
+            this.a(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.NORTH));
+            this.a(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.SOUTH));
+            this.a(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.WEST));
+            this.a(generatoraccessseed, random, blockposition_mutableblockposition1.a(blockposition_mutableblockposition, EnumDirection.EAST));
             blockposition_mutableblockposition.c(EnumDirection.DOWN);
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition2 = new BlockPosition.MutableBlockPosition();
 
@@ -57,7 +62,7 @@ public class WorldGenFeatureBasaltPillar extends WorldGenerator<WorldGenFeatureE
                         blockposition_mutableblockposition2.g(blockposition_mutableblockposition.b(i, 0, j));
                         int l = 3;
 
-                        while (generatoraccessseed.isEmpty(blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition2, EnumDirection.DOWN))) {
+                        while (generatoraccessseed.isEmpty(blockposition_mutableblockposition1.a(blockposition_mutableblockposition2, EnumDirection.DOWN))) {
                             blockposition_mutableblockposition2.c(EnumDirection.DOWN);
                             --l;
                             if (l <= 0) {
@@ -65,7 +70,7 @@ public class WorldGenFeatureBasaltPillar extends WorldGenerator<WorldGenFeatureE
                             }
                         }
 
-                        if (!generatoraccessseed.isEmpty(blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition2, EnumDirection.DOWN))) {
+                        if (!generatoraccessseed.isEmpty(blockposition_mutableblockposition1.a(blockposition_mutableblockposition2, EnumDirection.DOWN))) {
                             generatoraccessseed.setTypeAndData(blockposition_mutableblockposition2, Blocks.BASALT.getBlockData(), 2);
                         }
                     }

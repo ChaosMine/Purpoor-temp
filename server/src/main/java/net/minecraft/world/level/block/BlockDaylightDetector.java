@@ -30,7 +30,7 @@ public class BlockDaylightDetector extends BlockTileEntity {
 
     public BlockDaylightDetector(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockDaylightDetector.POWER, 0)).set(BlockDaylightDetector.b, false));
+        this.j(this.blockStateList.getBlockData().set(BlockDaylightDetector.POWER, 0).set(BlockDaylightDetector.b, false));
     }
 
     @Override
@@ -45,14 +45,14 @@ public class BlockDaylightDetector extends BlockTileEntity {
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Integer) iblockdata.get(BlockDaylightDetector.POWER);
+        return iblockdata.get(BlockDaylightDetector.POWER);
     }
 
     public static void d(IBlockData iblockdata, World world, BlockPosition blockposition) {
         if (world.getDimensionManager().hasSkyLight()) {
             int i = world.getBrightness(EnumSkyBlock.SKY, blockposition) - world.c();
             float f = world.a(1.0F);
-            boolean flag = (Boolean) iblockdata.get(BlockDaylightDetector.b);
+            boolean flag = iblockdata.get(BlockDaylightDetector.b);
 
             if (flag) {
                 i = 15 - i;
@@ -64,9 +64,9 @@ public class BlockDaylightDetector extends BlockTileEntity {
             }
 
             i = MathHelper.clamp(i, 0, 15);
-            if ((Integer) iblockdata.get(BlockDaylightDetector.POWER) != i) {
-                i = org.bukkit.craftbukkit.event.CraftEventFactory.callRedstoneChange(world, blockposition, ((Integer) iblockdata.get(POWER)), i).getNewCurrent(); // CraftBukkit - Call BlockRedstoneEvent
-                world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockDaylightDetector.POWER, i), 3);
+            if (iblockdata.get(BlockDaylightDetector.POWER) != i) {
+                i = org.bukkit.craftbukkit.event.CraftEventFactory.callRedstoneChange(world, blockposition, iblockdata.get(POWER), i).getNewCurrent(); // CraftBukkit - Call BlockRedstoneEvent
+                world.setTypeAndData(blockposition, iblockdata.set(BlockDaylightDetector.POWER, i), 3);
             }
 
         }
@@ -78,7 +78,7 @@ public class BlockDaylightDetector extends BlockTileEntity {
             if (world.isClientSide) {
                 return EnumInteractionResult.SUCCESS;
             } else {
-                IBlockData iblockdata1 = (IBlockData) iblockdata.a((IBlockState) BlockDaylightDetector.b);
+                IBlockData iblockdata1 = iblockdata.a((IBlockState) BlockDaylightDetector.b);
 
                 world.setTypeAndData(blockposition, iblockdata1, 4);
                 d(iblockdata1, world, blockposition);

@@ -105,7 +105,7 @@ public class NBTTagFloat extends NBTNumber {
 
     @Override
     public double asDouble() {
-        return (double) this.data;
+        return this.data;
     }
 
     @Override

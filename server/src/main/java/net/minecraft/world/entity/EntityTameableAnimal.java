@@ -71,11 +71,11 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
     }
 
     public boolean isTamed() {
-        return ((Byte) this.datawatcher.get(EntityTameableAnimal.bo) & 4) != 0;
+        return (this.datawatcher.get(EntityTameableAnimal.bo) & 4) != 0;
     }
 
     public void setTamed(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityTameableAnimal.bo);
+        byte b0 = this.datawatcher.get(EntityTameableAnimal.bo);
 
         if (flag) {
             this.datawatcher.set(EntityTameableAnimal.bo, (byte) (b0 | 4));
@@ -89,11 +89,11 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
     protected void eL() {}
 
     public boolean isSitting() {
-        return ((Byte) this.datawatcher.get(EntityTameableAnimal.bo) & 1) != 0;
+        return (this.datawatcher.get(EntityTameableAnimal.bo) & 1) != 0;
     }
 
     public void setSitting(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityTameableAnimal.bo);
+        byte b0 = this.datawatcher.get(EntityTameableAnimal.bo);
 
         if (flag) {
             this.datawatcher.set(EntityTameableAnimal.bo, (byte) (b0 | 1));
@@ -105,7 +105,7 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
 
     @Nullable
     public UUID getOwnerUUID() {
-        return (UUID) ((Optional) this.datawatcher.get(EntityTameableAnimal.bp)).orElse((Object) null);
+        return (UUID) ((Optional) this.datawatcher.get(EntityTameableAnimal.bp)).orElse(null);
     }
 
     public void setOwnerUUID(@Nullable UUID uuid) {
@@ -116,7 +116,7 @@ public abstract class EntityTameableAnimal extends EntityAnimal {
         this.setTamed(true);
         this.setOwnerUUID(entityhuman.getUniqueID());
         if (entityhuman instanceof EntityPlayer) {
-            CriterionTriggers.x.a((EntityPlayer) entityhuman, (EntityAnimal) this);
+            CriterionTriggers.x.a((EntityPlayer) entityhuman, this);
         }
 
     }

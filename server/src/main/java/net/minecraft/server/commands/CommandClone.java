@@ -109,7 +109,7 @@ public class CommandClone {
                         for (int l = structureboundingbox.b; l <= structureboundingbox.e; ++l) {
                             for (j = structureboundingbox.a; j <= structureboundingbox.d; ++j) {
                                 BlockPosition blockposition5 = new BlockPosition(j, l, k);
-                                BlockPosition blockposition6 = blockposition5.a((BaseBlockPosition) blockposition4);
+                                BlockPosition blockposition6 = blockposition5.a(blockposition4);
                                 ShapeDetectorBlock shapedetectorblock = new ShapeDetectorBlock(worldserver, blockposition5, false);
                                 IBlockData iblockdata = shapedetectorblock.a();
 
@@ -122,10 +122,10 @@ public class CommandClone {
                                         list1.add(new CommandClone.CommandCloneStoredTileEntity(blockposition6, iblockdata, nbttagcompound));
                                         deque.addLast(blockposition5);
                                     } else if (!iblockdata.i(worldserver, blockposition5) && !iblockdata.r(worldserver, blockposition5)) {
-                                        list2.add(new CommandClone.CommandCloneStoredTileEntity(blockposition6, iblockdata, (NBTTagCompound) null));
+                                        list2.add(new CommandClone.CommandCloneStoredTileEntity(blockposition6, iblockdata, null));
                                         deque.addFirst(blockposition5);
                                     } else {
-                                        list.add(new CommandClone.CommandCloneStoredTileEntity(blockposition6, iblockdata, (NBTTagCompound) null));
+                                        list.add(new CommandClone.CommandCloneStoredTileEntity(blockposition6, iblockdata, null));
                                         deque.addLast(blockposition5);
                                     }
                                 }

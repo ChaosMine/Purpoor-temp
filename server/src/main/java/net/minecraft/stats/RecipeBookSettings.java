@@ -3,171 +3,170 @@ package net.minecraft.stats;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import java.util.Map;
 import net.minecraft.SystemUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketDataSerializer;
 import net.minecraft.world.inventory.RecipeBookType;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public final class RecipeBookSettings {
 
-    private static final Map<RecipeBookType, Pair<String, String>> a = ImmutableMap.of(RecipeBookType.CRAFTING, Pair.of("isGuiOpen", "isFilteringCraftable"), RecipeBookType.FURNACE, Pair.of("isFurnaceGuiOpen", "isFurnaceFilteringCraftable"), RecipeBookType.BLAST_FURNACE, Pair.of("isBlastingFurnaceGuiOpen", "isBlastingFurnaceFilteringCraftable"), RecipeBookType.SMOKER, Pair.of("isSmokerGuiOpen", "isSmokerFilteringCraftable"));
-    private final Map<RecipeBookType, RecipeBookSettings.a> b;
+	private static final Map<RecipeBookType, Pair<String, String>> a = ImmutableMap.of(RecipeBookType.CRAFTING, Pair.of("isGuiOpen", "isFilteringCraftable"), RecipeBookType.FURNACE, Pair.of("isFurnaceGuiOpen", "isFurnaceFilteringCraftable"), RecipeBookType.BLAST_FURNACE, Pair.of("isBlastingFurnaceGuiOpen", "isBlastingFurnaceFilteringCraftable"), RecipeBookType.SMOKER, Pair.of("isSmokerGuiOpen", "isSmokerFilteringCraftable"));
+	private final Map<RecipeBookType, RecipeBookSettings.a> b;
 
-    private RecipeBookSettings(Map<RecipeBookType, RecipeBookSettings.a> map) {
-        this.b = map;
-    }
+	private RecipeBookSettings(Map<RecipeBookType, RecipeBookSettings.a> map) {
+		this.b = map;
+	}
 
-    public RecipeBookSettings() {
-        this((Map) SystemUtils.a((Object) Maps.newEnumMap(RecipeBookType.class), (enummap) -> {
-            RecipeBookType[] arecipebooktype = RecipeBookType.values();
-            int i = arecipebooktype.length;
+	public RecipeBookSettings() {
+		this(SystemUtils.a(new EnumMap<>(RecipeBookType.class), map -> {
+			RecipeBookType[] arecipebooktype = RecipeBookType.values();
+			int i = arecipebooktype.length;
 
-            for (int j = 0; j < i; ++j) {
-                RecipeBookType recipebooktype = arecipebooktype[j];
+			for (int j = 0; j < i; ++j) {
+				RecipeBookType recipebooktype = arecipebooktype[j];
+				map.put(recipebooktype, new RecipeBookSettings.a(false, false));
+			}
+		}));
+	}
 
-                enummap.put(recipebooktype, new RecipeBookSettings.a(false, false));
-            }
+	public static RecipeBookSettings a(PacketDataSerializer packetdataserializer) {
+		Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
+		RecipeBookType[] arecipebooktype = RecipeBookType.values();
+		int i = arecipebooktype.length;
 
-        }));
-    }
+		for (int j = 0; j < i; ++j) {
+			RecipeBookType recipebooktype = arecipebooktype[j];
+			boolean flag = packetdataserializer.readBoolean();
+			boolean flag1 = packetdataserializer.readBoolean();
 
-    public void a(RecipeBookType recipebooktype, boolean flag) {
-        ((RecipeBookSettings.a) this.b.get(recipebooktype)).a = flag;
-    }
+			map.put(recipebooktype, new RecipeBookSettings.a(flag, flag1));
+		}
 
-    public void b(RecipeBookType recipebooktype, boolean flag) {
-        ((RecipeBookSettings.a) this.b.get(recipebooktype)).b = flag;
-    }
+		return new RecipeBookSettings(map);
+	}
 
-    public static RecipeBookSettings a(PacketDataSerializer packetdataserializer) {
-        Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
-        RecipeBookType[] arecipebooktype = RecipeBookType.values();
-        int i = arecipebooktype.length;
+	public static RecipeBookSettings a(NBTTagCompound nbttagcompound) {
+		Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
 
-        for (int j = 0; j < i; ++j) {
-            RecipeBookType recipebooktype = arecipebooktype[j];
-            boolean flag = packetdataserializer.readBoolean();
-            boolean flag1 = packetdataserializer.readBoolean();
+		RecipeBookSettings.a.forEach((recipebooktype, pair) -> {
+			boolean flag = nbttagcompound.getBoolean(pair.getFirst());
+			boolean flag1 = nbttagcompound.getBoolean(pair.getSecond());
 
-            map.put(recipebooktype, new RecipeBookSettings.a(flag, flag1));
-        }
+			map.put(recipebooktype, new RecipeBookSettings.a(flag, flag1));
+		});
+		return new RecipeBookSettings(map);
+	}
 
-        return new RecipeBookSettings(map);
-    }
+	public void a(RecipeBookType recipebooktype, boolean flag) {
+		this.b.get(recipebooktype).a = flag;
+	}
 
-    public void b(PacketDataSerializer packetdataserializer) {
-        RecipeBookType[] arecipebooktype = RecipeBookType.values();
-        int i = arecipebooktype.length;
+	public void b(RecipeBookType recipebooktype, boolean flag) {
+		this.b.get(recipebooktype).b = flag;
+	}
 
-        for (int j = 0; j < i; ++j) {
-            RecipeBookType recipebooktype = arecipebooktype[j];
-            RecipeBookSettings.a recipebooksettings_a = (RecipeBookSettings.a) this.b.get(recipebooktype);
+	public void b(PacketDataSerializer packetdataserializer) {
+		RecipeBookType[] arecipebooktype = RecipeBookType.values();
+		int i = arecipebooktype.length;
 
-            if (recipebooksettings_a == null) {
-                packetdataserializer.writeBoolean(false);
-                packetdataserializer.writeBoolean(false);
-            } else {
-                packetdataserializer.writeBoolean(recipebooksettings_a.a);
-                packetdataserializer.writeBoolean(recipebooksettings_a.b);
-            }
-        }
+		for (int j = 0; j < i; ++j) {
+			RecipeBookType recipebooktype = arecipebooktype[j];
+			RecipeBookSettings.a recipebooksettings_a = this.b.get(recipebooktype);
 
-    }
+			if (recipebooksettings_a == null) {
+				packetdataserializer.writeBoolean(false);
+				packetdataserializer.writeBoolean(false);
+			} else {
+				packetdataserializer.writeBoolean(recipebooksettings_a.a);
+				packetdataserializer.writeBoolean(recipebooksettings_a.b);
+			}
+		}
 
-    public static RecipeBookSettings a(NBTTagCompound nbttagcompound) {
-        Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
+	}
 
-        RecipeBookSettings.a.forEach((recipebooktype, pair) -> {
-            boolean flag = nbttagcompound.getBoolean((String) pair.getFirst());
-            boolean flag1 = nbttagcompound.getBoolean((String) pair.getSecond());
+	public void b(NBTTagCompound nbttagcompound) {
+		RecipeBookSettings.a.forEach((recipebooktype, pair) -> {
+			RecipeBookSettings.a recipebooksettings_a = this.b.get(recipebooktype);
 
-            map.put(recipebooktype, new RecipeBookSettings.a(flag, flag1));
-        });
-        return new RecipeBookSettings(map);
-    }
+			nbttagcompound.setBoolean(pair.getFirst(), recipebooksettings_a.a);
+			nbttagcompound.setBoolean(pair.getSecond(), recipebooksettings_a.b);
+		});
+	}
 
-    public void b(NBTTagCompound nbttagcompound) {
-        RecipeBookSettings.a.forEach((recipebooktype, pair) -> {
-            RecipeBookSettings.a recipebooksettings_a = (RecipeBookSettings.a) this.b.get(recipebooktype);
+	public RecipeBookSettings a() {
+		Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
+		RecipeBookType[] arecipebooktype = RecipeBookType.values();
+		int i = arecipebooktype.length;
 
-            nbttagcompound.setBoolean((String) pair.getFirst(), recipebooksettings_a.a);
-            nbttagcompound.setBoolean((String) pair.getSecond(), recipebooksettings_a.b);
-        });
-    }
+		for (int j = 0; j < i; ++j) {
+			RecipeBookType recipebooktype = arecipebooktype[j];
+			RecipeBookSettings.a recipebooksettings_a = this.b.get(recipebooktype);
 
-    public RecipeBookSettings a() {
-        Map<RecipeBookType, RecipeBookSettings.a> map = Maps.newEnumMap(RecipeBookType.class);
-        RecipeBookType[] arecipebooktype = RecipeBookType.values();
-        int i = arecipebooktype.length;
+			map.put(recipebooktype, recipebooksettings_a.a());
+		}
 
-        for (int j = 0; j < i; ++j) {
-            RecipeBookType recipebooktype = arecipebooktype[j];
-            RecipeBookSettings.a recipebooksettings_a = (RecipeBookSettings.a) this.b.get(recipebooktype);
+		return new RecipeBookSettings(map);
+	}
 
-            map.put(recipebooktype, recipebooksettings_a.a());
-        }
+	public void a(RecipeBookSettings recipebooksettings) {
+		this.b.clear();
+		RecipeBookType[] arecipebooktype = RecipeBookType.values();
+		int i = arecipebooktype.length;
 
-        return new RecipeBookSettings(map);
-    }
+		for (int j = 0; j < i; ++j) {
+			RecipeBookType recipebooktype = arecipebooktype[j];
+			RecipeBookSettings.a recipebooksettings_a = recipebooksettings.b.get(recipebooktype);
 
-    public void a(RecipeBookSettings recipebooksettings) {
-        this.b.clear();
-        RecipeBookType[] arecipebooktype = RecipeBookType.values();
-        int i = arecipebooktype.length;
+			this.b.put(recipebooktype, recipebooksettings_a.a());
+		}
 
-        for (int j = 0; j < i; ++j) {
-            RecipeBookType recipebooktype = arecipebooktype[j];
-            RecipeBookSettings.a recipebooksettings_a = (RecipeBookSettings.a) recipebooksettings.b.get(recipebooktype);
+	}
 
-            this.b.put(recipebooktype, recipebooksettings_a.a());
-        }
+	public boolean equals(Object object) {
+		return this == object || object instanceof RecipeBookSettings && this.b.equals(((RecipeBookSettings) object).b);
+	}
 
-    }
+	public int hashCode() {
+		return this.b.hashCode();
+	}
 
-    public boolean equals(Object object) {
-        return this == object || object instanceof RecipeBookSettings && this.b.equals(((RecipeBookSettings) object).b);
-    }
+	static final class a {
 
-    public int hashCode() {
-        return this.b.hashCode();
-    }
+		private boolean a;
+		private boolean b;
 
-    static final class a {
+		public a(boolean flag, boolean flag1) {
+			this.a = flag;
+			this.b = flag1;
+		}
 
-        private boolean a;
-        private boolean b;
+		public RecipeBookSettings.a a() {
+			return new RecipeBookSettings.a(this.a, this.b);
+		}
 
-        public a(boolean flag, boolean flag1) {
-            this.a = flag;
-            this.b = flag1;
-        }
+		public boolean equals(Object object) {
+			if (this == object) {
+				return true;
+			} else if (!(object instanceof RecipeBookSettings.a recipebooksettings_a)) {
+				return false;
+			} else {
 
-        public RecipeBookSettings.a a() {
-            return new RecipeBookSettings.a(this.a, this.b);
-        }
+				return this.a == recipebooksettings_a.a && this.b == recipebooksettings_a.b;
+			}
+		}
 
-        public boolean equals(Object object) {
-            if (this == object) {
-                return true;
-            } else if (!(object instanceof RecipeBookSettings.a)) {
-                return false;
-            } else {
-                RecipeBookSettings.a recipebooksettings_a = (RecipeBookSettings.a) object;
+		public int hashCode() {
+			int i = this.a ? 1 : 0;
 
-                return this.a == recipebooksettings_a.a && this.b == recipebooksettings_a.b;
-            }
-        }
+			i = 31 * i + (this.b ? 1 : 0);
+			return i;
+		}
 
-        public int hashCode() {
-            int i = this.a ? 1 : 0;
-
-            i = 31 * i + (this.b ? 1 : 0);
-            return i;
-        }
-
-        public String toString() {
-            return "[open=" + this.a + ", filtering=" + this.b + ']';
-        }
-    }
+		public String toString() {
+			return "[open=" + this.a + ", filtering=" + this.b + ']';
+		}
+	}
 }

@@ -53,7 +53,7 @@ public class NavigationFlying extends NavigationAbstract {
             if (this.a()) {
                 this.l();
             } else if (this.c != null && !this.c.c()) {
-                vec3d = this.c.a((Entity) this.a);
+                vec3d = this.c.a(this.a);
                 if (MathHelper.floor(this.a.locX()) == MathHelper.floor(vec3d.x) && MathHelper.floor(this.a.locY()) == MathHelper.floor(vec3d.y) && MathHelper.floor(this.a.locZ()) == MathHelper.floor(vec3d.z)) {
                     this.c.a();
                 }
@@ -61,7 +61,7 @@ public class NavigationFlying extends NavigationAbstract {
 
             PacketDebug.a(this.b, this.a, this.c, this.l);
             if (!this.m()) {
-                vec3d = this.c.a((Entity) this.a);
+                vec3d = this.c.a(this.a);
                 this.a.getControllerMove().a(vec3d.x, vec3d.y, vec3d.z, this.d);
             }
         }
@@ -147,6 +147,6 @@ public class NavigationFlying extends NavigationAbstract {
 
     @Override
     public boolean a(BlockPosition blockposition) {
-        return this.b.getType(blockposition).a((IBlockAccess) this.b, blockposition, (Entity) this.a);
+        return this.b.getType(blockposition).a((IBlockAccess) this.b, blockposition, this.a);
     }
 }

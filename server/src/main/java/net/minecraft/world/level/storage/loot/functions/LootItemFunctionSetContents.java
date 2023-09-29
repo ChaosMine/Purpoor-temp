@@ -60,7 +60,7 @@ public class LootItemFunctionSetContents extends LootItemFunctionConditional {
         super.a(lootcollector);
 
         for (int i = 0; i < this.a.size(); ++i) {
-            ((LootEntryAbstract) this.a.get(i)).a(lootcollector.b(".entry[" + i + "]"));
+            this.a.get(i).a(lootcollector.b(".entry[" + i + "]"));
         }
 
     }
@@ -74,13 +74,13 @@ public class LootItemFunctionSetContents extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetContents lootitemfunctionsetcontents, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetcontents, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetcontents, jsonserializationcontext);
             jsonobject.add("entries", jsonserializationcontext.serialize(lootitemfunctionsetcontents.a));
         }
 
         @Override
         public LootItemFunctionSetContents b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            LootEntryAbstract[] alootentryabstract = (LootEntryAbstract[]) ChatDeserializer.a(jsonobject, "entries", jsondeserializationcontext, LootEntryAbstract[].class);
+            LootEntryAbstract[] alootentryabstract = ChatDeserializer.a(jsonobject, "entries", jsondeserializationcontext, LootEntryAbstract[].class);
 
             return new LootItemFunctionSetContents(alootitemcondition, Arrays.asList(alootentryabstract));
         }

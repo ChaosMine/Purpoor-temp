@@ -15,21 +15,21 @@ import java.util.function.Function;
 public class DoubleBlockFinder {
 
     public static <S extends TileEntity> DoubleBlockFinder.Result<S> a(TileEntityTypes<S> tileentitytypes, Function<IBlockData, DoubleBlockFinder.BlockType> function, Function<IBlockData, EnumDirection> function1, BlockStateDirection blockstatedirection, IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition, BiPredicate<GeneratorAccess, BlockPosition> bipredicate) {
-        S s0 = tileentitytypes.a((IBlockAccess) generatoraccess, blockposition);
+        S s0 = tileentitytypes.a(generatoraccess, blockposition);
 
         if (s0 == null) {
             return DoubleBlockFinder.Combiner::b;
         } else if (bipredicate.test(generatoraccess, blockposition)) {
             return DoubleBlockFinder.Combiner::b;
         } else {
-            DoubleBlockFinder.BlockType doubleblockfinder_blocktype = (DoubleBlockFinder.BlockType) function.apply(iblockdata);
+            DoubleBlockFinder.BlockType doubleblockfinder_blocktype = function.apply(iblockdata);
             boolean flag = doubleblockfinder_blocktype == DoubleBlockFinder.BlockType.SINGLE;
             boolean flag1 = doubleblockfinder_blocktype == DoubleBlockFinder.BlockType.FIRST;
 
             if (flag) {
                 return new DoubleBlockFinder.Result.Single<>(s0);
             } else {
-                BlockPosition blockposition1 = blockposition.shift((EnumDirection) function1.apply(iblockdata));
+                BlockPosition blockposition1 = blockposition.shift(function1.apply(iblockdata));
                 // Paper start
                 IBlockData iblockdata1 = generatoraccess.getTypeIfLoaded(blockposition1);
                 if (iblockdata1 == null) {
@@ -38,14 +38,14 @@ public class DoubleBlockFinder {
                 // Paper end
 
                 if (iblockdata1.a(iblockdata.getBlock())) {
-                    DoubleBlockFinder.BlockType doubleblockfinder_blocktype1 = (DoubleBlockFinder.BlockType) function.apply(iblockdata1);
+                    DoubleBlockFinder.BlockType doubleblockfinder_blocktype1 = function.apply(iblockdata1);
 
                     if (doubleblockfinder_blocktype1 != DoubleBlockFinder.BlockType.SINGLE && doubleblockfinder_blocktype != doubleblockfinder_blocktype1 && iblockdata1.get(blockstatedirection) == iblockdata.get(blockstatedirection)) {
                         if (bipredicate.test(generatoraccess, blockposition1)) {
                             return DoubleBlockFinder.Combiner::b;
                         }
 
-                        S s1 = tileentitytypes.a((IBlockAccess) generatoraccess, blockposition1);
+                        S s1 = tileentitytypes.a(generatoraccess, blockposition1);
 
                         if (s1 != null) {
                             S s2 = flag1 ? s0 : s1;

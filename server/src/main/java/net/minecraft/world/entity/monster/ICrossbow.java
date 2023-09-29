@@ -39,11 +39,11 @@ public interface ICrossbow extends IRangedEntity {
     default void a(EntityLiving entityliving, EntityLiving entityliving1, IProjectile iprojectile, float f, float f1) {
         double d0 = entityliving1.locX() - entityliving.locX();
         double d1 = entityliving1.locZ() - entityliving.locZ();
-        double d2 = (double) MathHelper.sqrt(d0 * d0 + d1 * d1);
+        double d2 = MathHelper.sqrt(d0 * d0 + d1 * d1);
         double d3 = entityliving1.e(0.3333333333333333D) - iprojectile.locY() + d2 * 0.20000000298023224D;
         Vector3fa vector3fa = this.a(entityliving, new Vec3D(d0, d3, d1), f);
 
-        iprojectile.shoot((double) vector3fa.a(), (double) vector3fa.b(), (double) vector3fa.c(), f1, (float) (14 - entityliving.world.getDifficulty().a() * 4));
+        iprojectile.shoot(vector3fa.a(), vector3fa.b(), vector3fa.c(), f1, (float) (14 - entityliving.world.getDifficulty().a() * 4));
         entityliving.playSound(SoundEffects.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (entityliving.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 

@@ -35,17 +35,17 @@ public final class MinecraftServerBeans implements DynamicMBean {
     private final Map<String, MinecraftServerBeans.a> d;
 
     private MinecraftServerBeans(MinecraftServer minecraftserver) {
-        this.d = (Map) Stream.of(new MinecraftServerBeans.a("tickTimes", this::b, "Historical tick times (ms)", long[].class), new MinecraftServerBeans.a("averageTickTime", this::a, "Current average tick time (ms)", Long.TYPE)).collect(Collectors.toMap((minecraftserverbeans_a) -> {
+        this.d = Stream.of(new a("tickTimes", this::b, "Historical tick times (ms)", long[].class), new a("averageTickTime", this::a, "Current average tick time (ms)", Long.TYPE)).collect(Collectors.toMap((minecraftserverbeans_a) -> {
             return minecraftserverbeans_a.a;
         }, Function.identity()));
         this.b = minecraftserver;
-        MBeanAttributeInfo[] ambeanattributeinfo = (MBeanAttributeInfo[]) this.d.values().stream().map((object) -> {
-            return ((MinecraftServerBeans.a) object).a();
+        MBeanAttributeInfo[] ambeanattributeinfo = this.d.values().stream().map((object) -> {
+            return object.a();
         }).toArray((i) -> {
             return new MBeanAttributeInfo[i];
         });
 
-        this.c = new MBeanInfo(MinecraftServerBeans.class.getSimpleName(), "metrics for dedicated server", ambeanattributeinfo, (MBeanConstructorInfo[]) null, (MBeanOperationInfo[]) null, new MBeanNotificationInfo[0]);
+        this.c = new MBeanInfo(MinecraftServerBeans.class.getSimpleName(), "metrics for dedicated server", ambeanattributeinfo, null, null, new MBeanNotificationInfo[0]);
     }
 
     public static void a(MinecraftServer minecraftserver) {
@@ -67,7 +67,7 @@ public final class MinecraftServerBeans implements DynamicMBean {
 
     @Nullable
     public Object getAttribute(String s) {
-        MinecraftServerBeans.a minecraftserverbeans_a = (MinecraftServerBeans.a) this.d.get(s);
+        MinecraftServerBeans.a minecraftserverbeans_a = this.d.get(s);
 
         return minecraftserverbeans_a == null ? null : minecraftserverbeans_a.b.get();
     }
@@ -75,13 +75,9 @@ public final class MinecraftServerBeans implements DynamicMBean {
     public void setAttribute(Attribute attribute) {}
 
     public AttributeList getAttributes(String[] astring) {
-        Stream stream = Arrays.stream(astring);
-        Map map = this.d;
-
-        this.d.getClass();
-        List<Attribute> list = (List) stream.map(map::get).filter(Objects::nonNull).map((minecraftserverbeans_a) -> {
+        List<Attribute> list = Arrays.stream(astring).map(this.d::get).filter(Objects::nonNull).map((minecraftserverbeans_a) -> {
             return new Attribute(minecraftserverbeans_a.a, minecraftserverbeans_a.b.get());
-        }).collect(Collectors.toList());
+        }).toList();
 
         return new AttributeList(list);
     }

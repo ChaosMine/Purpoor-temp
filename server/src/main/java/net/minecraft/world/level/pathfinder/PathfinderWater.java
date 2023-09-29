@@ -58,7 +58,7 @@ public class PathfinderWater extends PathfinderAbstract {
         Fluid fluid = iblockaccess.getFluid(blockposition);
         IBlockData iblockdata = iblockaccess.getType(blockposition);
 
-        return fluid.isEmpty() && iblockdata.a(iblockaccess, blockposition.down(), PathMode.WATER) && iblockdata.isAir() ? PathType.BREACH : (fluid.a((Tag) TagsFluid.WATER) && iblockdata.a(iblockaccess, blockposition, PathMode.WATER) ? PathType.WATER : PathType.BLOCKED);
+        return fluid.isEmpty() && iblockdata.a(iblockaccess, blockposition.down(), PathMode.WATER) && iblockdata.isAir() ? PathType.BREACH : (fluid.a(TagsFluid.WATER) && iblockdata.a(iblockaccess, blockposition, PathMode.WATER) ? PathType.WATER : PathType.BLOCKED);
     }
 
     @Nullable
@@ -96,11 +96,11 @@ public class PathfinderWater extends PathfinderAbstract {
                     Fluid fluid = this.a.getFluid(blockposition_mutableblockposition.d(l, i1, j1));
                     IBlockData iblockdata = this.a.getType(blockposition_mutableblockposition.d(l, i1, j1));
 
-                    if (fluid.isEmpty() && iblockdata.a((IBlockAccess) this.a, blockposition_mutableblockposition.down(), PathMode.WATER) && iblockdata.isAir()) {
+                    if (fluid.isEmpty() && iblockdata.a(this.a, blockposition_mutableblockposition.down(), PathMode.WATER) && iblockdata.isAir()) {
                         return PathType.BREACH;
                     }
 
-                    if (!fluid.a((Tag) TagsFluid.WATER)) {
+                    if (!fluid.a(TagsFluid.WATER)) {
                         return PathType.BLOCKED;
                     }
                 }
@@ -109,7 +109,7 @@ public class PathfinderWater extends PathfinderAbstract {
 
         IBlockData iblockdata1 = this.a.getType(blockposition_mutableblockposition);
 
-        if (iblockdata1.a((IBlockAccess) this.a, blockposition_mutableblockposition, PathMode.WATER)) {
+        if (iblockdata1.a(this.a, blockposition_mutableblockposition, PathMode.WATER)) {
             return PathType.WATER;
         } else {
             return PathType.BLOCKED;

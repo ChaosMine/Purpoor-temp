@@ -43,7 +43,7 @@ public class LootItemFunctionSetTag extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetTag lootitemfunctionsettag, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsettag, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsettag, jsonserializationcontext);
             jsonobject.addProperty("tag", lootitemfunctionsettag.a.toString());
         }
 

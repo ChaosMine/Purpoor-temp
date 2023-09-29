@@ -126,7 +126,7 @@ public class DefinedStructureInfo {
     }
 
     public Random b(@Nullable BlockPosition blockposition) {
-        return this.h != null ? this.h : (blockposition == null ? new Random(SystemUtils.getMonotonicMillis()) : new Random(MathHelper.a((BaseBlockPosition) blockposition)));
+        return this.h != null ? this.h : (blockposition == null ? new Random(SystemUtils.getMonotonicMillis()) : new Random(MathHelper.a(blockposition)));
     }
 
     public boolean g() {
@@ -167,7 +167,7 @@ public class DefinedStructureInfo {
         if (i == 0) {
             throw new IllegalStateException("No palettes");
         } else {
-            return (DefinedStructure.a) list.get(this.b(blockposition).nextInt(i));
+            return list.get(this.b(blockposition).nextInt(i));
         }
     }
 

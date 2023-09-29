@@ -13,8 +13,8 @@ import java.util.UUID;
 public class CraftItem extends CraftEntity implements Item {
 
     // Paper start
-    private final static int NO_AGE_TIME = (int) Short.MIN_VALUE;
-    private final static int NO_PICKUP_TIME = (int) Short.MAX_VALUE;
+    private final static int NO_AGE_TIME = Short.MIN_VALUE;
+    private final static int NO_PICKUP_TIME = Short.MAX_VALUE;
     // Paper end
 
     private final EntityItem item;

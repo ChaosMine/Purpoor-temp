@@ -14,7 +14,7 @@ public class InventoryUtils {
     private static final Random a = new Random();
 
     public static void dropInventory(World world, BlockPosition blockposition, IInventory iinventory) {
-        dropInventory(world, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), iinventory);
+        dropInventory(world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), iinventory);
     }
 
     public static void dropEntity(World world, Entity entity, IInventory iinventory) {
@@ -30,12 +30,12 @@ public class InventoryUtils {
 
     public static void a(World world, BlockPosition blockposition, NonNullList<ItemStack> nonnulllist) {
         nonnulllist.forEach((itemstack) -> {
-            dropItem(world, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), itemstack);
+            dropItem(world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), itemstack);
         });
     }
 
     public static void dropItem(World world, double d0, double d1, double d2, ItemStack itemstack) {
-        double d3 = (double) EntityTypes.ITEM.j();
+        double d3 = EntityTypes.ITEM.j();
         double d4 = 1.0D - d3;
         double d5 = d3 / 2.0D;
         double d6 = Math.floor(d0) + InventoryUtils.a.nextDouble() * d4 + d5;

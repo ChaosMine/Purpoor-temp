@@ -91,7 +91,7 @@ public class CommandReplaceItem {
             throw CommandReplaceItem.c.create(itemstack.C(), i);
         } else {
             if (list.size() == 1) {
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.replaceitem.entity.success.single", new Object[]{((Entity) list.iterator().next()).getScoreboardDisplayName(), itemstack.C()}), true);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.replaceitem.entity.success.single", new Object[]{list.iterator().next().getScoreboardDisplayName(), itemstack.C()}), true);
             } else {
                 commandlistenerwrapper.sendMessage(new ChatMessage("commands.replaceitem.entity.success.multiple", new Object[]{list.size(), itemstack.C()}), true);
             }

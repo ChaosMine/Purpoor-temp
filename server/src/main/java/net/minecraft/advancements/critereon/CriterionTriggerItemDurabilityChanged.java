@@ -17,7 +17,7 @@ public class CriterionTriggerItemDurabilityChanged extends CriterionTriggerAbstr
     }
 
     @Override
-    public CriterionTriggerItemDurabilityChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerItemDurabilityChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("durability"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1 = CriterionConditionValue.IntegerRange.a(jsonobject.get("delta"));
@@ -37,14 +37,14 @@ public class CriterionTriggerItemDurabilityChanged extends CriterionTriggerAbstr
         private final CriterionConditionValue.IntegerRange b;
         private final CriterionConditionValue.IntegerRange c;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange1) {
             super(CriterionTriggerItemDurabilityChanged.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
             this.b = criterionconditionvalue_integerrange;
             this.c = criterionconditionvalue_integerrange1;
         }
 
-        public static CriterionTriggerItemDurabilityChanged.a a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public static CriterionTriggerItemDurabilityChanged.a a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             return new CriterionTriggerItemDurabilityChanged.a(criterionconditionentity_b, criterionconditionitem, criterionconditionvalue_integerrange, CriterionConditionValue.IntegerRange.e);
         }
 

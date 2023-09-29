@@ -152,7 +152,7 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /
             minecraftKey = new MinecraftKey(s);
         } catch (ResourceKeyInvalidException ex) {}
         // Paper end
-        return (TileEntity) IRegistry.BLOCK_ENTITY_TYPE.getOptional(minecraftKey).map((tileentitytypes) -> {
+        return IRegistry.BLOCK_ENTITY_TYPE.getOptional(minecraftKey).map((tileentitytypes) -> {
             try {
                 return tileentitytypes.a();
             } catch (Throwable throwable) {

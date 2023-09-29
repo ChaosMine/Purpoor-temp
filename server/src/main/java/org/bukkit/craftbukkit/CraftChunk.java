@@ -52,7 +52,7 @@ public class CraftChunk implements Chunk {
     public CraftChunk(net.minecraft.world.level.chunk.Chunk chunk) {
         this.weakChunk = new WeakReference<net.minecraft.world.level.chunk.Chunk>(chunk);
 
-        worldServer = (WorldServer) getHandle().world;
+        worldServer = getHandle().world;
         x = getHandle().getPos().x;
         z = getHandle().getPos().z;
     }

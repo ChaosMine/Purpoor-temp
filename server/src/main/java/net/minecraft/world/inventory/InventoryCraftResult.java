@@ -82,7 +82,7 @@ public class InventoryCraftResult implements IInventory, RecipeHolder {
 
     @Override
     public ItemStack getItem(int i) {
-        return (ItemStack) this.items.get(0);
+        return this.items.get(0);
     }
 
     @Override

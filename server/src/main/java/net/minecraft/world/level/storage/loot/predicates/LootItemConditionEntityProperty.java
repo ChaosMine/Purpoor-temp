@@ -35,17 +35,17 @@ public class LootItemConditionEntityProperty implements LootItemCondition {
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        Entity entity = (Entity) loottableinfo.getContextParameter(this.b.a());
-        Vec3D vec3d = (Vec3D) loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
+        Entity entity = loottableinfo.getContextParameter(this.b.a());
+        Vec3D vec3d = loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
 
         return this.a.a(loottableinfo.getWorld(), vec3d, entity);
     }
 
     public static LootItemCondition.a a(LootTableInfo.EntityTarget loottableinfo_entitytarget) {
-        return a(loottableinfo_entitytarget, CriterionConditionEntity.a.a());
+        return a(loottableinfo_entitytarget, CriterionConditionEntity.a_.a());
     }
 
-    public static LootItemCondition.a a(LootTableInfo.EntityTarget loottableinfo_entitytarget, CriterionConditionEntity.a criterionconditionentity_a) {
+    public static LootItemCondition.a a(LootTableInfo.EntityTarget loottableinfo_entitytarget, CriterionConditionEntity.a_ criterionconditionentity_a) {
         return () -> {
             return new LootItemConditionEntityProperty(criterionconditionentity_a.b(), loottableinfo_entitytarget);
         };
@@ -70,7 +70,7 @@ public class LootItemConditionEntityProperty implements LootItemCondition {
         public LootItemConditionEntityProperty a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
             CriterionConditionEntity criterionconditionentity = CriterionConditionEntity.a(jsonobject.get("predicate"));
 
-            return new LootItemConditionEntityProperty(criterionconditionentity, (LootTableInfo.EntityTarget) ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class));
+            return new LootItemConditionEntityProperty(criterionconditionentity, ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class));
         }
     }
 }

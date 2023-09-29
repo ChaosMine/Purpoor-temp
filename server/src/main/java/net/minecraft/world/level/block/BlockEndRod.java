@@ -20,22 +20,22 @@ public class BlockEndRod extends BlockDirectional {
 
     protected BlockEndRod(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockEndRod.FACING, EnumDirection.UP));
+        this.j(this.blockStateList.getBlockData().set(BlockEndRod.FACING, EnumDirection.UP));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockEndRod.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockEndRod.FACING)));
+        return iblockdata.set(BlockEndRod.FACING, enumblockrotation.a(iblockdata.get(BlockEndRod.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return (IBlockData) iblockdata.set(BlockEndRod.FACING, enumblockmirror.b((EnumDirection) iblockdata.get(BlockEndRod.FACING)));
+        return iblockdata.set(BlockEndRod.FACING, enumblockmirror.b(iblockdata.get(BlockEndRod.FACING)));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch (((EnumDirection) iblockdata.get(BlockEndRod.FACING)).n()) {
+        switch (iblockdata.get(BlockEndRod.FACING).n()) {
             case X:
             default:
                 return BlockEndRod.d;
@@ -51,7 +51,7 @@ public class BlockEndRod extends BlockDirectional {
         EnumDirection enumdirection = blockactioncontext.getClickedFace();
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition().shift(enumdirection.opposite()));
 
-        return iblockdata.a((Block) this) && iblockdata.get(BlockEndRod.FACING) == enumdirection ? (IBlockData) this.getBlockData().set(BlockEndRod.FACING, enumdirection.opposite()) : (IBlockData) this.getBlockData().set(BlockEndRod.FACING, enumdirection);
+        return iblockdata.a(this) && iblockdata.get(BlockEndRod.FACING) == enumdirection ? this.getBlockData().set(BlockEndRod.FACING, enumdirection.opposite()) : this.getBlockData().set(BlockEndRod.FACING, enumdirection);
     }
 
     @Override

@@ -16,8 +16,8 @@ public class ju extends jw<FluidType> {
 
     @Override
     protected void b() {
-        this.a(TagsFluid.WATER).a((Object[])(FluidTypes.WATER, FluidTypes.FLOWING_WATER));
-        this.a(TagsFluid.LAVA).a((Object[])(FluidTypes.LAVA, FluidTypes.FLOWING_LAVA));
+        this.a(TagsFluid.WATER).a(FluidTypes.WATER, FluidTypes.FLOWING_WATER);
+        this.a(TagsFluid.LAVA).a(FluidTypes.LAVA, FluidTypes.FLOWING_LAVA);
     }
 
     @Override

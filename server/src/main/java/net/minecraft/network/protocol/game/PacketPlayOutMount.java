@@ -21,7 +21,7 @@ public class PacketPlayOutMount implements Packet<PacketListenerPlayOut> {
         this.b = new int[list.size()];
 
         for (int i = 0; i < list.size(); ++i) {
-            this.b[i] = ((Entity) list.get(i)).getId();
+            this.b[i] = list.get(i).getId();
         }
 
     }

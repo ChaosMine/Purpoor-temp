@@ -21,7 +21,7 @@ public class WorldGenFeatureRandomPatchConfiguration implements WorldGenFeatureC
         }), WorldGenBlockPlacer.a.fieldOf("block_placer").forGetter((worldgenfeaturerandompatchconfiguration) -> {
             return worldgenfeaturerandompatchconfiguration.c;
         }), IBlockData.b.listOf().fieldOf("whitelist").forGetter((worldgenfeaturerandompatchconfiguration) -> {
-            return (List) worldgenfeaturerandompatchconfiguration.d.stream().map(Block::getBlockData).collect(Collectors.toList());
+            return (List) worldgenfeaturerandompatchconfiguration.d.stream().map(Block::getBlockData).toList();
         }), IBlockData.b.listOf().fieldOf("blacklist").forGetter((worldgenfeaturerandompatchconfiguration) -> {
             return ImmutableList.copyOf(worldgenfeaturerandompatchconfiguration.e);
         }), Codec.INT.fieldOf("tries").orElse(128).forGetter((worldgenfeaturerandompatchconfiguration) -> {
@@ -53,7 +53,7 @@ public class WorldGenFeatureRandomPatchConfiguration implements WorldGenFeatureC
     public final boolean m;
 
     private WorldGenFeatureRandomPatchConfiguration(WorldGenFeatureStateProvider worldgenfeaturestateprovider, WorldGenBlockPlacer worldgenblockplacer, List<IBlockData> list, List<IBlockData> list1, int i, int j, int k, int l, boolean flag, boolean flag1, boolean flag2) {
-        this(worldgenfeaturestateprovider, worldgenblockplacer, (Set) list.stream().map(BlockBase.BlockData::getBlock).collect(Collectors.toSet()), (Set) ImmutableSet.copyOf(list1), i, j, k, l, flag, flag1, flag2);
+        this(worldgenfeaturestateprovider, worldgenblockplacer, list.stream().map(BlockBase.BlockData::getBlock).collect(Collectors.toSet()), ImmutableSet.copyOf(list1), i, j, k, l, flag, flag1, flag2);
     }
 
     private WorldGenFeatureRandomPatchConfiguration(WorldGenFeatureStateProvider worldgenfeaturestateprovider, WorldGenBlockPlacer worldgenblockplacer, Set<Block> set, Set<IBlockData> set1, int i, int j, int k, int l, boolean flag, boolean flag1, boolean flag2) {

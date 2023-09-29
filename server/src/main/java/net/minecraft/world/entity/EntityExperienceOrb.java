@@ -114,14 +114,14 @@ public class EntityExperienceOrb extends Entity {
         this.lastX = this.locX();
         this.lastY = this.locY();
         this.lastZ = this.locZ();
-        if (this.a((Tag) TagsFluid.WATER)) {
+        if (this.a(TagsFluid.WATER)) {
             this.i();
         } else if (!this.isNoGravity()) {
             this.setMot(this.getMot().add(0.0D, -0.03D, 0.0D));
         }
 
-        if (this.world.getFluid(this.getChunkCoordinates()).a((Tag) TagsFluid.LAVA)) {
-            this.setMot((double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F), 0.20000000298023224D, (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F));
+        if (this.world.getFluid(this.getChunkCoordinates()).a(TagsFluid.LAVA)) {
+            this.setMot((this.random.nextFloat() - this.random.nextFloat()) * 0.2F, 0.20000000298023224D, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
             this.playSound(SoundEffects.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
         }
 
@@ -132,7 +132,7 @@ public class EntityExperienceOrb extends Entity {
         double d0 = 8.0D;
 
         if (this.targetTime < this.b - 20 + this.getId() % 100) {
-            if (this.targetPlayer == null || this.targetPlayer.h((Entity) this) > 64.0D) {
+            if (this.targetPlayer == null || this.targetPlayer.h(this) > 64.0D) {
                 this.targetPlayer = this.world.findNearbyPlayer(this, 8.0D);
             }
 
@@ -176,7 +176,7 @@ public class EntityExperienceOrb extends Entity {
             f = this.world.getType(new BlockPosition(this.locX(), this.locY() - 1.0D, this.locZ())).getBlock().getFrictionFactor() * 0.98F;
         }
 
-        this.setMot(this.getMot().d((double) f, 0.98D, (double) f));
+        this.setMot(this.getMot().d(f, 0.98D, f));
         if (this.onGround) {
             this.setMot(this.getMot().d(1.0D, -0.9D, 1.0D));
         }
@@ -238,7 +238,7 @@ public class EntityExperienceOrb extends Entity {
                 Entry<EnumItemSlot, ItemStack> entry = world.purpurConfig.useBetterMending ? EnchantmentManager.getMostDamagedEquipment(Enchantments.MENDING, entityhuman) : EnchantmentManager.a(Enchantments.MENDING, entityhuman, ItemStack::isDamaged); // Purpur
 
                 if (entry != null) {
-                    ItemStack itemstack = (ItemStack) entry.getValue();
+                    ItemStack itemstack = entry.getValue();
 
                     if (!itemstack.isEmpty() && itemstack.f()) {
                         int i = Math.min(this.c(this.value), itemstack.getDamage());

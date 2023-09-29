@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.nbt;
 
 import io.netty.buffer.ByteBufInputStream;

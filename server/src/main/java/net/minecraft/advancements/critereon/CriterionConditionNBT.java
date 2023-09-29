@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CriterionConditionNBT {
 
-    public static final CriterionConditionNBT a = new CriterionConditionNBT((NBTTagCompound) null);
+    public static final CriterionConditionNBT a = new CriterionConditionNBT(null);
     @Nullable
     private final NBTTagCompound b;
 
@@ -26,11 +26,11 @@ public class CriterionConditionNBT {
     }
 
     public boolean a(ItemStack itemstack) {
-        return this == CriterionConditionNBT.a ? true : this.a((NBTBase) itemstack.getTag());
+        return this == CriterionConditionNBT.a ? true : this.a(itemstack.getTag());
     }
 
     public boolean a(Entity entity) {
-        return this == CriterionConditionNBT.a ? true : this.a((NBTBase) b(entity));
+        return this == CriterionConditionNBT.a ? true : this.a(b(entity));
     }
 
     public boolean a(@Nullable NBTBase nbtbase) {
@@ -38,7 +38,7 @@ public class CriterionConditionNBT {
     }
 
     public JsonElement a() {
-        return (JsonElement) (this != CriterionConditionNBT.a && this.b != null ? new JsonPrimitive(this.b.toString()) : JsonNull.INSTANCE);
+        return this != CriterionConditionNBT.a && this.b != null ? new JsonPrimitive(this.b.toString()) : JsonNull.INSTANCE;
     }
 
     public static CriterionConditionNBT a(@Nullable JsonElement jsonelement) {

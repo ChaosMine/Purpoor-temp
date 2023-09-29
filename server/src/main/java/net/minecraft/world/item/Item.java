@@ -61,12 +61,12 @@ public class Item implements IMaterial {
     }
 
     public static Item getById(int i) {
-        return (Item) IRegistry.ITEM.fromId(i);
+        return IRegistry.ITEM.fromId(i);
     }
 
     @Deprecated
     public static Item getItemOf(Block block) {
-        return (Item) Item.e.getOrDefault(block, Items.AIR);
+        return Item.e.getOrDefault(block, Items.AIR);
     }
 
     public Item(Item.Info item_info) {

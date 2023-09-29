@@ -26,8 +26,8 @@ public class BlockTall extends Block implements IBlockWaterlogged {
     public static final BlockStateBoolean SOUTH = BlockSprawling.c;
     public static final BlockStateBoolean WEST = BlockSprawling.d;
     public static final BlockStateBoolean e = BlockProperties.C;
-    protected static final Map<EnumDirection, BlockStateBoolean> f = (Map) BlockSprawling.g.entrySet().stream().filter((entry) -> {
-        return ((EnumDirection) entry.getKey()).n().d();
+    protected static final Map<EnumDirection, BlockStateBoolean> f = BlockSprawling.g.entrySet().stream().filter((entry) -> {
+        return entry.getKey().n().d();
     }).collect(SystemUtils.a());
     protected final VoxelShape[] g;
     protected final VoxelShape[] h;
@@ -52,11 +52,11 @@ public class BlockTall extends Block implements IBlockWaterlogged {
         float f6 = 8.0F + f;
         float f7 = 8.0F - f1;
         float f8 = 8.0F + f1;
-        VoxelShape voxelshape = Block.a((double) f5, 0.0D, (double) f5, (double) f6, (double) f2, (double) f6);
-        VoxelShape voxelshape1 = Block.a((double) f7, (double) f3, 0.0D, (double) f8, (double) f4, (double) f8);
-        VoxelShape voxelshape2 = Block.a((double) f7, (double) f3, (double) f7, (double) f8, (double) f4, 16.0D);
-        VoxelShape voxelshape3 = Block.a(0.0D, (double) f3, (double) f7, (double) f8, (double) f4, (double) f8);
-        VoxelShape voxelshape4 = Block.a((double) f7, (double) f3, (double) f7, 16.0D, (double) f4, (double) f8);
+        VoxelShape voxelshape = Block.a(f5, 0.0D, f5, f6, f2, f6);
+        VoxelShape voxelshape1 = Block.a(f7, f3, 0.0D, f8, f4, f8);
+        VoxelShape voxelshape2 = Block.a(f7, f3, f7, f8, f4, 16.0D);
+        VoxelShape voxelshape3 = Block.a(0.0D, f3, f7, f8, f4, f8);
+        VoxelShape voxelshape4 = Block.a(f7, f3, f7, 16.0D, f4, f8);
         VoxelShape voxelshape5 = VoxelShapes.a(voxelshape1, voxelshape4);
         VoxelShape voxelshape6 = VoxelShapes.a(voxelshape2, voxelshape3);
         VoxelShape[] avoxelshape = new VoxelShape[]{VoxelShapes.a(), voxelshape2, voxelshape3, voxelshape6, voxelshape1, VoxelShapes.a(voxelshape2, voxelshape1), VoxelShapes.a(voxelshape3, voxelshape1), VoxelShapes.a(voxelshape6, voxelshape1), voxelshape4, VoxelShapes.a(voxelshape2, voxelshape4), VoxelShapes.a(voxelshape3, voxelshape4), VoxelShapes.a(voxelshape6, voxelshape4), voxelshape5, VoxelShapes.a(voxelshape2, voxelshape5), VoxelShapes.a(voxelshape3, voxelshape5), VoxelShapes.a(voxelshape6, voxelshape5)};
@@ -91,19 +91,19 @@ public class BlockTall extends Block implements IBlockWaterlogged {
         return this.i.computeIntIfAbsent(iblockdata, (iblockdata1) -> {
             int i = 0;
 
-            if ((Boolean) iblockdata1.get(BlockTall.NORTH)) {
+            if (iblockdata1.get(BlockTall.NORTH)) {
                 i |= a(EnumDirection.NORTH);
             }
 
-            if ((Boolean) iblockdata1.get(BlockTall.EAST)) {
+            if (iblockdata1.get(BlockTall.EAST)) {
                 i |= a(EnumDirection.EAST);
             }
 
-            if ((Boolean) iblockdata1.get(BlockTall.SOUTH)) {
+            if (iblockdata1.get(BlockTall.SOUTH)) {
                 i |= a(EnumDirection.SOUTH);
             }
 
-            if ((Boolean) iblockdata1.get(BlockTall.WEST)) {
+            if (iblockdata1.get(BlockTall.WEST)) {
                 i |= a(EnumDirection.WEST);
             }
 
@@ -113,7 +113,7 @@ public class BlockTall extends Block implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockTall.e) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockTall.e) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
@@ -125,11 +125,11 @@ public class BlockTall extends Block implements IBlockWaterlogged {
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
         switch (enumblockrotation) {
             case CLOCKWISE_180:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.SOUTH))).set(BlockTall.EAST, iblockdata.get(BlockTall.WEST))).set(BlockTall.SOUTH, iblockdata.get(BlockTall.NORTH))).set(BlockTall.WEST, iblockdata.get(BlockTall.EAST));
+                return iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.SOUTH)).set(BlockTall.EAST, iblockdata.get(BlockTall.WEST)).set(BlockTall.SOUTH, iblockdata.get(BlockTall.NORTH)).set(BlockTall.WEST, iblockdata.get(BlockTall.EAST));
             case COUNTERCLOCKWISE_90:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.EAST))).set(BlockTall.EAST, iblockdata.get(BlockTall.SOUTH))).set(BlockTall.SOUTH, iblockdata.get(BlockTall.WEST))).set(BlockTall.WEST, iblockdata.get(BlockTall.NORTH));
+                return iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.EAST)).set(BlockTall.EAST, iblockdata.get(BlockTall.SOUTH)).set(BlockTall.SOUTH, iblockdata.get(BlockTall.WEST)).set(BlockTall.WEST, iblockdata.get(BlockTall.NORTH));
             case CLOCKWISE_90:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.WEST))).set(BlockTall.EAST, iblockdata.get(BlockTall.NORTH))).set(BlockTall.SOUTH, iblockdata.get(BlockTall.EAST))).set(BlockTall.WEST, iblockdata.get(BlockTall.SOUTH));
+                return iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.WEST)).set(BlockTall.EAST, iblockdata.get(BlockTall.NORTH)).set(BlockTall.SOUTH, iblockdata.get(BlockTall.EAST)).set(BlockTall.WEST, iblockdata.get(BlockTall.SOUTH));
             default:
                 return iblockdata;
         }
@@ -139,9 +139,9 @@ public class BlockTall extends Block implements IBlockWaterlogged {
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
         switch (enumblockmirror) {
             case LEFT_RIGHT:
-                return (IBlockData) ((IBlockData) iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.SOUTH))).set(BlockTall.SOUTH, iblockdata.get(BlockTall.NORTH));
+                return iblockdata.set(BlockTall.NORTH, iblockdata.get(BlockTall.SOUTH)).set(BlockTall.SOUTH, iblockdata.get(BlockTall.NORTH));
             case FRONT_BACK:
-                return (IBlockData) ((IBlockData) iblockdata.set(BlockTall.EAST, iblockdata.get(BlockTall.WEST))).set(BlockTall.WEST, iblockdata.get(BlockTall.EAST));
+                return iblockdata.set(BlockTall.EAST, iblockdata.get(BlockTall.WEST)).set(BlockTall.WEST, iblockdata.get(BlockTall.EAST));
             default:
                 return super.a(iblockdata, enumblockmirror);
         }

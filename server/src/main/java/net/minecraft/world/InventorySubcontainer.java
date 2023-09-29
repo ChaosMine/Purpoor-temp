@@ -111,13 +111,13 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
 
     @Override
     public ItemStack getItem(int i) {
-        return i >= 0 && i < this.items.size() ? (ItemStack) this.items.get(i) : ItemStack.b;
+        return i >= 0 && i < this.items.size() ? this.items.get(i) : ItemStack.b;
     }
 
     public List<ItemStack> f() {
-        List<ItemStack> list = (List) this.items.stream().filter((itemstack) -> {
+        List<ItemStack> list = this.items.stream().filter((itemstack) -> {
             return !itemstack.isEmpty();
-        }).collect(Collectors.toList());
+        }).toList();
 
         this.clear();
         return list;
@@ -189,7 +189,7 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
 
     @Override
     public ItemStack splitWithoutUpdate(int i) {
-        ItemStack itemstack = (ItemStack) this.items.get(i);
+        ItemStack itemstack = this.items.get(i);
 
         if (itemstack.isEmpty()) {
             return ItemStack.b;
@@ -269,9 +269,9 @@ public class InventorySubcontainer implements IInventory, AutoRecipeOutput {
     }
 
     public String toString() {
-        return ((List) this.items.stream().filter((itemstack) -> {
+        return this.items.stream().filter((itemstack) -> {
             return !itemstack.isEmpty();
-        }).collect(Collectors.toList())).toString();
+        }).toList().toString();
     }
 
     private void c(ItemStack itemstack) {

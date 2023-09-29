@@ -42,7 +42,7 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
 
     @Override
     public void tick() {
-        boolean flag = (Boolean) this.getBlock().get(BlockCampfire.LIT);
+        boolean flag = this.getBlock().get(BlockCampfire.LIT);
         boolean flag1 = this.world.isClientSide;
 
         if (flag1) {
@@ -66,7 +66,7 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
 
     private void h() {
         for (int i = 0; i < this.items.size(); ++i) {
-            ItemStack itemstack = (ItemStack) this.items.get(i);
+            ItemStack itemstack = this.items.get(i);
 
             if (!itemstack.isEmpty()) {
                 int j = this.cookingTimes[i]++;
@@ -75,7 +75,7 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
                     InventorySubcontainer inventorysubcontainer = new InventorySubcontainer(new ItemStack[]{itemstack});
                     // Paper start
                     Optional<RecipeCampfire> recipe = this.world.getCraftingManager().craft(Recipes.CAMPFIRE_COOKING, inventorysubcontainer, this.world);
-                    ItemStack itemstack1 = (ItemStack) recipe.map((recipecampfire) -> {
+                    ItemStack itemstack1 = recipe.map((recipecampfire) -> {
                         // Paper end
                         return recipecampfire.a(inventorysubcontainer);
                     }).orElse(itemstack);
@@ -118,14 +118,14 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
 
             if (random.nextFloat() < 0.11F) {
                 for (i = 0; i < random.nextInt(2) + 2; ++i) {
-                    BlockCampfire.a(world, blockposition, (Boolean) this.getBlock().get(BlockCampfire.c), false);
+                    BlockCampfire.a(world, blockposition, this.getBlock().get(BlockCampfire.c), false);
                 }
             }
 
-            i = ((EnumDirection) this.getBlock().get(BlockCampfire.e)).get2DRotationValue();
+            i = this.getBlock().get(BlockCampfire.e).get2DRotationValue();
 
             for (int j = 0; j < this.items.size(); ++j) {
-                if (!((ItemStack) this.items.get(j)).isEmpty() && random.nextFloat() < 0.2F) {
+                if (!this.items.get(j).isEmpty() && random.nextFloat() < 0.2F) {
                     EnumDirection enumdirection = EnumDirection.fromType2(Math.floorMod(j + i, 4));
                     float f = 0.3125F;
                     double d0 = (double) blockposition.getX() + 0.5D - (double) ((float) enumdirection.getAdjacentX() * 0.3125F) + (double) ((float) enumdirection.g().getAdjacentX() * 0.3125F);
@@ -195,7 +195,7 @@ public class TileEntityCampfire extends TileEntity implements Clearable, ITickab
 
     public boolean a(ItemStack itemstack, int i) {
         for (int j = 0; j < this.items.size(); ++j) {
-            ItemStack itemstack1 = (ItemStack) this.items.get(j);
+            ItemStack itemstack1 = this.items.get(j);
 
             if (itemstack1.isEmpty()) {
                 this.cookingTotalTimes[j] = i;

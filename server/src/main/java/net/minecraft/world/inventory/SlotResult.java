@@ -63,7 +63,7 @@ public class SlotResult extends Slot {
 
         for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack itemstack1 = this.a.getItem(i);
-            ItemStack itemstack2 = (ItemStack) nonnulllist.get(i);
+            ItemStack itemstack2 = nonnulllist.get(i);
 
             if (!itemstack1.isEmpty()) {
                 this.a.splitStack(i, 1);

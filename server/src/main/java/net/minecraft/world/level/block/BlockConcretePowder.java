@@ -74,7 +74,7 @@ public class BlockConcretePowder extends BlockFalling {
             IBlockData iblockdata = iblockaccess.getType(blockposition_mutableblockposition);
 
             if (enumdirection != EnumDirection.DOWN || l(iblockdata)) {
-                blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+                blockposition_mutableblockposition.a(blockposition, enumdirection);
                 iblockdata = iblockaccess.getType(blockposition_mutableblockposition);
                 if (l(iblockdata) && !iblockdata.d(iblockaccess, blockposition, enumdirection.opposite())) {
                     flag = true;
@@ -87,13 +87,13 @@ public class BlockConcretePowder extends BlockFalling {
     }
 
     private static boolean l(IBlockData iblockdata) {
-        return iblockdata.getFluid().a((Tag) TagsFluid.WATER);
+        return iblockdata.getFluid().a(TagsFluid.WATER);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
         // CraftBukkit start
-        if (a((IBlockAccess) generatoraccess, blockposition)) {
+        if (a(generatoraccess, blockposition)) {
             // Suppress during worldgen
             if (!(generatoraccess instanceof World)) {
                 return this.a;

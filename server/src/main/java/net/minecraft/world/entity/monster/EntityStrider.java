@@ -100,7 +100,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
         do {
             blockposition_mutableblockposition.c(EnumDirection.UP);
-        } while (generatoraccess.getFluid(blockposition_mutableblockposition).a((Tag) TagsFluid.LAVA));
+        } while (generatoraccess.getFluid(blockposition_mutableblockposition).a(TagsFluid.LAVA));
 
         return generatoraccess.getType(blockposition_mutableblockposition).isAir();
     }
@@ -148,7 +148,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     public void saddle(@Nullable SoundCategory soundcategory) {
         this.saddleStorage.setSaddle(true);
         if (soundcategory != null) {
-            this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_STRIDER_SADDLE, soundcategory, 0.5F, 1.0F);
+            this.world.playSound(null, this, SoundEffects.ENTITY_STRIDER_SADDLE, soundcategory, 0.5F, 1.0F);
         }
 
     }
@@ -174,12 +174,12 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     }
 
     public boolean isShivering() {
-        return this.getVehicle() instanceof EntityStrider ? ((EntityStrider) this.getVehicle()).isShivering() : (Boolean) this.datawatcher.get(EntityStrider.br);
+        return this.getVehicle() instanceof EntityStrider ? ((EntityStrider) this.getVehicle()).isShivering() : this.datawatcher.get(EntityStrider.br);
     }
 
     @Override
     public boolean a(FluidType fluidtype) {
-        return fluidtype.a((Tag) TagsFluid.LAVA);
+        return fluidtype.a(TagsFluid.LAVA);
     }
 
     @Override
@@ -205,18 +205,18 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this);
+        return iworldreader.j(this);
     }
 
     @Nullable
     @Override
     public Entity getRidingPassenger() {
-        return this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
+        return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
     @Override
     public Vec3D b(EntityLiving entityliving) {
-        Vec3D[] avec3d = new Vec3D[]{a((double) this.getWidth(), (double) entityliving.getWidth(), entityliving.yaw), a((double) this.getWidth(), (double) entityliving.getWidth(), entityliving.yaw - 22.5F), a((double) this.getWidth(), (double) entityliving.getWidth(), entityliving.yaw + 22.5F), a((double) this.getWidth(), (double) entityliving.getWidth(), entityliving.yaw - 45.0F), a((double) this.getWidth(), (double) entityliving.getWidth(), entityliving.yaw + 45.0F)};
+        Vec3D[] avec3d = new Vec3D[]{a((double) this.getWidth(), entityliving.getWidth(), entityliving.yaw), a((double) this.getWidth(), entityliving.getWidth(), entityliving.yaw - 22.5F), a((double) this.getWidth(), entityliving.getWidth(), entityliving.yaw + 22.5F), a((double) this.getWidth(), entityliving.getWidth(), entityliving.yaw - 45.0F), a((double) this.getWidth(), entityliving.getWidth(), entityliving.yaw + 45.0F)};
         Set<BlockPosition> set = Sets.newLinkedHashSet();
         double d0 = this.getBoundingBox().maxY;
         double d1 = this.getBoundingBox().minY - 0.5D;
@@ -240,11 +240,11 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
         while (iterator.hasNext()) {
             BlockPosition blockposition = (BlockPosition) iterator.next();
 
-            if (!this.world.getFluid(blockposition).a((Tag) TagsFluid.LAVA)) {
+            if (!this.world.getFluid(blockposition).a(TagsFluid.LAVA)) {
                 double d3 = this.world.h(blockposition);
 
                 if (DismountUtil.a(d3)) {
-                    Vec3D vec3d1 = Vec3D.a((BaseBlockPosition) blockposition, d3);
+                    Vec3D vec3d1 = Vec3D.a(blockposition, d3);
                     UnmodifiableIterator unmodifiableiterator = entityliving.ej().iterator();
 
                     while (unmodifiableiterator.hasNext()) {
@@ -266,7 +266,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
     @Override
     public void g(Vec3D vec3d) {
         this.q(this.eL());
-        this.a((EntityInsentient) this, this.saddleStorage, vec3d);
+        this.a(this, this.saddleStorage, vec3d);
     }
 
     public float eL() {
@@ -318,7 +318,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
         IBlockData iblockdata = this.world.getType(this.getChunkCoordinates());
         IBlockData iblockdata1 = this.aN();
-        boolean flag = iblockdata.a((Tag) TagsBlock.STRIDER_WARM_BLOCKS) || iblockdata1.a((Tag) TagsBlock.STRIDER_WARM_BLOCKS) || this.b((Tag) TagsFluid.LAVA) > 0.0D;
+        boolean flag = iblockdata.a(TagsBlock.STRIDER_WARM_BLOCKS) || iblockdata1.a(TagsBlock.STRIDER_WARM_BLOCKS) || this.b(TagsFluid.LAVA) > 0.0D;
 
         // CraftBukkit start
         if (!flag ^ this.isShivering()) {
@@ -346,9 +346,9 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     private void eU() {
         if (this.aQ()) {
-            VoxelShapeCollision voxelshapecollision = VoxelShapeCollision.a((Entity) this);
+            VoxelShapeCollision voxelshapecollision = VoxelShapeCollision.a(this);
 
-            if (voxelshapecollision.a(BlockFluids.c, this.getChunkCoordinates(), true) && !this.world.getFluid(this.getChunkCoordinates().up()).a((Tag) TagsFluid.LAVA)) {
+            if (voxelshapecollision.a(BlockFluids.c, this.getChunkCoordinates(), true) && !this.world.getFluid(this.getChunkCoordinates().up()).a(TagsFluid.LAVA)) {
                 this.onGround = true;
             } else {
                 this.setMot(this.getMot().a(0.5D).add(0.0D, 0.05D, 0.0D));
@@ -378,7 +378,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     @Override
     protected boolean q(Entity entity) {
-        return this.getPassengers().isEmpty() && !this.a((Tag) TagsFluid.LAVA);
+        return this.getPassengers().isEmpty() && !this.a(TagsFluid.LAVA);
     }
 
     @Override
@@ -398,12 +398,12 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     @Override
     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
-        return iworldreader.getType(blockposition).getFluid().a((Tag) TagsFluid.LAVA) ? 10.0F : (this.aQ() ? Float.NEGATIVE_INFINITY : 0.0F);
+        return iworldreader.getType(blockposition).getFluid().a(TagsFluid.LAVA) ? 10.0F : (this.aQ() ? Float.NEGATIVE_INFINITY : 0.0F);
     }
 
     @Override
     public EntityStrider createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityStrider) EntityTypes.STRIDER.a((World) worldserver);
+        return EntityTypes.STRIDER.a(worldserver);
     }
 
     @Override
@@ -448,10 +448,10 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
             if (!enuminteractionresult.a()) {
                 ItemStack itemstack = entityhuman.b(enumhand);
 
-                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, (EntityLiving) this, enumhand) : tryRide(entityhuman, enumhand); // Purpur
+                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, this, enumhand) : tryRide(entityhuman, enumhand); // Purpur
             } else {
                 if (flag && !this.isSilent()) {
-                    this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_STRIDER_EAT, this.getSoundCategory(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+                    this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_STRIDER_EAT, this.getSoundCategory(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
                 }
 
                 return enuminteractionresult;
@@ -468,16 +468,16 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
             Object object;
 
             if (this.random.nextInt(30) == 0) {
-                EntityInsentient entityinsentient = (EntityInsentient) EntityTypes.ZOMBIFIED_PIGLIN.a((World) worldaccess.getMinecraftWorld());
+                EntityInsentient entityinsentient = EntityTypes.ZOMBIFIED_PIGLIN.a(worldaccess.getMinecraftWorld());
 
                 object = this.a(worldaccess, difficultydamagescaler, entityinsentient, new EntityZombie.GroupDataZombie(EntityZombie.a(this.random), false));
                 entityinsentient.setSlot(EnumItemSlot.MAINHAND, new ItemStack(Items.WARPED_FUNGUS_ON_A_STICK));
-                this.saddle((SoundCategory) null);
+                this.saddle(null);
             } else if (this.random.nextInt(10) == 0) {
-                EntityAgeable entityageable = (EntityAgeable) EntityTypes.STRIDER.a((World) worldaccess.getMinecraftWorld());
+                EntityAgeable entityageable = EntityTypes.STRIDER.a(worldaccess.getMinecraftWorld());
 
                 entityageable.setAgeRaw(-24000);
-                object = this.a(worldaccess, difficultydamagescaler, entityageable, (GroupDataEntity) null);
+                object = this.a(worldaccess, difficultydamagescaler, entityageable, null);
             } else {
                 object = new EntityAgeable.a(0.5F);
             }
@@ -488,7 +488,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
     private GroupDataEntity a(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EntityInsentient entityinsentient, @Nullable GroupDataEntity groupdataentity) {
         entityinsentient.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, 0.0F);
-        entityinsentient.prepare(worldaccess, difficultydamagescaler, EnumMobSpawn.JOCKEY, groupdataentity, (NBTTagCompound) null);
+        entityinsentient.prepare(worldaccess, difficultydamagescaler, EnumMobSpawn.JOCKEY, groupdataentity, null);
         entityinsentient.a((Entity) this, true);
         return new EntityAgeable.a(0.0F);
     }
@@ -524,7 +524,7 @@ public class EntityStrider extends EntityAnimal implements ISteerable, ISaddleab
 
         @Override
         protected boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
-            return iworldreader.getType(blockposition).a(Blocks.LAVA) && iworldreader.getType(blockposition.up()).a((IBlockAccess) iworldreader, blockposition, PathMode.LAND);
+            return iworldreader.getType(blockposition).a(Blocks.LAVA) && iworldreader.getType(blockposition.up()).a(iworldreader, blockposition, PathMode.LAND);
         }
     }
 

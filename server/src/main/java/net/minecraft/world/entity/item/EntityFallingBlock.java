@@ -155,13 +155,13 @@ public class EntityFallingBlock extends Entity {
             if (!this.world.isClientSide) {
                 blockposition = this.getChunkCoordinates();
                 boolean flag = this.block.getBlock() instanceof BlockConcretePowder;
-                boolean flag1 = flag && this.world.getFluid(blockposition).a((Tag) TagsFluid.WATER);
+                boolean flag1 = flag && this.world.getFluid(blockposition).a(TagsFluid.WATER);
                 double d0 = this.getMot().g();
 
                 if (flag && d0 > 1.0D) {
                     MovingObjectPositionBlock movingobjectpositionblock = this.world.rayTrace(new RayTrace(new Vec3D(this.lastX, this.lastY, this.lastZ), this.getPositionVector(), RayTrace.BlockCollisionOption.COLLIDER, RayTrace.FluidCollisionOption.SOURCE_ONLY, this));
 
-                    if (movingobjectpositionblock.getType() != MovingObjectPosition.EnumMovingObjectType.MISS && this.world.getFluid(movingobjectpositionblock.getBlockPosition()).a((Tag) TagsFluid.WATER)) {
+                    if (movingobjectpositionblock.getType() != MovingObjectPosition.EnumMovingObjectType.MISS && this.world.getFluid(movingobjectpositionblock.getBlockPosition()).a(TagsFluid.WATER)) {
                         blockposition = movingobjectpositionblock.getBlockPosition();
                         flag1 = true;
                     }
@@ -170,7 +170,7 @@ public class EntityFallingBlock extends Entity {
                 if (!this.onGround && !flag1) {
                     if (!this.world.isClientSide && (this.ticksLived > 100 && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600)) {
                         if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                            this.a((IMaterial) block);
+                            this.a(block);
                         }
 
                         this.die();
@@ -182,13 +182,13 @@ public class EntityFallingBlock extends Entity {
                     if (!iblockdata.a(Blocks.MOVING_PISTON)) {
                         this.die();
                         if (!this.g) {
-                            boolean flag2 = iblockdata.a((BlockActionContext) (new BlockActionContextDirectional(this.world, blockposition, EnumDirection.DOWN, ItemStack.b, EnumDirection.UP)));
+                            boolean flag2 = iblockdata.a(new BlockActionContextDirectional(this.world, blockposition, EnumDirection.DOWN, ItemStack.b, EnumDirection.UP));
                             boolean flag3 = BlockFalling.canFallThrough(this.world.getType(blockposition.down())) && (!flag || !flag1);
                             boolean flag4 = this.block.canPlace(this.world, blockposition) && !flag3;
 
                             if (flag2 && flag4) {
                                 if (this.block.b(BlockProperties.C) && this.world.getFluid(blockposition).getType() == FluidTypes.WATER) {
-                                    this.block = (IBlockData) this.block.set(BlockProperties.C, true);
+                                    this.block = this.block.set(BlockProperties.C, true);
                                 }
 
                                 // CraftBukkit start
@@ -222,10 +222,10 @@ public class EntityFallingBlock extends Entity {
                                         }
                                     }
                                 } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                    this.a((IMaterial) block);
+                                    this.a(block);
                                 }
                             } else if (this.dropItem && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                this.a((IMaterial) block);
+                                this.a(block);
                             }
                         } else if (block instanceof BlockFalling) {
                             ((BlockFalling) block).a(this.world, blockposition, this);
@@ -298,7 +298,7 @@ public class EntityFallingBlock extends Entity {
             this.hurtEntities = nbttagcompound.getBoolean("HurtEntities");
             this.fallHurtAmount = nbttagcompound.getFloat("FallHurtAmount");
             this.fallHurtMax = nbttagcompound.getInt("FallHurtMax");
-        } else if (this.block.a((Tag) TagsBlock.ANVIL)) {
+        } else if (this.block.a(TagsBlock.ANVIL)) {
             this.hurtEntities = true;
         }
 
@@ -331,7 +331,7 @@ public class EntityFallingBlock extends Entity {
     @Override
     public void appendEntityCrashDetails(CrashReportSystemDetails crashreportsystemdetails) {
         super.appendEntityCrashDetails(crashreportsystemdetails);
-        crashreportsystemdetails.a("Immitating BlockState", (Object) this.block.toString());
+        crashreportsystemdetails.a("Immitating BlockState", this.block.toString());
     }
 
     public IBlockData getBlock() {

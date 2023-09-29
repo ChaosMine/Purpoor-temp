@@ -31,11 +31,11 @@ public class ResourcePackRepository implements AutoCloseable {
     }
 
     public void a() {
-        List<String> list = (List) this.c.stream().map(ResourcePackLoader::e).collect(ImmutableList.toImmutableList());
+        List<String> list = this.c.stream().map(ResourcePackLoader::e).collect(ImmutableList.toImmutableList());
 
         this.close();
         this.b = this.g();
-        this.c = this.b((Collection) list);
+        this.c = this.b(list);
     }
 
     private Map<String, ResourcePackLoader> g() {
@@ -46,7 +46,7 @@ public class ResourcePackRepository implements AutoCloseable {
             ResourcePackSource resourcepacksource = (ResourcePackSource) iterator.next();
 
             resourcepacksource.a((resourcepackloader) -> {
-                ResourcePackLoader resourcepackloader1 = (ResourcePackLoader) map.put(resourcepackloader.e(), resourcepackloader);
+                ResourcePackLoader resourcepackloader1 = map.put(resourcepackloader.e(), resourcepackloader);
             }, this.d);
         }
 
@@ -58,7 +58,7 @@ public class ResourcePackRepository implements AutoCloseable {
     }
 
     private List<ResourcePackLoader> b(Collection<String> collection) {
-        List<ResourcePackLoader> list = (List) this.c(collection).collect(Collectors.toList());
+        List<ResourcePackLoader> list = this.c(collection).toList();
         Iterator iterator = this.b.values().iterator();
 
         while (iterator.hasNext()) {
@@ -90,7 +90,7 @@ public class ResourcePackRepository implements AutoCloseable {
     }
 
     public Collection<String> d() {
-        return (Collection) this.c.stream().map(ResourcePackLoader::e).collect(ImmutableSet.toImmutableSet());
+        return this.c.stream().map(ResourcePackLoader::e).collect(ImmutableSet.toImmutableSet());
     }
 
     public final Collection<ResourcePackLoader> getEnabledPacks() { return this.e(); } // Paper - OBFHELPER
@@ -100,7 +100,7 @@ public class ResourcePackRepository implements AutoCloseable {
 
     @Nullable
     public ResourcePackLoader a(String s) {
-        return (ResourcePackLoader) this.b.get(s);
+        return this.b.get(s);
     }
 
     public void close() {
@@ -112,6 +112,6 @@ public class ResourcePackRepository implements AutoCloseable {
     }
 
     public List<IResourcePack> f() {
-        return (List) this.c.stream().map(ResourcePackLoader::d).collect(ImmutableList.toImmutableList());
+        return this.c.stream().map(ResourcePackLoader::d).collect(ImmutableList.toImmutableList());
     }
 }

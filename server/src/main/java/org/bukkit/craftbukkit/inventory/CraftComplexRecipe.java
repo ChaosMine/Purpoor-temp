@@ -27,6 +27,6 @@ public class CraftComplexRecipe implements CraftRecipe, ComplexRecipe {
 
     @Override
     public void addToCraftingManager() {
-        MinecraftServer.getServer().getCraftingManager().addRecipe(recipe);
+        MinecraftServer.SERVER.getCraftingManager().addRecipe(recipe);
     }
 }

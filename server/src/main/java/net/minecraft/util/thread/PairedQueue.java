@@ -47,7 +47,7 @@ public interface PairedQueue<T, F> {
         public boolean a(PairedQueue.b pairedqueue_b) {
             int i = pairedqueue_b.a();
 
-            ((Queue) this.a.get(i)).add(pairedqueue_b);
+            this.a.get(i).add(pairedqueue_b);
             return true;
         }
 

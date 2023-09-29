@@ -92,7 +92,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
     @Nullable
     @Override
     public Entity getRidingPassenger() {
-        return this.passengers.isEmpty() ? null : (Entity) this.passengers.get(0); // Paper - do not copy list
+        return this.passengers.isEmpty() ? null : this.passengers.get(0); // Paper - do not copy list
     }
 
     @Override
@@ -184,7 +184,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
             if (!enuminteractionresult.a()) {
                 ItemStack itemstack = entityhuman.b(enumhand);
 
-                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, (EntityLiving) this, enumhand) : EnumInteractionResult.PASS;
+                return itemstack.getItem() == Items.SADDLE ? itemstack.a(entityhuman, this, enumhand) : EnumInteractionResult.PASS;
             } else {
                 return enuminteractionresult;
             }
@@ -214,7 +214,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
     public void saddle(@Nullable SoundCategory soundcategory) {
         this.saddleStorage.setSaddle(true);
         if (soundcategory != null) {
-            this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_PIG_SADDLE, soundcategory, 0.5F, 1.0F);
+            this.world.playSound(null, this, SoundEffects.ENTITY_PIG_SADDLE, soundcategory, 0.5F, 1.0F);
         }
 
     }
@@ -244,7 +244,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
                     double d0 = this.world.h(blockposition_mutableblockposition);
 
                     if (DismountUtil.a(d0)) {
-                        Vec3D vec3d = Vec3D.a((BaseBlockPosition) blockposition_mutableblockposition, d0);
+                        Vec3D vec3d = Vec3D.a(blockposition_mutableblockposition, d0);
 
                         if (DismountUtil.a(this.world, entityliving, axisalignedbb.c(vec3d))) {
                             entityliving.setPose(entitypose);
@@ -261,7 +261,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
     @Override
     public void onLightningStrike(WorldServer worldserver, EntityLightning entitylightning) {
         if (worldserver.getDifficulty() != EnumDifficulty.PEACEFUL) {
-            EntityPigZombie entitypigzombie = (EntityPigZombie) EntityTypes.ZOMBIFIED_PIGLIN.a((World) worldserver);
+            EntityPigZombie entitypigzombie = EntityTypes.ZOMBIFIED_PIGLIN.a(worldserver);
 
             entitypigzombie.setSlot(EnumItemSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
             entitypigzombie.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
@@ -294,7 +294,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
 
     @Override
     public void g(Vec3D vec3d) {
-        this.a((EntityInsentient) this, this.saddleStorage, vec3d);
+        this.a(this, this.saddleStorage, vec3d);
     }
 
     @Override
@@ -314,7 +314,7 @@ public class EntityPig extends EntityAnimal implements ISteerable, ISaddleable {
 
     @Override
     public EntityPig createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityPig) EntityTypes.PIG.a((World) worldserver);
+        return EntityTypes.PIG.a(worldserver);
     }
 
     @Override

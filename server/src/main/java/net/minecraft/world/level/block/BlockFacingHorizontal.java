@@ -16,11 +16,11 @@ public abstract class BlockFacingHorizontal extends Block {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockFacingHorizontal.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockFacingHorizontal.FACING)));
+        return iblockdata.set(BlockFacingHorizontal.FACING, enumblockrotation.a(iblockdata.get(BlockFacingHorizontal.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockFacingHorizontal.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockFacingHorizontal.FACING)));
     }
 }

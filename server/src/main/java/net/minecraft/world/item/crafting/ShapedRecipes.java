@@ -147,9 +147,9 @@ public class ShapedRecipes implements RecipeCrafting {
 
                 if (i1 >= 0 && j1 >= 0 && i1 < this.width && j1 < this.height) {
                     if (flag) {
-                        recipeitemstack = (RecipeItemStack) this.items.get(this.width - i1 - 1 + j1 * this.width);
+                        recipeitemstack = this.items.get(this.width - i1 - 1 + j1 * this.width);
                     } else {
-                        recipeitemstack = (RecipeItemStack) this.items.get(i1 + j1 * this.width);
+                        recipeitemstack = this.items.get(i1 + j1 * this.width);
                     }
                 }
 
@@ -183,7 +183,7 @@ public class ShapedRecipes implements RecipeCrafting {
         for (int k = 0; k < astring.length; ++k) {
             for (int l = 0; l < astring[k].length(); ++l) {
                 String s = astring[k].substring(l, l + 1);
-                RecipeItemStack recipeitemstack = (RecipeItemStack) map.get(s);
+                RecipeItemStack recipeitemstack = map.get(s);
 
                 if (recipeitemstack == null) {
                     throw new JsonSyntaxException("Pattern references symbol '" + s + "' but it's not defined in the key");
@@ -292,15 +292,15 @@ public class ShapedRecipes implements RecipeCrafting {
         while (iterator.hasNext()) {
             Entry<String, JsonElement> entry = (Entry) iterator.next();
 
-            if (((String) entry.getKey()).length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + (String) entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+            if (entry.getKey().length() != 1) {
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
             }
 
             if (" ".equals(entry.getKey())) {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), RecipeItemStack.a((JsonElement) entry.getValue()));
+            map.put(entry.getKey(), RecipeItemStack.a(entry.getValue()));
         }
 
         map.put(" ", RecipeItemStack.a);
@@ -309,14 +309,14 @@ public class ShapedRecipes implements RecipeCrafting {
 
     public static ItemStack a(JsonObject jsonobject) {
         String s = ChatDeserializer.h(jsonobject, "item");
-        Item item = (Item) IRegistry.ITEM.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
+        Item item = IRegistry.ITEM.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
             return new JsonSyntaxException("Unknown item '" + s + "'");
         });
 
         if (jsonobject.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
-            int i = ChatDeserializer.a(jsonobject, "count", (int) 1);
+            int i = ChatDeserializer.a(jsonobject, "count", 1);
 
             return new ItemStack(item, i);
         }

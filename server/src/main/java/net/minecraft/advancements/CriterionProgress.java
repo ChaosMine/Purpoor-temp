@@ -45,7 +45,7 @@ public class CriterionProgress {
     }
 
     public JsonElement e() {
-        return (JsonElement) (this.b != null ? new JsonPrimitive(CriterionProgress.a.format(this.b)) : JsonNull.INSTANCE);
+        return this.b != null ? new JsonPrimitive(CriterionProgress.a.format(this.b)) : JsonNull.INSTANCE;
     }
 
     public static CriterionProgress b(PacketDataSerializer packetdataserializer) {

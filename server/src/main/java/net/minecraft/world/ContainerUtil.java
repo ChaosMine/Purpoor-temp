@@ -10,11 +10,11 @@ import net.minecraft.world.item.ItemStack;
 public class ContainerUtil {
 
     public static ItemStack a(List<ItemStack> list, int i, int j) {
-        return i >= 0 && i < list.size() && !((ItemStack) list.get(i)).isEmpty() && j > 0 ? ((ItemStack) list.get(i)).cloneAndSubtract(j) : ItemStack.b;
+        return i >= 0 && i < list.size() && !list.get(i).isEmpty() && j > 0 ? list.get(i).cloneAndSubtract(j) : ItemStack.b;
     }
 
     public static ItemStack a(List<ItemStack> list, int i) {
-        return i >= 0 && i < list.size() ? (ItemStack) list.set(i, ItemStack.b) : ItemStack.b;
+        return i >= 0 && i < list.size() ? list.set(i, ItemStack.b) : ItemStack.b;
     }
 
     public static NBTTagCompound a(NBTTagCompound nbttagcompound, NonNullList<ItemStack> nonnulllist) {
@@ -25,7 +25,7 @@ public class ContainerUtil {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack itemstack = (ItemStack) nonnulllist.get(i);
+            ItemStack itemstack = nonnulllist.get(i);
 
             if (!itemstack.isEmpty()) {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();

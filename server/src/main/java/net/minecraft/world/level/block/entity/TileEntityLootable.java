@@ -79,7 +79,7 @@ public abstract class TileEntityLootable extends TileEntityContainer {
 
             //this.lootTable = null; // Paper
             this.lootableData.processRefill(entityhuman); // Paper
-            LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder((WorldServer) this.world)).set(LootContextParameters.ORIGIN, Vec3D.a((BaseBlockPosition) this.position)).a(this.lootTableSeed);
+            LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder((WorldServer) this.world)).set(LootContextParameters.ORIGIN, Vec3D.a(this.position)).a(this.lootTableSeed);
 
             if (entityhuman != null) {
                 loottableinfo_builder.a(entityhuman.eU()).set(LootContextParameters.THIS_ENTITY, entityhuman);
@@ -97,7 +97,7 @@ public abstract class TileEntityLootable extends TileEntityContainer {
 
     @Override
     public boolean isEmpty() {
-        this.d((EntityHuman) null);
+        this.d(null);
         // Paper start
         for (ItemStack itemStack : this.f()) {
             if (!itemStack.isEmpty()) {
@@ -110,13 +110,13 @@ public abstract class TileEntityLootable extends TileEntityContainer {
 
     @Override
     public ItemStack getItem(int i) {
-        if (i == 0) this.d((EntityHuman) null); // Paper
-        return (ItemStack) this.f().get(i);
+        if (i == 0) this.d(null); // Paper
+        return this.f().get(i);
     }
 
     @Override
     public ItemStack splitStack(int i, int j) {
-        this.d((EntityHuman) null);
+        this.d(null);
         ItemStack itemstack = ContainerUtil.a(this.f(), i, j);
 
         if (!itemstack.isEmpty()) {
@@ -128,13 +128,13 @@ public abstract class TileEntityLootable extends TileEntityContainer {
 
     @Override
     public ItemStack splitWithoutUpdate(int i) {
-        this.d((EntityHuman) null);
+        this.d(null);
         return ContainerUtil.a(this.f(), i);
     }
 
     @Override
     public void setItem(int i, ItemStack itemstack) {
-        this.d((EntityHuman) null);
+        this.d(null);
         this.f().set(i, itemstack);
         if (itemstack.getCount() > this.getMaxStackSize()) {
             itemstack.setCount(this.getMaxStackSize());

@@ -41,25 +41,25 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
 
     public BlockSweetBerryBush(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSweetBerryBush.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockSweetBerryBush.a, 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (Integer) iblockdata.get(BlockSweetBerryBush.a) == 0 ? BlockSweetBerryBush.b : ((Integer) iblockdata.get(BlockSweetBerryBush.a) < 3 ? BlockSweetBerryBush.c : super.b(iblockdata, iblockaccess, blockposition, voxelshapecollision));
+        return iblockdata.get(BlockSweetBerryBush.a) == 0 ? BlockSweetBerryBush.b : (iblockdata.get(BlockSweetBerryBush.a) < 3 ? BlockSweetBerryBush.c : super.b(iblockdata, iblockaccess, blockposition, voxelshapecollision));
     }
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockSweetBerryBush.a) < 3;
+        return iblockdata.get(BlockSweetBerryBush.a) < 3;
     }
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        int i = (Integer) iblockdata.get(BlockSweetBerryBush.a);
+        int i = iblockdata.get(BlockSweetBerryBush.a);
 
         if (i < 3 && random.nextInt(Math.max(1, (int) (100.0F / worldserver.spigotConfig.sweetBerryModifier) * 5)) == 0 && worldserver.getLightLevel(blockposition.up(), 0) >= 9) { // Spigot
-            CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, (IBlockData) iblockdata.set(BlockSweetBerryBush.a, i + 1), 2); // CraftBukkit
+            CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata.set(BlockSweetBerryBush.a, i + 1), 2); // CraftBukkit
         }
 
     }
@@ -69,7 +69,7 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
         if (entity instanceof EntityLiving && entity.getEntityType() != EntityTypes.FOX && entity.getEntityType() != EntityTypes.BEE) {
             entity.a(iblockdata, new Vec3D(0.800000011920929D, 0.75D, 0.800000011920929D));
-            if (!world.isClientSide && (Integer) iblockdata.get(BlockSweetBerryBush.a) > 0 && (entity.D != entity.locX() || entity.F != entity.locZ())) {
+            if (!world.isClientSide && iblockdata.get(BlockSweetBerryBush.a) > 0 && (entity.D != entity.locX() || entity.F != entity.locZ())) {
                 double d0 = Math.abs(entity.locX() - entity.D);
                 double d1 = Math.abs(entity.locZ() - entity.F);
 
@@ -85,7 +85,7 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
 
     @Override
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
-        int i = (Integer) iblockdata.get(BlockSweetBerryBush.a);
+        int i = iblockdata.get(BlockSweetBerryBush.a);
         boolean flag = i == 3;
 
         if (!flag && entityhuman.b(enumhand).getItem() == Items.BONE_MEAL) {
@@ -102,8 +102,8 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
                 a(world, blockposition, CraftItemStack.asNMSCopy(itemStack));
             }
             // CraftBukkit end
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockSweetBerryBush.a, 1), 2);
+            world.playSound(null, blockposition, SoundEffects.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockSweetBerryBush.a, 1), 2);
             return EnumInteractionResult.a(world.isClientSide);
         } else {
             return super.interact(iblockdata, world, blockposition, entityhuman, enumhand, movingobjectpositionblock);
@@ -117,7 +117,7 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
 
     @Override
     public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        return (Integer) iblockdata.get(BlockSweetBerryBush.a) < 3;
+        return iblockdata.get(BlockSweetBerryBush.a) < 3;
     }
 
     @Override
@@ -127,8 +127,8 @@ public class BlockSweetBerryBush extends BlockPlant implements IBlockFragilePlan
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        int i = Math.min(3, (Integer) iblockdata.get(BlockSweetBerryBush.a) + 1);
+        int i = Math.min(3, iblockdata.get(BlockSweetBerryBush.a) + 1);
 
-        worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockSweetBerryBush.a, i), 2);
+        worldserver.setTypeAndData(blockposition, iblockdata.set(BlockSweetBerryBush.a, i), 2);
     }
 }

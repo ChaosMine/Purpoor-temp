@@ -262,7 +262,7 @@ public class Raid {
                         flag1 = this.y.isPresent();
                         boolean flag2 = !flag1 && this.preRaidTicks % 5 == 0;
 
-                        if (flag1 && !this.world.getChunkProvider().a(new ChunkCoordIntPair((BlockPosition) this.y.get()))) {
+                        if (flag1 && !this.world.getChunkProvider().a(new ChunkCoordIntPair(this.y.get()))) {
                             flag2 = true;
                         }
 
@@ -296,7 +296,7 @@ public class Raid {
                     this.F();
                     if (i > 0) {
                         if (i <= 2) {
-                            this.bossBattle.a((IChatBaseComponent) Raid.a.mutableCopy().c(" - ").addSibling(new ChatMessage("event.minecraft.raid.raiders_remaining", new Object[]{i})));
+                            this.bossBattle.a(Raid.a.mutableCopy().c(" - ").addSibling(new ChatMessage("event.minecraft.raid.raiders_remaining", new Object[]{i})));
                         } else {
                             this.bossBattle.a(Raid.a);
                         }
@@ -309,7 +309,7 @@ public class Raid {
                 int j = 0;
 
                 while (this.G()) {
-                    BlockPosition blockposition = this.y.isPresent() ? (BlockPosition) this.y.get() : this.a(j, 20);
+                    BlockPosition blockposition = this.y.isPresent() ? this.y.get() : this.a(j, 20);
 
                     if (blockposition != null) {
                         this.started = true;
@@ -429,7 +429,7 @@ public class Raid {
         HashSet hashset = Sets.newHashSet();
 
         while (iterator.hasNext()) {
-            Set<EntityRaider> set = (Set) iterator.next();
+            Set<EntityRaider> set = iterator.next();
             Iterator iterator1 = set.iterator();
 
             while (iterator1.hasNext()) {
@@ -475,7 +475,7 @@ public class Raid {
         while (iterator.hasNext()) {
             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
             Vec3D vec3d = entityplayer.getPositionVector();
-            Vec3D vec3d1 = Vec3D.a((BaseBlockPosition) blockposition);
+            Vec3D vec3d1 = Vec3D.a(blockposition);
             float f1 = MathHelper.sqrt((vec3d1.x - vec3d.x) * (vec3d1.x - vec3d.x) + (vec3d1.z - vec3d.z) * (vec3d1.z - vec3d.z));
             double d0 = vec3d.x + (double) (13.0F / f1) * (vec3d1.x - vec3d.x);
             double d1 = vec3d.z + (double) (13.0F / f1) * (vec3d1.z - vec3d.z);
@@ -507,7 +507,7 @@ public class Raid {
             int i1 = 0;
 
             for (int j1 = 0; j1 < l; ++j1) {
-                EntityRaider entityraider = (EntityRaider) raid_wave.g.a((World) this.world);
+                EntityRaider entityraider = raid_wave.g.a(this.world);
 
                 if (!flag && entityraider.eN()) {
                     entityraider.setPatrolLeader(true);
@@ -522,12 +522,12 @@ public class Raid {
                     EntityRaider entityraider1 = null;
 
                     if (i == this.a(EnumDifficulty.NORMAL)) {
-                        entityraider1 = (EntityRaider) EntityTypes.PILLAGER.a((World) this.world);
+                        entityraider1 = EntityTypes.PILLAGER.a(this.world);
                     } else if (i >= this.a(EnumDifficulty.HARD)) {
                         if (i1 == 0) {
-                            entityraider1 = (EntityRaider) EntityTypes.EVOKER.a((World) this.world);
+                            entityraider1 = EntityTypes.EVOKER.a(this.world);
                         } else {
-                            entityraider1 = (EntityRaider) EntityTypes.VINDICATOR.a((World) this.world);
+                            entityraider1 = EntityTypes.VINDICATOR.a(this.world);
                         }
                     }
 
@@ -559,7 +559,7 @@ public class Raid {
             entityraider.b(0);
             if (!flag && blockposition != null) {
                 entityraider.setPosition((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 1.0D, (double) blockposition.getZ() + 0.5D);
-                entityraider.prepare(this.world, this.world.getDamageScaler(blockposition), EnumMobSpawn.EVENT, (GroupDataEntity) null, (NBTTagCompound) null);
+                entityraider.prepare(this.world, this.world.getDamageScaler(blockposition), EnumMobSpawn.EVENT, null, null);
                 entityraider.a(i, false);
                 entityraider.setOnGround(true);
                 this.world.addAllEntities(entityraider, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.RAID); // CraftBukkit
@@ -598,7 +598,7 @@ public class Raid {
     }
 
     public void a(EntityRaider entityraider, boolean flag) {
-        Set<EntityRaider> set = (Set) this.raiders.get(entityraider.fc());
+        Set<EntityRaider> set = this.raiders.get(entityraider.fc());
 
         if (set != null) {
             boolean flag1 = set.remove(entityraider);
@@ -627,13 +627,13 @@ public class Raid {
 
         nbttagcompound.set("Patterns", nbttaglist);
         itemstack.a(ItemStack.HideFlags.ADDITIONAL);
-        itemstack.a((IChatBaseComponent) (new ChatMessage("block.minecraft.ominous_banner")).a(EnumChatFormat.GOLD));
+        itemstack.a((new ChatMessage("block.minecraft.ominous_banner")).a(EnumChatFormat.GOLD));
         return itemstack;
     }
 
     @Nullable
     public EntityRaider b(int i) {
-        return (EntityRaider) this.f.get(i);
+        return this.f.get(i);
     }
 
     @Nullable
@@ -648,7 +648,7 @@ public class Raid {
             int k1 = this.world.a(HeightMap.Type.WORLD_SURFACE, i1, j1);
 
             blockposition_mutableblockposition.d(i1, k1, j1);
-            if ((!this.world.a_(blockposition_mutableblockposition) || i >= 2) && this.world.isAreaLoaded(blockposition_mutableblockposition.getX() - 10, blockposition_mutableblockposition.getY() - 10, blockposition_mutableblockposition.getZ() - 10, blockposition_mutableblockposition.getX() + 10, blockposition_mutableblockposition.getY() + 10, blockposition_mutableblockposition.getZ() + 10) && this.world.getChunkProvider().a(new ChunkCoordIntPair(blockposition_mutableblockposition)) && (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, (IWorldReader) this.world, blockposition_mutableblockposition, EntityTypes.RAVAGER) || this.world.getType(blockposition_mutableblockposition.down()).a(Blocks.SNOW) && this.world.getType(blockposition_mutableblockposition).isAir())) {
+            if ((!this.world.a_(blockposition_mutableblockposition) || i >= 2) && this.world.isAreaLoaded(blockposition_mutableblockposition.getX() - 10, blockposition_mutableblockposition.getY() - 10, blockposition_mutableblockposition.getZ() - 10, blockposition_mutableblockposition.getX() + 10, blockposition_mutableblockposition.getY() + 10, blockposition_mutableblockposition.getZ() + 10) && this.world.getChunkProvider().a(new ChunkCoordIntPair(blockposition_mutableblockposition)) && (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, this.world, blockposition_mutableblockposition, EntityTypes.RAVAGER) || this.world.getType(blockposition_mutableblockposition.down()).a(Blocks.SNOW) && this.world.getType(blockposition_mutableblockposition).isAir())) {
                 return blockposition_mutableblockposition;
             }
         }
@@ -664,7 +664,7 @@ public class Raid {
         this.raiders.computeIfAbsent(i, (integer) -> {
             return Sets.newHashSet();
         });
-        Set<EntityRaider> set = (Set) this.raiders.get(i);
+        Set<EntityRaider> set = this.raiders.get(i);
         EntityRaider entityraider1 = null;
         Iterator iterator = set.iterator();
 

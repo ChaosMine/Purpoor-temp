@@ -24,19 +24,19 @@ public class PathfinderGoalBeg extends PathfinderGoal {
         this.a = entitywolf;
         this.c = entitywolf.world;
         this.d = f;
-        this.f = (new PathfinderTargetCondition()).a((double) f).a().b().d();
+        this.f = (new PathfinderTargetCondition()).a(f).a().b().d();
         this.a(EnumSet.of(PathfinderGoal.Type.LOOK));
     }
 
     @Override
     public boolean a() {
-        this.b = this.c.a(this.f, (EntityLiving) this.a);
+        this.b = this.c.a(this.f, this.a);
         return this.b == null ? false : this.a(this.b);
     }
 
     @Override
     public boolean b() {
-        return !this.b.isAlive() ? false : (this.a.h((Entity) this.b) > (double) (this.d * this.d) ? false : this.e > 0 && this.a(this.b));
+        return !this.b.isAlive() ? false : (this.a.h(this.b) > (double) (this.d * this.d) ? false : this.e > 0 && this.a(this.b));
     }
 
     @Override

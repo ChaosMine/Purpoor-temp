@@ -84,7 +84,7 @@ public class VillagePlaceSection {
         BlockPosition blockposition = villageplacerecord.f();
         VillagePlaceType villageplacetype = villageplacerecord.g();
         short short0 = SectionPosition.b(blockposition);
-        VillagePlaceRecord villageplacerecord1 = (VillagePlaceRecord) this.b.get(short0);
+        VillagePlaceRecord villageplacerecord1 = this.b.get(short0);
 
         if (villageplacerecord1 != null) {
             if (villageplacetype.equals(villageplacerecord1.g())) {
@@ -97,26 +97,26 @@ public class VillagePlaceSection {
         }
 
         this.b.put(short0, villageplacerecord);
-        ((Set) this.c.computeIfAbsent(villageplacetype, (villageplacetype1) -> {
+        this.c.computeIfAbsent(villageplacetype, (villageplacetype1) -> {
             return Sets.newHashSet();
-        })).add(villageplacerecord);
+        }).add(villageplacerecord);
         return true;
     }
 
     public void a(BlockPosition blockposition) {
-        VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) this.b.remove(SectionPosition.b(blockposition));
+        VillagePlaceRecord villageplacerecord = this.b.remove(SectionPosition.b(blockposition));
 
         if (villageplacerecord == null) {
             VillagePlaceSection.LOGGER.error("POI data mismatch: never registered at " + blockposition);
         } else {
-            ((Set) this.c.get(villageplacerecord.g())).remove(villageplacerecord);
+            this.c.get(villageplacerecord.g()).remove(villageplacerecord);
             VillagePlaceSection.LOGGER.debug("Removed POI of type {} @ {}", new Supplier[]{villageplacerecord::g, villageplacerecord::f});
             this.d.run();
         }
     }
 
     public boolean c(BlockPosition blockposition) {
-        VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) this.b.get(SectionPosition.b(blockposition));
+        VillagePlaceRecord villageplacerecord = this.b.get(SectionPosition.b(blockposition));
 
         if (villageplacerecord == null) {
             throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException("POI never registered at " + blockposition)));
@@ -130,14 +130,14 @@ public class VillagePlaceSection {
 
     public boolean a(BlockPosition blockposition, Predicate<VillagePlaceType> predicate) {
         short short0 = SectionPosition.b(blockposition);
-        VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) this.b.get(short0);
+        VillagePlaceRecord villageplacerecord = this.b.get(short0);
 
         return villageplacerecord != null && predicate.test(villageplacerecord.g());
     }
 
     public Optional<VillagePlaceType> d(BlockPosition blockposition) {
         short short0 = SectionPosition.b(blockposition);
-        VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) this.b.get(short0);
+        VillagePlaceRecord villageplacerecord = this.b.get(short0);
 
         return villageplacerecord != null ? Optional.of(villageplacerecord.g()) : Optional.empty();
     }
@@ -149,7 +149,7 @@ public class VillagePlaceSection {
             this.b();
             consumer.accept((blockposition, villageplacetype) -> {
                 short short0 = SectionPosition.b(blockposition);
-                VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) short2objectmap.computeIfAbsent(short0, (i) -> {
+                VillagePlaceRecord villageplacerecord = short2objectmap.computeIfAbsent(short0, (i) -> {
                     return new VillagePlaceRecord(blockposition, villageplacetype, this.d);
                 });
 

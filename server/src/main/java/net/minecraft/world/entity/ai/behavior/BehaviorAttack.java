@@ -21,7 +21,7 @@ public class BehaviorAttack extends Behavior<EntityInsentient> {
     protected boolean a(WorldServer worldserver, EntityInsentient entityinsentient) {
         EntityLiving entityliving = this.b(entityinsentient);
 
-        return !this.a(entityinsentient) && BehaviorUtil.c(entityinsentient, entityliving) && BehaviorUtil.b((EntityLiving) entityinsentient, entityliving);
+        return !this.a(entityinsentient) && BehaviorUtil.c(entityinsentient, entityliving) && BehaviorUtil.b(entityinsentient, entityliving);
     }
 
     private boolean a(EntityInsentient entityinsentient) {
@@ -33,13 +33,13 @@ public class BehaviorAttack extends Behavior<EntityInsentient> {
     protected void a(WorldServer worldserver, EntityInsentient entityinsentient, long i) {
         EntityLiving entityliving = this.b(entityinsentient);
 
-        BehaviorUtil.a((EntityLiving) entityinsentient, entityliving);
+        BehaviorUtil.a(entityinsentient, entityliving);
         entityinsentient.swingHand(EnumHand.MAIN_HAND);
         entityinsentient.attackEntity(entityliving);
-        entityinsentient.getBehaviorController().a(MemoryModuleType.ATTACK_COOLING_DOWN, true, (long) this.b);
+        entityinsentient.getBehaviorController().a(MemoryModuleType.ATTACK_COOLING_DOWN, true, this.b);
     }
 
     private EntityLiving b(EntityInsentient entityinsentient) {
-        return (EntityLiving) entityinsentient.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+        return entityinsentient.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
     }
 }

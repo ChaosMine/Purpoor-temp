@@ -52,7 +52,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
             return chunkgeneratorabstract.h;
         })).apply(instance, instance.stable(ChunkGeneratorAbstract::new));
     });
-    private static final float[] i = (float[]) SystemUtils.a((new float[13824]), (afloat) -> { // CraftBukkit - decompile error
+    private static final float[] i = SystemUtils.a((new float[13824]), (afloat) -> { // CraftBukkit - decompile error
         for (int i = 0; i < 24; ++i) {
             for (int j = 0; j < 24; ++j) {
                 for (int k = 0; k < 24; ++k) {
@@ -62,7 +62,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         }
 
     });
-    private static final float[] j = (float[]) SystemUtils.a((new float[25]), (afloat) -> { // CraftBukkit - decompile error
+    private static final float[] j = SystemUtils.a((new float[25]), (afloat) -> { // CraftBukkit - decompile error
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.c((float) (i * i + j * j) + 0.2F);
@@ -97,9 +97,9 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
     }
 
     private ChunkGeneratorAbstract(WorldChunkManager worldchunkmanager, WorldChunkManager worldchunkmanager1, long i, Supplier<GeneratorSettingBase> supplier) {
-        super(worldchunkmanager, worldchunkmanager1, ((GeneratorSettingBase) supplier.get()).a(), i);
+        super(worldchunkmanager, worldchunkmanager1, supplier.get().a(), i);
         this.w = i;
-        GeneratorSettingBase generatorsettingbase = (GeneratorSettingBase) supplier.get();
+        GeneratorSettingBase generatorsettingbase = supplier.get();
 
         this.h = supplier;
         NoiseSettings noisesettings = generatorsettingbase.b();
@@ -117,7 +117,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         this.q = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         this.r = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         this.s = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-7, 0));
-        this.t = (NoiseGenerator) (noisesettings.i() ? new NoiseGenerator3(this.e, IntStream.rangeClosed(-3, 0)) : new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-3, 0)));
+        this.t = noisesettings.i() ? new NoiseGenerator3(this.e, IntStream.rangeClosed(-3, 0)) : new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-3, 0));
         this.e.a(2620);
         this.u = new NoiseGeneratorOctaves(this.e, IntStream.rangeClosed(-15, 0));
         if (noisesettings.k()) {
@@ -137,7 +137,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
     }
 
     public boolean a(long i, ResourceKey<GeneratorSettingBase> resourcekey) {
-        return this.w == i && ((GeneratorSettingBase) this.h.get()).a(resourcekey);
+        return this.w == i && this.h.get().a(resourcekey);
     }
 
     private double a(int i, int j, int k, double d0, double d1, double d2, double d3) {
@@ -186,14 +186,14 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
     }
 
     private void a(double[] adouble, int i, int j) {
-        NoiseSettings noisesettings = ((GeneratorSettingBase) this.h.get()).b();
+        NoiseSettings noisesettings = this.h.get().b();
         double d0;
         double d1;
         double d2;
         double d3;
 
         if (this.v != null) {
-            d0 = (double) (WorldChunkManagerTheEnd.a(this.v, i, j) - 8.0F);
+            d0 = WorldChunkManagerTheEnd.a(this.v, i, j) - 8.0F;
             if (d0 > 0.0D) {
                 d1 = 0.25D;
             } else {
@@ -240,8 +240,8 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
             float f10 = f1 / f2;
             float f11 = f / f2;
 
-            d2 = (double) (f10 * 0.5F - 0.125F);
-            d3 = (double) (f11 * 0.9F + 0.1F);
+            d2 = f10 * 0.5F - 0.125F;
+            d3 = f11 * 0.9F + 0.1F;
             d0 = d2 * 0.265625D;
             d1 = 96.0D / d3;
         }
@@ -251,12 +251,12 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         double d6 = d4 / noisesettings.b().c();
         double d7 = d5 / noisesettings.b().d();
 
-        d2 = (double) noisesettings.c().a();
-        d3 = (double) noisesettings.c().b();
-        double d8 = (double) noisesettings.c().c();
-        double d9 = (double) noisesettings.d().a();
-        double d10 = (double) noisesettings.d().b();
-        double d11 = (double) noisesettings.d().c();
+        d2 = noisesettings.c().a();
+        d3 = noisesettings.c().b();
+        double d8 = noisesettings.c().c();
+        double d9 = noisesettings.d().a();
+        double d10 = noisesettings.d().b();
+        double d11 = noisesettings.d().c();
         double d12 = noisesettings.j() ? this.c(i, j) : 0.0D;
         double d13 = noisesettings.g();
         double d14 = noisesettings.h();
@@ -291,7 +291,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
     }
 
     private double c(int i, int j) {
-        double d0 = this.u.a((double) (i * 200), 10.0D, (double) (j * 200), 1.0D, 0.0D, true);
+        double d0 = this.u.a(i * 200, 10.0D, j * 200, 1.0D, 0.0D, true);
         double d1;
 
         if (d0 < 0.0D) {
@@ -307,14 +307,14 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
 
     @Override
     public int getBaseHeight(int i, int j, HeightMap.Type heightmap_type) {
-        return this.a(i, j, (IBlockData[]) null, heightmap_type.e());
+        return this.a(i, j, null, heightmap_type.e());
     }
 
     @Override
     public IBlockAccess a(int i, int j) {
         IBlockData[] aiblockdata = new IBlockData[this.o * this.l];
 
-        this.a(i, j, aiblockdata, (Predicate) null);
+        this.a(i, j, aiblockdata, null);
         return new BlockColumn(aiblockdata);
     }
 
@@ -402,7 +402,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
         int i = ichunkaccess.getPos().d();
         int j = ichunkaccess.getPos().e();
-        GeneratorSettingBase generatorsettingbase = (GeneratorSettingBase) this.h.get();
+        GeneratorSettingBase generatorsettingbase = this.h.get();
         int k = generatorsettingbase.f(); final int floorHeight = k; // Paper
         int l = this.x - 1 - generatorsettingbase.e(); final int roofHeight = l; // Paper
         boolean flag = true;
@@ -558,7 +558,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
                                 int i5;
 
                                 for (d18 = d18 / 2.0D - d18 * d18 * d18 / 24.0D; objectlistiterator.hasNext(); d18 += a(k4, l4, i5) * 0.8D) {
-                                    StructurePiece structurepiece = (StructurePiece) objectlistiterator.next();
+                                    StructurePiece structurepiece = objectlistiterator.next();
                                     StructureBoundingBox structureboundingbox = structurepiece.g();
 
                                     k4 = Math.max(0, Math.max(structureboundingbox.a - j3, j3 - structureboundingbox.d));
@@ -569,7 +569,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
                                 objectlistiterator.back(objectlist.size());
 
                                 while (objectlistiterator1.hasNext()) {
-                                    WorldGenFeatureDefinedStructureJigsawJunction worldgenfeaturedefinedstructurejigsawjunction = (WorldGenFeatureDefinedStructureJigsawJunction) objectlistiterator1.next();
+                                    WorldGenFeatureDefinedStructureJigsawJunction worldgenfeaturedefinedstructurejigsawjunction = objectlistiterator1.next();
                                     int j5 = j3 - worldgenfeaturedefinedstructurejigsawjunction.a();
 
                                     k4 = j2 - worldgenfeaturedefinedstructurejigsawjunction.b();
@@ -615,7 +615,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
     }
 
     private static double b(int i, int j, int k) {
-        double d0 = (double) (i * i + k * k);
+        double d0 = i * i + k * k;
         double d1 = (double) j + 0.5D;
         double d2 = d1 * d1;
         double d3 = Math.pow(2.718281828459045D, -(d2 / 16.0D + d0 / 16.0D));
@@ -631,7 +631,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
 
     @Override
     public int getSeaLevel() {
-        return ((GeneratorSettingBase) this.h.get()).g();
+        return this.h.get().g();
     }
 
     @Override
@@ -665,7 +665,7 @@ public final class ChunkGeneratorAbstract extends ChunkGenerator {
 
     @Override
     public void addMobs(RegionLimitedWorldAccess regionlimitedworldaccess) {
-        if (!((GeneratorSettingBase) this.h.get()).h()) {
+        if (!this.h.get().h()) {
             int i = regionlimitedworldaccess.a();
             int j = regionlimitedworldaccess.b();
             BiomeBase biomebase = regionlimitedworldaccess.getBiome((new ChunkCoordIntPair(i, j)).l());

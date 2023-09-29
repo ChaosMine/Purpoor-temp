@@ -38,9 +38,9 @@ public class PathfinderGoalPanic extends PathfinderGoal {
                 BlockPosition blockposition = this.a(this.a.world, this.a, 5, 4);
 
                 if (blockposition != null) {
-                    this.c = (double) blockposition.getX();
-                    this.d = (double) blockposition.getY();
-                    this.e = (double) blockposition.getZ();
+                    this.c = blockposition.getX();
+                    this.d = blockposition.getY();
+                    this.e = blockposition.getZ();
                     return true;
                 }
             }
@@ -81,7 +81,7 @@ public class PathfinderGoalPanic extends PathfinderGoal {
     public boolean b() {
         // CraftBukkit start - introduce a temporary timeout hack until this is fixed properly
         if ((this.a.ticksLived - this.a.hurtTimestamp) > 100) {
-            this.a.setLastDamager((EntityLiving) null);
+            this.a.setLastDamager(null);
             return false;
         }
         // CraftBukkit end
@@ -102,7 +102,7 @@ public class PathfinderGoalPanic extends PathfinderGoal {
             for (int k1 = l - j; k1 <= l + j; ++k1) {
                 for (int l1 = i1 - i; l1 <= i1 + i; ++l1) {
                     blockposition_mutableblockposition.d(j1, k1, l1);
-                    if (iblockaccess.getFluid(blockposition_mutableblockposition).a((Tag) TagsFluid.WATER)) {
+                    if (iblockaccess.getFluid(blockposition_mutableblockposition).a(TagsFluid.WATER)) {
                         float f1 = (float) ((j1 - k) * (j1 - k) + (k1 - l) * (k1 - l) + (l1 - i1) * (l1 - i1));
 
                         if (f1 < f) {

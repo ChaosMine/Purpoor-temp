@@ -86,7 +86,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
     }
 
     private void d() {
-        this.world.playSound((EntityHuman) null, this.getPosition(), SoundEffects.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        this.world.playSound(null, this.getPosition(), SoundEffects.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 
     public void a(EnumDirection enumdirection) {
@@ -118,7 +118,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
             while (iterator.hasNext()) {
                 EntityLiving entityliving = (EntityLiving) iterator.next();
 
-                if (entityliving.isAlive() && !entityliving.dead && blockposition.a((IPosition) entityliving.getPositionVector(), 32.0D)) {
+                if (entityliving.isAlive() && !entityliving.dead && blockposition.a(entityliving.getPositionVector(), 32.0D)) {
                     entityliving.getBehaviorController().setMemory(MemoryModuleType.HEARD_BELL_TIME, this.world.getTime()); // Paper - decompile fix
                 }
             }
@@ -139,7 +139,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
             }
 
             entityliving = (EntityLiving) iterator.next();
-        } while (!entityliving.isAlive() || entityliving.dead || !blockposition.a((IPosition) entityliving.getPositionVector(), 32.0D) || !entityliving.getEntityType().a((Tag) TagsEntity.RADIERS));
+        } while (!entityliving.isAlive() || entityliving.dead || !blockposition.a(entityliving.getPositionVector(), 32.0D) || !entityliving.getEntityType().a(TagsEntity.RADIERS));
 
         return true;
     }
@@ -155,7 +155,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
             BlockPosition blockposition = this.getPosition();
             MutableInt mutableint = new MutableInt(16700985);
             int i = (int) this.h.stream().filter((entityliving) -> {
-                return blockposition.a((IPosition) entityliving.getPositionVector(), 48.0D);
+                return blockposition.a(entityliving.getPositionVector(), 48.0D);
             }).count();
 
             this.h.stream().filter(this::a).forEach((entityliving) -> {
@@ -171,7 +171,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
                     double d3 = (double) ColorUtil.a.c(l) / 255.0D;
                     double d4 = (double) ColorUtil.a.d(l) / 255.0D;
 
-                    world.addParticle(Particles.ENTITY_EFFECT, d0, (double) ((float) blockposition.getY() + 0.5F), d1, d2, d3, d4);
+                    world.addParticle(Particles.ENTITY_EFFECT, d0, (float) blockposition.getY() + 0.5F, d1, d2, d3, d4);
                 }
 
             });
@@ -179,7 +179,7 @@ public class TileEntityBell extends TileEntity implements ITickable {
     }
 
     private boolean a(EntityLiving entityliving) {
-        return entityliving.isAlive() && !entityliving.dead && this.getPosition().a((IPosition) entityliving.getPositionVector(), 48.0D) && entityliving.getEntityType().a((Tag) TagsEntity.RADIERS);
+        return entityliving.isAlive() && !entityliving.dead && this.getPosition().a(entityliving.getPositionVector(), 48.0D) && entityliving.getEntityType().a(TagsEntity.RADIERS);
     }
 
     private void b(EntityLiving entityliving) {

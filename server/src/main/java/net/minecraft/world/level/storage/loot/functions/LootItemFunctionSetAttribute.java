@@ -55,7 +55,7 @@ public class LootItemFunctionSetAttribute extends LootItemFunctionConditional {
 
             EnumItemSlot enumitemslot = (EnumItemSlot) SystemUtils.a((Object[]) lootitemfunctionsetattribute_b.f, random);
 
-            itemstack.a(lootitemfunctionsetattribute_b.b, new AttributeModifier(uuid, lootitemfunctionsetattribute_b.a, (double) lootitemfunctionsetattribute_b.d.b(random), lootitemfunctionsetattribute_b.c), enumitemslot);
+            itemstack.a(lootitemfunctionsetattribute_b.b, new AttributeModifier(uuid, lootitemfunctionsetattribute_b.a, lootitemfunctionsetattribute_b.d.b(random), lootitemfunctionsetattribute_b.c), enumitemslot);
         }
 
         return itemstack;
@@ -113,13 +113,13 @@ public class LootItemFunctionSetAttribute extends LootItemFunctionConditional {
         public static LootItemFunctionSetAttribute.b a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
             String s = ChatDeserializer.h(jsonobject, "name");
             MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "attribute"));
-            AttributeBase attributebase = (AttributeBase) IRegistry.ATTRIBUTE.get(minecraftkey);
+            AttributeBase attributebase = IRegistry.ATTRIBUTE.get(minecraftkey);
 
             if (attributebase == null) {
                 throw new JsonSyntaxException("Unknown attribute: " + minecraftkey);
             } else {
                 AttributeModifier.Operation attributemodifier_operation = a(ChatDeserializer.h(jsonobject, "operation"));
-                LootValueBounds lootvaluebounds = (LootValueBounds) ChatDeserializer.a(jsonobject, "amount", jsondeserializationcontext, LootValueBounds.class);
+                LootValueBounds lootvaluebounds = ChatDeserializer.a(jsonobject, "amount", jsondeserializationcontext, LootValueBounds.class);
                 UUID uuid = null;
                 EnumItemSlot[] aenumitemslot;
 
@@ -211,7 +211,7 @@ public class LootItemFunctionSetAttribute extends LootItemFunctionConditional {
         public d() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetAttribute lootitemfunctionsetattribute, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetattribute, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetattribute, jsonserializationcontext);
             JsonArray jsonarray = new JsonArray();
             Iterator iterator = lootitemfunctionsetattribute.a.iterator();
 

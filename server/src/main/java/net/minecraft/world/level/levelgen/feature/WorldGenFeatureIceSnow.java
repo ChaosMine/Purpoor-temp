@@ -19,7 +19,12 @@ public class WorldGenFeatureIceSnow extends WorldGenerator<WorldGenFeatureEmptyC
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition1 = new BlockPosition.MutableBlockPosition();
 
@@ -42,7 +47,7 @@ public class WorldGenFeatureIceSnow extends WorldGenerator<WorldGenFeatureEmptyC
                     IBlockData iblockdata = generatoraccessseed.getType(blockposition_mutableblockposition1);
 
                     if (iblockdata.b(BlockDirtSnow.a)) {
-                        generatoraccessseed.setTypeAndData(blockposition_mutableblockposition1, (IBlockData) iblockdata.set(BlockDirtSnow.a, true), 2);
+                        generatoraccessseed.setTypeAndData(blockposition_mutableblockposition1, iblockdata.set(BlockDirtSnow.a, true), 2);
                     }
                 }
             }

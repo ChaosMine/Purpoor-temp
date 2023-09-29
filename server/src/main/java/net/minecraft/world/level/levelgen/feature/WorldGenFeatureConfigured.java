@@ -43,9 +43,10 @@ public class WorldGenFeatureConfigured<FC extends WorldGenFeatureConfiguration, 
 
     @Override
     public WorldGenFeatureConfigured<?, ?> a(WorldGenDecoratorConfigured<?> worldgendecoratorconfigured) {
-        return WorldGenerator.DECORATED.b((WorldGenFeatureConfiguration) (new WorldGenFeatureCompositeConfiguration(() -> {
-            return this;
-        }, worldgendecoratorconfigured)));
+        return WorldGenerator.DECORATED.b(new WorldGenFeatureCompositeConfiguration(
+          () -> this,
+          worldgendecoratorconfigured
+        ));
     }
 
     public WorldGenFeatureRandomChoiceConfigurationWeight a(float f) {

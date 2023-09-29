@@ -29,7 +29,7 @@ public class BehaviorWorkComposter extends BehaviorWork {
         Optional<GlobalPos> optional = entityvillager.getBehaviorController().getMemory(MemoryModuleType.JOB_SITE);
 
         if (optional.isPresent()) {
-            GlobalPos globalpos = (GlobalPos) optional.get();
+            GlobalPos globalpos = optional.get();
             IBlockData iblockdata = worldserver.getType(globalpos.getBlockPosition());
 
             if (iblockdata.a(Blocks.COMPOSTER)) {
@@ -43,8 +43,8 @@ public class BehaviorWorkComposter extends BehaviorWork {
     private void a(WorldServer worldserver, EntityVillager entityvillager, GlobalPos globalpos, IBlockData iblockdata) {
         BlockPosition blockposition = globalpos.getBlockPosition();
 
-        if ((Integer) iblockdata.get(BlockComposter.a) == 8) {
-            iblockdata = BlockComposter.d(iblockdata, (World) worldserver, blockposition, entityvillager); // CraftBukkit
+        if (iblockdata.get(BlockComposter.a) == 8) {
+            iblockdata = BlockComposter.d(iblockdata, worldserver, blockposition, entityvillager); // CraftBukkit
         }
 
         int i = 20;
@@ -70,7 +70,7 @@ public class BehaviorWorkComposter extends BehaviorWork {
 
                     for (int l1 = 0; l1 < k1; ++l1) {
                         iblockdata1 = BlockComposter.a(iblockdata1, worldserver, itemstack, blockposition, entityvillager); // CraftBukkit
-                        if ((Integer) iblockdata1.get(BlockComposter.a) == 7) {
+                        if (iblockdata1.get(BlockComposter.a) == 7) {
                             this.a(worldserver, iblockdata, blockposition, iblockdata1);
                             return;
                         }

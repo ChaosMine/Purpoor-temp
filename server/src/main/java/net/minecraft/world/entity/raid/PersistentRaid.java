@@ -42,7 +42,7 @@ public class PersistentRaid extends PersistentBase {
     }
 
     public Raid a(int i) {
-        return (Raid) this.raids.get(i);
+        return this.raids.get(i);
     }
 
     public void a() {
@@ -99,7 +99,7 @@ public class PersistentRaid extends PersistentBase {
                 return null;
             } else {
                 BlockPosition blockposition = entityplayer.getChunkCoordinates();
-                List<VillagePlaceRecord> list = (List) this.b.y().c(VillagePlaceType.b, blockposition, 64, VillagePlace.Occupancy.IS_OCCUPIED).collect(Collectors.toList());
+                List<VillagePlaceRecord> list = this.b.y().c(VillagePlaceType.b, blockposition, 64, VillagePlace.Occupancy.IS_OCCUPIED).toList();
                 int i = 0;
                 Vec3D vec3d = Vec3D.ORIGIN;
 
@@ -107,7 +107,7 @@ public class PersistentRaid extends PersistentBase {
                     VillagePlaceRecord villageplacerecord = (VillagePlaceRecord) iterator.next();
                     BlockPosition blockposition1 = villageplacerecord.f();
 
-                    vec3d = vec3d.add((double) blockposition1.getX(), (double) blockposition1.getY(), (double) blockposition1.getZ());
+                    vec3d = vec3d.add(blockposition1.getX(), blockposition1.getY(), blockposition1.getZ());
                 }
 
                 BlockPosition blockposition2;
@@ -155,7 +155,7 @@ public class PersistentRaid extends PersistentBase {
                         this.raids.put(raid.getId(), raid);
                     }
                     // CraftBukkit end
-                    raid.a((EntityHuman) entityplayer);
+                    raid.a(entityplayer);
                     entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityStatus(entityplayer, (byte) 43));
                     if (!raid.c()) {
                         entityplayer.a(StatisticList.RAID_TRIGGER);
@@ -220,7 +220,7 @@ public class PersistentRaid extends PersistentBase {
     @Nullable
     public Raid getNearbyRaid(BlockPosition blockposition, int i) {
         Raid raid = null;
-        double d0 = (double) i;
+        double d0 = i;
         Iterator iterator = this.raids.values().iterator();
 
         while (iterator.hasNext()) {

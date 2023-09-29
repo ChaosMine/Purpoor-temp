@@ -25,15 +25,15 @@ import java.util.stream.Collectors;
 public class VillagePlaceType {
 
     private static final Supplier<Set<VillagePlaceType>> y = Suppliers.memoize(() -> {
-        return (Set) IRegistry.VILLAGER_PROFESSION.g().map(VillagerProfession::b).collect(Collectors.toSet());
+        return IRegistry.VILLAGER_PROFESSION.g().map(VillagerProfession::b).collect(Collectors.toSet());
     });
     public static final Predicate<VillagePlaceType> a = (villageplacetype) -> {
-        return ((Set) VillagePlaceType.y.get()).contains(villageplacetype);
+        return VillagePlaceType.y.get().contains(villageplacetype);
     };
     public static final Predicate<VillagePlaceType> b = (villageplacetype) -> {
         return true;
     };
-    private static final Set<IBlockData> z = (Set) ImmutableList.of(Blocks.RED_BED, Blocks.BLACK_BED, Blocks.BLUE_BED, Blocks.BROWN_BED, Blocks.CYAN_BED, Blocks.GRAY_BED, Blocks.GREEN_BED, Blocks.LIGHT_BLUE_BED, Blocks.LIGHT_GRAY_BED, Blocks.LIME_BED, Blocks.MAGENTA_BED, Blocks.ORANGE_BED, new Block[]{Blocks.PINK_BED, Blocks.PURPLE_BED, Blocks.WHITE_BED, Blocks.YELLOW_BED}).stream().flatMap((block) -> {
+    private static final Set<IBlockData> z = ImmutableList.of(Blocks.RED_BED, Blocks.BLACK_BED, Blocks.BLUE_BED, Blocks.BROWN_BED, Blocks.CYAN_BED, Blocks.GRAY_BED, Blocks.GREEN_BED, Blocks.LIGHT_BLUE_BED, Blocks.LIGHT_GRAY_BED, Blocks.LIME_BED, Blocks.MAGENTA_BED, Blocks.ORANGE_BED, new Block[]{Blocks.PINK_BED, Blocks.PURPLE_BED, Blocks.WHITE_BED, Blocks.YELLOW_BED}).stream().flatMap((block) -> {
         return block.getStates().a().stream();
     }).filter((iblockdata) -> {
         return iblockdata.get(BlockBed.PART) == BlockPropertyBedPart.HEAD;
@@ -107,16 +107,16 @@ public class VillagePlaceType {
     }
 
     private static VillagePlaceType a(String s, Set<IBlockData> set, int i, int j) {
-        return a((VillagePlaceType) IRegistry.a((IRegistry) IRegistry.POINT_OF_INTEREST_TYPE, new MinecraftKey(s), (Object) (new VillagePlaceType(s, set, i, j))));
+        return a((VillagePlaceType) IRegistry.a((IRegistry) IRegistry.POINT_OF_INTEREST_TYPE, new MinecraftKey(s), (new VillagePlaceType(s, set, i, j))));
     }
 
     private static VillagePlaceType a(String s, Set<IBlockData> set, int i, Predicate<VillagePlaceType> predicate, int j) {
-        return a((VillagePlaceType) IRegistry.a((IRegistry) IRegistry.POINT_OF_INTEREST_TYPE, new MinecraftKey(s), (Object) (new VillagePlaceType(s, set, i, predicate, j))));
+        return a((VillagePlaceType) IRegistry.a((IRegistry) IRegistry.POINT_OF_INTEREST_TYPE, new MinecraftKey(s), (new VillagePlaceType(s, set, i, predicate, j))));
     }
 
     private static VillagePlaceType a(VillagePlaceType villageplacetype) {
         villageplacetype.C.forEach((iblockdata) -> {
-            VillagePlaceType villageplacetype1 = (VillagePlaceType) VillagePlaceType.A.put(iblockdata, villageplacetype);
+            VillagePlaceType villageplacetype1 = VillagePlaceType.A.put(iblockdata, villageplacetype);
 
             if (villageplacetype1 != null) {
                 throw (IllegalStateException) SystemUtils.c((Throwable) (new IllegalStateException(String.format("%s is defined in too many tags", iblockdata))));

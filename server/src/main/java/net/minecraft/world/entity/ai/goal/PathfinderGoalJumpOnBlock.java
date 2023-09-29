@@ -52,8 +52,8 @@ public class PathfinderGoalJumpOnBlock extends PathfinderGoalGotoTarget {
         } else {
             IBlockData iblockdata = iworldreader.getType(blockposition);
 
-            return iblockdata.a(Blocks.CHEST) ? TileEntityChest.a((IBlockAccess) iworldreader, blockposition) < 1 : (iblockdata.a(Blocks.FURNACE) && (Boolean) iblockdata.get(BlockFurnaceFurace.LIT) ? true : iblockdata.a((Tag) TagsBlock.BEDS, (blockbase_blockdata) -> {
-                return (Boolean) blockbase_blockdata.d(BlockBed.PART).map((blockpropertybedpart) -> {
+            return iblockdata.a(Blocks.CHEST) ? TileEntityChest.a(iworldreader, blockposition) < 1 : (iblockdata.a(Blocks.FURNACE) && iblockdata.get(BlockFurnaceFurace.LIT) ? true : iblockdata.a(TagsBlock.BEDS, (blockbase_blockdata) -> {
+                return blockbase_blockdata.d(BlockBed.PART).map((blockpropertybedpart) -> {
                     return blockpropertybedpart != BlockPropertyBedPart.HEAD;
                 }).orElse(true);
             }));

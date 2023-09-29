@@ -45,12 +45,12 @@ public class BlockFluids extends Block implements IFluidSource {
         }
 
         this.d.add(fluidtypeflowing.a(8, true));
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockFluids.LEVEL, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockFluids.LEVEL, 0));
     }
 
     @Override
     public VoxelShape c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return voxelshapecollision.a(BlockFluids.c, blockposition, true) && (Integer) iblockdata.get(BlockFluids.LEVEL) == 0 && voxelshapecollision.a(iblockaccess.getFluid(blockposition.up()), this.b) ? BlockFluids.c : VoxelShapes.a();
+        return voxelshapecollision.a(BlockFluids.c, blockposition, true) && iblockdata.get(BlockFluids.LEVEL) == 0 && voxelshapecollision.a(iblockaccess.getFluid(blockposition.up()), this.b) ? BlockFluids.c : VoxelShapes.a();
     }
 
     @Override
@@ -70,14 +70,14 @@ public class BlockFluids extends Block implements IFluidSource {
 
     @Override
     public boolean a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, PathMode pathmode) {
-        return !this.b.a((Tag) TagsFluid.LAVA);
+        return !this.b.a(TagsFluid.LAVA);
     }
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        int i = (Integer) iblockdata.get(BlockFluids.LEVEL);
+        int i = iblockdata.get(BlockFluids.LEVEL);
 
-        return (Fluid) this.d.get(Math.min(i, 8));
+        return this.d.get(Math.min(i, 8));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class BlockFluids extends Block implements IFluidSource {
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
         if (generatoraccess.getMinecraftWorld().purpurConfig.tickFluids && iblockdata.getFluid().isSource() || iblockdata1.getFluid().isSource()) { // Purpur
-            generatoraccess.getFluidTickList().a(blockposition, iblockdata.getFluid().getType(), this.b.a((IWorldReader) generatoraccess));
+            generatoraccess.getFluidTickList().a(blockposition, iblockdata.getFluid().getType(), this.b.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -138,7 +138,7 @@ public class BlockFluids extends Block implements IFluidSource {
     }
 
     private boolean a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-        if (this.b.a((Tag) TagsFluid.LAVA)) {
+        if (this.b.a(TagsFluid.LAVA)) {
             boolean flag = world.getType(blockposition.down()).a(Blocks.SOUL_SOIL);
             EnumDirection[] aenumdirection = EnumDirection.values();
             int i = aenumdirection.length;
@@ -149,7 +149,7 @@ public class BlockFluids extends Block implements IFluidSource {
                 if (enumdirection != EnumDirection.DOWN) {
                     BlockPosition blockposition1 = blockposition.shift(enumdirection);
 
-                    if (world.getFluid(blockposition1).a((Tag) TagsFluid.WATER)) {
+                    if (world.getFluid(blockposition1).a(TagsFluid.WATER)) {
                         Block block = world.getFluid(blockposition).isSource() ? Blocks.OBSIDIAN : Blocks.COBBLESTONE;
 
                         // CraftBukkit start
@@ -186,7 +186,7 @@ public class BlockFluids extends Block implements IFluidSource {
 
     @Override
     public FluidType removeFluid(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata) {
-        if ((Integer) iblockdata.get(BlockFluids.LEVEL) == 0) {
+        if (iblockdata.get(BlockFluids.LEVEL) == 0) {
             generatoraccess.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
             return this.b;
         } else {

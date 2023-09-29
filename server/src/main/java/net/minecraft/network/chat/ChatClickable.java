@@ -61,7 +61,7 @@ public class ChatClickable {
 
         OPEN_URL("open_url", true), OPEN_FILE("open_file", false), RUN_COMMAND("run_command", true), SUGGEST_COMMAND("suggest_command", true), CHANGE_PAGE("change_page", true), COPY_TO_CLIPBOARD("copy_to_clipboard", true);
 
-        private static final Map<String, ChatClickable.EnumClickAction> g = (Map) Arrays.stream(values()).collect(Collectors.toMap(ChatClickable.EnumClickAction::b, (chatclickable_enumclickaction) -> {
+        private static final Map<String, ChatClickable.EnumClickAction> g = Arrays.stream(values()).collect(Collectors.toMap(EnumClickAction::b, (chatclickable_enumclickaction) -> {
             return chatclickable_enumclickaction;
         }));
         private final boolean h;
@@ -81,7 +81,7 @@ public class ChatClickable {
         }
 
         public static ChatClickable.EnumClickAction a(String s) {
-            return (ChatClickable.EnumClickAction) ChatClickable.EnumClickAction.g.get(s);
+            return EnumClickAction.g.get(s);
         }
     }
 }

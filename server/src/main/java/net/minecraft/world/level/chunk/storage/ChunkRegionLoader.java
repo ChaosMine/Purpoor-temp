@@ -475,7 +475,7 @@ public class ChunkRegionLoader {
 
         for (int i = -1; i < 17; ++i) { // Paper - conflict on loop parameter change
             int finalI = i; // CraftBukkit - decompile errors
-            ChunkSection chunksection = (ChunkSection) Arrays.stream(achunksection).filter((chunksection1) -> {
+            ChunkSection chunksection = Arrays.stream(achunksection).filter((chunksection1) -> {
                 return chunksection1 != null && chunksection1.getYPosition() >> 4 == finalI; // CraftBukkit - decompile errors
             }).findFirst().orElse(Chunk.a);
             // Paper start - async chunk save for unload
@@ -646,7 +646,7 @@ public class ChunkRegionLoader {
             Entry<HeightMap.Type, HeightMap> entry = (Entry) iterator2.next();
 
             if (ichunkaccess.getChunkStatus().h().contains(entry.getKey())) {
-                nbttagcompound2.set(((HeightMap.Type) entry.getKey()).b(), new NBTTagLongArray(((HeightMap) entry.getValue()).a()));
+                nbttagcompound2.set(entry.getKey().b(), new NBTTagLongArray(entry.getValue().a()));
             }
         }
 
@@ -743,7 +743,7 @@ public class ChunkRegionLoader {
         while (iterator.hasNext()) {
             Entry<StructureGenerator<?>, StructureStart<?>> entry = (Entry) iterator.next();
 
-            nbttagcompound1.set(((StructureGenerator) entry.getKey()).i(), ((StructureStart) entry.getValue()).a(chunkcoordintpair.x, chunkcoordintpair.z));
+            nbttagcompound1.set(entry.getKey().i(), entry.getValue().a(chunkcoordintpair.x, chunkcoordintpair.z));
         }
 
         nbttagcompound.set("Starts", nbttagcompound1);
@@ -753,7 +753,7 @@ public class ChunkRegionLoader {
         while (iterator1.hasNext()) {
             Entry<StructureGenerator<?>, LongSet> entry1 = (Entry) iterator1.next();
 
-            nbttagcompound2.set(((StructureGenerator) entry1.getKey()).i(), new NBTTagLongArray((LongSet) entry1.getValue()));
+            nbttagcompound2.set(entry1.getKey().i(), new NBTTagLongArray(entry1.getValue()));
         }
 
         nbttagcompound.set("References", nbttagcompound2);
@@ -768,7 +768,7 @@ public class ChunkRegionLoader {
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
             String s1 = s.toLowerCase(Locale.ROOT);
-            StructureGenerator<?> structuregenerator = (StructureGenerator) StructureGenerator.a.get(s1);
+            StructureGenerator<?> structuregenerator = StructureGenerator.a.get(s1);
 
             if (structuregenerator == null) {
                 ChunkRegionLoader.LOGGER.error("Unknown structure start: {}", s1);
@@ -820,7 +820,7 @@ public class ChunkRegionLoader {
                 ShortListIterator shortlistiterator = shortlist.iterator();
 
                 while (shortlistiterator.hasNext()) {
-                    Short oshort = (Short) shortlistiterator.next();
+                    Short oshort = shortlistiterator.next();
 
                     nbttaglist1.add(NBTTagShort.a(oshort));
                 }

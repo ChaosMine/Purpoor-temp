@@ -117,7 +117,7 @@ public class InventoryCrafting implements IInventory, AutoRecipeOutput {
 
     @Override
     public ItemStack getItem(int i) {
-        return i >= this.getSize() ? ItemStack.b : (ItemStack) this.items.get(i);
+        return i >= this.getSize() ? ItemStack.b : this.items.get(i);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class InventoryCrafting implements IInventory, AutoRecipeOutput {
         ItemStack itemstack = ContainerUtil.a(this.items, i, j);
 
         if (!itemstack.isEmpty()) {
-            this.container.a((IInventory) this);
+            this.container.a(this);
         }
 
         return itemstack;
@@ -139,7 +139,7 @@ public class InventoryCrafting implements IInventory, AutoRecipeOutput {
     @Override
     public void setItem(int i, ItemStack itemstack) {
         this.items.set(i, itemstack);
-        this.container.a((IInventory) this);
+        this.container.a(this);
     }
 
     @Override

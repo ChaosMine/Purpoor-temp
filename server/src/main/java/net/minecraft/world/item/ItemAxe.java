@@ -39,14 +39,14 @@ public class ItemAxe extends ItemTool {
         World world = itemactioncontext.getWorld();
         BlockPosition blockposition = itemactioncontext.getClickPosition();
         IBlockData iblockdata = world.getType(blockposition);
-        Block block = (Block) ItemAxe.a.get(iblockdata.getBlock());
+        Block block = ItemAxe.a.get(iblockdata.getBlock());
 
         if (block != null) {
             EntityHuman entityhuman = itemactioncontext.getEntity();
 
             world.playSound(entityhuman, blockposition, SoundEffects.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
             if (!world.isClientSide) {
-                world.setTypeAndData(blockposition, (IBlockData) block.getBlockData().set(BlockRotatable.AXIS, iblockdata.get(BlockRotatable.AXIS)), 11);
+                world.setTypeAndData(blockposition, block.getBlockData().set(BlockRotatable.AXIS, iblockdata.get(BlockRotatable.AXIS)), 11);
                 if (entityhuman != null) {
                     itemactioncontext.getItemStack().damage(1, entityhuman, (entityhuman1) -> {
                         entityhuman1.broadcastItemBreak(itemactioncontext.getHand());

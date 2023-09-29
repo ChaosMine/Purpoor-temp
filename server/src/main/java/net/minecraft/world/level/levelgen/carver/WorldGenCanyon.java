@@ -27,9 +27,9 @@ public class WorldGenCanyon extends WorldGenCarverAbstract<WorldGenFeatureConfig
 
     public boolean a(IChunkAccess ichunkaccess, Function<BlockPosition, BiomeBase> function, Random random, int i, int j, int k, int l, int i1, BitSet bitset, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
         int j1 = (this.d() * 2 - 1) * 16;
-        double d0 = (double) (j * 16 + random.nextInt(16));
-        double d1 = (double) (random.nextInt(random.nextInt(40) + 8) + 20);
-        double d2 = (double) (k * 16 + random.nextInt(16));
+        double d0 = j * 16 + random.nextInt(16);
+        double d1 = random.nextInt(random.nextInt(40) + 8) + 20;
+        double d2 = k * 16 + random.nextInt(16);
         float f = random.nextFloat() * 6.2831855F;
         float f1 = (random.nextFloat() - 0.5F) * 2.0F / 8.0F;
         double d3 = 3.0D;
@@ -66,9 +66,9 @@ public class WorldGenCanyon extends WorldGenCarverAbstract<WorldGenFeatureConfig
             float f6 = MathHelper.cos(f2);
             float f7 = MathHelper.sin(f2);
 
-            d0 += (double) (MathHelper.cos(f1) * f6);
-            d1 += (double) f7;
-            d2 += (double) (MathHelper.sin(f1) * f6);
+            d0 += MathHelper.cos(f1) * f6;
+            d1 += f7;
+            d2 += MathHelper.sin(f1) * f6;
             f2 *= 0.7F;
             f2 += f5 * 0.05F;
             f1 += f4 * 0.05F;

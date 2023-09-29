@@ -40,7 +40,7 @@ public class Reputation {
 
     private Stream<Reputation.b> c() {
         return this.a.entrySet().stream().flatMap((entry) -> {
-            return ((Reputation.a) entry.getValue()).a((UUID) entry.getKey());
+            return entry.getValue().a(entry.getKey());
         });
     }
 
@@ -67,7 +67,7 @@ public class Reputation {
             int j = 0;
 
             for (int k = 0; k < list.size(); ++k) {
-                Reputation.b reputation_b = (Reputation.b) list.get(k);
+                Reputation.b reputation_b = list.get(k);
 
                 j += Math.abs(reputation_b.a());
                 aint[k] = j - 1;
@@ -87,8 +87,8 @@ public class Reputation {
     }
 
     private Reputation.a a(UUID uuid) {
-        return (Reputation.a) this.a.computeIfAbsent(uuid, (uuid1) -> {
-            return new Reputation.a();
+        return this.a.computeIfAbsent(uuid, (uuid1) -> {
+            return new a();
         });
     }
 
@@ -106,7 +106,7 @@ public class Reputation {
     }
 
     public int a(UUID uuid, Predicate<ReputationType> predicate) {
-        Reputation.a reputation_a = (Reputation.a) this.a.get(uuid);
+        Reputation.a reputation_a = this.a.get(uuid);
 
         return reputation_a != null ? reputation_a.a(predicate) : 0;
     }
@@ -178,7 +178,7 @@ public class Reputation {
 
         public Stream<Reputation.b> a(UUID uuid) {
             return this.a.object2IntEntrySet().stream().map((entry) -> {
-                return new Reputation.b(uuid, (ReputationType) entry.getKey(), entry.getIntValue());
+                return new Reputation.b(uuid, entry.getKey(), entry.getIntValue());
             });
         }
 
@@ -187,7 +187,7 @@ public class Reputation {
 
             while (objectiterator.hasNext()) {
                 Entry<ReputationType> entry = (Entry) objectiterator.next();
-                int i = entry.getIntValue() - ((ReputationType) entry.getKey()).i;
+                int i = entry.getIntValue() - entry.getKey().i;
 
                 if (i < 2) {
                     objectiterator.remove();

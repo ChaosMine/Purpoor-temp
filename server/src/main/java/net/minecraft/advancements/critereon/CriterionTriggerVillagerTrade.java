@@ -19,8 +19,8 @@ public class CriterionTriggerVillagerTrade extends CriterionTriggerAbstract<Crit
     }
 
     @Override
-    public CriterionTriggerVillagerTrade.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "villager", lootdeserializationcontext);
+    public CriterionTriggerVillagerTrade.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "villager", lootdeserializationcontext);
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
 
         return new CriterionTriggerVillagerTrade.a(criterionconditionentity_b, criterionconditionentity_b1, criterionconditionitem);
@@ -36,17 +36,17 @@ public class CriterionTriggerVillagerTrade extends CriterionTriggerAbstract<Crit
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
+        private final CriterionConditionEntity.b_ a;
         private final CriterionConditionItem b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerVillagerTrade.a, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
             this.b = criterionconditionitem;
         }
 
         public static CriterionTriggerVillagerTrade.a c() {
-            return new CriterionTriggerVillagerTrade.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionItem.a);
+            return new CriterionTriggerVillagerTrade.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionItem.a);
         }
 
         public boolean a(LootTableInfo loottableinfo, ItemStack itemstack) {

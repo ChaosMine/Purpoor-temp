@@ -109,8 +109,8 @@ public class EntityTrackerEntry {
                 while (iterator.hasNext()) {
                     EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                    worldmap.a((EntityHuman) entityplayer, itemstack);
-                    Packet<?> packet = ((ItemWorldMap) itemstack.getItem()).a(itemstack, (World) this.b, (EntityHuman) entityplayer);
+                    worldmap.a(entityplayer, itemstack);
+                    Packet<?> packet = ((ItemWorldMap) itemstack.getItem()).a(itemstack, this.b, entityplayer);
 
                     if (packet != null) {
                         entityplayer.playerConnection.sendPacket(packet);

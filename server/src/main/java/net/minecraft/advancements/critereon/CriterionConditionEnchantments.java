@@ -36,7 +36,7 @@ public class CriterionConditionEnchantments {
                 return false;
             }
 
-            int i = (Integer) map.get(this.c);
+            int i = map.get(this.c);
 
             if (this.d != null && !this.d.d(i)) {
                 return false;
@@ -83,7 +83,7 @@ public class CriterionConditionEnchantments {
             if (jsonobject.has("enchantment")) {
                 MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "enchantment"));
 
-                enchantment = (Enchantment) IRegistry.ENCHANTMENT.getOptional(minecraftkey).orElseThrow(() -> {
+                enchantment = IRegistry.ENCHANTMENT.getOptional(minecraftkey).orElseThrow(() -> {
                     return new JsonSyntaxException("Unknown enchantment '" + minecraftkey + "'");
                 });
             }

@@ -36,7 +36,7 @@ public class LootItemConditionRandomChanceWithLooting implements LootItemConditi
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        Entity entity = (Entity) loottableinfo.getContextParameter(LootContextParameters.KILLER_ENTITY);
+        Entity entity = loottableinfo.getContextParameter(LootContextParameters.KILLER_ENTITY);
         int i = 0;
 
         if (entity instanceof EntityLiving) {

@@ -46,13 +46,13 @@ public class ItemArmor extends Item implements ItemWearable {
     private final Multimap<AttributeBase, AttributeModifier> m;
 
     public static boolean a(ISourceBlock isourceblock, ItemStack itemstack) {
-        BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING));
+        BlockPosition blockposition = isourceblock.getBlockPosition().shift(isourceblock.getBlockData().get(BlockDispenser.FACING));
         List<EntityLiving> list = isourceblock.getWorld().a(EntityLiving.class, new AxisAlignedBB(blockposition), IEntitySelector.g.and(new IEntitySelector.EntitySelectorEquipable(itemstack)));
 
         if (list.isEmpty()) {
             return false;
         } else {
-            EntityLiving entityliving = (EntityLiving) list.get(0);
+            EntityLiving entityliving = list.get(0);
             EnumItemSlot enumitemslot = isourceblock.getWorld().purpurConfig.dispenserApplyCursedArmor ? EntityInsentient.getSlotForItemStack(itemstack) : EntityInsentient.getSlotForDispenser(itemstack); // Purpur
             ItemStack itemstack1 = itemstack.cloneAndSubtract(1);
             // CraftBukkit start
@@ -74,7 +74,7 @@ public class ItemArmor extends Item implements ItemWearable {
                 itemstack.add(1);
                 // Chain to handler for new item
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
-                IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.REGISTRY.get(eventStack.getItem());
+                IDispenseBehavior idispensebehavior = BlockDispenser.REGISTRY.get(eventStack.getItem());
                 if (idispensebehavior != IDispenseBehavior.NONE && idispensebehavior != ItemArmor.a) {
                     idispensebehavior.dispense(isourceblock, eventStack);
                     return true;
@@ -99,14 +99,14 @@ public class ItemArmor extends Item implements ItemWearable {
         this.k = armormaterial.b(enumitemslot);
         this.l = armormaterial.e();
         this.c = armormaterial.f();
-        BlockDispenser.a((IMaterial) this, ItemArmor.a);
+        BlockDispenser.a(this, ItemArmor.a);
         Builder<AttributeBase, AttributeModifier> builder = ImmutableMultimap.builder();
         UUID uuid = ItemArmor.j[enumitemslot.b()];
 
-        builder.put(GenericAttributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", (double) this.k, AttributeModifier.Operation.ADDITION));
-        builder.put(GenericAttributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "Armor toughness", (double) this.l, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ARMOR, new AttributeModifier(uuid, "Armor modifier", this.k, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ARMOR_TOUGHNESS, new AttributeModifier(uuid, "Armor toughness", this.l, AttributeModifier.Operation.ADDITION));
         if (armormaterial == EnumArmorMaterial.NETHERITE) {
-            builder.put(GenericAttributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "Armor knockback resistance", (double) this.c, AttributeModifier.Operation.ADDITION));
+            builder.put(GenericAttributes.KNOCKBACK_RESISTANCE, new AttributeModifier(uuid, "Armor knockback resistance", this.c, AttributeModifier.Operation.ADDITION));
         }
 
         this.m = builder.build();

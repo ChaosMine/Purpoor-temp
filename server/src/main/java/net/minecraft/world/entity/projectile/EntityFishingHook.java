@@ -99,13 +99,13 @@ public class EntityFishingHook extends IProjectile {
         double d2 = entityhuman.locZ() - (double) f2 * 0.3D;
 
         this.setPositionRotation(d0, d1, d2, f1, f);
-        Vec3D vec3d = new Vec3D((double) (-f3), (double) MathHelper.a(-(f5 / f4), -5.0F, 5.0F), (double) (-f2));
+        Vec3D vec3d = new Vec3D(-f3, MathHelper.a(-(f5 / f4), -5.0F, 5.0F), -f2);
         double d3 = vec3d.f();
 
         vec3d = vec3d.d(0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D, 0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D, 0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D);
         this.setMot(vec3d);
         this.yaw = (float) (MathHelper.d(vec3d.x, vec3d.z) * 57.2957763671875D);
-        this.pitch = (float) (MathHelper.d(vec3d.y, (double) MathHelper.sqrt(c(vec3d))) * 57.2957763671875D);
+        this.pitch = (float) (MathHelper.d(vec3d.y, MathHelper.sqrt(c(vec3d))) * 57.2957763671875D);
         this.lastYaw = this.yaw;
         this.lastPitch = this.pitch;
     }
@@ -119,15 +119,15 @@ public class EntityFishingHook extends IProjectile {
     @Override
     public void a(DataWatcherObject<?> datawatcherobject) {
         if (EntityFishingHook.HOOKED_ENTITY.equals(datawatcherobject)) {
-            int i = (Integer) this.getDataWatcher().get(EntityFishingHook.HOOKED_ENTITY);
+            int i = this.getDataWatcher().get(EntityFishingHook.HOOKED_ENTITY);
 
             this.hooked = i > 0 ? this.world.getEntity(i - 1) : null;
         }
 
         if (EntityFishingHook.f.equals(datawatcherobject)) {
-            this.c = (Boolean) this.getDataWatcher().get(EntityFishingHook.f);
+            this.c = this.getDataWatcher().get(EntityFishingHook.f);
             if (this.c) {
-                this.setMot(this.getMot().x, (double) (-0.4F * MathHelper.a(this.b, 0.6F, 1.0F)), this.getMot().z);
+                this.setMot(this.getMot().x, -0.4F * MathHelper.a(this.b, 0.6F, 1.0F), this.getMot().z);
             }
         }
 
@@ -157,7 +157,7 @@ public class EntityFishingHook extends IProjectile {
             BlockPosition blockposition = this.getChunkCoordinates();
             Fluid fluid = this.world.getFluid(blockposition);
 
-            if (fluid.a((Tag) TagsFluid.WATER)) {
+            if (fluid.a(TagsFluid.WATER)) {
                 f = fluid.getHeight(this.world, blockposition);
             }
 
@@ -221,7 +221,7 @@ public class EntityFishingHook extends IProjectile {
                 }
             }
 
-            if (!fluid.a((Tag) TagsFluid.WATER)) {
+            if (!fluid.a(TagsFluid.WATER)) {
                 this.setMot(this.getMot().add(0.0D, -0.03D, 0.0D));
             }
 
@@ -258,7 +258,7 @@ public class EntityFishingHook extends IProjectile {
     }
 
     private void m() {
-        MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
+        MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, this::a);
 
         this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
     }
@@ -281,7 +281,7 @@ public class EntityFishingHook extends IProjectile {
     @Override
     protected void a(MovingObjectPositionBlock movingobjectpositionblock) {
         super.a(movingobjectpositionblock);
-        this.setMot(this.getMot().d().a(movingobjectpositionblock.a((Entity) this)));
+        this.setMot(this.getMot().d().a(movingobjectpositionblock.a(this)));
     }
 
     public void updateHookedEntity() {
@@ -329,19 +329,19 @@ public class EntityFishingHook extends IProjectile {
                     f1 = MathHelper.sin(f);
                     f2 = MathHelper.cos(f);
                     d0 = this.locX() + (double) (f1 * (float) this.ai * 0.1F);
-                    d1 = (double) ((float) MathHelper.floor(this.locY()) + 1.0F);
+                    d1 = (float) MathHelper.floor(this.locY()) + 1.0F;
                     d2 = this.locZ() + (double) (f2 * (float) this.ai * 0.1F);
                     iblockdata = worldserver.getType(new BlockPosition(d0, d1 - 1.0D, d2));
                     if (iblockdata.a(Blocks.WATER)) {
                         if (this.random.nextFloat() < 0.15F) {
-                            worldserver.a(Particles.BUBBLE, d0, d1 - 0.10000000149011612D, d2, 1, (double) f1, 0.1D, (double) f2, 0.0D);
+                            worldserver.a(Particles.BUBBLE, d0, d1 - 0.10000000149011612D, d2, 1, f1, 0.1D, f2, 0.0D);
                         }
 
                         float f3 = f1 * 0.04F;
                         float f4 = f2 * 0.04F;
 
-                        worldserver.a(Particles.FISHING, d0, d1, d2, 0, (double) f4, 0.01D, (double) (-f3), 1.0D);
-                        worldserver.a(Particles.FISHING, d0, d1, d2, 0, (double) (-f4), 0.01D, (double) f3, 1.0D);
+                        worldserver.a(Particles.FISHING, d0, d1, d2, 0, f4, 0.01D, -f3, 1.0D);
+                        worldserver.a(Particles.FISHING, d0, d1, d2, 0, -f4, 0.01D, f3, 1.0D);
                     }
                 } else {
                     // CraftBukkit start
@@ -354,8 +354,8 @@ public class EntityFishingHook extends IProjectile {
                     this.playSound(SoundEffects.ENTITY_FISHING_BOBBER_SPLASH, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                     double d3 = this.locY() + 0.5D;
 
-                    worldserver.a(Particles.BUBBLE, this.locX(), d3, this.locZ(), (int) (1.0F + this.getWidth() * 20.0F), (double) this.getWidth(), 0.0D, (double) this.getWidth(), 0.20000000298023224D);
-                    worldserver.a(Particles.FISHING, this.locX(), d3, this.locZ(), (int) (1.0F + this.getWidth() * 20.0F), (double) this.getWidth(), 0.0D, (double) this.getWidth(), 0.20000000298023224D);
+                    worldserver.a(Particles.BUBBLE, this.locX(), d3, this.locZ(), (int) (1.0F + this.getWidth() * 20.0F), this.getWidth(), 0.0D, this.getWidth(), 0.20000000298023224D);
+                    worldserver.a(Particles.FISHING, this.locX(), d3, this.locZ(), (int) (1.0F + this.getWidth() * 20.0F), this.getWidth(), 0.0D, this.getWidth(), 0.20000000298023224D);
                     this.ag = MathHelper.nextInt(this.random, 20, 40);
                     this.getDataWatcher().set(EntityFishingHook.f, true);
                 }
@@ -374,7 +374,7 @@ public class EntityFishingHook extends IProjectile {
                     f1 = MathHelper.a(this.random, 0.0F, 360.0F) * 0.017453292F;
                     f2 = MathHelper.a(this.random, 25.0F, 60.0F);
                     d0 = this.locX() + (double) (MathHelper.sin(f1) * f2 * 0.1F);
-                    d1 = (double) ((float) MathHelper.floor(this.locY()) + 1.0F);
+                    d1 = (float) MathHelper.floor(this.locY()) + 1.0F;
                     d2 = this.locZ() + (double) (MathHelper.cos(f1) * f2 * 0.1F);
                     iblockdata = worldserver.getType(new BlockPosition(d0, d1 - 1.0D, d2));
                     if (iblockdata.a(Blocks.WATER)) {
@@ -423,9 +423,9 @@ public class EntityFishingHook extends IProjectile {
     }
 
     private EntityFishingHook.WaterPosition a(BlockPosition blockposition, BlockPosition blockposition1) {
-        return (EntityFishingHook.WaterPosition) BlockPosition.b(blockposition, blockposition1).map(this::c).reduce((entityfishinghook_waterposition, entityfishinghook_waterposition1) -> {
-            return entityfishinghook_waterposition == entityfishinghook_waterposition1 ? entityfishinghook_waterposition : EntityFishingHook.WaterPosition.INVALID;
-        }).orElse(EntityFishingHook.WaterPosition.INVALID);
+        return BlockPosition.b(blockposition, blockposition1).map(this::c).reduce((entityfishinghook_waterposition, entityfishinghook_waterposition1) -> {
+            return entityfishinghook_waterposition == entityfishinghook_waterposition1 ? entityfishinghook_waterposition : WaterPosition.INVALID;
+        }).orElse(WaterPosition.INVALID);
     }
 
     private EntityFishingHook.WaterPosition c(BlockPosition blockposition) {
@@ -434,7 +434,7 @@ public class EntityFishingHook extends IProjectile {
         if (!iblockdata.isAir() && !iblockdata.a(Blocks.LILY_PAD)) {
             Fluid fluid = iblockdata.getFluid();
 
-            return fluid.a((Tag) TagsFluid.WATER) && fluid.isSource() && iblockdata.getCollisionShape(this.world, blockposition).isEmpty() ? EntityFishingHook.WaterPosition.INSIDE_WATER : EntityFishingHook.WaterPosition.INVALID;
+            return fluid.a(TagsFluid.WATER) && fluid.isSource() && iblockdata.getCollisionShape(this.world, blockposition).isEmpty() ? EntityFishingHook.WaterPosition.INSIDE_WATER : EntityFishingHook.WaterPosition.INVALID;
         } else {
             return EntityFishingHook.WaterPosition.ABOVE_WATER;
         }
@@ -466,7 +466,7 @@ public class EntityFishingHook extends IProjectile {
                 }
                 // CraftBukkit end
                 this.reel();
-                CriterionTriggers.D.a((EntityPlayer) entityhuman, itemstack, this, (Collection) Collections.emptyList());
+                CriterionTriggers.D.a((EntityPlayer) entityhuman, itemstack, this, Collections.emptyList());
                 this.world.broadcastEntityEffect(this, (byte) 31);
                 i = this.hooked instanceof EntityItem ? 3 : 5;
             } else if (this.ag > 0) {
@@ -474,7 +474,7 @@ public class EntityFishingHook extends IProjectile {
                 LootTable loottable = this.world.getMinecraftServer().getLootTableRegistry().getLootTable(LootTables.ag);
                 List<ItemStack> list = loottable.populateLoot(loottableinfo_builder.build(LootContextParameterSets.FISHING));
 
-                CriterionTriggers.D.a((EntityPlayer) entityhuman, itemstack, this, (Collection) list);
+                CriterionTriggers.D.a((EntityPlayer) entityhuman, itemstack, this, list);
                 Iterator iterator = list.iterator();
 
                 while (iterator.hasNext()) {
@@ -511,7 +511,7 @@ public class EntityFishingHook extends IProjectile {
                         entityhuman.world.addEntity(new EntityExperienceOrb(entityhuman.world, entityhuman.locX(), entityhuman.locY() + 0.5D, entityhuman.locZ() + 0.5D, playerFishEvent.getExpToDrop(), org.bukkit.entity.ExperienceOrb.SpawnReason.FISHING, this.getOwner(), this)); // Paper
                     }
                     // CraftBukkit end
-                    if (itemstack1.getItem().a((Tag) TagsItem.FISHES)) {
+                    if (itemstack1.getItem().a(TagsItem.FISHES)) {
                         entityhuman.a(StatisticList.FISH_CAUGHT, 1);
                     }
                 }

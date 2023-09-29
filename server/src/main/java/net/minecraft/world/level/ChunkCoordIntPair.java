@@ -126,7 +126,7 @@ public class ChunkCoordIntPair {
         final int k = chunkcoordintpair.x < chunkcoordintpair1.x ? 1 : -1;
         final int l = chunkcoordintpair.z < chunkcoordintpair1.z ? 1 : -1;
 
-        return StreamSupport.stream(new AbstractSpliterator<ChunkCoordIntPair>((long) (i * j), 64) {
+        return StreamSupport.stream(new AbstractSpliterator<ChunkCoordIntPair>(i * j, 64) {
             @Nullable
             private ChunkCoordIntPair e;
 

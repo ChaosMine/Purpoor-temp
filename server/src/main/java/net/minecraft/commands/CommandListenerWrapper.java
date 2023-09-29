@@ -95,7 +95,7 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
     }
 
     public CommandListenerWrapper a(ResultConsumer<CommandListenerWrapper> resultconsumer, BinaryOperator<ResultConsumer<CommandListenerWrapper>> binaryoperator) {
-        ResultConsumer<CommandListenerWrapper> resultconsumer1 = (ResultConsumer) binaryoperator.apply(this.l, resultconsumer);
+        ResultConsumer<CommandListenerWrapper> resultconsumer1 = binaryoperator.apply(this.l, resultconsumer);
 
         return this.a(resultconsumer1);
     }
@@ -136,7 +136,7 @@ public class CommandListenerWrapper implements ICompletionProvider, com.destroys
         double d0 = vec3d.x - vec3d1.x;
         double d1 = vec3d.y - vec3d1.y;
         double d2 = vec3d.z - vec3d1.z;
-        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
         float f = MathHelper.g((float) (-(MathHelper.d(d1, d3) * 57.2957763671875D)));
         float f1 = MathHelper.g((float) (MathHelper.d(d2, d0) * 57.2957763671875D) - 90.0F);
 

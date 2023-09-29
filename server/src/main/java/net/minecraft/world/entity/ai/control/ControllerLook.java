@@ -94,7 +94,7 @@ public class ControllerLook {
         double d0 = this.e - this.a.locX();
         double d1 = this.f - this.a.getHeadY();
         double d2 = this.g - this.a.locZ();
-        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 
         return (float) (-(MathHelper.d(d1, d3) * 57.2957763671875D));
     }

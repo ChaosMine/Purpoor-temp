@@ -33,7 +33,7 @@ public class BlockConduit extends BlockTileEntity implements IBlockWaterlogged {
 
     public BlockConduit(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockConduit.a, true));
+        this.j(this.blockStateList.getBlockData().set(BlockConduit.a, true));
     }
 
     @Override
@@ -53,13 +53,13 @@ public class BlockConduit extends BlockTileEntity implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockConduit.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockConduit.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockConduit.a)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockConduit.a)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -87,7 +87,7 @@ public class BlockConduit extends BlockTileEntity implements IBlockWaterlogged {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
 
-        return (IBlockData) this.getBlockData().set(BlockConduit.a, fluid.a((Tag) TagsFluid.WATER) && fluid.e() == 8);
+        return this.getBlockData().set(BlockConduit.a, fluid.a(TagsFluid.WATER) && fluid.e() == 8);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class BehaviorStopRiding<E extends EntityLiving, T extends Entity> extend
     @Override
     protected boolean a(WorldServer worldserver, E e0) {
         Entity entity = e0.getVehicle();
-        Entity entity1 = (Entity) e0.getBehaviorController().getMemory(MemoryModuleType.RIDE_TARGET).orElse((Object) null);
+        Entity entity1 = e0.getBehaviorController().getMemory(MemoryModuleType.RIDE_TARGET).orElse(null);
 
         if (entity == null && entity1 == null) {
             return false;
@@ -34,7 +34,7 @@ public class BehaviorStopRiding<E extends EntityLiving, T extends Entity> extend
     }
 
     private boolean a(E e0, Entity entity) {
-        return entity.isAlive() && entity.a((Entity) e0, (double) this.b) && entity.world == e0.world;
+        return entity.isAlive() && entity.a(e0, this.b) && entity.world == e0.world;
     }
 
     @Override

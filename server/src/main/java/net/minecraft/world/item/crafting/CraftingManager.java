@@ -45,10 +45,10 @@ public class CraftingManager extends ResourceDataJson {
 
         while (iterator.hasNext()) {
             Entry<MinecraftKey, JsonElement> entry = (Entry) iterator.next();
-            MinecraftKey minecraftkey = (MinecraftKey) entry.getKey();
+            MinecraftKey minecraftkey = entry.getKey();
 
             try {
-                IRecipe<?> irecipe = a(minecraftkey, ChatDeserializer.m((JsonElement) entry.getValue(), "top element"));
+                IRecipe<?> irecipe = a(minecraftkey, ChatDeserializer.m(entry.getValue(), "top element"));
 
                 // CraftBukkit start - SPIGOT-4638: last recipe gets priority
                 (map1.computeIfAbsent(irecipe.g(), (recipes) -> {
@@ -60,7 +60,7 @@ public class CraftingManager extends ResourceDataJson {
             }
         }
 
-        this.recipes = (Map) map1.entrySet().stream().collect(ImmutableMap.toImmutableMap(Entry::getKey, (entry1) -> {
+        this.recipes = map1.entrySet().stream().collect(ImmutableMap.toImmutableMap(Entry::getKey, (entry1) -> {
             return entry1.getValue(); // CraftBukkit // Paper - decompile fix - *shrugs internally*
         }));
         CraftingManager.LOGGER.info("Loaded {} recipes", map1.size());
@@ -91,15 +91,15 @@ public class CraftingManager extends ResourceDataJson {
     public <C extends IInventory, T extends IRecipe<C>> List<T> a(Recipes<T> recipes) {
         return (List) this.b(recipes).values().stream().map((irecipe) -> {
             return irecipe;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     public <C extends IInventory, T extends IRecipe<C>> List<T> b(Recipes<T> recipes, C c0, World world) {
-        return (List) this.b(recipes).values().stream().flatMap((irecipe) -> {
+        return this.b(recipes).values().stream().flatMap((irecipe) -> {
             return SystemUtils.a(recipes.a(irecipe, world, c0));
         }).sorted(Comparator.comparing((irecipe) -> {
             return irecipe.getResult().j();
-        })).collect(Collectors.toList());
+        })).toList();
     }
 
     private <C extends IInventory, T extends IRecipe<C>> Map<MinecraftKey, IRecipe<C>> b(Recipes<T> recipes) {
@@ -129,7 +129,7 @@ public class CraftingManager extends ResourceDataJson {
     }
 
     public Collection<IRecipe<?>> b() {
-        return (Collection) this.recipes.values().stream().flatMap((map) -> {
+        return this.recipes.values().stream().flatMap((map) -> {
             return map.values().stream();
         }).collect(Collectors.toSet());
     }

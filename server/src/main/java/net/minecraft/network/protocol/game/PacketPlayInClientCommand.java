@@ -22,7 +22,7 @@ public class PacketPlayInClientCommand implements Packet<PacketListenerPlayIn> {
 
     @Override
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
-        packetdataserializer.writeEnum((Enum) this.a);
+        packetdataserializer.writeEnum(this.a);
     }
 
     public void a(PacketListenerPlayIn packetlistenerplayin) {

@@ -28,9 +28,9 @@ public class DataConverterAddChoices extends DataFix {
         if (taggedchoicetype.getKeyType() != taggedchoicetype1.getKeyType()) {
             throw new IllegalStateException("Could not inject: key type is not the same");
         } else {
-            return this.fixTypeEverywhere(s, taggedchoicetype, taggedchoicetype1, (dynamicops) -> {
+            return this.fixTypeEverywhere(s, taggedchoicetype, (TaggedChoiceType) taggedchoicetype1, (dynamicops) -> {
                 return (pair) -> {
-                    if (!taggedchoicetype1.hasType(pair.getFirst())) {
+                    if (!((TaggedChoiceType) taggedchoicetype1).hasType(pair.getFirst())) {
                         throw new IllegalArgumentException(String.format("Unknown type %s in %s ", pair.getFirst(), this.b));
                     } else {
                         return pair;

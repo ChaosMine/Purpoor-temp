@@ -7,9 +7,9 @@ import net.minecraft.resources.MinecraftKey;
 public abstract class CriterionInstanceAbstract implements CriterionInstance {
 
     private final MinecraftKey a;
-    private final CriterionConditionEntity.b b;
+    private final CriterionConditionEntity.b_ b;
 
-    public CriterionInstanceAbstract(MinecraftKey minecraftkey, CriterionConditionEntity.b criterionconditionentity_b) {
+    public CriterionInstanceAbstract(MinecraftKey minecraftkey, CriterionConditionEntity.b_ criterionconditionentity_b) {
         this.a = minecraftkey;
         this.b = criterionconditionentity_b;
     }
@@ -19,7 +19,7 @@ public abstract class CriterionInstanceAbstract implements CriterionInstance {
         return this.a;
     }
 
-    protected CriterionConditionEntity.b b() {
+    protected CriterionConditionEntity.b_ b() {
         return this.b;
     }
 

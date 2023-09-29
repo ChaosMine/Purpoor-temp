@@ -88,18 +88,18 @@ public abstract class EntityFishSchool extends EntityFish {
     }
 
     public boolean eS() {
-        return this.h((Entity) this.b) <= 121.0D;
+        return this.h(this.b) <= 121.0D;
     }
 
     public void eT() {
         if (this.eO()) {
-            this.getNavigation().a((Entity) this.b, 1.0D);
+            this.getNavigation().a(this.b, 1.0D);
         }
 
     }
 
     public void a(Stream<EntityFishSchool> stream) {
-        stream.limit((long) (this.eN() - this.c)).filter((entityfishschool) -> {
+        stream.limit(this.eN() - this.c).filter((entityfishschool) -> {
             return entityfishschool != this;
         }).forEach((entityfishschool) -> {
             entityfishschool.a(this);
@@ -109,14 +109,14 @@ public abstract class EntityFishSchool extends EntityFish {
     @Nullable
     @Override
     public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @Nullable GroupDataEntity groupdataentity, @Nullable NBTTagCompound nbttagcompound) {
-        super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
         if (groupdataentity == null) {
             groupdataentity = new EntityFishSchool.a(this);
         } else {
             this.a(((EntityFishSchool.a) groupdataentity).a);
         }
 
-        return (GroupDataEntity) groupdataentity;
+        return groupdataentity;
     }
 
     public static class a implements GroupDataEntity {

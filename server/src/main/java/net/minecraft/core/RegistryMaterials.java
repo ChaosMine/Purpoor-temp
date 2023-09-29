@@ -115,7 +115,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
     @Nullable
     @Override
     public MinecraftKey getKey(T t0) {
-        return (MinecraftKey) this.bh.inverse().get(t0);
+        return this.bh.inverse().get(t0);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
 
     @Nullable
     @Override
-    public T a(@Nullable ResourceKey<T> resourcekey) {
+    public T a___key(@Nullable ResourceKey<T> resourcekey) {
         return this.bi.get(resourcekey);
     }
 
@@ -142,7 +142,7 @@ public class RegistryMaterials<T> extends IRegistryWritable<T> {
 
     @Override
     public Lifecycle d(T t0) {
-        return (Lifecycle) this.bj.get(t0);
+        return this.bj.get(t0);
     }
 
     @Override

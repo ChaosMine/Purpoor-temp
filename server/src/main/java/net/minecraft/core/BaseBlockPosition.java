@@ -111,7 +111,7 @@ public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
     }
 
     public boolean a(BaseBlockPosition baseblockposition, double d0) {
-        return this.distanceSquared((double) baseblockposition.getX(), (double) baseblockposition.getY(), (double) baseblockposition.getZ(), false) < d0 * d0;
+        return this.distanceSquared(baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ(), false) < d0 * d0;
     }
 
     public boolean a(IPosition iposition, double d0) {
@@ -120,7 +120,7 @@ public class BaseBlockPosition implements Comparable<BaseBlockPosition> {
 
     public final double distanceSquared(BaseBlockPosition baseblockposition) { return j(baseblockposition); } // Paper - OBFHELPER
     public double j(BaseBlockPosition baseblockposition) {
-        return this.distanceSquared((double) baseblockposition.getX(), (double) baseblockposition.getY(), (double) baseblockposition.getZ(), true);
+        return this.distanceSquared(baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ(), true);
     }
 
     public double a(IPosition iposition, boolean flag) {

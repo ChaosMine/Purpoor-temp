@@ -26,7 +26,7 @@ public class SensorNearestItems extends Sensor<EntityInsentient> {
         BehaviorController<?> behaviorcontroller = entityinsentient.getBehaviorController();
         // Tuinity start - remove streams
         List<EntityItem> list = worldserver.a(EntityItem.class, entityinsentient.getBoundingBox().grow(8.0D, 4.0D, 8.0D), (EntityItem item) -> {
-            return entityinsentient.i(item.getItemStack()) && item.a((Entity)entityinsentient, 9.0D); // copied from removed code, make sure to update - move here so we sort less
+            return entityinsentient.i(item.getItemStack()) && item.a(entityinsentient, 9.0D); // copied from removed code, make sure to update - move here so we sort less
         });
 
         list.sort(Comparator.comparingDouble(entityinsentient::h)); // better to take the sort perf hit than using line of sight more than we need to.

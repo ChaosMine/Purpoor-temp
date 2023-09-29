@@ -87,8 +87,8 @@ public class BehaviorGate<E extends EntityLiving> extends Behavior<E> {
 
     @Override
     public String toString() {
-        Set<? extends Behavior<? super E>> set = (Set) this.e.c().filter((behavior) -> {
-            return behavior.a() == Behavior.Status.RUNNING;
+        Set<? extends Behavior<? super E>> set = this.e.c().filter((behavior) -> {
+            return behavior.a() == Status.RUNNING;
         }).collect(Collectors.toSet());
 
         return "(" + this.getClass().getSimpleName() + "): " + set;

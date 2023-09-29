@@ -206,6 +206,10 @@ public class EntityTypes<T extends Entity> {
         return IRegistry.ENTITY_TYPE.getKey(entitytypes);
     }
 
+    public static MinecraftKey getName__ET(EntityTypes<?> entitytypes) {
+        return IRegistry.ENTITY_TYPE.getKey(entitytypes);
+    }
+
     public static Optional<EntityTypes<?>> getByName(String name) { return a(name); } // Paper - OBFHELPER
     public static Optional<EntityTypes<?>> a(String s) {
         return IRegistry.ENTITY_TYPE.getOptional(MinecraftKey.a(s));
@@ -304,7 +308,7 @@ public class EntityTypes<T extends Entity> {
 
     @Nullable
     public T createCreature(WorldServer worldserver, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1) {
-        T t0 = this.a((World) worldserver);
+        T t0 = this.a(worldserver);
 
         if (t0 == null) {
             return null;
@@ -312,7 +316,7 @@ public class EntityTypes<T extends Entity> {
             double d0;
 
             if (flag) {
-                t0.setPosition((double) blockposition.getX() + 0.5D, (double) (blockposition.getY() + 1), (double) blockposition.getZ() + 0.5D);
+                t0.setPosition((double) blockposition.getX() + 0.5D, blockposition.getY() + 1, (double) blockposition.getZ() + 0.5D);
                 d0 = a(worldserver, blockposition, flag1, t0.getBoundingBox());
             } else {
                 d0 = 0.0D;
@@ -324,7 +328,7 @@ public class EntityTypes<T extends Entity> {
 
                 entityinsentient.aC = entityinsentient.yaw;
                 entityinsentient.aA = entityinsentient.yaw;
-                entityinsentient.prepare(worldserver, worldserver.getDamageScaler(entityinsentient.getChunkCoordinates()), enummobspawn, (GroupDataEntity) null, nbttagcompound);
+                entityinsentient.prepare(worldserver, worldserver.getDamageScaler(entityinsentient.getChunkCoordinates()), enummobspawn, null, nbttagcompound);
                 entityinsentient.F();
             }
 
@@ -332,7 +336,7 @@ public class EntityTypes<T extends Entity> {
                 t0.setCustomName(ichatbasecomponent);
             }
 
-            try { a((World) worldserver, entityhuman, t0, nbttagcompound); } catch (Throwable t) { LOGGER.warn("Error loading spawn egg NBT", t); } // CraftBukkit - SPIGOT-5665
+            try { a(worldserver, entityhuman, t0, nbttagcompound); } catch (Throwable t) { LOGGER.warn("Error loading spawn egg NBT", t); } // CraftBukkit - SPIGOT-5665
             return t0;
         }
     }
@@ -344,7 +348,7 @@ public class EntityTypes<T extends Entity> {
             axisalignedbb1 = axisalignedbb1.b(0.0D, -1.0D, 0.0D);
         }
 
-        Stream<VoxelShape> stream = iworldreader.d((Entity) null, axisalignedbb1, (entity) -> {
+        Stream<VoxelShape> stream = iworldreader.d(null, axisalignedbb1, (entity) -> {
             return true;
         });
 
@@ -463,7 +467,7 @@ public class EntityTypes<T extends Entity> {
     }
 
     public boolean a(IBlockData iblockdata) {
-        return this.bh.contains(iblockdata.getBlock()) ? false : (!this.bk && (iblockdata.a((Tag) TagsBlock.FIRE) || iblockdata.a(Blocks.MAGMA_BLOCK) || BlockCampfire.g(iblockdata) || iblockdata.a(Blocks.LAVA)) ? true : iblockdata.a(Blocks.WITHER_ROSE) || iblockdata.a(Blocks.SWEET_BERRY_BUSH) || iblockdata.a(Blocks.CACTUS));
+        return this.bh.contains(iblockdata.getBlock()) ? false : (!this.bk && (iblockdata.a(TagsBlock.FIRE) || iblockdata.a(Blocks.MAGMA_BLOCK) || BlockCampfire.g(iblockdata) || iblockdata.a(Blocks.LAVA)) ? true : iblockdata.a(Blocks.WITHER_ROSE) || iblockdata.a(Blocks.SWEET_BERRY_BUSH) || iblockdata.a(Blocks.CACTUS));
     }
 
     public EntitySize l() {
@@ -476,7 +480,7 @@ public class EntityTypes<T extends Entity> {
 
     @Nullable
     public static Entity a(NBTTagCompound nbttagcompound, World world, Function<Entity, Entity> function) {
-        return (Entity) b(nbttagcompound, world).map(function).map((entity) -> {
+        return b(nbttagcompound, world).map(function).map((entity) -> {
             if (nbttagcompound.hasKeyOfType("Passengers", 9)) {
                 NBTTagList nbttaglist = nbttagcompound.getList("Passengers", 10);
 

@@ -69,7 +69,7 @@ public class Pathfinder {
                 Map.Entry<PathDestination, BlockPosition> entry = list.get(i1);
                 PathDestination pathdestination = entry.getKey();
 
-                if (pathpoint1.c((PathPoint) pathdestination) <= (float) i) {
+                if (pathpoint1.c(pathdestination) <= (float) i) {
                     pathdestination.e();
                     set2.add(entry);
                     // Paper end

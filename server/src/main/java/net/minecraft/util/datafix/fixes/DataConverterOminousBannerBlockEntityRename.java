@@ -21,7 +21,7 @@ public class DataConverterOminousBannerBlockEntityRename extends DataConverterNa
         Optional<String> optional = dynamic.get("CustomName").asString().result();
 
         if (optional.isPresent()) {
-            String s = (String) optional.get();
+            String s = optional.get();
 
             s = s.replace("\"translate\":\"block.minecraft.illager_banner\"", "\"translate\":\"block.minecraft.ominous_banner\"");
             return dynamic.set("CustomName", dynamic.createString(s));

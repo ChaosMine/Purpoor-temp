@@ -32,6 +32,6 @@ public class WorldGenFeatureRandomChoiceConfigurationWeight {
     }
 
     public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition) {
-        return ((WorldGenFeatureConfigured) this.b.get()).a(generatoraccessseed, chunkgenerator, random, blockposition);
+        return this.b.get().a(generatoraccessseed, chunkgenerator, random, blockposition);
     }
 }

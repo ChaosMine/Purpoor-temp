@@ -92,7 +92,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
 
     @Nullable public final Optional<R> getIfLoaded(long value) { return this.c(value); } // Tuinity - OBFHELPER // Tuinity - OBFHELPER
     @Nullable protected Optional<R> c(long i) { // Tuinity - OBFHELPER
-        return (Optional) this.c.get(i);
+        return this.c.get(i);
     }
 
     public final Optional<R> getOrLoad(long coordinate) { return this.d(coordinate); } // Tuinity - OBFHELPER
@@ -197,7 +197,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
 
     private void d(ChunkCoordIntPair chunkcoordintpair) {
         Dynamic<NBTBase> dynamic = this.a(chunkcoordintpair, DynamicOpsNBT.a); // Paper - conflict here to avoid adding obfhelpers :)
-        NBTBase nbtbase = (NBTBase) dynamic.getValue();
+        NBTBase nbtbase = dynamic.getValue();
 
         if (nbtbase instanceof NBTTagCompound) {
             try { this.write(chunkcoordintpair, (NBTTagCompound) nbtbase); } catch (IOException ioexception) { RegionFileSection.LOGGER.error("Error writing data to disk", ioexception); } // Paper - nuke IOWorker // TODO make this write async
@@ -210,7 +210,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
     // Paper start - internal get data function, copied from above
     private NBTTagCompound getDataInternal(ChunkCoordIntPair chunkcoordintpair) {
         Dynamic<NBTBase> dynamic = this.a(chunkcoordintpair, DynamicOpsNBT.a);
-        NBTBase nbtbase = (NBTBase) dynamic.getValue();
+        NBTBase nbtbase = dynamic.getValue();
 
         if (nbtbase instanceof NBTTagCompound) {
             return (NBTTagCompound)nbtbase;
@@ -228,7 +228,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
             long j = SectionPosition.a(chunkcoordintpair, i).s();
 
             this.d.remove(j);
-            Optional<R> optional = (Optional) this.c.get(j);
+            Optional<R> optional = this.c.get(j);
 
             if (optional != null && optional.isPresent()) {
                 DataResult<T> dataresult = ((Codec) this.e.apply(() -> {
@@ -250,7 +250,7 @@ public class RegionFileSection<R> extends RegionFileCache implements AutoCloseab
     protected void b(long i) {}
 
     protected void a(long i) {
-        Optional<R> optional = (Optional) this.c.get(i);
+        Optional<R> optional = this.c.get(i);
 
         if (optional != null && optional.isPresent()) {
             this.d.add(i);

@@ -23,7 +23,7 @@ public class BlockRedstoneTorchWall extends BlockRedstoneTorch {
 
     protected BlockRedstoneTorchWall(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockRedstoneTorchWall.b, EnumDirection.NORTH)).set(BlockRedstoneTorchWall.c, true));
+        this.j(this.blockStateList.getBlockData().set(BlockRedstoneTorchWall.b, EnumDirection.NORTH).set(BlockRedstoneTorchWall.c, true));
     }
 
     @Override
@@ -51,19 +51,19 @@ public class BlockRedstoneTorchWall extends BlockRedstoneTorch {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         IBlockData iblockdata = Blocks.WALL_TORCH.getPlacedState(blockactioncontext);
 
-        return iblockdata == null ? null : (IBlockData) this.getBlockData().set(BlockRedstoneTorchWall.b, iblockdata.get(BlockRedstoneTorchWall.b));
+        return iblockdata == null ? null : this.getBlockData().set(BlockRedstoneTorchWall.b, iblockdata.get(BlockRedstoneTorchWall.b));
     }
 
     @Override
     protected boolean a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-        EnumDirection enumdirection = ((EnumDirection) iblockdata.get(BlockRedstoneTorchWall.b)).opposite();
+        EnumDirection enumdirection = iblockdata.get(BlockRedstoneTorchWall.b).opposite();
 
         return world.isBlockFacePowered(blockposition.shift(enumdirection), enumdirection);
     }
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockRedstoneTorchWall.c) && iblockdata.get(BlockRedstoneTorchWall.b) != enumdirection ? 15 : 0;
+        return iblockdata.get(BlockRedstoneTorchWall.c) && iblockdata.get(BlockRedstoneTorchWall.b) != enumdirection ? 15 : 0;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class BehaviorWalkHome extends Behavior<EntityLiving> {
             VillagePlace villageplace = worldserver.y();
             Optional<BlockPosition> optional = villageplace.d(VillagePlaceType.r.c(), entityliving.getChunkCoordinates(), 48, VillagePlace.Occupancy.ANY);
 
-            return optional.isPresent() && ((BlockPosition) optional.get()).j(entitycreature.getChunkCoordinates()) > 4.0D;
+            return optional.isPresent() && optional.get().j(entitycreature.getChunkCoordinates()) > 4.0D;
         }
     }
 
@@ -69,7 +69,7 @@ public class BehaviorWalkHome extends Behavior<EntityLiving> {
             Optional<VillagePlaceType> optional = villageplace.c(blockposition);
 
             if (optional.isPresent()) {
-                entityliving.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(blockposition, this.b, 1)));
+                entityliving.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(blockposition, this.b, 1)));
                 PacketDebug.c(worldserver, blockposition);
             }
         } else if (this.d < 5) {

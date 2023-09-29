@@ -154,7 +154,7 @@ public class ChunkCache implements IBlockAccess, ICollisionAccess {
                                 }
                                 VoxelShape voxelshape2 = blockData.getCollisionShape(this, mutablePos, collisionShape);
                                 if (voxelshape2 != net.minecraft.world.phys.shapes.VoxelShapes.getEmptyShape()) {
-                                    VoxelShape voxelshape3 = voxelshape2.offset((double)blockX, (double)blockY, (double)blockZ);
+                                    VoxelShape voxelshape3 = voxelshape2.offset(blockX, blockY, blockZ);
 
                                     if (predicate != null && !predicate.test(blockData, mutablePos)) {
                                         continue;
@@ -224,7 +224,7 @@ public class ChunkCache implements IBlockAccess, ICollisionAccess {
         if (k >= 0 && k < this.c.length && l >= 0 && l < this.c[k].length) { // Paper - if this changes, update getChunkIfLoaded below
             IChunkAccess ichunkaccess = this.c[k][l];
 
-            return (IChunkAccess) (ichunkaccess != null ? ichunkaccess : new ChunkEmpty(this.e, new ChunkCoordIntPair(i, j)));
+            return ichunkaccess != null ? ichunkaccess : new ChunkEmpty(this.e, new ChunkCoordIntPair(i, j));
         } else {
             return new ChunkEmpty(this.e, new ChunkCoordIntPair(i, j));
         }

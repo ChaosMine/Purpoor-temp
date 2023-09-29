@@ -65,7 +65,7 @@ public abstract class LocaleLanguage {
         return new LocaleLanguage() {
             @Override
             public String a(String s) {
-                return (String) map.getOrDefault(s, s);
+                return map.getOrDefault(s, s);
             }
 
             @Override
@@ -76,12 +76,12 @@ public abstract class LocaleLanguage {
     }
 
     public static void a(InputStream inputstream, BiConsumer<String, String> biconsumer) {
-        JsonObject jsonobject = (JsonObject) LocaleLanguage.b.fromJson(new InputStreamReader(inputstream, StandardCharsets.UTF_8), JsonObject.class);
+        JsonObject jsonobject = LocaleLanguage.b.fromJson(new InputStreamReader(inputstream, StandardCharsets.UTF_8), JsonObject.class);
         Iterator iterator = jsonobject.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Entry<String, JsonElement> entry = (Entry) iterator.next();
-            String s = LocaleLanguage.c.matcher(ChatDeserializer.a((JsonElement) entry.getValue(), (String) entry.getKey())).replaceAll("%$1s");
+            String s = LocaleLanguage.c.matcher(ChatDeserializer.a(entry.getValue(), entry.getKey())).replaceAll("%$1s");
 
             biconsumer.accept(entry.getKey(), s);
         }

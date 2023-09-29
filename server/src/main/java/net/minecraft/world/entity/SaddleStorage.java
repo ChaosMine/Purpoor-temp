@@ -24,7 +24,7 @@ public class SaddleStorage {
     public void a() {
         this.boosting = true;
         this.currentBoostTicks = 0;
-        this.boostTicks = (Integer) this.dataWatcher.get(this.dataWatcherBoostTicks);
+        this.boostTicks = this.dataWatcher.get(this.dataWatcherBoostTicks);
     }
 
     public boolean a(Random random) {
@@ -61,6 +61,6 @@ public class SaddleStorage {
     }
 
     public boolean hasSaddle() {
-        return (Boolean) this.dataWatcher.get(this.f);
+        return this.dataWatcher.get(this.f);
     }
 }

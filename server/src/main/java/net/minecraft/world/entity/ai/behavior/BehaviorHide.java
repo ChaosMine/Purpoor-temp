@@ -28,12 +28,12 @@ public class BehaviorHide extends Behavior<EntityLiving> {
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
         Optional<Long> optional = behaviorcontroller.getMemory(MemoryModuleType.HEARD_BELL_TIME);
-        boolean flag = (Long) optional.get() + 300L <= i;
+        boolean flag = optional.get() + 300L <= i;
 
         if (this.d <= this.c && !flag) {
-            BlockPosition blockposition = ((GlobalPos) behaviorcontroller.getMemory(MemoryModuleType.HIDING_PLACE).get()).getBlockPosition();
+            BlockPosition blockposition = behaviorcontroller.getMemory(MemoryModuleType.HIDING_PLACE).get().getBlockPosition();
 
-            if (blockposition.a((BaseBlockPosition) entityliving.getChunkCoordinates(), (double) this.b)) {
+            if (blockposition.a(entityliving.getChunkCoordinates(), this.b)) {
                 ++this.d;
             }
 

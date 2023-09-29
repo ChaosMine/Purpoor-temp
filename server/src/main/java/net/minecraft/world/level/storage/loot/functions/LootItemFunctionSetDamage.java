@@ -51,13 +51,13 @@ public class LootItemFunctionSetDamage extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetDamage lootitemfunctionsetdamage, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetdamage, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetdamage, jsonserializationcontext);
             jsonobject.add("damage", jsonserializationcontext.serialize(lootitemfunctionsetdamage.b));
         }
 
         @Override
         public LootItemFunctionSetDamage b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            return new LootItemFunctionSetDamage(alootitemcondition, (LootValueBounds) ChatDeserializer.a(jsonobject, "damage", jsondeserializationcontext, LootValueBounds.class));
+            return new LootItemFunctionSetDamage(alootitemcondition, ChatDeserializer.a(jsonobject, "damage", jsondeserializationcontext, LootValueBounds.class));
         }
     }
 }

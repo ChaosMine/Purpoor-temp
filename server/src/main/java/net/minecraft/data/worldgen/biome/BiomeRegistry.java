@@ -16,11 +16,11 @@ public abstract class BiomeRegistry {
 
     private static BiomeBase a(int i, ResourceKey<BiomeBase> resourcekey, BiomeBase biomebase) {
         BiomeRegistry.c.put(i, resourcekey);
-        return (BiomeBase) RegistryGeneration.a(RegistryGeneration.WORLDGEN_BIOME, i, resourcekey, biomebase);
+        return RegistryGeneration.a(RegistryGeneration.WORLDGEN_BIOME, i, resourcekey, biomebase);
     }
 
     public static ResourceKey<BiomeBase> a(int i) {
-        return (ResourceKey) BiomeRegistry.c.get(i);
+        return BiomeRegistry.c.get(i);
     }
 
     static {

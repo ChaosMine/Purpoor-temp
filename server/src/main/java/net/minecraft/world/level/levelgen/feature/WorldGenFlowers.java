@@ -23,7 +23,7 @@ public abstract class WorldGenFlowers<U extends WorldGenFeatureConfiguration> ex
         for (int j = 0; j < this.a(u0); ++j) {
             BlockPosition blockposition1 = this.a(random, blockposition, u0);
 
-            if (generatoraccessseed.isEmpty(blockposition1) && blockposition1.getY() < 255 && iblockdata.canPlace(generatoraccessseed, blockposition1) && this.a((GeneratorAccess) generatoraccessseed, blockposition1, u0)) {
+            if (generatoraccessseed.isEmpty(blockposition1) && blockposition1.getY() < 255 && iblockdata.canPlace(generatoraccessseed, blockposition1) && this.a(generatoraccessseed, blockposition1, u0)) {
                 generatoraccessseed.setTypeAndData(blockposition1, iblockdata, 2);
                 ++i;
             }

@@ -17,7 +17,7 @@ public class CriterionTriggerConstructBeacon extends CriterionTriggerAbstract<Cr
     }
 
     @Override
-    public CriterionTriggerConstructBeacon.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerConstructBeacon.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("level"));
 
         return new CriterionTriggerConstructBeacon.a(criterionconditionentity_b, criterionconditionvalue_integerrange);
@@ -33,13 +33,13 @@ public class CriterionTriggerConstructBeacon extends CriterionTriggerAbstract<Cr
 
         private final CriterionConditionValue.IntegerRange a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             super(CriterionTriggerConstructBeacon.a, criterionconditionentity_b);
             this.a = criterionconditionvalue_integerrange;
         }
 
         public static CriterionTriggerConstructBeacon.a a(CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
-            return new CriterionTriggerConstructBeacon.a(CriterionConditionEntity.b.a, criterionconditionvalue_integerrange);
+            return new CriterionTriggerConstructBeacon.a(CriterionConditionEntity.b_.a, criterionconditionvalue_integerrange);
         }
 
         public boolean a(TileEntityBeacon tileentitybeacon) {

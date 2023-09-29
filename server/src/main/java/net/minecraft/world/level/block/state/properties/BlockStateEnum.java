@@ -31,7 +31,7 @@ public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T>
 
         while (iterator.hasNext()) {
             T t0 = iterator.next(); // Paper - Decompile fix
-            String s1 = ((INamable) t0).getName();
+            String s1 = t0.getName();
 
             if (this.b.containsKey(s1)) {
                 throw new IllegalArgumentException("Multiple values have the same name '" + s1 + "'");
@@ -61,7 +61,7 @@ public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T>
     }
 
     public String a(T t0) {
-        return ((INamable) t0).getName();
+        return t0.getName();
     }
 
     public boolean equals_unused(Object object) { // Paper
@@ -86,15 +86,15 @@ public class BlockStateEnum<T extends Enum<T> & INamable> extends IBlockState<T>
     }
 
     public static <T extends Enum<T> & INamable> BlockStateEnum<T> of(String s, Class<T> oclass) {
-        return a(s, oclass, (Predicate) Predicates.alwaysTrue());
+        return a(s, oclass, Predicates.alwaysTrue());
     }
 
     public static <T extends Enum<T> & INamable> BlockStateEnum<T> a(String s, Class<T> oclass, Predicate<T> predicate) {
-        return a(s, oclass, (Collection) Arrays.stream(oclass.getEnumConstants()).filter(predicate).collect(Collectors.toList()));
+        return a(s, oclass, Arrays.stream(oclass.getEnumConstants()).filter(predicate).toList());
     }
 
     public static <T extends Enum<T> & INamable> BlockStateEnum<T> of(String s, Class<T> oclass, T... at) {
-        return a(s, oclass, (Collection) Lists.newArrayList(at));
+        return a(s, oclass, Lists.newArrayList(at));
     }
 
     public static <T extends Enum<T> & INamable> BlockStateEnum<T> a(String s, Class<T> oclass, Collection<T> collection) {

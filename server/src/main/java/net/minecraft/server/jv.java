@@ -62,26 +62,26 @@ public class jv extends jw<Item> {
         this.a(TagsBlock.FLOWERS, TagsItem.FLOWERS);
         this.a(TagsBlock.GOLD_ORES, TagsItem.GOLD_ORES);
         this.a(TagsBlock.SOUL_FIRE_BASE_BLOCKS, TagsItem.SOUL_FIRE_BASE_BLOCKS);
-        this.a(TagsItem.BANNERS).a((Object[])(Items.WHITE_BANNER, Items.ORANGE_BANNER, Items.MAGENTA_BANNER, Items.LIGHT_BLUE_BANNER, Items.YELLOW_BANNER, Items.LIME_BANNER, Items.PINK_BANNER, Items.GRAY_BANNER, Items.LIGHT_GRAY_BANNER, Items.CYAN_BANNER, Items.PURPLE_BANNER, Items.BLUE_BANNER, Items.BROWN_BANNER, Items.GREEN_BANNER, Items.RED_BANNER, Items.BLACK_BANNER));
-        this.a(TagsItem.BOATS).a((Object[])(Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.BIRCH_BOAT, Items.JUNGLE_BOAT, Items.ACACIA_BOAT, Items.DARK_OAK_BOAT));
-        this.a(TagsItem.FISHES).a((Object[])(Items.COD, Items.COOKED_COD, Items.SALMON, Items.COOKED_SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH));
+        this.a(TagsItem.BANNERS).a(Items.WHITE_BANNER, Items.ORANGE_BANNER, Items.MAGENTA_BANNER, Items.LIGHT_BLUE_BANNER, Items.YELLOW_BANNER, Items.LIME_BANNER, Items.PINK_BANNER, Items.GRAY_BANNER, Items.LIGHT_GRAY_BANNER, Items.CYAN_BANNER, Items.PURPLE_BANNER, Items.BLUE_BANNER, Items.BROWN_BANNER, Items.GREEN_BANNER, Items.RED_BANNER, Items.BLACK_BANNER);
+        this.a(TagsItem.BOATS).a(Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.BIRCH_BOAT, Items.JUNGLE_BOAT, Items.ACACIA_BOAT, Items.DARK_OAK_BOAT);
+        this.a(TagsItem.FISHES).a(Items.COD, Items.COOKED_COD, Items.SALMON, Items.COOKED_SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH);
         this.a(TagsBlock.STANDING_SIGNS, TagsItem.SIGNS);
-        this.a(TagsItem.CREEPER_DROP_MUSIC_DISCS).a((Object[])(Items.MUSIC_DISC_13, Items.MUSIC_DISC_CAT, Items.MUSIC_DISC_BLOCKS, Items.MUSIC_DISC_CHIRP, Items.MUSIC_DISC_FAR, Items.MUSIC_DISC_MALL, Items.MUSIC_DISC_MELLOHI, Items.MUSIC_DISC_STAL, Items.MUSIC_DISC_STRAD, Items.MUSIC_DISC_WARD, Items.MUSIC_DISC_11, Items.MUSIC_DISC_WAIT));
-        this.a(TagsItem.MUSIC_DISCS).a(TagsItem.CREEPER_DROP_MUSIC_DISCS).a((Object)Items.MUSIC_DISC_PIGSTEP);
-        this.a(TagsItem.COALS).a((Object[])(Items.COAL, Items.CHARCOAL));
-        this.a(TagsItem.ARROWS).a((Object[])(Items.ARROW, Items.TIPPED_ARROW, Items.SPECTRAL_ARROW));
-        this.a(TagsItem.LECTERN_BOOKS).a((Object[])(Items.WRITTEN_BOOK, Items.WRITABLE_BOOK));
-        this.a(TagsItem.BEACON_PAYMENT_ITEMS).a((Object[])(Items.NETHERITE_INGOT, Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.IRON_INGOT));
-        this.a(TagsItem.PIGLIN_REPELLENTS).a((Object)Items.dp).a((Object)Items.rl).a((Object)Items.ro);
-        this.a(TagsItem.PIGLIN_LOVED).a(TagsItem.GOLD_ORES).a((Object[])(Items.bG, Items.rE, Items.fg, Items.GOLD_INGOT, Items.rj, Items.CLOCK, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE, Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS, Items.GOLDEN_HORSE_ARMOR, Items.GOLDEN_SWORD, Items.GOLDEN_PICKAXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_AXE, Items.GOLDEN_HOE));
-        this.a(TagsItem.NON_FLAMMABLE_WOOD).a((Object[])(Items.S, Items.aa, Items.aq, Items.ai, Items.R, Items.Z, Items.ap, Items.ah, Items.v, Items.w, Items.bO, Items.bP, Items.cP, Items.cQ, Items.dg, Items.dh, Items.dy, Items.dz, Items.dY, Items.dZ, Items.ex, Items.ey, Items.eZ, Items.fa, Items.jS, Items.jT, Items.CRIMSON_SIGN, Items.WARPED_SIGN));
-        this.a(TagsItem.STONE_TOOL_MATERIALS).a((Object[])(Items.o, Items.rB));
-        this.a(TagsItem.STONE_CRAFTING_MATERIALS).a((Object[])(Items.o, Items.rB));
+        this.a(TagsItem.CREEPER_DROP_MUSIC_DISCS).a(Items.MUSIC_DISC_13, Items.MUSIC_DISC_CAT, Items.MUSIC_DISC_BLOCKS, Items.MUSIC_DISC_CHIRP, Items.MUSIC_DISC_FAR, Items.MUSIC_DISC_MALL, Items.MUSIC_DISC_MELLOHI, Items.MUSIC_DISC_STAL, Items.MUSIC_DISC_STRAD, Items.MUSIC_DISC_WARD, Items.MUSIC_DISC_11, Items.MUSIC_DISC_WAIT);
+        this.a(TagsItem.MUSIC_DISCS).a(TagsItem.CREEPER_DROP_MUSIC_DISCS).a(Items.MUSIC_DISC_PIGSTEP);
+        this.a(TagsItem.COALS).a(Items.COAL, Items.CHARCOAL);
+        this.a(TagsItem.ARROWS).a(Items.ARROW, Items.TIPPED_ARROW, Items.SPECTRAL_ARROW);
+        this.a(TagsItem.LECTERN_BOOKS).a(Items.WRITTEN_BOOK, Items.WRITABLE_BOOK);
+        this.a(TagsItem.BEACON_PAYMENT_ITEMS).a(Items.NETHERITE_INGOT, Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.IRON_INGOT);
+        this.a(TagsItem.PIGLIN_REPELLENTS).a(Items.dp).a(Items.rl).a(Items.ro);
+        this.a(TagsItem.PIGLIN_LOVED).a(TagsItem.GOLD_ORES).a(Items.bG, Items.rE, Items.fg, Items.GOLD_INGOT, Items.rj, Items.CLOCK, Items.GOLDEN_CARROT, Items.GLISTERING_MELON_SLICE, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE, Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS, Items.GOLDEN_HORSE_ARMOR, Items.GOLDEN_SWORD, Items.GOLDEN_PICKAXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_AXE, Items.GOLDEN_HOE);
+        this.a(TagsItem.NON_FLAMMABLE_WOOD).a(Items.S, Items.aa, Items.aq, Items.ai, Items.R, Items.Z, Items.ap, Items.ah, Items.v, Items.w, Items.bO, Items.bP, Items.cP, Items.cQ, Items.dg, Items.dh, Items.dy, Items.dz, Items.dY, Items.dZ, Items.ex, Items.ey, Items.eZ, Items.fa, Items.jS, Items.jT, Items.CRIMSON_SIGN, Items.WARPED_SIGN);
+        this.a(TagsItem.STONE_TOOL_MATERIALS).a(Items.o, Items.rB);
+        this.a(TagsItem.STONE_CRAFTING_MATERIALS).a(Items.o, Items.rB);
     }
 
     protected void a(Tag.e<Block> tag_e, Tag.e<Item> tag_e1) {
         Tag.a tag_a = this.b(tag_e1);
-        Tag.a tag_a1 = (Tag.a) this.d.apply(tag_e);
+        Tag.a tag_a1 = this.d.apply(tag_e);
 
         tag_a1.b().forEach(tag_a::a);
     }

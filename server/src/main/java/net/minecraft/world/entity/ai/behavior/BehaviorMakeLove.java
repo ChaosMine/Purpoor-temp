@@ -34,7 +34,7 @@ public class BehaviorMakeLove extends Behavior<EntityVillager> {
     }
 
     protected void a(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        EntityAgeable entityageable = (EntityAgeable) entityvillager.getBehaviorController().getMemory(MemoryModuleType.BREED_TARGET).get();
+        EntityAgeable entityageable = entityvillager.getBehaviorController().getMemory(MemoryModuleType.BREED_TARGET).get();
 
         BehaviorUtil.a(entityvillager, entityageable, 0.5F);
         worldserver.broadcastEntityEffect(entityageable, (byte) 18);
@@ -47,7 +47,7 @@ public class BehaviorMakeLove extends Behavior<EntityVillager> {
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
         EntityVillager entityvillager1 = (EntityVillager) entityvillager.getBehaviorController().getMemory(MemoryModuleType.BREED_TARGET).get();
 
-        if (entityvillager.h((Entity) entityvillager1) <= 5.0D) {
+        if (entityvillager.h(entityvillager1) <= 5.0D) {
             BehaviorUtil.a(entityvillager, entityvillager1, 0.5F);
             if (i >= this.b) {
                 entityvillager.ff();
@@ -71,10 +71,10 @@ public class BehaviorMakeLove extends Behavior<EntityVillager> {
             Optional<EntityVillager> optional1 = this.b(worldserver, entityvillager, entityvillager1);
 
             if (optional1.isPresent()) {
-                this.a(worldserver, (EntityVillager) optional1.get(), (BlockPosition) optional.get());
+                this.a(worldserver, optional1.get(), optional.get());
             } else {
-                worldserver.y().b((BlockPosition) optional.get());
-                PacketDebug.c(worldserver, (BlockPosition) optional.get());
+                worldserver.y().b(optional.get());
+                PacketDebug.c(worldserver, optional.get());
             }
         }
 
@@ -90,7 +90,7 @@ public class BehaviorMakeLove extends Behavior<EntityVillager> {
             return entityageable.getEntityType() == EntityTypes.VILLAGER;
         });
 
-        return !optional.isPresent() ? false : BehaviorUtil.a(behaviorcontroller, MemoryModuleType.BREED_TARGET, EntityTypes.VILLAGER) && entityvillager.canBreed() && ((EntityAgeable) optional.get()).canBreed();
+        return !optional.isPresent() ? false : BehaviorUtil.a(behaviorcontroller, MemoryModuleType.BREED_TARGET, EntityTypes.VILLAGER) && entityvillager.canBreed() && optional.get().canBreed();
     }
 
     private Optional<BlockPosition> b(WorldServer worldserver, EntityVillager entityvillager) {

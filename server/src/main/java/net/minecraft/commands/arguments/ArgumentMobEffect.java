@@ -43,7 +43,7 @@ public class ArgumentMobEffect implements ArgumentType<MobEffectList> {
     }
 
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandcontext, SuggestionsBuilder suggestionsbuilder) {
-        return ICompletionProvider.a((Iterable) IRegistry.MOB_EFFECT.keySet(), suggestionsbuilder);
+        return ICompletionProvider.a(IRegistry.MOB_EFFECT.keySet(), suggestionsbuilder);
     }
 
     public Collection<String> getExamples() {

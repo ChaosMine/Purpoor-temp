@@ -19,7 +19,7 @@ public class PathfinderGoalRandomSwim extends PathfinderGoalRandomStroll {
     protected Vec3D g() {
         Vec3D vec3d = RandomPositionGenerator.a(this.a, 10, 7);
 
-        for (int i = 0; vec3d != null && !this.a.world.getType(new BlockPosition(vec3d)).a((IBlockAccess) this.a.world, new BlockPosition(vec3d), PathMode.WATER) && i++ < 10; vec3d = RandomPositionGenerator.a(this.a, 10, 7)) {
+        for (int i = 0; vec3d != null && !this.a.world.getType(new BlockPosition(vec3d)).a(this.a.world, new BlockPosition(vec3d), PathMode.WATER) && i++ < 10; vec3d = RandomPositionGenerator.a(this.a, 10, 7)) {
             ;
         }
 

@@ -18,8 +18,8 @@ public class CriterionTriggerSummonedEntity extends CriterionTriggerAbstract<Cri
     }
 
     @Override
-    public CriterionTriggerSummonedEntity.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "entity", lootdeserializationcontext);
+    public CriterionTriggerSummonedEntity.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "entity", lootdeserializationcontext);
 
         return new CriterionTriggerSummonedEntity.a(criterionconditionentity_b, criterionconditionentity_b1);
     }
@@ -34,15 +34,15 @@ public class CriterionTriggerSummonedEntity extends CriterionTriggerAbstract<Cri
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
+        private final CriterionConditionEntity.b_ a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1) {
             super(CriterionTriggerSummonedEntity.a, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
         }
 
-        public static CriterionTriggerSummonedEntity.a a(CriterionConditionEntity.a criterionconditionentity_a) {
-            return new CriterionTriggerSummonedEntity.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity_a.b()));
+        public static CriterionTriggerSummonedEntity.a a(CriterionConditionEntity.a_ criterionconditionentity_a) {
+            return new CriterionTriggerSummonedEntity.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity_a.b()));
         }
 
         public boolean a(LootTableInfo loottableinfo) {

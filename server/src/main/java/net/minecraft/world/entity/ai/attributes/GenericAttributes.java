@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.entity.ai.attributes;
 
 import net.minecraft.core.IRegistry;
@@ -20,6 +19,6 @@ public class GenericAttributes {
     public static final AttributeBase JUMP_STRENGTH = a("horse.jump_strength", (new AttributeRanged("attribute.name.horse.jump_strength", 0.7D, 0.0D, 2.0D)).a(true));
 
     private static AttributeBase a(String s, AttributeBase attributebase) {
-        return (AttributeBase) IRegistry.a(IRegistry.ATTRIBUTE, s, attributebase); // CraftBukkit - decompile error
+        return IRegistry.a(IRegistry.ATTRIBUTE, s, attributebase); // CraftBukkit - decompile error
     }
 }

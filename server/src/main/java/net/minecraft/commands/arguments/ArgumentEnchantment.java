@@ -43,7 +43,7 @@ public class ArgumentEnchantment implements ArgumentType<Enchantment> {
     }
 
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandcontext, SuggestionsBuilder suggestionsbuilder) {
-        return ICompletionProvider.a((Iterable) IRegistry.ENCHANTMENT.keySet(), suggestionsbuilder);
+        return ICompletionProvider.a(IRegistry.ENCHANTMENT.keySet(), suggestionsbuilder);
     }
 
     public Collection<String> getExamples() {

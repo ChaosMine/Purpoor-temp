@@ -79,7 +79,7 @@ public final class ProjectileHelper {
 
             entity.yaw = (float) (MathHelper.d(vec3d.z, vec3d.x) * 57.2957763671875D) + 90.0F;
 
-            for (entity.pitch = (float) (MathHelper.d((double) f1, vec3d.y) * 57.2957763671875D) - 90.0F; entity.pitch - entity.lastPitch < -180.0F; entity.lastPitch -= 360.0F) {
+            for (entity.pitch = (float) (MathHelper.d(f1, vec3d.y) * 57.2957763671875D) - 90.0F; entity.pitch - entity.lastPitch < -180.0F; entity.lastPitch -= 360.0F) {
                 ;
             }
 
@@ -105,7 +105,7 @@ public final class ProjectileHelper {
     }
 
     public static EntityArrow a(EntityLiving entityliving, ItemStack itemstack, float f) {
-        ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW));
+        ItemArrow itemarrow = (ItemArrow) (itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW);
         EntityArrow entityarrow = itemarrow.a(entityliving.world, itemstack, entityliving);
 
         entityarrow.a(entityliving, f);

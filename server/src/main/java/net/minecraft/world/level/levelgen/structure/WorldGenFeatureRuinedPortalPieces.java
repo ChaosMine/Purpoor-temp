@@ -1,336 +1,282 @@
 package net.minecraft.world.level.levelgen.structure;
 
-import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.MinecraftKey;
-import net.minecraft.world.level.ChunkCoordIntPair;
-import net.minecraft.world.level.GeneratorAccess;
-import net.minecraft.world.level.GeneratorAccessSeed;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldAccess;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BlockLeaves;
-import net.minecraft.world.level.block.BlockVine;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EnumBlockMirror;
-import net.minecraft.world.level.block.EnumBlockRotation;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.BlockStateBoolean;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.HeightMap;
 import net.minecraft.world.level.levelgen.feature.WorldGenFeatureStructurePieceType;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructure;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureInfo;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorBlackstoneReplace;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorBlockAge;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorBlockIgnore;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorLavaSubmergedBlock;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorPredicates;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureProcessorRule;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureTestBlock;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureTestRandomBlock;
-import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureTestTrue;
+import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 public class WorldGenFeatureRuinedPortalPieces extends DefinedStructurePiece {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private final MinecraftKey e;
+	private final EnumBlockRotation f;
+	private final EnumBlockMirror g;
+	private final Position h;
+	private final a_ i;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private final MinecraftKey e;
-    private final EnumBlockRotation f;
-    private final EnumBlockMirror g;
-    private final WorldGenFeatureRuinedPortalPieces.Position h;
-    private final WorldGenFeatureRuinedPortalPieces.a i;
+	public WorldGenFeatureRuinedPortalPieces(BlockPosition var0, Position var1, a_ var2, MinecraftKey var3, DefinedStructure var4, EnumBlockRotation var5, EnumBlockMirror var6, BlockPosition var7) {
+		super(WorldGenFeatureStructurePieceType.J, 0);
+		this.c = var0;
+		this.e = var3;
+		this.f = var5;
+		this.g = var6;
+		this.h = var1;
+		this.i = var2;
+		this.a(var4, var7);
+	}
 
-    public WorldGenFeatureRuinedPortalPieces(BlockPosition blockposition, WorldGenFeatureRuinedPortalPieces.Position worldgenfeatureruinedportalpieces_position, WorldGenFeatureRuinedPortalPieces.a worldgenfeatureruinedportalpieces_a, MinecraftKey minecraftkey, DefinedStructure definedstructure, EnumBlockRotation enumblockrotation, EnumBlockMirror enumblockmirror, BlockPosition blockposition1) {
-        super(WorldGenFeatureStructurePieceType.J, 0);
-        this.c = blockposition;
-        this.e = minecraftkey;
-        this.f = enumblockrotation;
-        this.g = enumblockmirror;
-        this.h = worldgenfeatureruinedportalpieces_position;
-        this.i = worldgenfeatureruinedportalpieces_a;
-        this.a(definedstructure, blockposition1);
-    }
+	public WorldGenFeatureRuinedPortalPieces(DefinedStructureManager var0, NBTTagCompound var1) {
+		super(WorldGenFeatureStructurePieceType.J, var1);
+		this.e = new MinecraftKey(var1.getString("Template"));
+		this.f = EnumBlockRotation.valueOf(var1.getString("Rotation"));
+		this.g = EnumBlockMirror.valueOf(var1.getString("Mirror"));
+		this.h = Position.a(var1.getString("VerticalPlacement"));
+		this.i = WorldGenFeatureRuinedPortalPieces.a_.a.parse(new Dynamic<>(DynamicOpsNBT.a, var1.get("Properties"))).getOrThrow(true, LOGGER::error);
+		DefinedStructure var2 = var0.a(this.e);
+		this.a(var2, new BlockPosition(var2.a().getX() / 2, 0, var2.a().getZ() / 2));
+	}
 
-    public WorldGenFeatureRuinedPortalPieces(DefinedStructureManager definedstructuremanager, NBTTagCompound nbttagcompound) {
-        super(WorldGenFeatureStructurePieceType.J, nbttagcompound);
-        this.e = new MinecraftKey(nbttagcompound.getString("Template"));
-        this.f = EnumBlockRotation.valueOf(nbttagcompound.getString("Rotation"));
-        this.g = EnumBlockMirror.valueOf(nbttagcompound.getString("Mirror"));
-        this.h = WorldGenFeatureRuinedPortalPieces.Position.a(nbttagcompound.getString("VerticalPlacement"));
-        DataResult dataresult = WorldGenFeatureRuinedPortalPieces.a.a.parse(new Dynamic(DynamicOpsNBT.a, nbttagcompound.get("Properties")));
-        Logger logger = WorldGenFeatureRuinedPortalPieces.LOGGER;
+	private static int a(GeneratorAccess var0, int var1, int var2, Position var3) {
+		return var0.a(WorldGenFeatureRuinedPortalPieces.a(var3), var1, var2) - 1;
+	}
 
-        logger.getClass();
-        this.i = (WorldGenFeatureRuinedPortalPieces.a) dataresult.getOrThrow(true, logger::error);
-        DefinedStructure definedstructure = definedstructuremanager.a(this.e);
+	public static HeightMap.Type a(Position var0) {
+		return var0 == Position.ON_OCEAN_FLOOR ? HeightMap.Type.OCEAN_FLOOR_WG : HeightMap.Type.WORLD_SURFACE_WG;
+	}
 
-        this.a(definedstructure, new BlockPosition(definedstructure.a().getX() / 2, 0, definedstructure.a().getZ() / 2));
-    }
+	private static DefinedStructureProcessorPredicates a(Block var0, float var1, Block var2) {
+		return new DefinedStructureProcessorPredicates(new DefinedStructureTestRandomBlock(var0, var1), DefinedStructureTestTrue.b, var2.getBlockData());
+	}
 
-    @Override
-    protected void a(NBTTagCompound nbttagcompound) {
-        super.a(nbttagcompound);
-        nbttagcompound.setString("Template", this.e.toString());
-        nbttagcompound.setString("Rotation", this.f.name());
-        nbttagcompound.setString("Mirror", this.g.name());
-        nbttagcompound.setString("VerticalPlacement", this.h.a());
-        DataResult dataresult = WorldGenFeatureRuinedPortalPieces.a.a.encodeStart(DynamicOpsNBT.a, this.i);
-        Logger logger = WorldGenFeatureRuinedPortalPieces.LOGGER;
+	private static DefinedStructureProcessorPredicates a(Block var1) {
+		return new DefinedStructureProcessorPredicates(new DefinedStructureTestBlock(Blocks.LAVA), DefinedStructureTestTrue.b, var1.getBlockData());
+	}
 
-        logger.getClass();
-        dataresult.resultOrPartial(logger::error).ifPresent((nbtbase) -> {
-            nbttagcompound.set("Properties", nbtbase);
-        });
-    }
+	@Override
+	protected void a(NBTTagCompound var0) {
+		super.a(var0);
+		var0.setString("Template", this.e.toString());
+		var0.setString("Rotation", this.f.name());
+		var0.setString("Mirror", this.g.name());
+		var0.setString("VerticalPlacement", this.h.a());
+		WorldGenFeatureRuinedPortalPieces.a_.a.encodeStart(DynamicOpsNBT.a, this.i).resultOrPartial(LOGGER::error).ifPresent(var1 -> var0.set("Properties", var1));
+	}
 
-    private void a(DefinedStructure definedstructure, BlockPosition blockposition) {
-        DefinedStructureProcessorBlockIgnore definedstructureprocessorblockignore = this.i.d ? DefinedStructureProcessorBlockIgnore.b : DefinedStructureProcessorBlockIgnore.d;
-        List<DefinedStructureProcessorPredicates> list = Lists.newArrayList();
+	private void a(DefinedStructure var0, BlockPosition var1) {
+		DefinedStructureProcessorBlockIgnore var2 = this.i.d ? DefinedStructureProcessorBlockIgnore.b : DefinedStructureProcessorBlockIgnore.d;
+		var var3 = new ArrayList<DefinedStructureProcessorPredicates>();
+		var3.add(WorldGenFeatureRuinedPortalPieces.a(Blocks.GOLD_BLOCK, 0.3f, Blocks.AIR));
+		var3.add(this.c());
+		if (!this.i.b) {
+			var3.add(WorldGenFeatureRuinedPortalPieces.a(Blocks.NETHERRACK, 0.07f, Blocks.MAGMA_BLOCK));
+		}
+		DefinedStructureInfo var4 = new DefinedStructureInfo().a(this.f).a(this.g).a(var1).a(var2).a(new DefinedStructureProcessorRule(var3)).a(new DefinedStructureProcessorBlockAge(this.i.c)).a(new DefinedStructureProcessorLavaSubmergedBlock());
+		if (this.i.g) {
+			var4.a(DefinedStructureProcessorBlackstoneReplace.b);
+		}
+		this.a(var0, this.c, var4);
+	}
 
-        list.add(a(Blocks.GOLD_BLOCK, 0.3F, Blocks.AIR));
-        list.add(this.c());
-        if (!this.i.b) {
-            list.add(a(Blocks.NETHERRACK, 0.07F, Blocks.MAGMA_BLOCK));
-        }
+	private DefinedStructureProcessorPredicates c() {
+		if (this.h == Position.ON_OCEAN_FLOOR) {
+			return WorldGenFeatureRuinedPortalPieces.a(Blocks.MAGMA_BLOCK);
+		}
+		if (this.i.b) {
+			return WorldGenFeatureRuinedPortalPieces.a(Blocks.NETHERRACK);
+		}
+		return WorldGenFeatureRuinedPortalPieces.a(Blocks.LAVA, 0.2f, Blocks.MAGMA_BLOCK);
+	}
 
-        DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.f).a(this.g).a(blockposition).a((DefinedStructureProcessor) definedstructureprocessorblockignore).a((DefinedStructureProcessor) (new DefinedStructureProcessorRule(list))).a((DefinedStructureProcessor) (new DefinedStructureProcessorBlockAge(this.i.c))).a((DefinedStructureProcessor) (new DefinedStructureProcessorLavaSubmergedBlock()));
+	@Override
+	public boolean a(GeneratorAccessSeed var0, StructureManager var1, ChunkGenerator var22, Random var3, StructureBoundingBox var4, ChunkCoordIntPair var5, BlockPosition var6) {
+		if (!var4.b(this.c)) {
+			return true;
+		}
+		var4.c(this.a.b(this.b, this.c));
+		boolean var7 = super.a(var0, var1, var22, var3, var4, var5, var6);
+		this.b(var3, var0);
+		this.a(var3, var0);
+		if (this.i.f || this.i.e) {
+			BlockPosition.a(this.g()).forEach(var2 -> {
+				if (this.i.f) {
+					this.a(var3, var0, var2);
+				}
+				if (this.i.e) {
+					this.b(var3, var0, var2);
+				}
+			});
+		}
+		return var7;
+	}
 
-        if (this.i.g) {
-            definedstructureinfo.a((DefinedStructureProcessor) DefinedStructureProcessorBlackstoneReplace.b);
-        }
+	@Override
+	protected void a(String var0, BlockPosition var1, WorldAccess var2, Random var3, StructureBoundingBox var4) {
+	}
 
-        this.a(definedstructure, this.c, definedstructureinfo);
-    }
+	private void a(Random var0, GeneratorAccess var1, BlockPosition var2) {
+		IBlockData var3 = var1.getType(var2);
+		if (var3.isAir() || var3.a(Blocks.VINE)) {
+			return;
+		}
+		EnumDirection var4 = EnumDirection.EnumDirectionLimit.HORIZONTAL.a(var0);
+		BlockPosition var5 = var2.shift(var4);
+		IBlockData var6 = var1.getType(var5);
+		if (!var6.isAir()) {
+			return;
+		}
+		if (!Block.a(var3.getCollisionShape(var1, var2), var4)) {
+			return;
+		}
+		BlockStateBoolean var7 = BlockVine.getDirection(var4.opposite());
+		var1.setTypeAndData(var5, Blocks.VINE.getBlockData().set(var7, true), 3);
+	}
 
-    private DefinedStructureProcessorPredicates c() {
-        return this.h == WorldGenFeatureRuinedPortalPieces.Position.ON_OCEAN_FLOOR ? a(Blocks.LAVA, Blocks.MAGMA_BLOCK) : (this.i.b ? a(Blocks.LAVA, Blocks.NETHERRACK) : a(Blocks.LAVA, 0.2F, Blocks.MAGMA_BLOCK));
-    }
+	private void b(Random var0, GeneratorAccess var1, BlockPosition var2) {
+		if (var0.nextFloat() < 0.5f && var1.getType(var2).a(Blocks.NETHERRACK) && var1.getType(var2.up()).isAir()) {
+			var1.setTypeAndData(var2.up(), Blocks.JUNGLE_LEAVES.getBlockData().set(BlockLeaves.PERSISTENT, true), 3);
+		}
+	}
 
-    @Override
-    public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-        if (!structureboundingbox.b((BaseBlockPosition) this.c)) {
-            return true;
-        } else {
-            structureboundingbox.c(this.a.b(this.b, this.c));
-            boolean flag = super.a(generatoraccessseed, structuremanager, chunkgenerator, random, structureboundingbox, chunkcoordintpair, blockposition);
+	private void a(Random var0, GeneratorAccess var1) {
+		for (int var2 = this.n.a + 1; var2 < this.n.d; ++var2) {
+			for (int var3 = this.n.c + 1; var3 < this.n.f; ++var3) {
+				BlockPosition var4 = new BlockPosition(var2, this.n.b, var3);
+				if (!var1.getType(var4).a(Blocks.NETHERRACK)) continue;
+				this.c(var0, var1, var4.down());
+			}
+		}
+	}
 
-            this.b(random, generatoraccessseed);
-            this.a(random, (GeneratorAccess) generatoraccessseed);
-            if (this.i.f || this.i.e) {
-                BlockPosition.a(this.g()).forEach((blockposition1) -> {
-                    if (this.i.f) {
-                        this.a(random, (GeneratorAccess) generatoraccessseed, blockposition1);
-                    }
+	private void c(Random var0, GeneratorAccess var1, BlockPosition var2) {
+		BlockPosition.MutableBlockPosition var3 = var2.i();
+		this.d(var0, var1, var3);
+		for (int var4 = 8; var4 > 0 && var0.nextFloat() < 0.5f; --var4) {
+			var3.c(EnumDirection.DOWN);
+			this.d(var0, var1, var3);
+		}
+	}
 
-                    if (this.i.e) {
-                        this.b(random, generatoraccessseed, blockposition1);
-                    }
+	private void b(Random var0, GeneratorAccess var1) {
+		boolean var2 = this.h == Position.ON_LAND_SURFACE || this.h == Position.ON_OCEAN_FLOOR;
+		BaseBlockPosition var3 = this.n.g();
+		int var4 = var3.getX();
+		int var5 = var3.getZ();
+		float[] var6 = new float[]{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 0.9f, 0.8f, 0.7f, 0.6f, 0.4f, 0.2f};
+		int var7 = var6.length;
+		int var8 = (this.n.d() + this.n.f()) / 2;
+		int var9 = var0.nextInt(Math.max(1, 8 - var8 / 2));
+		BlockPosition.MutableBlockPosition var11 = BlockPosition.ZERO.i();
+		for (int var12 = var4 - var7; var12 <= var4 + var7; ++var12) {
+			for (int var13 = var5 - var7; var13 <= var5 + var7; ++var13) {
+				int var14 = Math.abs(var12 - var4) + Math.abs(var13 - var5);
+				int var15 = Math.max(0, var14 + var9);
+				if (var15 >= var7) continue;
+				float var16 = var6[var15];
+				if (!(var0.nextDouble() < (double) var16)) continue;
+				int var17 = WorldGenFeatureRuinedPortalPieces.a(var1, var12, var13, this.h);
+				int var18 = var2 ? var17 : Math.min(this.n.b, var17);
+				var11.d(var12, var18, var13);
+				if (Math.abs(var18 - this.n.b) > 3 || !this.a(var1, var11)) continue;
+				this.d(var0, var1, var11);
+				if (this.i.e) {
+					this.b(var0, var1, var11);
+				}
+				this.c(var0, var1, var11.down());
+			}
+		}
+	}
 
-                });
-            }
+	private boolean a(GeneratorAccess var0, BlockPosition var1) {
+		IBlockData var2 = var0.getType(var1);
+		return !var2.a(Blocks.AIR) && !var2.a(Blocks.OBSIDIAN) && !var2.a(Blocks.CHEST) && (this.h == Position.IN_NETHER || !var2.a(Blocks.LAVA));
+	}
 
-            return flag;
-        }
-    }
+	private void d(Random var0, GeneratorAccess var1, BlockPosition var2) {
+		if (!this.i.b && var0.nextFloat() < 0.07f) {
+			var1.setTypeAndData(var2, Blocks.MAGMA_BLOCK.getBlockData(), 3);
+		} else {
+			var1.setTypeAndData(var2, Blocks.NETHERRACK.getBlockData(), 3);
+		}
+	}
 
-    @Override
-    protected void a(String s, BlockPosition blockposition, WorldAccess worldaccess, Random random, StructureBoundingBox structureboundingbox) {}
+	public enum Position {
+		ON_LAND_SURFACE("on_land_surface"),
+		PARTLY_BURIED("partly_buried"),
+		ON_OCEAN_FLOOR("on_ocean_floor"),
+		IN_MOUNTAIN("in_mountain"),
+		UNDERGROUND("underground"),
+		IN_NETHER("in_nether");
 
-    private void a(Random random, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        IBlockData iblockdata = generatoraccess.getType(blockposition);
+		private static final Map<String, Position> g;
 
-        if (!iblockdata.isAir() && !iblockdata.a(Blocks.VINE)) {
-            EnumDirection enumdirection = EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random);
-            BlockPosition blockposition1 = blockposition.shift(enumdirection);
-            IBlockData iblockdata1 = generatoraccess.getType(blockposition1);
+		static {
+			g = Arrays.stream(Position.values()).collect(Collectors.toMap(Position::a, var0 -> var0));
+		}
 
-            if (iblockdata1.isAir()) {
-                if (Block.a(iblockdata.getCollisionShape(generatoraccess, blockposition), enumdirection)) {
-                    BlockStateBoolean blockstateboolean = BlockVine.getDirection(enumdirection.opposite());
+		private final String h;
 
-                    generatoraccess.setTypeAndData(blockposition1, (IBlockData) Blocks.VINE.getBlockData().set(blockstateboolean, true), 3);
-                }
-            }
-        }
-    }
+		Position(String var2) {
+			this.h = var2;
+		}
 
-    private void b(Random random, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        if (random.nextFloat() < 0.5F && generatoraccess.getType(blockposition).a(Blocks.NETHERRACK) && generatoraccess.getType(blockposition.up()).isAir()) {
-            generatoraccess.setTypeAndData(blockposition.up(), (IBlockData) Blocks.JUNGLE_LEAVES.getBlockData().set(BlockLeaves.PERSISTENT, true), 3);
-        }
+		public static Position a(String var0) {
+			return g.get(var0);
+		}
 
-    }
+		public String a() {
+			return this.h;
+		}
+	}
 
-    private void a(Random random, GeneratorAccess generatoraccess) {
-        for (int i = this.n.a + 1; i < this.n.d; ++i) {
-            for (int j = this.n.c + 1; j < this.n.f; ++j) {
-                BlockPosition blockposition = new BlockPosition(i, this.n.b, j);
+	public static class a_ {
+		public static final Codec<a_> a = RecordCodecBuilder.create(builder ->
+			builder.group(
+				Codec.BOOL.fieldOf("cold").forGetter(v -> v.b),
+				Codec.FLOAT.fieldOf("mossiness").forGetter(v -> v.c),
+				Codec.BOOL.fieldOf("air_pocket").forGetter(v -> v.d),
+				Codec.BOOL.fieldOf("overgrown").forGetter(v -> v.e),
+				Codec.BOOL.fieldOf("vines").forGetter(v -> v.f),
+				Codec.BOOL.fieldOf("replace_with_blackstone").forGetter(v -> v.g)
+			).apply(builder, a_::new)
+		);
 
-                if (generatoraccess.getType(blockposition).a(Blocks.NETHERRACK)) {
-                    this.c(random, generatoraccess, blockposition.down());
-                }
-            }
-        }
+		public boolean b;
+		public float c = 0.2f;
+		public boolean d;
+		public boolean e;
+		public boolean f;
+		public boolean g;
 
-    }
+		public a_() {
+		}
 
-    private void c(Random random, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
-
-        this.d(random, generatoraccess, blockposition_mutableblockposition);
-        int i = 8;
-
-        while (i > 0 && random.nextFloat() < 0.5F) {
-            blockposition_mutableblockposition.c(EnumDirection.DOWN);
-            --i;
-            this.d(random, generatoraccess, blockposition_mutableblockposition);
-        }
-
-    }
-
-    private void b(Random random, GeneratorAccess generatoraccess) {
-        boolean flag = this.h == WorldGenFeatureRuinedPortalPieces.Position.ON_LAND_SURFACE || this.h == WorldGenFeatureRuinedPortalPieces.Position.ON_OCEAN_FLOOR;
-        BaseBlockPosition baseblockposition = this.n.g();
-        int i = baseblockposition.getX();
-        int j = baseblockposition.getZ();
-        float[] afloat = new float[]{1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.9F, 0.9F, 0.8F, 0.7F, 0.6F, 0.4F, 0.2F};
-        int k = afloat.length;
-        int l = (this.n.d() + this.n.f()) / 2;
-        int i1 = random.nextInt(Math.max(1, 8 - l / 2));
-        boolean flag1 = true;
-        BlockPosition.MutableBlockPosition blockposition_mutableblockposition = BlockPosition.ZERO.i();
-
-        for (int j1 = i - k; j1 <= i + k; ++j1) {
-            for (int k1 = j - k; k1 <= j + k; ++k1) {
-                int l1 = Math.abs(j1 - i) + Math.abs(k1 - j);
-                int i2 = Math.max(0, l1 + i1);
-
-                if (i2 < k) {
-                    float f = afloat[i2];
-
-                    if (random.nextDouble() < (double) f) {
-                        int j2 = a(generatoraccess, j1, k1, this.h);
-                        int k2 = flag ? j2 : Math.min(this.n.b, j2);
-
-                        blockposition_mutableblockposition.d(j1, k2, k1);
-                        if (Math.abs(k2 - this.n.b) <= 3 && this.a(generatoraccess, (BlockPosition) blockposition_mutableblockposition)) {
-                            this.d(random, generatoraccess, blockposition_mutableblockposition);
-                            if (this.i.e) {
-                                this.b(random, generatoraccess, blockposition_mutableblockposition);
-                            }
-
-                            this.c(random, generatoraccess, blockposition_mutableblockposition.down());
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    private boolean a(GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        IBlockData iblockdata = generatoraccess.getType(blockposition);
-
-        return !iblockdata.a(Blocks.AIR) && !iblockdata.a(Blocks.OBSIDIAN) && !iblockdata.a(Blocks.CHEST) && (this.h == WorldGenFeatureRuinedPortalPieces.Position.IN_NETHER || !iblockdata.a(Blocks.LAVA));
-    }
-
-    private void d(Random random, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        if (!this.i.b && random.nextFloat() < 0.07F) {
-            generatoraccess.setTypeAndData(blockposition, Blocks.MAGMA_BLOCK.getBlockData(), 3);
-        } else {
-            generatoraccess.setTypeAndData(blockposition, Blocks.NETHERRACK.getBlockData(), 3);
-        }
-
-    }
-
-    private static int a(GeneratorAccess generatoraccess, int i, int j, WorldGenFeatureRuinedPortalPieces.Position worldgenfeatureruinedportalpieces_position) {
-        return generatoraccess.a(a(worldgenfeatureruinedportalpieces_position), i, j) - 1;
-    }
-
-    public static HeightMap.Type a(WorldGenFeatureRuinedPortalPieces.Position worldgenfeatureruinedportalpieces_position) {
-        return worldgenfeatureruinedportalpieces_position == WorldGenFeatureRuinedPortalPieces.Position.ON_OCEAN_FLOOR ? HeightMap.Type.OCEAN_FLOOR_WG : HeightMap.Type.WORLD_SURFACE_WG;
-    }
-
-    private static DefinedStructureProcessorPredicates a(Block block, float f, Block block1) {
-        return new DefinedStructureProcessorPredicates(new DefinedStructureTestRandomBlock(block, f), DefinedStructureTestTrue.b, block1.getBlockData());
-    }
-
-    private static DefinedStructureProcessorPredicates a(Block block, Block block1) {
-        return new DefinedStructureProcessorPredicates(new DefinedStructureTestBlock(block), DefinedStructureTestTrue.b, block1.getBlockData());
-    }
-
-    public static enum Position {
-
-        ON_LAND_SURFACE("on_land_surface"), PARTLY_BURIED("partly_buried"), ON_OCEAN_FLOOR("on_ocean_floor"), IN_MOUNTAIN("in_mountain"), UNDERGROUND("underground"), IN_NETHER("in_nether");
-
-        private static final Map<String, WorldGenFeatureRuinedPortalPieces.Position> g = (Map) Arrays.stream(values()).collect(Collectors.toMap(WorldGenFeatureRuinedPortalPieces.Position::a, (worldgenfeatureruinedportalpieces_position) -> {
-            return worldgenfeatureruinedportalpieces_position;
-        }));
-        private final String h;
-
-        private Position(String s) {
-            this.h = s;
-        }
-
-        public String a() {
-            return this.h;
-        }
-
-        public static WorldGenFeatureRuinedPortalPieces.Position a(String s) {
-            return (WorldGenFeatureRuinedPortalPieces.Position) WorldGenFeatureRuinedPortalPieces.Position.g.get(s);
-        }
-    }
-
-    public static class a {
-
-        public static final Codec<WorldGenFeatureRuinedPortalPieces.a> a = RecordCodecBuilder.create((instance) -> {
-            return instance.group(Codec.BOOL.fieldOf("cold").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.b;
-            }), Codec.FLOAT.fieldOf("mossiness").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.c;
-            }), Codec.BOOL.fieldOf("air_pocket").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.d;
-            }), Codec.BOOL.fieldOf("overgrown").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.e;
-            }), Codec.BOOL.fieldOf("vines").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.f;
-            }), Codec.BOOL.fieldOf("replace_with_blackstone").forGetter((worldgenfeatureruinedportalpieces_a) -> {
-                return worldgenfeatureruinedportalpieces_a.g;
-            })).apply(instance, WorldGenFeatureRuinedPortalPieces.a::new);
-        });
-        public boolean b;
-        public float c = 0.2F;
-        public boolean d;
-        public boolean e;
-        public boolean f;
-        public boolean g;
-
-        public a() {}
-
-        public <T> a(boolean flag, float f, boolean flag1, boolean flag2, boolean flag3, boolean flag4) {
-            this.b = flag;
-            this.c = f;
-            this.d = flag1;
-            this.e = flag2;
-            this.f = flag3;
-            this.g = flag4;
-        }
-    }
+		public a_(boolean var0, float var1, boolean var2, boolean var3, boolean var4, boolean var5) {
+			this.b = var0;
+			this.c = var1;
+			this.d = var2;
+			this.e = var3;
+			this.f = var4;
+			this.g = var5;
+		}
+	}
 }

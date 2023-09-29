@@ -66,7 +66,7 @@ public class EntityHorse extends EntityHorseAbstract {
 
     @Override
     protected void eK() {
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue((double) this.fp());
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.fp());
         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.fr());
         this.getAttributeInstance(GenericAttributes.JUMP_STRENGTH).setValue(this.fq());
     }
@@ -116,7 +116,7 @@ public class EntityHorse extends EntityHorseAbstract {
     }
 
     private int getVariantRaw() {
-        return (Integer) this.datawatcher.get(EntityHorse.bx);
+        return this.datawatcher.get(EntityHorse.bx);
     }
 
     public void setVariant(HorseColor horsecolor, HorseStyle horsestyle) {
@@ -148,7 +148,7 @@ public class EntityHorse extends EntityHorseAbstract {
                 int i = ((ItemHorseArmor) itemstack.getItem()).g();
 
                 if (i != 0) {
-                    this.getAttributeInstance(GenericAttributes.ARMOR).b(new AttributeModifier(EntityHorse.bw, "Horse armor bonus", (double) i, AttributeModifier.Operation.ADDITION));
+                    this.getAttributeInstance(GenericAttributes.ARMOR).b(new AttributeModifier(EntityHorse.bw, "Horse armor bonus", i, AttributeModifier.Operation.ADDITION));
                 }
             }
         }
@@ -227,7 +227,7 @@ public class EntityHorse extends EntityHorseAbstract {
                 return this.b(entityhuman, itemstack);
             }
 
-            EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, (EntityLiving) this, enumhand);
+            EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, this, enumhand);
 
             if (enuminteractionresult.a()) {
                 return enuminteractionresult;
@@ -264,11 +264,11 @@ public class EntityHorse extends EntityHorseAbstract {
         EntityHorseAbstract entityhorseabstract;
 
         if (entityageable instanceof EntityHorseDonkey) {
-            entityhorseabstract = (EntityHorseAbstract) EntityTypes.MULE.a((World) worldserver);
+            entityhorseabstract = EntityTypes.MULE.a(worldserver);
         } else {
             EntityHorse entityhorse = (EntityHorse) entityageable;
 
-            entityhorseabstract = (EntityHorseAbstract) EntityTypes.HORSE.a((World) worldserver);
+            entityhorseabstract = EntityTypes.HORSE.a(worldserver);
             int i = this.random.nextInt(9);
             HorseColor horsecolor;
 
@@ -321,7 +321,7 @@ public class EntityHorse extends EntityHorseAbstract {
         }
 
         this.setVariant(horsecolor, (HorseStyle) SystemUtils.a((Object[]) HorseStyle.values(), this.random));
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     public static class a extends EntityAgeable.a {

@@ -168,10 +168,10 @@ public abstract class ChunkMapDistance {
                     this.computeDelayedTicketFor(entry.getLongKey(), tempLevel[0], entry.getValue());
                 }
                 // Tuinity end - delay chunk unloads
-                this.updateTicketLevel(entry.getLongKey(), getLowestTicketLevel((ArraySetSorted) entry.getValue())); // Tuinity - replace ticket level propagator
+                this.updateTicketLevel(entry.getLongKey(), getLowestTicketLevel(entry.getValue())); // Tuinity - replace ticket level propagator
             }
 
-            if (((ArraySetSorted) entry.getValue()).isEmpty()) {
+            if (entry.getValue().isEmpty()) {
                 objectiterator.remove();
             }
 
@@ -181,7 +181,7 @@ public abstract class ChunkMapDistance {
     }
 
     private static int getLowestTicketLevel(ArraySetSorted<Ticket<?>> arraysetsorted) {
-        return !arraysetsorted.isEmpty() ? ((Ticket) arraysetsorted.b()).b() : PlayerChunkMap.GOLDEN_TICKET + 1;
+        return !arraysetsorted.isEmpty() ? arraysetsorted.b().b() : PlayerChunkMap.GOLDEN_TICKET + 1;
     }
 
     protected abstract boolean a(long i);
@@ -284,7 +284,7 @@ public abstract class ChunkMapDistance {
     private boolean addTicket(long i, Ticket<?> ticket) { // CraftBukkit - void -> boolean
         ArraySetSorted<Ticket<?>> arraysetsorted = this.e(i);
         int j = getLowestTicketLevel(arraysetsorted);
-        Ticket<?> ticket1 = (Ticket) arraysetsorted.a(ticket); // CraftBukkit - decompile error
+        Ticket<?> ticket1 = arraysetsorted.a(ticket); // CraftBukkit - decompile error
 
         ticket1.a(this.currentTick);
         if (ticket.b() < j) {
@@ -475,7 +475,7 @@ public abstract class ChunkMapDistance {
     }
 
     private ArraySetSorted<Ticket<?>> e(long i) {
-        return (ArraySetSorted) this.tickets.computeIfAbsent(i, (j) -> {
+        return this.tickets.computeIfAbsent(i, (j) -> {
             return ArraySetSorted.a(4);
         });
     }
@@ -494,16 +494,16 @@ public abstract class ChunkMapDistance {
     public void a(SectionPosition sectionposition, EntityPlayer entityplayer) {
         long i = sectionposition.r().pair();
 
-        ((ObjectSet) this.c.computeIfAbsent(i, (j) -> {
+        this.c.computeIfAbsent(i, (j) -> {
             return new ObjectOpenHashSet();
-        })).add(entityplayer);
+        }).add(entityplayer);
         //this.f.update(i, 0, true); // Paper - no longer used
         //this.g.update(i, 0, true); // Tuinity - no longer used
     }
 
     public void b(SectionPosition sectionposition, EntityPlayer entityplayer) {
         long i = sectionposition.r().pair();
-        ObjectSet<EntityPlayer> objectset = (ObjectSet) this.c.get(i);
+        ObjectSet<EntityPlayer> objectset = this.c.get(i);
         if (objectset == null) return; // CraftBukkit - SPIGOT-6208
 
         if (objectset != null) objectset.remove(entityplayer); // Paper - some state corruption happens here, don't crash, clean up gracefully.
@@ -516,11 +516,11 @@ public abstract class ChunkMapDistance {
     }
 
     protected String c(long i) {
-        ArraySetSorted<Ticket<?>> arraysetsorted = (ArraySetSorted) this.tickets.get(i);
+        ArraySetSorted<Ticket<?>> arraysetsorted = this.tickets.get(i);
         String s;
 
         if (arraysetsorted != null && !arraysetsorted.isEmpty()) {
-            s = ((Ticket) arraysetsorted.b()).toString();
+            s = arraysetsorted.b().toString();
         } else {
             s = "no_ticket";
         }
@@ -578,9 +578,9 @@ public abstract class ChunkMapDistance {
 
         @Override
         protected int b(long i) {
-            ArraySetSorted<Ticket<?>> arraysetsorted = (ArraySetSorted) ChunkMapDistance.this.tickets.get(i);
+            ArraySetSorted<Ticket<?>> arraysetsorted = ChunkMapDistance.this.tickets.get(i);
 
-            return arraysetsorted == null ? Integer.MAX_VALUE : (arraysetsorted.isEmpty() ? Integer.MAX_VALUE : ((Ticket) arraysetsorted.b()).b());
+            return arraysetsorted == null ? Integer.MAX_VALUE : (arraysetsorted.isEmpty() ? Integer.MAX_VALUE : arraysetsorted.b().b());
         }
 
         @Override
@@ -874,7 +874,7 @@ public abstract class ChunkMapDistance {
         }
 
         private boolean d(long i) {
-            ObjectSet<EntityPlayer> objectset = (ObjectSet) ChunkMapDistance.this.c.get(i);
+            ObjectSet<EntityPlayer> objectset = ChunkMapDistance.this.c.get(i);
 
             return objectset != null && !objectset.isEmpty();
         }

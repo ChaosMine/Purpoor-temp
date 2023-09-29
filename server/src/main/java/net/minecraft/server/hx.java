@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Iterator;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.RegistryBlocks;
 import net.minecraft.data.DebugReportGenerator;
@@ -14,58 +11,49 @@ import net.minecraft.data.DebugReportProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.MinecraftKey;
 
+import java.io.IOException;
+
 public class hx implements DebugReportProvider {
+	private static final Gson b = new GsonBuilder().setPrettyPrinting().create();
+	private final DebugReportGenerator c;
 
-    private static final Gson b = (new GsonBuilder()).setPrettyPrinting().create();
-    private final DebugReportGenerator c;
+	public hx(DebugReportGenerator var0) {
+		this.c = var0;
+	}
 
-    public hx(DebugReportGenerator debugreportgenerator) {
-        this.c = debugreportgenerator;
-    }
+	private static <T> JsonElement a(IRegistry<T> var0) {
+		JsonObject var1 = new JsonObject();
+		if (var0 instanceof RegistryBlocks<?> rb) {
+			MinecraftKey var2 = rb.a();
+			var1.addProperty("default", var2.toString());
+		}
 
-    @Override
-    public void a(HashCache hashcache) throws IOException {
-        JsonObject jsonobject = new JsonObject();
+		int var2 = ((IRegistry) IRegistry.f).a(var0);
+		var1.addProperty("protocol_id", var2);
+		JsonObject var3 = new JsonObject();
 
-        IRegistry.f.keySet().forEach((minecraftkey) -> {
-            jsonobject.add(minecraftkey.toString(), a((IRegistry) IRegistry.f.get(minecraftkey)));
-        });
-        Path path = this.c.b().resolve("reports/registries.json");
+		for (MinecraftKey var5 : var0.keySet()) {
+			T var6 = var0.get(var5);
+			int var7 = var0.a(var6);
+			JsonObject var8 = new JsonObject();
+			var8.addProperty("protocol_id", var7);
+			var3.add(var5.toString(), var8);
+		}
 
-        DebugReportProvider.a(hx.b, hashcache, jsonobject, path);
-    }
+		var1.add("entries", var3);
+		return var1;
+	}
 
-    private static <T> JsonElement a(IRegistry<T> iregistry) {
-        JsonObject jsonobject = new JsonObject();
+	@Override
+	public void a(HashCache var0) throws IOException {
+		JsonObject var1 = new JsonObject();
+		IRegistry.f.keySet().forEach(var1x -> var1.add(var1x.toString(), a(IRegistry.f.get(var1x))));
+		java.nio.file.Path var2 = this.c.b().resolve("reports/registries.json");
+		DebugReportProvider.a(b, var0, var1, var2);
+	}
 
-        if (iregistry instanceof RegistryBlocks) {
-            MinecraftKey minecraftkey = ((RegistryBlocks) iregistry).a();
-
-            jsonobject.addProperty("default", minecraftkey.toString());
-        }
-
-        int i = IRegistry.f.a((Object) iregistry);
-
-        jsonobject.addProperty("protocol_id", i);
-        JsonObject jsonobject1 = new JsonObject();
-        Iterator iterator = iregistry.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            MinecraftKey minecraftkey1 = (MinecraftKey) iterator.next();
-            T t0 = iregistry.get(minecraftkey1);
-            int j = iregistry.a(t0);
-            JsonObject jsonobject2 = new JsonObject();
-
-            jsonobject2.addProperty("protocol_id", j);
-            jsonobject1.add(minecraftkey1.toString(), jsonobject2);
-        }
-
-        jsonobject.add("entries", jsonobject1);
-        return jsonobject;
-    }
-
-    @Override
-    public String a() {
-        return "Registry Dump";
-    }
+	@Override
+	public String a() {
+		return "Registry Dump";
+	}
 }

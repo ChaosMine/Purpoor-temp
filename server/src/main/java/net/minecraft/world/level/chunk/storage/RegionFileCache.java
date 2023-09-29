@@ -67,7 +67,7 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
     public synchronized RegionFile getFile(ChunkCoordIntPair chunkcoordintpair, boolean existingOnly, boolean lock) throws IOException {
         // Paper end
         long i = ChunkCoordIntPair.pair(chunkcoordintpair.getRegionX(), chunkcoordintpair.getRegionZ());
-        RegionFile regionfile = (RegionFile) this.cache.getAndMoveToFirst(i);
+        RegionFile regionfile = this.cache.getAndMoveToFirst(i);
 
         if (regionfile != null) {
             // Paper start
@@ -79,7 +79,7 @@ public class RegionFileCache implements AutoCloseable { // Paper - no final
             return regionfile;
         } else {
             if (this.cache.size() >= com.destroystokyo.paper.PaperConfig.regionFileCacheSize) { // Paper - configurable
-                ((RegionFile) this.cache.removeLast()).close();
+                this.cache.removeLast().close();
             }
 
             if (!this.b.exists()) {

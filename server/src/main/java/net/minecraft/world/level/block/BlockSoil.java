@@ -36,7 +36,7 @@ public class BlockSoil extends Block {
 
     protected BlockSoil(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSoil.MOISTURE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockSoil.MOISTURE, 0));
     }
 
     @Override
@@ -80,16 +80,16 @@ public class BlockSoil extends Block {
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        int i = (Integer) iblockdata.get(BlockSoil.MOISTURE);
+        int i = iblockdata.get(BlockSoil.MOISTURE);
 
-        if (!a((IWorldReader) worldserver, blockposition) && !worldserver.isRainingAt(blockposition.up())) {
+        if (!a(worldserver, blockposition) && !worldserver.isRainingAt(blockposition.up())) {
             if (i > 0) {
-                org.bukkit.craftbukkit.event.CraftEventFactory.handleMoistureChangeEvent(worldserver, blockposition, (IBlockData) iblockdata.set(BlockSoil.MOISTURE, i - 1), 2); // CraftBukkit
+                org.bukkit.craftbukkit.event.CraftEventFactory.handleMoistureChangeEvent(worldserver, blockposition, iblockdata.set(BlockSoil.MOISTURE, i - 1), 2); // CraftBukkit
             } else if (!a((IBlockAccess) worldserver, blockposition)) {
                 fade(iblockdata, worldserver, blockposition);
             }
         } else if (i < 7) {
-            org.bukkit.craftbukkit.event.CraftEventFactory.handleMoistureChangeEvent(worldserver, blockposition, (IBlockData) iblockdata.set(BlockSoil.MOISTURE, 7), 2); // CraftBukkit
+            org.bukkit.craftbukkit.event.CraftEventFactory.handleMoistureChangeEvent(worldserver, blockposition, iblockdata.set(BlockSoil.MOISTURE, 7), 2); // CraftBukkit
         }
 
     }

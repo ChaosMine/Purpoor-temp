@@ -185,11 +185,11 @@ public class PacketPlayOutCommands implements Packet<PacketListenerPlayOut> {
         while (iterator.hasNext()) {
             CommandNode<ICompletionProvider> commandnode1 = (CommandNode) iterator.next();
 
-            packetdataserializer.d((Integer) map.get(commandnode1));
+            packetdataserializer.d(map.get(commandnode1));
         }
 
         if (commandnode.getRedirect() != null) {
-            packetdataserializer.d((Integer) map.get(commandnode.getRedirect()));
+            packetdataserializer.d(map.get(commandnode.getRedirect()));
         }
 
         if (commandnode instanceof ArgumentCommandNode) {

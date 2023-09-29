@@ -107,15 +107,15 @@ public class ItemBoneMeal extends Item {
 
                             if (Objects.equals(optional, Optional.of(Biomes.WARM_OCEAN)) || Objects.equals(optional, Optional.of(Biomes.DEEP_WARM_OCEAN))) {
                                 if (i == 0 && enumdirection != null && enumdirection.n().d()) {
-                                    iblockdata = (IBlockData) ((Block) TagsBlock.WALL_CORALS.a(world.random)).getBlockData().set(BlockCoralFanWallAbstract.a, enumdirection);
+                                    iblockdata = TagsBlock.WALL_CORALS.a(world.random).getBlockData().set(BlockCoralFanWallAbstract.a, enumdirection);
                                 } else if (ItemBoneMeal.RANDOM.nextInt(4) == 0) {
-                                    iblockdata = ((Block) TagsBlock.UNDERWATER_BONEMEALS.a(ItemBoneMeal.RANDOM)).getBlockData();
+                                    iblockdata = TagsBlock.UNDERWATER_BONEMEALS.a(ItemBoneMeal.RANDOM).getBlockData();
                                 }
                             }
 
-                            if (iblockdata.getBlock().a((Tag) TagsBlock.WALL_CORALS)) {
+                            if (iblockdata.getBlock().a(TagsBlock.WALL_CORALS)) {
                                 for (int k = 0; !iblockdata.canPlace(world, blockposition1) && k < 4; ++k) {
-                                    iblockdata = (IBlockData) iblockdata.set(BlockCoralFanWallAbstract.a, EnumDirection.EnumDirectionLimit.HORIZONTAL.a(ItemBoneMeal.RANDOM));
+                                    iblockdata = iblockdata.set(BlockCoralFanWallAbstract.a, EnumDirection.EnumDirectionLimit.HORIZONTAL.a(ItemBoneMeal.RANDOM));
                                 }
                             }
 

@@ -31,7 +31,7 @@ public class WorldGenFeatureShipwreck extends StructureGenerator<WorldGenFeature
         }
 
         public void a(IRegistryCustom iregistrycustom, ChunkGenerator chunkgenerator, DefinedStructureManager definedstructuremanager, int i, int j, BiomeBase biomebase, WorldGenFeatureShipwreckConfiguration worldgenfeatureshipwreckconfiguration) {
-            EnumBlockRotation enumblockrotation = EnumBlockRotation.a((Random) this.d);
+            EnumBlockRotation enumblockrotation = EnumBlockRotation.a(this.d);
             BlockPosition blockposition = new BlockPosition(i * 16, 90, j * 16);
 
             WorldGenShipwreck.a(definedstructuremanager, blockposition, enumblockrotation, this.b, this.d, worldgenfeatureshipwreckconfiguration);

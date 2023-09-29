@@ -179,13 +179,13 @@ public class EntityVex extends EntityMonster {
     }
 
     private boolean b(int i) {
-        byte b0 = (Byte) this.datawatcher.get(EntityVex.b);
+        byte b0 = this.datawatcher.get(EntityVex.b);
 
         return (b0 & i) != 0;
     }
 
     private void a(int i, boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityVex.b);
+        byte b0 = this.datawatcher.get(EntityVex.b);
         int j;
 
         if (flag) {
@@ -316,7 +316,7 @@ public class EntityVex extends EntityMonster {
 
         @Override
         public boolean a() {
-            return EntityVex.this.getGoalTarget() != null && !EntityVex.this.getControllerMove().b() && EntityVex.this.random.nextInt(7) == 0 ? EntityVex.this.h((Entity) EntityVex.this.getGoalTarget()) > 4.0D : false;
+            return EntityVex.this.getGoalTarget() != null && !EntityVex.this.getControllerMove().b() && EntityVex.this.random.nextInt(7) == 0 ? EntityVex.this.h(EntityVex.this.getGoalTarget()) > 4.0D : false;
         }
 
         @Override
@@ -347,7 +347,7 @@ public class EntityVex extends EntityMonster {
                 EntityVex.this.attackEntity(entityliving);
                 EntityVex.this.setCharging(false);
             } else {
-                double d0 = EntityVex.this.h((Entity) entityliving);
+                double d0 = EntityVex.this.h(entityliving);
 
                 if (d0 < 9.0D) {
                     Vec3D vec3d = entityliving.j(1.0F);

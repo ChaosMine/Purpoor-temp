@@ -37,7 +37,7 @@ public abstract class EntityFireballFireball extends EntityFireball {
     }
 
     public ItemStack getItem() {
-        return (ItemStack) this.getDataWatcher().get(EntityFireballFireball.e);
+        return this.getDataWatcher().get(EntityFireballFireball.e);
     }
 
     @Override

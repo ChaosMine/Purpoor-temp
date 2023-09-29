@@ -181,7 +181,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         this.goalSelector.a(0, new EntityBee.b(this, 1.399999976158142D, true));
         this.goalSelector.a(1, new EntityBee.d());
         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
-        this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.25D, RecipeItemStack.a((Tag) TagsItem.FLOWERS), false));
+        this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.25D, RecipeItemStack.a(TagsItem.FLOWERS), false));
         this.bC = new EntityBee.k();
         this.goalSelector.a(4, this.bC);
         this.goalSelector.a(5, new PathfinderGoalFollowParent(this, 1.25D));
@@ -244,7 +244,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
         boolean flag = entity.damageEntity(DamageSource.b(this), (float) ((int) this.b(GenericAttributes.ATTACK_DAMAGE)));
 
         if (flag) {
-            this.a((EntityLiving) this, entity);
+            this.a(this, entity);
             if (entity instanceof EntityLiving) {
                 ((EntityLiving) entity).q(((EntityLiving) entity).dz() + 1);
                 byte b0 = 0;
@@ -285,7 +285,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
     }
 
     private void h(BlockPosition blockposition) {
-        Vec3D vec3d = Vec3D.c((BaseBlockPosition) blockposition);
+        Vec3D vec3d = Vec3D.c(blockposition);
         byte b0 = 0;
         BlockPosition blockposition1 = this.getChunkCoordinates();
         int i = (int) vec3d.y - blockposition1.getY();
@@ -402,7 +402,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     @Override
     public int getAnger() {
-        return (Integer) this.datawatcher.get(EntityBee.bp);
+        return this.datawatcher.get(EntityBee.bp);
     }
 
     @Override
@@ -475,7 +475,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                 --this.bz;
             }
 
-            boolean flag = this.isAngry() && !this.hasStung() && this.getGoalTarget() != null && this.getGoalTarget().h((Entity) this) < 4.0D;
+            boolean flag = this.isAngry() && !this.hasStung() && this.getGoalTarget() != null && this.getGoalTarget().h(this) < 4.0D;
 
             this.v(flag);
             if (this.ticksLived % 20 == 0 && !this.fj()) {
@@ -530,15 +530,15 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     private void d(int i, boolean flag) {
         if (flag) {
-            this.datawatcher.set(EntityBee.bo, (byte) ((Byte) this.datawatcher.get(EntityBee.bo) | i));
+            this.datawatcher.set(EntityBee.bo, (byte) (this.datawatcher.get(EntityBee.bo) | i));
         } else {
-            this.datawatcher.set(EntityBee.bo, (byte) ((Byte) this.datawatcher.get(EntityBee.bo) & ~i));
+            this.datawatcher.set(EntityBee.bo, (byte) (this.datawatcher.get(EntityBee.bo) & ~i));
         }
 
     }
 
     private boolean u(int i) {
-        return ((Byte) this.datawatcher.get(EntityBee.bo) & i) != 0;
+        return (this.datawatcher.get(EntityBee.bo) & i) != 0;
     }
 
     public static AttributeProvider.Builder eZ() {
@@ -569,11 +569,11 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     @Override
     public boolean k(ItemStack itemstack) {
-        return itemstack.getItem().a((Tag) TagsItem.FLOWERS);
+        return itemstack.getItem().a(TagsItem.FLOWERS);
     }
 
     private boolean k(BlockPosition blockposition) {
-        return this.world.p(blockposition) && this.world.getType(blockposition).getBlock().a((Tag) TagsBlock.FLOWERS);
+        return this.world.p(blockposition) && this.world.getType(blockposition).getBlock().a(TagsBlock.FLOWERS);
     }
 
     @Override
@@ -601,7 +601,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
     @Override
     public EntityBee createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityBee) EntityTypes.BEE.a((World) worldserver);
+        return EntityTypes.BEE.a(worldserver);
     }
 
     @Override
@@ -657,7 +657,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
     }
 
     private boolean b(BlockPosition blockposition, int i) {
-        return blockposition.a((BaseBlockPosition) this.getChunkCoordinates(), (double) i);
+        return blockposition.a(this.getChunkCoordinates(), i);
     }
 
     class d extends EntityBee.a {
@@ -669,7 +669,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         @Override
         public boolean g() {
-            if (EntityBee.this.hasHivePos() && EntityBee.this.fd() && EntityBee.this.hivePos.a((IPosition) EntityBee.this.getPositionVector(), 2.0D)) {
+            if (EntityBee.this.hasHivePos() && EntityBee.this.fd() && EntityBee.this.hivePos.a(EntityBee.this.getPositionVector(), 2.0D)) {
                 if (!EntityBee.this.world.isLoadedAndInBounds(EntityBee.this.hivePos)) return false; // Paper
                 TileEntity tileentity = EntityBee.this.world.getTileEntity(EntityBee.this.hivePos);
 
@@ -750,7 +750,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                     boolean flag = false;
                     BlockStateInteger blockstateinteger = null;
 
-                    if (block.a((Tag) TagsBlock.BEE_GROWABLES)) {
+                    if (block.a(TagsBlock.BEE_GROWABLES)) {
                         if (block instanceof BlockCrops) {
                             BlockCrops blockcrops = (BlockCrops) block;
 
@@ -762,13 +762,13 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                             int j;
 
                             if (block instanceof BlockStem) {
-                                j = (Integer) iblockdata.get(BlockStem.AGE);
+                                j = iblockdata.get(BlockStem.AGE);
                                 if (j < 7) {
                                     flag = true;
                                     blockstateinteger = BlockStem.AGE;
                                 }
                             } else if (block == Blocks.SWEET_BERRY_BUSH) {
-                                j = (Integer) iblockdata.get(BlockSweetBerryBush.a);
+                                j = iblockdata.get(BlockSweetBerryBush.a);
                                 if (j < 3) {
                                     flag = true;
                                     blockstateinteger = BlockSweetBerryBush.a;
@@ -776,9 +776,9 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                             }
                         }
 
-                        if (flag && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(EntityBee.this, blockposition, iblockdata.set(blockstateinteger, (Integer) iblockdata.get(blockstateinteger) + 1)).isCancelled()) { // Spigot
+                        if (flag && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(EntityBee.this, blockposition, iblockdata.set(blockstateinteger, iblockdata.get(blockstateinteger) + 1)).isCancelled()) { // Spigot
                             EntityBee.this.world.triggerEffect(2005, blockposition, 0);
-                            EntityBee.this.world.setTypeUpdate(blockposition, (IBlockData) iblockdata.set(blockstateinteger, (Integer) iblockdata.get(blockstateinteger) + 1));
+                            EntityBee.this.world.setTypeUpdate(blockposition, iblockdata.set(blockstateinteger, iblockdata.get(blockstateinteger) + 1));
                             EntityBee.this.fi();
                         }
                     }
@@ -818,7 +818,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                 do {
                     if (!iterator.hasNext()) {
                         EntityBee.this.bD.j();
-                        EntityBee.this.hivePos = (BlockPosition) list.get(0);
+                        EntityBee.this.hivePos = list.get(0);
                         return;
                     }
 
@@ -836,18 +836,18 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                 return villageplacetype == VillagePlaceType.t || villageplacetype == VillagePlaceType.u;
             }, blockposition, 20, VillagePlace.Occupancy.ANY);
 
-            return (List) stream.map(VillagePlaceRecord::f).filter((blockposition1) -> {
+            return stream.map(VillagePlaceRecord::f).filter((blockposition1) -> {
                 return EntityBee.this.i(blockposition1);
             }).sorted(Comparator.comparingDouble((blockposition1) -> {
                 return blockposition1.j(blockposition);
-            })).collect(Collectors.toList());
+            })).toList();
         }
     }
 
     class k extends EntityBee.a {
 
         private final Predicate<IBlockData> c = (iblockdata) -> {
-            return iblockdata.a((Tag) TagsBlock.TALL_FLOWERS) ? (iblockdata.a(Blocks.SUNFLOWER) ? iblockdata.get(BlockTallPlant.HALF) == BlockPropertyDoubleBlockHalf.UPPER : true) : iblockdata.a((Tag) TagsBlock.SMALL_FLOWERS);
+            return iblockdata.a(TagsBlock.TALL_FLOWERS) ? (iblockdata.a(Blocks.SUNFLOWER) ? iblockdata.get(BlockTallPlant.HALF) == BlockPropertyDoubleBlockHalf.UPPER : true) : iblockdata.a(TagsBlock.SMALL_FLOWERS);
         };
         private int d = 0;
         private int e = 0;
@@ -874,7 +874,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                 Optional<BlockPosition> optional = this.o();
 
                 if (optional.isPresent()) {
-                    EntityBee.this.flowerPos = (BlockPosition) optional.get();
+                    EntityBee.this.flowerPos = optional.get();
                     EntityBee.this.navigation.a((double) EntityBee.this.flowerPos.getX() + 0.5D, (double) EntityBee.this.flowerPos.getY() + 0.5D, (double) EntityBee.this.flowerPos.getZ() + 0.5D, 1.2000000476837158D);
                     return true;
                 } else {
@@ -939,7 +939,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
             if (this.h > 600) {
                 EntityBee.this.flowerPos = null;
             } else {
-                Vec3D vec3d = Vec3D.c((BaseBlockPosition) EntityBee.this.flowerPos).add(0.0D, 0.6000000238418579D, 0.0D);
+                Vec3D vec3d = Vec3D.c(EntityBee.this.flowerPos).add(0.0D, 0.6000000238418579D, 0.0D);
 
                 if (vec3d.f(EntityBee.this.getPositionVector()) > 1.0D) {
                     this.g = vec3d;
@@ -1004,7 +1004,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
                     for (int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
                         for (int l = k < j && k > -j ? j : 0; l <= j; l = l > 0 ? -l : 1 - l) {
                             blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, k, i - 1, l);
-                            if (blockposition.a((BaseBlockPosition) blockposition_mutableblockposition, d0) && predicate.test(EntityBee.this.world.getType(blockposition_mutableblockposition))) {
+                            if (blockposition.a(blockposition_mutableblockposition, d0) && predicate.test(EntityBee.this.world.getType(blockposition_mutableblockposition))) {
                                 return Optional.of(blockposition_mutableblockposition);
                             }
                         }
@@ -1107,7 +1107,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         @Override
         public boolean g() {
-            return EntityBee.this.hivePos != null && !EntityBee.this.ez() && EntityBee.this.fd() && !this.d(EntityBee.this.hivePos) && EntityBee.this.world.getType(EntityBee.this.hivePos).a((Tag) TagsBlock.BEEHIVES);
+            return EntityBee.this.hivePos != null && !EntityBee.this.ez() && EntityBee.this.fd() && !this.d(EntityBee.this.hivePos) && EntityBee.this.world.getType(EntityBee.this.hivePos).a(TagsBlock.BEEHIVES);
         }
 
         @Override
@@ -1165,7 +1165,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
 
         private boolean a(BlockPosition blockposition) {
             EntityBee.this.navigation.a(10.0F);
-            EntityBee.this.navigation.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0D);
+            EntityBee.this.navigation.a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), 1.0D);
             return EntityBee.this.navigation.k() != null && EntityBee.this.navigation.k().j();
         }
 
@@ -1241,7 +1241,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
             Vec3D vec3d;
 
             if (EntityBee.this.fj() && !EntityBee.this.b(EntityBee.this.hivePos, 22)) {
-                Vec3D vec3d1 = Vec3D.a((BaseBlockPosition) EntityBee.this.hivePos);
+                Vec3D vec3d1 = Vec3D.a(EntityBee.this.hivePos);
 
                 vec3d = vec3d1.d(EntityBee.this.getPositionVector()).d();
             } else {
@@ -1251,7 +1251,7 @@ public class EntityBee extends EntityAnimal implements IEntityAngerable, EntityB
             boolean flag = true;
             Vec3D vec3d2 = RandomPositionGenerator.a(EntityBee.this, 8, 7, vec3d, 1.5707964F, 2, 1);
 
-            return vec3d2 != null ? vec3d2 : RandomPositionGenerator.a((EntityCreature) EntityBee.this, 8, 4, -2, vec3d, 1.5707963705062866D);
+            return vec3d2 != null ? vec3d2 : RandomPositionGenerator.a(EntityBee.this, 8, 4, -2, vec3d, 1.5707963705062866D);
         }
     }
 

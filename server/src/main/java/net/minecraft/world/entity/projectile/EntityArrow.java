@@ -117,7 +117,7 @@ public abstract class EntityArrow extends IProjectile {
             float f = MathHelper.sqrt(c(vec3d));
 
             this.yaw = (float) (MathHelper.d(vec3d.x, vec3d.z) * 57.2957763671875D);
-            this.pitch = (float) (MathHelper.d(vec3d.y, (double) f) * 57.2957763671875D);
+            this.pitch = (float) (MathHelper.d(vec3d.y, f) * 57.2957763671875D);
             this.lastYaw = this.yaw;
             this.lastPitch = this.pitch;
         }
@@ -234,7 +234,7 @@ public abstract class EntityArrow extends IProjectile {
                 this.yaw = (float) (MathHelper.d(d0, d2) * 57.2957763671875D);
             }
 
-            this.pitch = (float) (MathHelper.d(d1, (double) f1) * 57.2957763671875D);
+            this.pitch = (float) (MathHelper.d(d1, f1) * 57.2957763671875D);
             this.pitch = e(this.lastPitch, this.pitch);
             this.yaw = e(this.lastYaw, this.yaw);
             float f2 = 0.99F;
@@ -270,7 +270,7 @@ public abstract class EntityArrow extends IProjectile {
         this.inGround = false;
         Vec3D vec3d = this.getMot();
 
-        this.setMot(vec3d.d((double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
+        this.setMot(vec3d.d(this.random.nextFloat() * 0.2F, this.random.nextFloat() * 0.2F, this.random.nextFloat() * 0.2F));
         // this.despawnCounter = 0; // Purpur - do not reset despawn counter
     }
 
@@ -338,7 +338,7 @@ public abstract class EntityArrow extends IProjectile {
         }
 
         if (this.isCritical()) {
-            long j = (long) this.random.nextInt(i / 2 + 2);
+            long j = this.random.nextInt(i / 2 + 2);
 
             i = (int) Math.min(j + (long) i, 2147483647L);
         }
@@ -390,7 +390,7 @@ public abstract class EntityArrow extends IProjectile {
 
                 if (!this.world.isClientSide && entity1 instanceof EntityLiving) {
                     EnchantmentManager.a(entityliving, entity1);
-                    EnchantmentManager.b((EntityLiving) entity1, (Entity) entityliving);
+                    EnchantmentManager.b((EntityLiving) entity1, entityliving);
                 }
 
                 this.a(entityliving);
@@ -406,9 +406,9 @@ public abstract class EntityArrow extends IProjectile {
                     EntityPlayer entityplayer = (EntityPlayer) entity1;
 
                     if (this.am != null && this.isShotFromCrossbow()) {
-                        CriterionTriggers.G.a(entityplayer, (Collection) this.am);
+                        CriterionTriggers.G.a(entityplayer, this.am);
                     } else if (!entity.isAlive() && this.isShotFromCrossbow()) {
-                        CriterionTriggers.G.a(entityplayer, (Collection) Arrays.asList(entity));
+                        CriterionTriggers.G.a(entityplayer, Arrays.asList(entity));
                     }
                 }
             }
@@ -514,7 +514,7 @@ public abstract class EntityArrow extends IProjectile {
         this.setCritical(nbttagcompound.getBoolean("crit"));
         this.setPierceLevel(nbttagcompound.getByte("PierceLevel"));
         if (nbttagcompound.hasKeyOfType("SoundEvent", 8)) {
-            this.ak = (SoundEffect) IRegistry.SOUND_EVENT.getOptional(new MinecraftKey(nbttagcompound.getString("SoundEvent"))).orElse(this.i());
+            this.ak = IRegistry.SOUND_EVENT.getOptional(new MinecraftKey(nbttagcompound.getString("SoundEvent"))).orElse(this.i());
         }
 
         this.setShotFromCrossbow(nbttagcompound.getBoolean("ShotFromCrossbow"));
@@ -600,7 +600,7 @@ public abstract class EntityArrow extends IProjectile {
     }
 
     private void a(int i, boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityArrow.f);
+        byte b0 = this.datawatcher.get(EntityArrow.f);
 
         if (flag) {
             this.datawatcher.set(EntityArrow.f, (byte) (b0 | i));
@@ -611,19 +611,19 @@ public abstract class EntityArrow extends IProjectile {
     }
 
     public boolean isCritical() {
-        byte b0 = (Byte) this.datawatcher.get(EntityArrow.f);
+        byte b0 = this.datawatcher.get(EntityArrow.f);
 
         return (b0 & 1) != 0;
     }
 
     public boolean isShotFromCrossbow() {
-        byte b0 = (Byte) this.datawatcher.get(EntityArrow.f);
+        byte b0 = this.datawatcher.get(EntityArrow.f);
 
         return (b0 & 4) != 0;
     }
 
     public byte getPierceLevel() {
-        return (Byte) this.datawatcher.get(EntityArrow.g);
+        return this.datawatcher.get(EntityArrow.g);
     }
 
     public void a(EntityLiving entityliving, float f) {
@@ -655,7 +655,7 @@ public abstract class EntityArrow extends IProjectile {
     }
 
     public boolean t() {
-        return !this.world.isClientSide ? this.noclip : ((Byte) this.datawatcher.get(EntityArrow.f) & 2) != 0;
+        return !this.world.isClientSide ? this.noclip : (this.datawatcher.get(EntityArrow.f) & 2) != 0;
     }
 
     public void setShotFromCrossbow(boolean flag) {

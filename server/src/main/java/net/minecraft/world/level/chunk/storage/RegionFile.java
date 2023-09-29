@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.level.chunk.storage;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -126,7 +125,7 @@ public class RegionFile implements AutoCloseable {
 
             // search the regionfile from start to finish for the most up-to-date chunk data
 
-            for (long i = 2, maxSector = Math.min((long)(Integer.MAX_VALUE >>> 8), totalSectors); i < maxSector; ++i) { // first two sectors are header, skip
+            for (long i = 2, maxSector = Math.min(Integer.MAX_VALUE >>> 8, totalSectors); i < maxSector; ++i) { // first two sectors are header, skip
                 int chunkDataLength = this.getLength(i);
                 NBTTagCompound compound = this.attemptRead(i, chunkDataLength, fileLength);
                 if (compound == null || compound == OVERSIZED_COMPOUND) {
@@ -573,7 +572,7 @@ public class RegionFile implements AutoCloseable {
             int l = k * 4096;
             ByteBuffer bytebuffer = ByteBuffer.allocate(l);
 
-            this.dataFile.read(bytebuffer, (long) (j * 4096));
+            this.dataFile.read(bytebuffer, j * 4096);
             ((java.nio.Buffer) bytebuffer).flip(); // CraftBukkit - decompile error
             if (bytebuffer.remaining() < 5) {
                 RegionFile.LOGGER.error("Chunk {} header is truncated: expected {} but read {}", chunkcoordintpair, l, bytebuffer.remaining());
@@ -715,7 +714,7 @@ public class RegionFile implements AutoCloseable {
             ByteBuffer bytebuffer = ByteBuffer.allocate(5);
 
             try {
-                this.dataFile.read(bytebuffer, (long) (j * 4096));
+                this.dataFile.read(bytebuffer, j * 4096);
                 ((java.nio.Buffer) bytebuffer).flip(); // CraftBukkit - decompile error
                 if (bytebuffer.remaining() != 5) {
                     return false;
@@ -757,7 +756,7 @@ public class RegionFile implements AutoCloseable {
     }
 
     public DataOutputStream c(ChunkCoordIntPair chunkcoordintpair) throws IOException {
-        return new DataOutputStream(new BufferedOutputStream(this.f.a((OutputStream) (new RegionFile.ChunkBuffer(chunkcoordintpair)))));
+        return new DataOutputStream(new BufferedOutputStream(this.f.a(new ChunkBuffer(chunkcoordintpair))));
     }
 
     public void a() throws IOException {
@@ -783,13 +782,13 @@ public class RegionFile implements AutoCloseable {
             regionfile_b = this.a(path, bytebuffer);
             ByteBuffer bytebuffer1 = this.b();
 
-            this.dataFile.write(bytebuffer1, (long) (k1 * 4096));
+            this.dataFile.write(bytebuffer1, k1 * 4096);
         } else {
             k1 = this.freeSectors.a(j1);
             regionfile_b = () -> {
                 Files.deleteIfExists(this.e(chunkcoordintpair));
             };
-            this.dataFile.write(bytebuffer, (long) (k1 * 4096));
+            this.dataFile.write(bytebuffer, k1 * 4096);
         }
 
         int l1 = (int) (SystemUtils.getTimeMillis() / 1000L);
@@ -819,7 +818,7 @@ public class RegionFile implements AutoCloseable {
     }
 
     private RegionFile.b a(Path path, ByteBuffer bytebuffer) throws IOException {
-        Path path1 = Files.createTempFile(this.e, "tmp", (String) null);
+        Path path1 = Files.createTempFile(this.e, "tmp", null);
         FileChannel filechannel = FileChannel.open(path1, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         Throwable throwable = null;
 
@@ -900,7 +899,7 @@ public class RegionFile implements AutoCloseable {
             ByteBuffer bytebuffer = RegionFile.c.duplicate();
 
             ((java.nio.Buffer) bytebuffer).position(0); // CraftBukkit - decompile error
-            this.dataFile.write(bytebuffer, (long) (j - 1));
+            this.dataFile.write(bytebuffer, j - 1);
         }
 
     }

@@ -3,7 +3,6 @@ package net.minecraft.advancements.critereon;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityLiving;
 
 public class CriterionTriggerEffectsChanged extends CriterionTriggerAbstract<CriterionTriggerEffectsChanged.a> {
 
@@ -17,7 +16,7 @@ public class CriterionTriggerEffectsChanged extends CriterionTriggerAbstract<Cri
     }
 
     @Override
-    public CriterionTriggerEffectsChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerEffectsChanged.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionMobEffect criterionconditionmobeffect = CriterionConditionMobEffect.a(jsonobject.get("effects"));
 
         return new CriterionTriggerEffectsChanged.a(criterionconditionentity_b, criterionconditionmobeffect);
@@ -33,17 +32,17 @@ public class CriterionTriggerEffectsChanged extends CriterionTriggerAbstract<Cri
 
         private final CriterionConditionMobEffect a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionMobEffect criterionconditionmobeffect) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionMobEffect criterionconditionmobeffect) {
             super(CriterionTriggerEffectsChanged.a, criterionconditionentity_b);
             this.a = criterionconditionmobeffect;
         }
 
         public static CriterionTriggerEffectsChanged.a a(CriterionConditionMobEffect criterionconditionmobeffect) {
-            return new CriterionTriggerEffectsChanged.a(CriterionConditionEntity.b.a, criterionconditionmobeffect);
+            return new CriterionTriggerEffectsChanged.a(CriterionConditionEntity.b_.a, criterionconditionmobeffect);
         }
 
         public boolean a(EntityPlayer entityplayer) {
-            return this.a.a((EntityLiving) entityplayer);
+            return this.a.a(entityplayer);
         }
 
         @Override

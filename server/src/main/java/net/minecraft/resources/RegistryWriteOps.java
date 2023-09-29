@@ -25,11 +25,11 @@ public class RegistryWriteOps<T> extends DynamicOpsWrapper<T> {
         Optional<IRegistryWritable<E>> optional = this.b.a(resourcekey);
 
         if (optional.isPresent()) {
-            IRegistryWritable<E> iregistrywritable = (IRegistryWritable) optional.get();
+            IRegistryWritable<E> iregistrywritable = optional.get();
             Optional<ResourceKey<E>> optional1 = iregistrywritable.c(e0);
 
             if (optional1.isPresent()) {
-                ResourceKey<E> resourcekey1 = (ResourceKey) optional1.get();
+                ResourceKey<E> resourcekey1 = optional1.get();
 
                 return MinecraftKey.a.encode(resourcekey1.a(), this.a, t0);
             }

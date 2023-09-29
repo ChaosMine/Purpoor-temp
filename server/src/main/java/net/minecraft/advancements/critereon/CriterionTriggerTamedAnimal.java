@@ -18,8 +18,8 @@ public class CriterionTriggerTamedAnimal extends CriterionTriggerAbstract<Criter
     }
 
     @Override
-    public CriterionTriggerTamedAnimal.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "entity", lootdeserializationcontext);
+    public CriterionTriggerTamedAnimal.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "entity", lootdeserializationcontext);
 
         return new CriterionTriggerTamedAnimal.a(criterionconditionentity_b, criterionconditionentity_b1);
     }
@@ -34,19 +34,19 @@ public class CriterionTriggerTamedAnimal extends CriterionTriggerAbstract<Criter
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
+        private final CriterionConditionEntity.b_ a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1) {
             super(CriterionTriggerTamedAnimal.a, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
         }
 
         public static CriterionTriggerTamedAnimal.a c() {
-            return new CriterionTriggerTamedAnimal.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a);
+            return new CriterionTriggerTamedAnimal.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a);
         }
 
         public static CriterionTriggerTamedAnimal.a a(CriterionConditionEntity criterionconditionentity) {
-            return new CriterionTriggerTamedAnimal.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity));
+            return new CriterionTriggerTamedAnimal.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity));
         }
 
         public boolean a(LootTableInfo loottableinfo) {

@@ -301,12 +301,12 @@ public final class PlayerChunkLoader {
 
     protected int getMaxChunkLoads() {
         double config = TuinityConfig.playerMaxConcurrentChunkLoads;
-        return Math.max(1, (config <= 0 ? (int)Math.ceil(-config * MinecraftServer.getServer().getPlayerCount()) : (int)config) * 9);
+        return Math.max(1, (config <= 0 ? (int)Math.ceil(-config * MinecraftServer.SERVER.getPlayerCount()) : (int)config) * 9);
     }
 
     protected double getTargetSendRatePerPlayer() {
         double config = TuinityConfig.playerTargetChunkSendRate;
-        return config <= 0 ? -config : config / MinecraftServer.getServer().getPlayerCount();
+        return config <= 0 ? -config : config / MinecraftServer.SERVER.getPlayerCount();
     }
 
     public void onChunkPlayerTickReady(final int chunkX, final int chunkZ) {
@@ -869,15 +869,15 @@ public final class PlayerChunkLoader {
             final double p1z = posZ;
 
             // to the left of the looking direction
-            final double p2x = PRIORITISED_DISTANCE * Math.cos(Math.toRadians(yaw + (double)(FOV / 2.0))) // calculate rotated vector
+            final double p2x = PRIORITISED_DISTANCE * Math.cos(Math.toRadians(yaw + (FOV / 2.0))) // calculate rotated vector
                     + p1x; // offset vector
-            final double p2z = PRIORITISED_DISTANCE * Math.sin(Math.toRadians(yaw + (double)(FOV / 2.0))) // calculate rotated vector
+            final double p2z = PRIORITISED_DISTANCE * Math.sin(Math.toRadians(yaw + (FOV / 2.0))) // calculate rotated vector
                     + p1z; // offset vector
 
             // to the right of the looking direction
-            final double p3x = PRIORITISED_DISTANCE * Math.cos(Math.toRadians(yaw - (double)(FOV / 2.0))) // calculate rotated vector
+            final double p3x = PRIORITISED_DISTANCE * Math.cos(Math.toRadians(yaw - (FOV / 2.0))) // calculate rotated vector
                     + p1x; // offset vector
-            final double p3z = PRIORITISED_DISTANCE * Math.sin(Math.toRadians(yaw - (double)(FOV / 2.0))) // calculate rotated vector
+            final double p3z = PRIORITISED_DISTANCE * Math.sin(Math.toRadians(yaw - (FOV / 2.0))) // calculate rotated vector
                     + p1z; // offset vector
 
             // now that we have all of our points, we can recalculate the load queue
@@ -908,7 +908,7 @@ public final class PlayerChunkLoader {
                             p1x, p1z, p2x, p2z, p3x, p3z,
 
                             // center of chunk
-                            (double)((chunkX << 4) | 8), (double)((chunkZ << 4) | 8)
+                            (chunkX << 4) | 8, (chunkZ << 4) | 8
                     );
 
 
@@ -926,7 +926,7 @@ public final class PlayerChunkLoader {
                             // will be loaded if the player changes direction
                             priority = (double)manhattanDistance / 6.0;
                         } else {
-                            priority = (double)manhattanDistance;
+                            priority = manhattanDistance;
                         }
                     }
 

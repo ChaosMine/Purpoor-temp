@@ -30,15 +30,15 @@ public class BehaviorPositionValidate extends Behavior<EntityLiving> {
 
     @Override
     protected boolean a(WorldServer worldserver, EntityLiving entityliving) {
-        GlobalPos globalpos = (GlobalPos) entityliving.getBehaviorController().getMemory(this.b).get();
+        GlobalPos globalpos = entityliving.getBehaviorController().getMemory(this.b).get();
 
-        return worldserver.getDimensionKey() == globalpos.getDimensionManager() && globalpos.getBlockPosition().a((IPosition) entityliving.getPositionVector(), 16.0D);
+        return worldserver.getDimensionKey() == globalpos.getDimensionManager() && globalpos.getBlockPosition().a(entityliving.getPositionVector(), 16.0D);
     }
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
-        GlobalPos globalpos = (GlobalPos) behaviorcontroller.getMemory(this.b).get();
+        GlobalPos globalpos = behaviorcontroller.getMemory(this.b).get();
         BlockPosition blockposition = globalpos.getBlockPosition();
         WorldServer worldserver1 = worldserver.getMinecraftServer().getWorldServer(globalpos.getDimensionManager());
 
@@ -57,7 +57,7 @@ public class BehaviorPositionValidate extends Behavior<EntityLiving> {
     private boolean a(WorldServer worldserver, BlockPosition blockposition, EntityLiving entityliving) {
         IBlockData iblockdata = worldserver.getType(blockposition);
 
-        return iblockdata.getBlock().a((Tag) TagsBlock.BEDS) && (Boolean) iblockdata.get(BlockBed.OCCUPIED) && !entityliving.isSleeping();
+        return iblockdata.getBlock().a(TagsBlock.BEDS) && iblockdata.get(BlockBed.OCCUPIED) && !entityliving.isSleeping();
     }
 
     private boolean a(WorldServer worldserver, BlockPosition blockposition) {

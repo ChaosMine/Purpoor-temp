@@ -13,7 +13,7 @@ public class WorldGenFeatureTrees<P extends WorldGenFeatureTree> {
     private final Codec<P> f;
 
     private static <P extends WorldGenFeatureTree> WorldGenFeatureTrees<P> a(String s, Codec<P> codec) {
-        return (WorldGenFeatureTrees) IRegistry.a(IRegistry.TREE_DECORATOR_TYPE, s, (Object) (new WorldGenFeatureTrees<>(codec)));
+        return IRegistry.a(IRegistry.TREE_DECORATOR_TYPE, s, new WorldGenFeatureTrees<>(codec));
     }
 
     private WorldGenFeatureTrees(Codec<P> codec) {

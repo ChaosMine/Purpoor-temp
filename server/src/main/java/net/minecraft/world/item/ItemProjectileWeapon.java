@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityLiving;
 public abstract class ItemProjectileWeapon extends Item {
 
     public static final Predicate<ItemStack> a = (itemstack) -> {
-        return itemstack.getItem().a((Tag) TagsItem.ARROWS);
+        return itemstack.getItem().a(TagsItem.ARROWS);
     };
     public static final Predicate<ItemStack> b = ItemProjectileWeapon.a.or((itemstack) -> {
         return itemstack.getItem() == Items.FIREWORK_ROCKET;

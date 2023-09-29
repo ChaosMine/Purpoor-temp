@@ -53,7 +53,7 @@ public class TileEntityCommand extends TileEntity {
 
         @Override
         public CommandListenerWrapper getWrapper() {
-            return new CommandListenerWrapper(this, Vec3D.a((BaseBlockPosition) TileEntityCommand.this.position), Vec2F.a, this.d(), 2, this.getName().getString(), this.getName(), this.d().getMinecraftServer(), (Entity) null);
+            return new CommandListenerWrapper(this, Vec3D.a(TileEntityCommand.this.position), Vec2F.a, this.d(), 2, this.getName().getString(), this.getName(), this.d().getMinecraftServer(), null);
         }
     };
 
@@ -150,7 +150,7 @@ public class TileEntityCommand extends TileEntity {
     public boolean k() {
         this.c = true;
         if (this.x()) {
-            BlockPosition blockposition = this.position.shift(((EnumDirection) this.world.getType(this.position).get(BlockCommand.a)).opposite());
+            BlockPosition blockposition = this.position.shift(this.world.getType(this.position).get(BlockCommand.a).opposite());
 
             if (this.world.getType(blockposition).getBlock() instanceof BlockCommand) {
                 TileEntity tileentity = this.world.getTileEntity(blockposition);
@@ -181,7 +181,7 @@ public class TileEntityCommand extends TileEntity {
     public boolean x() {
         IBlockData iblockdata = this.world.getType(this.getPosition());
 
-        return iblockdata.getBlock() instanceof BlockCommand ? (Boolean) iblockdata.get(BlockCommand.b) : false;
+        return iblockdata.getBlock() instanceof BlockCommand ? iblockdata.get(BlockCommand.b) : false;
     }
 
     @Override

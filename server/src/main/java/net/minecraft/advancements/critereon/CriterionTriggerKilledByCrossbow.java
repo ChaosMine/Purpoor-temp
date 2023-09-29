@@ -25,8 +25,8 @@ public class CriterionTriggerKilledByCrossbow extends CriterionTriggerAbstract<C
     }
 
     @Override
-    public CriterionTriggerKilledByCrossbow.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b[] acriterionconditionentity_b = CriterionConditionEntity.b.b(jsonobject, "victims", lootdeserializationcontext);
+    public CriterionTriggerKilledByCrossbow.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_[] acriterionconditionentity_b = CriterionConditionEntity.b_.b(jsonobject, "victims", lootdeserializationcontext);
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("unique_entity_types"));
 
         return new CriterionTriggerKilledByCrossbow.a(criterionconditionentity_b, acriterionconditionentity_b, criterionconditionvalue_integerrange);
@@ -51,41 +51,41 @@ public class CriterionTriggerKilledByCrossbow extends CriterionTriggerAbstract<C
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b[] a;
+        private final CriterionConditionEntity.b_[] a;
         private final CriterionConditionValue.IntegerRange b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b[] acriterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_[] acriterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             super(CriterionTriggerKilledByCrossbow.a, criterionconditionentity_b);
             this.a = acriterionconditionentity_b;
             this.b = criterionconditionvalue_integerrange;
         }
 
-        public static CriterionTriggerKilledByCrossbow.a a(CriterionConditionEntity.a... acriterionconditionentity_a) {
-            CriterionConditionEntity.b[] acriterionconditionentity_b = new CriterionConditionEntity.b[acriterionconditionentity_a.length];
+        public static CriterionTriggerKilledByCrossbow.a a(CriterionConditionEntity.a_... acriterionconditionentity_a) {
+            CriterionConditionEntity.b_[] acriterionconditionentity_b = new CriterionConditionEntity.b_[acriterionconditionentity_a.length];
 
             for (int i = 0; i < acriterionconditionentity_a.length; ++i) {
-                CriterionConditionEntity.a criterionconditionentity_a = acriterionconditionentity_a[i];
+                CriterionConditionEntity.a_ criterionconditionentity_a = acriterionconditionentity_a[i];
 
-                acriterionconditionentity_b[i] = CriterionConditionEntity.b.a(criterionconditionentity_a.b());
+                acriterionconditionentity_b[i] = CriterionConditionEntity.b_.a(criterionconditionentity_a.b());
             }
 
-            return new CriterionTriggerKilledByCrossbow.a(CriterionConditionEntity.b.a, acriterionconditionentity_b, CriterionConditionValue.IntegerRange.e);
+            return new CriterionTriggerKilledByCrossbow.a(CriterionConditionEntity.b_.a, acriterionconditionentity_b, CriterionConditionValue.IntegerRange.e);
         }
 
         public static CriterionTriggerKilledByCrossbow.a a(CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
-            CriterionConditionEntity.b[] acriterionconditionentity_b = new CriterionConditionEntity.b[0];
+            CriterionConditionEntity.b_[] acriterionconditionentity_b = new CriterionConditionEntity.b_[0];
 
-            return new CriterionTriggerKilledByCrossbow.a(CriterionConditionEntity.b.a, acriterionconditionentity_b, criterionconditionvalue_integerrange);
+            return new CriterionTriggerKilledByCrossbow.a(CriterionConditionEntity.b_.a, acriterionconditionentity_b, criterionconditionvalue_integerrange);
         }
 
         public boolean a(Collection<LootTableInfo> collection, int i) {
             if (this.a.length > 0) {
                 List<LootTableInfo> list = Lists.newArrayList(collection);
-                CriterionConditionEntity.b[] acriterionconditionentity_b = this.a;
+                CriterionConditionEntity.b_[] acriterionconditionentity_b = this.a;
                 int j = acriterionconditionentity_b.length;
 
                 for (int k = 0; k < j; ++k) {
-                    CriterionConditionEntity.b criterionconditionentity_b = acriterionconditionentity_b[k];
+                    CriterionConditionEntity.b_ criterionconditionentity_b = acriterionconditionentity_b[k];
                     boolean flag = false;
                     Iterator iterator = list.iterator();
 
@@ -112,7 +112,7 @@ public class CriterionTriggerKilledByCrossbow extends CriterionTriggerAbstract<C
         public JsonObject a(LootSerializationContext lootserializationcontext) {
             JsonObject jsonobject = super.a(lootserializationcontext);
 
-            jsonobject.add("victims", CriterionConditionEntity.b.a(this.a, lootserializationcontext));
+            jsonobject.add("victims", CriterionConditionEntity.b_.a(this.a, lootserializationcontext));
             jsonobject.add("unique_entity_types", this.b.d());
             return jsonobject;
         }

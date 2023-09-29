@@ -64,7 +64,7 @@ public class EnchantmentManager {
             NBTTagCompound nbttagcompound = nbttaglist.getCompound(i);
 
             IRegistry.ENCHANTMENT.getOptional(MinecraftKey.a(nbttagcompound.getString("id"))).ifPresent((enchantment) -> {
-                Integer integer = (Integer) map.put(enchantment, nbttagcompound.getInt("lvl"));
+                Integer integer = map.put(enchantment, nbttagcompound.getInt("lvl"));
             });
         }
 
@@ -77,10 +77,10 @@ public class EnchantmentManager {
 
         while (iterator.hasNext()) {
             Entry<Enchantment, Integer> entry = (Entry) iterator.next();
-            Enchantment enchantment = (Enchantment) entry.getKey();
+            Enchantment enchantment = entry.getKey();
 
             if (enchantment != null) {
-                int i = (Integer) entry.getValue();
+                int i = entry.getValue();
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
 
                 nbttagcompound.setString("id", String.valueOf(IRegistry.ENCHANTMENT.getKey(enchantment)));
@@ -95,7 +95,7 @@ public class EnchantmentManager {
         if (nbttaglist.isEmpty()) {
             itemstack.removeTag("Enchantments");
         } else if (itemstack.getItem() != Items.ENCHANTED_BOOK) {
-            itemstack.a("Enchantments", (NBTBase) nbttaglist);
+            itemstack.a("Enchantments", nbttaglist);
         }
 
     }
@@ -309,14 +309,14 @@ public class EnchantmentManager {
 
             while (iterator.hasNext()) {
                 Entry<EnumItemSlot, ItemStack> entry = (Entry) iterator.next();
-                ItemStack itemstack = (ItemStack) entry.getValue();
+                ItemStack itemstack = entry.getValue();
 
                 if (!itemstack.isEmpty() && getEnchantmentLevel(enchantment, itemstack) > 0 && predicate.test(itemstack)) {
                     list.add(entry);
                 }
             }
 
-            return list.isEmpty() ? null : (Entry) list.get(entityliving.getRandom().nextInt(list.size()));
+            return list.isEmpty() ? null : list.get(entityliving.getRandom().nextInt(list.size()));
         }
     }
 

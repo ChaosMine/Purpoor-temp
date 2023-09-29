@@ -57,7 +57,7 @@ public class EntityLlamaTrader extends EntityLlama {
 
     @Override
     protected EntityLlama fz() {
-        return (EntityLlama) EntityTypes.TRADER_LLAMA.a(this.world);
+        return EntityTypes.TRADER_LLAMA.a(this.world);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class EntityLlamaTrader extends EntityLlama {
             groupdataentity = new EntityAgeable.a(false);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     public class a extends PathfinderGoalTarget {

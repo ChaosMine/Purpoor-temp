@@ -90,7 +90,7 @@ public final class LightEngineBlock extends LightEngineLayer<LightEngineStorageB
             long j1 = BlockPosition.getAdjacent(x, y, z, enumdirection); // Paper
             long k1 = SectionPosition.blockToSection(j1); // Paper
 
-            if (k == k1 || ((LightEngineStorageBlock) this.c).g(k1)) {
+            if (k == k1 || this.c.g(k1)) {
                 this.b(i, j1, j, flag);
             }
         }
@@ -139,7 +139,7 @@ public final class LightEngineBlock extends LightEngineLayer<LightEngineStorageB
                 if (j1 == j2) {
                     nibblearray1 = nibblearray;
                 } else {
-                    nibblearray1 = ((LightEngineStorageBlock) this.c).updating.getUpdatingOptimized(j2); // Paper
+                    nibblearray1 = this.c.updating.getUpdatingOptimized(j2); // Paper
                 }
 
                 if (nibblearray1 != null) {
@@ -161,7 +161,7 @@ public final class LightEngineBlock extends LightEngineLayer<LightEngineStorageB
 
     @Override
     public void a(BlockPosition blockposition, int i) {
-        ((LightEngineStorageBlock) this.c).d();
+        this.c.d();
         this.a(Long.MAX_VALUE, blockposition.asLong(), 15 - i, true);
     }
 }

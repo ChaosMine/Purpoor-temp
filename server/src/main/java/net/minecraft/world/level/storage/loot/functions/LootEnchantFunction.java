@@ -44,7 +44,7 @@ public class LootEnchantFunction extends LootItemFunctionConditional {
 
     @Override
     public ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
-        Entity entity = (Entity) loottableinfo.getContextParameter(LootContextParameters.KILLER_ENTITY);
+        Entity entity = loottableinfo.getContextParameter(LootContextParameters.KILLER_ENTITY);
 
         if (entity instanceof EntityLiving) {
             int i = EnchantmentManager.g((EntityLiving) entity);
@@ -88,9 +88,9 @@ public class LootEnchantFunction extends LootItemFunctionConditional {
 
         @Override
         public LootEnchantFunction b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            int i = ChatDeserializer.a(jsonobject, "limit", (int) 0);
+            int i = ChatDeserializer.a(jsonobject, "limit", 0);
 
-            return new LootEnchantFunction(alootitemcondition, (LootValueBounds) ChatDeserializer.a(jsonobject, "count", jsondeserializationcontext, LootValueBounds.class), i);
+            return new LootEnchantFunction(alootitemcondition, ChatDeserializer.a(jsonobject, "count", jsondeserializationcontext, LootValueBounds.class), i);
         }
     }
 

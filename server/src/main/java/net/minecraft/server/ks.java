@@ -3,15 +3,13 @@ package net.minecraft.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
+
 import net.minecraft.data.DebugReportGenerator;
 import net.minecraft.data.DebugReportProvider;
 import net.minecraft.data.HashCache;
@@ -23,49 +21,44 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ks implements DebugReportProvider {
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Gson c = (new GsonBuilder()).setPrettyPrinting().create();
+	private final DebugReportGenerator d;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson c = (new GsonBuilder()).setPrettyPrinting().create();
-    private final DebugReportGenerator d;
+	public ks(DebugReportGenerator debugreportgenerator) {
+		this.d = debugreportgenerator;
+	}
 
-    public ks(DebugReportGenerator debugreportgenerator) {
-        this.d = debugreportgenerator;
-    }
+	private static Path a(Path path, MinecraftKey minecraftkey) {
+		return path.resolve("reports/biomes/" + minecraftkey.getKey() + ".json");
+	}
 
-    @Override
-    public void a(HashCache hashcache) {
-        Path path = this.d.b();
-        Iterator iterator = RegistryGeneration.WORLDGEN_BIOME.d().iterator();
+	@Override
+	public void a(HashCache hashcache) {
+		Path path = this.d.b();
 
-        while (iterator.hasNext()) {
-            Entry<ResourceKey<BiomeBase>, BiomeBase> entry = (Entry) iterator.next();
-            Path path1 = a(path, ((ResourceKey) entry.getKey()).a());
-            BiomeBase biomebase = (BiomeBase) entry.getValue();
-            Function function = JsonOps.INSTANCE.withEncoder(BiomeBase.d);
+		for (Entry<ResourceKey<BiomeBase>, BiomeBase> resourceKeyBiomeBaseEntry : RegistryGeneration.WORLDGEN_BIOME.d()) {
+			Path path1 = a(path, resourceKeyBiomeBaseEntry.getKey().a());
+			BiomeBase biomebase = resourceKeyBiomeBaseEntry.getValue();
+			var function = JsonOps.INSTANCE.withEncoder(BiomeBase.d);
 
-            try {
-                Optional<JsonElement> optional = ((DataResult) function.apply(() -> {
-                    return biomebase;
-                })).result();
+			try {
+				Optional<JsonElement> optional = function.apply(() -> biomebase).result();
 
-                if (optional.isPresent()) {
-                    DebugReportProvider.a(ks.c, hashcache, (JsonElement) optional.get(), path1);
-                } else {
-                    ks.LOGGER.error("Couldn't serialize biome {}", path1);
-                }
-            } catch (IOException ioexception) {
-                ks.LOGGER.error("Couldn't save biome {}", path1, ioexception);
-            }
-        }
+				if (optional.isPresent()) {
+					DebugReportProvider.a(ks.c, hashcache, optional.get(), path1);
+				} else {
+					ks.LOGGER.error("Couldn't serialize biome {}", path1);
+				}
+			} catch (IOException ioexception) {
+				ks.LOGGER.error("Couldn't save biome {}", path1, ioexception);
+			}
+		}
 
-    }
+	}
 
-    private static Path a(Path path, MinecraftKey minecraftkey) {
-        return path.resolve("reports/biomes/" + minecraftkey.getKey() + ".json");
-    }
-
-    @Override
-    public String a() {
-        return "Biomes";
-    }
+	@Override
+	public String a() {
+		return "Biomes";
+	}
 }

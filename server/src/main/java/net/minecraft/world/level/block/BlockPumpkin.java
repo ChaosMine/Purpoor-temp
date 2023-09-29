@@ -40,8 +40,8 @@ public class BlockPumpkin extends BlockStemmed {
                 EnumDirection enumdirection = movingobjectpositionblock.getDirection();
                 EnumDirection enumdirection1 = enumdirection.n() == EnumDirection.EnumAxis.Y ? entityhuman.getDirection().opposite() : enumdirection;
 
-                world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                world.setTypeAndData(blockposition, (IBlockData) Blocks.CARVED_PUMPKIN.getBlockData().set(BlockPumpkinCarved.a, enumdirection1), 11);
+                world.playSound(null, blockposition, SoundEffects.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.setTypeAndData(blockposition, Blocks.CARVED_PUMPKIN.getBlockData().set(BlockPumpkinCarved.a, enumdirection1), 11);
                 // Paper start - Add PlayerShearBlockEvent
                 for (org.bukkit.inventory.ItemStack item : event.getDrops()) {
                 EntityItem entityitem = new EntityItem(world, (double) blockposition.getX() + 0.5D + (double) enumdirection1.getAdjacentX() * 0.65D, (double) blockposition.getY() + 0.1D, (double) blockposition.getZ() + 0.5D + (double) enumdirection1.getAdjacentZ() * 0.65D, org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(item));

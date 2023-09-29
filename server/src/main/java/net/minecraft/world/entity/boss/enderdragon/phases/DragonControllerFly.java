@@ -25,7 +25,7 @@ public class DragonControllerFly extends AbstractDragonController {
         if (!this.b && this.c != null) {
             BlockPosition blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, WorldGenEndTrophy.a);
 
-            if (!blockposition.a((IPosition) this.a.getPositionVector(), 10.0D)) {
+            if (!blockposition.a(this.a.getPositionVector(), 10.0D)) {
                 this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.HOLDING_PATTERN);
             }
         } else {
@@ -58,7 +58,7 @@ public class DragonControllerFly extends AbstractDragonController {
             j += 12;
         }
 
-        this.c = this.a.a(i, j, (PathPoint) null);
+        this.c = this.a.a(i, j, null);
         this.k();
     }
 
@@ -73,10 +73,10 @@ public class DragonControllerFly extends AbstractDragonController {
                 double d0;
 
                 do {
-                    d0 = (double) ((float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F);
+                    d0 = (float) blockposition.getY() + this.a.getRandom().nextFloat() * 20.0F;
                 } while (d0 < (double) blockposition.getY());
 
-                this.d = new Vec3D((double) blockposition.getX(), d0, (double) blockposition.getZ());
+                this.d = new Vec3D(blockposition.getX(), d0, blockposition.getZ());
             }
         }
 

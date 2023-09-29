@@ -339,7 +339,7 @@ public class DataConverterFlatten extends DataFix {
         hashmap.put("minecraft:record_wait.0", "minecraft:music_disc_wait");
         hashmap.put("minecraft:record_ward.0", "minecraft:music_disc_ward");
     });
-    private static final Set<String> b = (Set) DataConverterFlatten.a.keySet().stream().map((s) -> {
+    private static final Set<String> b = DataConverterFlatten.a.keySet().stream().map((s) -> {
         return s.substring(0, s.indexOf(46));
     }).collect(Collectors.toSet());
     private static final Set<String> c = Sets.newHashSet(new String[]{"minecraft:bow", "minecraft:carrot_on_a_stick", "minecraft:chainmail_boots", "minecraft:chainmail_chestplate", "minecraft:chainmail_helmet", "minecraft:chainmail_leggings", "minecraft:diamond_axe", "minecraft:diamond_boots", "minecraft:diamond_chestplate", "minecraft:diamond_helmet", "minecraft:diamond_hoe", "minecraft:diamond_leggings", "minecraft:diamond_pickaxe", "minecraft:diamond_shovel", "minecraft:diamond_sword", "minecraft:elytra", "minecraft:fishing_rod", "minecraft:flint_and_steel", "minecraft:golden_axe", "minecraft:golden_boots", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_hoe", "minecraft:golden_leggings", "minecraft:golden_pickaxe", "minecraft:golden_shovel", "minecraft:golden_sword", "minecraft:iron_axe", "minecraft:iron_boots", "minecraft:iron_chestplate", "minecraft:iron_helmet", "minecraft:iron_hoe", "minecraft:iron_leggings", "minecraft:iron_pickaxe", "minecraft:iron_shovel", "minecraft:iron_sword", "minecraft:leather_boots", "minecraft:leather_chestplate", "minecraft:leather_helmet", "minecraft:leather_leggings", "minecraft:shears", "minecraft:shield", "minecraft:stone_axe", "minecraft:stone_hoe", "minecraft:stone_pickaxe", "minecraft:stone_shovel", "minecraft:stone_sword", "minecraft:wooden_axe", "minecraft:wooden_hoe", "minecraft:wooden_pickaxe", "minecraft:wooden_shovel", "minecraft:wooden_sword"});
@@ -385,9 +385,9 @@ public class DataConverterFlatten extends DataFix {
     @Nullable
     public static String a(@Nullable String s, int i) {
         if (DataConverterFlatten.b.contains(s)) {
-            String s1 = (String) DataConverterFlatten.a.get(s + '.' + i);
+            String s1 = DataConverterFlatten.a.get(s + '.' + i);
 
-            return s1 == null ? (String) DataConverterFlatten.a.get(s + ".0") : s1;
+            return s1 == null ? DataConverterFlatten.a.get(s + ".0") : s1;
         } else {
             return null;
         }

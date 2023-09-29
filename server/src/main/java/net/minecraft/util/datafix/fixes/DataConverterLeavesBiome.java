@@ -28,7 +28,7 @@ public class DataConverterLeavesBiome extends DataFix {
                     if (!optional.isPresent()) {
                         return dynamic;
                     } else {
-                        int[] aint = ((IntStream) optional.get()).toArray();
+                        int[] aint = optional.get().toArray();
                         int[] aint1 = new int[1024];
 
                         int i;

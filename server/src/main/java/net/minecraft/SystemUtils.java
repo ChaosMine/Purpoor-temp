@@ -417,7 +417,7 @@ public class SystemUtils {
     }
 
     public static DataResult<int[]> a(IntStream intstream, int i) {
-        int[] aint = intstream.limit((long) (i + 1)).toArray();
+        int[] aint = intstream.limit(i + 1).toArray();
 
         if (aint.length != i) {
             String s = "Input is not a list of " + i + " ints";

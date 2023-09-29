@@ -27,9 +27,9 @@ public interface ICollisionAccess extends IBlockAccess {
     }
 
     default boolean a(IBlockData iblockdata, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        VoxelShape voxelshape = iblockdata.b((IBlockAccess) this, blockposition, voxelshapecollision);
+        VoxelShape voxelshape = iblockdata.b(this, blockposition, voxelshapecollision);
 
-        return voxelshape.isEmpty() || this.a((Entity) null, voxelshape.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ()));
+        return voxelshape.isEmpty() || this.a(null, voxelshape.a(blockposition.getX(), blockposition.getY(), blockposition.getZ()));
     }
 
     default boolean j(Entity entity) {
@@ -42,7 +42,7 @@ public interface ICollisionAccess extends IBlockAccess {
     }
     default boolean getCubes(AxisAlignedBB axisalignedbb) {
         // Tuinity end - allow overriding in WorldServer
-        return this.b((Entity) null, axisalignedbb, (entity) -> {
+        return this.b(null, axisalignedbb, (entity) -> {
             return true;
         });
     }

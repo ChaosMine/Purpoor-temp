@@ -30,7 +30,7 @@ public class BlockJukeBox extends BlockTileEntity {
 
     protected BlockJukeBox(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockJukeBox.HAS_RECORD, false));
+        this.j(this.blockStateList.getBlockData().set(BlockJukeBox.HAS_RECORD, false));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class BlockJukeBox extends BlockTileEntity {
             NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("BlockEntityTag");
 
             if (nbttagcompound1.hasKey("RecordItem")) {
-                world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockJukeBox.HAS_RECORD, true), 2);
+                world.setTypeAndData(blockposition, iblockdata.set(BlockJukeBox.HAS_RECORD, true), 2);
             }
         }
 
@@ -50,9 +50,9 @@ public class BlockJukeBox extends BlockTileEntity {
 
     @Override
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
-        if ((Boolean) iblockdata.get(BlockJukeBox.HAS_RECORD)) {
+        if (iblockdata.get(BlockJukeBox.HAS_RECORD)) {
             this.dropRecord(world, blockposition);
-            iblockdata = (IBlockData) iblockdata.set(BlockJukeBox.HAS_RECORD, false);
+            iblockdata = iblockdata.set(BlockJukeBox.HAS_RECORD, false);
             world.setTypeAndData(blockposition, iblockdata, 2);
             return EnumInteractionResult.a(world.isClientSide);
         } else {
@@ -71,7 +71,7 @@ public class BlockJukeBox extends BlockTileEntity {
             }
             ((TileEntityJukeBox) tileentity).setRecord(itemstack);
             // CraftBukkit end
-            generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockJukeBox.HAS_RECORD, true), 2);
+            generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockJukeBox.HAS_RECORD, true), 2);
         }
     }
 

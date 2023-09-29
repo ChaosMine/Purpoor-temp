@@ -45,7 +45,7 @@ public abstract class EntityProjectileThrowable extends EntityProjectile {
     // CraftBukkit end
 
     public ItemStack getItem() {
-        return (ItemStack) this.getDataWatcher().get(EntityProjectileThrowable.b);
+        return this.getDataWatcher().get(EntityProjectileThrowable.b);
     }
 
     public ItemStack g() {

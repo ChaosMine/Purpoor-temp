@@ -27,12 +27,12 @@ public class BehaviorLeaveJob extends Behavior<EntityVillager> {
     }
 
     protected void a(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        BlockPosition blockposition = ((GlobalPos) entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get()).getBlockPosition();
+        BlockPosition blockposition = entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get().getBlockPosition();
         Optional<VillagePlaceType> optional = worldserver.y().c(blockposition);
 
         if (optional.isPresent()) {
             BehaviorUtil.a(entityvillager, (entityvillager1) -> {
-                return this.a((VillagePlaceType) optional.get(), entityvillager1, blockposition);
+                return this.a(optional.get(), entityvillager1, blockposition);
             }).findFirst().ifPresent((entityvillager1) -> {
                 this.a(worldserver, entityvillager, entityvillager1, blockposition, entityvillager1.getBehaviorController().getMemory(MemoryModuleType.JOB_SITE).isPresent());
             });
@@ -48,7 +48,7 @@ public class BehaviorLeaveJob extends Behavior<EntityVillager> {
             Optional<GlobalPos> optional = entityvillager.getBehaviorController().getMemory(MemoryModuleType.JOB_SITE);
             VillagerProfession villagerprofession = entityvillager.getVillagerData().getProfession();
 
-            return entityvillager.getVillagerData().getProfession() != VillagerProfession.NONE && villagerprofession.b().c().test(villageplacetype) ? (!optional.isPresent() ? this.a(entityvillager, blockposition, villageplacetype) : ((GlobalPos) optional.get()).getBlockPosition().equals(blockposition)) : false;
+            return entityvillager.getVillagerData().getProfession() != VillagerProfession.NONE && villagerprofession.b().c().test(villageplacetype) ? (!optional.isPresent() ? this.a(entityvillager, blockposition, villageplacetype) : optional.get().getBlockPosition().equals(blockposition)) : false;
         }
     }
 
@@ -56,7 +56,7 @@ public class BehaviorLeaveJob extends Behavior<EntityVillager> {
         this.a(entityvillager);
         if (!flag) {
             BehaviorUtil.a(entityvillager1, blockposition, this.b, 1);
-            entityvillager1.getBehaviorController().setMemory(MemoryModuleType.POTENTIAL_JOB_SITE, (Object) GlobalPos.create(worldserver.getDimensionKey(), blockposition));
+            entityvillager1.getBehaviorController().setMemory(MemoryModuleType.POTENTIAL_JOB_SITE, GlobalPos.create(worldserver.getDimensionKey(), blockposition));
             PacketDebug.c(worldserver, blockposition);
         }
 

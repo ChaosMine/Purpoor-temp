@@ -141,7 +141,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
 
     @Override
     public void tick() {
-        ItemStack itemstack = (ItemStack) this.items.get(4);
+        ItemStack itemstack = this.items.get(4);
 
         if (this.fuelLevel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             // CraftBukkit start
@@ -162,7 +162,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
 
         boolean flag = this.h();
         boolean flag1 = this.brewTime > 0;
-        ItemStack itemstack1 = (ItemStack) this.items.get(3);
+        ItemStack itemstack1 = this.items.get(3);
 
         // CraftBukkit start - Use wall time instead of ticks for brewing
         int elapsedTicks = MinecraftServer.currentTick - this.lastTick;
@@ -202,7 +202,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
                 }
 
                 for (int i = 0; i < BlockBrewingStand.HAS_BOTTLE.length; ++i) {
-                    iblockdata = (IBlockData) iblockdata.set(BlockBrewingStand.HAS_BOTTLE[i], aboolean[i]);
+                    iblockdata = iblockdata.set(BlockBrewingStand.HAS_BOTTLE[i], aboolean[i]);
                 }
 
                 this.world.setTypeAndData(this.position, iblockdata, 2);
@@ -215,7 +215,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
         boolean[] aboolean = new boolean[3];
 
         for (int i = 0; i < 3; ++i) {
-            if (!((ItemStack) this.items.get(i)).isEmpty()) {
+            if (!this.items.get(i).isEmpty()) {
                 aboolean[i] = true;
             }
         }
@@ -224,7 +224,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
     }
 
     private boolean h() {
-        ItemStack itemstack = (ItemStack) this.items.get(3);
+        ItemStack itemstack = this.items.get(3);
 
         if (itemstack.isEmpty()) {
             return false;
@@ -232,7 +232,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
             return false;
         } else {
             for (int i = 0; i < 3; ++i) {
-                ItemStack itemstack1 = (ItemStack) this.items.get(i);
+                ItemStack itemstack1 = this.items.get(i);
 
                 if (!itemstack1.isEmpty() && PotionBrewer.a(itemstack1, itemstack)) {
                     return true;
@@ -244,7 +244,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
     }
 
     private void j() {
-        ItemStack itemstack = (ItemStack) this.items.get(3);
+        ItemStack itemstack = this.items.get(3);
         // CraftBukkit start
         InventoryHolder owner = this.getOwner();
         if (owner != null) {
@@ -257,7 +257,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
         // CraftBukkit end
 
         for (int i = 0; i < 3; ++i) {
-            this.items.set(i, PotionBrewer.d(itemstack, (ItemStack) this.items.get(i)));
+            this.items.set(i, PotionBrewer.d(itemstack, this.items.get(i)));
         }
 
         itemstack.subtract(1);
@@ -269,7 +269,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
             if (itemstack.isEmpty()) {
                 itemstack = itemstack1;
             } else if (!this.world.isClientSide) {
-                InventoryUtils.dropItem(this.world, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), itemstack1);
+                InventoryUtils.dropItem(this.world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), itemstack1);
             }
         }
 
@@ -297,7 +297,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
 
     @Override
     public ItemStack getItem(int i) {
-        return i >= 0 && i < this.items.size() ? (ItemStack) this.items.get(i) : ItemStack.b;
+        return i >= 0 && i < this.items.size() ? this.items.get(i) : ItemStack.b;
     }
 
     @Override

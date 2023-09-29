@@ -17,11 +17,11 @@ public final class CraftMemoryMapper {
         if (object instanceof GlobalPos) {
             return fromNms((GlobalPos) object);
         } else if (object instanceof Long) {
-            return (Long) object;
+            return object;
         } else if (object instanceof UUID) {
-            return (UUID) object;
+            return object;
         } else if (object instanceof Boolean) {
-            return (Boolean) object;
+            return object;
         }
 
         throw new UnsupportedOperationException("Do not know how to map " + object);
@@ -33,11 +33,11 @@ public final class CraftMemoryMapper {
         } else if (object instanceof Location) {
             return toNms((Location) object);
         } else if (object instanceof Long) {
-            return (Long) object;
+            return object;
         } else if (object instanceof UUID) {
-            return (UUID) object;
+            return object;
         } else if (object instanceof Boolean) {
-            return (Boolean) object;
+            return object;
         }
 
         throw new UnsupportedOperationException("Do not know how to map " + object);

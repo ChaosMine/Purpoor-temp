@@ -46,7 +46,7 @@ public class ItemArmorStand extends Item {
             try (var XUI = world.getEntities(null, axisalignedbb)) {
                 if (world.b((Entity) null, axisalignedbb, __ -> true) && XUI.isEmpty()) {
                     if (world instanceof WorldServer worldserver) {
-                        EntityArmorStand entityarmorstand = EntityTypes.ARMOR_STAND.createCreature(worldserver, itemstack.getTag(), (IChatBaseComponent) null, itemactioncontext.getEntity(), blockposition, EnumMobSpawn.SPAWN_EGG, true, true);
+                        EntityArmorStand entityarmorstand = EntityTypes.ARMOR_STAND.createCreature(worldserver, itemstack.getTag(), null, itemactioncontext.getEntity(), blockposition, EnumMobSpawn.SPAWN_EGG, true, true);
 
                         if (entityarmorstand == null) {
                             return EnumInteractionResult.FAIL;
@@ -71,7 +71,7 @@ public class ItemArmorStand extends Item {
                         }
                         // Purpur end
                         worldserver.addAllEntities(entityarmorstand); // Paper - moved down
-                        world.playSound((EntityHuman) null, entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), SoundEffects.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
+                        world.playSound(null, entityarmorstand.locX(), entityarmorstand.locY(), entityarmorstand.locZ(), SoundEffects.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
                     }
 
                     itemstack.subtract(1);

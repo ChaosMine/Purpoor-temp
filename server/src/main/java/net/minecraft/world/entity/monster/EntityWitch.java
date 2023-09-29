@@ -116,7 +116,7 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
 
     public boolean isDrinkingPotion() { return m(); } // Paper - OBFHELPER
     public boolean m() {
-        return (Boolean) this.getDataWatcher().get(EntityWitch.bp);
+        return this.getDataWatcher().get(EntityWitch.bp);
     }
 
     public static AttributeProvider.Builder eK() {
@@ -162,13 +162,13 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
             } else {
                 PotionRegistry potionregistry = null;
 
-                if (this.random.nextFloat() < 0.15F && this.a((Tag) TagsFluid.WATER) && !this.hasEffect(MobEffects.WATER_BREATHING)) {
+                if (this.random.nextFloat() < 0.15F && this.a(TagsFluid.WATER) && !this.hasEffect(MobEffects.WATER_BREATHING)) {
                     potionregistry = Potions.WATER_BREATHING;
                 } else if (this.random.nextFloat() < 0.15F && (this.isBurning() || this.dm() != null && this.dm().isFire()) && !this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
                     potionregistry = Potions.FIRE_RESISTANCE;
                 } else if (this.random.nextFloat() < 0.05F && this.getHealth() < this.getMaxHealth()) {
                     potionregistry = Potions.HEALING;
-                } else if (this.random.nextFloat() < 0.5F && this.getGoalTarget() != null && !this.hasEffect(MobEffects.FASTER_MOVEMENT) && this.getGoalTarget().h((Entity) this) > 121.0D) {
+                } else if (this.random.nextFloat() < 0.5F && this.getGoalTarget() != null && !this.hasEffect(MobEffects.FASTER_MOVEMENT) && this.getGoalTarget().h(this) > 121.0D) {
                     potionregistry = Potions.SWIFTNESS;
                 }
 
@@ -210,7 +210,7 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
         this.bq = this.getItemInMainHand().k();
         this.v(true);
         if (!this.isSilent()) {
-            this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
+            this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_WITCH_DRINK, this.getSoundCategory(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
         }
 
         AttributeModifiable attributemodifiable = this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
@@ -256,7 +256,7 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
                     potionregistry = Potions.REGENERATION;
                 }
 
-                this.setGoalTarget((EntityLiving) null);
+                this.setGoalTarget(null);
             } else if (f1 >= 8.0F && !entityliving.hasEffect(MobEffects.SLOWER_MOVEMENT)) {
                 potionregistry = Potions.SLOWNESS;
             } else if (entityliving.getHealth() >= 8.0F && !entityliving.hasEffect(MobEffects.POISON)) {
@@ -278,7 +278,7 @@ public class EntityWitch extends EntityRaider implements IRangedEntity {
             entitypotion.pitch -= -20.0F;
             entitypotion.shoot(d0, d1 + (double) (f1 * 0.2F), d2, 0.75F, 8.0F);
             if (!this.isSilent()) {
-                this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
+                this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_WITCH_THROW, this.getSoundCategory(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
             }
 
             this.world.addEntity(entitypotion);

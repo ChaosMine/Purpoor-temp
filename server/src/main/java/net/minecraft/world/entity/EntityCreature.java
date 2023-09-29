@@ -19,7 +19,7 @@ public abstract class EntityCreature extends EntityInsentient {
     }
 
     public float f(BlockPosition blockposition) {
-        return this.a(blockposition, (IWorldReader) this.world);
+        return this.a(blockposition, this.world);
     }
 
     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
@@ -28,7 +28,7 @@ public abstract class EntityCreature extends EntityInsentient {
 
     @Override
     public boolean a(GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn) {
-        return this.a(this.getChunkCoordinates(), (IWorldReader) generatoraccess) >= 0.0F;
+        return this.a(this.getChunkCoordinates(), generatoraccess) >= 0.0F;
     }
 
     public boolean eI() {

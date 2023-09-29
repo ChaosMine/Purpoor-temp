@@ -79,7 +79,7 @@ public class LightEngine implements ILightEngine {
     }
 
     public LightEngineLayerEventListener a(EnumSkyBlock enumskyblock) {
-        return (LightEngineLayerEventListener) (enumskyblock == EnumSkyBlock.BLOCK ? (this.a == null ? LightEngineLayerEventListener.Void.INSTANCE : this.a) : (this.b == null ? LightEngineLayerEventListener.Void.INSTANCE : this.b));
+        return enumskyblock == EnumSkyBlock.BLOCK ? (this.a == null ? LightEngineLayerEventListener.Void.INSTANCE : this.a) : (this.b == null ? LightEngineLayerEventListener.Void.INSTANCE : this.b);
     }
 
     public void a(EnumSkyBlock enumskyblock, SectionPosition sectionposition, @Nullable NibbleArray nibblearray, boolean flag) {

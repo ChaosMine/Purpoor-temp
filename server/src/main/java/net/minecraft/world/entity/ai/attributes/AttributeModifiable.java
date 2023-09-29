@@ -50,7 +50,7 @@ public class AttributeModifiable {
     }
 
     public Set<AttributeModifier> a(AttributeModifier.Operation attributemodifier_operation) {
-        return (Set) this.b.computeIfAbsent(attributemodifier_operation, (attributemodifier_operation1) -> {
+        return this.b.computeIfAbsent(attributemodifier_operation, (attributemodifier_operation1) -> {
             return Sets.newHashSet();
         });
     }
@@ -61,7 +61,7 @@ public class AttributeModifiable {
 
     @Nullable
     public AttributeModifier a(UUID uuid) {
-        return (AttributeModifier) this.c.get(uuid);
+        return this.c.get(uuid);
     }
 
     public boolean a(AttributeModifier attributemodifier) {
@@ -69,7 +69,7 @@ public class AttributeModifiable {
     }
 
     private void e(AttributeModifier attributemodifier) {
-        AttributeModifier attributemodifier1 = (AttributeModifier) this.c.putIfAbsent(attributemodifier.getUniqueId(), attributemodifier);
+        AttributeModifier attributemodifier1 = this.c.putIfAbsent(attributemodifier.getUniqueId(), attributemodifier);
 
         if (attributemodifier1 != null) {
             throw new IllegalArgumentException("Modifier is already applied on this attribute!");
@@ -155,7 +155,7 @@ public class AttributeModifiable {
     }
 
     private Collection<AttributeModifier> b(AttributeModifier.Operation attributemodifier_operation) {
-        return (Collection) this.b.getOrDefault(attributemodifier_operation, Collections.emptySet());
+        return this.b.getOrDefault(attributemodifier_operation, Collections.emptySet());
     }
 
     public void a(AttributeModifiable attributemodifiable) {

@@ -226,7 +226,7 @@ public final class GameProfileSerializer {
         if (!nbttagcompound.hasKeyOfType("Name", 8)) {
             return Blocks.AIR.getBlockData();
         } else {
-            Block block = (Block) IRegistry.BLOCK.get(new MinecraftKey(nbttagcompound.getString("Name")));
+            Block block = IRegistry.BLOCK.get(new MinecraftKey(nbttagcompound.getString("Name")));
             IBlockData iblockdata = block.getBlockData();
 
             if (nbttagcompound.hasKeyOfType("Properties", 10)) {
@@ -239,7 +239,7 @@ public final class GameProfileSerializer {
                     IBlockState<?> iblockstate = blockstatelist.a(s);
 
                     if (iblockstate != null) {
-                        iblockdata = (IBlockData) a(iblockdata, iblockstate, s, nbttagcompound1, nbttagcompound);
+                        iblockdata = a(iblockdata, iblockstate, s, nbttagcompound1, nbttagcompound);
                     }
                 }
             }
@@ -271,7 +271,7 @@ public final class GameProfileSerializer {
 
             while (unmodifiableiterator.hasNext()) {
                 Entry<IBlockState<?>, Comparable<?>> entry = (Entry) unmodifiableiterator.next();
-                IBlockState<?> iblockstate = (IBlockState) entry.getKey();
+                IBlockState<?> iblockstate = entry.getKey();
 
                 nbttagcompound1.setString(iblockstate.getName(), a(iblockstate, (Comparable) entry.getValue()));
             }

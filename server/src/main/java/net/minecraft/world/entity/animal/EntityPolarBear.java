@@ -109,7 +109,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
 
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityAgeable) EntityTypes.POLAR_BEAR.a((World) worldserver);
+        return EntityTypes.POLAR_BEAR.a(worldserver);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
         boolean flag = entity.damageEntity(DamageSource.mobAttack(this), (float) ((int) this.b(GenericAttributes.ATTACK_DAMAGE)));
 
         if (flag) {
-            this.a((EntityLiving) this, entity);
+            this.a(this, entity);
         }
 
         return flag;
@@ -279,7 +279,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
 
     public boolean isStanding() { return eM(); } // Purpur - OBFHELPER
     public boolean eM() {
-        return (Boolean) this.datawatcher.get(EntityPolarBear.bo);
+        return this.datawatcher.get(EntityPolarBear.bo);
     }
 
     public void setStanding(boolean standing) { t(standing); } // Purpur - OBFHELPER
@@ -299,7 +299,7 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
             groupdataentity = new EntityAgeable.a(1.0F);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     class d extends PathfinderGoalPanic {
@@ -353,14 +353,14 @@ public class EntityPolarBear extends EntityAnimal implements IEntityAngerable {
 
         @Override
         protected double a(EntityLiving entityliving) {
-            return (double) (4.0F + entityliving.getWidth());
+            return 4.0F + entityliving.getWidth();
         }
     }
 
     class a extends PathfinderGoalNearestAttackableTarget<EntityHuman> {
 
         public a() {
-            super(EntityPolarBear.this, EntityHuman.class, 20, true, true, (Predicate) null);
+            super(EntityPolarBear.this, EntityHuman.class, 20, true, true, null);
         }
 
         @Override

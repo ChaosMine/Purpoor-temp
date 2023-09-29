@@ -45,7 +45,7 @@ public class PathfinderGoalMeleeAttack extends PathfinderGoal {
             } else if (!entityliving.isAlive()) {
                 return false;
             } else {
-                this.d = this.a.getNavigation().a((Entity) entityliving, 0);
+                this.d = this.a.getNavigation().a(entityliving, 0);
                 return this.d != null ? true : this.a(entityliving) >= this.a.h(entityliving.locX(), entityliving.locY(), entityliving.locZ());
             }
         }
@@ -71,7 +71,7 @@ public class PathfinderGoalMeleeAttack extends PathfinderGoal {
         EntityLiving entityliving = this.a.getGoalTarget();
 
         if (!IEntitySelector.e.test(entityliving)) {
-            this.a.setGoalTarget((EntityLiving) null);
+            this.a.setGoalTarget(null);
         }
 
         this.a.setAggressive(false);
@@ -97,7 +97,7 @@ public class PathfinderGoalMeleeAttack extends PathfinderGoal {
                 this.h += 5;
             }
 
-            if (!this.a.getNavigation().a((Entity) entityliving, this.b)) {
+            if (!this.a.getNavigation().a(entityliving, this.b)) {
                 this.h += 15;
             }
         }
@@ -134,6 +134,6 @@ public class PathfinderGoalMeleeAttack extends PathfinderGoal {
     }
 
     protected double a(EntityLiving entityliving) {
-        return (double) (this.a.getWidth() * 2.0F * this.a.getWidth() * 2.0F + entityliving.getWidth());
+        return this.a.getWidth() * 2.0F * this.a.getWidth() * 2.0F + entityliving.getWidth();
     }
 }

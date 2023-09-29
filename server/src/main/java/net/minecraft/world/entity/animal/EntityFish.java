@@ -85,7 +85,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
     }
 
     public boolean isFromBucket() {
-        return (Boolean) this.datawatcher.get(EntityFish.FROM_BUCKET);
+        return this.datawatcher.get(EntityFish.FROM_BUCKET);
     }
 
     public void setFromBucket(boolean flag) {
@@ -139,7 +139,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
     @Override
     public void movementTick() {
         if (!this.isInWater() && this.onGround && this.v) {
-            this.setMot(this.getMot().add((double) ((this.random.nextFloat() * 2.0F - 1.0F) * 0.05F), 0.4000000059604645D, (double) ((this.random.nextFloat() * 2.0F - 1.0F) * 0.05F)));
+            this.setMot(this.getMot().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.05F, 0.4000000059604645D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.05F));
             this.onGround = false;
             this.impulse = true;
             this.playSound(this.getSoundFlop(), this.getSoundVolume(), this.dH());
@@ -160,7 +160,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
             PlayerBucketFishEvent playerBucketFishEvent = CraftEventFactory.callPlayerFishBucketEvent(this, entityhuman, itemstack, itemstack1);
             itemstack1 = CraftItemStack.asNMSCopy(playerBucketFishEvent.getFishBucket());
             if (playerBucketFishEvent.isCancelled()) {
-                ((EntityPlayer) entityhuman).updateInventory(((EntityPlayer) entityhuman).activeContainer); // We need to update inventory to resync client's bucket
+                ((EntityPlayer) entityhuman).updateInventory(entityhuman.activeContainer); // We need to update inventory to resync client's bucket
                 ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(this)); // We need to play out these packets as the client assumes the fish is gone
                 ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutEntityMetadata(this.getId(), datawatcher, true)); // Need to send data such as the display name to client
                 return EnumInteractionResult.FAIL;
@@ -230,7 +230,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
         @Override
         public void tick() {
             // Purpur end
-            if (this.i.a((Tag) TagsFluid.WATER)) {
+            if (this.i.a(TagsFluid.WATER)) {
                 this.i.setMot(this.i.getMot().add(0.0D, 0.005D, 0.0D));
             }
 
@@ -243,7 +243,7 @@ public abstract class EntityFish extends EntityWaterAnimal {
                 double d2 = this.d - this.i.locZ();
 
                 if (d1 != 0.0D) {
-                    double d3 = (double) MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                    double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
 
                     this.i.setMot(this.i.getMot().add(0.0D, (double) this.i.dN() * (d1 / d3) * 0.1D, 0.0D));
                 }

@@ -25,7 +25,7 @@ public abstract class CraftLootable<T extends TileEntityLootable> extends CraftC
         super.applyTo(lootable);
 
         if (this.getSnapshot().lootTable == null) {
-            lootable.setLootTable((MinecraftKey) null, 0L);
+            lootable.setLootTable(null, 0L);
         }
     }
 

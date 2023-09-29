@@ -54,7 +54,7 @@ public class EntityCat extends EntityTameableAnimal {
     private static final DataWatcherObject<Boolean> bt = DataWatcher.a(EntityCat.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Boolean> bu = DataWatcher.a(EntityCat.class, DataWatcherRegistry.i);
     private static final DataWatcherObject<Integer> bv = DataWatcher.a(EntityCat.class, DataWatcherRegistry.b);
-    public static final Map<Integer, MinecraftKey> bq = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
+    public static final Map<Integer, MinecraftKey> bq = SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // CraftBukkit - decompile error
         hashmap.put(0, new MinecraftKey("textures/entity/cat/tabby.png"));
         hashmap.put(1, new MinecraftKey("textures/entity/cat/black.png"));
         hashmap.put(2, new MinecraftKey("textures/entity/cat/red.png"));
@@ -110,7 +110,7 @@ public class EntityCat extends EntityTameableAnimal {
     // Purpur end
 
     public MinecraftKey eU() {
-        return (MinecraftKey) EntityCat.bq.getOrDefault(this.getCatType(), EntityCat.bq.get(0));
+        return EntityCat.bq.getOrDefault(this.getCatType(), EntityCat.bq.get(0));
     }
 
     @Override
@@ -135,7 +135,7 @@ public class EntityCat extends EntityTameableAnimal {
     }
 
     public int getCatType() {
-        return (Integer) this.datawatcher.get(EntityCat.bs);
+        return this.datawatcher.get(EntityCat.bs);
     }
 
     public void setCatType(int i) {
@@ -152,7 +152,7 @@ public class EntityCat extends EntityTameableAnimal {
     }
 
     public boolean eW() {
-        return (Boolean) this.datawatcher.get(EntityCat.bt);
+        return this.datawatcher.get(EntityCat.bt);
     }
 
     public void setHeadDown(boolean flag) { y(flag); } // Purpur - OBFHELPER
@@ -161,11 +161,11 @@ public class EntityCat extends EntityTameableAnimal {
     }
 
     public boolean eX() {
-        return (Boolean) this.datawatcher.get(EntityCat.bu);
+        return this.datawatcher.get(EntityCat.bu);
     }
 
     public EnumColor getCollarColor() {
-        return EnumColor.fromColorIndex((Integer) this.datawatcher.get(EntityCat.bv));
+        return EnumColor.fromColorIndex(this.datawatcher.get(EntityCat.bv));
     }
 
     public void setCollarColor(EnumColor enumcolor) {
@@ -316,7 +316,7 @@ public class EntityCat extends EntityTameableAnimal {
 
     @Override
     public EntityCat createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityCat entitycat = (EntityCat) EntityTypes.CAT.a((World) worldserver);
+        EntityCat entitycat = EntityTypes.CAT.a(worldserver);
 
         if (entityageable instanceof EntityCat) {
             if (this.random.nextBoolean()) {
@@ -364,7 +364,7 @@ public class EntityCat extends EntityTameableAnimal {
 
         WorldServer worldserver = worldaccess.getMinecraftWorld();
 
-        if (worldserver instanceof WorldServer && ((WorldServer) worldserver).getStructureManager().getStructureStarts(this.getChunkCoordinates(), true, StructureGenerator.SWAMP_HUT, worldaccess).e()) { // Tuinity - fix deadlock on chunk gen
+        if (worldserver instanceof WorldServer && worldserver.getStructureManager().getStructureStarts(this.getChunkCoordinates(), true, StructureGenerator.SWAMP_HUT, worldaccess).e()) { // Tuinity - fix deadlock on chunk gen
             this.setCatType(10);
             this.setPersistent();
         }
@@ -379,12 +379,12 @@ public class EntityCat extends EntityTameableAnimal {
         Item item = itemstack.getItem();
 
         if (this.world.isClientSide) {
-            return this.isTamed() && this.i((EntityLiving) entityhuman) ? EnumInteractionResult.SUCCESS : (this.k(itemstack) && (this.getHealth() < this.getMaxHealth() || !this.isTamed()) ? EnumInteractionResult.SUCCESS : EnumInteractionResult.PASS);
+            return this.isTamed() && this.i(entityhuman) ? EnumInteractionResult.SUCCESS : (this.k(itemstack) && (this.getHealth() < this.getMaxHealth() || !this.isTamed()) ? EnumInteractionResult.SUCCESS : EnumInteractionResult.PASS);
         } else {
             EnumInteractionResult enuminteractionresult;
 
             if (this.isTamed()) {
-                if (this.i((EntityLiving) entityhuman)) {
+                if (this.i(entityhuman)) {
                     if (!(item instanceof ItemDye)) {
                         if (item.isFood() && this.k(itemstack) && this.getHealth() < this.getMaxHealth()) {
                             this.a(entityhuman, itemstack);
@@ -456,7 +456,7 @@ public class EntityCat extends EntityTameableAnimal {
             this.bw = new EntityCat.a<>(this, EntityHuman.class, 16.0F, 0.8D, 1.33D);
         }
 
-        this.goalSelector.a((PathfinderGoal) this.bw);
+        this.goalSelector.a(this.bw);
         if (!this.isTamed()) {
             this.goalSelector.a(4, this.bw);
         }
@@ -490,15 +490,15 @@ public class EntityCat extends EntityTameableAnimal {
                         return false;
                     }
 
-                    if (this.a.h((Entity) this.b) > 100.0D) {
+                    if (this.a.h(this.b) > 100.0D) {
                         return false;
                     }
 
                     BlockPosition blockposition = this.b.getChunkCoordinates();
                     IBlockData iblockdata = this.a.world.getType(blockposition);
 
-                    if (iblockdata.getBlock().a((Tag) TagsBlock.BEDS)) {
-                        this.c = (BlockPosition) iblockdata.d(BlockBed.FACING).map((enumdirection) -> {
+                    if (iblockdata.getBlock().a(TagsBlock.BEDS)) {
+                        this.c = iblockdata.d(BlockBed.FACING).map((enumdirection) -> {
                             return blockposition.shift(enumdirection.opposite());
                         }).orElseGet(() -> {
                             return new BlockPosition(blockposition);
@@ -539,7 +539,7 @@ public class EntityCat extends EntityTameableAnimal {
         public void c() {
             if (this.c != null) {
                 this.a.setSitting(false);
-                this.a.getNavigation().a((double) this.c.getX(), (double) this.c.getY(), (double) this.c.getZ(), 1.100000023841858D);
+                this.a.getNavigation().a(this.c.getX(), this.c.getY(), this.c.getZ(), 1.100000023841858D);
             }
 
         }
@@ -563,7 +563,7 @@ public class EntityCat extends EntityTameableAnimal {
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
 
             blockposition_mutableblockposition.g(this.a.getChunkCoordinates());
-            this.a.a((double) (blockposition_mutableblockposition.getX() + random.nextInt(11) - 5), (double) (blockposition_mutableblockposition.getY() + random.nextInt(5) - 2), (double) (blockposition_mutableblockposition.getZ() + random.nextInt(11) - 5), false);
+            this.a.a(blockposition_mutableblockposition.getX() + random.nextInt(11) - 5, blockposition_mutableblockposition.getY() + random.nextInt(5) - 2, blockposition_mutableblockposition.getZ() + random.nextInt(11) - 5, false);
             blockposition_mutableblockposition.g(this.a.getChunkCoordinates());
             LootTable loottable = this.a.world.getMinecraftServer().getLootTableRegistry().getLootTable(LootTables.ak);
             LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder((WorldServer) this.a.world)).set(LootContextParameters.ORIGIN, this.a.getPositionVector()).set(LootContextParameters.THIS_ENTITY, this.a).a(random);
@@ -574,7 +574,7 @@ public class EntityCat extends EntityTameableAnimal {
                 ItemStack itemstack = (ItemStack) iterator.next();
 
                 // CraftBukkit start
-                EntityItem entityitem = new EntityItem(this.a.world, (double) blockposition_mutableblockposition.getX() - (double) MathHelper.sin(this.a.aA * 0.017453292F), (double) blockposition_mutableblockposition.getY(), (double) blockposition_mutableblockposition.getZ() + (double) MathHelper.cos(this.a.aA * 0.017453292F), itemstack);
+                EntityItem entityitem = new EntityItem(this.a.world, (double) blockposition_mutableblockposition.getX() - (double) MathHelper.sin(this.a.aA * 0.017453292F), blockposition_mutableblockposition.getY(), (double) blockposition_mutableblockposition.getZ() + (double) MathHelper.cos(this.a.aA * 0.017453292F), itemstack);
                 org.bukkit.event.entity.EntityDropItemEvent event = new org.bukkit.event.entity.EntityDropItemEvent(this.a.getBukkitEntity(), (org.bukkit.entity.Item) entityitem.getBukkitEntity());
                 entityitem.world.getServer().getPluginManager().callEvent(event);
                 if (event.isCancelled()) {
@@ -590,14 +590,14 @@ public class EntityCat extends EntityTameableAnimal {
         public void e() {
             if (this.b != null && this.c != null) {
                 this.a.setSitting(false);
-                this.a.getNavigation().a((double) this.c.getX(), (double) this.c.getY(), (double) this.c.getZ(), 1.100000023841858D);
-                if (this.a.h((Entity) this.b) < 2.5D) {
+                this.a.getNavigation().a(this.c.getX(), this.c.getY(), this.c.getZ(), 1.100000023841858D);
+                if (this.a.h(this.b) < 2.5D) {
                     ++this.d;
                     if (this.d > 16) {
                         this.a.x(true);
                         this.a.y(false);
                     } else {
-                        this.a.a((Entity) this.b, 45.0F, 45.0F);
+                        this.a.a(this.b, 45.0F, 45.0F);
                         this.a.y(true);
                     }
                 } else {

@@ -17,7 +17,12 @@ public class WorldGenFeatureKelp extends WorldGenerator<WorldGenFeatureEmptyConf
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         int i = 0;
         int j = generatoraccessseed.a(HeightMap.Type.OCEAN_FLOOR, blockposition.getX(), blockposition.getZ());
         BlockPosition blockposition1 = new BlockPosition(blockposition.getX(), j, blockposition.getZ());
@@ -30,7 +35,7 @@ public class WorldGenFeatureKelp extends WorldGenerator<WorldGenFeatureEmptyConf
             for (int l = 0; l <= k; ++l) {
                 if (generatoraccessseed.getType(blockposition1).a(Blocks.WATER) && generatoraccessseed.getType(blockposition1.up()).a(Blocks.WATER) && iblockdata1.canPlace(generatoraccessseed, blockposition1)) {
                     if (l == k) {
-                        generatoraccessseed.setTypeAndData(blockposition1, (IBlockData) iblockdata.set(BlockKelp.d, random.nextInt(4) + 20), 2);
+                        generatoraccessseed.setTypeAndData(blockposition1, iblockdata.set(BlockKelp.d, random.nextInt(4) + 20), 2);
                         ++i;
                     } else {
                         generatoraccessseed.setTypeAndData(blockposition1, iblockdata1, 2);
@@ -39,7 +44,7 @@ public class WorldGenFeatureKelp extends WorldGenerator<WorldGenFeatureEmptyConf
                     BlockPosition blockposition2 = blockposition1.down();
 
                     if (iblockdata.canPlace(generatoraccessseed, blockposition2) && !generatoraccessseed.getType(blockposition2.down()).a(Blocks.KELP)) {
-                        generatoraccessseed.setTypeAndData(blockposition2, (IBlockData) iblockdata.set(BlockKelp.d, random.nextInt(4) + 20), 2);
+                        generatoraccessseed.setTypeAndData(blockposition2, iblockdata.set(BlockKelp.d, random.nextInt(4) + 20), 2);
                         ++i;
                     }
                     break;

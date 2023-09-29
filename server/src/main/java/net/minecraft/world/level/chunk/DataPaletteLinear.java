@@ -1,12 +1,13 @@
 package net.minecraft.world.level.chunk;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import net.minecraft.core.RegistryBlockID;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketDataSerializer;
+
+import javax.annotation.Nullable;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class DataPaletteLinear<T> implements DataPalette<T> {
 
@@ -19,7 +20,7 @@ public class DataPaletteLinear<T> implements DataPalette<T> {
 
     public DataPaletteLinear(RegistryBlockID<T> registryblockid, int i, DataPaletteExpandable<T> datapaletteexpandable, Function<NBTTagCompound, T> function) {
         this.a = registryblockid;
-        this.b = (Object[]) (new Object[1 << i]);
+        this.b = (T[]) (new Object[1 << i]);
         this.e = i;
         this.c = datapaletteexpandable;
         this.d = function;

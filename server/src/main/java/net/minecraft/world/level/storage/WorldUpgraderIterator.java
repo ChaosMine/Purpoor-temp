@@ -48,13 +48,13 @@ public class WorldUpgraderIterator {
         File file2 = convertable_conversionsession.a(World.THE_END);
 
         WorldUpgraderIterator.LOGGER.info("Scanning folders...");
-        a(file, (Collection) list);
+        a(file, list);
         if (file1.exists()) {
-            a(file1, (Collection) list1);
+            a(file1, list1);
         }
 
         if (file2.exists()) {
-            a(file2, (Collection) list2);
+            a(file2, list2);
         }
 
         int i = list.size() + list1.size() + list2.size();
@@ -68,16 +68,16 @@ public class WorldUpgraderIterator {
         Object object;
 
         if (savedata != null && savedata.getGeneratorSettings().isFlatWorld()) {
-            object = new WorldChunkManagerHell((BiomeBase) iregistry.d(Biomes.PLAINS));
+            object = new WorldChunkManagerHell(iregistry.d(Biomes.PLAINS));
         } else {
             object = new WorldChunkManagerOverworld(j, false, false, iregistry);
         }
 
-        a(iregistrycustom_dimension, new File(file, "region"), (Iterable) list, (WorldChunkManager) object, 0, i, iprogressupdate);
-        a(iregistrycustom_dimension, new File(file1, "region"), (Iterable) list1, new WorldChunkManagerHell((BiomeBase) iregistry.d(Biomes.NETHER_WASTES)), list.size(), i, iprogressupdate);
-        a(iregistrycustom_dimension, new File(file2, "region"), (Iterable) list2, new WorldChunkManagerHell((BiomeBase) iregistry.d(Biomes.THE_END)), list.size() + list1.size(), i, iprogressupdate);
+        a(iregistrycustom_dimension, new File(file, "region"), list, (WorldChunkManager) object, 0, i, iprogressupdate);
+        a(iregistrycustom_dimension, new File(file1, "region"), list1, new WorldChunkManagerHell(iregistry.d(Biomes.NETHER_WASTES)), list.size(), i, iprogressupdate);
+        a(iregistrycustom_dimension, new File(file2, "region"), list2, new WorldChunkManagerHell(iregistry.d(Biomes.THE_END)), list.size() + list1.size(), i, iprogressupdate);
         a(convertable_conversionsession);
-        convertable_conversionsession.a((IRegistryCustom) iregistrycustom_dimension, savedata);
+        convertable_conversionsession.a(iregistrycustom_dimension, savedata);
         return true;
     }
 

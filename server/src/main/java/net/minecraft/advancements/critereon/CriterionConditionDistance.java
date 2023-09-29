@@ -37,7 +37,7 @@ public class CriterionConditionDistance {
         float f1 = (float) (d1 - d4);
         float f2 = (float) (d2 - d5);
 
-        return this.b.d(MathHelper.e(f)) && this.c.d(MathHelper.e(f1)) && this.d.d(MathHelper.e(f2)) ? (!this.e.a((double) (f * f + f2 * f2)) ? false : this.f.a((double) (f * f + f1 * f1 + f2 * f2))) : false;
+        return this.b.d(MathHelper.e(f)) && this.c.d(MathHelper.e(f1)) && this.d.d(MathHelper.e(f2)) ? (!this.e.a(f * f + f2 * f2) ? false : this.f.a(f * f + f1 * f1 + f2 * f2)) : false;
     }
 
     public static CriterionConditionDistance a(@Nullable JsonElement jsonelement) {

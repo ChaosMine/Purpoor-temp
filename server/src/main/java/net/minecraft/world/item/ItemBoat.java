@@ -42,7 +42,7 @@ public class ItemBoat extends Item {
                     Vec3D vec3d1 = entityhuman.j(1.0F);
 
                     for (Entity entity : list) {
-                        AxisAlignedBB axisalignedbb = entity.getBoundingBox().g((double) entity.bg());
+                        AxisAlignedBB axisalignedbb = entity.getBoundingBox().g(entity.bg());
 
                         if (axisalignedbb.d(vec3d1)) {
                             return InteractionResultWrapper.pass(itemstack);

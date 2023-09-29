@@ -503,7 +503,7 @@ public class ItemStack implements Cloneable, ConfigurationSerializable, net.kyor
 
         Material type;
         if (version < 0) {
-            type = Material.getMaterial(Material.LEGACY_PREFIX + (String) args.get("type"));
+            type = Material.getMaterial(Material.LEGACY_PREFIX + args.get("type"));
 
             byte dataVal = (type != null && type.getMaxDurability() == 0) ? (byte) damage : 0; // Actually durable items get a 0 passed into conversion
             type = Bukkit.getUnsafe().fromLegacy(new MaterialData(type, dataVal), true);

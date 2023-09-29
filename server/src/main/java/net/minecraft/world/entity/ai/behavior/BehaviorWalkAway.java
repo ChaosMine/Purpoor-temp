@@ -37,18 +37,18 @@ public class BehaviorWalkAway<T> extends Behavior<EntityCreature> {
     }
 
     protected boolean a(WorldServer worldserver, EntityCreature entitycreature) {
-        return this.b(entitycreature) ? false : entitycreature.getPositionVector().a((IPosition) this.a(entitycreature), (double) this.d);
+        return this.b(entitycreature) ? false : entitycreature.getPositionVector().a(this.a(entitycreature), this.d);
     }
 
     private Vec3D a(EntityCreature entitycreature) {
-        return (Vec3D) this.e.apply(entitycreature.getBehaviorController().getMemory(this.b).get());
+        return this.e.apply(entitycreature.getBehaviorController().getMemory(this.b).get());
     }
 
     private boolean b(EntityCreature entitycreature) {
         if (!entitycreature.getBehaviorController().hasMemory(MemoryModuleType.WALK_TARGET)) {
             return false;
         } else {
-            MemoryTarget memorytarget = (MemoryTarget) entitycreature.getBehaviorController().getMemory(MemoryModuleType.WALK_TARGET).get();
+            MemoryTarget memorytarget = entitycreature.getBehaviorController().getMemory(MemoryModuleType.WALK_TARGET).get();
 
             if (memorytarget.b() != this.c) {
                 return false;
@@ -70,7 +70,7 @@ public class BehaviorWalkAway<T> extends Behavior<EntityCreature> {
             Vec3D vec3d1 = RandomPositionGenerator.d(entitycreature, 16, 7, vec3d);
 
             if (vec3d1 != null) {
-                entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(vec3d1, f, 0)));
+                entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(vec3d1, f, 0)));
                 return;
             }
         }

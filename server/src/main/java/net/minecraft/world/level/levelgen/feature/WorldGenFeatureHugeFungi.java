@@ -21,7 +21,12 @@ public class WorldGenFeatureHugeFungi extends WorldGenerator<WorldGenFeatureHuge
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureHugeFungiConfiguration worldgenfeaturehugefungiconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureHugeFungiConfiguration worldgenfeaturehugefungiconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturehugefungiconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureHugeFungiConfiguration worldgenfeaturehugefungiconfiguration) {
         Block block = worldgenfeaturehugefungiconfiguration.f.getBlock();
         BlockPosition blockposition1 = null;
         Block block1 = generatoraccessseed.getType(blockposition.down()).getBlock();
@@ -84,10 +89,10 @@ public class WorldGenFeatureHugeFungi extends WorldGenerator<WorldGenFeatureHuge
                             generatoraccess.setTypeAndData(blockposition_mutableblockposition, iblockdata, 3);
                         } else if (flag1) {
                             if (random.nextFloat() < 0.1F) {
-                                this.a((IWorldWriter) generatoraccess, (BlockPosition) blockposition_mutableblockposition, iblockdata);
+                                this.a(generatoraccess, blockposition_mutableblockposition, iblockdata);
                             }
                         } else {
-                            this.a((IWorldWriter) generatoraccess, (BlockPosition) blockposition_mutableblockposition, iblockdata);
+                            this.a(generatoraccess, blockposition_mutableblockposition, iblockdata);
                         }
                     }
                 }
@@ -147,11 +152,11 @@ public class WorldGenFeatureHugeFungi extends WorldGenerator<WorldGenFeatureHuge
 
     private void a(GeneratorAccess generatoraccess, Random random, WorldGenFeatureHugeFungiConfiguration worldgenfeaturehugefungiconfiguration, BlockPosition.MutableBlockPosition blockposition_mutableblockposition, float f, float f1, float f2) {
         if (random.nextFloat() < f) {
-            this.a((IWorldWriter) generatoraccess, (BlockPosition) blockposition_mutableblockposition, worldgenfeaturehugefungiconfiguration.i);
+            this.a(generatoraccess, blockposition_mutableblockposition, worldgenfeaturehugefungiconfiguration.i);
         } else if (random.nextFloat() < f1) {
-            this.a((IWorldWriter) generatoraccess, (BlockPosition) blockposition_mutableblockposition, worldgenfeaturehugefungiconfiguration.h);
+            this.a(generatoraccess, blockposition_mutableblockposition, worldgenfeaturehugefungiconfiguration.h);
             if (random.nextFloat() < f2) {
-                a((BlockPosition) blockposition_mutableblockposition, generatoraccess, random);
+                a(blockposition_mutableblockposition, generatoraccess, random);
             }
         }
 
@@ -159,9 +164,9 @@ public class WorldGenFeatureHugeFungi extends WorldGenerator<WorldGenFeatureHuge
 
     private void a(GeneratorAccess generatoraccess, Random random, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
         if (generatoraccess.getType(blockposition.down()).a(iblockdata.getBlock())) {
-            this.a((IWorldWriter) generatoraccess, blockposition, iblockdata);
+            this.a(generatoraccess, blockposition, iblockdata);
         } else if ((double) random.nextFloat() < 0.15D) {
-            this.a((IWorldWriter) generatoraccess, blockposition, iblockdata);
+            this.a(generatoraccess, blockposition, iblockdata);
             if (flag && random.nextInt(11) == 0) {
                 a(blockposition, generatoraccess, random);
             }

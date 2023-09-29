@@ -448,7 +448,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
         this.b = this.b.a(enumdifficulty);
         // CraftBukkit start
         PacketPlayOutServerDifficulty packet = new PacketPlayOutServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
-        for (EntityPlayer player : (java.util.List<EntityPlayer>) (java.util.List) world.getPlayers()) {
+        for (EntityPlayer player : world.getPlayers()) {
             player.playerConnection.sendPacket(packet);
         }
         // CraftBukkit end

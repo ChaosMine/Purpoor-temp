@@ -52,7 +52,7 @@ public class Criterion {
         while (iterator.hasNext()) {
             Entry<String, JsonElement> entry = (Entry) iterator.next();
 
-            map.put(entry.getKey(), a(ChatDeserializer.m((JsonElement) entry.getValue(), "criterion"), lootdeserializationcontext));
+            map.put(entry.getKey(), a(ChatDeserializer.m(entry.getValue(), "criterion"), lootdeserializationcontext));
         }
 
         return map;
@@ -76,8 +76,8 @@ public class Criterion {
         while (iterator.hasNext()) {
             Entry<String, Criterion> entry = (Entry) iterator.next();
 
-            packetdataserializer.a((String) entry.getKey());
-            ((Criterion) entry.getValue()).a(packetdataserializer);
+            packetdataserializer.a(entry.getKey());
+            entry.getValue().a(packetdataserializer);
         }
 
     }

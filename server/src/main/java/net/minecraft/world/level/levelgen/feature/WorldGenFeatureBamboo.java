@@ -15,16 +15,21 @@ import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeature
 
 public class WorldGenFeatureBamboo extends WorldGenerator<WorldGenFeatureConfigurationChance> {
 
-    private static final IBlockData a = (IBlockData) ((IBlockData) ((IBlockData) Blocks.BAMBOO.getBlockData().set(BlockBamboo.d, 1)).set(BlockBamboo.e, BlockPropertyBambooSize.NONE)).set(BlockBamboo.f, 0);
-    private static final IBlockData ab = (IBlockData) ((IBlockData) WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.LARGE)).set(BlockBamboo.f, 1);
-    private static final IBlockData ac = (IBlockData) WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.LARGE);
-    private static final IBlockData ad = (IBlockData) WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.SMALL);
+    private static final IBlockData a = Blocks.BAMBOO.getBlockData().set(BlockBamboo.d, 1).set(BlockBamboo.e, BlockPropertyBambooSize.NONE).set(BlockBamboo.f, 0);
+    private static final IBlockData ab = WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.LARGE).set(BlockBamboo.f, 1);
+    private static final IBlockData ac = WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.LARGE);
+    private static final IBlockData ad = WorldGenFeatureBamboo.a.set(BlockBamboo.e, BlockPropertyBambooSize.SMALL);
 
     public WorldGenFeatureBamboo(Codec<WorldGenFeatureConfigurationChance> codec) {
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureconfigurationchance);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureConfigurationChance worldgenfeatureconfigurationchance) {
         int i = 0;
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition1 = blockposition.i();

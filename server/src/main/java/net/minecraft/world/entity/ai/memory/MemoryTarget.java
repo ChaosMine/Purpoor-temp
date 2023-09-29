@@ -12,11 +12,11 @@ public class MemoryTarget {
     private final int c;
 
     public MemoryTarget(BlockPosition blockposition, float f, int i) {
-        this((BehaviorPosition) (new BehaviorTarget(blockposition)), f, i);
+        this(new BehaviorTarget(blockposition), f, i);
     }
 
     public MemoryTarget(Vec3D vec3d, float f, int i) {
-        this((BehaviorPosition) (new BehaviorTarget(new BlockPosition(vec3d))), f, i);
+        this(new BehaviorTarget(new BlockPosition(vec3d)), f, i);
     }
 
     public MemoryTarget(BehaviorPosition behaviorposition, float f, int i) {

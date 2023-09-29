@@ -128,7 +128,7 @@ public class EntityGuardian extends EntityMonster {
     }
 
     public boolean eN() {
-        return (Boolean) this.datawatcher.get(EntityGuardian.b);
+        return this.datawatcher.get(EntityGuardian.b);
     }
 
     private void setMovingFlag(boolean movingFlag) { t(movingFlag); } // Purpur - OBFHELPER
@@ -145,7 +145,7 @@ public class EntityGuardian extends EntityMonster {
     }
 
     public boolean eO() {
-        return (Integer) this.datawatcher.get(EntityGuardian.d) != 0;
+        return this.datawatcher.get(EntityGuardian.d) != 0;
     }
 
     @Nullable
@@ -156,7 +156,7 @@ public class EntityGuardian extends EntityMonster {
             if (this.bt != null) {
                 return this.bt;
             } else {
-                Entity entity = this.world.getEntity((Integer) this.datawatcher.get(EntityGuardian.d));
+                Entity entity = this.world.getEntity(this.datawatcher.get(EntityGuardian.d));
 
                 if (entity instanceof EntityLiving) {
                     this.bt = (EntityLiving) entity;
@@ -212,7 +212,7 @@ public class EntityGuardian extends EntityMonster {
 
     @Override
     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
-        return iworldreader.getFluid(blockposition).a((Tag) TagsFluid.WATER) ? 10.0F + iworldreader.y(blockposition) - 0.5F : super.a(blockposition, iworldreader);
+        return iworldreader.getFluid(blockposition).a(TagsFluid.WATER) ? 10.0F + iworldreader.y(blockposition) - 0.5F : super.a(blockposition, iworldreader);
     }
 
     @Override
@@ -229,7 +229,7 @@ public class EntityGuardian extends EntityMonster {
                         this.world.a(this.locX(), this.locY(), this.locZ(), this.getSoundFlop(), this.getSoundCategory(), 1.0F, 1.0F, false);
                     }
 
-                    this.bv = vec3d.y < 0.0D && this.world.a(this.getChunkCoordinates().down(), (Entity) this);
+                    this.bv = vec3d.y < 0.0D && this.world.a(this.getChunkCoordinates().down(), this);
                 } else if (this.eN()) {
                     if (this.bq < 0.5F) {
                         this.bq = 4.0F;
@@ -268,7 +268,7 @@ public class EntityGuardian extends EntityMonster {
                     if (entityliving != null) {
                         this.getControllerLook().a(entityliving, 90.0F, 90.0F);
                         this.getControllerLook().a();
-                        double d0 = (double) this.A(0.0F);
+                        double d0 = this.A(0.0F);
                         double d1 = entityliving.locX() - this.locX();
                         double d2 = entityliving.e(0.5D) - this.getHeadY();
                         double d3 = entityliving.locZ() - this.locZ();
@@ -290,7 +290,7 @@ public class EntityGuardian extends EntityMonster {
             if (this.aH()) {
                 this.setAirTicks(300);
             } else if (this.onGround) {
-                this.setMot(this.getMot().add((double) ((this.random.nextFloat() * 2.0F - 1.0F) * 0.4F), 0.5D, (double) ((this.random.nextFloat() * 2.0F - 1.0F) * 0.4F)));
+                this.setMot(this.getMot().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.4F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.4F));
                 this.yaw = this.random.nextFloat() * 360.0F;
                 this.onGround = false;
                 this.impulse = true;
@@ -314,11 +314,11 @@ public class EntityGuardian extends EntityMonster {
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this);
+        return iworldreader.j(this);
     }
 
-    public static boolean b(EntityTypes<? extends EntityGuardian> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
-        return (random.nextInt(20) == 0 || !generatoraccess.x(blockposition)) && generatoraccess.getDifficulty() != EnumDifficulty.PEACEFUL && (enummobspawn == EnumMobSpawn.SPAWNER || generatoraccess.getFluid(blockposition).a((Tag) TagsFluid.WATER));
+    public static boolean b_guardian(EntityTypes<? extends EntityGuardian> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
+        return (random.nextInt(20) == 0 || !generatoraccess.x(blockposition)) && generatoraccess.getDifficulty() != EnumDifficulty.PEACEFUL && (enummobspawn == EnumMobSpawn.SPAWNER || generatoraccess.getFluid(blockposition).a(TagsFluid.WATER));
     }
 
     @Override
@@ -393,8 +393,8 @@ public class EntityGuardian extends EntityMonster {
 
                 this.i.q(f2);
                 double d4 = Math.sin((double) (this.i.ticksLived + this.i.getId()) * 0.5D) * 0.05D;
-                double d5 = Math.cos((double) (this.i.yaw * 0.017453292F));
-                double d6 = Math.sin((double) (this.i.yaw * 0.017453292F));
+                double d5 = Math.cos(this.i.yaw * 0.017453292F);
+                double d6 = Math.sin(this.i.yaw * 0.017453292F);
                 double d7 = Math.sin((double) (this.i.ticksLived + this.i.getId()) * 0.75D) * 0.05D;
 
                 this.i.setMot(this.i.getMot().add(d4 * d5, d7 * (d6 + d5) * 0.25D + (double) f2 * d2 * 0.1D, d4 * d6));
@@ -442,7 +442,7 @@ public class EntityGuardian extends EntityMonster {
 
         @Override
         public boolean b() {
-            return super.b() && (this.c || this.a.h((Entity) this.a.getGoalTarget()) > 9.0D);
+            return super.b() && (this.c || this.a.h(this.a.getGoalTarget()) > 9.0D);
         }
 
         @Override
@@ -456,7 +456,7 @@ public class EntityGuardian extends EntityMonster {
         @Override
         public void d() {
             this.a.a(0);
-            this.a.setGoalTarget((EntityLiving) null);
+            this.a.setGoalTarget(null);
             this.a.goalRandomStroll.h();
         }
 
@@ -467,7 +467,7 @@ public class EntityGuardian extends EntityMonster {
             this.a.getNavigation().o();
             this.a.getControllerLook().a(entityliving, 90.0F, 90.0F);
             if (!this.a.hasLineOfSight(entityliving)) {
-                this.a.setGoalTarget((EntityLiving) null);
+                this.a.setGoalTarget(null);
             } else {
                 ++this.b;
                 if (this.b == 0) {
@@ -488,7 +488,7 @@ public class EntityGuardian extends EntityMonster {
 
                     entityliving.damageEntity(DamageSource.c(this.a, this.a), f);
                     entityliving.damageEntity(DamageSource.mobAttack(this.a), (float) this.a.b(GenericAttributes.ATTACK_DAMAGE));
-                    this.a.setGoalTarget((EntityLiving) null);
+                    this.a.setGoalTarget(null);
                 }
 
                 super.e();
@@ -505,7 +505,7 @@ public class EntityGuardian extends EntityMonster {
         }
 
         public boolean test(@Nullable EntityLiving entityliving) {
-            return (entityliving instanceof EntityHuman || entityliving instanceof EntitySquid) && entityliving.h((Entity) this.a) > 9.0D;
+            return (entityliving instanceof EntityHuman || entityliving instanceof EntitySquid) && entityliving.h(this.a) > 9.0D;
         }
     }
 }

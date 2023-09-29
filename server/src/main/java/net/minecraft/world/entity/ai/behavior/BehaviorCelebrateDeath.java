@@ -30,10 +30,10 @@ public class BehaviorCelebrateDeath extends Behavior<EntityLiving> {
         EntityLiving entityliving1 = this.a(entityliving);
 
         if (this.c.test(entityliving, entityliving1)) {
-            entityliving.getBehaviorController().a(MemoryModuleType.DANCING, true, (long) this.b);
+            entityliving.getBehaviorController().a(MemoryModuleType.DANCING, true, this.b);
         }
 
-        entityliving.getBehaviorController().a(MemoryModuleType.CELEBRATE_LOCATION, entityliving1.getChunkCoordinates(), (long) this.b);
+        entityliving.getBehaviorController().a(MemoryModuleType.CELEBRATE_LOCATION, entityliving1.getChunkCoordinates(), this.b);
         if (entityliving1.getEntityType() != EntityTypes.PLAYER || worldserver.getGameRules().getBoolean(GameRules.FORGIVE_DEAD_PLAYERS)) {
             entityliving.getBehaviorController().removeMemory(MemoryModuleType.ATTACK_TARGET);
             entityliving.getBehaviorController().removeMemory(MemoryModuleType.ANGRY_AT);
@@ -42,6 +42,6 @@ public class BehaviorCelebrateDeath extends Behavior<EntityLiving> {
     }
 
     private EntityLiving a(EntityLiving entityliving) {
-        return (EntityLiving) entityliving.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+        return entityliving.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
     }
 }

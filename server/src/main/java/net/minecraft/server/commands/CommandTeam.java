@@ -60,7 +60,7 @@ public class CommandTeam {
         })))).then(net.minecraft.commands.CommandDispatcher.a("empty").then(net.minecraft.commands.CommandDispatcher.a("team", (ArgumentType) ArgumentScoreboardTeam.a()).executes((commandcontext) -> {
             return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentScoreboardTeam.a(commandcontext, "team"));
         })))).then(net.minecraft.commands.CommandDispatcher.a("join").then(((RequiredArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("team", (ArgumentType) ArgumentScoreboardTeam.a()).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentScoreboardTeam.a(commandcontext, "team"), (Collection) Collections.singleton(((CommandListenerWrapper) commandcontext.getSource()).g().getName()));
+            return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentScoreboardTeam.a(commandcontext, "team"), Collections.singleton(((CommandListenerWrapper) commandcontext.getSource()).g().getName()));
         })).then(net.minecraft.commands.CommandDispatcher.a("members", (ArgumentType) ArgumentScoreholder.b()).suggests(ArgumentScoreholder.a).executes((commandcontext) -> {
             return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentScoreboardTeam.a(commandcontext, "team"), ArgumentScoreholder.c(commandcontext, "members"));
         }))))).then(net.minecraft.commands.CommandDispatcher.a("leave").then(net.minecraft.commands.CommandDispatcher.a("members", (ArgumentType) ArgumentScoreholder.b()).suggests(ArgumentScoreholder.a).executes((commandcontext) -> {
@@ -249,7 +249,7 @@ public class CommandTeam {
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, String s) throws CommandSyntaxException {
-        return a(commandlistenerwrapper, s, (IChatBaseComponent) (new ChatComponentText(s)));
+        return a(commandlistenerwrapper, s, new ChatComponentText(s));
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, String s, IChatBaseComponent ichatbasecomponent) throws CommandSyntaxException {

@@ -36,7 +36,7 @@ public class HashCache {
         Files.createDirectories(path1);
         this.c = path1.resolve(s);
         this.c().forEach((path2) -> {
-            String s1 = (String) this.e.put(path2, "");
+            String s1 = this.e.put(path2, "");
         });
         if (Files.isReadable(this.c)) {
             IOUtils.readLines(Files.newInputStream(this.c), Charsets.UTF_8).forEach((s1) -> {
@@ -61,15 +61,15 @@ public class HashCache {
         }
 
         IOUtils.writeLines((Collection) this.f.entrySet().stream().map((entry) -> {
-            return (String) entry.getValue() + ' ' + this.b.relativize((Path) entry.getKey());
-        }).collect(Collectors.toList()), System.lineSeparator(), bufferedwriter);
+            return entry.getValue() + ' ' + this.b.relativize(entry.getKey());
+        }).toList(), System.lineSeparator(), bufferedwriter);
         bufferedwriter.close();
         HashCache.LOGGER.debug("Caching: cache hits: {}, created: {} removed: {}", this.d, this.f.size() - this.d, this.e.size());
     }
 
     @Nullable
     public String a(Path path) {
-        return (String) this.e.get(path);
+        return this.e.get(path);
     }
 
     public void a(Path path, String s) {

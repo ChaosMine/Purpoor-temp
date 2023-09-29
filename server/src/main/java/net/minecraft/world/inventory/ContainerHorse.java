@@ -31,7 +31,7 @@ public class ContainerHorse extends Container {
     }
 
     public ContainerHorse(int i, PlayerInventory playerinventory, IInventory iinventory, final EntityHorseAbstract entityhorseabstract) {
-        super((Containers) null, i);
+        super(null, i);
         player = playerinventory;
         // CraftBukkit end
         this.c = iinventory;
@@ -89,7 +89,7 @@ public class ContainerHorse extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

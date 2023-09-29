@@ -41,7 +41,7 @@ public class PathfinderGoalFollowEntity extends PathfinderGoal {
 
     @Override
     public boolean a() {
-        List<EntityInsentient> list = this.a.world.a(EntityInsentient.class, this.a.getBoundingBox().g((double) this.i), this.b);
+        List<EntityInsentient> list = this.a.world.a(EntityInsentient.class, this.a.getBoundingBox().g(this.i), this.b);
 
         if (!list.isEmpty()) {
             Iterator iterator = list.iterator();
@@ -61,7 +61,7 @@ public class PathfinderGoalFollowEntity extends PathfinderGoal {
 
     @Override
     public boolean b() {
-        return this.c != null && !this.e.m() && this.a.h((Entity) this.c) > (double) (this.g * this.g);
+        return this.c != null && !this.e.m() && this.a.h(this.c) > (double) (this.g * this.g);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class PathfinderGoalFollowEntity extends PathfinderGoal {
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 
                 if (d3 > (double) (this.g * this.g)) {
-                    this.e.a((Entity) this.c, this.d);
+                    this.e.a(this.c, this.d);
                 } else {
                     this.e.o();
                     ControllerLook controllerlook = this.c.getControllerLook();

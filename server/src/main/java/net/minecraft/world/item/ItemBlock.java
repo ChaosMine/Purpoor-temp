@@ -184,14 +184,14 @@ public class ItemBlock extends Item {
     }
 
     private static <T extends Comparable<T>> IBlockData a(IBlockData iblockdata, IBlockState<T> iblockstate, String s) {
-        return (IBlockData) iblockstate.b(s).map((comparable) -> {
-            return (IBlockData) iblockdata.set(iblockstate, comparable);
+        return iblockstate.b(s).map((comparable) -> {
+            return iblockdata.set(iblockstate, comparable);
         }).orElse(iblockdata);
     }
 
     protected boolean b(BlockActionContext blockactioncontext, IBlockData iblockdata) {
         var entityhuman = blockactioncontext.getEntity();
-        var voxelshapecollision = entityhuman == null ? VoxelShapeCollision.a() : VoxelShapeCollision.a((Entity) entityhuman);
+        var voxelshapecollision = entityhuman == null ? VoxelShapeCollision.a() : VoxelShapeCollision.a(entityhuman);
         // CraftBukkit start - store default return
         var world = blockactioncontext.getWorld(); // Paper
         var defaultReturn = (!this.isCheckCollisions() || iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) && world.checkEntityCollision(iblockdata, entityhuman, voxelshapecollision, blockactioncontext.getClickPosition(), true); // Paper

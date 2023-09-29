@@ -26,7 +26,7 @@ public class BlockTorchWall extends BlockTorch {
 
     protected BlockTorchWall(BlockBase.Info blockbase_info, ParticleParam particleparam) {
         super(blockbase_info, particleparam);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockTorchWall.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockTorchWall.a, EnumDirection.NORTH));
     }
 
     @Override
@@ -40,12 +40,12 @@ public class BlockTorchWall extends BlockTorch {
     }
 
     public static VoxelShape h(IBlockData iblockdata) {
-        return (VoxelShape) BlockTorchWall.b.get(iblockdata.get(BlockTorchWall.a));
+        return BlockTorchWall.b.get(iblockdata.get(BlockTorchWall.a));
     }
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockTorchWall.a);
+        EnumDirection enumdirection = iblockdata.get(BlockTorchWall.a);
         BlockPosition blockposition1 = blockposition.shift(enumdirection.opposite());
         IBlockData iblockdata1 = iworldreader.getType(blockposition1);
 
@@ -68,7 +68,7 @@ public class BlockTorchWall extends BlockTorch {
             if (enumdirection.n().d()) {
                 EnumDirection enumdirection1 = enumdirection.opposite();
 
-                iblockdata = (IBlockData) iblockdata.set(BlockTorchWall.a, enumdirection1);
+                iblockdata = iblockdata.set(BlockTorchWall.a, enumdirection1);
                 if (iblockdata.canPlace(world, blockposition)) {
                     return iblockdata;
                 }
@@ -85,12 +85,12 @@ public class BlockTorchWall extends BlockTorch {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockTorchWall.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockTorchWall.a)));
+        return iblockdata.set(BlockTorchWall.a, enumblockrotation.a(iblockdata.get(BlockTorchWall.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockTorchWall.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockTorchWall.a)));
     }
 
     @Override

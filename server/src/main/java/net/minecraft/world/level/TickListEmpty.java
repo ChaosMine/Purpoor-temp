@@ -9,7 +9,7 @@ public class TickListEmpty<T> implements TickList<T> {
     public TickListEmpty() {}
 
     public static <T> TickListEmpty<T> b() {
-        return TickListEmpty.a;
+        return (TickListEmpty<T>) TickListEmpty.a;
     }
 
     @Override

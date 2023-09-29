@@ -69,11 +69,11 @@ public class ArgumentScoreboardCriteria implements ArgumentType<IScoreboardCrite
             }
         }
 
-        return ICompletionProvider.b((Iterable) list, suggestionsbuilder);
+        return ICompletionProvider.b(list, suggestionsbuilder);
     }
 
     public <T> String a(StatisticWrapper<T> statisticwrapper, Object object) {
-        return Statistic.a(statisticwrapper, object);
+        return Statistic.a(statisticwrapper, (T) object);
     }
 
     public Collection<String> getExamples() {

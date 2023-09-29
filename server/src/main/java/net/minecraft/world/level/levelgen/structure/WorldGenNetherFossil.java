@@ -52,7 +52,7 @@ public class WorldGenNetherFossil {
 
         private void a(DefinedStructureManager definedstructuremanager) {
             DefinedStructure definedstructure = definedstructuremanager.a(this.d);
-            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a(DefinedStructureProcessorBlockIgnore.d);
 
             this.a(definedstructure, this.c, definedstructureinfo);
         }

@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.chunk.IChunkAccess;
 
+@SuppressWarnings("StaticInitializerReferencesSubClass")
 public abstract class WorldGenSurface<C extends WorldGenSurfaceConfiguration> {
 
     private static final IBlockData a = Blocks.DIRT.getBlockData();
@@ -64,7 +65,7 @@ public abstract class WorldGenSurface<C extends WorldGenSurfaceConfiguration> {
     private final Codec<WorldGenSurfaceComposite<C>> Z;
 
     private static <C extends WorldGenSurfaceConfiguration, F extends WorldGenSurface<C>> F a(String s, F f0) {
-        return (WorldGenSurface) IRegistry.a(IRegistry.SURFACE_BUILDER, s, (Object) f0);
+        return IRegistry.a(IRegistry.SURFACE_BUILDER, s, f0);
     }
 
     public WorldGenSurface(Codec<C> codec) {

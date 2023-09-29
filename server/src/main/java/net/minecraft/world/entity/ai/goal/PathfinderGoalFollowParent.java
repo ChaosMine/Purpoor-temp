@@ -31,7 +31,7 @@ public class PathfinderGoalFollowParent extends PathfinderGoal {
                 EntityAnimal entityanimal1 = (EntityAnimal) iterator.next();
 
                 if (entityanimal1.getAge() >= 0) {
-                    double d1 = this.a.h((Entity) entityanimal1);
+                    double d1 = this.a.h(entityanimal1);
 
                     if (d1 <= d0) {
                         d0 = d1;
@@ -58,7 +58,7 @@ public class PathfinderGoalFollowParent extends PathfinderGoal {
         } else if (!this.b.isAlive()) {
             return false;
         } else {
-            double d0 = this.a.h((Entity) this.b);
+            double d0 = this.a.h(this.b);
 
             return d0 >= 9.0D && d0 <= 256.0D;
         }
@@ -78,7 +78,7 @@ public class PathfinderGoalFollowParent extends PathfinderGoal {
     public void e() {
         if (--this.d <= 0) {
             this.d = 10;
-            this.a.getNavigation().a((Entity) this.b, this.c);
+            this.a.getNavigation().a(this.b, this.c);
         }
     }
 }

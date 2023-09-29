@@ -84,11 +84,11 @@ public final class GeneratorSettingBase {
     }
 
     public boolean a(ResourceKey<GeneratorSettingBase> resourcekey) {
-        return Objects.equals(this, RegistryGeneration.j.a(resourcekey));
+        return Objects.equals(this, RegistryGeneration.j.a___key(resourcekey));
     }
 
     private static GeneratorSettingBase a(ResourceKey<GeneratorSettingBase> resourcekey, GeneratorSettingBase generatorsettingbase) {
-        RegistryGeneration.a(RegistryGeneration.j, resourcekey.a(), (Object) generatorsettingbase);
+        RegistryGeneration.a(RegistryGeneration.j, resourcekey.a(), generatorsettingbase);
         return generatorsettingbase;
     }
 

@@ -45,7 +45,7 @@ public class BlockEnderChest extends BlockChestAbstract<TileEntityEnderChest> im
         super(blockbase_info, () -> {
             return TileEntityTypes.ENDER_CHEST;
         });
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockEnderChest.FACING, EnumDirection.NORTH)).set(BlockEnderChest.c, false));
+        this.j(this.blockStateList.getBlockData().set(BlockEnderChest.FACING, EnumDirection.NORTH).set(BlockEnderChest.c, false));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BlockEnderChest extends BlockChestAbstract<TileEntityEnderChest> im
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
 
-        return (IBlockData) ((IBlockData) this.getBlockData().set(BlockEnderChest.FACING, blockactioncontext.f().opposite())).set(BlockEnderChest.c, fluid.getType() == FluidTypes.WATER);
+        return this.getBlockData().set(BlockEnderChest.FACING, blockactioncontext.f().opposite()).set(BlockEnderChest.c, fluid.getType() == FluidTypes.WATER);
     }
 
     @Override
@@ -121,12 +121,12 @@ public class BlockEnderChest extends BlockChestAbstract<TileEntityEnderChest> im
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockEnderChest.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockEnderChest.FACING)));
+        return iblockdata.set(BlockEnderChest.FACING, enumblockrotation.a(iblockdata.get(BlockEnderChest.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockEnderChest.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockEnderChest.FACING)));
     }
 
     @Override
@@ -136,13 +136,13 @@ public class BlockEnderChest extends BlockChestAbstract<TileEntityEnderChest> im
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockEnderChest.c) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockEnderChest.c) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockEnderChest.c)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockEnderChest.c)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);

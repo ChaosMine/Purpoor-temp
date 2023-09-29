@@ -34,6 +34,6 @@ public class WorldGenSurfaceComposites {
     public static final WorldGenSurfaceComposite<WorldGenSurfaceConfigurationBase> w = a("wooded_badlands", WorldGenSurface.C.a(WorldGenSurface.n));
 
     private static <SC extends WorldGenSurfaceConfiguration> WorldGenSurfaceComposite<SC> a(String s, WorldGenSurfaceComposite<SC> worldgensurfacecomposite) {
-        return (WorldGenSurfaceComposite) RegistryGeneration.a(RegistryGeneration.c, s, (Object) worldgensurfacecomposite);
+        return (WorldGenSurfaceComposite) RegistryGeneration.a(RegistryGeneration.c, s,  worldgensurfacecomposite);
     }
 }

@@ -59,7 +59,7 @@ public class EnchantmentProtection extends Enchantment {
         int i = EnchantmentManager.a(Enchantments.PROTECTION_EXPLOSIONS, entityliving);
 
         if (i > 0) {
-            d0 -= (double) MathHelper.floor(d0 * (double) ((float) i * 0.15F));
+            d0 -= MathHelper.floor(d0 * (double) ((float) i * 0.15F));
         }
 
         return d0;

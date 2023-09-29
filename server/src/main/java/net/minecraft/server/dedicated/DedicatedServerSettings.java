@@ -29,7 +29,7 @@ public class DedicatedServerSettings {
     }
 
     public DedicatedServerSettings setProperty(UnaryOperator<DedicatedServerProperties> unaryoperator) {
-        (this.properties = (DedicatedServerProperties) unaryoperator.apply(this.properties)).savePropertiesFile(this.path);
+        (this.properties = unaryoperator.apply(this.properties)).savePropertiesFile(this.path);
         return this;
     }
 }

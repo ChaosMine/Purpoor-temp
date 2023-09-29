@@ -33,7 +33,7 @@ public class CSVWriter {
     }
 
     private void a(Stream<?> stream) throws IOException {
-        this.a.write((String) stream.map(CSVWriter::a).collect(Collectors.joining(",")) + "\r\n");
+        this.a.write(stream.map(CSVWriter::a).collect(Collectors.joining(",")) + "\r\n");
     }
 
     private static String a(@Nullable Object object) {

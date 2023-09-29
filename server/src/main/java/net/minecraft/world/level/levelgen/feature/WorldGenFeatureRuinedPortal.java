@@ -75,9 +75,9 @@ public class WorldGenFeatureRuinedPortal extends StructureGenerator<WorldGenFeat
         }
 
         List<BlockPosition> list = ImmutableList.of(new BlockPosition(structureboundingbox.a, 0, structureboundingbox.c), new BlockPosition(structureboundingbox.d, 0, structureboundingbox.c), new BlockPosition(structureboundingbox.a, 0, structureboundingbox.f), new BlockPosition(structureboundingbox.d, 0, structureboundingbox.f));
-        List<IBlockAccess> list1 = (List) list.stream().map((blockposition) -> {
+        List<IBlockAccess> list1 = list.stream().map((blockposition) -> {
             return chunkgenerator.a(blockposition.getX(), blockposition.getZ());
-        }).collect(Collectors.toList());
+        }).toList();
         HeightMap.Type heightmap_type = worldgenfeatureruinedportalpieces_position == WorldGenFeatureRuinedPortalPieces.Position.ON_OCEAN_FLOOR ? HeightMap.Type.OCEAN_FLOOR_WG : HeightMap.Type.WORLD_SURFACE_WG;
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
 
@@ -118,7 +118,7 @@ public class WorldGenFeatureRuinedPortal extends StructureGenerator<WorldGenFeat
         STANDARD("standard"), DESERT("desert"), JUNGLE("jungle"), SWAMP("swamp"), MOUNTAIN("mountain"), OCEAN("ocean"), NETHER("nether");
 
         public static final Codec<WorldGenFeatureRuinedPortal.Type> h = INamable.a(WorldGenFeatureRuinedPortal.Type::values, WorldGenFeatureRuinedPortal.Type::a);
-        private static final Map<String, WorldGenFeatureRuinedPortal.Type> i = (Map) Arrays.stream(values()).collect(Collectors.toMap(WorldGenFeatureRuinedPortal.Type::b, (worldgenfeatureruinedportal_type) -> {
+        private static final Map<String, WorldGenFeatureRuinedPortal.Type> i = Arrays.stream(values()).collect(Collectors.toMap(Type::b, (worldgenfeatureruinedportal_type) -> {
             return worldgenfeatureruinedportal_type;
         }));
         private final String j;
@@ -132,7 +132,7 @@ public class WorldGenFeatureRuinedPortal extends StructureGenerator<WorldGenFeat
         }
 
         public static WorldGenFeatureRuinedPortal.Type a(String s) {
-            return (WorldGenFeatureRuinedPortal.Type) WorldGenFeatureRuinedPortal.Type.i.get(s);
+            return Type.i.get(s);
         }
 
         @Override
@@ -148,7 +148,7 @@ public class WorldGenFeatureRuinedPortal extends StructureGenerator<WorldGenFeat
         }
 
         public void a(IRegistryCustom iregistrycustom, ChunkGenerator chunkgenerator, DefinedStructureManager definedstructuremanager, int i, int j, BiomeBase biomebase, WorldGenFeatureRuinedPortalConfiguration worldgenfeatureruinedportalconfiguration) {
-            WorldGenFeatureRuinedPortalPieces.a worldgenfeatureruinedportalpieces_a = new WorldGenFeatureRuinedPortalPieces.a();
+            WorldGenFeatureRuinedPortalPieces.a_ worldgenfeatureruinedportalpieces_a = new WorldGenFeatureRuinedPortalPieces.a_();
             WorldGenFeatureRuinedPortalPieces.Position worldgenfeatureruinedportalpieces_position;
 
             if (worldgenfeatureruinedportalconfiguration.b == WorldGenFeatureRuinedPortal.Type.DESERT) {
@@ -198,7 +198,7 @@ public class WorldGenFeatureRuinedPortal extends StructureGenerator<WorldGenFeat
             }
 
             DefinedStructure definedstructure = definedstructuremanager.a(minecraftkey);
-            EnumBlockRotation enumblockrotation = (EnumBlockRotation) SystemUtils.a((Object[]) EnumBlockRotation.values(), (Random) this.d);
+            EnumBlockRotation enumblockrotation = (EnumBlockRotation) SystemUtils.a((Object[]) EnumBlockRotation.values(), this.d);
             EnumBlockMirror enumblockmirror = this.d.nextFloat() < 0.5F ? EnumBlockMirror.NONE : EnumBlockMirror.FRONT_BACK;
             BlockPosition blockposition = new BlockPosition(definedstructure.a().getX() / 2, 0, definedstructure.a().getZ() / 2);
             BlockPosition blockposition1 = (new ChunkCoordIntPair(i, j)).l();

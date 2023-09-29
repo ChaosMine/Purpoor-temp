@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.entity.animal;
 
 import net.minecraft.core.BlockPosition;
@@ -168,7 +167,7 @@ public class EntitySquid extends EntityWaterAnimal {
             }
 
             if (!this.world.isClientSide) {
-                this.setMot((double) (this.bw * this.bt), (double) (this.bx * this.bt), (double) (this.by * this.bt));
+                this.setMot(this.bw * this.bt, this.bx * this.bt, this.by * this.bt);
             }
 
             Vec3D vec3d = this.getMot();
@@ -177,7 +176,7 @@ public class EntitySquid extends EntityWaterAnimal {
             this.aA += (-((float) MathHelper.d(vec3d.x, vec3d.z)) * 57.295776F - this.aA) * 0.1F;
             this.yaw = this.aA;
             this.d = (float) ((double) this.d + 3.141592653589793D * (double) this.bv * 1.5D);
-            this.b += (-((float) MathHelper.d((double) f1, vec3d.y)) * 57.295776F - this.b) * 0.1F;
+            this.b += (-((float) MathHelper.d(f1, vec3d.y)) * 57.295776F - this.b) * 0.1F;
         } else {
             this.br = MathHelper.e(MathHelper.sin(this.bp)) * 3.1415927F * 0.25F;
             if (!this.world.isClientSide) {
@@ -258,7 +257,7 @@ public class EntitySquid extends EntityWaterAnimal {
         public boolean a() {
             EntityLiving entityliving = EntitySquid.this.getLastDamager();
 
-            return EntitySquid.this.isInWater() && entityliving != null ? EntitySquid.this.h((Entity) entityliving) < 100.0D : false;
+            return EntitySquid.this.isInWater() && entityliving != null ? EntitySquid.this.h(entityliving) < 100.0D : false;
         }
 
         @Override
@@ -276,7 +275,7 @@ public class EntitySquid extends EntityWaterAnimal {
                 IBlockData iblockdata = EntitySquid.this.world.getType(new BlockPosition(EntitySquid.this.locX() + vec3d.x, EntitySquid.this.locY() + vec3d.y, EntitySquid.this.locZ() + vec3d.z));
                 Fluid fluid = EntitySquid.this.world.getFluid(new BlockPosition(EntitySquid.this.locX() + vec3d.x, EntitySquid.this.locY() + vec3d.y, EntitySquid.this.locZ() + vec3d.z));
 
-                if (fluid.a((Tag) TagsFluid.WATER) || iblockdata.isAir()) {
+                if (fluid.a(TagsFluid.WATER) || iblockdata.isAir()) {
                     double d0 = vec3d.f();
 
                     if (d0 > 0.0D) {

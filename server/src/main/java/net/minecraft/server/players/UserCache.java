@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.server.players;
 
 import com.github.benmanes.caffeine.cache.Caffeine;

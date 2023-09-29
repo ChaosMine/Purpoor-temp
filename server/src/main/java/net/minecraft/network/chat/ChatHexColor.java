@@ -11,10 +11,10 @@ import java.util.stream.Stream;
 
 public final class ChatHexColor {
 
-    private static final Map<EnumChatFormat, ChatHexColor> a = (Map) Stream.of(EnumChatFormat.values()).filter(EnumChatFormat::d).collect(ImmutableMap.toImmutableMap(Function.identity(), (enumchatformat) -> {
+    private static final Map<EnumChatFormat, ChatHexColor> a = Stream.of(EnumChatFormat.values()).filter(EnumChatFormat::d).collect(ImmutableMap.toImmutableMap(Function.identity(), (enumchatformat) -> {
         return new ChatHexColor(enumchatformat.e(), enumchatformat.f(), enumchatformat); // CraftBukkit
     }));
-    private static final Map<String, ChatHexColor> b = (Map) ChatHexColor.a.values().stream().collect(ImmutableMap.toImmutableMap((chathexcolor) -> {
+    private static final Map<String, ChatHexColor> b = ChatHexColor.a.values().stream().collect(ImmutableMap.toImmutableMap((chathexcolor) -> {
         return chathexcolor.name;
     }, Function.identity()));
     private final int rgb;
@@ -67,7 +67,7 @@ public final class ChatHexColor {
 
     @Nullable
     public static ChatHexColor a(EnumChatFormat enumchatformat) {
-        return (ChatHexColor) ChatHexColor.a.get(enumchatformat);
+        return ChatHexColor.a.get(enumchatformat);
     }
 
     public static ChatHexColor a(int i) {
@@ -85,7 +85,7 @@ public final class ChatHexColor {
                 return null;
             }
         } else {
-            return (ChatHexColor) ChatHexColor.b.get(s);
+            return ChatHexColor.b.get(s);
         }
     }
 }

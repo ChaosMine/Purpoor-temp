@@ -32,35 +32,35 @@ public class DataConverterHeightmapRenaming extends DataFix {
         if (!optional.isPresent()) {
             return dynamic;
         } else {
-            Dynamic<?> dynamic1 = (Dynamic) optional.get();
+            Dynamic<?> dynamic1 = optional.get();
             Optional<? extends Dynamic<?>> optional1 = dynamic1.get("LIQUID").result();
 
             if (optional1.isPresent()) {
                 dynamic1 = dynamic1.remove("LIQUID");
-                dynamic1 = dynamic1.set("WORLD_SURFACE_WG", (Dynamic) optional1.get());
+                dynamic1 = dynamic1.set("WORLD_SURFACE_WG", optional1.get());
             }
 
             Optional<? extends Dynamic<?>> optional2 = dynamic1.get("SOLID").result();
 
             if (optional2.isPresent()) {
                 dynamic1 = dynamic1.remove("SOLID");
-                dynamic1 = dynamic1.set("OCEAN_FLOOR_WG", (Dynamic) optional2.get());
-                dynamic1 = dynamic1.set("OCEAN_FLOOR", (Dynamic) optional2.get());
+                dynamic1 = dynamic1.set("OCEAN_FLOOR_WG", optional2.get());
+                dynamic1 = dynamic1.set("OCEAN_FLOOR", optional2.get());
             }
 
             Optional<? extends Dynamic<?>> optional3 = dynamic1.get("LIGHT").result();
 
             if (optional3.isPresent()) {
                 dynamic1 = dynamic1.remove("LIGHT");
-                dynamic1 = dynamic1.set("LIGHT_BLOCKING", (Dynamic) optional3.get());
+                dynamic1 = dynamic1.set("LIGHT_BLOCKING", optional3.get());
             }
 
             Optional<? extends Dynamic<?>> optional4 = dynamic1.get("RAIN").result();
 
             if (optional4.isPresent()) {
                 dynamic1 = dynamic1.remove("RAIN");
-                dynamic1 = dynamic1.set("MOTION_BLOCKING", (Dynamic) optional4.get());
-                dynamic1 = dynamic1.set("MOTION_BLOCKING_NO_LEAVES", (Dynamic) optional4.get());
+                dynamic1 = dynamic1.set("MOTION_BLOCKING", optional4.get());
+                dynamic1 = dynamic1.set("MOTION_BLOCKING_NO_LEAVES", optional4.get());
             }
 
             return dynamic.set("Heightmaps", dynamic1);

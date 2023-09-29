@@ -80,7 +80,7 @@ public class PathfinderGoalFollowBoat extends PathfinderGoal {
         boolean flag = MathHelper.e(this.c.aR) > 0.0F || MathHelper.e(this.c.aT) > 0.0F;
         float f = this.d == PathfinderGoalBoat.GO_IN_BOAT_DIRECTION ? (flag ? 0.01F : 0.0F) : 0.015F;
 
-        this.b.a(f, new Vec3D((double) this.b.aR, (double) this.b.aS, (double) this.b.aT));
+        this.b.a(f, new Vec3D(this.b.aR, this.b.aS, this.b.aT));
         this.b.move(EnumMoveType.SELF, this.b.getMot());
         if (--this.a <= 0) {
             this.a = 10;
@@ -88,8 +88,8 @@ public class PathfinderGoalFollowBoat extends PathfinderGoal {
                 BlockPosition blockposition = this.c.getChunkCoordinates().shift(this.c.getDirection().opposite());
 
                 blockposition = blockposition.b(0, -1, 0);
-                this.b.getNavigation().a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0D);
-                if (this.b.g((Entity) this.c) < 4.0F) {
+                this.b.getNavigation().a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), 1.0D);
+                if (this.b.g(this.c) < 4.0F) {
                     this.a = 0;
                     this.d = PathfinderGoalBoat.GO_IN_BOAT_DIRECTION;
                 }
@@ -97,8 +97,8 @@ public class PathfinderGoalFollowBoat extends PathfinderGoal {
                 EnumDirection enumdirection = this.c.getAdjustedDirection();
                 BlockPosition blockposition1 = this.c.getChunkCoordinates().shift(enumdirection, 10);
 
-                this.b.getNavigation().a((double) blockposition1.getX(), (double) (blockposition1.getY() - 1), (double) blockposition1.getZ(), 1.0D);
-                if (this.b.g((Entity) this.c) > 12.0F) {
+                this.b.getNavigation().a(blockposition1.getX(), blockposition1.getY() - 1, blockposition1.getZ(), 1.0D);
+                if (this.b.g(this.c) > 12.0F) {
                     this.a = 0;
                     this.d = PathfinderGoalBoat.GO_TO_BOAT;
                 }

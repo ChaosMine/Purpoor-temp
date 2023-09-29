@@ -39,7 +39,7 @@ public abstract class DataConverterItemName extends DataFix {
         return new DataConverterItemName(schema, s) {
             @Override
             protected String a(String s1) {
-                return (String) function.apply(s1);
+                return function.apply(s1);
             }
         };
     }

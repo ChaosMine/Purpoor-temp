@@ -26,18 +26,18 @@ public class BlockCoralBase extends Block implements IBlockWaterlogged {
 
     protected BlockCoralBase(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCoralBase.b, true));
+        this.j(this.blockStateList.getBlockData().set(BlockCoralBase.b, true));
     }
 
     protected void a(IBlockData iblockdata, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        if (!c(iblockdata, (IBlockAccess) generatoraccess, blockposition)) {
+        if (!c(iblockdata, generatoraccess, blockposition)) {
             generatoraccess.getBlockTickList().a(blockposition, this, 60 + generatoraccess.getRandom().nextInt(40));
         }
 
     }
 
     protected static boolean c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
-        if ((Boolean) iblockdata.get(BlockCoralBase.b)) {
+        if (iblockdata.get(BlockCoralBase.b)) {
             return true;
         } else {
             EnumDirection[] aenumdirection = EnumDirection.values();
@@ -46,7 +46,7 @@ public class BlockCoralBase extends Block implements IBlockWaterlogged {
             for (int j = 0; j < i; ++j) {
                 EnumDirection enumdirection = aenumdirection[j];
 
-                if (iblockaccess.getFluid(blockposition.shift(enumdirection)).a((Tag) TagsFluid.WATER)) {
+                if (iblockaccess.getFluid(blockposition.shift(enumdirection)).a(TagsFluid.WATER)) {
                     return true;
                 }
             }
@@ -60,7 +60,7 @@ public class BlockCoralBase extends Block implements IBlockWaterlogged {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
 
-        return (IBlockData) this.getBlockData().set(BlockCoralBase.b, fluid.a((Tag) TagsFluid.WATER) && fluid.e() == 8);
+        return this.getBlockData().set(BlockCoralBase.b, fluid.a(TagsFluid.WATER) && fluid.e() == 8);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class BlockCoralBase extends Block implements IBlockWaterlogged {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockCoralBase.b)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockCoralBase.b)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return enumdirection == EnumDirection.DOWN && !this.canPlace(iblockdata, generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -91,6 +91,6 @@ public class BlockCoralBase extends Block implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockCoralBase.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockCoralBase.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 }

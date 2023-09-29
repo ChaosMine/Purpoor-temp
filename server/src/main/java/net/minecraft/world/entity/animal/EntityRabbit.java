@@ -115,7 +115,7 @@ public class EntityRabbit extends EntityAnimal {
             PathEntity pathentity = this.navigation.k();
 
             if (pathentity != null && !pathentity.c()) {
-                Vec3D vec3d = pathentity.a((Entity) this);
+                Vec3D vec3d = pathentity.a(this);
 
                 if (vec3d.y > this.locY() + 0.5D) {
                     return 0.5F;
@@ -203,7 +203,7 @@ public class EntityRabbit extends EntityAnimal {
             if (this.getRabbitType() == 99 && this.bt == 0) {
                 EntityLiving entityliving = this.getGoalTarget();
 
-                if (entityliving != null && this.h((Entity) entityliving) < 16.0D) {
+                if (entityliving != null && this.h(entityliving) < 16.0D) {
                     this.b(entityliving.locX(), entityliving.locZ());
                     this.moveController.a(entityliving.locX(), entityliving.locY(), entityliving.locZ(), this.moveController.c());
                     this.eK();
@@ -219,7 +219,7 @@ public class EntityRabbit extends EntityAnimal {
                     Vec3D vec3d = new Vec3D(this.moveController.d(), this.moveController.e(), this.moveController.f());
 
                     if (pathentity != null && !pathentity.c()) {
-                        vec3d = pathentity.a((Entity) this);
+                        vec3d = pathentity.a(this);
                     }
 
                     this.b(vec3d.x, vec3d.z);
@@ -373,7 +373,7 @@ public class EntityRabbit extends EntityAnimal {
 
     @Override
     public EntityRabbit createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityRabbit entityrabbit = (EntityRabbit) EntityTypes.RABBIT.a((World) worldserver);
+        EntityRabbit entityrabbit = EntityTypes.RABBIT.a(worldserver);
         int i = this.a((GeneratorAccess) worldserver);
 
         if (this.random.nextInt(20) != 0) {
@@ -394,7 +394,7 @@ public class EntityRabbit extends EntityAnimal {
     }
 
     public int getRabbitType() {
-        return (Integer) this.datawatcher.get(EntityRabbit.bo);
+        return this.datawatcher.get(EntityRabbit.bo);
     }
 
     public void setRabbitType(int i) {
@@ -419,7 +419,7 @@ public class EntityRabbit extends EntityAnimal {
     @Nullable
     @Override
     public GroupDataEntity prepare(WorldAccess worldaccess, DifficultyDamageScaler difficultydamagescaler, EnumMobSpawn enummobspawn, @Nullable GroupDataEntity groupdataentity, @Nullable NBTTagCompound nbttagcompound) {
-        int i = this.a((GeneratorAccess) worldaccess);
+        int i = this.a(worldaccess);
 
         if (groupdataentity instanceof EntityRabbit.GroupDataRabbit) {
             i = ((EntityRabbit.GroupDataRabbit) groupdataentity).a;
@@ -428,7 +428,7 @@ public class EntityRabbit extends EntityAnimal {
         }
 
         this.setRabbitType(i);
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     private int a(GeneratorAccess generatoraccess) {
@@ -466,7 +466,7 @@ public class EntityRabbit extends EntityAnimal {
 
         @Override
         protected double a(EntityLiving entityliving) {
-            return (double) (4.0F + entityliving.getWidth());
+            return 4.0F + entityliving.getWidth();
         }
     }
 
@@ -520,7 +520,7 @@ public class EntityRabbit extends EntityAnimal {
         @Override
         public void e() {
             super.e();
-            this.entity.getControllerLook().a((double) this.e.getX() + 0.5D, (double) (this.e.getY() + 1), (double) this.e.getZ() + 0.5D, 10.0F, (float) this.entity.O());
+            this.entity.getControllerLook().a((double) this.e.getX() + 0.5D, this.e.getY() + 1, (double) this.e.getZ() + 0.5D, 10.0F, (float) this.entity.O());
             if (this.l()) {
                 World world = this.entity.world;
                 BlockPosition blockposition = this.e.up();
@@ -528,7 +528,7 @@ public class EntityRabbit extends EntityAnimal {
                 Block block = iblockdata.getBlock();
 
                 if (this.i && block instanceof BlockCarrots) {
-                    Integer integer = (Integer) iblockdata.get(BlockCarrots.AGE);
+                    Integer integer = iblockdata.get(BlockCarrots.AGE);
 
                     if (integer == 0) {
                         // CraftBukkit start
@@ -548,7 +548,7 @@ public class EntityRabbit extends EntityAnimal {
                             return;
                         }
                         // CraftBukkit end
-                        world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockCarrots.AGE, integer - 1), 2);
+                        world.setTypeAndData(blockposition, iblockdata.set(BlockCarrots.AGE, integer - 1), 2);
                         world.triggerEffect(2001, blockposition, Block.getCombinedId(iblockdata));
                     }
 

@@ -39,7 +39,7 @@ public class LootItemFunctionFillPlayerHead extends LootItemFunctionConditional 
     @Override
     public ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
         if (itemstack.getItem() == Items.PLAYER_HEAD) {
-            Entity entity = (Entity) loottableinfo.getContextParameter(this.a.a());
+            Entity entity = loottableinfo.getContextParameter(this.a.a());
 
             if (entity instanceof EntityHuman) {
                 GameProfile gameprofile = ((EntityHuman) entity).getProfile();
@@ -56,13 +56,13 @@ public class LootItemFunctionFillPlayerHead extends LootItemFunctionConditional 
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionFillPlayerHead lootitemfunctionfillplayerhead, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionfillplayerhead, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionfillplayerhead, jsonserializationcontext);
             jsonobject.add("entity", jsonserializationcontext.serialize(lootitemfunctionfillplayerhead.a));
         }
 
         @Override
         public LootItemFunctionFillPlayerHead b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            LootTableInfo.EntityTarget loottableinfo_entitytarget = (LootTableInfo.EntityTarget) ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class);
+            LootTableInfo.EntityTarget loottableinfo_entitytarget = ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class);
 
             return new LootItemFunctionFillPlayerHead(alootitemcondition, loottableinfo_entitytarget);
         }

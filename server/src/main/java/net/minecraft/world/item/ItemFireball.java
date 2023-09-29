@@ -35,7 +35,7 @@ public class ItemFireball extends Item {
             }
             // CraftBukkit end
             this.a(world, blockposition);
-            world.setTypeUpdate(blockposition, (IBlockData) iblockdata.set(BlockCampfire.LIT, true));
+            world.setTypeUpdate(blockposition, iblockdata.set(BlockCampfire.LIT, true));
             flag = true;
         } else {
             blockposition = blockposition.shift(itemactioncontext.getClickedFace());
@@ -49,7 +49,7 @@ public class ItemFireball extends Item {
                 }
                 // CraftBukkit end
                 this.a(world, blockposition);
-                world.setTypeUpdate(blockposition, BlockFireAbstract.a((IBlockAccess) world, blockposition));
+                world.setTypeUpdate(blockposition, BlockFireAbstract.a(world, blockposition));
                 flag = true;
             }
         }
@@ -63,6 +63,6 @@ public class ItemFireball extends Item {
     }
 
     private void a(World world, BlockPosition blockposition) {
-        world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (ItemFireball.RANDOM.nextFloat() - ItemFireball.RANDOM.nextFloat()) * 0.2F + 1.0F);
+        world.playSound(null, blockposition, SoundEffects.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (ItemFireball.RANDOM.nextFloat() - ItemFireball.RANDOM.nextFloat()) * 0.2F + 1.0F);
     }
 }

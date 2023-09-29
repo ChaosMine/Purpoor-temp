@@ -39,7 +39,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
     @Override
     public void update() {
         if (this.d()) {
-            this.a((EntityHuman) null, this.world.getType(this.getPosition()), TileEntityBeehive.ReleaseStatus.EMERGENCY);
+            this.a(null, this.world.getType(this.getPosition()), TileEntityBeehive.ReleaseStatus.EMERGENCY);
         }
 
         super.update();
@@ -127,7 +127,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
     }
     // Paper end
     public static int a(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockBeehive.b);
+        return iblockdata.get(BlockBeehive.b);
     }
 
     public boolean isSedated() {
@@ -169,7 +169,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
 
                 BlockPosition blockposition = this.getPosition();
 
-                this.world.playSound((EntityHuman) null, (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), SoundEffects.BLOCK_BEEHIVE_ENTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, blockposition.getX(), blockposition.getY(), blockposition.getZ(), SoundEffects.BLOCK_BEEHIVE_ENTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
             entity.die();
@@ -192,7 +192,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
             nbttagcompound.remove("Passengers");
             nbttagcompound.remove("Leash");
             nbttagcompound.remove("UUID");
-            EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockBeehive.a);
+            EnumDirection enumdirection = iblockdata.get(BlockBeehive.a);
             BlockPosition blockposition1 = blockposition.shift(enumdirection);
             boolean flag = !this.world.getType(blockposition1).getCollisionShape(this.world, blockposition1).isEmpty();
 
@@ -204,7 +204,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
                 });
 
                 if (entity != null) {
-                    if (!entity.getEntityType().a((Tag) TagsEntity.BEEHIVE_INHABITORS)) {
+                    if (!entity.getEntityType().a(TagsEntity.BEEHIVE_INHABITORS)) {
                         return false;
                     } else {
                         // CraftBukkit start
@@ -228,7 +228,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
 
                             if (tileentitybeehive_releasestatus == TileEntityBeehive.ReleaseStatus.HONEY_DELIVERED) {
                                 entitybee.fb();
-                                if (iblockdata.getBlock().a((Tag) TagsBlock.BEEHIVES)) {
+                                if (iblockdata.getBlock().a(TagsBlock.BEEHIVES)) {
                                     int i = a(iblockdata);
 
                                     if (i < 5) {
@@ -238,7 +238,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
                                             --j;
                                         }
 
-                                        this.world.setTypeUpdate(this.getPosition(), (IBlockData) iblockdata.set(BlockBeehive.b, i + j));
+                                        this.world.setTypeUpdate(this.getPosition(), iblockdata.set(BlockBeehive.b, i + j));
                                     }
                                 }
                             }
@@ -259,7 +259,7 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
                              */ // CraftBukkit end
                         }
 
-                        this.world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_BEEHIVE_EXIT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        this.world.playSound(null, blockposition, SoundEffects.BLOCK_BEEHIVE_EXIT, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         return true; // return this.world.addEntity(entity); // CraftBukkit - moved up
                     }
                 } else {
@@ -292,11 +292,11 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
         TileEntityBeehive.HiveBee tileentitybeehive_hivebee;
 
         for (IBlockData iblockdata = this.getBlock(); iterator.hasNext(); tileentitybeehive_hivebee.ticksInHive++) {
-            tileentitybeehive_hivebee = (TileEntityBeehive.HiveBee) iterator.next();
+            tileentitybeehive_hivebee = iterator.next();
             if (tileentitybeehive_hivebee.ticksInHive > tileentitybeehive_hivebee.minOccupationTicks) {
                 TileEntityBeehive.ReleaseStatus tileentitybeehive_releasestatus = tileentitybeehive_hivebee.entityData.getBoolean("HasNectar") ? TileEntityBeehive.ReleaseStatus.HONEY_DELIVERED : TileEntityBeehive.ReleaseStatus.BEE_RELEASED;
 
-                if (this.releaseBee(iblockdata, tileentitybeehive_hivebee, (List) null, tileentitybeehive_releasestatus)) {
+                if (this.releaseBee(iblockdata, tileentitybeehive_hivebee, null, tileentitybeehive_releasestatus)) {
                     iterator.remove();
                     // CraftBukkit start
                 } else {
@@ -316,10 +316,10 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
 
             if (this.bees.size() > 0 && this.world.getRandom().nextDouble() < 0.005D) {
                 double d0 = (double) blockposition.getX() + 0.5D;
-                double d1 = (double) blockposition.getY();
+                double d1 = blockposition.getY();
                 double d2 = (double) blockposition.getZ() + 0.5D;
 
-                this.world.playSound((EntityHuman) null, d0, d1, d2, SoundEffects.BLOCK_BEEHIVE_WORK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, d0, d1, d2, SoundEffects.BLOCK_BEEHIVE_WORK, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
             this.l();

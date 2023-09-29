@@ -18,9 +18,9 @@ public class TickListChunk<T> implements TickList<T> {
     private final Function<T, MinecraftKey> b;
 
     public TickListChunk(Function<T, MinecraftKey> function, List<NextTickListEntry<T>> list, long i) {
-        this(function, (List) list.stream().map((nextticklistentry) -> {
-            return new TickListChunk.a<>(nextticklistentry.b(), nextticklistentry.a, (int) (nextticklistentry.b - i), nextticklistentry.c);
-        }).collect(Collectors.toList()));
+        this(function, list.stream().map((nextticklistentry) -> {
+            return new a<>(nextticklistentry.b(), nextticklistentry.a, (int) (nextticklistentry.b - i), nextticklistentry.c);
+        }).toList());
     }
 
     private TickListChunk(Function<T, MinecraftKey> function, List<TickListChunk.a<T>> list) {
@@ -51,7 +51,7 @@ public class TickListChunk<T> implements TickList<T> {
             TickListChunk.a<T> ticklistchunk_a = (TickListChunk.a) iterator.next();
             NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-            nbttagcompound.setString("i", ((MinecraftKey) this.b.apply(ticklistchunk_a.d)).toString());
+            nbttagcompound.setString("i", this.b.apply(ticklistchunk_a.d).toString());
             nbttagcompound.setInt("x", ticklistchunk_a.a.getX());
             nbttagcompound.setInt("y", ticklistchunk_a.a.getY());
             nbttagcompound.setInt("z", ticklistchunk_a.a.getZ());

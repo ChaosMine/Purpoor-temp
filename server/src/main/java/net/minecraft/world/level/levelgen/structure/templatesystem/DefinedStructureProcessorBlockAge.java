@@ -34,11 +34,11 @@ public class DefinedStructureProcessorBlockAge extends DefinedStructureProcessor
         IBlockData iblockdata1 = null;
 
         if (!iblockdata.a(Blocks.STONE_BRICKS) && !iblockdata.a(Blocks.STONE) && !iblockdata.a(Blocks.CHISELED_STONE_BRICKS)) {
-            if (iblockdata.a((Tag) TagsBlock.STAIRS)) {
+            if (iblockdata.a(TagsBlock.STAIRS)) {
                 iblockdata1 = this.a(random, definedstructure_blockinfo1.b);
-            } else if (iblockdata.a((Tag) TagsBlock.SLABS)) {
+            } else if (iblockdata.a(TagsBlock.SLABS)) {
                 iblockdata1 = this.b(random);
-            } else if (iblockdata.a((Tag) TagsBlock.WALLS)) {
+            } else if (iblockdata.a(TagsBlock.WALLS)) {
                 iblockdata1 = this.c(random);
             } else if (iblockdata.a(Blocks.OBSIDIAN)) {
                 iblockdata1 = this.d(random);
@@ -64,14 +64,14 @@ public class DefinedStructureProcessorBlockAge extends DefinedStructureProcessor
 
     @Nullable
     private IBlockData a(Random random, IBlockData iblockdata) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockStairs.FACING);
-        BlockPropertyHalf blockpropertyhalf = (BlockPropertyHalf) iblockdata.get(BlockStairs.HALF);
+        EnumDirection enumdirection = iblockdata.get(BlockStairs.FACING);
+        BlockPropertyHalf blockpropertyhalf = iblockdata.get(BlockStairs.HALF);
 
         if (random.nextFloat() >= 0.5F) {
             return null;
         } else {
             IBlockData[] aiblockdata = new IBlockData[]{Blocks.STONE_SLAB.getBlockData(), Blocks.STONE_BRICK_SLAB.getBlockData()};
-            IBlockData[] aiblockdata1 = new IBlockData[]{(IBlockData) ((IBlockData) Blocks.MOSSY_STONE_BRICK_STAIRS.getBlockData().set(BlockStairs.FACING, enumdirection)).set(BlockStairs.HALF, blockpropertyhalf), Blocks.MOSSY_STONE_BRICK_SLAB.getBlockData()};
+            IBlockData[] aiblockdata1 = new IBlockData[]{Blocks.MOSSY_STONE_BRICK_STAIRS.getBlockData().set(BlockStairs.FACING, enumdirection).set(BlockStairs.HALF, blockpropertyhalf), Blocks.MOSSY_STONE_BRICK_SLAB.getBlockData()};
 
             return this.a(random, aiblockdata, aiblockdata1);
         }
@@ -93,7 +93,7 @@ public class DefinedStructureProcessorBlockAge extends DefinedStructureProcessor
     }
 
     private static IBlockData a(Random random, Block block) {
-        return (IBlockData) ((IBlockData) block.getBlockData().set(BlockStairs.FACING, EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random))).set(BlockStairs.HALF, BlockPropertyHalf.values()[random.nextInt(BlockPropertyHalf.values().length)]);
+        return block.getBlockData().set(BlockStairs.FACING, EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random)).set(BlockStairs.HALF, BlockPropertyHalf.values()[random.nextInt(BlockPropertyHalf.values().length)]);
     }
 
     private IBlockData a(Random random, IBlockData[] aiblockdata, IBlockData[] aiblockdata1) {

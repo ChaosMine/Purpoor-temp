@@ -6,6 +6,7 @@ import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -17,263 +18,261 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
 import net.minecraft.core.IRegistryCustom;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.World;
 
 public interface ICompletionProvider {
+	static <T> void a(Iterable<T> iterable, String s, Function<T, MinecraftKey> function, Consumer<T> consumer) {
+		boolean flag = s.indexOf(58) > -1;
 
-    Collection<String> l();
+		for (T t0 : iterable) {
+			MinecraftKey minecraftkey = function.apply(t0);
 
-    default Collection<String> r() {
-        return Collections.emptyList();
-    }
+			if (flag) {
+				String s1 = minecraftkey.toString();
 
-    Collection<String> m();
+				if (a(s, s1)) {
+					consumer.accept(t0);
+				}
+			} else if (a(s, minecraftkey.getNamespace()) || minecraftkey.getNamespace().equals("minecraft") && a(s, minecraftkey.getKey())) {
+				consumer.accept(t0);
+			}
+		}
 
-    Collection<MinecraftKey> n();
+	}
 
-    Stream<MinecraftKey> o();
+	static <T> void a(Iterable<T> iterable, String s, String s1, Function<T, MinecraftKey> function, Consumer<T> consumer) {
+		if (s.isEmpty()) {
+			iterable.forEach(consumer);
+		} else {
+			String s2 = Strings.commonPrefix(s, s1);
 
-    CompletableFuture<Suggestions> a(CommandContext<ICompletionProvider> commandcontext, SuggestionsBuilder suggestionsbuilder);
+			if (!s2.isEmpty()) {
+				String s3 = s.substring(s2.length());
 
-    default Collection<ICompletionProvider.a> s() {
-        return Collections.singleton(ICompletionProvider.a.b);
-    }
+				a(iterable, s3, function, consumer);
+			}
+		}
 
-    default Collection<ICompletionProvider.a> t() {
-        return Collections.singleton(ICompletionProvider.a.b);
-    }
+	}
 
-    Set<ResourceKey<World>> p();
+	static CompletableFuture<Suggestions> a(Iterable<MinecraftKey> iterable, SuggestionsBuilder suggestionsbuilder, String s) {
+		String s1 = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
 
-    IRegistryCustom q();
+		a(iterable, s1, s, (minecraftkey) -> {
+			return minecraftkey;
+		}, (minecraftkey) -> {
+			suggestionsbuilder.suggest(s + minecraftkey);
+		});
+		return suggestionsbuilder.buildFuture();
+	}
 
-    boolean hasPermission(int i);
+	static CompletableFuture<Suggestions> a(Iterable<MinecraftKey> iterable, SuggestionsBuilder suggestionsbuilder) {
+		String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
 
-    static <T> void a(Iterable<T> iterable, String s, Function<T, MinecraftKey> function, Consumer<T> consumer) {
-        boolean flag = s.indexOf(58) > -1;
-        Iterator iterator = iterable.iterator();
+		a(iterable, s, (minecraftkey) -> {
+			return minecraftkey;
+		}, (minecraftkey) -> {
+			suggestionsbuilder.suggest(minecraftkey.toString());
+		});
+		return suggestionsbuilder.buildFuture();
+	}
 
-        while (iterator.hasNext()) {
-            T t0 = iterator.next();
-            MinecraftKey minecraftkey = (MinecraftKey) function.apply(t0);
+	static <T> CompletableFuture<Suggestions> a(Iterable<T> iterable, SuggestionsBuilder suggestionsbuilder, Function<T, MinecraftKey> function, Function<T, Message> function1) {
+		String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
 
-            if (flag) {
-                String s1 = minecraftkey.toString();
+		a(iterable, s, function, (object) -> {
+			suggestionsbuilder.suggest(function.apply(object).toString(), function1.apply(object));
+		});
+		return suggestionsbuilder.buildFuture();
+	}
 
-                if (a(s, s1)) {
-                    consumer.accept(t0);
-                }
-            } else if (a(s, minecraftkey.getNamespace()) || minecraftkey.getNamespace().equals("minecraft") && a(s, minecraftkey.getKey())) {
-                consumer.accept(t0);
-            }
-        }
+	static CompletableFuture<Suggestions> a(Stream<MinecraftKey> stream, SuggestionsBuilder suggestionsbuilder) {
+		return a(stream::iterator, suggestionsbuilder);
+	}
 
-    }
+	static <T> CompletableFuture<Suggestions> a(Stream<T> stream, SuggestionsBuilder suggestionsbuilder, Function<T, MinecraftKey> function, Function<T, Message> function1) {
+		return a(stream::iterator, suggestionsbuilder, function, function1);
+	}
 
-    static <T> void a(Iterable<T> iterable, String s, String s1, Function<T, MinecraftKey> function, Consumer<T> consumer) {
-        if (s.isEmpty()) {
-            iterable.forEach(consumer);
-        } else {
-            String s2 = Strings.commonPrefix(s, s1);
+	static CompletableFuture<Suggestions> a(String s, Collection<ICompletionProvider.a> collection, SuggestionsBuilder suggestionsbuilder, Predicate<String> predicate) {
+		List<String> list = Lists.newArrayList();
 
-            if (!s2.isEmpty()) {
-                String s3 = s.substring(s2.length());
+		if (Strings.isNullOrEmpty(s)) {
+			Iterator iterator = collection.iterator();
 
-                a(iterable, s3, function, consumer);
-            }
-        }
+			while (iterator.hasNext()) {
+				ICompletionProvider.a icompletionprovider_a = (ICompletionProvider.a) iterator.next();
+				String s1 = icompletionprovider_a.c + " " + icompletionprovider_a.d + " " + icompletionprovider_a.e;
 
-    }
+				if (predicate.test(s1)) {
+					list.add(icompletionprovider_a.c);
+					list.add(icompletionprovider_a.c + " " + icompletionprovider_a.d);
+					list.add(s1);
+				}
+			}
+		} else {
+			String[] astring = s.split(" ");
+			Iterator iterator1;
+			ICompletionProvider.a icompletionprovider_a1;
+			String s2;
 
-    static CompletableFuture<Suggestions> a(Iterable<MinecraftKey> iterable, SuggestionsBuilder suggestionsbuilder, String s) {
-        String s1 = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+			if (astring.length == 1) {
+				iterator1 = collection.iterator();
 
-        a(iterable, s1, s, (minecraftkey) -> {
-            return minecraftkey;
-        }, (minecraftkey) -> {
-            suggestionsbuilder.suggest(s + minecraftkey);
-        });
-        return suggestionsbuilder.buildFuture();
-    }
+				while (iterator1.hasNext()) {
+					icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
+					s2 = astring[0] + " " + icompletionprovider_a1.d + " " + icompletionprovider_a1.e;
+					if (predicate.test(s2)) {
+						list.add(astring[0] + " " + icompletionprovider_a1.d);
+						list.add(s2);
+					}
+				}
+			} else if (astring.length == 2) {
+				iterator1 = collection.iterator();
 
-    static CompletableFuture<Suggestions> a(Iterable<MinecraftKey> iterable, SuggestionsBuilder suggestionsbuilder) {
-        String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+				while (iterator1.hasNext()) {
+					icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
+					s2 = astring[0] + " " + astring[1] + " " + icompletionprovider_a1.e;
+					if (predicate.test(s2)) {
+						list.add(s2);
+					}
+				}
+			}
+		}
 
-        a(iterable, s, (minecraftkey) -> {
-            return minecraftkey;
-        }, (minecraftkey) -> {
-            suggestionsbuilder.suggest(minecraftkey.toString());
-        });
-        return suggestionsbuilder.buildFuture();
-    }
+		return b(list, suggestionsbuilder);
+	}
 
-    static <T> CompletableFuture<Suggestions> a(Iterable<T> iterable, SuggestionsBuilder suggestionsbuilder, Function<T, MinecraftKey> function, Function<T, Message> function1) {
-        String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+	static CompletableFuture<Suggestions> b(String s, Collection<ICompletionProvider.a> collection, SuggestionsBuilder suggestionsbuilder, Predicate<String> predicate) {
+		List<String> list = Lists.newArrayList();
 
-        a(iterable, s, function, (object) -> {
-            suggestionsbuilder.suggest(((MinecraftKey) function.apply(object)).toString(), (Message) function1.apply(object));
-        });
-        return suggestionsbuilder.buildFuture();
-    }
+		if (Strings.isNullOrEmpty(s)) {
+			Iterator iterator = collection.iterator();
 
-    static CompletableFuture<Suggestions> a(Stream<MinecraftKey> stream, SuggestionsBuilder suggestionsbuilder) {
-        return a(stream::iterator, suggestionsbuilder);
-    }
+			while (iterator.hasNext()) {
+				ICompletionProvider.a icompletionprovider_a = (ICompletionProvider.a) iterator.next();
+				String s1 = icompletionprovider_a.c + " " + icompletionprovider_a.e;
 
-    static <T> CompletableFuture<Suggestions> a(Stream<T> stream, SuggestionsBuilder suggestionsbuilder, Function<T, MinecraftKey> function, Function<T, Message> function1) {
-        return a(stream::iterator, suggestionsbuilder, function, function1);
-    }
+				if (predicate.test(s1)) {
+					list.add(icompletionprovider_a.c);
+					list.add(s1);
+				}
+			}
+		} else {
+			String[] astring = s.split(" ");
 
-    static CompletableFuture<Suggestions> a(String s, Collection<ICompletionProvider.a> collection, SuggestionsBuilder suggestionsbuilder, Predicate<String> predicate) {
-        List<String> list = Lists.newArrayList();
+			if (astring.length == 1) {
+				Iterator iterator1 = collection.iterator();
 
-        if (Strings.isNullOrEmpty(s)) {
-            Iterator iterator = collection.iterator();
+				while (iterator1.hasNext()) {
+					ICompletionProvider.a icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
+					String s2 = astring[0] + " " + icompletionprovider_a1.e;
 
-            while (iterator.hasNext()) {
-                ICompletionProvider.a icompletionprovider_a = (ICompletionProvider.a) iterator.next();
-                String s1 = icompletionprovider_a.c + " " + icompletionprovider_a.d + " " + icompletionprovider_a.e;
+					if (predicate.test(s2)) {
+						list.add(s2);
+					}
+				}
+			}
+		}
 
-                if (predicate.test(s1)) {
-                    list.add(icompletionprovider_a.c);
-                    list.add(icompletionprovider_a.c + " " + icompletionprovider_a.d);
-                    list.add(s1);
-                }
-            }
-        } else {
-            String[] astring = s.split(" ");
-            Iterator iterator1;
-            ICompletionProvider.a icompletionprovider_a1;
-            String s2;
+		return b(list, suggestionsbuilder);
+	}
 
-            if (astring.length == 1) {
-                iterator1 = collection.iterator();
+	static CompletableFuture<Suggestions> b(Iterable<String> iterable, SuggestionsBuilder suggestionsbuilder) {
+		String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+		Iterator iterator = iterable.iterator();
 
-                while (iterator1.hasNext()) {
-                    icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
-                    s2 = astring[0] + " " + icompletionprovider_a1.d + " " + icompletionprovider_a1.e;
-                    if (predicate.test(s2)) {
-                        list.add(astring[0] + " " + icompletionprovider_a1.d);
-                        list.add(s2);
-                    }
-                }
-            } else if (astring.length == 2) {
-                iterator1 = collection.iterator();
+		while (iterator.hasNext()) {
+			String s1 = (String) iterator.next();
 
-                while (iterator1.hasNext()) {
-                    icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
-                    s2 = astring[0] + " " + astring[1] + " " + icompletionprovider_a1.e;
-                    if (predicate.test(s2)) {
-                        list.add(s2);
-                    }
-                }
-            }
-        }
+			if (a(s, s1.toLowerCase(Locale.ROOT))) {
+				suggestionsbuilder.suggest(s1);
+			}
+		}
 
-        return b((Iterable) list, suggestionsbuilder);
-    }
+		return suggestionsbuilder.buildFuture();
+	}
 
-    static CompletableFuture<Suggestions> b(String s, Collection<ICompletionProvider.a> collection, SuggestionsBuilder suggestionsbuilder, Predicate<String> predicate) {
-        List<String> list = Lists.newArrayList();
+	static CompletableFuture<Suggestions> b(Stream<String> stream, SuggestionsBuilder suggestionsbuilder) {
+		String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
 
-        if (Strings.isNullOrEmpty(s)) {
-            Iterator iterator = collection.iterator();
+		stream.filter((s1) -> {
+			return a(s, s1.toLowerCase(Locale.ROOT));
+		}).forEach(suggestionsbuilder::suggest);
+		return suggestionsbuilder.buildFuture();
+	}
 
-            while (iterator.hasNext()) {
-                ICompletionProvider.a icompletionprovider_a = (ICompletionProvider.a) iterator.next();
-                String s1 = icompletionprovider_a.c + " " + icompletionprovider_a.e;
+	static CompletableFuture<Suggestions> a(String[] astring, SuggestionsBuilder suggestionsbuilder) {
+		String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+		String[] astring1 = astring;
+		int i = astring.length;
 
-                if (predicate.test(s1)) {
-                    list.add(icompletionprovider_a.c);
-                    list.add(s1);
-                }
-            }
-        } else {
-            String[] astring = s.split(" ");
+		for (int j = 0; j < i; ++j) {
+			String s1 = astring1[j];
 
-            if (astring.length == 1) {
-                Iterator iterator1 = collection.iterator();
+			if (a(s, s1.toLowerCase(Locale.ROOT))) {
+				suggestionsbuilder.suggest(s1);
+			}
+		}
 
-                while (iterator1.hasNext()) {
-                    ICompletionProvider.a icompletionprovider_a1 = (ICompletionProvider.a) iterator1.next();
-                    String s2 = astring[0] + " " + icompletionprovider_a1.e;
+		return suggestionsbuilder.buildFuture();
+	}
 
-                    if (predicate.test(s2)) {
-                        list.add(s2);
-                    }
-                }
-            }
-        }
+	static boolean a(String s, String s1) {
+		for (int i = 0; !s1.startsWith(s, i); ++i) {
+			i = s1.indexOf(95, i);
+			if (i < 0) {
+				return false;
+			}
+		}
 
-        return b((Iterable) list, suggestionsbuilder);
-    }
+		return true;
+	}
 
-    static CompletableFuture<Suggestions> b(Iterable<String> iterable, SuggestionsBuilder suggestionsbuilder) {
-        String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
-        Iterator iterator = iterable.iterator();
+	Collection<String> l();
 
-        while (iterator.hasNext()) {
-            String s1 = (String) iterator.next();
+	default Collection<String> r() {
+		return Collections.emptyList();
+	}
 
-            if (a(s, s1.toLowerCase(Locale.ROOT))) {
-                suggestionsbuilder.suggest(s1);
-            }
-        }
+	Collection<String> m();
 
-        return suggestionsbuilder.buildFuture();
-    }
+	Collection<MinecraftKey> n();
 
-    static CompletableFuture<Suggestions> b(Stream<String> stream, SuggestionsBuilder suggestionsbuilder) {
-        String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
+	Stream<MinecraftKey> o();
 
-        stream.filter((s1) -> {
-            return a(s, s1.toLowerCase(Locale.ROOT));
-        }).forEach(suggestionsbuilder::suggest);
-        return suggestionsbuilder.buildFuture();
-    }
+	CompletableFuture<Suggestions> a(CommandContext<ICompletionProvider> commandcontext, SuggestionsBuilder suggestionsbuilder);
 
-    static CompletableFuture<Suggestions> a(String[] astring, SuggestionsBuilder suggestionsbuilder) {
-        String s = suggestionsbuilder.getRemaining().toLowerCase(Locale.ROOT);
-        String[] astring1 = astring;
-        int i = astring.length;
+	default Collection<ICompletionProvider.a> s() {
+		return Collections.singleton(ICompletionProvider.a.b);
+	}
 
-        for (int j = 0; j < i; ++j) {
-            String s1 = astring1[j];
+	default Collection<ICompletionProvider.a> t() {
+		return Collections.singleton(ICompletionProvider.a.b);
+	}
 
-            if (a(s, s1.toLowerCase(Locale.ROOT))) {
-                suggestionsbuilder.suggest(s1);
-            }
-        }
+	Set<ResourceKey<World>> p();
 
-        return suggestionsbuilder.buildFuture();
-    }
+	IRegistryCustom q();
 
-    static boolean a(String s, String s1) {
-        for (int i = 0; !s1.startsWith(s, i); ++i) {
-            i = s1.indexOf(95, i);
-            if (i < 0) {
-                return false;
-            }
-        }
+	boolean hasPermission(int i);
 
-        return true;
-    }
+	class a {
 
-    public static class a {
+		public static final ICompletionProvider.a a = new ICompletionProvider.a("^", "^", "^");
+		public static final ICompletionProvider.a b = new ICompletionProvider.a("~", "~", "~");
+		public final String c;
+		public final String d;
+		public final String e;
 
-        public static final ICompletionProvider.a a = new ICompletionProvider.a("^", "^", "^");
-        public static final ICompletionProvider.a b = new ICompletionProvider.a("~", "~", "~");
-        public final String c;
-        public final String d;
-        public final String e;
-
-        public a(String s, String s1, String s2) {
-            this.c = s;
-            this.d = s1;
-            this.e = s2;
-        }
-    }
+		public a(String s, String s1, String s2) {
+			this.c = s;
+			this.d = s1;
+			this.e = s2;
+		}
+	}
 }

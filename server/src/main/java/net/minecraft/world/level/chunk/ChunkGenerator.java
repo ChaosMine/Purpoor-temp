@@ -212,7 +212,7 @@ public abstract class ChunkGenerator {
         } catch (Exception exception) {
             CrashReport crashreport = CrashReport.a(exception, "Biome decoration");
 
-            crashreport.a("Generation").a("CenterX", (Object) i).a("CenterZ", (Object) j).a("Seed", (Object) i1).a("Biome", (Object) biomebase);
+            crashreport.a("Generation").a("CenterX", i).a("CenterZ", j).a("Seed", i1).a("Biome", biomebase);
             throw new ReportedException(crashreport);
         }
     }
@@ -252,7 +252,7 @@ public abstract class ChunkGenerator {
             Supplier<StructureFeature<?, ?>> supplier = (Supplier) iterator.next();
 
             // CraftBukkit start
-            StructureFeature<?, ?> structurefeature = (StructureFeature) supplier.get();
+            StructureFeature<?, ?> structurefeature = supplier.get();
             if (structurefeature.c == StructureGenerator.STRONGHOLD) {
                 synchronized (structurefeature) {
                     this.a(structurefeature, iregistrycustom, structuremanager, ichunkaccess, definedstructuremanager, i, chunkcoordintpair, biomebase);

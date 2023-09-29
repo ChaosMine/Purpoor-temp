@@ -11,7 +11,7 @@ public class WorldGenBlockPlacers<P extends WorldGenBlockPlacer> {
     private final Codec<P> d;
 
     private static <P extends WorldGenBlockPlacer> WorldGenBlockPlacers<P> a(String s, Codec<P> codec) {
-        return (WorldGenBlockPlacers) IRegistry.a(IRegistry.BLOCK_PLACER_TYPE, s, (Object) (new WorldGenBlockPlacers<>(codec)));
+        return IRegistry.a(IRegistry.BLOCK_PLACER_TYPE, s, new WorldGenBlockPlacers<>(codec));
     }
 
     private WorldGenBlockPlacers(Codec<P> codec) {

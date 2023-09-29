@@ -172,7 +172,7 @@ public class TileEntityConduit extends TileEntity implements ITickable {
         int k = this.position.getX();
         int l = this.position.getY();
         int i1 = this.position.getZ();
-        AxisAlignedBB axisalignedbb = (new AxisAlignedBB((double) k, (double) l, (double) i1, (double) (k + 1), (double) (l + 1), (double) (i1 + 1))).g((double) j).b(0.0D, (double) this.world.getBuildHeight(), 0.0D);
+        AxisAlignedBB axisalignedbb = (new AxisAlignedBB(k, l, i1, k + 1, l + 1, i1 + 1)).g(j).b(0.0D, this.world.getBuildHeight(), 0.0D);
         List<EntityHuman> list = this.world.a(EntityHuman.class, axisalignedbb);
 
         if (!list.isEmpty()) {
@@ -181,7 +181,7 @@ public class TileEntityConduit extends TileEntity implements ITickable {
             while (iterator.hasNext()) {
                 EntityHuman entityhuman = (EntityHuman) iterator.next();
 
-                if (this.position.a((BaseBlockPosition) entityhuman.getChunkCoordinates(), (double) j) && entityhuman.isInWaterOrRain()) {
+                if (this.position.a(entityhuman.getChunkCoordinates(), j) && entityhuman.isInWaterOrRain()) {
                     entityhuman.addEffect(new MobEffect(MobEffects.CONDUIT_POWER, 260, 0, true, true), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONDUIT); // CraftBukkit
                 }
             }
@@ -199,14 +199,14 @@ public class TileEntityConduit extends TileEntity implements ITickable {
             this.target = this.x();
             this.k = null;
         } else if (this.target == null) {
-            List<EntityLiving> list = this.world.a(EntityLiving.class, this.m(), (java.util.function.Predicate<EntityLiving>) (entityliving1) -> { // CraftBukkit - decompile error
+            List<EntityLiving> list = this.world.a(EntityLiving.class, this.m(), (entityliving1) -> { // CraftBukkit - decompile error
                 return entityliving1 instanceof IMonster && entityliving1.isInWaterOrRain();
             });
 
             if (!list.isEmpty()) {
-                this.target = (EntityLiving) list.get(this.world.random.nextInt(list.size()));
+                this.target = list.get(this.world.random.nextInt(list.size()));
             }
-        } else if (!this.target.isAlive() || !this.position.a((BaseBlockPosition) this.target.getChunkCoordinates(), 8.0D)) {
+        } else if (!this.target.isAlive() || !this.position.a(this.target.getChunkCoordinates(), 8.0D)) {
             this.target = null;
         }
 
@@ -214,7 +214,7 @@ public class TileEntityConduit extends TileEntity implements ITickable {
             // CraftBukkit start
             CraftEventFactory.blockDamage = CraftBlock.at(this.world, this.position);
             if (this.target.damageEntity(DamageSource.MAGIC, 4.0F)) {
-                this.world.playSound((EntityHuman) null, this.target.locX(), this.target.locY(), this.target.locZ(), SoundEffects.BLOCK_CONDUIT_ATTACK_TARGET, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, this.target.locX(), this.target.locY(), this.target.locZ(), SoundEffects.BLOCK_CONDUIT_ATTACK_TARGET, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
             CraftEventFactory.blockDamage = null;
             // CraftBukkit end
@@ -245,21 +245,21 @@ public class TileEntityConduit extends TileEntity implements ITickable {
         int j = this.position.getY();
         int k = this.position.getZ();
 
-        return (new AxisAlignedBB((double) i, (double) j, (double) k, (double) (i + 1), (double) (j + 1), (double) (k + 1))).g(8.0D);
+        return (new AxisAlignedBB(i, j, k, i + 1, j + 1, k + 1)).g(8.0D);
     }
 
     @Nullable
     private EntityLiving x() {
-        List<EntityLiving> list = this.world.a(EntityLiving.class, this.m(), (java.util.function.Predicate<EntityLiving>) (entityliving) -> { // CraftBukkit - decompile error
+        List<EntityLiving> list = this.world.a(EntityLiving.class, this.m(), (entityliving) -> { // CraftBukkit - decompile error
             return entityliving.getUniqueID().equals(this.k);
         });
 
-        return list.size() == 1 ? (EntityLiving) list.get(0) : null;
+        return list.size() == 1 ? list.get(0) : null;
     }
 
     private void y() {
         Random random = this.world.random;
-        double d0 = (double) (MathHelper.sin((float) (this.a + 35) * 0.1F) / 2.0F + 0.5F);
+        double d0 = MathHelper.sin((float) (this.a + 35) * 0.1F) / 2.0F + 0.5F;
 
         d0 = (d0 * d0 + d0) * 0.30000001192092896D;
         Vec3D vec3d = new Vec3D((double) this.position.getX() + 0.5D, (double) this.position.getY() + 1.5D + d0, (double) this.position.getZ() + 0.5D);
@@ -276,7 +276,7 @@ public class TileEntityConduit extends TileEntity implements ITickable {
                 f1 = -2.0F + random.nextFloat();
                 float f2 = -0.5F + random.nextFloat();
                 BlockPosition blockposition1 = blockposition.b(this.position);
-                Vec3D vec3d1 = (new Vec3D((double) f, (double) f1, (double) f2)).add((double) blockposition1.getX(), (double) blockposition1.getY(), (double) blockposition1.getZ());
+                Vec3D vec3d1 = (new Vec3D(f, f1, f2)).add(blockposition1.getX(), blockposition1.getY(), blockposition1.getZ());
 
                 this.world.addParticle(Particles.NAUTILUS, vec3d.x, vec3d.y, vec3d.z, vec3d1.x, vec3d1.y, vec3d1.z);
             }
@@ -288,7 +288,7 @@ public class TileEntityConduit extends TileEntity implements ITickable {
 
             f = -1.0F + random.nextFloat() * this.target.getHeight();
             f1 = (-0.5F + random.nextFloat()) * (3.0F + this.target.getWidth());
-            Vec3D vec3d3 = new Vec3D((double) f3, (double) f, (double) f1);
+            Vec3D vec3d3 = new Vec3D(f3, f, f1);
 
             this.world.addParticle(Particles.NAUTILUS, vec3d2.x, vec3d2.y, vec3d2.z, vec3d3.x, vec3d3.y, vec3d3.z);
         }
@@ -312,6 +312,6 @@ public class TileEntityConduit extends TileEntity implements ITickable {
     }
 
     public void a(SoundEffect soundeffect) {
-        this.world.playSound((EntityHuman) null, this.position, soundeffect, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        this.world.playSound(null, this.position, soundeffect, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 }

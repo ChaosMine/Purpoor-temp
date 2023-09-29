@@ -38,8 +38,8 @@ public abstract class BlockSign extends BlockTileEntity implements IBlockWaterlo
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockSign.a)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockSign.a)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -101,6 +101,6 @@ public abstract class BlockSign extends BlockTileEntity implements IBlockWaterlo
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockSign.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockSign.a) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 }

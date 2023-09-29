@@ -25,7 +25,7 @@ public class WorldChunkManagerHell extends WorldChunkManager {
     }
 
     public WorldChunkManagerHell(Supplier<BiomeBase> supplier) {
-        super((List) ImmutableList.of(supplier.get()));
+        super(ImmutableList.of(supplier.get()));
         this.f = supplier;
     }
 
@@ -36,7 +36,7 @@ public class WorldChunkManagerHell extends WorldChunkManager {
 
     @Override
     public BiomeBase getBiome(int i, int j, int k) {
-        return (BiomeBase) this.f.get();
+        return this.f.get();
     }
 
     @Nullable
@@ -47,6 +47,6 @@ public class WorldChunkManagerHell extends WorldChunkManager {
 
     @Override
     public Set<BiomeBase> a(int i, int j, int k, int l) {
-        return Sets.newHashSet(new BiomeBase[]{(BiomeBase) this.f.get()});
+        return Sets.newHashSet(new BiomeBase[]{this.f.get()});
     }
 }

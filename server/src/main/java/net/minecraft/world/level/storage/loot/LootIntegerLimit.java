@@ -57,11 +57,11 @@ public class LootIntegerLimit implements IntUnaryOperator {
     }
 
     public static LootIntegerLimit a(int i) {
-        return new LootIntegerLimit(i, (Integer) null);
+        return new LootIntegerLimit(i, null);
     }
 
     public static LootIntegerLimit b(int i) {
-        return new LootIntegerLimit((Integer) null, i);
+        return new LootIntegerLimit(null, i);
     }
 
     public int applyAsInt(int i) {

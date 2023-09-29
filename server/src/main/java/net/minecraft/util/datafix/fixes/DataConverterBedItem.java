@@ -7,31 +7,31 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.util.datafix.schemas.DataConverterSchemaNamed;
 
+import java.util.Objects;
+import java.util.Optional;
+
 public class DataConverterBedItem extends DataFix {
+	public DataConverterBedItem(Schema schema, boolean flag) {
+		super(schema, flag);
+	}
 
-    public DataConverterBedItem(Schema schema, boolean flag) {
-        super(schema, flag);
-    }
+	public TypeRewriteRule makeRule() {
+		OpticFinder<Pair<String, String>> opticfinder = DSL.fieldFinder("id", DSL.named(DataConverterTypes.ITEM_NAME.typeName(), DataConverterSchemaNamed.a()));
 
-    public TypeRewriteRule makeRule() {
-        OpticFinder<Pair<String, String>> opticfinder = DSL.fieldFinder("id", DSL.named(DataConverterTypes.ITEM_NAME.typeName(), DataConverterSchemaNamed.a()));
+		return this.fixTypeEverywhereTyped("BedItemColorFix", this.getInputSchema().getType(DataConverterTypes.ITEM_STACK), (typed) -> {
+			Optional<Pair<String, String>> optional = typed.getOptional(opticfinder);
 
-        return this.fixTypeEverywhereTyped("BedItemColorFix", this.getInputSchema().getType(DataConverterTypes.ITEM_STACK), (typed) -> {
-            Optional<Pair<String, String>> optional = typed.getOptional(opticfinder);
+			if (optional.isPresent() && Objects.equals(optional.get().getSecond(), "minecraft:bed")) {
+				Dynamic<?> dynamic = typed.get(DSL.remainderFinder());
 
-            if (optional.isPresent() && Objects.equals(((Pair) optional.get()).getSecond(), "minecraft:bed")) {
-                Dynamic<?> dynamic = (Dynamic) typed.get(DSL.remainderFinder());
+				if (dynamic.get("Damage").asInt(0) == 0) {
+					return typed.set(DSL.remainderFinder(), dynamic.set("Damage", dynamic.createShort((short) 14)));
+				}
+			}
 
-                if (dynamic.get("Damage").asInt(0) == 0) {
-                    return typed.set(DSL.remainderFinder(), dynamic.set("Damage", dynamic.createShort((short) 14)));
-                }
-            }
-
-            return typed;
-        });
-    }
+			return typed;
+		});
+	}
 }

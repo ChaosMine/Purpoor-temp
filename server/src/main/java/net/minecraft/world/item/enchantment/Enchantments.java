@@ -54,6 +54,6 @@ public class Enchantments {
     // CraftBukkit end
 
     private static Enchantment a(String s, Enchantment enchantment) {
-        return (Enchantment) IRegistry.a(IRegistry.ENCHANTMENT, s, enchantment); // CraftBukkit - decompile error
+        return IRegistry.a(IRegistry.ENCHANTMENT, s, enchantment); // CraftBukkit - decompile error
     }
 }

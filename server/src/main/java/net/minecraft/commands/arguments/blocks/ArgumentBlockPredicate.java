@@ -113,13 +113,13 @@ public class ArgumentBlockPredicate implements ArgumentType<ArgumentBlockPredica
 
                 while (iterator.hasNext()) {
                     Entry<String, String> entry = (Entry) iterator.next();
-                    IBlockState<?> iblockstate = iblockdata.getBlock().getStates().a((String) entry.getKey());
+                    IBlockState<?> iblockstate = iblockdata.getBlock().getStates().a(entry.getKey());
 
                     if (iblockstate == null) {
                         return false;
                     }
 
-                    Comparable<?> comparable = (Comparable) iblockstate.b((String) entry.getValue()).orElse((Object) null);
+                    Comparable<?> comparable = iblockstate.b(entry.getValue()).orElse(null);
 
                     if (comparable == null) {
                         return false;

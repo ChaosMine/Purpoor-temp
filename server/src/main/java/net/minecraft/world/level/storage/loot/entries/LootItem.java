@@ -44,7 +44,7 @@ public class LootItem extends LootSelectorEntry {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItem lootitem, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootSelectorEntry) lootitem, jsonserializationcontext);
+            super.a(jsonobject, lootitem, jsonserializationcontext);
             MinecraftKey minecraftkey = IRegistry.ITEM.getKey(lootitem.g);
 
             if (minecraftkey == null) {
@@ -52,6 +52,11 @@ public class LootItem extends LootSelectorEntry {
             } else {
                 jsonobject.addProperty("name", minecraftkey.toString());
             }
+        }
+
+        @Override
+        public void serializeType(JsonObject jsonobject, LootItem t0, JsonSerializationContext jsonserializationcontext) {
+            a(jsonobject, t0, jsonserializationcontext);
         }
 
         @Override

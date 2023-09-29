@@ -31,7 +31,7 @@ public class BlockTNT extends Block {
 
     public BlockTNT(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) this.getBlockData().set(BlockTNT.a, false));
+        this.j(this.getBlockData().set(BlockTNT.a, false));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class BlockTNT extends Block {
 
     @Override
     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
-        if (!world.s_() && !entityhuman.isCreative() && (Boolean) iblockdata.get(BlockTNT.a)) {
+        if (!world.s_() && !entityhuman.isCreative() && iblockdata.get(BlockTNT.a)) {
             a(world, blockposition);
         }
 
@@ -82,7 +82,7 @@ public class BlockTNT extends Block {
             if(!new TNTPrimeEvent(tntBlock, TNTPrimeEvent.PrimeReason.EXPLOSION, source).callEvent())
                 return;
             // Paper end
-            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, explosion.getSource());
+            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) blockposition.getX() + 0.5D, blockposition.getY(), (double) blockposition.getZ() + 0.5D, explosion.getSource());
 
             entitytntprimed.setFuseTicks((short) (world.random.nextInt(entitytntprimed.getFuseTicks() / 4) + entitytntprimed.getFuseTicks() / 8));
             world.addEntity(entitytntprimed);
@@ -95,10 +95,10 @@ public class BlockTNT extends Block {
 
     private static void a(World world, BlockPosition blockposition, @Nullable EntityLiving entityliving) {
         if (!world.isClientSide) {
-            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, entityliving);
+            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) blockposition.getX() + 0.5D, blockposition.getY(), (double) blockposition.getZ() + 0.5D, entityliving);
 
             world.addEntity(entitytntprimed);
-            world.playSound((EntityHuman) null, entitytntprimed.locX(), entitytntprimed.locY(), entitytntprimed.locZ(), SoundEffects.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, entitytntprimed.locX(), entitytntprimed.locY(), entitytntprimed.locZ(), SoundEffects.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
@@ -115,7 +115,7 @@ public class BlockTNT extends Block {
             if(!new TNTPrimeEvent(tntBlock, TNTPrimeEvent.PrimeReason.ITEM, entityhuman.getBukkitEntity()).callEvent())
                 return EnumInteractionResult.FAIL;
             // Paper end
-            a(world, blockposition, (EntityLiving) entityhuman);
+            a(world, blockposition, entityhuman);
             world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
             if (!entityhuman.isCreative()) {
                 if (item == Items.FLINT_AND_STEEL) {

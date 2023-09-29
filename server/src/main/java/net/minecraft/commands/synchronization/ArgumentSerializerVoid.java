@@ -18,7 +18,7 @@ public class ArgumentSerializerVoid<T extends ArgumentType<?>> implements Argume
 
     @Override
     public T b(PacketDataSerializer packetdataserializer) {
-        return (ArgumentType) this.a.get();
+        return this.a.get();
     }
 
     @Override

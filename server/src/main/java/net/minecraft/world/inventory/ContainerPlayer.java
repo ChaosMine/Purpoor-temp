@@ -37,7 +37,7 @@ public class ContainerPlayer extends ContainerRecipeBook<InventoryCrafting> {
     // CraftBukkit end
 
     public ContainerPlayer(PlayerInventory playerinventory, boolean flag, EntityHuman entityhuman) {
-        super((Containers) null, 0);
+        super(null, 0);
         this.i = flag;
         this.owner = entityhuman;
         // CraftBukkit start
@@ -47,7 +47,7 @@ public class ContainerPlayer extends ContainerRecipeBook<InventoryCrafting> {
         this.player = playerinventory; // CraftBukkit - save player
         setTitle(new ChatMessage("container.crafting")); // SPIGOT-4722: Allocate title for player inventory
         // CraftBukkit end
-        this.a((Slot) (new SlotResult(playerinventory.player, this.craftInventory, this.resultInventory, 0, 154, 28)));
+        this.a(new SlotResult(playerinventory.player, this.craftInventory, this.resultInventory, 0, 154, 28));
 
         int i;
         int j;
@@ -121,7 +121,7 @@ public class ContainerPlayer extends ContainerRecipeBook<InventoryCrafting> {
         super.b(entityhuman);
         this.resultInventory.clear();
         if (!entityhuman.world.isClientSide) {
-            this.a(entityhuman, entityhuman.world, (IInventory) this.craftInventory);
+            this.a(entityhuman, entityhuman.world, this.craftInventory);
         }
     }
 
@@ -133,7 +133,7 @@ public class ContainerPlayer extends ContainerRecipeBook<InventoryCrafting> {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
@@ -155,13 +155,13 @@ public class ContainerPlayer extends ContainerRecipeBook<InventoryCrafting> {
                 if (!this.a(itemstack1, 9, 45, false)) {
                     return ItemStack.b;
                 }
-            } else if (enumitemslot.a() == EnumItemSlot.Function.ARMOR && !((Slot) this.slots.get(8 - enumitemslot.b())).hasItem()) {
+            } else if (enumitemslot.a() == EnumItemSlot.Function.ARMOR && !this.slots.get(8 - enumitemslot.b()).hasItem()) {
                 int j = 8 - enumitemslot.b();
 
                 if (!this.a(itemstack1, j, j + 1, false)) {
                     return ItemStack.b;
                 }
-            } else if (enumitemslot == EnumItemSlot.OFFHAND && !((Slot) this.slots.get(45)).hasItem()) {
+            } else if (enumitemslot == EnumItemSlot.OFFHAND && !this.slots.get(45).hasItem()) {
                 if (!this.a(itemstack1, 45, 46, false)) {
                     return ItemStack.b;
                 }

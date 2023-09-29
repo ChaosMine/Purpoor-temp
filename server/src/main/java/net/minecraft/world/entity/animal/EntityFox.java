@@ -202,7 +202,7 @@ public class EntityFox extends EntityAnimal {
 
             if (this.l(itemstack)) {
                 if (this.bD > 600) {
-                    ItemStack itemstack1 = itemstack.a(this.world, (EntityLiving) this);
+                    ItemStack itemstack1 = itemstack.a(this.world, this);
 
                     if (!itemstack1.isEmpty()) {
                         this.setSlot(EnumItemSlot.MAINHAND, itemstack1);
@@ -276,7 +276,7 @@ public class EntityFox extends EntityAnimal {
 
     @Override
     public EntityFox createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityFox entityfox = (EntityFox) EntityTypes.FOX.a((World) worldserver);
+        EntityFox entityfox = EntityTypes.FOX.a(worldserver);
 
         entityfox.setFoxType(this.random.nextBoolean() ? this.getFoxType() : ((EntityFox) entityageable).getFoxType());
         return entityfox;
@@ -308,7 +308,7 @@ public class EntityFox extends EntityAnimal {
         }
 
         this.a(difficultydamagescaler);
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     private void initializePathFinderGoals() {
@@ -344,7 +344,7 @@ public class EntityFox extends EntityAnimal {
     }
 
     public EntityFox.Type getFoxType() {
-        return EntityFox.Type.a((Integer) this.datawatcher.get(EntityFox.bo));
+        return EntityFox.Type.a(this.datawatcher.get(EntityFox.bo));
     }
 
     public void setFoxType(EntityFox.Type entityfox_type) {
@@ -361,7 +361,7 @@ public class EntityFox extends EntityAnimal {
     }
 
     private void b(@Nullable UUID uuid) {
-        if (((Optional) this.datawatcher.get(EntityFox.FIRST_TRUSTED_PLAYER)).isPresent()) {
+        if (this.datawatcher.get(EntityFox.FIRST_TRUSTED_PLAYER).isPresent()) {
             this.datawatcher.set(EntityFox.SECOND_TRUSTED_PLAYER, Optional.ofNullable(uuid));
         } else {
             this.datawatcher.set(EntityFox.FIRST_TRUSTED_PLAYER, Optional.ofNullable(uuid));
@@ -445,15 +445,15 @@ public class EntityFox extends EntityAnimal {
 
     private void d(int i, boolean flag) {
         if (flag) {
-            this.datawatcher.set(EntityFox.bp, (byte) ((Byte) this.datawatcher.get(EntityFox.bp) | i));
+            this.datawatcher.set(EntityFox.bp, (byte) (this.datawatcher.get(EntityFox.bp) | i));
         } else {
-            this.datawatcher.set(EntityFox.bp, (byte) ((Byte) this.datawatcher.get(EntityFox.bp) & ~i));
+            this.datawatcher.set(EntityFox.bp, (byte) (this.datawatcher.get(EntityFox.bp) & ~i));
         }
 
     }
 
     private boolean t(int i) {
-        return ((Byte) this.datawatcher.get(EntityFox.bp) & i) != 0;
+        return (this.datawatcher.get(EntityFox.bp) & i) != 0;
     }
 
     @Override
@@ -811,10 +811,10 @@ public class EntityFox extends EntityAnimal {
                     if (entityliving.getAdjustedDirection() != entityliving.getDirection()) {
                         return false;
                     } else {
-                        boolean flag = EntityFox.a((EntityFox) EntityFox.this, entityliving);
+                        boolean flag = EntityFox.a(EntityFox.this, entityliving);
 
                         if (!flag) {
-                            EntityFox.this.getNavigation().a((Entity) entityliving, 0);
+                            EntityFox.this.getNavigation().a(entityliving, 0);
                             EntityFox.this.setCrouching(false);
                             EntityFox.this.w(false);
                         }
@@ -893,7 +893,7 @@ public class EntityFox extends EntityAnimal {
                 EntityFox.this.attackEntity(entityliving);
             } else if (EntityFox.this.pitch > 0.0F && EntityFox.this.onGround && (float) EntityFox.this.getMot().y != 0.0F && EntityFox.this.world.getType(EntityFox.this.getChunkCoordinates()).a(Blocks.SNOW)) {
                 EntityFox.this.pitch = 60.0F;
-                EntityFox.this.setGoalTarget((EntityLiving) null);
+                EntityFox.this.setGoalTarget(null);
                 EntityFox.this.x(true);
             }
 
@@ -914,7 +914,7 @@ public class EntityFox extends EntityAnimal {
 
         @Override
         public boolean a() {
-            return EntityFox.this.isInWater() && EntityFox.this.b((Tag) TagsFluid.WATER) > 0.25D || EntityFox.this.aQ();
+            return EntityFox.this.isInWater() && EntityFox.this.b(TagsFluid.WATER) > 0.25D || EntityFox.this.aQ();
         }
     }
 
@@ -1023,7 +1023,7 @@ public class EntityFox extends EntityAnimal {
         protected boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
             IBlockData iblockdata = iworldreader.getType(blockposition);
 
-            return iblockdata.a(Blocks.SWEET_BERRY_BUSH) && (Integer) iblockdata.get(BlockSweetBerryBush.a) >= 2;
+            return iblockdata.a(Blocks.SWEET_BERRY_BUSH) && iblockdata.get(BlockSweetBerryBush.a) >= 2;
         }
 
         @Override
@@ -1046,7 +1046,7 @@ public class EntityFox extends EntityAnimal {
                 IBlockData iblockdata = EntityFox.this.world.getType(this.e);
 
                 if (iblockdata.a(Blocks.SWEET_BERRY_BUSH)) {
-                    int i = (Integer) iblockdata.get(BlockSweetBerryBush.a);
+                    int i = iblockdata.get(BlockSweetBerryBush.a);
 
                     iblockdata.set(BlockSweetBerryBush.a, 1);
                     // CraftBukkit start - call EntityChangeBlockEvent
@@ -1067,7 +1067,7 @@ public class EntityFox extends EntityAnimal {
                     }
 
                     EntityFox.this.playSound(SoundEffects.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, 1.0F, 1.0F);
-                    EntityFox.this.world.setTypeAndData(this.e, (IBlockData) iblockdata.set(BlockSweetBerryBush.a, 1), 2);
+                    EntityFox.this.world.setTypeAndData(this.e, iblockdata.set(BlockSweetBerryBush.a, 1), 2);
                 }
             }
         }
@@ -1349,7 +1349,7 @@ public class EntityFox extends EntityAnimal {
 
                 if (entityplayer2 != null) {
                     entityplayer2.a(StatisticList.ANIMALS_BRED);
-                    CriterionTriggers.o.a(entityplayer2, this.animal, this.partner, (EntityAgeable) entityfox);
+                    CriterionTriggers.o.a(entityplayer2, this.animal, this.partner, entityfox);
                 }
 
                 // Purpur start
@@ -1415,7 +1415,7 @@ public class EntityFox extends EntityAnimal {
             } else {
                 EntityLiving entityliving = EntityFox.this.getGoalTarget();
 
-                return entityliving != null && entityliving.isAlive() && EntityFox.bu.test(entityliving) && EntityFox.this.h((Entity) entityliving) > 36.0D && !EntityFox.this.isCrouching() && !EntityFox.this.eW() && !EntityFox.this.jumping;
+                return entityliving != null && entityliving.isAlive() && EntityFox.bu.test(entityliving) && EntityFox.this.h(entityliving) > 36.0D && !EntityFox.this.isCrouching() && !EntityFox.this.eW() && !EntityFox.this.jumping;
             }
         }
 
@@ -1429,7 +1429,7 @@ public class EntityFox extends EntityAnimal {
         public void d() {
             EntityLiving entityliving = EntityFox.this.getGoalTarget();
 
-            if (entityliving != null && EntityFox.a((EntityFox) EntityFox.this, entityliving)) {
+            if (entityliving != null && EntityFox.a(EntityFox.this, entityliving)) {
                 EntityFox.this.w(true);
                 EntityFox.this.setCrouching(true);
                 EntityFox.this.getNavigation().o();
@@ -1446,12 +1446,12 @@ public class EntityFox extends EntityAnimal {
             EntityLiving entityliving = EntityFox.this.getGoalTarget();
 
             EntityFox.this.getControllerLook().a(entityliving, (float) EntityFox.this.Q(), (float) EntityFox.this.O());
-            if (EntityFox.this.h((Entity) entityliving) <= 36.0D) {
+            if (EntityFox.this.h(entityliving) <= 36.0D) {
                 EntityFox.this.w(true);
                 EntityFox.this.setCrouching(true);
                 EntityFox.this.getNavigation().o();
             } else {
-                EntityFox.this.getNavigation().a((Entity) entityliving, 1.5D);
+                EntityFox.this.getNavigation().a(entityliving, 1.5D);
             }
 
         }
@@ -1503,7 +1503,7 @@ public class EntityFox extends EntityAnimal {
             ItemStack itemstack = EntityFox.this.getEquipment(EnumItemSlot.MAINHAND);
 
             if (itemstack.isEmpty() && !list.isEmpty()) {
-                EntityFox.this.getNavigation().a((Entity) list.get(0), 1.2000000476837158D);
+                EntityFox.this.getNavigation().a(list.get(0), 1.2000000476837158D);
             }
 
         }
@@ -1513,7 +1513,7 @@ public class EntityFox extends EntityAnimal {
             List<EntityItem> list = EntityFox.this.world.a(EntityItem.class, EntityFox.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntityFox.bs);
 
             if (!list.isEmpty()) {
-                EntityFox.this.getNavigation().a((Entity) list.get(0), 1.2000000476837158D);
+                EntityFox.this.getNavigation().a(list.get(0), 1.2000000476837158D);
             }
 
         }
@@ -1523,10 +1523,10 @@ public class EntityFox extends EntityAnimal {
 
         RED(0, "red", new ResourceKey[]{Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.TAIGA_MOUNTAINS, Biomes.GIANT_TREE_TAIGA, Biomes.GIANT_SPRUCE_TAIGA, Biomes.GIANT_TREE_TAIGA_HILLS, Biomes.GIANT_SPRUCE_TAIGA_HILLS}), SNOW(1, "snow", new ResourceKey[]{Biomes.SNOWY_TAIGA, Biomes.SNOWY_TAIGA_HILLS, Biomes.SNOWY_TAIGA_MOUNTAINS});
 
-        private static final EntityFox.Type[] c = (EntityFox.Type[]) Arrays.stream(values()).sorted(Comparator.comparingInt(EntityFox.Type::b)).toArray((i) -> {
-            return new EntityFox.Type[i];
+        private static final EntityFox.Type[] c = Arrays.stream(values()).sorted(Comparator.comparingInt(Type::b)).toArray((i) -> {
+            return new Type[i];
         });
-        private static final Map<String, EntityFox.Type> d = (Map) Arrays.stream(values()).collect(Collectors.toMap(EntityFox.Type::a, (entityfox_type) -> {
+        private static final Map<String, EntityFox.Type> d = Arrays.stream(values()).collect(Collectors.toMap(Type::a, (entityfox_type) -> {
             return entityfox_type;
         }));
         private final int e;
@@ -1548,7 +1548,7 @@ public class EntityFox extends EntityAnimal {
         }
 
         public static EntityFox.Type a(String s) {
-            return (EntityFox.Type) EntityFox.Type.d.getOrDefault(s, EntityFox.Type.RED);
+            return Type.d.getOrDefault(s, Type.RED);
         }
 
         public static EntityFox.Type a(int i) {

@@ -47,7 +47,7 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
 
     public BlockCobbleWall(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCobbleWall.UP, true)).set(BlockCobbleWall.c, BlockPropertyWallHeight.NONE)).set(BlockCobbleWall.b, BlockPropertyWallHeight.NONE)).set(BlockCobbleWall.d, BlockPropertyWallHeight.NONE)).set(BlockCobbleWall.e, BlockPropertyWallHeight.NONE)).set(BlockCobbleWall.f, false));
+        this.j(this.blockStateList.getBlockData().set(BlockCobbleWall.UP, true).set(BlockCobbleWall.c, BlockPropertyWallHeight.NONE).set(BlockCobbleWall.b, BlockPropertyWallHeight.NONE).set(BlockCobbleWall.d, BlockPropertyWallHeight.NONE).set(BlockCobbleWall.e, BlockPropertyWallHeight.NONE).set(BlockCobbleWall.f, false));
         this.g = this.a(4.0F, 3.0F, 16.0F, 0.0F, 14.0F, 16.0F);
         this.h = this.a(4.0F, 3.0F, 24.0F, 0.0F, 24.0F, 24.0F);
     }
@@ -61,15 +61,15 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
         float f7 = 8.0F + f;
         float f8 = 8.0F - f1;
         float f9 = 8.0F + f1;
-        VoxelShape voxelshape = Block.a((double) f6, 0.0D, (double) f6, (double) f7, (double) f2, (double) f7);
-        VoxelShape voxelshape1 = Block.a((double) f8, (double) f3, 0.0D, (double) f9, (double) f4, (double) f9);
-        VoxelShape voxelshape2 = Block.a((double) f8, (double) f3, (double) f8, (double) f9, (double) f4, 16.0D);
-        VoxelShape voxelshape3 = Block.a(0.0D, (double) f3, (double) f8, (double) f9, (double) f4, (double) f9);
-        VoxelShape voxelshape4 = Block.a((double) f8, (double) f3, (double) f8, 16.0D, (double) f4, (double) f9);
-        VoxelShape voxelshape5 = Block.a((double) f8, (double) f3, 0.0D, (double) f9, (double) f5, (double) f9);
-        VoxelShape voxelshape6 = Block.a((double) f8, (double) f3, (double) f8, (double) f9, (double) f5, 16.0D);
-        VoxelShape voxelshape7 = Block.a(0.0D, (double) f3, (double) f8, (double) f9, (double) f5, (double) f9);
-        VoxelShape voxelshape8 = Block.a((double) f8, (double) f3, (double) f8, 16.0D, (double) f5, (double) f9);
+        VoxelShape voxelshape = Block.a(f6, 0.0D, f6, f7, f2, f7);
+        VoxelShape voxelshape1 = Block.a(f8, f3, 0.0D, f9, f4, f9);
+        VoxelShape voxelshape2 = Block.a(f8, f3, f8, f9, f4, 16.0D);
+        VoxelShape voxelshape3 = Block.a(0.0D, f3, f8, f9, f4, f9);
+        VoxelShape voxelshape4 = Block.a(f8, f3, f8, 16.0D, f4, f9);
+        VoxelShape voxelshape5 = Block.a(f8, f3, 0.0D, f9, f5, f9);
+        VoxelShape voxelshape6 = Block.a(f8, f3, f8, f9, f5, 16.0D);
+        VoxelShape voxelshape7 = Block.a(0.0D, f3, f8, f9, f5, f9);
+        VoxelShape voxelshape8 = Block.a(f8, f3, f8, 16.0D, f5, f9);
         Builder<IBlockData, VoxelShape> builder = ImmutableMap.builder();
         Iterator iterator = BlockCobbleWall.UP.getValues().iterator();
 
@@ -101,7 +101,7 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
                                 voxelshape9 = VoxelShapes.a(voxelshape9, voxelshape);
                             }
 
-                            IBlockData iblockdata = (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.getBlockData().set(BlockCobbleWall.UP, obool)).set(BlockCobbleWall.b, blockpropertywallheight)).set(BlockCobbleWall.e, blockpropertywallheight2)).set(BlockCobbleWall.c, blockpropertywallheight1)).set(BlockCobbleWall.d, blockpropertywallheight3);
+                            IBlockData iblockdata = this.getBlockData().set(BlockCobbleWall.UP, obool).set(BlockCobbleWall.b, blockpropertywallheight).set(BlockCobbleWall.e, blockpropertywallheight2).set(BlockCobbleWall.c, blockpropertywallheight1).set(BlockCobbleWall.d, blockpropertywallheight3);
 
                             builder.put(iblockdata.set(BlockCobbleWall.f, false), voxelshape9);
                             builder.put(iblockdata.set(BlockCobbleWall.f, true), voxelshape9);
@@ -116,12 +116,12 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) this.g.get(iblockdata);
+        return this.g.get(iblockdata);
     }
 
     @Override
     public VoxelShape c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) this.h.get(iblockdata);
+        return this.h.get(iblockdata);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
         Block block = iblockdata.getBlock();
         boolean flag1 = block instanceof BlockFenceGate && BlockFenceGate.a(iblockdata, enumdirection);
 
-        return iblockdata.a((Tag) TagsBlock.WALLS) || !b(block) && flag || block instanceof BlockIronBars || flag1;
+        return iblockdata.a(TagsBlock.WALLS) || !b(block) && flag || block instanceof BlockIronBars || flag1;
     }
 
     @Override
@@ -155,18 +155,18 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
         boolean flag1 = this.a(iblockdata1, iblockdata1.d(world, blockposition2, EnumDirection.WEST), EnumDirection.WEST);
         boolean flag2 = this.a(iblockdata2, iblockdata2.d(world, blockposition3, EnumDirection.NORTH), EnumDirection.NORTH);
         boolean flag3 = this.a(iblockdata3, iblockdata3.d(world, blockposition4, EnumDirection.EAST), EnumDirection.EAST);
-        IBlockData iblockdata5 = (IBlockData) this.getBlockData().set(BlockCobbleWall.f, fluid.getType() == FluidTypes.WATER);
+        IBlockData iblockdata5 = this.getBlockData().set(BlockCobbleWall.f, fluid.getType() == FluidTypes.WATER);
 
         return this.a(world, iblockdata5, blockposition5, iblockdata4, flag, flag1, flag2, flag3);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockCobbleWall.f)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockCobbleWall.f)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
-        return enumdirection == EnumDirection.DOWN ? super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1) : (enumdirection == EnumDirection.UP ? this.a((IWorldReader) generatoraccess, iblockdata, blockposition1, iblockdata1) : this.a((IWorldReader) generatoraccess, blockposition, iblockdata, blockposition1, iblockdata1, enumdirection));
+        return enumdirection == EnumDirection.DOWN ? super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1) : (enumdirection == EnumDirection.UP ? this.a(generatoraccess, iblockdata, blockposition1, iblockdata1) : this.a(generatoraccess, blockposition, iblockdata, blockposition1, iblockdata1, enumdirection));
     }
 
     private static boolean a(IBlockData iblockdata, IBlockState<BlockPropertyWallHeight> iblockstate) {
@@ -178,20 +178,20 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
     }
 
     private IBlockData a(IWorldReader iworldreader, IBlockData iblockdata, BlockPosition blockposition, IBlockData iblockdata1) {
-        boolean flag = a(iblockdata, (IBlockState) BlockCobbleWall.c);
-        boolean flag1 = a(iblockdata, (IBlockState) BlockCobbleWall.b);
-        boolean flag2 = a(iblockdata, (IBlockState) BlockCobbleWall.d);
-        boolean flag3 = a(iblockdata, (IBlockState) BlockCobbleWall.e);
+        boolean flag = a(iblockdata, BlockCobbleWall.c);
+        boolean flag1 = a(iblockdata, BlockCobbleWall.b);
+        boolean flag2 = a(iblockdata, BlockCobbleWall.d);
+        boolean flag3 = a(iblockdata, BlockCobbleWall.e);
 
         return this.a(iworldreader, iblockdata, blockposition, iblockdata1, flag, flag1, flag2, flag3);
     }
 
     private IBlockData a(IWorldReader iworldreader, BlockPosition blockposition, IBlockData iblockdata, BlockPosition blockposition1, IBlockData iblockdata1, EnumDirection enumdirection) {
         EnumDirection enumdirection1 = enumdirection.opposite();
-        boolean flag = enumdirection == EnumDirection.NORTH ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, (IBlockState) BlockCobbleWall.c);
-        boolean flag1 = enumdirection == EnumDirection.EAST ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, (IBlockState) BlockCobbleWall.b);
-        boolean flag2 = enumdirection == EnumDirection.SOUTH ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, (IBlockState) BlockCobbleWall.d);
-        boolean flag3 = enumdirection == EnumDirection.WEST ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, (IBlockState) BlockCobbleWall.e);
+        boolean flag = enumdirection == EnumDirection.NORTH ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, BlockCobbleWall.c);
+        boolean flag1 = enumdirection == EnumDirection.EAST ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, BlockCobbleWall.b);
+        boolean flag2 = enumdirection == EnumDirection.SOUTH ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, BlockCobbleWall.d);
+        boolean flag3 = enumdirection == EnumDirection.WEST ? this.a(iblockdata1, iblockdata1.d(iworldreader, blockposition1, enumdirection1), enumdirection1) : a(iblockdata, BlockCobbleWall.e);
         BlockPosition blockposition2 = blockposition.up();
         IBlockData iblockdata2 = iworldreader.getType(blockposition2);
 
@@ -202,19 +202,19 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
         VoxelShape voxelshape = iblockdata1.getCollisionShape(iworldreader, blockposition).a(EnumDirection.DOWN);
         IBlockData iblockdata2 = this.a(iblockdata, flag, flag1, flag2, flag3, voxelshape);
 
-        return (IBlockData) iblockdata2.set(BlockCobbleWall.UP, this.a(iblockdata2, iblockdata1, voxelshape));
+        return iblockdata2.set(BlockCobbleWall.UP, this.a(iblockdata2, iblockdata1, voxelshape));
     }
 
     private boolean a(IBlockData iblockdata, IBlockData iblockdata1, VoxelShape voxelshape) {
-        boolean flag = iblockdata1.getBlock() instanceof BlockCobbleWall && (Boolean) iblockdata1.get(BlockCobbleWall.UP);
+        boolean flag = iblockdata1.getBlock() instanceof BlockCobbleWall && iblockdata1.get(BlockCobbleWall.UP);
 
         if (flag) {
             return true;
         } else {
-            BlockPropertyWallHeight blockpropertywallheight = (BlockPropertyWallHeight) iblockdata.get(BlockCobbleWall.c);
-            BlockPropertyWallHeight blockpropertywallheight1 = (BlockPropertyWallHeight) iblockdata.get(BlockCobbleWall.d);
-            BlockPropertyWallHeight blockpropertywallheight2 = (BlockPropertyWallHeight) iblockdata.get(BlockCobbleWall.b);
-            BlockPropertyWallHeight blockpropertywallheight3 = (BlockPropertyWallHeight) iblockdata.get(BlockCobbleWall.e);
+            BlockPropertyWallHeight blockpropertywallheight = iblockdata.get(BlockCobbleWall.c);
+            BlockPropertyWallHeight blockpropertywallheight1 = iblockdata.get(BlockCobbleWall.d);
+            BlockPropertyWallHeight blockpropertywallheight2 = iblockdata.get(BlockCobbleWall.b);
+            BlockPropertyWallHeight blockpropertywallheight3 = iblockdata.get(BlockCobbleWall.e);
             boolean flag1 = blockpropertywallheight1 == BlockPropertyWallHeight.NONE;
             boolean flag2 = blockpropertywallheight3 == BlockPropertyWallHeight.NONE;
             boolean flag3 = blockpropertywallheight2 == BlockPropertyWallHeight.NONE;
@@ -226,13 +226,13 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
             } else {
                 boolean flag6 = blockpropertywallheight == BlockPropertyWallHeight.TALL && blockpropertywallheight1 == BlockPropertyWallHeight.TALL || blockpropertywallheight2 == BlockPropertyWallHeight.TALL && blockpropertywallheight3 == BlockPropertyWallHeight.TALL;
 
-                return flag6 ? false : iblockdata1.getBlock().a((Tag) TagsBlock.WALL_POST_OVERRIDE) || a(voxelshape, BlockCobbleWall.i);
+                return flag6 ? false : iblockdata1.getBlock().a(TagsBlock.WALL_POST_OVERRIDE) || a(voxelshape, BlockCobbleWall.i);
             }
         }
     }
 
     private IBlockData a(IBlockData iblockdata, boolean flag, boolean flag1, boolean flag2, boolean flag3, VoxelShape voxelshape) {
-        return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.c, this.a(flag, voxelshape, BlockCobbleWall.j))).set(BlockCobbleWall.b, this.a(flag1, voxelshape, BlockCobbleWall.p))).set(BlockCobbleWall.d, this.a(flag2, voxelshape, BlockCobbleWall.k))).set(BlockCobbleWall.e, this.a(flag3, voxelshape, BlockCobbleWall.o));
+        return iblockdata.set(BlockCobbleWall.c, this.a(flag, voxelshape, BlockCobbleWall.j)).set(BlockCobbleWall.b, this.a(flag1, voxelshape, BlockCobbleWall.p)).set(BlockCobbleWall.d, this.a(flag2, voxelshape, BlockCobbleWall.k)).set(BlockCobbleWall.e, this.a(flag3, voxelshape, BlockCobbleWall.o));
     }
 
     private BlockPropertyWallHeight a(boolean flag, VoxelShape voxelshape, VoxelShape voxelshape1) {
@@ -241,7 +241,7 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockCobbleWall.f) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockCobbleWall.f) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
@@ -258,11 +258,11 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
         switch (enumblockrotation) {
             case CLOCKWISE_180:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.d))).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.e))).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.c))).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.b));
+                return iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.d)).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.e)).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.c)).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.b));
             case COUNTERCLOCKWISE_90:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.b))).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.d))).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.e))).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.c));
+                return iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.b)).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.d)).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.e)).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.c));
             case CLOCKWISE_90:
-                return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.e))).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.c))).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.b))).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.d));
+                return iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.e)).set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.c)).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.b)).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.d));
             default:
                 return iblockdata;
         }
@@ -272,9 +272,9 @@ public class BlockCobbleWall extends Block implements IBlockWaterlogged {
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
         switch (enumblockmirror) {
             case LEFT_RIGHT:
-                return (IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.d))).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.c));
+                return iblockdata.set(BlockCobbleWall.c, iblockdata.get(BlockCobbleWall.d)).set(BlockCobbleWall.d, iblockdata.get(BlockCobbleWall.c));
             case FRONT_BACK:
-                return (IBlockData) ((IBlockData) iblockdata.set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.e))).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.b));
+                return iblockdata.set(BlockCobbleWall.b, iblockdata.get(BlockCobbleWall.e)).set(BlockCobbleWall.e, iblockdata.get(BlockCobbleWall.b));
             default:
                 return super.a(iblockdata, enumblockmirror);
         }

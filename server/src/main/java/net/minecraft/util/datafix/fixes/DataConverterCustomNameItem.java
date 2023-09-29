@@ -22,16 +22,16 @@ public class DataConverterCustomNameItem extends DataFix {
         Optional<? extends Dynamic<?>> optional = dynamic.get("display").result();
 
         if (optional.isPresent()) {
-            Dynamic<?> dynamic1 = (Dynamic) optional.get();
+            Dynamic<?> dynamic1 = optional.get();
             Optional<String> optional1 = dynamic1.get("Name").asString().result();
 
             if (optional1.isPresent()) {
-                dynamic1 = dynamic1.set("Name", dynamic1.createString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) (new ChatComponentText((String) optional1.get())))));
+                dynamic1 = dynamic1.set("Name", dynamic1.createString(IChatBaseComponent.ChatSerializer.a(new ChatComponentText(optional1.get()))));
             } else {
                 Optional<String> optional2 = dynamic1.get("LocName").asString().result();
 
                 if (optional2.isPresent()) {
-                    dynamic1 = dynamic1.set("Name", dynamic1.createString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) (new ChatMessage((String) optional2.get())))));
+                    dynamic1 = dynamic1.set("Name", dynamic1.createString(IChatBaseComponent.ChatSerializer.a(new ChatMessage(optional2.get()))));
                     dynamic1 = dynamic1.remove("LocName");
                 }
             }

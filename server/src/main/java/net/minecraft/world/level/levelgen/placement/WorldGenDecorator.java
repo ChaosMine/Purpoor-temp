@@ -15,6 +15,7 @@ import net.minecraft.world.level.levelgen.placement.nether.WorldGenDecoratorNeth
 import net.minecraft.world.level.levelgen.placement.nether.WorldGenDecoratorNetherGlowstone;
 import net.minecraft.world.level.levelgen.placement.nether.WorldGenDecoratorNetherMagma;
 
+@SuppressWarnings("StaticInitializerReferencesSubClass")
 public abstract class WorldGenDecorator<DC extends WorldGenFeatureDecoratorConfiguration> {
 
     public static final WorldGenDecorator<WorldGenFeatureEmptyConfiguration2> a = a("nope", new WorldGenDecoratorEmpty(WorldGenFeatureEmptyConfiguration2.a));
@@ -49,7 +50,7 @@ public abstract class WorldGenDecorator<DC extends WorldGenFeatureDecoratorConfi
     private final Codec<WorldGenDecoratorConfigured<DC>> D;
 
     private static <T extends WorldGenFeatureDecoratorConfiguration, G extends WorldGenDecorator<T>> G a(String s, G g0) {
-        return (WorldGenDecorator) IRegistry.a(IRegistry.DECORATOR, s, (Object) g0);
+        return IRegistry.a(IRegistry.DECORATOR, s, g0);
     }
 
     public WorldGenDecorator(Codec<DC> codec) {

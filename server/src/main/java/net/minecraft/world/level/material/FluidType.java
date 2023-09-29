@@ -25,7 +25,7 @@ public abstract class FluidType {
 
         this.a(blockstatelist_a);
         this.d = blockstatelist_a.a(FluidType::h, Fluid::new);
-        this.f((Fluid) this.d.getBlockData());
+        this.f(this.d.getBlockData());
     }
 
     protected void a(BlockStateList.a<FluidType, Fluid> blockstatelist_a) {}

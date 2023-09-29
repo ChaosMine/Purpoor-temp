@@ -74,7 +74,7 @@ public class Wood extends MaterialData {
         switch (getItemType()) {
             case LEGACY_WOOD:
             case LEGACY_WOOD_DOUBLE_STEP:
-                return TreeSpecies.getByData((byte) getData());
+                return TreeSpecies.getByData(getData());
             case LEGACY_LOG:
             case LEGACY_LEAVES:
                 return TreeSpecies.getByData((byte) (getData() & 0x3));

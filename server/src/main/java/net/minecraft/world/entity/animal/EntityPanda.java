@@ -119,7 +119,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     public int eK() {
-        return (Integer) this.datawatcher.get(EntityPanda.bp);
+        return this.datawatcher.get(EntityPanda.bp);
     }
 
     public void t(int i) {
@@ -149,7 +149,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     public boolean eO() {
-        return (Integer) this.datawatcher.get(EntityPanda.br) > 0;
+        return this.datawatcher.get(EntityPanda.br) > 0;
     }
 
     public void v(boolean flag) {
@@ -157,7 +157,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     private int fk() {
-        return (Integer) this.datawatcher.get(EntityPanda.br);
+        return this.datawatcher.get(EntityPanda.br);
     }
 
     public void setEating(boolean eating) { this.v(eating); } // Purpur - OBFHELPER
@@ -174,7 +174,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     public int eU() {
-        return (Integer) this.datawatcher.get(EntityPanda.bq);
+        return this.datawatcher.get(EntityPanda.bq);
     }
 
     public void u(int i) {
@@ -182,7 +182,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     public EntityPanda.Gene getMainGene() {
-        return EntityPanda.Gene.a((Byte) this.datawatcher.get(EntityPanda.bs));
+        return EntityPanda.Gene.a(this.datawatcher.get(EntityPanda.bs));
     }
 
     public void setMainGene(EntityPanda.Gene entitypanda_gene) {
@@ -194,7 +194,7 @@ public class EntityPanda extends EntityAnimal {
     }
 
     public EntityPanda.Gene getHiddenGene() {
-        return EntityPanda.Gene.a((Byte) this.datawatcher.get(EntityPanda.bt));
+        return EntityPanda.Gene.a(this.datawatcher.get(EntityPanda.bt));
     }
 
     public void setHiddenGene(EntityPanda.Gene entitypanda_gene) {
@@ -225,11 +225,11 @@ public class EntityPanda extends EntityAnimal {
     }
 
     private boolean w(int i) {
-        return ((Byte) this.datawatcher.get(EntityPanda.bu) & i) != 0;
+        return (this.datawatcher.get(EntityPanda.bu) & i) != 0;
     }
 
     private void d(int i, boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityPanda.bu);
+        byte b0 = this.datawatcher.get(EntityPanda.bu);
 
         if (flag) {
             this.datawatcher.set(EntityPanda.bu, (byte) (b0 | i));
@@ -256,7 +256,7 @@ public class EntityPanda extends EntityAnimal {
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityPanda entitypanda = (EntityPanda) EntityTypes.PANDA.a((World) worldserver);
+        EntityPanda entitypanda = EntityTypes.PANDA.a(worldserver);
 
         if (entityageable instanceof EntityPanda) {
             entitypanda.a(this, (EntityPanda) entityageable);
@@ -352,7 +352,7 @@ public class EntityPanda extends EntityAnimal {
 
         if (this.eK() > 0) {
             if (this.getGoalTarget() != null) {
-                this.a((Entity) this.getGoalTarget(), 90.0F, 90.0F);
+                this.a(this.getGoalTarget(), 90.0F, 90.0F);
             }
 
             if (this.eK() == 29 || this.eK() == 14) {
@@ -547,7 +547,7 @@ public class EntityPanda extends EntityAnimal {
             groupdataentity = new EntityAgeable.a(0.2F);
         }
 
-        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) groupdataentity, nbttagcompound);
+        return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
     public void a(EntityPanda entitypanda, @Nullable EntityPanda entitypanda1) {
@@ -700,9 +700,9 @@ public class EntityPanda extends EntityAnimal {
                 BlockPosition blockposition = this.a(this.a.world, this.a, 5, 4);
 
                 if (blockposition != null) {
-                    this.c = (double) blockposition.getX();
-                    this.d = (double) blockposition.getY();
-                    this.e = (double) blockposition.getZ();
+                    this.c = blockposition.getX();
+                    this.d = blockposition.getY();
+                    this.e = blockposition.getZ();
                     return true;
                 } else {
                     return this.g();
@@ -735,14 +735,14 @@ public class EntityPanda extends EntityAnimal {
             if (!this.a.bw && !this.a.bx) {
                 return super.b();
             } else {
-                this.a.setGoalTarget((EntityLiving) null);
+                this.a.setGoalTarget(null);
                 return false;
             }
         }
 
         @Override
         protected void a(EntityInsentient entityinsentient, EntityLiving entityliving) {
-            if (entityinsentient instanceof EntityPanda && ((EntityPanda) entityinsentient).isAggressive()) {
+            if (entityinsentient instanceof EntityPanda && entityinsentient.isAggressive()) {
                 entityinsentient.setGoalTarget(entityliving, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true); // CraftBukkit
             }
 
@@ -819,7 +819,7 @@ public class EntityPanda extends EntityAnimal {
             List<EntityItem> list = EntityPanda.this.world.a(EntityItem.class, EntityPanda.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntityPanda.PICKUP_PREDICATE);
 
             if (!list.isEmpty() && EntityPanda.this.getEquipment(EnumItemSlot.MAINHAND).isEmpty()) {
-                EntityPanda.this.getNavigation().a((Entity) list.get(0), 1.2000000476837158D);
+                EntityPanda.this.getNavigation().a(list.get(0), 1.2000000476837158D);
             } else if (!EntityPanda.this.getEquipment(EnumItemSlot.MAINHAND).isEmpty()) {
                 EntityPanda.this.ft();
             }
@@ -878,9 +878,9 @@ public class EntityPanda extends EntityAnimal {
                         this.e.t(32);
                         this.f = this.e.ticksLived + 600;
                         if (this.e.doAITick()) {
-                            EntityHuman entityhuman = this.b.a(EntityPanda.bv, (EntityLiving) this.e);
+                            EntityHuman entityhuman = this.b.a(EntityPanda.bv, this.e);
 
-                            this.e.bF.a((EntityLiving) entityhuman);
+                            this.e.bF.a(entityhuman);
                         }
                     }
 
@@ -1018,7 +1018,7 @@ public class EntityPanda extends EntityAnimal {
                     if (this.e == EntityHuman.class) {
                         this.b = this.a.world.a(this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ());
                     } else {
-                        this.b = this.a.world.b(this.e, this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ(), this.a.getBoundingBox().grow((double) this.c, 3.0D, (double) this.c));
+                        this.b = this.a.world.b(this.e, this.f, this.a, this.a.locX(), this.a.getHeadY(), this.a.locZ(), this.a.getBoundingBox().grow(this.c, 3.0D, this.c));
                     }
                 }
 
@@ -1071,8 +1071,8 @@ public class EntityPanda extends EntityAnimal {
 
         NORMAL(0, "normal", false), LAZY(1, "lazy", false), WORRIED(2, "worried", false), PLAYFUL(3, "playful", false), BROWN(4, "brown", true), WEAK(5, "weak", true), AGGRESSIVE(6, "aggressive", false);
 
-        private static final EntityPanda.Gene[] h = (EntityPanda.Gene[]) Arrays.stream(values()).sorted(Comparator.comparingInt(EntityPanda.Gene::a)).toArray((i) -> {
-            return new EntityPanda.Gene[i];
+        private static final EntityPanda.Gene[] h = Arrays.stream(values()).sorted(Comparator.comparingInt(Gene::a)).toArray((i) -> {
+            return new Gene[i];
         });
         private final int i;
         private final String j;

@@ -16,7 +16,7 @@ public enum ReputationType {
     public final int h;
     public final int i;
     public final int j;
-    private static final Map<String, ReputationType> k = (Map) Stream.of(values()).collect(ImmutableMap.toImmutableMap((reputationtype) -> {
+    private static final Map<String, ReputationType> k = Stream.of(values()).collect(ImmutableMap.toImmutableMap((reputationtype) -> {
         return reputationtype.f;
     }, Function.identity()));
 
@@ -30,6 +30,6 @@ public enum ReputationType {
 
     @Nullable
     public static ReputationType a(String s) {
-        return (ReputationType) ReputationType.k.get(s);
+        return ReputationType.k.get(s);
     }
 }

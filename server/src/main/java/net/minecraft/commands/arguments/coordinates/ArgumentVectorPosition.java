@@ -30,8 +30,8 @@ public class ArgumentVectorPosition implements IVectorPosition {
         float f3 = MathHelper.sin(-vec2f.i * 0.017453292F);
         float f4 = MathHelper.cos((-vec2f.i + 90.0F) * 0.017453292F);
         float f5 = MathHelper.sin((-vec2f.i + 90.0F) * 0.017453292F);
-        Vec3D vec3d1 = new Vec3D((double) (f * f2), (double) f3, (double) (f1 * f2));
-        Vec3D vec3d2 = new Vec3D((double) (f * f4), (double) f5, (double) (f1 * f4));
+        Vec3D vec3d1 = new Vec3D(f * f2, f3, f1 * f2);
+        Vec3D vec3d2 = new Vec3D(f * f4, f5, f1 * f4);
         Vec3D vec3d3 = vec3d1.c(vec3d2).a(-1.0D);
         double d0 = vec3d1.x * this.c + vec3d2.x * this.b + vec3d3.x * this.a;
         double d1 = vec3d1.y * this.c + vec3d2.y * this.b + vec3d3.y * this.a;

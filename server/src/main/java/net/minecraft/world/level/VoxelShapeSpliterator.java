@@ -104,18 +104,18 @@ public class VoxelShapeSpliterator extends AbstractSpliterator<VoxelShape> {
                     continue;
                 }
 
-                VoxelShape voxelshape = iblockdata.b((IBlockAccess) this.g, this.e, this.c);
+                VoxelShape voxelshape = iblockdata.b(this.g, this.e, this.c);
 
                 if (voxelshape == VoxelShapes.b()) {
-                    if (!this.b.voxelShapeIntersect((double) i, (double) j, (double) k, (double) i + 1.0D, (double) j + 1.0D, (double) k + 1.0D)) { // Tuinity - keep vanilla behavior for voxelshape intersection - See comment in AxisAlignedBB
+                    if (!this.b.voxelShapeIntersect(i, j, k, (double) i + 1.0D, (double) j + 1.0D, (double) k + 1.0D)) { // Tuinity - keep vanilla behavior for voxelshape intersection - See comment in AxisAlignedBB
                         continue;
                     }
 
-                    consumer.accept(voxelshape.a((double) i, (double) j, (double) k));
+                    consumer.accept(voxelshape.a(i, j, k));
                     return true;
                 }
 
-                VoxelShape voxelshape1 = voxelshape.a((double) i, (double) j, (double) k);
+                VoxelShape voxelshape1 = voxelshape.a(i, j, k);
 
                 if (!VoxelShapes.c(voxelshape1, this.f, OperatorBoolean.AND)) {
                     continue;
@@ -164,10 +164,10 @@ public class VoxelShapeSpliterator extends AbstractSpliterator<VoxelShape> {
     }
 
     public static boolean a(WorldBorder worldborder, AxisAlignedBB axisalignedbb) {
-        double d0 = (double) MathHelper.floor(worldborder.e());
-        double d1 = (double) MathHelper.floor(worldborder.f());
-        double d2 = (double) MathHelper.f(worldborder.g());
-        double d3 = (double) MathHelper.f(worldborder.h());
+        double d0 = MathHelper.floor(worldborder.e());
+        double d1 = MathHelper.floor(worldborder.f());
+        double d2 = MathHelper.f(worldborder.g());
+        double d3 = MathHelper.f(worldborder.h());
 
         return axisalignedbb.minX > d0 && axisalignedbb.minX < d2 && axisalignedbb.minZ > d1 && axisalignedbb.minZ < d3 && axisalignedbb.maxX > d0 && axisalignedbb.maxX < d2 && axisalignedbb.maxZ > d1 && axisalignedbb.maxZ < d3;
     }

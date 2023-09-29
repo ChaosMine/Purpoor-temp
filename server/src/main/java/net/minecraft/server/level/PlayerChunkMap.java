@@ -201,7 +201,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 	} // Tuinity - public read
 
 	private int convertSpigotRangeToVanilla(int vanilla) {
-		return MinecraftServer.getServer().applyTrackingRangeScale(vanilla);
+		return MinecraftServer.SERVER.applyTrackingRangeScale(vanilla);
 	}
 	// Paper end - use distance map to optimise tracker
 	// Paper start - optimise PlayerChunkMap#isOutsideRange
@@ -962,7 +962,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
 	protected void save(boolean flag) {
 		var visibleChunks = this.getVisibleChunks(); // Paper remove clone of visible Chunks unless saving off main thread (watchdog kill)
 		if (flag) {
-			var list = visibleChunks.values().stream().filter(PlayerChunk::hasBeenLoaded).peek(PlayerChunk::m).collect(Collectors.toList()); // Paper - remove cloning of visible chunks
+			var list = visibleChunks.values().stream().filter(PlayerChunk::hasBeenLoaded).peek(PlayerChunk::m).toList(); // Paper - remove cloning of visible chunks
 			var mutableboolean = new MutableBoolean();
 
 			do {

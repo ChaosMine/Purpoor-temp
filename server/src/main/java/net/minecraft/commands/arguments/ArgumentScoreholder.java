@@ -39,7 +39,7 @@ public class ArgumentScoreholder implements ArgumentType<ArgumentScoreholder.a> 
         }
 
         return argumentparserselector.a(suggestionsbuilder, (suggestionsbuilder1) -> {
-            ICompletionProvider.b((Iterable) ((CommandListenerWrapper) commandcontext.getSource()).l(), suggestionsbuilder1);
+            ICompletionProvider.b(((CommandListenerWrapper) commandcontext.getSource()).l(), suggestionsbuilder1);
         });
     };
     private static final Collection<String> b = Arrays.asList("Player", "0123", "*", "@e");
@@ -51,7 +51,7 @@ public class ArgumentScoreholder implements ArgumentType<ArgumentScoreholder.a> 
     }
 
     public static String a(CommandContext<CommandListenerWrapper> commandcontext, String s) throws CommandSyntaxException {
-        return (String) b(commandcontext, s).iterator().next();
+        return b(commandcontext, s).iterator().next();
     }
 
     public static Collection<String> b(CommandContext<CommandListenerWrapper> commandcontext, String s) throws CommandSyntaxException {
@@ -104,7 +104,7 @@ public class ArgumentScoreholder implements ArgumentType<ArgumentScoreholder.a> 
 
             if (s.equals("*")) {
                 return (commandlistenerwrapper, supplier) -> {
-                    Collection<String> collection = (Collection) supplier.get();
+                    Collection<String> collection = supplier.get();
 
                     if (collection.isEmpty()) {
                         throw ArgumentScoreholder.c.create();

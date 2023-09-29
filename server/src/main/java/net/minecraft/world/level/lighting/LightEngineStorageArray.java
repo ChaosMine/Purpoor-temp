@@ -86,7 +86,7 @@ public abstract class LightEngineStorageArray<M extends LightEngineStorageArray<
     @Nullable
     public NibbleArray d(long i) {
         if (this.isVisible) { throw new IllegalStateException("writing to visible data"); } // Paper - avoid copying light data
-        return (NibbleArray) this.data.queueRemove(i); // Paper - avoid copying light data
+        return this.data.queueRemove(i); // Paper - avoid copying light data
     }
 
     public void a(long i, NibbleArray nibblearray) {

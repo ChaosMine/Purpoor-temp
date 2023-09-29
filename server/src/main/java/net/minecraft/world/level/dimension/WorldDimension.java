@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Iterator;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -43,7 +43,7 @@ public final class WorldDimension {
     }
 
     public DimensionManager b() {
-        return (DimensionManager) this.f.get();
+        return this.f.get();
     }
 
     public ChunkGenerator c() {
@@ -52,27 +52,22 @@ public final class WorldDimension {
 
     public static RegistryMaterials<WorldDimension> a(RegistryMaterials<WorldDimension> registrymaterials) {
         RegistryMaterials<WorldDimension> registrymaterials1 = new RegistryMaterials<>(IRegistry.M, Lifecycle.experimental());
-        Iterator iterator = WorldDimension.e.iterator();
 
-        while (iterator.hasNext()) {
-            ResourceKey<WorldDimension> resourcekey = (ResourceKey) iterator.next();
-            WorldDimension worlddimension = (WorldDimension) registrymaterials.a(resourcekey);
+			for (ResourceKey<WorldDimension> resourcekey : WorldDimension.e) {
+				WorldDimension worlddimension = registrymaterials.a___key(resourcekey);
 
-            if (worlddimension != null) {
-                registrymaterials1.a(resourcekey, (Object) worlddimension, registrymaterials.d((Object) worlddimension));
-            }
-        }
+				if (worlddimension != null) {
+					registrymaterials1.a(resourcekey, worlddimension, registrymaterials.d(worlddimension));
+				}
+			}
 
-        iterator = registrymaterials.d().iterator();
+			for (Entry<ResourceKey<WorldDimension>, WorldDimension> entry : registrymaterials.d()) {
+				ResourceKey<WorldDimension> resourcekey1 = entry.getKey();
 
-        while (iterator.hasNext()) {
-            Entry<ResourceKey<WorldDimension>, WorldDimension> entry = (Entry) iterator.next();
-            ResourceKey<WorldDimension> resourcekey1 = (ResourceKey) entry.getKey();
-
-            if (!WorldDimension.e.contains(resourcekey1)) {
-                registrymaterials1.a(resourcekey1, entry.getValue(), registrymaterials.d(entry.getValue()));
-            }
-        }
+				if (!WorldDimension.e.contains(resourcekey1)) {
+					registrymaterials1.a(resourcekey1, entry.getValue(), registrymaterials.d(entry.getValue()));
+				}
+			}
 
         return registrymaterials1;
     }
@@ -83,20 +78,20 @@ public final class WorldDimension {
         if (list.size() != WorldDimension.e.size()) {
             return false;
         } else {
-            Entry<ResourceKey<WorldDimension>, WorldDimension> entry = (Entry) list.get(0);
-            Entry<ResourceKey<WorldDimension>, WorldDimension> entry1 = (Entry) list.get(1);
-            Entry<ResourceKey<WorldDimension>, WorldDimension> entry2 = (Entry) list.get(2);
+            Entry<ResourceKey<WorldDimension>, WorldDimension> entry = list.get(0);
+            Entry<ResourceKey<WorldDimension>, WorldDimension> entry1 = list.get(1);
+            Entry<ResourceKey<WorldDimension>, WorldDimension> entry2 = list.get(2);
 
             if (entry.getKey() == WorldDimension.OVERWORLD && entry1.getKey() == WorldDimension.THE_NETHER && entry2.getKey() == WorldDimension.THE_END) {
-                if (!((WorldDimension) entry.getValue()).b().a(DimensionManager.OVERWORLD_IMPL) && ((WorldDimension) entry.getValue()).b() != DimensionManager.m) {
+                if (!entry.getValue().b().a(DimensionManager.OVERWORLD_IMPL) && entry.getValue().b() != DimensionManager.m) {
                     return false;
-                } else if (!((WorldDimension) entry1.getValue()).b().a(DimensionManager.THE_NETHER_IMPL)) {
+                } else if (!entry1.getValue().b().a(DimensionManager.THE_NETHER_IMPL)) {
                     return false;
-                } else if (!((WorldDimension) entry2.getValue()).b().a(DimensionManager.THE_END_IMPL)) {
+                } else if (!entry2.getValue().b().a(DimensionManager.THE_END_IMPL)) {
                     return false;
-                } else if (((WorldDimension) entry1.getValue()).c() instanceof ChunkGeneratorAbstract && ((WorldDimension) entry2.getValue()).c() instanceof ChunkGeneratorAbstract) {
-                    ChunkGeneratorAbstract chunkgeneratorabstract = (ChunkGeneratorAbstract) ((WorldDimension) entry1.getValue()).c();
-                    ChunkGeneratorAbstract chunkgeneratorabstract1 = (ChunkGeneratorAbstract) ((WorldDimension) entry2.getValue()).c();
+                } else if (entry1.getValue().c() instanceof ChunkGeneratorAbstract && entry2.getValue().c() instanceof ChunkGeneratorAbstract) {
+                    ChunkGeneratorAbstract chunkgeneratorabstract = (ChunkGeneratorAbstract) entry1.getValue().c();
+                    ChunkGeneratorAbstract chunkgeneratorabstract1 = (ChunkGeneratorAbstract) entry2.getValue().c();
 
                     if (!chunkgeneratorabstract.a(i, GeneratorSettingBase.e)) {
                         return false;

@@ -50,13 +50,13 @@ public class ItemSpade extends ItemTool {
             if (iblockdata1 != null && world.getType(blockposition.up()).isAir()) {
                 world.playSound(entityhuman, blockposition, SoundEffects.ITEM_SHOVEL_FLATTEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 iblockdata2 = iblockdata1;
-            } else if (iblockdata.getBlock() instanceof BlockCampfire && (Boolean) iblockdata.get(BlockCampfire.LIT)) {
+            } else if (iblockdata.getBlock() instanceof BlockCampfire && iblockdata.get(BlockCampfire.LIT)) {
                 if (!world.s_()) {
-                    world.a((EntityHuman) null, 1009, blockposition, 0);
+                    world.a(null, 1009, blockposition, 0);
                 }
 
-                BlockCampfire.c((GeneratorAccess) world, blockposition, iblockdata);
-                iblockdata2 = (IBlockData) iblockdata.set(BlockCampfire.LIT, false);
+                BlockCampfire.c(world, blockposition, iblockdata);
+                iblockdata2 = iblockdata.set(BlockCampfire.LIT, false);
             }
 
             if (iblockdata2 != null) {

@@ -80,6 +80,6 @@ public class EntityHorseMule extends EntityHorseChestedAbstract {
 
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityAgeable) EntityTypes.MULE.a((World) worldserver);
+        return EntityTypes.MULE.a(worldserver);
     }
 }

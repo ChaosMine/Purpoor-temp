@@ -194,7 +194,7 @@ public class SectionPosition extends BaseBlockPosition {
     }
 
     public static Stream<SectionPosition> a(final int i, final int j, final int k, final int l, final int i1, final int j1) {
-        return StreamSupport.stream(new AbstractSpliterator<SectionPosition>((long) ((l - i + 1) * (i1 - j + 1) * (j1 - k + 1)), 64) {
+        return StreamSupport.stream(new AbstractSpliterator<SectionPosition>((l - i + 1) * (i1 - j + 1) * (j1 - k + 1), 64) {
             final CursorPosition a = new CursorPosition(i, j, k, l, i1, j1);
 
             public boolean tryAdvance(Consumer<? super SectionPosition> consumer) {

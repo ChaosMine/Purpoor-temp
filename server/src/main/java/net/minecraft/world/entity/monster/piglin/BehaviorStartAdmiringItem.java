@@ -17,12 +17,12 @@ public class BehaviorStartAdmiringItem<E extends EntityPiglin> extends Behavior<
     }
 
     protected boolean a(WorldServer worldserver, E e0) {
-        EntityItem entityitem = (EntityItem) e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
+        EntityItem entityitem = e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
 
         return PiglinAI.a(entityitem.getItemStack().getItem());
     }
 
     protected void a(WorldServer worldserver, E e0, long i) {
-        e0.getBehaviorController().a(MemoryModuleType.ADMIRING_ITEM, true, (long) this.b);
+        e0.getBehaviorController().a(MemoryModuleType.ADMIRING_ITEM, true, this.b);
     }
 }

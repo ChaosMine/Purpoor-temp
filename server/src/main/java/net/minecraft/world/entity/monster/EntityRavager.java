@@ -102,7 +102,7 @@ public class EntityRavager extends EntityRaider {
 
     @Override
     protected void H() {
-        boolean flag = !(this.getRidingPassenger() instanceof EntityInsentient) || this.getRidingPassenger().getEntityType().a((Tag) TagsEntity.RADIERS);
+        boolean flag = !(this.getRidingPassenger() instanceof EntityInsentient) || this.getRidingPassenger().getEntityType().a(TagsEntity.RADIERS);
         boolean flag1 = !(this.getVehicle() instanceof EntityBoat);
 
         this.goalSelector.a(PathfinderGoal.Type.MOVE, flag);
@@ -159,7 +159,7 @@ public class EntityRavager extends EntityRaider {
     @Nullable
     @Override
     public Entity getRidingPassenger() {
-        return this.passengers.isEmpty() ? null : (Entity) this.passengers.get(0); // Paper - do not copy list
+        return this.passengers.isEmpty() ? null : this.passengers.get(0); // Paper - do not copy list
     }
 
     @Override
@@ -220,9 +220,9 @@ public class EntityRavager extends EntityRaider {
 
     private void eX() {
         if (this.random.nextInt(6) == 0) {
-            double d0 = this.locX() - (double) this.getWidth() * Math.sin((double) (this.aA * 0.017453292F)) + (this.random.nextDouble() * 0.6D - 0.3D);
+            double d0 = this.locX() - (double) this.getWidth() * Math.sin(this.aA * 0.017453292F) + (this.random.nextDouble() * 0.6D - 0.3D);
             double d1 = this.locY() + (double) this.getHeight() - 0.3D;
-            double d2 = this.locZ() + (double) this.getWidth() * Math.cos((double) (this.aA * 0.017453292F)) + (this.random.nextDouble() * 0.6D - 0.3D);
+            double d2 = this.locZ() + (double) this.getWidth() * Math.cos(this.aA * 0.017453292F) + (this.random.nextDouble() * 0.6D - 0.3D);
 
             this.world.addParticle(Particles.ENTITY_EFFECT, d0, d1, d2, 0.4980392156862745D, 0.5137254901960784D, 0.5725490196078431D);
         }
@@ -248,7 +248,7 @@ public class EntityRavager extends EntityRaider {
                 this.world.broadcastEntityEffect(this, (byte) 39);
                 entityliving.collide(this);
             } else {
-                this.a((Entity) entityliving);
+                this.a(entityliving);
             }
 
             entityliving.velocityChanged = true;
@@ -365,7 +365,7 @@ public class EntityRavager extends EntityRaider {
         protected double a(EntityLiving entityliving) {
             float f = EntityRavager.this.getWidth() - 0.1F;
 
-            return (double) (f * 2.0F * f * 2.0F + entityliving.getWidth());
+            return f * 2.0F * f * 2.0F + entityliving.getWidth();
         }
     }
 }

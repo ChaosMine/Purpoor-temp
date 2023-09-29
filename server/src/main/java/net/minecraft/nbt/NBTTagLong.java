@@ -1,11 +1,12 @@
 package net.minecraft.nbt;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.chat.IChatMutableComponent;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 public class NBTTagLong extends NBTNumber {
 
@@ -38,7 +39,7 @@ public class NBTTagLong extends NBTNumber {
     }
 
     public static NBTTagLong a(long i) {
-        return i >= -128L && i <= 1024L ? NBTTagLong.a.a[(int) i + 128] : new NBTTagLong(i);
+        return i >= -128L && i <= 1024L ? NBTTagLong.a_.a[(int) i + 128] : new NBTTagLong(i);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class NBTTagLong extends NBTNumber {
     }
 
     public boolean equals(Object object) {
-        return this == object ? true : object instanceof NBTTagLong && this.data == ((NBTTagLong) object).data;
+        return this == object || object instanceof NBTTagLong && this.data == ((NBTTagLong) object).data;
     }
 
     public int hashCode() {
@@ -88,7 +89,7 @@ public class NBTTagLong extends NBTNumber {
 
     @Override
     public int asInt() {
-        return (int) (this.data & -1L);
+        return (int) (this.data);
     }
 
     @Override
@@ -116,13 +117,13 @@ public class NBTTagLong extends NBTNumber {
         return this.data;
     }
 
-    static class a {
+    static class a_ {
 
         static final NBTTagLong[] a = new NBTTagLong[1153];
 
         static {
-            for (int i = 0; i < NBTTagLong.a.a.length; ++i) {
-                NBTTagLong.a.a[i] = new NBTTagLong((long) (-128 + i));
+            for (int i = 0; i < a.length; ++i) {
+                a[i] = new NBTTagLong(-128 + i);
             }
 
         }

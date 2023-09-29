@@ -52,11 +52,11 @@ public class CommandData {
         return new ChatMessage("commands.data.modify.invalid_index", new Object[]{object});
     });
     public static final List<Function<String, CommandData.c>> a = ImmutableList.of(CommandDataAccessorEntity.a, CommandDataAccessorTile.a, CommandDataStorage.a);
-    public static final List<CommandData.c> b = (List) CommandData.a.stream().map((function) -> {
-        return (CommandData.c) function.apply("target");
+    public static final List<CommandData.c> b = CommandData.a.stream().map((function) -> {
+        return function.apply("target");
     }).collect(ImmutableList.toImmutableList());
-    public static final List<CommandData.c> c = (List) CommandData.a.stream().map((function) -> {
-        return (CommandData.c) function.apply("source");
+    public static final List<CommandData.c> c = CommandData.a.stream().map((function) -> {
+        return function.apply("source");
     }).collect(ImmutableList.toImmutableList());
 
     public static void a(CommandDispatcher<CommandListenerWrapper> commanddispatcher) {
@@ -94,12 +94,12 @@ public class CommandData {
                 }))).then(net.minecraft.commands.CommandDispatcher.a("append").then(commanddata_b.create((commandcontext, nbttagcompound, argumentnbtkey_h, list) -> {
                     return a(-1, nbttagcompound, argumentnbtkey_h, list);
                 }))).then(net.minecraft.commands.CommandDispatcher.a("set").then(commanddata_b.create((commandcontext, nbttagcompound, argumentnbtkey_h, list) -> {
-                    NBTBase nbtbase = (NBTBase) Iterables.getLast(list);
+                    NBTBase nbtbase = Iterables.getLast(list);
 
                     nbtbase.getClass();
                     return argumentnbtkey_h.b(nbttagcompound, nbtbase::clone);
                 }))).then(net.minecraft.commands.CommandDispatcher.a("merge").then(commanddata_b.create((commandcontext, nbttagcompound, argumentnbtkey_h, list) -> {
-                    Collection<NBTBase> collection = argumentnbtkey_h.a((NBTBase) nbttagcompound, NBTTagCompound::new);
+                    Collection<NBTBase> collection = argumentnbtkey_h.a(nbttagcompound, NBTTagCompound::new);
                     int i = 0;
 
                     NBTTagCompound nbttagcompound1;
@@ -136,7 +136,7 @@ public class CommandData {
     }
 
     private static int a(int i, NBTTagCompound nbttagcompound, ArgumentNBTKey.h argumentnbtkey_h, List<NBTBase> list) throws CommandSyntaxException {
-        Collection<NBTBase> collection = argumentnbtkey_h.a((NBTBase) nbttagcompound, NBTTagList::new);
+        Collection<NBTBase> collection = argumentnbtkey_h.a(nbttagcompound, NBTTagList::new);
         int j = 0;
 
         boolean flag;
@@ -193,7 +193,7 @@ public class CommandData {
                             }).then(net.minecraft.commands.CommandDispatcher.a("sourcePath", (ArgumentType) ArgumentNBTKey.a()).executes((commandcontext) -> {
                                 CommandDataAccessor commanddataaccessor = commanddata_c1.a(commandcontext);
                                 ArgumentNBTKey.h argumentnbtkey_h = ArgumentNBTKey.a(commandcontext, "sourcePath");
-                                List<NBTBase> list = argumentnbtkey_h.a((NBTBase) commanddataaccessor.a());
+                                List<NBTBase> list = argumentnbtkey_h.a(commanddataaccessor.a());
 
                                 return a(commandcontext, commanddata_c, commanddata_a, list);
                             }));
@@ -244,9 +244,9 @@ public class CommandData {
     }
 
     private static NBTBase a(ArgumentNBTKey.h argumentnbtkey_h, CommandDataAccessor commanddataaccessor) throws CommandSyntaxException {
-        Collection<NBTBase> collection = argumentnbtkey_h.a((NBTBase) commanddataaccessor.a());
+        Collection<NBTBase> collection = argumentnbtkey_h.a(commanddataaccessor.a());
         Iterator<NBTBase> iterator = collection.iterator();
-        NBTBase nbtbase = (NBTBase) iterator.next();
+        NBTBase nbtbase = iterator.next();
 
         if (iterator.hasNext()) {
             throw CommandData.g.create();

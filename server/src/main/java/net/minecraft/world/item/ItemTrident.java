@@ -93,7 +93,7 @@ public class ItemTrident extends Item implements ItemVanishable {
                             entitythrowntrident.trident = itemstack.cloneItemStack(); // SPIGOT-4511 update since damage call moved
                             // CraftBukkit end
 
-                            world.playSound((EntityHuman) null, (Entity) entitythrowntrident, SoundEffects.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSound(null, entitythrowntrident, SoundEffects.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             if (!entityhuman.abilities.canInstantlyBuild) {
                                 entityhuman.inventory.f(itemstack);
                             }
@@ -133,7 +133,7 @@ public class ItemTrident extends Item implements ItemVanishable {
                         }
                         // Purpur end
 
-                        entityhuman.i((double) f2, (double) f3, (double) f4);
+                        entityhuman.i(f2, f3, f4);
                         entityhuman.r(20);
                         if (entityhuman.isOnGround()) {
                             float f7 = 1.1999999F;
@@ -151,7 +151,7 @@ public class ItemTrident extends Item implements ItemVanishable {
                             soundeffect = SoundEffects.ITEM_TRIDENT_RIPTIDE_1;
                         }
 
-                        world.playSound((EntityHuman) null, (Entity) entityhuman, soundeffect, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        world.playSound(null, entityhuman, soundeffect, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
 
                 }

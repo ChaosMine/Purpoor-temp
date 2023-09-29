@@ -45,19 +45,19 @@ public class EnchantmentFrostWalker extends Enchantment {
             IBlockData iblockdata = Blocks.FROSTED_ICE.getBlockData();
             float f = (float) Math.min(16, 2 + i);
             BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
-            Iterator iterator = BlockPosition.a(blockposition.a((double) (-f), -1.0D, (double) (-f)), blockposition.a((double) f, -1.0D, (double) f)).iterator();
+            Iterator iterator = BlockPosition.a(blockposition.a(-f, -1.0D, -f), blockposition.a(f, -1.0D, f)).iterator();
 
             while (iterator.hasNext()) {
                 BlockPosition blockposition1 = (BlockPosition) iterator.next();
 
-                if (blockposition1.a((IPosition) entityliving.getPositionVector(), (double) f)) {
+                if (blockposition1.a(entityliving.getPositionVector(), f)) {
                     blockposition_mutableblockposition.d(blockposition1.getX(), blockposition1.getY() + 1, blockposition1.getZ());
                     IBlockData iblockdata1 = world.getType(blockposition_mutableblockposition);
 
                     if (iblockdata1.isAir()) {
                         IBlockData iblockdata2 = world.getType(blockposition1);
 
-                        if (iblockdata2.getMaterial() == Material.WATER && (Integer) iblockdata2.get(BlockFluids.LEVEL) == 0 && iblockdata.canPlace(world, blockposition1) && world.a(iblockdata, blockposition1, VoxelShapeCollision.a())) {
+                        if (iblockdata2.getMaterial() == Material.WATER && iblockdata2.get(BlockFluids.LEVEL) == 0 && iblockdata.canPlace(world, blockposition1) && world.a(iblockdata, blockposition1, VoxelShapeCollision.a())) {
                             // CraftBukkit Start - Call EntityBlockFormEvent for Frost Walker
                             if (org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(world, blockposition1, iblockdata, entityliving)) {
                                 world.getBlockTickList().a(blockposition1, Blocks.FROSTED_ICE, MathHelper.nextInt(entityliving.getRandom(), 60, 120));

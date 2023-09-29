@@ -48,7 +48,7 @@ public class DataConverterNewVillage extends DataFix {
                                 return pair.mapFirst((s) -> {
                                     return s.equals("New_Village") ? "Village" : s;
                                 });
-                            }).collect(Collectors.toList());
+                            }).toList();
                         });
                     }).update(DSL.remainderFinder(), (dynamic) -> {
                         return dynamic.update("References", (dynamic1) -> {

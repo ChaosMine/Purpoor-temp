@@ -31,7 +31,7 @@ public class BlockRedstoneOre extends Block {
 
     public BlockRedstoneOre(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) this.getBlockData().set(BlockRedstoneOre.a, false));
+        this.j(this.getBlockData().set(BlockRedstoneOre.a, false));
     }
 
     @Override
@@ -83,25 +83,25 @@ public class BlockRedstoneOre extends Block {
                 return;
             }
             // CraftBukkit end
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneOre.a, true), 3);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneOre.a, true), 3);
         }
 
     }
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockRedstoneOre.a);
+        return iblockdata.get(BlockRedstoneOre.a);
     }
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Boolean) iblockdata.get(BlockRedstoneOre.a)) {
+        if (iblockdata.get(BlockRedstoneOre.a)) {
             // CraftBukkit start
             if (CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, iblockdata.set(BlockRedstoneOre.a, false)).isCancelled()) {
                 return;
             }
             // CraftBukkit end
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRedstoneOre.a, false), 3);
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockRedstoneOre.a, false), 3);
         }
 
     }

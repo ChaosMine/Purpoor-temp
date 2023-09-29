@@ -18,7 +18,7 @@ public abstract class IBlockDataHolder<O, S> {
             if (entry == null) {
                 return "<NULL>";
             } else {
-                IBlockState<?> iblockstate = (IBlockState) entry.getKey();
+                IBlockState<?> iblockstate = entry.getKey();
 
                 return iblockstate.getName() + "=" + this.a((IBlockState) iblockstate, (Comparable) entry.getValue()); // Paper - decompile fix
             }
@@ -67,7 +67,7 @@ public abstract class IBlockDataHolder<O, S> {
         stringbuilder.append(this.c);
         if (!this.getStateMap().isEmpty()) {
             stringbuilder.append('[');
-            stringbuilder.append((String) this.getStateMap().entrySet().stream().map(IBlockDataHolder.STATE_TO_VALUE).collect(Collectors.joining(",")));
+            stringbuilder.append(this.getStateMap().entrySet().stream().map(IBlockDataHolder.STATE_TO_VALUE).collect(Collectors.joining(",")));
             stringbuilder.append(']');
         }
 
@@ -120,7 +120,7 @@ public abstract class IBlockDataHolder<O, S> {
 
             while (unmodifiableiterator.hasNext()) {
                 Entry<IBlockState<?>, Comparable<?>> entry = (Entry) unmodifiableiterator.next();
-                IBlockState<?> iblockstate = (IBlockState) entry.getKey();
+                IBlockState<?> iblockstate = entry.getKey();
                 Iterator iterator = iblockstate.getValues().iterator();
 
                 while (iterator.hasNext()) {
@@ -132,7 +132,7 @@ public abstract class IBlockDataHolder<O, S> {
                 }
             }
 
-            this.e = (Table) (table.isEmpty() ? table : ArrayTable.create(table)); this.optimisedTable.loadInTable((Table)this.e, this.b); // Tuinity - optimise state lookup
+            this.e = table.isEmpty() ? table : ArrayTable.create(table); this.optimisedTable.loadInTable((Table)this.e, this.b); // Tuinity - optimise state lookup
 
         }
     }

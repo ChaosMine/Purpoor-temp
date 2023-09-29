@@ -212,13 +212,13 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
         // CraftBukkit end
     }
 
-    public static boolean b(EntityTypes<EntityPigZombie> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
+    public static boolean b_pigzombie(EntityTypes<EntityPigZombie> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         return generatoraccess.getDifficulty() != EnumDifficulty.PEACEFUL && generatoraccess.getType(blockposition.down()).getBlock() != Blocks.NETHER_WART_BLOCK;
     }
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this) && !iworldreader.containsLiquid(this.getBoundingBox());
+        return iworldreader.j(this) && !iworldreader.containsLiquid(this.getBoundingBox());
     }
 
     @Override
@@ -285,6 +285,6 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
 
     @Override
     public boolean f(EntityHuman entityhuman) {
-        return this.a_((EntityLiving) entityhuman);
+        return this.a_(entityhuman);
     }
 }

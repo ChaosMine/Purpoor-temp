@@ -27,7 +27,7 @@ public class BlockReed extends Block {
 
     protected BlockReed(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockReed.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockReed.AGE, 0));
     }
 
     @Override
@@ -48,18 +48,18 @@ public class BlockReed extends Block {
         if (worldserver.isEmpty(blockposition.up())) {
             int i;
 
-            for (i = 1; worldserver.getType(blockposition.down(i)).a((Block) this); ++i) {
+            for (i = 1; worldserver.getType(blockposition.down(i)).a(this); ++i) {
                 ;
             }
 
                 if (i < worldserver.paperConfig.reedMaxHeight) { // Paper - Configurable growth height
-                int j = (Integer) iblockdata.get(BlockReed.AGE);
+                int j = iblockdata.get(BlockReed.AGE);
 
                 if (j >= (byte) range(3, ((100.0F / worldserver.spigotConfig.caneModifier) * 15) + 0.5F, 15)) { // Spigot
                     org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition.up(), this.getBlockData()); // CraftBukkit
-                    worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockReed.AGE, 0), 4);
+                    worldserver.setTypeAndData(blockposition, iblockdata.set(BlockReed.AGE, 0), 4);
                 } else {
-                    worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockReed.AGE, j + 1), 4);
+                    worldserver.setTypeAndData(blockposition, iblockdata.set(BlockReed.AGE, j + 1), 4);
                 }
             }
         }
@@ -91,7 +91,7 @@ public class BlockReed extends Block {
                     IBlockData iblockdata2 = iworldreader.getType(blockposition1.shift(enumdirection));
                     Fluid fluid = iworldreader.getFluid(blockposition1.shift(enumdirection));
 
-                    if (fluid.a((Tag) TagsFluid.WATER) || iblockdata2.a(Blocks.FROSTED_ICE)) {
+                    if (fluid.a(TagsFluid.WATER) || iblockdata2.a(Blocks.FROSTED_ICE)) {
                         return true;
                     }
                 }

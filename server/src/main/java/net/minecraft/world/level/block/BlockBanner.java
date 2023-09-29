@@ -26,7 +26,7 @@ public class BlockBanner extends BlockBannerAbstract {
 
     public BlockBanner(EnumColor enumcolor, BlockBase.Info blockbase_info) {
         super(enumcolor, blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBanner.ROTATION, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockBanner.ROTATION, 0));
         BlockBanner.b.put(enumcolor, this);
     }
 
@@ -42,7 +42,7 @@ public class BlockBanner extends BlockBannerAbstract {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockBanner.ROTATION, MathHelper.floor((double) ((180.0F + blockactioncontext.h()) * 16.0F / 360.0F) + 0.5D) & 15);
+        return this.getBlockData().set(BlockBanner.ROTATION, MathHelper.floor((double) ((180.0F + blockactioncontext.h()) * 16.0F / 360.0F) + 0.5D) & 15);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class BlockBanner extends BlockBannerAbstract {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockBanner.ROTATION, enumblockrotation.a((Integer) iblockdata.get(BlockBanner.ROTATION), 16));
+        return iblockdata.set(BlockBanner.ROTATION, enumblockrotation.a(iblockdata.get(BlockBanner.ROTATION), 16));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return (IBlockData) iblockdata.set(BlockBanner.ROTATION, enumblockmirror.a((Integer) iblockdata.get(BlockBanner.ROTATION), 16));
+        return iblockdata.set(BlockBanner.ROTATION, enumblockmirror.a(iblockdata.get(BlockBanner.ROTATION), 16));
     }
 
     @Override

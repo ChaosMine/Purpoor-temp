@@ -5,52 +5,36 @@ import com.mojang.datafixers.Typed;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+
 import java.util.Objects;
 
 public class DataConverterHorse extends DataConverterEntityName {
+	public DataConverterHorse(Schema schema, boolean flag) {
+		super("EntityHorseSplitFix", schema, flag);
+	}
 
-    public DataConverterHorse(Schema schema, boolean flag) {
-        super("EntityHorseSplitFix", schema, flag);
-    }
+	@Override
+	protected Pair<String, Typed<?>> a(String s, Typed<?> typed) {
+		Dynamic<?> dynamic = typed.get(DSL.remainderFinder());
 
-    @Override
-    protected Pair<String, Typed<?>> a(String s, Typed<?> typed) {
-        Dynamic<?> dynamic = (Dynamic) typed.get(DSL.remainderFinder());
+		if (Objects.equals("EntityHorse", s)) {
+			int i = dynamic.get("Type").asInt(0);
+			String s1 = switch (i) {
+				default -> "Horse";
+				case 1 -> "Donkey";
+				case 2 -> "Mule";
+				case 3 -> "ZombieHorse";
+				case 4 -> "SkeletonHorse";
+			};
 
-        if (Objects.equals("EntityHorse", s)) {
-            int i = dynamic.get("Type").asInt(0);
-            String s1;
+			dynamic.remove("Type");
+			Type<?> type = this.getOutputSchema().findChoiceType(DataConverterTypes.ENTITY).types().get(s1);
+			var dataresult = typed.write();
 
-            switch (i) {
-                case 0:
-                default:
-                    s1 = "Horse";
-                    break;
-                case 1:
-                    s1 = "Donkey";
-                    break;
-                case 2:
-                    s1 = "Mule";
-                    break;
-                case 3:
-                    s1 = "ZombieHorse";
-                    break;
-                case 4:
-                    s1 = "SkeletonHorse";
-            }
-
-            dynamic.remove("Type");
-            Type<?> type = (Type) this.getOutputSchema().findChoiceType(DataConverterTypes.ENTITY).types().get(s1);
-            DataResult dataresult = typed.write();
-
-            type.getClass();
-            return Pair.of(s1, ((Pair) dataresult.flatMap(type::readTyped).result().orElseThrow(() -> {
-                return new IllegalStateException("Could not parse the new horse");
-            })).getFirst());
-        } else {
-            return Pair.of(s, typed);
-        }
-    }
+			return Pair.of(s1, (dataresult.flatMap(type::readTyped).result().orElseThrow(() -> new IllegalStateException("Could not parse the new horse"))).getFirst());
+		} else {
+			return Pair.of(s, typed);
+		}
+	}
 }

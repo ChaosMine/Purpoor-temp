@@ -139,7 +139,7 @@ public class WorldGenMineshaftPieces {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            if (this.a((IBlockAccess) generatoraccessseed, structureboundingbox)) {
+            if (this.a(generatoraccessseed, structureboundingbox)) {
                 return false;
             } else {
                 this.a(generatoraccessseed, structureboundingbox, 0, 5, 0, 2, 7, 1, WorldGenMineshaftPieces.WorldGenMineshaftStairs.m, WorldGenMineshaftPieces.WorldGenMineshaftStairs.m, false);
@@ -261,7 +261,7 @@ public class WorldGenMineshaftPieces {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            if (this.a((IBlockAccess) generatoraccessseed, structureboundingbox)) {
+            if (this.a(generatoraccessseed, structureboundingbox)) {
                 return false;
             } else {
                 IBlockData iblockdata = this.a();
@@ -284,7 +284,7 @@ public class WorldGenMineshaftPieces {
 
                 for (int i = this.n.a; i <= this.n.d; ++i) {
                     for (int j = this.n.c; j <= this.n.f; ++j) {
-                        if (this.a((IBlockAccess) generatoraccessseed, i, this.n.b - 1, j, structureboundingbox).isAir() && this.a((IWorldReader) generatoraccessseed, i, this.n.b - 1, j, structureboundingbox)) {
+                        if (this.a((IBlockAccess) generatoraccessseed, i, this.n.b - 1, j, structureboundingbox).isAir() && this.a(generatoraccessseed, i, this.n.b - 1, j, structureboundingbox)) {
                             this.a(generatoraccessseed, iblockdata, i, this.n.b - 1, j, structureboundingbox);
                         }
                     }
@@ -453,8 +453,8 @@ public class WorldGenMineshaftPieces {
         protected boolean a(GeneratorAccessSeed generatoraccessseed, StructureBoundingBox structureboundingbox, Random random, int i, int j, int k, MinecraftKey minecraftkey) {
             BlockPosition blockposition = new BlockPosition(this.a(i, k), this.d(j), this.b(i, k));
 
-            if (structureboundingbox.b((BaseBlockPosition) blockposition) && generatoraccessseed.getType(blockposition).isAir() && !generatoraccessseed.getType(blockposition.down()).isAir()) {
-                IBlockData iblockdata = (IBlockData) Blocks.RAIL.getBlockData().set(BlockMinecartTrack.SHAPE, random.nextBoolean() ? BlockPropertyTrackPosition.NORTH_SOUTH : BlockPropertyTrackPosition.EAST_WEST);
+            if (structureboundingbox.b(blockposition) && generatoraccessseed.getType(blockposition).isAir() && !generatoraccessseed.getType(blockposition.down()).isAir()) {
+                IBlockData iblockdata = Blocks.RAIL.getBlockData().set(BlockMinecartTrack.SHAPE, random.nextBoolean() ? BlockPropertyTrackPosition.NORTH_SOUTH : BlockPropertyTrackPosition.EAST_WEST);
 
                 this.a(generatoraccessseed, iblockdata, i, j, k, structureboundingbox);
                 EntityMinecartChest entityminecartchest = new EntityMinecartChest(generatoraccessseed.getMinecraftWorld(), (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D);
@@ -469,7 +469,7 @@ public class WorldGenMineshaftPieces {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            if (this.a((IBlockAccess) generatoraccessseed, structureboundingbox)) {
+            if (this.a(generatoraccessseed, structureboundingbox)) {
                 return false;
             } else {
                 boolean flag = false;
@@ -514,7 +514,7 @@ public class WorldGenMineshaftPieces {
                         int k1 = this.b(1, i1);
                         BlockPosition blockposition1 = new BlockPosition(j1, l, k1);
 
-                        if (structureboundingbox.b((BaseBlockPosition) blockposition1) && this.a((IWorldReader) generatoraccessseed, 1, 0, i1, structureboundingbox)) {
+                        if (structureboundingbox.b(blockposition1) && this.a(generatoraccessseed, 1, 0, i1, structureboundingbox)) {
                             this.d = true;
                             generatoraccessseed.setTypeAndData(blockposition1, Blocks.SPAWNER.getBlockData(), 2);
                             TileEntity tileentity = generatoraccessseed.getTileEntity(blockposition1);
@@ -531,7 +531,7 @@ public class WorldGenMineshaftPieces {
                         boolean flag4 = true;
                         IBlockData iblockdata1 = this.a((IBlockAccess) generatoraccessseed, k, -1, j, structureboundingbox);
 
-                        if (iblockdata1.isAir() && this.a((IWorldReader) generatoraccessseed, k, -1, j, structureboundingbox)) {
+                        if (iblockdata1.isAir() && this.a(generatoraccessseed, k, -1, j, structureboundingbox)) {
                             boolean flag5 = true;
 
                             this.a(generatoraccessseed, iblockdata, k, -1, j, structureboundingbox);
@@ -540,13 +540,13 @@ public class WorldGenMineshaftPieces {
                 }
 
                 if (this.b) {
-                    IBlockData iblockdata2 = (IBlockData) Blocks.RAIL.getBlockData().set(BlockMinecartTrack.SHAPE, BlockPropertyTrackPosition.NORTH_SOUTH);
+                    IBlockData iblockdata2 = Blocks.RAIL.getBlockData().set(BlockMinecartTrack.SHAPE, BlockPropertyTrackPosition.NORTH_SOUTH);
 
                     for (j = 0; j <= i; ++j) {
                         IBlockData iblockdata3 = this.a((IBlockAccess) generatoraccessseed, 1, -1, j, structureboundingbox);
 
                         if (!iblockdata3.isAir() && iblockdata3.i(generatoraccessseed, new BlockPosition(this.a(1, j), this.d(-1), this.b(1, j)))) {
-                            float f = this.a((IWorldReader) generatoraccessseed, 1, 0, j, structureboundingbox) ? 0.7F : 0.9F;
+                            float f = this.a(generatoraccessseed, 1, 0, j, structureboundingbox) ? 0.7F : 0.9F;
 
                             this.a(generatoraccessseed, structureboundingbox, random, f, 1, 0, j, iblockdata2);
                         }
@@ -562,22 +562,22 @@ public class WorldGenMineshaftPieces {
                 IBlockData iblockdata = this.a();
                 IBlockData iblockdata1 = this.b();
 
-                this.a(generatoraccessseed, structureboundingbox, i, j, k, i, l - 1, k, (IBlockData) iblockdata1.set(BlockFence.WEST, true), WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
-                this.a(generatoraccessseed, structureboundingbox, i1, j, k, i1, l - 1, k, (IBlockData) iblockdata1.set(BlockFence.EAST, true), WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
+                this.a(generatoraccessseed, structureboundingbox, i, j, k, i, l - 1, k, iblockdata1.set(BlockFence.WEST, true), WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
+                this.a(generatoraccessseed, structureboundingbox, i1, j, k, i1, l - 1, k, iblockdata1.set(BlockFence.EAST, true), WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
                 if (random.nextInt(4) == 0) {
                     this.a(generatoraccessseed, structureboundingbox, i, l, k, i, l, k, iblockdata, WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
                     this.a(generatoraccessseed, structureboundingbox, i1, l, k, i1, l, k, iblockdata, WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
                 } else {
                     this.a(generatoraccessseed, structureboundingbox, i, l, k, i1, l, k, iblockdata, WorldGenMineshaftPieces.WorldGenMineshaftCorridor.m, false);
-                    this.a(generatoraccessseed, structureboundingbox, random, 0.05F, i + 1, l, k - 1, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.NORTH));
-                    this.a(generatoraccessseed, structureboundingbox, random, 0.05F, i + 1, l, k + 1, (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH));
+                    this.a(generatoraccessseed, structureboundingbox, random, 0.05F, i + 1, l, k - 1, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.NORTH));
+                    this.a(generatoraccessseed, structureboundingbox, random, 0.05F, i + 1, l, k + 1, Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, EnumDirection.SOUTH));
                 }
 
             }
         }
 
         private void a(GeneratorAccessSeed generatoraccessseed, StructureBoundingBox structureboundingbox, Random random, float f, int i, int j, int k) {
-            if (this.a((IWorldReader) generatoraccessseed, i, j, k, structureboundingbox)) {
+            if (this.a(generatoraccessseed, i, j, k, structureboundingbox)) {
                 this.a(generatoraccessseed, structureboundingbox, random, f, i, j, k, Blocks.COBWEB.getBlockData());
             }
 
@@ -673,7 +673,7 @@ public class WorldGenMineshaftPieces {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            if (this.a((IBlockAccess) generatoraccessseed, structureboundingbox)) {
+            if (this.a(generatoraccessseed, structureboundingbox)) {
                 return false;
             } else {
                 this.a(generatoraccessseed, structureboundingbox, this.n.a, this.n.b, this.n.c, this.n.d, this.n.b, this.n.f, Blocks.DIRT.getBlockData(), WorldGenMineshaftPieces.WorldGenMineshaftRoom.m, true);

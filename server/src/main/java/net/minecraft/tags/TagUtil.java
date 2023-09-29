@@ -13,7 +13,7 @@ import net.minecraft.resources.MinecraftKey;
 public class TagUtil<T> {
 
     private Tags<T> a = Tags.c();
-    private final List<TagUtil.a<T>> b = Lists.newArrayList();
+    private final List<a_<T>> b = Lists.newArrayList();
     private final Function<ITagRegistry, Tags<T>> c;
 
     public TagUtil(Function<ITagRegistry, Tags<T>> function) {
@@ -21,14 +21,14 @@ public class TagUtil<T> {
     }
 
     public Tag.e<T> a(String s) {
-        TagUtil.a<T> tagutil_a = new TagUtil.a<>(new MinecraftKey(s));
+        a_<T> tagutil_a = new a_<>(new MinecraftKey(s));
 
         this.b.add(tagutil_a);
         return tagutil_a;
     }
 
     public void a(ITagRegistry itagregistry) {
-        Tags<T> tags = (Tags) this.c.apply(itagregistry);
+        Tags<T> tags = this.c.apply(itagregistry);
 
         this.a = tags;
         this.b.forEach((tagutil_a) -> {
@@ -45,20 +45,20 @@ public class TagUtil<T> {
     }
 
     public Set<MinecraftKey> b(ITagRegistry itagregistry) {
-        Tags<T> tags = (Tags) this.c.apply(itagregistry);
-        Set<MinecraftKey> set = (Set) this.b.stream().map(TagUtil.a::a).collect(Collectors.toSet());
+        Tags<T> tags = this.c.apply(itagregistry);
+        Set<MinecraftKey> set = this.b.stream().map(TagUtil.a_::a).collect(Collectors.toSet());
         ImmutableSet<MinecraftKey> immutableset = ImmutableSet.copyOf(tags.b());
 
         return Sets.difference(set, immutableset);
     }
 
-    static class a<T> implements Tag.e<T> {
+    static class a_<T> implements Tag.e<T> {
 
         @Nullable
         private Tag<T> b;
         protected final MinecraftKey a;
 
-        private a(MinecraftKey minecraftkey) {
+        private a_(MinecraftKey minecraftkey) {
             this.a = minecraftkey;
         }
 
@@ -76,7 +76,7 @@ public class TagUtil<T> {
         }
 
         void a(Function<MinecraftKey, Tag<T>> function) {
-            this.b = (Tag) function.apply(this.a);
+            this.b = function.apply(this.a);
         }
 
         @Override

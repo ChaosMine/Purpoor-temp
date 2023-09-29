@@ -55,6 +55,6 @@ public class PathfinderGoalCatSitOnBed extends PathfinderGoalGotoTarget {
 
     @Override
     protected boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
-        return iworldreader.isEmpty(blockposition.up()) && iworldreader.getType(blockposition).getBlock().a((Tag) TagsBlock.BEDS);
+        return iworldreader.isEmpty(blockposition.up()) && iworldreader.getType(blockposition).getBlock().a(TagsBlock.BEDS);
     }
 }

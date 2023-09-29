@@ -35,7 +35,7 @@ public class in implements il {
     }
 
     public in a(ir ir) {
-        return this.a((List) ImmutableList.of(ir));
+        return this.a(ImmutableList.of(ir));
     }
 
     public in a(im im, List<ir> list) {
@@ -44,26 +44,21 @@ public class in implements il {
     }
 
     public in a(im im, ir... air) {
-        return this.a(im, (List) ImmutableList.copyOf(air));
+        return this.a(im, ImmutableList.copyOf(air));
     }
 
     public in a(im im, ir ir) {
-        return this.a(im, (List) ImmutableList.of(ir));
+        return this.a(im, ImmutableList.of(ir));
     }
 
     public JsonElement get() {
-        BlockStateList<Block, IBlockData> blockstatelist = this.a.getStates();
-
-        this.b.forEach((in_b) -> {
-            in_b.a(blockstatelist);
-        });
-        JsonArray jsonarray = new JsonArray();
-
-        this.b.stream().map(in.b::get).forEach(jsonarray::add);
-        JsonObject jsonobject = new JsonObject();
-
-        jsonobject.add("multipart", jsonarray);
-        return jsonobject;
+        BlockStateList<Block, IBlockData> var0 = this.a.getStates();
+        this.b.forEach(var1x -> var1x.a(var0));
+        JsonArray var1 = new JsonArray();
+        this.b.stream().map(v -> v.get()).forEach(var1::add);
+        JsonObject var2 = new JsonObject();
+        var2.add("multipart", var1);
+        return var2;
     }
 
     static class a extends in.b {
@@ -71,7 +66,7 @@ public class in implements il {
         private final im a;
 
         private a(im im, List<ir> list) {
-            super(list, null);
+            super(list);
             this.a = im;
         }
 
@@ -82,7 +77,7 @@ public class in implements il {
 
         @Override
         public void a(JsonObject jsonobject) {
-            jsonobject.add("when", (JsonElement) this.a.get());
+            jsonobject.add("when", this.a.get());
         }
     }
 

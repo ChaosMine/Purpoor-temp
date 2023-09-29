@@ -52,14 +52,14 @@ public class PacketPlayOutSpawnEntity implements Packet<PacketListenerPlayOut> {
     }
 
     public PacketPlayOutSpawnEntity(Entity entity, EntityTypes<?> entitytypes, int i, BlockPosition blockposition) {
-        this(entity.getId(), entity.getUniqueID(), (double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), entity.pitch, entity.yaw, entitytypes, i, entity.getMot());
+        this(entity.getId(), entity.getUniqueID(), blockposition.getX(), blockposition.getY(), blockposition.getZ(), entity.pitch, entity.yaw, entitytypes, i, entity.getMot());
     }
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
         this.a = packetdataserializer.i();
         this.b = packetdataserializer.k();
-        this.k = (EntityTypes) IRegistry.ENTITY_TYPE.fromId(packetdataserializer.i());
+        this.k = IRegistry.ENTITY_TYPE.fromId(packetdataserializer.i());
         this.c = packetdataserializer.readDouble();
         this.d = packetdataserializer.readDouble();
         this.e = packetdataserializer.readDouble();

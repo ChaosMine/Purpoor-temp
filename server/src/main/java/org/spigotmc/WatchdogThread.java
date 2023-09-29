@@ -134,7 +134,7 @@ public class WatchdogThread extends Thread {
 			// Paper start
 			Logger log = Bukkit.getServer().getLogger();
 			long currentTime = monotonicMillis();
-			MinecraftServer server = MinecraftServer.getServer();
+			MinecraftServer server = MinecraftServer.SERVER;
 			if (lastTick != 0 && timeoutTime > 0 && hasStarted && (!server.isRunning() || (currentTime > lastTick + earlyWarningEvery && !DISABLE_WATCHDOG))) {
 				boolean isLongTimeout = currentTime > lastTick + timeoutTime || (!server.isRunning() && !server.hasStopped() && currentTime > lastTick + 1000);
 				// Don't spam early warning dumps

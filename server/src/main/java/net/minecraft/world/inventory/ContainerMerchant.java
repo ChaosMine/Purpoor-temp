@@ -41,7 +41,7 @@ public class ContainerMerchant extends Container {
         this.inventoryMerchant = new InventoryMerchant(imerchant);
         this.a(new Slot(this.inventoryMerchant, 0, 136, 37));
         this.a(new Slot(this.inventoryMerchant, 1, 162, 37));
-        this.a((Slot) (new SlotMerchantResult(playerinventory.player, imerchant, this.inventoryMerchant, 2, 220, 37)));
+        this.a(new SlotMerchantResult(playerinventory.player, imerchant, this.inventoryMerchant, 2, 220, 37));
         this.player = playerinventory; // CraftBukkit - save player
 
         int j;
@@ -81,7 +81,7 @@ public class ContainerMerchant extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
@@ -134,7 +134,7 @@ public class ContainerMerchant extends Container {
     @Override
     public void b(EntityHuman entityhuman) {
         super.b(entityhuman);
-        this.merchant.setTradingPlayer((EntityHuman) null);
+        this.merchant.setTradingPlayer(null);
         if (!this.merchant.getWorld().isClientSide) {
             if (entityhuman.isAlive() && (!(entityhuman instanceof EntityPlayer) || !((EntityPlayer) entityhuman).q())) {
                 entityhuman.inventory.a(entityhuman.world, this.inventoryMerchant.splitWithoutUpdate(0));
@@ -178,10 +178,10 @@ public class ContainerMerchant extends Container {
             }
 
             if (this.inventoryMerchant.getItem(0).isEmpty() && this.inventoryMerchant.getItem(1).isEmpty()) {
-                ItemStack itemstack2 = ((MerchantRecipe) this.i().get(i)).getBuyItem1();
+                ItemStack itemstack2 = this.i().get(i).getBuyItem1();
 
                 this.c(0, itemstack2);
-                ItemStack itemstack3 = ((MerchantRecipe) this.i().get(i)).getBuyItem2();
+                ItemStack itemstack3 = this.i().get(i).getBuyItem2();
 
                 this.c(1, itemstack3);
             }
@@ -192,7 +192,7 @@ public class ContainerMerchant extends Container {
     private void c(int i, ItemStack itemstack) {
         if (!itemstack.isEmpty()) {
             for (int j = 3; j < 39; ++j) {
-                ItemStack itemstack1 = ((Slot) this.slots.get(j)).getItem();
+                ItemStack itemstack1 = this.slots.get(j).getItem();
 
                 if (!itemstack1.isEmpty() && this.b(itemstack, itemstack1)) {
                     ItemStack itemstack2 = this.inventoryMerchant.getItem(i);

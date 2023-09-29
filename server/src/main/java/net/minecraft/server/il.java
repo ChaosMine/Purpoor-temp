@@ -5,6 +5,5 @@ import java.util.function.Supplier;
 import net.minecraft.world.level.block.Block;
 
 public interface il extends Supplier<JsonElement> {
-
     Block a();
 }

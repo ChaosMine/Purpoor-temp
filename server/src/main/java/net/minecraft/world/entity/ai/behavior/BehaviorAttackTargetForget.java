@@ -48,19 +48,19 @@ public class BehaviorAttackTargetForget<E extends EntityInsentient> extends Beha
     }
 
     private EntityLiving b(E e0) {
-        return (EntityLiving) e0.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+        return e0.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
     }
 
     private static <E extends EntityLiving> boolean a(E e0) {
         Optional<Long> optional = e0.getBehaviorController().getMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
 
-        return optional.isPresent() && e0.world.getTime() - (Long) optional.get() > 200L;
+        return optional.isPresent() && e0.world.getTime() - optional.get() > 200L;
     }
 
     private boolean c(E e0) {
         Optional<EntityLiving> optional = e0.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET);
 
-        return optional.isPresent() && !((EntityLiving) optional.get()).isAlive();
+        return optional.isPresent() && !optional.get().isAlive();
     }
 
     private void d(E e0, EntityTargetEvent.TargetReason reason) {

@@ -52,14 +52,14 @@ public class WorldGenStronghold extends StructureGenerator<WorldGenFeatureEmptyC
                 WorldGenStrongholdPieces.a();
                 worldgenstrongholdpieces_worldgenstrongholdstart = new WorldGenStrongholdPieces.WorldGenStrongholdStart(this.d, (i << 4) + 2, (j << 4) + 2);
                 this.b.add(worldgenstrongholdpieces_worldgenstrongholdstart);
-                worldgenstrongholdpieces_worldgenstrongholdstart.a((StructurePiece) worldgenstrongholdpieces_worldgenstrongholdstart, this.b, (Random) this.d);
+                worldgenstrongholdpieces_worldgenstrongholdstart.a(worldgenstrongholdpieces_worldgenstrongholdstart, this.b, this.d);
                 List list = worldgenstrongholdpieces_worldgenstrongholdstart.c;
 
                 while (!list.isEmpty()) {
                     int l = this.d.nextInt(list.size());
                     StructurePiece structurepiece = (StructurePiece) list.remove(l);
 
-                    structurepiece.a((StructurePiece) worldgenstrongholdpieces_worldgenstrongholdstart, this.b, (Random) this.d);
+                    structurepiece.a(worldgenstrongholdpieces_worldgenstrongholdstart, this.b, this.d);
                 }
 
                 this.b();

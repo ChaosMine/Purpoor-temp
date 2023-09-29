@@ -61,7 +61,7 @@ public class WorldGenMonument extends StructureGenerator<WorldGenFeatureEmptyCon
             }
 
             biomebase1 = (BiomeBase) iterator.next();
-        } while (biomebase1.e().a((StructureGenerator) this));
+        } while (biomebase1.e().a(this));
 
         return false;
     }

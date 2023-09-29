@@ -58,8 +58,8 @@ public enum EnumBannerPatternType {
                 Pair<EnumBannerPatternType, EnumColor> pair = (Pair) iterator.next();
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
 
-                nbttagcompound.setString("Pattern", ((EnumBannerPatternType) pair.getLeft()).V);
-                nbttagcompound.setInt("Color", ((EnumColor) pair.getRight()).getColorIndex());
+                nbttagcompound.setString("Pattern", pair.getLeft().V);
+                nbttagcompound.setInt("Color", pair.getRight().getColorIndex());
                 nbttaglist.add(nbttagcompound);
             }
 

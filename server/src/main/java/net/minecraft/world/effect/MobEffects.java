@@ -74,6 +74,6 @@ public class MobEffects {
     // CraftBukkit end
 
     private static MobEffectList a(int i, String s, MobEffectList mobeffectlist) {
-        return (MobEffectList) IRegistry.a(IRegistry.MOB_EFFECT, i, s, mobeffectlist);
+        return IRegistry.a(IRegistry.MOB_EFFECT, i, s, mobeffectlist);
     }
 }

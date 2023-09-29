@@ -49,11 +49,11 @@ public abstract class jw<T> implements DebugReportProvider {
             return this.f.containsKey(minecraftkey) ? tag : null;
         };
         Function<MinecraftKey, T> function1 = (minecraftkey) -> {
-            return this.c.getOptional(minecraftkey).orElse((Object) null);
+            return this.c.getOptional(minecraftkey).orElse(null);
         };
 
         this.f.forEach((minecraftkey, tag_a) -> {
-            List<Tag.b> list = (List) tag_a.b(function, function1).collect(Collectors.toList());
+            List<Tag.b> list = tag_a.b(function, function1).toList();
 
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", minecraftkey, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
@@ -109,7 +109,7 @@ public abstract class jw<T> implements DebugReportProvider {
     }
 
     protected Tag.a b(Tag.e<T> tag_e) {
-        return (Tag.a) this.f.computeIfAbsent(tag_e.a(), (minecraftkey) -> {
+        return this.f.computeIfAbsent(tag_e.a(), (minecraftkey) -> {
             return new Tag.a();
         });
     }
@@ -138,12 +138,8 @@ public abstract class jw<T> implements DebugReportProvider {
 
         @SafeVarargs
         public final jw.a<T> a(T... at) {
-            Stream stream = Stream.of(at);
-            IRegistry iregistry = this.b;
-
-            this.b.getClass();
-            stream.map(iregistry::getKey).forEach((minecraftkey) -> {
-                this.a.a(minecraftkey, this.c);
+            Stream.of(at).map(this.b::getKey).forEach(key -> {
+                this.a.a(key, this.c);
             });
             return this;
         }

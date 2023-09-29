@@ -46,7 +46,7 @@ public class PacketPlayOutEntityEquipment implements Packet<PacketListenerPlayOu
         int i = this.b.size();
 
         for (int j = 0; j < i; ++j) {
-            Pair<EnumItemSlot, ItemStack> pair = (Pair) this.b.get(j);
+            Pair<EnumItemSlot, ItemStack> pair = this.b.get(j);
             EnumItemSlot enumitemslot = (EnumItemSlot) pair.getFirst();
             boolean flag = j != i - 1;
             int k = enumitemslot.ordinal();

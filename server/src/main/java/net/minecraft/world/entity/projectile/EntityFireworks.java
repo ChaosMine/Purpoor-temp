@@ -111,7 +111,7 @@ public class EntityFireworks extends IProjectile {
 
         if (this.n()) {
             if (this.ridingEntity == null) {
-                ((OptionalInt) this.datawatcher.get(EntityFireworks.c)).ifPresent((i) -> {
+                this.datawatcher.get(EntityFireworks.c).ifPresent((i) -> {
                     Entity entity = this.world.getEntity(i);
 
                     if (entity instanceof EntityLiving) {
@@ -146,7 +146,7 @@ public class EntityFireworks extends IProjectile {
             this.setMot(vec3d);
         }
 
-        MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
+        MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, this::a);
 
         if (!this.noclip) {
             this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
@@ -155,7 +155,7 @@ public class EntityFireworks extends IProjectile {
 
         this.x();
         if (this.ticksFlown == 0 && !this.isSilent()) {
-            this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
+            this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
         }
 
         ++this.ticksFlown;
@@ -195,7 +195,7 @@ public class EntityFireworks extends IProjectile {
     protected void a(MovingObjectPositionBlock movingobjectpositionblock) {
         BlockPosition blockposition = new BlockPosition(movingobjectpositionblock.getBlockPosition());
 
-        this.world.getType(blockposition).a(this.world, blockposition, (Entity) this);
+        this.world.getType(blockposition).a(this.world, blockposition, this);
         if (!this.world.s_() && this.hasExplosions()) {
             // CraftBukkit start
             if (!org.bukkit.craftbukkit.event.CraftEventFactory.callFireworkExplodeEvent(this).isCancelled()) {
@@ -208,7 +208,7 @@ public class EntityFireworks extends IProjectile {
     }
 
     private boolean hasExplosions() {
-        ItemStack itemstack = (ItemStack) this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
+        ItemStack itemstack = this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
         NBTTagCompound nbttagcompound = itemstack.isEmpty() ? null : itemstack.b("Fireworks");
         NBTTagList nbttaglist = nbttagcompound != null ? nbttagcompound.getList("Explosions", 10) : null;
 
@@ -217,7 +217,7 @@ public class EntityFireworks extends IProjectile {
 
     private void m() {
         float f = 0.0F;
-        ItemStack itemstack = (ItemStack) this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
+        ItemStack itemstack = this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
         NBTTagCompound nbttagcompound = itemstack.isEmpty() ? null : itemstack.b("Fireworks");
         NBTTagList nbttaglist = nbttagcompound != null ? nbttagcompound.getList("Explosions", 10) : null;
 
@@ -254,7 +254,7 @@ public class EntityFireworks extends IProjectile {
                     }
 
                     if (flag) {
-                        float f1 = f * (float) Math.sqrt((5.0D - (double) this.g((Entity) entityliving)) / 5.0D);
+                        float f1 = f * (float) Math.sqrt((5.0D - (double) this.g(entityliving)) / 5.0D);
 
                         CraftEventFactory.entityDamage = this; // CraftBukkit
                         entityliving.damageEntity(DamageSource.a(this, this.getShooter()), f1);
@@ -267,11 +267,11 @@ public class EntityFireworks extends IProjectile {
     }
 
     private boolean n() {
-        return ((OptionalInt) this.datawatcher.get(EntityFireworks.c)).isPresent();
+        return this.datawatcher.get(EntityFireworks.c).isPresent();
     }
 
     public boolean isShotAtAngle() {
-        return (Boolean) this.datawatcher.get(EntityFireworks.SHOT_AT_ANGLE);
+        return this.datawatcher.get(EntityFireworks.SHOT_AT_ANGLE);
     }
 
     @Override
@@ -279,13 +279,13 @@ public class EntityFireworks extends IProjectile {
         super.saveData(nbttagcompound);
         nbttagcompound.setInt("Life", this.ticksFlown);
         nbttagcompound.setInt("LifeTime", this.expectedLifespan);
-        ItemStack itemstack = (ItemStack) this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
+        ItemStack itemstack = this.datawatcher.get(EntityFireworks.FIREWORK_ITEM);
 
         if (!itemstack.isEmpty()) {
             nbttagcompound.set("FireworksItem", itemstack.save(new NBTTagCompound()));
         }
 
-        nbttagcompound.setBoolean("ShotAtAngle", (Boolean) this.datawatcher.get(EntityFireworks.SHOT_AT_ANGLE));
+        nbttagcompound.setBoolean("ShotAtAngle", this.datawatcher.get(EntityFireworks.SHOT_AT_ANGLE));
         // Paper start
         if (this.spawningEntity != null) {
             nbttagcompound.setUUID("SpawningEntity", this.spawningEntity);

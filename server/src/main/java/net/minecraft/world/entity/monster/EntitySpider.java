@@ -75,7 +75,7 @@ public class EntitySpider extends EntityMonster {
 
     @Override
     public double bc() {
-        return (double) (this.getHeight() * 0.5F);
+        return this.getHeight() * 0.5F;
     }
 
     @Override
@@ -146,11 +146,11 @@ public class EntitySpider extends EntityMonster {
     }
 
     public boolean eL() {
-        return ((Byte) this.datawatcher.get(EntitySpider.b) & 1) != 0;
+        return (this.datawatcher.get(EntitySpider.b) & 1) != 0;
     }
 
     public void t(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntitySpider.b);
+        byte b0 = this.datawatcher.get(EntitySpider.b);
 
         if (flag) {
             b0 = (byte) (b0 | 1);
@@ -167,10 +167,10 @@ public class EntitySpider extends EntityMonster {
         Object object = super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
 
         if (worldaccess.getRandom().nextInt(100) == 0) {
-            EntitySkeleton entityskeleton = (EntitySkeleton) EntityTypes.SKELETON.a(this.world);
+            EntitySkeleton entityskeleton = EntityTypes.SKELETON.a(this.world);
 
             entityskeleton.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, 0.0F);
-            entityskeleton.prepare(worldaccess, difficultydamagescaler, enummobspawn, (GroupDataEntity) null, (NBTTagCompound) null);
+            entityskeleton.prepare(worldaccess, difficultydamagescaler, enummobspawn, null, null);
             entityskeleton.startRiding(this);
         }
 
@@ -227,7 +227,7 @@ public class EntitySpider extends EntityMonster {
             float f = this.a.aR();
 
             if (f >= 0.5F && this.a.getRandom().nextInt(100) == 0) {
-                this.a.setGoalTarget((EntityLiving) null);
+                this.a.setGoalTarget(null);
                 return false;
             } else {
                 return super.b();
@@ -236,7 +236,7 @@ public class EntitySpider extends EntityMonster {
 
         @Override
         protected double a(EntityLiving entityliving) {
-            return (double) (4.0F + entityliving.getWidth());
+            return 4.0F + entityliving.getWidth();
         }
     }
 

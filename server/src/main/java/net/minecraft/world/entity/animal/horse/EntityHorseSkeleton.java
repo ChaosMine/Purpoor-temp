@@ -81,7 +81,7 @@ public class EntityHorseSkeleton extends EntityHorseAbstract {
     @Override
     protected SoundEffect getSoundAmbient() {
         super.getSoundAmbient();
-        return this.a((Tag) TagsFluid.WATER) ? SoundEffects.ENTITY_SKELETON_HORSE_AMBIENT_WATER : SoundEffects.ENTITY_SKELETON_HORSE_AMBIENT;
+        return this.a(TagsFluid.WATER) ? SoundEffects.ENTITY_SKELETON_HORSE_AMBIENT_WATER : SoundEffects.ENTITY_SKELETON_HORSE_AMBIENT;
     }
 
     @Override
@@ -191,7 +191,7 @@ public class EntityHorseSkeleton extends EntityHorseAbstract {
             if (flag) {
                 this.goalSelector.a(1, this.bw);
             } else {
-                this.goalSelector.a((PathfinderGoal) this.bw);
+                this.goalSelector.a(this.bw);
             }
 
         }
@@ -200,7 +200,7 @@ public class EntityHorseSkeleton extends EntityHorseAbstract {
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityAgeable) EntityTypes.SKELETON_HORSE.a((World) worldserver);
+        return EntityTypes.SKELETON_HORSE.a(worldserver);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class EntityHorseSkeleton extends EntityHorseAbstract {
                     return EnumInteractionResult.a(this.world.isClientSide);
                 }
 
-                EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, (EntityLiving) this, enumhand);
+                EnumInteractionResult enuminteractionresult = itemstack.a(entityhuman, this, enumhand);
 
                 if (enuminteractionresult.a()) {
                     return enuminteractionresult;

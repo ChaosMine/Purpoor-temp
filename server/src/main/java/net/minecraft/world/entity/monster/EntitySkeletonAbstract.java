@@ -163,9 +163,9 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
 
     public void eL() {
         if (this.world != null && !this.world.isClientSide) {
-            this.goalSelector.a((PathfinderGoal) this.c);
-            this.goalSelector.a((PathfinderGoal) this.b);
-            ItemStack itemstack = this.b(ProjectileHelper.a((EntityLiving) this, Items.BOW));
+            this.goalSelector.a(this.c);
+            this.goalSelector.a(this.b);
+            ItemStack itemstack = this.b(ProjectileHelper.a(this, Items.BOW));
 
             if (itemstack.getItem() == Items.BOW) {
                 byte b0 = 20;
@@ -185,12 +185,12 @@ public abstract class EntitySkeletonAbstract extends EntityMonster implements IR
 
     @Override
     public void a(EntityLiving entityliving, float f) {
-        ItemStack itemstack = this.f(this.b(ProjectileHelper.a((EntityLiving) this, Items.BOW)));
+        ItemStack itemstack = this.f(this.b(ProjectileHelper.a(this, Items.BOW)));
         EntityArrow entityarrow = this.b(itemstack, f);
         double d0 = entityliving.locX() - this.locX();
         double d1 = entityliving.e(0.3333333333333333D) - entityarrow.locY();
         double d2 = entityliving.locZ() - this.locZ();
-        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 
         entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
         // CraftBukkit start

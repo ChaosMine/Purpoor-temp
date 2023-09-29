@@ -123,7 +123,7 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements IHo
             List<EntityItem> list = this.world.a(EntityItem.class, this.getBoundingBox().grow(0.25D, 0.0D, 0.25D), IEntitySelector.a);
 
             if (!list.isEmpty()) {
-                TileEntityHopper.a((IInventory) this, (EntityItem) list.get(0));
+                TileEntityHopper.a(this, list.get(0));
             }
 
             return false;
@@ -134,7 +134,7 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements IHo
     public void a(DamageSource damagesource) {
         super.a(damagesource);
         if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-            this.a((IMaterial) Blocks.HOPPER);
+            this.a(Blocks.HOPPER);
         }
 
     }

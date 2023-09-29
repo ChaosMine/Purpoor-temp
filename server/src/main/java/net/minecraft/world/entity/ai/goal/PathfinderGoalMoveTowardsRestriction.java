@@ -25,7 +25,7 @@ public class PathfinderGoalMoveTowardsRestriction extends PathfinderGoal {
         if (this.a.ev()) {
             return false;
         } else {
-            Vec3D vec3d = RandomPositionGenerator.b(this.a, 16, 7, Vec3D.c((BaseBlockPosition) this.a.ew()));
+            Vec3D vec3d = RandomPositionGenerator.b(this.a, 16, 7, Vec3D.c(this.a.ew()));
 
             if (vec3d == null) {
                 return false;

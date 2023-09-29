@@ -20,12 +20,12 @@ public class BlockNetherWart extends BlockPlant {
 
     protected BlockNetherWart(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockNetherWart.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockNetherWart.AGE, 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockNetherWart.b[(Integer) iblockdata.get(BlockNetherWart.AGE)];
+        return BlockNetherWart.b[iblockdata.get(BlockNetherWart.AGE)];
     }
 
     @Override
@@ -35,15 +35,15 @@ public class BlockNetherWart extends BlockPlant {
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockNetherWart.AGE) < 3;
+        return iblockdata.get(BlockNetherWart.AGE) < 3;
     }
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        int i = (Integer) iblockdata.get(BlockNetherWart.AGE);
+        int i = iblockdata.get(BlockNetherWart.AGE);
 
         if (i < 3 && random.nextInt(Math.max(1, (int) (100.0F / worldserver.spigotConfig.wartModifier) * 10)) == 0) { // Spigot
-            iblockdata = (IBlockData) iblockdata.set(BlockNetherWart.AGE, i + 1);
+            iblockdata = iblockdata.set(BlockNetherWart.AGE, i + 1);
             org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata, 2); // CraftBukkit
         }
 

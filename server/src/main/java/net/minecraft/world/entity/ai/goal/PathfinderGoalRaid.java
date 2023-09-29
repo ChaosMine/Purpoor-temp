@@ -43,7 +43,7 @@ public class PathfinderGoalRaid<T extends EntityRaider> extends PathfinderGoal {
             }
 
             if (!this.a.eI()) {
-                Vec3D vec3d = RandomPositionGenerator.b(this.a, 15, 4, Vec3D.c((BaseBlockPosition) raid.getCenter()));
+                Vec3D vec3d = RandomPositionGenerator.b(this.a, 15, 4, Vec3D.c(raid.getCenter()));
 
                 if (vec3d != null) {
                     this.a.getNavigation().a(vec3d.x, vec3d.y, vec3d.z, 1.0D);
@@ -66,7 +66,7 @@ public class PathfinderGoalRaid<T extends EntityRaider> extends PathfinderGoal {
             while (iterator.hasNext()) {
                 EntityRaider entityraider = (EntityRaider) iterator.next();
 
-                raid.a(raid.getGroupsSpawned(), entityraider, (BlockPosition) null, true);
+                raid.a(raid.getGroupsSpawned(), entityraider, null, true);
             }
         }
 

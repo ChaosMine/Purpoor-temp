@@ -32,7 +32,7 @@ public class WorldGenFeatureOceanRuin extends StructureGenerator<WorldGenFeature
         WARM("warm"), COLD("cold");
 
         public static final Codec<WorldGenFeatureOceanRuin.Temperature> c = INamable.a(WorldGenFeatureOceanRuin.Temperature::values, WorldGenFeatureOceanRuin.Temperature::a);
-        private static final Map<String, WorldGenFeatureOceanRuin.Temperature> d = (Map) Arrays.stream(values()).collect(Collectors.toMap(WorldGenFeatureOceanRuin.Temperature::b, (worldgenfeatureoceanruin_temperature) -> {
+        private static final Map<String, WorldGenFeatureOceanRuin.Temperature> d = Arrays.stream(values()).collect(Collectors.toMap(Temperature::b, (worldgenfeatureoceanruin_temperature) -> {
             return worldgenfeatureoceanruin_temperature;
         }));
         private final String e;
@@ -47,7 +47,7 @@ public class WorldGenFeatureOceanRuin extends StructureGenerator<WorldGenFeature
 
         @Nullable
         public static WorldGenFeatureOceanRuin.Temperature a(String s) {
-            return (WorldGenFeatureOceanRuin.Temperature) WorldGenFeatureOceanRuin.Temperature.d.get(s);
+            return Temperature.d.get(s);
         }
 
         @Override
@@ -66,9 +66,9 @@ public class WorldGenFeatureOceanRuin extends StructureGenerator<WorldGenFeature
             int k = i * 16;
             int l = j * 16;
             BlockPosition blockposition = new BlockPosition(k, 90, l);
-            EnumBlockRotation enumblockrotation = EnumBlockRotation.a((Random) this.d);
+            EnumBlockRotation enumblockrotation = EnumBlockRotation.a(this.d);
 
-            WorldGenFeatureOceanRuinPieces.a(definedstructuremanager, blockposition, enumblockrotation, this.b, (Random) this.d, worldgenfeatureoceanruinconfiguration);
+            WorldGenFeatureOceanRuinPieces.a(definedstructuremanager, blockposition, enumblockrotation, this.b, this.d, worldgenfeatureoceanruinconfiguration);
             this.b();
         }
     }

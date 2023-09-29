@@ -36,7 +36,7 @@ public class WorldGenFeatureDefinedStructurePoolList extends WorldGenFeatureDefi
 
     @Override
     public List<DefinedStructure.BlockInfo> a(DefinedStructureManager definedstructuremanager, BlockPosition blockposition, EnumBlockRotation enumblockrotation, Random random) {
-        return ((WorldGenFeatureDefinedStructurePoolStructure) this.b.get(0)).a(definedstructuremanager, blockposition, enumblockrotation, random);
+        return this.b.get(0).a(definedstructuremanager, blockposition, enumblockrotation, random);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class WorldGenFeatureDefinedStructurePoolList extends WorldGenFeatureDefi
     }
 
     public String toString() {
-        return "List[" + (String) this.b.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
+        return "List[" + this.b.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
     }
 
     private void b(WorldGenFeatureDefinedStructurePoolTemplate.Matching worldgenfeaturedefinedstructurepooltemplate_matching) {

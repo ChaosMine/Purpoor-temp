@@ -30,12 +30,12 @@ public class BlockTarget extends Block {
 
     public BlockTarget(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockTarget.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockTarget.a, 0));
     }
 
     @Override
     public void a(World world, IBlockData iblockdata, MovingObjectPositionBlock movingobjectpositionblock, IProjectile iprojectile) {
-        int i = a((GeneratorAccess) world, iblockdata, movingobjectpositionblock, (Entity) iprojectile);
+        int i = a(world, iblockdata, movingobjectpositionblock, (Entity) iprojectile);
         // Paper start
     }
     private static void awardTargetHitCriteria(IProjectile iprojectile, MovingObjectPositionBlock movingobjectpositionblock, int i) {
@@ -96,21 +96,21 @@ public class BlockTarget extends Block {
     }
 
     private static void a(GeneratorAccess generatoraccess, IBlockData iblockdata, int i, BlockPosition blockposition, int j) {
-        generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockTarget.a, i), 3);
+        generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockTarget.a, i), 3);
         generatoraccess.getBlockTickList().a(blockposition, iblockdata.getBlock(), j);
     }
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if ((Integer) iblockdata.get(BlockTarget.a) != 0) {
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockTarget.a, 0), 3);
+        if (iblockdata.get(BlockTarget.a) != 0) {
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockTarget.a, 0), 3);
         }
 
     }
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Integer) iblockdata.get(BlockTarget.a);
+        return iblockdata.get(BlockTarget.a);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class BlockTarget extends Block {
     @Override
     public void onPlace(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!world.s_() && !iblockdata.a(iblockdata1.getBlock())) {
-            if ((Integer) iblockdata.get(BlockTarget.a) > 0 && !world.getBlockTickList().a(blockposition, this)) {
-                world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockTarget.a, 0), 18);
+            if (iblockdata.get(BlockTarget.a) > 0 && !world.getBlockTickList().a(blockposition, this)) {
+                world.setTypeAndData(blockposition, iblockdata.set(BlockTarget.a, 0), 18);
             }
 
         }

@@ -3,7 +3,6 @@ package net.minecraft.core;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.particles.Particle;
 import net.minecraft.core.particles.Particles;
 import net.minecraft.data.RegistryGeneration;
@@ -202,7 +201,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
         return ResourceKey.a(new MinecraftKey(s));
     }
 
-    public static <T extends IRegistryWritable<?>> void a(IRegistryWritable<T> iregistrywritable) {
+    public static <T extends IRegistryWritable<?>> void a___(IRegistryWritable<T> iregistrywritable) {
         iregistrywritable.forEach((iregistrywritable1) -> {
             if (iregistrywritable1.keySet().isEmpty()) {
                 IRegistry.LOGGER.error("Registry '{}' was empty after loading", iregistrywritable.getKey(iregistrywritable1));
@@ -239,7 +238,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
         IRegistry.a.put(minecraftkey, supplier);
         IRegistryWritable iregistrywritable = IRegistry.e; // Paper - decompile fix
 
-        return (R) iregistrywritable.a(resourcekey, (Object) r0, lifecycle); // Paper - decompile fix
+        return (R) iregistrywritable.a(resourcekey, r0, lifecycle); // Paper - decompile fix
     }
 
     protected IRegistry(ResourceKey<? extends IRegistry<T>> resourcekey, Lifecycle lifecycle) {
@@ -285,9 +284,9 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     @Override
     public abstract int a(@Nullable T t0);
 
-    @Nullable public final T get(@Nullable ResourceKey<T> resourcekey) { return this.a(resourcekey); } // Paper - OBFHELPER
+    @Nullable public final T get(@Nullable ResourceKey<T> resourcekey) { return this.a___key(resourcekey); } // Paper - OBFHELPER
     @Nullable
-    public abstract T a(@Nullable ResourceKey<T> resourcekey);
+    public abstract T a___key(@Nullable ResourceKey<T> resourcekey);
 
     @Nullable
     public abstract T get(@Nullable MinecraftKey minecraftkey);
@@ -301,7 +300,7 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
     }
 
     public T d(ResourceKey<T> resourcekey) {
-        T t0 = this.a(resourcekey);
+        T t0 = this.a___key(resourcekey);
 
         if (t0 == null) {
             throw new IllegalStateException("Missing: " + resourcekey);
@@ -338,6 +337,6 @@ public abstract class IRegistry<T> implements Codec<T>, Keyable, Registry<T> {
             }
 
         });
-        a(IRegistry.e);
+        a___(IRegistry.e);
     }
 }

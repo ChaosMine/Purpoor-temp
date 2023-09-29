@@ -15,7 +15,7 @@ public class ChatColorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getByStringWithNull() {
-        ChatColor.getByChar((String) null);
+        ChatColor.getByChar(null);
     }
 
     @Test(expected = IllegalArgumentException.class)

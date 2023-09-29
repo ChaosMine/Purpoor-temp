@@ -26,14 +26,14 @@ public class BlockTallPlant extends BlockPlant {
 
     public BlockTallPlant(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.LOWER));
+        this.j(this.blockStateList.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.LOWER));
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        BlockPropertyDoubleBlockHalf blockpropertydoubleblockhalf = (BlockPropertyDoubleBlockHalf) iblockdata.get(BlockTallPlant.HALF);
+        BlockPropertyDoubleBlockHalf blockpropertydoubleblockhalf = iblockdata.get(BlockTallPlant.HALF);
 
-        return enumdirection.n() == EnumDirection.EnumAxis.Y && blockpropertydoubleblockhalf == BlockPropertyDoubleBlockHalf.LOWER == (enumdirection == EnumDirection.UP) && (!iblockdata1.a((Block) this) || iblockdata1.get(BlockTallPlant.HALF) == blockpropertydoubleblockhalf) ? Blocks.AIR.getBlockData() : (blockpropertydoubleblockhalf == BlockPropertyDoubleBlockHalf.LOWER && enumdirection == EnumDirection.DOWN && !iblockdata.canPlace(generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1));
+        return enumdirection.n() == EnumDirection.EnumAxis.Y && blockpropertydoubleblockhalf == BlockPropertyDoubleBlockHalf.LOWER == (enumdirection == EnumDirection.UP) && (!iblockdata1.a(this) || iblockdata1.get(BlockTallPlant.HALF) == blockpropertydoubleblockhalf) ? Blocks.AIR.getBlockData() : (blockpropertydoubleblockhalf == BlockPropertyDoubleBlockHalf.LOWER && enumdirection == EnumDirection.DOWN && !iblockdata.canPlace(generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1));
     }
 
     @Nullable
@@ -46,7 +46,7 @@ public class BlockTallPlant extends BlockPlant {
 
     @Override
     public void postPlace(World world, BlockPosition blockposition, IBlockData iblockdata, EntityLiving entityliving, ItemStack itemstack) {
-        world.setTypeAndData(blockposition.up(), (IBlockData) this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.UPPER), 3);
+        world.setTypeAndData(blockposition.up(), this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.UPPER), 3);
     }
 
     @Override
@@ -56,13 +56,13 @@ public class BlockTallPlant extends BlockPlant {
         } else {
             IBlockData iblockdata1 = iworldreader.getType(blockposition.down());
 
-            return iblockdata1.a((Block) this) && iblockdata1.get(BlockTallPlant.HALF) == BlockPropertyDoubleBlockHalf.LOWER;
+            return iblockdata1.a(this) && iblockdata1.get(BlockTallPlant.HALF) == BlockPropertyDoubleBlockHalf.LOWER;
         }
     }
 
     public void a(GeneratorAccess generatoraccess, BlockPosition blockposition, int i) {
-        generatoraccess.setTypeAndData(blockposition, (IBlockData) this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.LOWER), i);
-        generatoraccess.setTypeAndData(blockposition.up(), (IBlockData) this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.UPPER), i);
+        generatoraccess.setTypeAndData(blockposition, this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.LOWER), i);
+        generatoraccess.setTypeAndData(blockposition.up(), this.getBlockData().set(BlockTallPlant.HALF, BlockPropertyDoubleBlockHalf.UPPER), i);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BlockTallPlant extends BlockPlant {
             if (entityhuman.isCreative()) {
                 b(world, blockposition, iblockdata, entityhuman);
             } else {
-                dropItems(iblockdata, world, blockposition, (TileEntity) null, entityhuman, entityhuman.getItemInMainHand());
+                dropItems(iblockdata, world, blockposition, null, entityhuman, entityhuman.getItemInMainHand());
             }
         }
 
@@ -89,7 +89,7 @@ public class BlockTallPlant extends BlockPlant {
             return;
         }
         // CraftBukkit end
-        BlockPropertyDoubleBlockHalf blockpropertydoubleblockhalf = (BlockPropertyDoubleBlockHalf) iblockdata.get(BlockTallPlant.HALF);
+        BlockPropertyDoubleBlockHalf blockpropertydoubleblockhalf = iblockdata.get(BlockTallPlant.HALF);
 
         if (blockpropertydoubleblockhalf == BlockPropertyDoubleBlockHalf.UPPER) {
             BlockPosition blockposition1 = blockposition.down();

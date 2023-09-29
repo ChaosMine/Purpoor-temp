@@ -32,6 +32,6 @@ public class PathfinderGoalStrollVillage extends PathfinderGoalRandomStroll {
         SectionPosition sectionposition = SectionPosition.a(blockposition);
         SectionPosition sectionposition1 = BehaviorUtil.a(worldserver, sectionposition, 2);
 
-        return sectionposition1 != sectionposition ? RandomPositionGenerator.b(this.a, 10, 7, Vec3D.c((BaseBlockPosition) sectionposition1.q())) : null;
+        return sectionposition1 != sectionposition ? RandomPositionGenerator.b(this.a, 10, 7, Vec3D.c(sectionposition1.q())) : null;
     }
 }

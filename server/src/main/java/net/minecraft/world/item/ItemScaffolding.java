@@ -32,7 +32,7 @@ public class ItemScaffolding extends ItemBlock {
         Block block = this.getBlock();
 
         if (!iblockdata.a(block)) {
-            return BlockScaffolding.a((IBlockAccess) world, blockposition) == 7 ? null : blockactioncontext;
+            return BlockScaffolding.a(world, blockposition) == 7 ? null : blockactioncontext;
         } else {
             EnumDirection enumdirection;
 

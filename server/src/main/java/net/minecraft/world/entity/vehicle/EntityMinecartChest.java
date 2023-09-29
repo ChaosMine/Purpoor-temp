@@ -27,7 +27,7 @@ public class EntityMinecartChest extends EntityMinecartContainer {
     public void a(DamageSource damagesource) {
         super.a(damagesource);
         if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-            this.a((IMaterial) Blocks.CHEST);
+            this.a(Blocks.CHEST);
         }
 
     }
@@ -44,7 +44,7 @@ public class EntityMinecartChest extends EntityMinecartContainer {
 
     @Override
     public IBlockData q() {
-        return (IBlockData) Blocks.CHEST.getBlockData().set(BlockChest.FACING, EnumDirection.NORTH);
+        return Blocks.CHEST.getBlockData().set(BlockChest.FACING, EnumDirection.NORTH);
     }
 
     @Override

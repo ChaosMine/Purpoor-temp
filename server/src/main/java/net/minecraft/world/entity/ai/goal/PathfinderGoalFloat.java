@@ -20,7 +20,7 @@ public class PathfinderGoalFloat extends PathfinderGoal {
     public final boolean validConditions() { return this.a(); } // Paper - OBFHELPER
     @Override
     public boolean a() {
-        return this.a.isInWater() && this.a.b((Tag) TagsFluid.WATER) > this.a.cx() || this.a.aQ();
+        return this.a.isInWater() && this.a.b(TagsFluid.WATER) > this.a.cx() || this.a.aQ();
     }
 
     public void update() { this.e(); } // Paper - OBFHELPER

@@ -26,7 +26,7 @@ public class BlockSoulFire extends BlockFireAbstract {
     }
 
     public static boolean c(Block block) {
-        return block.a((Tag) TagsBlock.SOUL_FIRE_BASE_BLOCKS);
+        return block.a(TagsBlock.SOUL_FIRE_BASE_BLOCKS);
     }
 
     @Override

@@ -29,7 +29,7 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
 
     @Override
     protected void eK() {
-        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue((double) this.fp());
+        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.fp());
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
     }
 
     public boolean isCarryingChest() {
-        return (Boolean) this.datawatcher.get(EntityHorseChestedAbstract.bw);
+        return this.datawatcher.get(EntityHorseChestedAbstract.bw);
     }
 
     public void setCarryingChest(boolean flag) {
@@ -65,7 +65,7 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
         super.dropInventory();
         if (this.isCarryingChest()) {
             if (!this.world.isClientSide) {
-                this.a((IMaterial) Blocks.CHEST);
+                this.a(Blocks.CHEST);
             }
 
             //this.setCarryingChest(false); // Paper - moved to post death logic

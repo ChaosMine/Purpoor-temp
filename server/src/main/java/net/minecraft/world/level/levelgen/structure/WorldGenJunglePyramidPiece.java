@@ -114,10 +114,10 @@ public class WorldGenJunglePyramidPiece extends WorldGenScatteredPiece {
             this.a(generatoraccessseed, structureboundingbox, 4, 9, 10, 4, 9, 10, false, random, WorldGenJunglePyramidPiece.i);
             this.a(generatoraccessseed, structureboundingbox, 7, 9, 10, 7, 9, 10, false, random, WorldGenJunglePyramidPiece.i);
             this.a(generatoraccessseed, structureboundingbox, 5, 9, 7, 6, 9, 7, false, random, WorldGenJunglePyramidPiece.i);
-            IBlockData iblockdata = (IBlockData) Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.EAST);
-            IBlockData iblockdata1 = (IBlockData) Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.WEST);
-            IBlockData iblockdata2 = (IBlockData) Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.SOUTH);
-            IBlockData iblockdata3 = (IBlockData) Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.NORTH);
+            IBlockData iblockdata = Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.EAST);
+            IBlockData iblockdata1 = Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.WEST);
+            IBlockData iblockdata2 = Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.SOUTH);
+            IBlockData iblockdata3 = Blocks.COBBLESTONE_STAIRS.getBlockData().set(BlockStairs.FACING, EnumDirection.NORTH);
 
             this.a(generatoraccessseed, iblockdata3, 5, 9, 6, structureboundingbox);
             this.a(generatoraccessseed, iblockdata3, 6, 9, 6, structureboundingbox);
@@ -164,11 +164,11 @@ public class WorldGenJunglePyramidPiece extends WorldGenScatteredPiece {
             this.a(generatoraccessseed, structureboundingbox, 7, -2, 1, 9, -2, 1, false, random, WorldGenJunglePyramidPiece.i);
             this.a(generatoraccessseed, structureboundingbox, 6, -3, 1, 6, -3, 1, false, random, WorldGenJunglePyramidPiece.i);
             this.a(generatoraccessseed, structureboundingbox, 6, -1, 1, 6, -1, 1, false, random, WorldGenJunglePyramidPiece.i);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.EAST)).set(BlockTripwireHook.ATTACHED, true), 1, -3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.WEST)).set(BlockTripwireHook.ATTACHED, true), 4, -3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.EAST, true)).set(BlockTripwire.WEST, true)).set(BlockTripwire.ATTACHED, true), 2, -3, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.EAST, true)).set(BlockTripwire.WEST, true)).set(BlockTripwire.ATTACHED, true), 3, -3, 8, structureboundingbox);
-            IBlockData iblockdata4 = (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.EAST).set(BlockTripwireHook.ATTACHED, true), 1, -3, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.WEST).set(BlockTripwireHook.ATTACHED, true), 4, -3, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.EAST, true).set(BlockTripwire.WEST, true).set(BlockTripwire.ATTACHED, true), 2, -3, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.EAST, true).set(BlockTripwire.WEST, true).set(BlockTripwire.ATTACHED, true), 3, -3, 8, structureboundingbox);
+            IBlockData iblockdata4 = Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE);
 
             this.a(generatoraccessseed, iblockdata4, 5, -3, 7, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 5, -3, 6, structureboundingbox);
@@ -176,30 +176,30 @@ public class WorldGenJunglePyramidPiece extends WorldGenScatteredPiece {
             this.a(generatoraccessseed, iblockdata4, 5, -3, 4, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 5, -3, 3, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 5, -3, 2, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 5, -3, 1, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 4, -3, 1, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 5, -3, 1, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 4, -3, 1, structureboundingbox);
             this.a(generatoraccessseed, Blocks.MOSSY_COBBLESTONE.getBlockData(), 3, -3, 1, structureboundingbox);
             if (!this.g) {
                 this.g = this.a(generatoraccessseed, structureboundingbox, random, 3, -2, 1, EnumDirection.NORTH, LootTables.B);
             }
 
-            this.a(generatoraccessseed, (IBlockData) Blocks.VINE.getBlockData().set(BlockVine.SOUTH, true), 3, -2, 2, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.NORTH)).set(BlockTripwireHook.ATTACHED, true), 7, -3, 1, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.SOUTH)).set(BlockTripwireHook.ATTACHED, true), 7, -3, 5, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true)).set(BlockTripwire.SOUTH, true)).set(BlockTripwire.ATTACHED, true), 7, -3, 2, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true)).set(BlockTripwire.SOUTH, true)).set(BlockTripwire.ATTACHED, true), 7, -3, 3, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true)).set(BlockTripwire.SOUTH, true)).set(BlockTripwire.ATTACHED, true), 7, -3, 4, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 8, -3, 6, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE), 9, -3, 6, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.UP), 9, -3, 5, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.VINE.getBlockData().set(BlockVine.SOUTH, true), 3, -2, 2, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.NORTH).set(BlockTripwireHook.ATTACHED, true), 7, -3, 1, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE_HOOK.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.SOUTH).set(BlockTripwireHook.ATTACHED, true), 7, -3, 5, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true).set(BlockTripwire.SOUTH, true).set(BlockTripwire.ATTACHED, true), 7, -3, 2, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true).set(BlockTripwire.SOUTH, true).set(BlockTripwire.ATTACHED, true), 7, -3, 3, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.TRIPWIRE.getBlockData().set(BlockTripwire.NORTH, true).set(BlockTripwire.SOUTH, true).set(BlockTripwire.ATTACHED, true), 7, -3, 4, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 8, -3, 6, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE), 9, -3, 6, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.UP), 9, -3, 5, structureboundingbox);
             this.a(generatoraccessseed, Blocks.MOSSY_COBBLESTONE.getBlockData(), 9, -3, 4, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 9, -2, 4, structureboundingbox);
             if (!this.h) {
                 this.h = this.a(generatoraccessseed, structureboundingbox, random, 9, -2, 3, EnumDirection.WEST, LootTables.B);
             }
 
-            this.a(generatoraccessseed, (IBlockData) Blocks.VINE.getBlockData().set(BlockVine.EAST, true), 8, -1, 3, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) Blocks.VINE.getBlockData().set(BlockVine.EAST, true), 8, -2, 3, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.VINE.getBlockData().set(BlockVine.EAST, true), 8, -1, 3, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.VINE.getBlockData().set(BlockVine.EAST, true), 8, -2, 3, structureboundingbox);
             if (!this.e) {
                 this.e = this.a(generatoraccessseed, structureboundingbox, random, 8, -3, 3, LootTables.A);
             }
@@ -218,7 +218,7 @@ public class WorldGenJunglePyramidPiece extends WorldGenScatteredPiece {
             this.a(generatoraccessseed, Blocks.CHISELED_STONE_BRICKS.getBlockData(), 8, -2, 11, structureboundingbox);
             this.a(generatoraccessseed, Blocks.CHISELED_STONE_BRICKS.getBlockData(), 9, -2, 11, structureboundingbox);
             this.a(generatoraccessseed, Blocks.CHISELED_STONE_BRICKS.getBlockData(), 10, -2, 11, structureboundingbox);
-            IBlockData iblockdata5 = (IBlockData) ((IBlockData) Blocks.LEVER.getBlockData().set(BlockLever.FACING, EnumDirection.NORTH)).set(BlockLever.FACE, BlockPropertyAttachPosition.WALL);
+            IBlockData iblockdata5 = Blocks.LEVER.getBlockData().set(BlockLever.FACING, EnumDirection.NORTH).set(BlockLever.FACE, BlockPropertyAttachPosition.WALL);
 
             this.a(generatoraccessseed, iblockdata5, 8, -2, 12, structureboundingbox);
             this.a(generatoraccessseed, iblockdata5, 9, -2, 12, structureboundingbox);
@@ -228,11 +228,11 @@ public class WorldGenJunglePyramidPiece extends WorldGenScatteredPiece {
             this.a(generatoraccessseed, Blocks.MOSSY_COBBLESTONE.getBlockData(), 10, -2, 9, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 8, -2, 9, structureboundingbox);
             this.a(generatoraccessseed, iblockdata4, 8, -2, 10, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE)).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 10, -1, 9, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.UP), 9, -2, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.WEST), 10, -2, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.WEST), 10, -1, 8, structureboundingbox);
-            this.a(generatoraccessseed, (IBlockData) Blocks.REPEATER.getBlockData().set(BlockRepeater.FACING, EnumDirection.NORTH), 10, -2, 10, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REDSTONE_WIRE.getBlockData().set(BlockRedstoneWire.NORTH, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.SOUTH, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.EAST, BlockPropertyRedstoneSide.SIDE).set(BlockRedstoneWire.WEST, BlockPropertyRedstoneSide.SIDE), 10, -1, 9, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.UP), 9, -2, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.WEST), 10, -2, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.STICKY_PISTON.getBlockData().set(BlockPiston.FACING, EnumDirection.WEST), 10, -1, 8, structureboundingbox);
+            this.a(generatoraccessseed, Blocks.REPEATER.getBlockData().set(BlockRepeater.FACING, EnumDirection.NORTH), 10, -2, 10, structureboundingbox);
             if (!this.f) {
                 this.f = this.a(generatoraccessseed, structureboundingbox, random, 9, -3, 10, LootTables.A);
             }

@@ -33,7 +33,7 @@ public interface im extends Supplier<JsonElement> {
 
         private static <T extends Comparable<T>> String a(IBlockState<T> iblockstate, Stream<T> stream) {
             iblockstate.getClass();
-            return (String) stream.map(iblockstate::a).collect(Collectors.joining("|"));
+            return stream.map(iblockstate::a).collect(Collectors.joining("|"));
         }
 
         private static <T extends Comparable<T>> String c(IBlockState<T> iblockstate, T t0, T[] at) {
@@ -41,7 +41,7 @@ public interface im extends Supplier<JsonElement> {
         }
 
         private <T extends Comparable<T>> void a(IBlockState<T> iblockstate, String s) {
-            String s1 = (String) this.a.put(iblockstate, s);
+            String s1 = this.a.put(iblockstate, s);
 
             if (s1 != null) {
                 throw new IllegalStateException("Tried to replace " + iblockstate + " value from " + s1 + " to " + s);
@@ -70,9 +70,9 @@ public interface im extends Supplier<JsonElement> {
 
         @Override
         public void a(BlockStateList<?, ?> blockstatelist) {
-            List<IBlockState<?>> list = (List) this.a.keySet().stream().filter((iblockstate) -> {
+            List<IBlockState<?>> list = this.a.keySet().stream().filter((iblockstate) -> {
                 return blockstatelist.a(iblockstate.getName()) != iblockstate;
-            }).collect(Collectors.toList());
+            }).toList();
 
             if (!list.isEmpty()) {
                 throw new IllegalStateException("Properties " + list + " are missing from " + blockstatelist);

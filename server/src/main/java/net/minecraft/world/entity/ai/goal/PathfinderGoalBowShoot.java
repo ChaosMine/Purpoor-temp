@@ -85,7 +85,7 @@ public class PathfinderGoalBowShoot<T extends EntityMonster & IRangedEntity> ext
                 this.a.getNavigation().o();
                 ++this.i;
             } else {
-                this.a.getNavigation().a((Entity) entityliving, this.b);
+                this.a.getNavigation().a(entityliving, this.b);
                 this.i = -1;
             }
 
@@ -109,7 +109,7 @@ public class PathfinderGoalBowShoot<T extends EntityMonster & IRangedEntity> ext
                 }
 
                 this.a.getControllerMove().a(this.h ? -0.5F : 0.5F, this.g ? 0.5F : -0.5F);
-                this.a.a((Entity) entityliving, 30.0F, 30.0F);
+                this.a.a(entityliving, 30.0F, 30.0F);
             } else {
                 this.a.getControllerLook().a(entityliving, 30.0F, 30.0F);
             }
@@ -122,12 +122,12 @@ public class PathfinderGoalBowShoot<T extends EntityMonster & IRangedEntity> ext
 
                     if (i >= 20) {
                         this.a.clearActiveItem();
-                        ((IRangedEntity) this.a).a(entityliving, ItemBow.a(i));
+                        this.a.a(entityliving, ItemBow.a(i));
                         this.e = this.c;
                     }
                 }
             } else if (--this.e <= 0 && this.f >= -60) {
-                this.a.c(ProjectileHelper.a((EntityLiving) this.a, Items.BOW));
+                this.a.c(ProjectileHelper.a(this.a, Items.BOW));
             }
 
         }

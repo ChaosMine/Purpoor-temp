@@ -20,10 +20,10 @@ public class ChatComponentKeybind extends ChatBaseComponent {
 
     private IChatBaseComponent j() {
         if (this.f == null) {
-            this.f = (Supplier) ChatComponentKeybind.d.apply(this.e);
+            this.f = ChatComponentKeybind.d.apply(this.e);
         }
 
-        return (IChatBaseComponent) this.f.get();
+        return this.f.get();
     }
 
     @Override

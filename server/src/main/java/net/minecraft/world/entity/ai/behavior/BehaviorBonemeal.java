@@ -57,7 +57,7 @@ public class BehaviorBonemeal extends Behavior<EntityVillager> {
             for (int k = -1; k <= 1; ++k) {
                 for (int l = -1; l <= 1; ++l) {
                     blockposition_mutableblockposition.a((BaseBlockPosition) entityvillager.getChunkCoordinates(), j, k, l);
-                    if (this.a((BlockPosition) blockposition_mutableblockposition, worldserver)) {
+                    if (this.a(blockposition_mutableblockposition, worldserver)) {
                         ++i;
                         if (worldserver.random.nextInt(i) == 0) {
                             optional = Optional.of(blockposition_mutableblockposition.immutableCopy());
@@ -88,20 +88,20 @@ public class BehaviorBonemeal extends Behavior<EntityVillager> {
         this.e.ifPresent((blockposition) -> {
             BehaviorTarget behaviortarget = new BehaviorTarget(blockposition);
 
-            entityvillager.getBehaviorController().setMemory(MemoryModuleType.LOOK_TARGET, (Object) behaviortarget);
-            entityvillager.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(behaviortarget, 0.5F, 1)));
+            entityvillager.getBehaviorController().setMemory(MemoryModuleType.LOOK_TARGET, behaviortarget);
+            entityvillager.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(behaviortarget, 0.5F, 1)));
         });
     }
 
     protected void c(WorldServer worldserver, EntityVillager entityvillager, long i) {
         entityvillager.setSlot(EnumItemSlot.MAINHAND, ItemStack.b);
-        this.c = (long) entityvillager.ticksLived;
+        this.c = entityvillager.ticksLived;
     }
 
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        BlockPosition blockposition = (BlockPosition) this.e.get();
+        BlockPosition blockposition = this.e.get();
 
-        if (i >= this.b && blockposition.a((IPosition) entityvillager.getPositionVector(), 1.0D)) {
+        if (i >= this.b && blockposition.a(entityvillager.getPositionVector(), 1.0D)) {
             ItemStack itemstack = ItemStack.b;
             InventorySubcontainer inventorysubcontainer = entityvillager.getInventory();
             int j = inventorysubcontainer.getSize();
@@ -115,7 +115,7 @@ public class BehaviorBonemeal extends Behavior<EntityVillager> {
                 }
             }
 
-            if (!itemstack.isEmpty() && ItemBoneMeal.a(itemstack, (World) worldserver, blockposition)) {
+            if (!itemstack.isEmpty() && ItemBoneMeal.a(itemstack, worldserver, blockposition)) {
                 worldserver.triggerEffect(2005, blockposition, 0);
                 this.e = this.b(worldserver, entityvillager);
                 this.a(entityvillager);

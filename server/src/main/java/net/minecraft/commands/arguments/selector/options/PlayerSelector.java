@@ -104,7 +104,7 @@ public class PlayerSelector {
                 int i = argumentparserselector.g().getCursor();
                 CriterionConditionValue.FloatRange criterionconditionvalue_floatrange = CriterionConditionValue.FloatRange.a(argumentparserselector.g());
 
-                if ((criterionconditionvalue_floatrange.a() == null || (Float) criterionconditionvalue_floatrange.a() >= 0.0F) && (criterionconditionvalue_floatrange.b() == null || (Float) criterionconditionvalue_floatrange.b() >= 0.0F)) {
+                if ((criterionconditionvalue_floatrange.a() == null || criterionconditionvalue_floatrange.a() >= 0.0F) && (criterionconditionvalue_floatrange.b() == null || criterionconditionvalue_floatrange.b() >= 0.0F)) {
                     argumentparserselector.a(criterionconditionvalue_floatrange);
                     argumentparserselector.h();
                 } else {
@@ -118,7 +118,7 @@ public class PlayerSelector {
                 int i = argumentparserselector.g().getCursor();
                 CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(argumentparserselector.g());
 
-                if ((criterionconditionvalue_integerrange.a() == null || (Integer) criterionconditionvalue_integerrange.a() >= 0) && (criterionconditionvalue_integerrange.b() == null || (Integer) criterionconditionvalue_integerrange.b() >= 0)) {
+                if ((criterionconditionvalue_integerrange.a() == null || criterionconditionvalue_integerrange.a() >= 0) && (criterionconditionvalue_integerrange.b() == null || criterionconditionvalue_integerrange.b() >= 0)) {
                     argumentparserselector.a(criterionconditionvalue_integerrange);
                     argumentparserselector.a(false);
                 } else {
@@ -193,7 +193,7 @@ public class PlayerSelector {
                 String s = argumentparserselector.g().readUnquotedString();
 
                 argumentparserselector.a((suggestionsbuilder, consumer) -> {
-                    return ICompletionProvider.b((Iterable) Arrays.asList("nearest", "furthest", "random", "arbitrary"), suggestionsbuilder);
+                    return ICompletionProvider.b(Arrays.asList("nearest", "furthest", "random", "arbitrary"), suggestionsbuilder);
                 });
                 byte b0 = -1;
 
@@ -338,11 +338,11 @@ public class PlayerSelector {
             }, new ChatMessage("argument.entity.options.team.description"));
             a("type", (argumentparserselector) -> {
                 argumentparserselector.a((suggestionsbuilder, consumer) -> {
-                    ICompletionProvider.a((Iterable) IRegistry.ENTITY_TYPE.keySet(), suggestionsbuilder, String.valueOf('!'));
-                    ICompletionProvider.a((Iterable) TagsEntity.a().b(), suggestionsbuilder, "!#");
+                    ICompletionProvider.a(IRegistry.ENTITY_TYPE.keySet(), suggestionsbuilder, String.valueOf('!'));
+                    ICompletionProvider.a(TagsEntity.a().b(), suggestionsbuilder, "!#");
                     if (!argumentparserselector.F()) {
-                        ICompletionProvider.a((Iterable) IRegistry.ENTITY_TYPE.keySet(), suggestionsbuilder);
-                        ICompletionProvider.a((Iterable) TagsEntity.a().b(), suggestionsbuilder, String.valueOf('#'));
+                        ICompletionProvider.a(IRegistry.ENTITY_TYPE.keySet(), suggestionsbuilder);
+                        ICompletionProvider.a(TagsEntity.a().b(), suggestionsbuilder, String.valueOf('#'));
                     }
 
                     return suggestionsbuilder.buildFuture();
@@ -613,7 +613,7 @@ public class PlayerSelector {
     }
 
     public static PlayerSelector.a a(ArgumentParserSelector argumentparserselector, String s, int i) throws CommandSyntaxException {
-        PlayerSelector.b playerselector_b = (PlayerSelector.b) PlayerSelector.i.get(s);
+        PlayerSelector.b playerselector_b = PlayerSelector.i.get(s);
 
         if (playerselector_b != null) {
             if (playerselector_b.b.test(argumentparserselector)) {
@@ -634,8 +634,8 @@ public class PlayerSelector {
         while (iterator.hasNext()) {
             Entry<String, PlayerSelector.b> entry = (Entry) iterator.next();
 
-            if (((PlayerSelector.b) entry.getValue()).b.test(argumentparserselector) && ((String) entry.getKey()).toLowerCase(Locale.ROOT).startsWith(s)) {
-                suggestionsbuilder.suggest((String) entry.getKey() + '=', ((PlayerSelector.b) entry.getValue()).c);
+            if (entry.getValue().b.test(argumentparserselector) && entry.getKey().toLowerCase(Locale.ROOT).startsWith(s)) {
+                suggestionsbuilder.suggest(entry.getKey() + '=', entry.getValue().c);
             }
         }
 

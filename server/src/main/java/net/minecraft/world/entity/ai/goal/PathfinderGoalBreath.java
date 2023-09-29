@@ -60,19 +60,19 @@ public class PathfinderGoalBreath extends PathfinderGoal {
             blockposition = new BlockPosition(this.a.locX(), this.a.locY() + 8.0D, this.a.locZ());
         }
 
-        this.a.getNavigation().a((double) blockposition.getX(), (double) (blockposition.getY() + 1), (double) blockposition.getZ(), 1.0D);
+        this.a.getNavigation().a(blockposition.getX(), blockposition.getY() + 1, blockposition.getZ(), 1.0D);
     }
 
     @Override
     public void e() {
         this.g();
-        this.a.a(0.02F, new Vec3D((double) this.a.aR, (double) this.a.aS, (double) this.a.aT));
+        this.a.a(0.02F, new Vec3D(this.a.aR, this.a.aS, this.a.aT));
         this.a.move(EnumMoveType.SELF, this.a.getMot());
     }
 
     private boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
         IBlockData iblockdata = iworldreader.getType(blockposition);
 
-        return (iworldreader.getFluid(blockposition).isEmpty() || iblockdata.a(Blocks.BUBBLE_COLUMN)) && iblockdata.a((IBlockAccess) iworldreader, blockposition, PathMode.LAND);
+        return (iworldreader.getFluid(blockposition).isEmpty() || iblockdata.a(Blocks.BUBBLE_COLUMN)) && iblockdata.a(iworldreader, blockposition, PathMode.LAND);
     }
 }

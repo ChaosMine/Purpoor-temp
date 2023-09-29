@@ -32,11 +32,13 @@ import net.minecraft.world.level.levelgen.surfacebuilders.WorldGenSurfaceComposi
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+
 public abstract class IRegistryCustom {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Map<ResourceKey<? extends IRegistry<?>>, IRegistryCustom.a<?>> b = (Map) SystemUtils.a(() -> {
-        Builder<ResourceKey<? extends IRegistry<?>>, IRegistryCustom.a<?>> builder = ImmutableMap.builder();
+    private static final Map<ResourceKey<? extends IRegistry<?>>, IRegistryCustom.a<?>> b = SystemUtils.a(() -> {
+        Builder<ResourceKey<? extends IRegistry<?>>, a<?>> builder = ImmutableMap.builder();
 
         a(builder, IRegistry.K, DimensionManager.d, DimensionManager.d);
         a(builder, IRegistry.ay, BiomeBase.b, BiomeBase.c);
@@ -49,8 +51,8 @@ public abstract class IRegistryCustom {
         a(builder, IRegistry.ar, GeneratorSettingBase.a);
         return builder.build();
     });
-    private static final IRegistryCustom.Dimension c = (IRegistryCustom.Dimension) SystemUtils.a(() -> {
-        IRegistryCustom.Dimension iregistrycustom_dimension = new IRegistryCustom.Dimension();
+    private static final IRegistryCustom.Dimension c = SystemUtils.a(() -> {
+        Dimension iregistrycustom_dimension = new Dimension();
 
         DimensionManager.a(iregistrycustom_dimension);
         IRegistryCustom.b.keySet().stream().filter((resourcekey) -> {
@@ -66,7 +68,7 @@ public abstract class IRegistryCustom {
     public abstract <E> Optional<IRegistryWritable<E>> a(ResourceKey<? extends IRegistry<E>> resourcekey);
 
     public <E> IRegistryWritable<E> b(ResourceKey<? extends IRegistry<E>> resourcekey) {
-        return (IRegistryWritable) this.a(resourcekey).orElseThrow(() -> {
+        return this.a(resourcekey).orElseThrow(() -> {
             return new IllegalStateException("Missing registry: " + resourcekey);
         });
     }
@@ -112,15 +114,15 @@ public abstract class IRegistryCustom {
             if (flag) {
                 registryreadops_b_a.a(IRegistryCustom.c, (ResourceKey) entry.getKey(), iregistrycustom_a.b(), iregistry.a(e0), e0, iregistry.d(e0));
             } else {
-                iregistrywritable.a(iregistry.a(e0), (ResourceKey) entry.getKey(), e0, iregistry.d(e0));
+                iregistrywritable.a(iregistry.a(e0), entry.getKey(), e0, iregistry.d(e0));
             }
         }
 
     }
 
     private static <R extends IRegistry<?>> void a(IRegistryCustom.Dimension iregistrycustom_dimension, ResourceKey<R> resourcekey) {
-        IRegistry<R> iregistry = RegistryGeneration.b;
-        IRegistry<?> iregistry1 = (IRegistry) iregistry.a(resourcekey);
+        IRegistry<R> iregistry = (IRegistry<R>) RegistryGeneration.b;
+        IRegistry<?> iregistry1 = iregistry.a___key(resourcekey);
 
         if (iregistry1 == null) {
             throw new IllegalStateException("Missing builtin registry: " + resourcekey);
@@ -130,7 +132,7 @@ public abstract class IRegistryCustom {
     }
 
     private static <E> void a(IRegistryCustom.Dimension iregistrycustom_dimension, IRegistry<E> iregistry) {
-        IRegistryWritable<E> iregistrywritable = (IRegistryWritable) iregistrycustom_dimension.a(iregistry.f()).orElseThrow(() -> {
+        IRegistryWritable<E> iregistrywritable = iregistrycustom_dimension.a(iregistry.f()).orElseThrow(() -> {
             return new IllegalStateException("Missing registry: " + iregistry.f());
         });
         Iterator iterator = iregistry.d().iterator();
@@ -139,7 +141,7 @@ public abstract class IRegistryCustom {
             Entry<ResourceKey<E>, E> entry = (Entry) iterator.next();
             E e0 = entry.getValue();
 
-            iregistrywritable.a(iregistry.a(e0), (ResourceKey) entry.getKey(), e0, iregistry.d(e0));
+            iregistrywritable.a(iregistry.a(e0), entry.getKey(), e0, iregistry.d(e0));
         }
 
     }
@@ -189,11 +191,10 @@ public abstract class IRegistryCustom {
         }
 
         private static <K extends ResourceKey<? extends IRegistry<?>>, V extends RegistryMaterials<?>> Codec<IRegistryCustom.Dimension> a(UnboundedMapCodec<K, V> unboundedmapcodec) {
-            return unboundedmapcodec.xmap(IRegistryCustom.Dimension::new, (iregistrycustom_dimension) -> {
-                return (ImmutableMap) iregistrycustom_dimension.b.entrySet().stream().filter((entry) -> {
-                    return ((IRegistryCustom.a) IRegistryCustom.b.get(entry.getKey())).d();
-                }).collect(ImmutableMap.toImmutableMap(Entry::getKey, Entry::getValue));
-            });
+            return unboundedmapcodec.xmap(
+              IRegistryCustom.Dimension::new,
+              dimension -> (ImmutableMap) dimension.b.entrySet().stream().filter((entry) -> IRegistryCustom.b.get(entry.getKey()).d()).collect(toImmutableMap(Entry::getKey, Entry::getValue))
+            );
         }
 
         private static <E> DataResult<? extends Codec<E>> c(ResourceKey<? extends IRegistry<E>> resourcekey) {
@@ -205,7 +206,7 @@ public abstract class IRegistryCustom {
         }
 
         public Dimension() {
-            this((Map) IRegistryCustom.b.keySet().stream().collect(Collectors.toMap(Function.identity(), IRegistryCustom.Dimension::d)));
+            this(IRegistryCustom.b.keySet().stream().collect(Collectors.toMap(Function.identity(), Dimension::d)));
         }
 
         private Dimension(Map<? extends ResourceKey<? extends IRegistry<?>>, ? extends RegistryMaterials<?>> map) {
@@ -213,14 +214,12 @@ public abstract class IRegistryCustom {
         }
 
         private static <E> RegistryMaterials<?> d(ResourceKey<? extends IRegistry<?>> resourcekey) {
-            return new RegistryMaterials<>(resourcekey, Lifecycle.stable());
+            return new RegistryMaterials<>((ResourceKey) resourcekey, Lifecycle.stable());
         }
 
         @Override
         public <E> Optional<IRegistryWritable<E>> a(ResourceKey<? extends IRegistry<E>> resourcekey) {
-            return Optional.ofNullable(this.b.get(resourcekey)).map((registrymaterials) -> {
-                return registrymaterials;
-            });
+            return Optional.ofNullable((IRegistryWritable<E>)this.b.get(resourcekey));
         }
     }
 

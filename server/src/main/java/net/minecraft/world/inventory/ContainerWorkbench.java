@@ -43,7 +43,7 @@ public class ContainerWorkbench extends ContainerRecipeBook<InventoryCrafting> {
         // CraftBukkit end
         this.containerAccess = containeraccess;
         this.f = playerinventory.player;
-        this.a((Slot) (new SlotResult(playerinventory.player, this.craftInventory, this.resultInventory, 0, 124, 35)));
+        this.a(new SlotResult(playerinventory.player, this.craftInventory, this.resultInventory, 0, 124, 35));
 
         int j;
         int k;
@@ -73,7 +73,7 @@ public class ContainerWorkbench extends ContainerRecipeBook<InventoryCrafting> {
             Optional<RecipeCrafting> optional = world.getMinecraftServer().getCraftingManager().craft(Recipes.CRAFTING, inventorycrafting, world);
 
             if (optional.isPresent()) {
-                RecipeCrafting recipecrafting = (RecipeCrafting) optional.get();
+                RecipeCrafting recipecrafting = optional.get();
 
                 if (inventorycraftresult.a(world, entityplayer, recipecrafting)) {
                     itemstack = recipecrafting.a(inventorycrafting);
@@ -113,7 +113,7 @@ public class ContainerWorkbench extends ContainerRecipeBook<InventoryCrafting> {
     public void b(EntityHuman entityhuman) {
         super.b(entityhuman);
         this.containerAccess.a((world, blockposition) -> {
-            this.a(entityhuman, world, (IInventory) this.craftInventory);
+            this.a(entityhuman, world, this.craftInventory);
         });
     }
 
@@ -126,7 +126,7 @@ public class ContainerWorkbench extends ContainerRecipeBook<InventoryCrafting> {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

@@ -29,7 +29,7 @@ public class PacketPlayOutMultiBlockChange implements Packet<PacketListenerPlayO
         int i = 0;
 
         for (ShortIterator shortiterator = shortset.iterator(); shortiterator.hasNext(); ++i) {
-            short short0 = (Short) shortiterator.next();
+            short short0 = shortiterator.next();
 
             this.b[i] = short0;
             this.c[i] = (chunksection != null) ? chunksection.getType(SectionPosition.a(short0), SectionPosition.b(short0), SectionPosition.c(short0)) : net.minecraft.world.level.block.Blocks.AIR.getBlockData(); // CraftBukkit - SPIGOT-6076, Mojang bug when empty chunk section notified
@@ -54,7 +54,7 @@ public class PacketPlayOutMultiBlockChange implements Packet<PacketListenerPlayO
             long k = packetdataserializer.j();
 
             this.b[j] = (short) ((int) (k & 4095L));
-            this.c[j] = (IBlockData) Block.REGISTRY_ID.fromId((int) (k >>> 12));
+            this.c[j] = Block.REGISTRY_ID.fromId((int) (k >>> 12));
         }
 
     }

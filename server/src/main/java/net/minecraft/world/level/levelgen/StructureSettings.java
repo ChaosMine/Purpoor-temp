@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.level.levelgen;
 
 import com.google.common.collect.ImmutableMap;
@@ -31,7 +30,7 @@ public class StructureSettings {
     private final StructureSettingsStronghold e;
 
     public StructureSettings(Optional<StructureSettingsStronghold> optional, Map<StructureGenerator<?>, StructureSettingsFeature> map) {
-        this.e = (StructureSettingsStronghold) optional.orElse(null); // CraftBukkit - decompile error
+        this.e = optional.orElse(null); // CraftBukkit - decompile error
         this.d = Maps.newHashMap(map); // Spigot
     }
 
@@ -46,7 +45,7 @@ public class StructureSettings {
 
     @Nullable
     public StructureSettingsFeature a(StructureGenerator<?> structuregenerator) {
-        return (StructureSettingsFeature) this.d.get(structuregenerator);
+        return this.d.get(structuregenerator);
     }
 
     @Nullable

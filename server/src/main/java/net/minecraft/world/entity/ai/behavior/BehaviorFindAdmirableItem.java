@@ -30,15 +30,15 @@ public class BehaviorFindAdmirableItem<E extends EntityLiving> extends Behavior<
 
     @Override
     protected boolean a(WorldServer worldserver, E e0) {
-        return this.b.test(e0) && this.a(e0).a((Entity) e0, (double) this.c);
+        return this.b.test(e0) && this.a(e0).a(e0, this.c);
     }
 
     @Override
     protected void a(WorldServer worldserver, E e0, long i) {
-        BehaviorUtil.a(e0, (Entity) this.a(e0), this.d, 0);
+        BehaviorUtil.a(e0, this.a(e0), this.d, 0);
     }
 
     private EntityItem a(E e0) {
-        return (EntityItem) e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
+        return e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM).get();
     }
 }

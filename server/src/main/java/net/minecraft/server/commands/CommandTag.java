@@ -66,7 +66,7 @@ public class CommandTag {
             throw CommandTag.a.create();
         } else {
             if (collection.size() == 1) {
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.add.success.single", new Object[]{s, ((Entity) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.add.success.single", new Object[]{s, collection.iterator().next().getScoreboardDisplayName()}), true);
             } else {
                 commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.add.success.multiple", new Object[]{s, collection.size()}), true);
             }
@@ -91,7 +91,7 @@ public class CommandTag {
             throw CommandTag.b.create();
         } else {
             if (collection.size() == 1) {
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.remove.success.single", new Object[]{s, ((Entity) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.remove.success.single", new Object[]{s, collection.iterator().next().getScoreboardDisplayName()}), true);
             } else {
                 commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.remove.success.multiple", new Object[]{s, collection.size()}), true);
             }
@@ -111,17 +111,17 @@ public class CommandTag {
         }
 
         if (collection.size() == 1) {
-            Entity entity1 = (Entity) collection.iterator().next();
+            Entity entity1 = collection.iterator().next();
 
             if (set.isEmpty()) {
                 commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.single.empty", new Object[]{entity1.getScoreboardDisplayName()}), false);
             } else {
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.single.success", new Object[]{entity1.getScoreboardDisplayName(), set.size(), ChatComponentUtils.a((Collection) set)}), false);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.single.success", new Object[]{entity1.getScoreboardDisplayName(), set.size(), ChatComponentUtils.a(set)}), false);
             }
         } else if (set.isEmpty()) {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.multiple.empty", new Object[]{collection.size()}), false);
         } else {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.multiple.success", new Object[]{collection.size(), set.size(), ChatComponentUtils.a((Collection) set)}), false);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.tag.list.multiple.success", new Object[]{collection.size(), set.size(), ChatComponentUtils.a(set)}), false);
         }
 
         return set.size();

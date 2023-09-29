@@ -253,7 +253,7 @@ public class CommandExecute {
                 int j = flag ? i : (flag1 ? 1 : 0);
 
                 argumentnbtkey_h.b(nbttagcompound, () -> {
-                    return (NBTBase) intfunction.apply(j);
+                    return intfunction.apply(j);
                 });
                 commanddataaccessor.a(nbttagcompound);
             } catch (CommandSyntaxException commandsyntaxexception) {
@@ -436,7 +436,7 @@ public class CommandExecute {
                 for (int l = structureboundingbox.b; l <= structureboundingbox.e; ++l) {
                     for (int i1 = structureboundingbox.a; i1 <= structureboundingbox.d; ++i1) {
                         BlockPosition blockposition4 = new BlockPosition(i1, l, k);
-                        BlockPosition blockposition5 = blockposition4.a((BaseBlockPosition) blockposition3);
+                        BlockPosition blockposition5 = blockposition4.a(blockposition3);
                         IBlockData iblockdata = worldserver.getType(blockposition4);
 
                         if (!flag || !iblockdata.a(Blocks.AIR)) {

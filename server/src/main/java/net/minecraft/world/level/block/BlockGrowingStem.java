@@ -38,7 +38,7 @@ public abstract class BlockGrowingStem extends BlockGrowingAbstract implements I
         }
 
         if (this.b) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -48,7 +48,7 @@ public abstract class BlockGrowingStem extends BlockGrowingAbstract implements I
     public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
         Optional<BlockPosition> optional = this.b(iblockaccess, blockposition, iblockdata);
 
-        return optional.isPresent() && this.c().h(iblockaccess.getType(((BlockPosition) optional.get()).shift(this.a)));
+        return optional.isPresent() && this.c().h(iblockaccess.getType(optional.get().shift(this.a)));
     }
 
     @Override
@@ -58,12 +58,12 @@ public abstract class BlockGrowingStem extends BlockGrowingAbstract implements I
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        Optional<BlockPosition> optional = this.b((IBlockAccess) worldserver, blockposition, iblockdata);
+        Optional<BlockPosition> optional = this.b(worldserver, blockposition, iblockdata);
 
         if (optional.isPresent()) {
-            IBlockData iblockdata1 = worldserver.getType((BlockPosition) optional.get());
+            IBlockData iblockdata1 = worldserver.getType(optional.get());
 
-            ((BlockGrowingTop) iblockdata1.getBlock()).a(worldserver, random, (BlockPosition) optional.get(), iblockdata1);
+            ((BlockGrowingTop) iblockdata1.getBlock()).a(worldserver, random, optional.get(), iblockdata1);
         }
 
     }

@@ -11,11 +11,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.EnumChatFormat;
-import net.minecraft.SharedConstants;
-import net.minecraft.SystemUtils;
 import net.minecraft.commands.synchronization.ArgumentRegistry;
 import net.minecraft.commands.synchronization.CompletionProviders;
-import net.minecraft.gametest.framework.GameTestHarnessTestCommand;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.PacketPlayOutCommands;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +36,7 @@ import java.util.stream.Collectors;
 public class CommandDispatcher {
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	private final com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> b = new com.mojang.brigadier.CommandDispatcher();
+	private final com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> b = new com.mojang.brigadier.CommandDispatcher<>();
 
 	public CommandDispatcher(CommandDispatcher.ServerType commanddispatcher_servertype) {
 		this(); // CraftBukkit
@@ -63,7 +60,6 @@ public class CommandDispatcher {
 		CommandGamemode.a(this.b);
 		CommandGamerule.a(this.b);
 		CommandGive.a(this.b);
-		CommandHelp.a(this.b);
 		CommandKick.a(this.b);
 		CommandKill.a(this.b);
 		CommandList.a(this.b);
@@ -130,6 +126,53 @@ public class CommandDispatcher {
 		this.b.setConsumer((commandcontext, flag1, i) -> {
 			commandcontext.getSource().a(commandcontext, flag1, i);
 		});
+	}
+
+	public static LiteralArgumentBuilder<CommandListenerWrapper> literal(String s) {
+		return a(s);
+	} // Purpur - OBFHELPER
+
+	public static LiteralArgumentBuilder<CommandListenerWrapper> a(String s) {
+		return LiteralArgumentBuilder.literal(s);
+	}
+
+	public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> argument(String s, ArgumentType<T> argumenttype) {
+		return a(s, argumenttype);
+	} // Purpur - OBFHELPER
+
+	public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> a(String s, ArgumentType<T> argumenttype) {
+		return RequiredArgumentBuilder.argument(s, argumenttype);
+	}
+
+	public static Predicate<String> a(CommandDispatcher.b commanddispatcher_b) {
+		return (s) -> {
+			try {
+				commanddispatcher_b.parse(new StringReader(s));
+				return true;
+			} catch (CommandSyntaxException commandsyntaxexception) {
+				return false;
+			}
+		};
+	}
+
+	@Nullable
+	public static <S> CommandSyntaxException a(ParseResults<S> parseresults) {
+		return !parseresults.getReader().canRead() ? null : (parseresults.getExceptions().size() == 1 ? parseresults.getExceptions().values().iterator().next() : (parseresults.getContext().getRange().isEmpty() ? CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parseresults.getReader()) : CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(parseresults.getReader())));
+	}
+
+	public static void b() {
+		RootCommandNode<CommandListenerWrapper> rootcommandnode = (new CommandDispatcher(CommandDispatcher.ServerType.ALL)).a().getRoot();
+		Set<ArgumentType<?>> set = ArgumentRegistry.a(rootcommandnode);
+		Set<ArgumentType<?>> set1 = set.stream().filter((argumenttype) -> {
+			return !ArgumentRegistry.a(argumenttype);
+		}).collect(Collectors.toSet());
+
+		if (!set1.isEmpty()) {
+			CommandDispatcher.LOGGER.warn("Missing type registration for following arguments:\n {}", set1.stream().map((argumenttype) -> {
+				return "\t" + argumenttype;
+			}).collect(Collectors.joining(",\n")));
+			throw new IllegalStateException("Unregistered argument types");
+		}
 	}
 
 	public int dispatchServerCommand(CommandListenerWrapper sender, String command) {
@@ -274,7 +317,7 @@ public class CommandDispatcher {
 		}
 		// Paper start - Async command map building
 		new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandListenerWrapper>(entityplayer.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
-		MinecraftServer.getServer().execute(() -> {
+		MinecraftServer.SERVER.execute(() -> {
 			runSync(entityplayer, bukkit, rootcommandnode);
 		});
 	}
@@ -298,67 +341,40 @@ public class CommandDispatcher {
 	}
 
 	private void a(CommandNode<CommandListenerWrapper> commandnode, CommandNode<ICompletionProvider> commandnode1, CommandListenerWrapper commandlistenerwrapper, Map<CommandNode<CommandListenerWrapper>, CommandNode<ICompletionProvider>> map) {
-      for (var commandListenerWrapperCommandNode : commandnode.getChildren()) {
-          CommandNode<CommandListenerWrapper> commandnode2 = (CommandNode) commandListenerWrapperCommandNode;
-          if (!org.spigotmc.SpigotConfig.sendNamespaced && commandnode2.getName().contains(":")) continue; // Spigot
+		for (var commandListenerWrapperCommandNode : commandnode.getChildren()) {
+			CommandNode<CommandListenerWrapper> commandnode2 = commandListenerWrapperCommandNode;
+			if (!org.spigotmc.SpigotConfig.sendNamespaced && commandnode2.getName().contains(":")) continue; // Spigot
 
-          if (commandnode2.canUse(commandlistenerwrapper)) {
-              var argumentbuilder = commandnode2.createBuilder(); // CraftBukkit - decompile error
+			if (commandnode2.canUse(commandlistenerwrapper)) {
+				var argumentbuilder = commandnode2.createBuilder(); // CraftBukkit - decompile error
 
-              argumentbuilder.requires(__ -> true);
-              if (argumentbuilder.getCommand() != null) {
-                  argumentbuilder.executes((commandcontext) -> 0);
-              }
+				argumentbuilder.requires(__ -> true);
+				if (argumentbuilder.getCommand() != null) {
+					argumentbuilder.executes((commandcontext) -> 0);
+				}
 
-              if (argumentbuilder instanceof RequiredArgumentBuilder) {
-                  RequiredArgumentBuilder<ICompletionProvider, ?> requiredargumentbuilder = (RequiredArgumentBuilder) argumentbuilder;
+				if (argumentbuilder instanceof RequiredArgumentBuilder) {
+					RequiredArgumentBuilder<ICompletionProvider, ?> requiredargumentbuilder = (RequiredArgumentBuilder) argumentbuilder;
 
-                  if (requiredargumentbuilder.getSuggestionsProvider() != null) {
-                      requiredargumentbuilder.suggests(CompletionProviders.b(requiredargumentbuilder.getSuggestionsProvider()));
-                  }
-              }
+					if (requiredargumentbuilder.getSuggestionsProvider() != null) {
+						requiredargumentbuilder.suggests(CompletionProviders.b(requiredargumentbuilder.getSuggestionsProvider()));
+					}
+				}
 
-              if (argumentbuilder.getRedirect() != null) {
-                  argumentbuilder.redirect((CommandNode) map.get(argumentbuilder.getRedirect()));
-              }
+				if (argumentbuilder.getRedirect() != null) {
+					argumentbuilder.redirect((CommandNode) map.get(argumentbuilder.getRedirect()));
+				}
 
-              CommandNode commandnode3 = argumentbuilder.build(); // CraftBukkit - decompile error
+				CommandNode commandnode3 = argumentbuilder.build(); // CraftBukkit - decompile error
 
-              map.put(commandnode2, commandnode3);
-              commandnode1.addChild(commandnode3);
-              if (!commandnode2.getChildren().isEmpty()) {
-                  this.a(commandnode2, commandnode3, commandlistenerwrapper, map);
-              }
-          }
-      }
-
-	}
-
-	public static LiteralArgumentBuilder<CommandListenerWrapper> literal(String s) {
-		return a(s);
-	} // Purpur - OBFHELPER
-
-	public static LiteralArgumentBuilder<CommandListenerWrapper> a(String s) {
-		return LiteralArgumentBuilder.literal(s);
-	}
-
-	public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> argument(String s, ArgumentType<T> argumenttype) {
-		return a(s, argumenttype);
-	} // Purpur - OBFHELPER
-
-	public static <T> RequiredArgumentBuilder<CommandListenerWrapper, T> a(String s, ArgumentType<T> argumenttype) {
-		return RequiredArgumentBuilder.argument(s, argumenttype);
-	}
-
-	public static Predicate<String> a(CommandDispatcher.b commanddispatcher_b) {
-		return (s) -> {
-			try {
-				commanddispatcher_b.parse(new StringReader(s));
-				return true;
-			} catch (CommandSyntaxException commandsyntaxexception) {
-				return false;
+				map.put(commandnode2, commandnode3);
+				commandnode1.addChild(commandnode3);
+				if (!commandnode2.getChildren().isEmpty()) {
+					this.a(commandnode2, commandnode3, commandlistenerwrapper, map);
+				}
 			}
-		};
+		}
+
 	}
 
 	public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> getDispatcher() {
@@ -371,26 +387,6 @@ public class CommandDispatcher {
 
 	public com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> dispatcher() { // Paper - OBFHELPER
 		return this.b;
-	}
-
-	@Nullable
-	public static <S> CommandSyntaxException a(ParseResults<S> parseresults) {
-		return !parseresults.getReader().canRead() ? null : (parseresults.getExceptions().size() == 1 ? parseresults.getExceptions().values().iterator().next() : (parseresults.getContext().getRange().isEmpty() ? CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parseresults.getReader()) : CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(parseresults.getReader())));
-	}
-
-	public static void b() {
-		RootCommandNode<CommandListenerWrapper> rootcommandnode = (new CommandDispatcher(CommandDispatcher.ServerType.ALL)).a().getRoot();
-		Set<ArgumentType<?>> set = ArgumentRegistry.a((CommandNode) rootcommandnode);
-		Set<ArgumentType<?>> set1 = set.stream().filter((argumenttype) -> {
-			return !ArgumentRegistry.a(argumenttype);
-		}).collect(Collectors.toSet());
-
-		if (!set1.isEmpty()) {
-			CommandDispatcher.LOGGER.warn("Missing type registration for following arguments:\n {}", set1.stream().map((argumenttype) -> {
-				return "\t" + argumenttype;
-			}).collect(Collectors.joining(",\n")));
-			throw new IllegalStateException("Unregistered argument types");
-		}
 	}
 
 	public enum ServerType {

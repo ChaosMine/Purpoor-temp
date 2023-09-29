@@ -71,14 +71,14 @@ public class ResourcePackFile extends ResourcePackAbstract {
         HashSet hashset = Sets.newHashSet();
 
         while (enumeration.hasMoreElements()) {
-            ZipEntry zipentry = (ZipEntry) enumeration.nextElement();
+            ZipEntry zipentry = enumeration.nextElement();
             String s = zipentry.getName();
 
             if (s.startsWith(enumresourcepacktype.a() + "/")) {
                 List<String> list = Lists.newArrayList(ResourcePackFile.b.split(s));
 
                 if (list.size() > 1) {
-                    String s1 = (String) list.get(1);
+                    String s1 = list.get(1);
 
                     if (s1.equals(s1.toLowerCase(Locale.ROOT))) {
                         hashset.add(s1);
@@ -122,7 +122,7 @@ public class ResourcePackFile extends ResourcePackAbstract {
         String s3 = s2 + s1 + "/";
 
         while (enumeration.hasMoreElements()) {
-            ZipEntry zipentry = (ZipEntry) enumeration.nextElement();
+            ZipEntry zipentry = enumeration.nextElement();
 
             if (!zipentry.isDirectory()) {
                 String s4 = zipentry.getName();

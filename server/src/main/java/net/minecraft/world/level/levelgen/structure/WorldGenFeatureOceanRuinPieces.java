@@ -85,7 +85,7 @@ public class WorldGenFeatureOceanRuinPieces {
         for (int l = 0; l < k; ++l) {
             if (!list1.isEmpty()) {
                 int i1 = random.nextInt(list1.size());
-                BlockPosition blockposition3 = (BlockPosition) list1.remove(i1);
+                BlockPosition blockposition3 = list1.remove(i1);
                 int j1 = blockposition3.getX();
                 int k1 = blockposition3.getZ();
                 EnumBlockRotation enumblockrotation1 = EnumBlockRotation.a(random);
@@ -163,7 +163,7 @@ public class WorldGenFeatureOceanRuinPieces {
 
         private void a(DefinedStructureManager definedstructuremanager) {
             DefinedStructure definedstructure = definedstructuremanager.a(this.f);
-            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.g).a(EnumBlockMirror.NONE).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.g).a(EnumBlockMirror.NONE).a(DefinedStructureProcessorBlockIgnore.d);
 
             this.a(definedstructure, this.c, definedstructureinfo);
         }
@@ -181,18 +181,18 @@ public class WorldGenFeatureOceanRuinPieces {
         @Override
         protected void a(String s, BlockPosition blockposition, WorldAccess worldaccess, Random random, StructureBoundingBox structureboundingbox) {
             if ("chest".equals(s)) {
-                worldaccess.setTypeAndData(blockposition, (IBlockData) Blocks.CHEST.getBlockData().set(BlockChest.d, worldaccess.getFluid(blockposition).a((Tag) TagsFluid.WATER)), 2);
+                worldaccess.setTypeAndData(blockposition, Blocks.CHEST.getBlockData().set(BlockChest.d, worldaccess.getFluid(blockposition).a(TagsFluid.WATER)), 2);
                 TileEntity tileentity = worldaccess.getTileEntity(blockposition);
 
                 if (tileentity instanceof TileEntityChest) {
                     ((TileEntityChest) tileentity).setLootTable(this.h ? LootTables.F : LootTables.E, random.nextLong());
                 }
             } else if ("drowned".equals(s)) {
-                EntityDrowned entitydrowned = (EntityDrowned) EntityTypes.DROWNED.a((World) worldaccess.getMinecraftWorld());
+                EntityDrowned entitydrowned = EntityTypes.DROWNED.a(worldaccess.getMinecraftWorld());
 
                 entitydrowned.setPersistent();
                 entitydrowned.setPositionRotation(blockposition, 0.0F, 0.0F);
-                entitydrowned.prepare(worldaccess, worldaccess.getDamageScaler(blockposition), EnumMobSpawn.STRUCTURE, (GroupDataEntity) null, (NBTTagCompound) null);
+                entitydrowned.prepare(worldaccess, worldaccess.getDamageScaler(blockposition), EnumMobSpawn.STRUCTURE, null, null);
                 worldaccess.addAllEntities(entitydrowned);
                 if (blockposition.getY() > worldaccess.getSeaLevel()) {
                     worldaccess.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 2);
@@ -205,13 +205,13 @@ public class WorldGenFeatureOceanRuinPieces {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            this.b.b().a((DefinedStructureProcessor) (new DefinedStructureProcessorRotation(this.e))).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+            this.b.b().a(new DefinedStructureProcessorRotation(this.e)).a(DefinedStructureProcessorBlockIgnore.d);
             int i = generatoraccessseed.a(HeightMap.Type.OCEAN_FLOOR_WG, this.c.getX(), this.c.getZ());
 
             this.c = new BlockPosition(this.c.getX(), i, this.c.getZ());
-            BlockPosition blockposition1 = DefinedStructure.a(new BlockPosition(this.a.a().getX() - 1, 0, this.a.a().getZ() - 1), EnumBlockMirror.NONE, this.g, BlockPosition.ZERO).a((BaseBlockPosition) this.c);
+            BlockPosition blockposition1 = DefinedStructure.a(new BlockPosition(this.a.a().getX() - 1, 0, this.a.a().getZ() - 1), EnumBlockMirror.NONE, this.g, BlockPosition.ZERO).a(this.c);
 
-            this.c = new BlockPosition(this.c.getX(), this.a(this.c, (IBlockAccess) generatoraccessseed, blockposition1), this.c.getZ());
+            this.c = new BlockPosition(this.c.getX(), this.a(this.c, generatoraccessseed, blockposition1), this.c.getZ());
             return super.a(generatoraccessseed, structuremanager, chunkgenerator, random, structureboundingbox, chunkcoordintpair, blockposition);
         }
 
@@ -230,7 +230,7 @@ public class WorldGenFeatureOceanRuinPieces {
                 BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(i1, k1, j1);
                 IBlockData iblockdata = iblockaccess.getType(blockposition_mutableblockposition);
 
-                for (Fluid fluid = iblockaccess.getFluid(blockposition_mutableblockposition); (iblockdata.isAir() || fluid.a((Tag) TagsFluid.WATER) || iblockdata.getBlock().a((Tag) TagsBlock.ICE)) && k1 > 1; fluid = iblockaccess.getFluid(blockposition_mutableblockposition)) {
+                for (Fluid fluid = iblockaccess.getFluid(blockposition_mutableblockposition); (iblockdata.isAir() || fluid.a(TagsFluid.WATER) || iblockdata.getBlock().a(TagsBlock.ICE)) && k1 > 1; fluid = iblockaccess.getFluid(blockposition_mutableblockposition)) {
                     --k1;
                     blockposition_mutableblockposition.d(i1, k1, j1);
                     iblockdata = iblockaccess.getType(blockposition_mutableblockposition);

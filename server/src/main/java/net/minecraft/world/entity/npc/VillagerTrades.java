@@ -124,7 +124,7 @@ public class VillagerTrades {
 
                     ItemWorldMap.applySepiaFilter(worldserver, itemstack);
                     WorldMap.decorateMap(itemstack, blockposition, "+", this.c);
-                    itemstack.a((IChatBaseComponent) (new ChatMessage("filled_map." + this.b.i().toLowerCase(Locale.ROOT))));
+                    itemstack.a(new ChatMessage("filled_map." + this.b.i().toLowerCase(Locale.ROOT)));
                     return new MerchantRecipe(new ItemStack(Items.EMERALD, this.a), new ItemStack(Items.COMPASS), itemstack, this.d, this.e, 0.2F);
                 } else {
                     return null;
@@ -143,8 +143,8 @@ public class VillagerTrades {
 
         @Override
         public MerchantRecipe a(Entity entity, Random random) {
-            List<Enchantment> list = (List) IRegistry.ENCHANTMENT.g().filter(Enchantment::h).collect(Collectors.toList());
-            Enchantment enchantment = (Enchantment) list.get(random.nextInt(list.size()));
+            List<Enchantment> list = IRegistry.ENCHANTMENT.g().filter(Enchantment::h).toList();
+            Enchantment enchantment = list.get(random.nextInt(list.size()));
             int i = MathHelper.nextInt(random, enchantment.getStartLevel(), enchantment.getMaxLevel());
             ItemStack itemstack = ItemEnchantedBook.a(new WeightedRandomEnchant(enchantment, i));
             int j = 2 + random.nextInt(5 + i * 10) + 3 * i;
@@ -232,10 +232,10 @@ public class VillagerTrades {
         @Override
         public MerchantRecipe a(Entity entity, Random random) {
             ItemStack itemstack = new ItemStack(Items.EMERALD, this.c);
-            List<PotionRegistry> list = (List) IRegistry.POTION.g().filter((potionregistry) -> {
+            List<PotionRegistry> list = IRegistry.POTION.g().filter((potionregistry) -> {
                 return !potionregistry.a().isEmpty() && PotionBrewer.a(potionregistry);
-            }).collect(Collectors.toList());
-            PotionRegistry potionregistry = (PotionRegistry) list.get(random.nextInt(list.size()));
+            }).toList();
+            PotionRegistry potionregistry = list.get(random.nextInt(list.size()));
             ItemStack itemstack1 = PotionUtil.a(new ItemStack(this.a.getItem(), this.b), potionregistry);
 
             return new MerchantRecipe(itemstack, new ItemStack(this.f, this.g), itemstack1, this.d, this.e, this.h);
@@ -360,7 +360,7 @@ public class VillagerTrades {
         @Override
         public MerchantRecipe a(Entity entity, Random random) {
             if (entity instanceof VillagerDataHolder) {
-                ItemStack itemstack = new ItemStack((IMaterial) this.a.get(((VillagerDataHolder) entity).getVillagerData().getType()), this.b);
+                ItemStack itemstack = new ItemStack(this.a.get(((VillagerDataHolder) entity).getVillagerData().getType()), this.b);
 
                 return new MerchantRecipe(itemstack, new ItemStack(Items.EMERALD), this.c, this.d, 0.05F);
             } else {

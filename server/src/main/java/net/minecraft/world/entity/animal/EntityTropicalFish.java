@@ -84,7 +84,7 @@ public class EntityTropicalFish extends EntityFishSchool {
     }
 
     public int getVariant() {
-        return (Integer) this.datawatcher.get(EntityTropicalFish.c);
+        return this.datawatcher.get(EntityTropicalFish.c);
     }
 
     @Override

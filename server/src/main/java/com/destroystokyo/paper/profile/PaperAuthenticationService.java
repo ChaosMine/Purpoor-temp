@@ -11,7 +11,7 @@ public class PaperAuthenticationService extends YggdrasilAuthenticationService {
     private final Environment environment;
     public PaperAuthenticationService(Proxy proxy) {
         super(proxy);
-        this.environment = (Environment)EnvironmentParser.getEnvironmentFromProperties().orElse(YggdrasilEnvironment.PROD);;
+        this.environment = EnvironmentParser.getEnvironmentFromProperties().orElse(YggdrasilEnvironment.PROD);
     }
 
     @Override

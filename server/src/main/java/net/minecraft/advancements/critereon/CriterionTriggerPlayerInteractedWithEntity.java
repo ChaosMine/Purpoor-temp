@@ -19,9 +19,9 @@ public class CriterionTriggerPlayerInteractedWithEntity extends CriterionTrigger
     }
 
     @Override
-    protected CriterionTriggerPlayerInteractedWithEntity.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    protected CriterionTriggerPlayerInteractedWithEntity.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "entity", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "entity", lootdeserializationcontext);
 
         return new CriterionTriggerPlayerInteractedWithEntity.a(criterionconditionentity_b, criterionconditionitem, criterionconditionentity_b1);
     }
@@ -37,15 +37,15 @@ public class CriterionTriggerPlayerInteractedWithEntity extends CriterionTrigger
     public static class a extends CriterionInstanceAbstract {
 
         private final CriterionConditionItem a;
-        private final CriterionConditionEntity.b b;
+        private final CriterionConditionEntity.b_ b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionEntity.b criterionconditionentity_b1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionEntity.b_ criterionconditionentity_b1) {
             super(CriterionTriggerPlayerInteractedWithEntity.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
             this.b = criterionconditionentity_b1;
         }
 
-        public static CriterionTriggerPlayerInteractedWithEntity.a a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem.a criterionconditionitem_a, CriterionConditionEntity.b criterionconditionentity_b1) {
+        public static CriterionTriggerPlayerInteractedWithEntity.a a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem.a_ criterionconditionitem_a, CriterionConditionEntity.b_ criterionconditionentity_b1) {
             return new CriterionTriggerPlayerInteractedWithEntity.a(criterionconditionentity_b, criterionconditionitem_a.b(), criterionconditionentity_b1);
         }
 

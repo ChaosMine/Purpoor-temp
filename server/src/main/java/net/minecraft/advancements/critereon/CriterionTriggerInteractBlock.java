@@ -20,7 +20,7 @@ public class CriterionTriggerInteractBlock extends CriterionTriggerAbstract<Crit
     }
 
     @Override
-    public CriterionTriggerInteractBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerInteractBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionLocation criterionconditionlocation = CriterionConditionLocation.a(jsonobject.get("location"));
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
 
@@ -40,14 +40,14 @@ public class CriterionTriggerInteractBlock extends CriterionTriggerAbstract<Crit
         private final CriterionConditionLocation a;
         private final CriterionConditionItem b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerInteractBlock.a, criterionconditionentity_b);
             this.a = criterionconditionlocation;
             this.b = criterionconditionitem;
         }
 
-        public static CriterionTriggerInteractBlock.a a(CriterionConditionLocation.a criterionconditionlocation_a, CriterionConditionItem.a criterionconditionitem_a) {
-            return new CriterionTriggerInteractBlock.a(CriterionConditionEntity.b.a, criterionconditionlocation_a.b(), criterionconditionitem_a.b());
+        public static CriterionTriggerInteractBlock.a a(CriterionConditionLocation.a_ criterionconditionlocation_a, CriterionConditionItem.a_ criterionconditionitem_a) {
+            return new CriterionTriggerInteractBlock.a(CriterionConditionEntity.b_.a, criterionconditionlocation_a.b(), criterionconditionitem_a.b());
         }
 
         public boolean a(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, ItemStack itemstack) {

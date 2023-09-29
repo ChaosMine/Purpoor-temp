@@ -28,7 +28,7 @@ public class BlockWallSign extends BlockSign {
 
     public BlockWallSign(BlockBase.Info blockbase_info, BlockPropertyWood blockpropertywood) {
         super(blockbase_info, blockpropertywood);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockWallSign.FACING, EnumDirection.NORTH)).set(BlockWallSign.a, false));
+        this.j(this.blockStateList.getBlockData().set(BlockWallSign.FACING, EnumDirection.NORTH).set(BlockWallSign.a, false));
     }
 
     @Override
@@ -38,12 +38,12 @@ public class BlockWallSign extends BlockSign {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) BlockWallSign.d.get(iblockdata.get(BlockWallSign.FACING));
+        return BlockWallSign.d.get(iblockdata.get(BlockWallSign.FACING));
     }
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        return iworldreader.getType(blockposition.shift(((EnumDirection) iblockdata.get(BlockWallSign.FACING)).opposite())).getMaterial().isBuildable();
+        return iworldreader.getType(blockposition.shift(iblockdata.get(BlockWallSign.FACING).opposite())).getMaterial().isBuildable();
     }
 
     @Nullable
@@ -63,9 +63,9 @@ public class BlockWallSign extends BlockSign {
             if (enumdirection.n().d()) {
                 EnumDirection enumdirection1 = enumdirection.opposite();
 
-                iblockdata = (IBlockData) iblockdata.set(BlockWallSign.FACING, enumdirection1);
+                iblockdata = iblockdata.set(BlockWallSign.FACING, enumdirection1);
                 if (iblockdata.canPlace(world, blockposition)) {
-                    return (IBlockData) iblockdata.set(BlockWallSign.a, fluid.getType() == FluidTypes.WATER);
+                    return iblockdata.set(BlockWallSign.a, fluid.getType() == FluidTypes.WATER);
                 }
             }
         }
@@ -80,12 +80,12 @@ public class BlockWallSign extends BlockSign {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockWallSign.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockWallSign.FACING)));
+        return iblockdata.set(BlockWallSign.FACING, enumblockrotation.a(iblockdata.get(BlockWallSign.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockWallSign.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockWallSign.FACING)));
     }
 
     @Override

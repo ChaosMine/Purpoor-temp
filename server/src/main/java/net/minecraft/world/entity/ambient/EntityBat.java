@@ -136,11 +136,11 @@ public class EntityBat extends EntityAmbient {
     }
 
     public boolean isAsleep() {
-        return ((Byte) this.datawatcher.get(EntityBat.b) & 1) != 0;
+        return (this.datawatcher.get(EntityBat.b) & 1) != 0;
     }
 
     public void setAsleep(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityBat.b);
+        byte b0 = this.datawatcher.get(EntityBat.b);
 
         if (flag) {
             this.datawatcher.set(EntityBat.b, (byte) (b0 | 1));
@@ -183,12 +183,12 @@ public class EntityBat extends EntityAmbient {
                     this.aC = (float) this.random.nextInt(360);
                 }
 
-                if (this.world.a(EntityBat.c, (EntityLiving) this) != null) {
+                if (this.world.a(EntityBat.c, this) != null) {
                     // CraftBukkit Start - Call BatToggleSleepEvent
                     if (CraftEventFactory.handleBatToggleSleepEvent(this, true)) {
                         this.setAsleep(false);
                         if (!flag) {
-                            this.world.a((EntityHuman) null, 1025, blockposition, 0);
+                            this.world.a(null, 1025, blockposition, 0);
                         }
                     }
                     // CraftBukkit End
@@ -198,7 +198,7 @@ public class EntityBat extends EntityAmbient {
                 if (CraftEventFactory.handleBatToggleSleepEvent(this, true)) {
                     this.setAsleep(false);
                     if (!flag) {
-                        this.world.a((EntityHuman) null, 1025, blockposition, 0);
+                        this.world.a(null, 1025, blockposition, 0);
                     }
                 }
                 // CraftBukkit End - Call BatToggleSleepEvent
@@ -208,7 +208,7 @@ public class EntityBat extends EntityAmbient {
                 this.d = null;
             }
 
-            if (this.d == null || this.random.nextInt(30) == 0 || this.d.a((IPosition) this.getPositionVector(), 2.0D)) {
+            if (this.d == null || this.random.nextInt(30) == 0 || this.d.a(this.getPositionVector(), 2.0D)) {
                 this.d = new BlockPosition(this.locX() + (double) this.random.nextInt(7) - (double) this.random.nextInt(7), this.locY() + (double) this.random.nextInt(6) - 2.0D, this.locZ() + (double) this.random.nextInt(7) - (double) this.random.nextInt(7));
             }
 
@@ -279,7 +279,7 @@ public class EntityBat extends EntityAmbient {
     @Override
     public void saveData(NBTTagCompound nbttagcompound) {
         super.saveData(nbttagcompound);
-        nbttagcompound.setByte("BatFlags", (Byte) this.datawatcher.get(EntityBat.b));
+        nbttagcompound.setByte("BatFlags", this.datawatcher.get(EntityBat.b));
     }
 
     public static boolean b(EntityTypes<EntityBat> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {

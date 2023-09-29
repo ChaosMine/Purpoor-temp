@@ -19,7 +19,7 @@ public interface INamable {
     String getName();
 
     static <E extends Enum<E> & INamable> Codec<E> a(Supplier<E[]> supplier, Function<? super String, ? extends E> function) {
-        E[] ae = (Enum[]) supplier.get();
+        E[] ae = supplier.get();
 
         return a(Enum::ordinal, (i) -> {
             return ae[i];
@@ -52,6 +52,7 @@ public interface INamable {
                 return "StringRepresentable[" + tointfunction + "]";
             }
         };
+
     }
 
     static Keyable a(final INamable[] ainamable) {
@@ -59,13 +60,9 @@ public interface INamable {
             public <T> Stream<T> keys(DynamicOps<T> dynamicops) {
                 if (dynamicops.compressMaps()) {
                     IntStream intstream = IntStream.range(0, ainamable.length);
-
-                    dynamicops.getClass();
                     return intstream.mapToObj(dynamicops::createInt);
                 } else {
-                    Stream stream = Arrays.stream(ainamable).map(INamable::getName);
-
-                    dynamicops.getClass();
+                    var stream = Arrays.stream(ainamable).map(INamable::getName);
                     return stream.map(dynamicops::createString);
                 }
             }

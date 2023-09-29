@@ -37,9 +37,9 @@ public class BehaviorAttackTargetSet<E extends EntityInsentient> extends Behavio
         if (!this.b.test(e0)) {
             return false;
         } else {
-            Optional<? extends EntityLiving> optional = (Optional) this.c.apply(e0);
+            Optional<? extends EntityLiving> optional = this.c.apply(e0);
 
-            return optional.isPresent() && ((EntityLiving) optional.get()).isAlive();
+            return optional.isPresent() && optional.get().isAlive();
         }
     }
 

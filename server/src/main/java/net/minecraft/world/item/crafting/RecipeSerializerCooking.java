@@ -26,7 +26,7 @@ public class RecipeSerializerCooking<T extends RecipeCooking> implements RecipeS
         RecipeItemStack recipeitemstack = RecipeItemStack.a((JsonElement) object);
         String s1 = ChatDeserializer.h(jsonobject, "result");
         MinecraftKey minecraftkey1 = new MinecraftKey(s1);
-        ItemStack itemstack = new ItemStack((IMaterial) IRegistry.ITEM.getOptional(minecraftkey1).orElseThrow(() -> {
+        ItemStack itemstack = new ItemStack(IRegistry.ITEM.getOptional(minecraftkey1).orElseThrow(() -> {
             return new IllegalStateException("Item: " + s1 + " does not exist");
         }));
         float f = ChatDeserializer.a(jsonobject, "experience", 0.0F);

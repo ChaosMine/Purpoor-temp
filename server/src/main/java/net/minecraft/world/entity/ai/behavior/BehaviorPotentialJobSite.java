@@ -22,7 +22,7 @@ public class BehaviorPotentialJobSite extends Behavior<EntityVillager> {
     }
 
     protected boolean a(WorldServer worldserver, EntityVillager entityvillager) {
-        return (Boolean) entityvillager.getBehaviorController().f().map((activity) -> {
+        return entityvillager.getBehaviorController().f().map((activity) -> {
             return activity == Activity.IDLE || activity == Activity.WORK || activity == Activity.PLAY;
         }).orElse(true);
     }
@@ -32,7 +32,7 @@ public class BehaviorPotentialJobSite extends Behavior<EntityVillager> {
     }
 
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        BehaviorUtil.a(entityvillager, ((GlobalPos) entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get()).getBlockPosition(), this.b, 1);
+        BehaviorUtil.a(entityvillager, entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get().getBlockPosition(), this.b, 1);
     }
 
     protected void c(WorldServer worldserver, EntityVillager entityvillager, long i) {

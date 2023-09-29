@@ -42,7 +42,7 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
         StructureGenerator.g();
         IRegistryWritable<WorldGenFeatureDefinedStructurePoolTemplate> iregistrywritable = iregistrycustom.b(IRegistry.ax);
         EnumBlockRotation enumblockrotation = EnumBlockRotation.a(random);
-        WorldGenFeatureDefinedStructurePoolTemplate worldgenfeaturedefinedstructurepooltemplate = (WorldGenFeatureDefinedStructurePoolTemplate) worldgenfeaturevillageconfiguration.c().get();
+        WorldGenFeatureDefinedStructurePoolTemplate worldgenfeaturedefinedstructurepooltemplate = worldgenfeaturevillageconfiguration.c().get();
         WorldGenFeatureDefinedStructurePoolStructure worldgenfeaturedefinedstructurepoolstructure = worldgenfeaturedefinedstructurepooltemplate.a(random);
         WorldGenFeaturePillagerOutpostPoolPiece worldgenfeaturepillageroutpostpoolpiece = worldgenfeaturedefinedstructurejigsawplacement_a.create(definedstructuremanager, worldgenfeaturedefinedstructurepoolstructure, blockposition, worldgenfeaturedefinedstructurepoolstructure.f(), enumblockrotation, worldgenfeaturedefinedstructurepoolstructure.a(definedstructuremanager, blockposition, enumblockrotation));
         StructureBoundingBox structureboundingbox = worldgenfeaturepillageroutpostpoolpiece.g();
@@ -62,13 +62,13 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
         list.add(worldgenfeaturepillageroutpostpoolpiece);
         if (worldgenfeaturevillageconfiguration.b() > 0) {
             boolean flag2 = true;
-            AxisAlignedBB axisalignedbb = new AxisAlignedBB((double) (i - 80), (double) (k - 80), (double) (j - 80), (double) (i + 80 + 1), (double) (k + 80 + 1), (double) (j + 80 + 1));
+            AxisAlignedBB axisalignedbb = new AxisAlignedBB(i - 80, k - 80, j - 80, i + 80 + 1, k + 80 + 1, j + 80 + 1);
             WorldGenFeatureDefinedStructureJigsawPlacement.c worldgenfeaturedefinedstructurejigsawplacement_c = new WorldGenFeatureDefinedStructureJigsawPlacement.c(iregistrywritable, worldgenfeaturevillageconfiguration.b(), worldgenfeaturedefinedstructurejigsawplacement_a, chunkgenerator, definedstructuremanager, list, random);
 
             worldgenfeaturedefinedstructurejigsawplacement_c.h.addLast(new WorldGenFeatureDefinedStructureJigsawPlacement.b(worldgenfeaturepillageroutpostpoolpiece, new MutableObject(VoxelShapes.a(VoxelShapes.a(axisalignedbb), VoxelShapes.a(AxisAlignedBB.a(structureboundingbox)), OperatorBoolean.ONLY_FIRST)), k + 80, 0));
 
             while (!worldgenfeaturedefinedstructurejigsawplacement_c.h.isEmpty()) {
-                WorldGenFeatureDefinedStructureJigsawPlacement.b worldgenfeaturedefinedstructurejigsawplacement_b = (WorldGenFeatureDefinedStructureJigsawPlacement.b) worldgenfeaturedefinedstructurejigsawplacement_c.h.removeFirst();
+                WorldGenFeatureDefinedStructureJigsawPlacement.b worldgenfeaturedefinedstructurejigsawplacement_b = worldgenfeaturedefinedstructurejigsawplacement_c.h.removeFirst();
 
                 worldgenfeaturedefinedstructurejigsawplacement_c.a(worldgenfeaturedefinedstructurejigsawplacement_b.a, worldgenfeaturedefinedstructurejigsawplacement_b.b, worldgenfeaturedefinedstructurejigsawplacement_b.c, worldgenfeaturedefinedstructurejigsawplacement_b.d, flag);
             }
@@ -83,7 +83,7 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
         worldgenfeaturedefinedstructurejigsawplacement_c.h.addLast(new WorldGenFeatureDefinedStructureJigsawPlacement.b(worldgenfeaturepillageroutpostpoolpiece, new MutableObject(VoxelShapes.a), 0, 0));
 
         while (!worldgenfeaturedefinedstructurejigsawplacement_c.h.isEmpty()) {
-            WorldGenFeatureDefinedStructureJigsawPlacement.b worldgenfeaturedefinedstructurejigsawplacement_b = (WorldGenFeatureDefinedStructureJigsawPlacement.b) worldgenfeaturedefinedstructurejigsawplacement_c.h.removeFirst();
+            WorldGenFeatureDefinedStructureJigsawPlacement.b worldgenfeaturedefinedstructurejigsawplacement_b = worldgenfeaturedefinedstructurejigsawplacement_c.h.removeFirst();
 
             worldgenfeaturedefinedstructurejigsawplacement_c.a(worldgenfeaturedefinedstructurejigsawplacement_b.a, worldgenfeaturedefinedstructurejigsawplacement_b.b, worldgenfeaturedefinedstructurejigsawplacement_b.c, worldgenfeaturedefinedstructurejigsawplacement_b.d, false);
         }
@@ -139,12 +139,12 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
                 MinecraftKey minecraftkey = new MinecraftKey(definedstructure_blockinfo.c.getString("pool"));
                 Optional<WorldGenFeatureDefinedStructurePoolTemplate> optional = this.a.getOptional(minecraftkey);
 
-                if (optional.isPresent() && (((WorldGenFeatureDefinedStructurePoolTemplate) optional.get()).c() != 0 || Objects.equals(minecraftkey, WorldGenFeaturePieces.a.a()))) {
-                    MinecraftKey minecraftkey1 = ((WorldGenFeatureDefinedStructurePoolTemplate) optional.get()).a();
+                if (optional.isPresent() && (optional.get().c() != 0 || Objects.equals(minecraftkey, WorldGenFeaturePieces.a.a()))) {
+                    MinecraftKey minecraftkey1 = optional.get().a();
                     Optional<WorldGenFeatureDefinedStructurePoolTemplate> optional1 = this.a.getOptional(minecraftkey1);
 
-                    if (optional1.isPresent() && (((WorldGenFeatureDefinedStructurePoolTemplate) optional1.get()).c() != 0 || Objects.equals(minecraftkey1, WorldGenFeaturePieces.a.a()))) {
-                        boolean flag2 = structureboundingbox.b((BaseBlockPosition) blockposition2);
+                    if (optional1.isPresent() && (optional1.get().c() != 0 || Objects.equals(minecraftkey1, WorldGenFeaturePieces.a.a()))) {
+                        boolean flag2 = structureboundingbox.b(blockposition2);
                         MutableObject mutableobject2;
                         int j1;
 
@@ -162,10 +162,10 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
                         List<WorldGenFeatureDefinedStructurePoolStructure> list = Lists.newArrayList();
 
                         if (j != this.b) {
-                            list.addAll(((WorldGenFeatureDefinedStructurePoolTemplate) optional.get()).b(this.g));
+                            list.addAll(optional.get().b(this.g));
                         }
 
-                        list.addAll(((WorldGenFeatureDefinedStructurePoolTemplate) optional1.get()).b(this.g));
+                        list.addAll(optional1.get().b(this.g));
                         Iterator iterator1 = list.iterator();
 
                         while (iterator1.hasNext()) {
@@ -185,7 +185,7 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
 
                                 if (flag && structureboundingbox1.e() <= 16) {
                                     k1 = list1.stream().mapToInt((definedstructure_blockinfo1) -> {
-                                        if (!structureboundingbox1.b((BaseBlockPosition) definedstructure_blockinfo1.a.shift(BlockJigsaw.h(definedstructure_blockinfo1.b)))) {
+                                        if (!structureboundingbox1.b(definedstructure_blockinfo1.a.shift(BlockJigsaw.h(definedstructure_blockinfo1.b)))) {
                                             return 0;
                                         } else {
                                             MinecraftKey minecraftkey2 = new MinecraftKey(definedstructure_blockinfo1.c.getString("pool"));
@@ -193,10 +193,10 @@ public class WorldGenFeatureDefinedStructureJigsawPlacement {
                                             Optional<WorldGenFeatureDefinedStructurePoolTemplate> optional3 = optional2.flatMap((worldgenfeaturedefinedstructurepooltemplate) -> {
                                                 return this.a.getOptional(worldgenfeaturedefinedstructurepooltemplate.a());
                                             });
-                                            int l1 = (Integer) optional2.map((worldgenfeaturedefinedstructurepooltemplate) -> {
+                                            int l1 = optional2.map((worldgenfeaturedefinedstructurepooltemplate) -> {
                                                 return worldgenfeaturedefinedstructurepooltemplate.a(this.e);
                                             }).orElse(0);
-                                            int i2 = (Integer) optional3.map((worldgenfeaturedefinedstructurepooltemplate) -> {
+                                            int i2 = optional3.map((worldgenfeaturedefinedstructurepooltemplate) -> {
                                                 return worldgenfeaturedefinedstructurepooltemplate.a(this.e);
                                             }).orElse(0);
 

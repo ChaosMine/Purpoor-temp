@@ -35,7 +35,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
         // Paper end
         int k = SectionPosition.c(j);
         synchronized (this.visibleUpdateLock) { // Paper - avoid copying light data
-        LightEngineStorageSky.a lightenginestoragesky_a = (LightEngineStorageSky.a) this.e_visible; // Paper - avoid copying light data - must be after lock acquire
+        LightEngineStorageSky.a lightenginestoragesky_a = this.e_visible; // Paper - avoid copying light data - must be after lock acquire
         int l = lightenginestoragesky_a.otherData.getVisibleAsync(SectionPosition.f(j)); // Paper - avoid copying light data
 
         if (l != lightenginestoragesky_a.b && k < l) {
@@ -53,7 +53,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
                 }
             }
 
-            return nibblearray.a(baseX & 15, (int) ((i << 52) >> 52) & 15, (int) baseZ & 15); // Paper - y changed above
+            return nibblearray.a(baseX & 15, (int) ((i << 52) >> 52) & 15, baseZ & 15); // Paper - y changed above
         } else {
             return 15;
         }
@@ -64,19 +64,19 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
     protected void k(long i) {
         int j = SectionPosition.c(i);
 
-        if (((LightEngineStorageSky.a) this.f).b > j) {
-            ((LightEngineStorageSky.a) this.f).b = j;
-            ((LightEngineStorageSky.a) this.f).otherData.queueDefaultReturnValue(((LightEngineStorageSky.a) this.f).b); // Paper - avoid copying light data
+        if (this.f.b > j) {
+            this.f.b = j;
+            this.f.otherData.queueDefaultReturnValue(this.f.b); // Paper - avoid copying light data
         }
 
         long k = SectionPosition.f(i);
-        int l = ((LightEngineStorageSky.a) this.f).otherData.getUpdating(k); // Paper - avoid copying light data
+        int l = this.f.otherData.getUpdating(k); // Paper - avoid copying light data
 
         if (l < j + 1) {
-            ((LightEngineStorageSky.a) this.f).otherData.queueUpdate(k, j + 1); // Paper - avoid copying light data
+            this.f.otherData.queueUpdate(k, j + 1); // Paper - avoid copying light data
             if (this.o.contains(k)) {
                 this.q(i);
-                if (l > ((LightEngineStorageSky.a) this.f).b) {
+                if (l > this.f.b) {
                     long i1 = SectionPosition.b(SectionPosition.b(i), l - 1, SectionPosition.d(i));
 
                     this.p(i1);
@@ -113,7 +113,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
 
         int k = SectionPosition.c(i);
 
-        if (((LightEngineStorageSky.a) this.f).otherData.getUpdating(j) == k + 1) { // Paper - avoid copying light data
+        if (this.f.otherData.getUpdating(j) == k + 1) { // Paper - avoid copying light data
             long l;
 
             for (l = i; !this.g(l) && this.a(k); l = SectionPosition.a(l, EnumDirection.DOWN)) {
@@ -121,12 +121,12 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
             }
 
             if (this.g(l)) {
-                ((LightEngineStorageSky.a) this.f).otherData.queueUpdate(j, k + 1); // Paper - avoid copying light data
+                this.f.otherData.queueUpdate(j, k + 1); // Paper - avoid copying light data
                 if (flag) {
                     this.q(l);
                 }
             } else {
-                ((LightEngineStorageSky.a) this.f).otherData.queueRemove(j); // Paper - avoid copying light data
+                this.f.otherData.queueRemove(j); // Paper - avoid copying light data
             }
         }
 
@@ -140,9 +140,9 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
     protected void b(long i, boolean flag) {
         this.d();
         if (flag && this.o.add(i)) {
-            int j = ((LightEngineStorageSky.a) this.f).otherData.getUpdating(i); // Paper - avoid copying light data
+            int j = this.f.otherData.getUpdating(i); // Paper - avoid copying light data
 
-            if (j != ((LightEngineStorageSky.a) this.f).b) {
+            if (j != this.f.b) {
                 long k = SectionPosition.b(SectionPosition.b(i), j - 1, SectionPosition.d(i));
 
                 this.q(k);
@@ -161,15 +161,15 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
 
     @Override
     protected NibbleArray j(long i) {
-        NibbleArray nibblearray = (NibbleArray) this.i.get(i);
+        NibbleArray nibblearray = this.i.get(i);
 
         if (nibblearray != null) {
             return nibblearray;
         } else {
             long j = SectionPosition.a(i, EnumDirection.UP);
-            int k = ((LightEngineStorageSky.a) this.f).otherData.getUpdating(SectionPosition.f(i)); // Paper - avoid copying light data
+            int k = this.f.otherData.getUpdating(SectionPosition.f(i)); // Paper - avoid copying light data
 
-            if (k != ((LightEngineStorageSky.a) this.f).b && SectionPosition.c(j) < k) {
+            if (k != this.f.b && SectionPosition.c(j) < k) {
                 NibbleArray nibblearray1;
 
                 while ((nibblearray1 = this.updating.getUpdatingOptimized(j)) == null) { // Paper
@@ -207,7 +207,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
                         if (j == 1) {
                             this.a(lightenginelayer, i);
                             if (this.g.add(i)) {
-                                ((LightEngineStorageSky.a) this.f).a(i);
+                                this.f.a(i);
                             }
 
                             Arrays.fill(this.updating.getUpdatingOptimized(i).asBytesPoolSafe(), (byte) -1); // Paper - use optimized
@@ -301,7 +301,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
     }
 
     protected boolean a(int i) {
-        return i >= ((LightEngineStorageSky.a) this.f).b;
+        return i >= this.f.b;
     }
 
     protected boolean m(long i) {
@@ -316,7 +316,7 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
             if (!this.o.contains(l)) {
                 return false;
             } else {
-                int i1 = ((LightEngineStorageSky.a) this.f).otherData.getUpdating(l); // Paper - avoid copying light data
+                int i1 = this.f.otherData.getUpdating(l); // Paper - avoid copying light data
 
                 return SectionPosition.c(i1) == j + 16;
             }
@@ -325,9 +325,9 @@ public class LightEngineStorageSky extends LightEngineStorage<LightEngineStorage
 
     protected boolean n(long i) {
         long j = SectionPosition.f(i);
-        int k = ((LightEngineStorageSky.a) this.f).otherData.getUpdating(j); // Paper - avoid copying light data
+        int k = this.f.otherData.getUpdating(j); // Paper - avoid copying light data
 
-        return k == ((LightEngineStorageSky.a) this.f).b || SectionPosition.c(i) >= k;
+        return k == this.f.b || SectionPosition.c(i) >= k;
     }
 
     protected boolean o(long i) {

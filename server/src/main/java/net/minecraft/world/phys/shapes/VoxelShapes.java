@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public final class VoxelShapes {
 
-    private static final VoxelShape b = (VoxelShape) SystemUtils.a(() -> {
+    private static final VoxelShape b = SystemUtils.a(() -> {
         VoxelShapeBitSet voxelshapebitset = new VoxelShapeBitSet(1, 1, 1);
 
         voxelshapebitset.a(0, 0, 0, true, true);
@@ -150,9 +150,9 @@ public final class VoxelShapes {
                 int l2 = (int) Math.round(axisalignedbb.maxZ * (double) j1);
                 VoxelShapeBitSet voxelshapebitset = new VoxelShapeBitSet(l, i1, j1, k1, i2, k2, l1, j2, l2);
 
-                for (long i3 = (long) k1; i3 < (long) l1; ++i3) {
-                    for (long j3 = (long) i2; j3 < (long) j2; ++j3) {
-                        for (long k3 = (long) k2; k3 < (long) l2; ++k3) {
+                for (long i3 = k1; i3 < (long) l1; ++i3) {
+                    for (long j3 = i2; j3 < (long) j2; ++j3) {
+                        for (long k3 = k2; k3 < (long) l2; ++k3) {
                             voxelshapebitset.a((int) i3, (int) j3, (int) k3, false, true);
                         }
                     }
@@ -193,7 +193,7 @@ public final class VoxelShapes {
     }
 
     public static VoxelShape a(VoxelShape voxelshape, VoxelShape... avoxelshape) {
-        return (VoxelShape) Arrays.stream(avoxelshape).reduce(voxelshape, VoxelShapes::a);
+        return Arrays.stream(avoxelshape).reduce(voxelshape, VoxelShapes::a);
     }
 
     public static VoxelShape a(VoxelShape voxelshape, VoxelShape voxelshape1, OperatorBoolean operatorboolean) {
@@ -219,7 +219,7 @@ public final class VoxelShapes {
                 VoxelShapeMerger voxelshapemerger2 = a((voxelshapemerger.a().size() - 1) * (voxelshapemerger1.a().size() - 1), voxelshape.a(EnumDirection.EnumAxis.Z), voxelshape1.a(EnumDirection.EnumAxis.Z), flag, flag1);
                 VoxelShapeBitSet voxelshapebitset = VoxelShapeBitSet.a(voxelshape.a, voxelshape1.a, voxelshapemerger, voxelshapemerger1, voxelshapemerger2, operatorboolean);
 
-                return (VoxelShape) (voxelshapemerger instanceof VoxelShapeCubeMerger && voxelshapemerger1 instanceof VoxelShapeCubeMerger && voxelshapemerger2 instanceof VoxelShapeCubeMerger ? new VoxelShapeCube(voxelshapebitset) : new VoxelShapeArray(voxelshapebitset, voxelshapemerger.a(), voxelshapemerger1.a(), voxelshapemerger2.a()));
+                return voxelshapemerger instanceof VoxelShapeCubeMerger && voxelshapemerger1 instanceof VoxelShapeCubeMerger && voxelshapemerger2 instanceof VoxelShapeCubeMerger ? new VoxelShapeCube(voxelshapebitset) : new VoxelShapeArray(voxelshapebitset, voxelshapemerger.a(), voxelshapemerger1.a(), voxelshapemerger2.a());
             }
         }
     }
@@ -231,9 +231,9 @@ public final class VoxelShapes {
             if (voxelshape instanceof com.tuinity.tuinity.voxel.AABBVoxelShape && voxelshape1 instanceof com.tuinity.tuinity.voxel.AABBVoxelShape) {
                 return ((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape).aabb.voxelShapeIntersect(((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape1).aabb);
             } else if (voxelshape instanceof com.tuinity.tuinity.voxel.AABBVoxelShape && voxelshape1 instanceof VoxelShapeArray) {
-                return ((VoxelShapeArray)voxelshape1).intersects(((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape).aabb);
+                return voxelshape1.intersects(((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape).aabb);
             } else if (voxelshape1 instanceof com.tuinity.tuinity.voxel.AABBVoxelShape && voxelshape instanceof VoxelShapeArray) {
-                return ((VoxelShapeArray)voxelshape).intersects(((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape1).aabb);
+                return voxelshape.intersects(((com.tuinity.tuinity.voxel.AABBVoxelShape)voxelshape1).aabb);
             }
         }
         return abstract_c(voxelshape, voxelshape1, operatorboolean);
@@ -351,7 +351,7 @@ public final class VoxelShapes {
                                 if (iblockdata == null) return 0.0D; // Paper
 
                                 if (!iblockdata.isAir() && (k2 != 1 || iblockdata.d()) && (k2 != 2 || iblockdata.a(Blocks.MOVING_PISTON))) { // Paper
-                                    d0 = iblockdata.b((IBlockAccess) iworldreader, blockposition_mutableblockposition, voxelshapecollision).a(enumdirection_enumaxis2, axisalignedbb.d((double) (-blockposition_mutableblockposition.getX()), (double) (-blockposition_mutableblockposition.getY()), (double) (-blockposition_mutableblockposition.getZ())), d0);
+                                    d0 = iblockdata.b(iworldreader, blockposition_mutableblockposition, voxelshapecollision).a(enumdirection_enumaxis2, axisalignedbb.d(-blockposition_mutableblockposition.getX(), -blockposition_mutableblockposition.getY(), -blockposition_mutableblockposition.getZ()), d0);
                                     if (Math.abs(d0) < 1.0E-7D) {
                                         return 0.0D;
                                     }
@@ -397,7 +397,7 @@ public final class VoxelShapes {
                 i = 0;
             }
 
-            return (VoxelShape) (!flag ? a() : new VoxelShapeSlice(voxelshape, enumdirection_enumaxis, i));
+            return !flag ? a() : new VoxelShapeSlice(voxelshape, enumdirection_enumaxis, i);
         }
     }
 

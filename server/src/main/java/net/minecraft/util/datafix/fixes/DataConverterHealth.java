@@ -23,14 +23,14 @@ public class DataConverterHealth extends DataFix {
         float f;
 
         if (optional.isPresent()) {
-            f = ((Number) optional.get()).floatValue();
+            f = optional.get().floatValue();
             dynamic = dynamic.remove("HealF");
         } else {
             if (!optional1.isPresent()) {
                 return dynamic;
             }
 
-            f = ((Number) optional1.get()).floatValue();
+            f = optional1.get().floatValue();
         }
 
         return dynamic.set("Health", dynamic.createFloat(f));

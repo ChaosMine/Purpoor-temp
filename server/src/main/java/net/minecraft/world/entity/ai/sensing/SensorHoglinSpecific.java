@@ -2,10 +2,12 @@ package net.minecraft.world.entity.ai.sensing;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import net.minecraft.core.BlockPosition;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.tags.Tag;
@@ -17,48 +19,40 @@ import net.minecraft.world.entity.monster.hoglin.EntityHoglin;
 import net.minecraft.world.entity.monster.piglin.EntityPiglin;
 
 public class SensorHoglinSpecific extends Sensor<EntityHoglin> {
+	@Override
+	public Set<MemoryModuleType<?>> a() {
+		return ImmutableSet.of(MemoryModuleType.VISIBLE_MOBS, MemoryModuleType.NEAREST_REPELLENT, MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT);
+	}
 
-    public SensorHoglinSpecific() {}
+	protected void a(WorldServer worldserver, EntityHoglin entityhoglin) {
+		BehaviorController<?> behaviorcontroller = entityhoglin.getBehaviorController();
 
-    @Override
-    public Set<MemoryModuleType<?>> a() {
-        return ImmutableSet.of(MemoryModuleType.VISIBLE_MOBS, MemoryModuleType.NEAREST_REPELLENT, MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT, new MemoryModuleType[0]);
-    }
+		behaviorcontroller.setMemory(MemoryModuleType.NEAREST_REPELLENT, this.b_(worldserver, entityhoglin));
+		Optional<EntityPiglin> optional = Optional.empty();
+		int i = 0;
+		List<EntityHoglin> list = Lists.newArrayList();
+		List<EntityLiving> list1 = behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(Lists.newArrayList());
 
-    protected void a(WorldServer worldserver, EntityHoglin entityhoglin) {
-        BehaviorController<?> behaviorcontroller = entityhoglin.getBehaviorController();
+		for (EntityLiving entityliving : list1) {
+			if (entityliving instanceof EntityPiglin && !entityliving.isBaby()) {
+				++i;
+				if (optional.isEmpty()) {
+					optional = Optional.of((EntityPiglin) entityliving);
+				}
+			}
 
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_REPELLENT, this.b(worldserver, entityhoglin));
-        Optional<EntityPiglin> optional = Optional.empty();
-        int i = 0;
-        List<EntityHoglin> list = Lists.newArrayList();
-        List<EntityLiving> list1 = (List) behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(Lists.newArrayList());
-        Iterator iterator = list1.iterator();
+			if (entityliving instanceof EntityHoglin && !entityliving.isBaby()) {
+				list.add((EntityHoglin) entityliving);
+			}
+		}
 
-        while (iterator.hasNext()) {
-            EntityLiving entityliving = (EntityLiving) iterator.next();
+		behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, optional);
+		behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, list);
+		behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, i);
+		behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT, list.size());
+	}
 
-            if (entityliving instanceof EntityPiglin && !entityliving.isBaby()) {
-                ++i;
-                if (!optional.isPresent()) {
-                    optional = Optional.of((EntityPiglin) entityliving);
-                }
-            }
-
-            if (entityliving instanceof EntityHoglin && !entityliving.isBaby()) {
-                list.add((EntityHoglin) entityliving);
-            }
-        }
-
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_PIGLIN, optional);
-        behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS, (Object) list);
-        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT, (Object) i);
-        behaviorcontroller.setMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT, (Object) list.size());
-    }
-
-    private Optional<BlockPosition> b(WorldServer worldserver, EntityHoglin entityhoglin) {
-        return BlockPosition.a(entityhoglin.getChunkCoordinates(), 8, 4, (blockposition) -> {
-            return worldserver.getType(blockposition).a((Tag) TagsBlock.HOGLIN_REPELLENTS);
-        });
-    }
+	private Optional<BlockPosition> b_(WorldServer worldserver, EntityHoglin entityhoglin) {
+		return BlockPosition.a(entityhoglin.getChunkCoordinates(), 8, 4, (blockposition) -> worldserver.getType(blockposition).a(TagsBlock.HOGLIN_REPELLENTS));
+	}
 }

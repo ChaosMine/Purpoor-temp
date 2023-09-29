@@ -15,7 +15,7 @@ public class BlockActionContextDirectional extends BlockActionContext {
     private final EnumDirection b;
 
     public BlockActionContextDirectional(World world, BlockPosition blockposition, EnumDirection enumdirection, ItemStack itemstack, EnumDirection enumdirection1) {
-        super(world, (EntityHuman) null, EnumHand.MAIN_HAND, itemstack, new MovingObjectPositionBlock(Vec3D.c((BaseBlockPosition) blockposition), enumdirection1, blockposition, false));
+        super(world, null, EnumHand.MAIN_HAND, itemstack, new MovingObjectPositionBlock(Vec3D.c(blockposition), enumdirection1, blockposition, false));
         this.b = enumdirection;
     }
 
@@ -26,7 +26,7 @@ public class BlockActionContextDirectional extends BlockActionContext {
 
     @Override
     public boolean b() {
-        return this.getWorld().getType(this.i().getBlockPosition()).a((BlockActionContext) this);
+        return this.getWorld().getType(this.i().getBlockPosition()).a(this);
     }
 
     @Override

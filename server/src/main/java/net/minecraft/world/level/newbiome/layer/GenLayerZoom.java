@@ -29,7 +29,7 @@ public enum GenLayerZoom implements AreaTransformer2 {
     public int a(AreaContextTransformed<?> areacontexttransformed, Area area, int i, int j) {
         int k = area.a(this.a(i), this.b(j));
 
-        areacontexttransformed.a((long) (i >> 1 << 1), (long) (j >> 1 << 1));
+        areacontexttransformed.a(i >> 1 << 1, (long) (j >> 1 << 1));
         int l = i & 1;
         int i1 = j & 1;
 

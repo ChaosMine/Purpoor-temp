@@ -57,7 +57,7 @@ public class NBTTagLongArray extends NBTList<NBTTagLong> {
         long[] along = new long[list.size()];
 
         for (int i = 0; i < list.size(); ++i) {
-            Long olong = (Long) list.get(i);
+            Long olong = list.get(i);
 
             along[i] = olong == null ? 0L : olong;
         }

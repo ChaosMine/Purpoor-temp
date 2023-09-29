@@ -21,7 +21,7 @@ public class CriterionTriggerChangedDimension extends CriterionTriggerAbstract<C
     }
 
     @Override
-    public CriterionTriggerChangedDimension.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerChangedDimension.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         ResourceKey<World> resourcekey = jsonobject.has("from") ? ResourceKey.a(IRegistry.L, new MinecraftKey(ChatDeserializer.h(jsonobject, "from"))) : null;
         ResourceKey<World> resourcekey1 = jsonobject.has("to") ? ResourceKey.a(IRegistry.L, new MinecraftKey(ChatDeserializer.h(jsonobject, "to"))) : null;
 
@@ -41,14 +41,14 @@ public class CriterionTriggerChangedDimension extends CriterionTriggerAbstract<C
         @Nullable
         private final ResourceKey<World> b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, @Nullable ResourceKey<World> resourcekey, @Nullable ResourceKey<World> resourcekey1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, @Nullable ResourceKey<World> resourcekey, @Nullable ResourceKey<World> resourcekey1) {
             super(CriterionTriggerChangedDimension.a, criterionconditionentity_b);
             this.a = resourcekey;
             this.b = resourcekey1;
         }
 
         public static CriterionTriggerChangedDimension.a a(ResourceKey<World> resourcekey) {
-            return new CriterionTriggerChangedDimension.a(CriterionConditionEntity.b.a, (ResourceKey) null, resourcekey);
+            return new CriterionTriggerChangedDimension.a(CriterionConditionEntity.b_.a, null, resourcekey);
         }
 
         public boolean b(ResourceKey<World> resourcekey, ResourceKey<World> resourcekey1) {

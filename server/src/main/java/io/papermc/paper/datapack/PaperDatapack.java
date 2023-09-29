@@ -39,8 +39,8 @@ public class PaperDatapack implements Datapack {
             return;
         }
 
-        MinecraftServer server = MinecraftServer.getServer();
-        List<String> enabledKeys = server.getResourcePackRepository().getEnabledPacks().stream().map(ResourcePackLoader::getName).collect(Collectors.toList());
+        MinecraftServer server = MinecraftServer.SERVER;
+        List<String> enabledKeys = server.getResourcePackRepository().getEnabledPacks().stream().map(ResourcePackLoader::getName).toList();
         if (enabled) {
             enabledKeys.add(this.name);
         } else {

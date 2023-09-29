@@ -91,7 +91,7 @@ public class AdvancementDataPlayer {
         if (PurpurConfig.disableCriterions) return;
 
         for (CriterionTrigger<?> criterionTrigger : CriterionTriggers.a()) {
-            CriterionTrigger<?> criteriontrigger = (CriterionTrigger) criterionTrigger;
+            CriterionTrigger<?> criteriontrigger = criterionTrigger;
 
             criteriontrigger.a(this);
         }
@@ -131,7 +131,7 @@ public class AdvancementDataPlayer {
         while (iterator.hasNext()) {
             Entry<Advancement, AdvancementProgress> entry = (Entry) iterator.next();
 
-            if (((AdvancementProgress) entry.getValue()).isDone()) {
+            if (entry.getValue().isDone()) {
                 list.add(entry.getKey());
                 this.j.add(entry.getKey());
             }
@@ -179,18 +179,18 @@ public class AdvancementDataPlayer {
 
                     dynamic = this.d.update(DataFixTypes.ADVANCEMENTS.a(), dynamic, dynamic.get("DataVersion").asInt(0), SharedConstants.getGameVersion().getWorldVersion());
                     dynamic = dynamic.remove("DataVersion");
-                    Map<MinecraftKey, AdvancementProgress> map = (Map) AdvancementDataPlayer.b.getAdapter(AdvancementDataPlayer.c).fromJsonTree((JsonElement) dynamic.getValue());
+                    Map<MinecraftKey, AdvancementProgress> map = AdvancementDataPlayer.b.getAdapter(AdvancementDataPlayer.c).fromJsonTree(dynamic.getValue());
 
                     if (map == null) {
                         throw new JsonParseException("Found null for advancements");
                     }
 
                     Stream<Entry<MinecraftKey, AdvancementProgress>> stream = map.entrySet().stream().sorted(Comparator.comparing(Entry::getValue));
-                    Iterator iterator = ((List) stream.collect(Collectors.toList())).iterator();
+                    Iterator iterator = ((List) stream.toList()).iterator();
 
                     while (iterator.hasNext()) {
                         Entry<MinecraftKey, AdvancementProgress> entry = (Entry) iterator.next();
-                        Advancement advancement = advancementdataworld.a((MinecraftKey) entry.getKey());
+                        Advancement advancement = advancementdataworld.a(entry.getKey());
 
                         if (advancement == null) {
                             // CraftBukkit start
@@ -200,7 +200,7 @@ public class AdvancementDataPlayer {
                             }
                             // CraftBukkit end
                         } else {
-                            this.a(advancement, (AdvancementProgress) entry.getValue());
+                            this.a(advancement, entry.getValue());
                         }
                     }
                 } catch (Throwable throwable1) {
@@ -240,10 +240,10 @@ public class AdvancementDataPlayer {
 
         while (iterator.hasNext()) {
             Entry<Advancement, AdvancementProgress> entry = (Entry) iterator.next();
-            AdvancementProgress advancementprogress = (AdvancementProgress) entry.getValue();
+            AdvancementProgress advancementprogress = entry.getValue();
 
             if (advancementprogress.b()) {
-                map.put(((Advancement) entry.getKey()).getName(), advancementprogress);
+                map.put(entry.getKey().getName(), advancementprogress);
             }
         }
 
@@ -378,16 +378,16 @@ public class AdvancementDataPlayer {
 
             while (iterator.hasNext()) {
                 Entry<String, Criterion> entry = (Entry) iterator.next();
-                CriterionProgress criterionprogress = advancementprogress.getCriterionProgress((String) entry.getKey());
+                CriterionProgress criterionprogress = advancementprogress.getCriterionProgress(entry.getKey());
 
                 if (criterionprogress != null && !criterionprogress.a()) {
-                    CriterionInstance criterioninstance = ((Criterion) entry.getValue()).a();
+                    CriterionInstance criterioninstance = entry.getValue().a();
 
                     if (criterioninstance != null) {
                         CriterionTrigger<CriterionInstance> criteriontrigger = CriterionTriggers.a(criterioninstance.a());
 
                         if (criteriontrigger != null) {
-                            criteriontrigger.a(this, new CriterionTrigger.a<>(criterioninstance, advancement, (String) entry.getKey()));
+                            criteriontrigger.a(this, new CriterionTrigger.a<>(criterioninstance, advancement, entry.getKey()));
                         }
                     }
                 }
@@ -403,16 +403,16 @@ public class AdvancementDataPlayer {
 
         while (iterator.hasNext()) {
             Entry<String, Criterion> entry = (Entry) iterator.next();
-            CriterionProgress criterionprogress = advancementprogress.getCriterionProgress((String) entry.getKey());
+            CriterionProgress criterionprogress = advancementprogress.getCriterionProgress(entry.getKey());
 
             if (criterionprogress != null && (criterionprogress.a() || advancementprogress.isDone())) {
-                CriterionInstance criterioninstance = ((Criterion) entry.getValue()).a();
+                CriterionInstance criterioninstance = entry.getValue().a();
 
                 if (criterioninstance != null) {
                     CriterionTrigger<CriterionInstance> criteriontrigger = CriterionTriggers.a(criterioninstance.a());
 
                     if (criteriontrigger != null) {
-                        criteriontrigger.b(this, new CriterionTrigger.a<>(criterioninstance, advancement, (String) entry.getKey()));
+                        criteriontrigger.b(this, new CriterionTrigger.a<>(criterioninstance, advancement, entry.getKey()));
                     }
                 }
             }
@@ -479,7 +479,7 @@ public class AdvancementDataPlayer {
 
     public AdvancementProgress getProgress(Advancement advancement) {
         if (PurpurConfig.disableCriterions) return EMPTY_PROGRESS;
-        AdvancementProgress advancementprogress = (AdvancementProgress) this.data.get(advancement);
+        AdvancementProgress advancementprogress = this.data.get(advancement);
 
         if (advancementprogress == null) {
             advancementprogress = new AdvancementProgress();

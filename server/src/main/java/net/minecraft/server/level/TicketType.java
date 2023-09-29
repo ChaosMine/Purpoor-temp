@@ -52,7 +52,7 @@ public class TicketType<T> {
     }
 
     public static <T> TicketType<T> a(String s, Comparator<T> comparator, int i) {
-        return new TicketType<>(s, comparator, (long) i);
+        return new TicketType<>(s, comparator, i);
     }
 
     protected TicketType(String s, Comparator<T> comparator, long i) {

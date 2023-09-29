@@ -33,6 +33,6 @@ public class BlockTallPlantFlower extends BlockTallPlant implements IBlockFragil
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        a((World) worldserver, blockposition, new ItemStack(this));
+        a(worldserver, blockposition, new ItemStack(this));
     }
 }

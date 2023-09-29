@@ -82,7 +82,7 @@ public class ArgumentProfile implements ArgumentType<ArgumentProfile.a> {
             }
 
             return argumentparserselector.a(suggestionsbuilder, (suggestionsbuilder1) -> {
-                ICompletionProvider.b((Iterable) ((ICompletionProvider) commandcontext.getSource()).l(), suggestionsbuilder1);
+                ICompletionProvider.b(((ICompletionProvider) commandcontext.getSource()).l(), suggestionsbuilder1);
             });
         } else {
             return Suggestions.empty();

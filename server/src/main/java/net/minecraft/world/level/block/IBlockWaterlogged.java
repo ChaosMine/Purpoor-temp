@@ -21,8 +21,8 @@ public interface IBlockWaterlogged extends IFluidSource, IFluidContainer {
     default boolean place(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata, Fluid fluid) {
         if (!(Boolean) iblockdata.get(BlockProperties.C) && fluid.getType() == FluidTypes.WATER) {
             if (!generatoraccess.s_()) {
-                generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockProperties.C, true), 3);
-                generatoraccess.getFluidTickList().a(blockposition, fluid.getType(), fluid.getType().a((IWorldReader) generatoraccess));
+                generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockProperties.C, true), 3);
+                generatoraccess.getFluidTickList().a(blockposition, fluid.getType(), fluid.getType().a(generatoraccess));
             }
 
             return true;
@@ -33,8 +33,8 @@ public interface IBlockWaterlogged extends IFluidSource, IFluidContainer {
 
     @Override
     default FluidType removeFluid(GeneratorAccess generatoraccess, BlockPosition blockposition, IBlockData iblockdata) {
-        if ((Boolean) iblockdata.get(BlockProperties.C)) {
-            generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockProperties.C, false), 3);
+        if (iblockdata.get(BlockProperties.C)) {
+            generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockProperties.C, false), 3);
             return FluidTypes.WATER;
         } else {
             return FluidTypes.EMPTY;

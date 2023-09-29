@@ -19,7 +19,7 @@ public class WorldProviderNormal {
         boolean flag1 = worldserver.getDimensionManager().hasCeiling();
         IBlockData iblockdata = biomebase.e().e().a();
 
-        if (flag && !iblockdata.getBlock().a((Tag) TagsBlock.VALID_SPAWN)) {
+        if (flag && !iblockdata.getBlock().a(TagsBlock.VALID_SPAWN)) {
             return null;
         } else {
             Chunk chunk = worldserver.getChunkAt(i >> 4, j >> 4);

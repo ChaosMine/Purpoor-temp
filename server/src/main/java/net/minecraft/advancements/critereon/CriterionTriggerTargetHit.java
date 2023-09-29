@@ -19,9 +19,9 @@ public class CriterionTriggerTargetHit extends CriterionTriggerAbstract<Criterio
     }
 
     @Override
-    public CriterionTriggerTargetHit.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerTargetHit.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("signal_strength"));
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "projectile", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "projectile", lootdeserializationcontext);
 
         return new CriterionTriggerTargetHit.a(criterionconditionentity_b, criterionconditionvalue_integerrange, criterionconditionentity_b1);
     }
@@ -37,16 +37,16 @@ public class CriterionTriggerTargetHit extends CriterionTriggerAbstract<Criterio
     public static class a extends CriterionInstanceAbstract {
 
         private final CriterionConditionValue.IntegerRange a;
-        private final CriterionConditionEntity.b b;
+        private final CriterionConditionEntity.b_ b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionEntity.b criterionconditionentity_b1) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionEntity.b_ criterionconditionentity_b1) {
             super(CriterionTriggerTargetHit.a, criterionconditionentity_b);
             this.a = criterionconditionvalue_integerrange;
             this.b = criterionconditionentity_b1;
         }
 
-        public static CriterionTriggerTargetHit.a a(CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionEntity.b criterionconditionentity_b) {
-            return new CriterionTriggerTargetHit.a(CriterionConditionEntity.b.a, criterionconditionvalue_integerrange, criterionconditionentity_b);
+        public static CriterionTriggerTargetHit.a a(CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange, CriterionConditionEntity.b_ criterionconditionentity_b) {
+            return new CriterionTriggerTargetHit.a(CriterionConditionEntity.b_.a, criterionconditionvalue_integerrange, criterionconditionentity_b);
         }
 
         @Override

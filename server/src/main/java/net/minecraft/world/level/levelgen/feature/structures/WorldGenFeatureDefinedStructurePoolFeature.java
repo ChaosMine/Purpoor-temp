@@ -59,7 +59,7 @@ public class WorldGenFeatureDefinedStructurePoolFeature extends WorldGenFeatureD
     public List<DefinedStructure.BlockInfo> a(DefinedStructureManager definedstructuremanager, BlockPosition blockposition, EnumBlockRotation enumblockrotation, Random random) {
         List<DefinedStructure.BlockInfo> list = Lists.newArrayList();
 
-        list.add(new DefinedStructure.BlockInfo(blockposition, (IBlockData) Blocks.JIGSAW.getBlockData().set(BlockJigsaw.a, BlockPropertyJigsawOrientation.a(EnumDirection.DOWN, EnumDirection.SOUTH)), this.c));
+        list.add(new DefinedStructure.BlockInfo(blockposition, Blocks.JIGSAW.getBlockData().set(BlockJigsaw.a, BlockPropertyJigsawOrientation.a(EnumDirection.DOWN, EnumDirection.SOUTH)), this.c));
         return list;
     }
 
@@ -72,7 +72,7 @@ public class WorldGenFeatureDefinedStructurePoolFeature extends WorldGenFeatureD
 
     @Override
     public boolean a(DefinedStructureManager definedstructuremanager, GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, BlockPosition blockposition, BlockPosition blockposition1, EnumBlockRotation enumblockrotation, StructureBoundingBox structureboundingbox, Random random, boolean flag) {
-        return ((WorldGenFeatureConfigured) this.b.get()).a(generatoraccessseed, chunkgenerator, random, blockposition);
+        return this.b.get().a(generatoraccessseed, chunkgenerator, random, blockposition);
     }
 
     @Override

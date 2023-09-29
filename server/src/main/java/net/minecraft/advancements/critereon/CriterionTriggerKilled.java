@@ -22,8 +22,8 @@ public class CriterionTriggerKilled extends CriterionTriggerAbstract<CriterionTr
     }
 
     @Override
-    public CriterionTriggerKilled.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        return new CriterionTriggerKilled.a(this.a, criterionconditionentity_b, CriterionConditionEntity.b.a(jsonobject, "entity", lootdeserializationcontext), CriterionConditionDamageSource.a(jsonobject.get("killing_blow")));
+    public CriterionTriggerKilled.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        return new CriterionTriggerKilled.a(this.a, criterionconditionentity_b, CriterionConditionEntity.b_.a(jsonobject, "entity", lootdeserializationcontext), CriterionConditionDamageSource.a(jsonobject.get("killing_blow")));
     }
 
     public void a(EntityPlayer entityplayer, Entity entity, DamageSource damagesource) {
@@ -36,29 +36,29 @@ public class CriterionTriggerKilled extends CriterionTriggerAbstract<CriterionTr
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
+        private final CriterionConditionEntity.b_ a;
         private final CriterionConditionDamageSource b;
 
-        public a(MinecraftKey minecraftkey, CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1, CriterionConditionDamageSource criterionconditiondamagesource) {
+        public a(MinecraftKey minecraftkey, CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1, CriterionConditionDamageSource criterionconditiondamagesource) {
             super(minecraftkey, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
             this.b = criterionconditiondamagesource;
         }
 
-        public static CriterionTriggerKilled.a a(CriterionConditionEntity.a criterionconditionentity_a) {
-            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity_a.b()), CriterionConditionDamageSource.a);
+        public static CriterionTriggerKilled.a a(CriterionConditionEntity.a_ criterionconditionentity_a) {
+            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity_a.b()), CriterionConditionDamageSource.a);
         }
 
         public static CriterionTriggerKilled.a c() {
-            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionDamageSource.a);
+            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionDamageSource.a);
         }
 
-        public static CriterionTriggerKilled.a a(CriterionConditionEntity.a criterionconditionentity_a, CriterionConditionDamageSource.a criterionconditiondamagesource_a) {
-            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a(criterionconditionentity_a.b()), criterionconditiondamagesource_a.b());
+        public static CriterionTriggerKilled.a a(CriterionConditionEntity.a_ criterionconditionentity_a, CriterionConditionDamageSource.a_ criterionconditiondamagesource_a) {
+            return new CriterionTriggerKilled.a(CriterionTriggers.b.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a(criterionconditionentity_a.b()), criterionconditiondamagesource_a.b());
         }
 
         public static CriterionTriggerKilled.a d() {
-            return new CriterionTriggerKilled.a(CriterionTriggers.c.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionDamageSource.a);
+            return new CriterionTriggerKilled.a(CriterionTriggers.c.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionDamageSource.a);
         }
 
         public boolean a(EntityPlayer entityplayer, LootTableInfo loottableinfo, DamageSource damagesource) {

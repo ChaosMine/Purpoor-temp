@@ -67,7 +67,7 @@ public class LootItemFunctionSetTable extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetTable lootitemfunctionsettable, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsettable, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsettable, jsonserializationcontext);
             jsonobject.addProperty("name", lootitemfunctionsettable.a.toString());
             if (lootitemfunctionsettable.b != 0L) {
                 jsonobject.addProperty("seed", lootitemfunctionsettable.b);

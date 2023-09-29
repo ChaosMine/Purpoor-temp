@@ -58,7 +58,7 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
 
     public EntityZombieVillager(EntityTypes<? extends EntityZombieVillager> entitytypes, World world) {
         super(entitytypes, world);
-        this.setVillagerData(this.getVillagerData().withProfession((VillagerProfession) IRegistry.VILLAGER_PROFESSION.a(this.random)));
+        this.setVillagerData(this.getVillagerData().withProfession(IRegistry.VILLAGER_PROFESSION.a(this.random)));
     }
 
     // Purpur start
@@ -212,7 +212,7 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
     }
 
     public boolean isConverting() {
-        return (Boolean) this.getDataWatcher().get(EntityZombieVillager.CONVERTING);
+        return this.getDataWatcher().get(EntityZombieVillager.CONVERTING);
     }
 
     public void startConversion(@Nullable UUID uuid, int i) {
@@ -229,7 +229,7 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
 
     private void c(WorldServer worldserver) {
         // CraftBukkit start
-        EntityVillager entityvillager = (EntityVillager) this.a(EntityTypes.VILLAGER, false, EntityTransformEvent.TransformReason.CURED, CreatureSpawnEvent.SpawnReason.CURED);
+        EntityVillager entityvillager = this.a(EntityTypes.VILLAGER, false, EntityTransformEvent.TransformReason.CURED, CreatureSpawnEvent.SpawnReason.CURED);
         if (entityvillager == null) {
             ((ZombieVillager) getBukkitEntity()).setConversionTime(-1); // SPIGOT-5208: End conversion to stop event spam
             return;
@@ -246,7 +246,7 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
                 if (EnchantmentManager.d(itemstack)) {
                     entityvillager.a_(enumitemslot.b() + 300, itemstack);
                 } else {
-                    double d0 = (double) this.e(enumitemslot);
+                    double d0 = this.e(enumitemslot);
 
                     if (d0 > 1.0D) {
                         this.forceDrops = true; // CraftBukkit
@@ -267,19 +267,19 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
         }
 
         entityvillager.setExperience(this.br);
-        entityvillager.prepare(worldserver, worldserver.getDamageScaler(entityvillager.getChunkCoordinates()), EnumMobSpawn.CONVERSION, (GroupDataEntity) null, (NBTTagCompound) null);
+        entityvillager.prepare(worldserver, worldserver.getDamageScaler(entityvillager.getChunkCoordinates()), EnumMobSpawn.CONVERSION, null, null);
         if (this.conversionPlayer != null) {
             EntityHuman entityhuman = worldserver.b(this.conversionPlayer);
 
             if (entityhuman instanceof EntityPlayer) {
-                CriterionTriggers.r.a((EntityPlayer) entityhuman, (EntityZombie) this, entityvillager);
-                worldserver.a(ReputationEvent.a, (Entity) entityhuman, (ReputationHandler) entityvillager);
+                CriterionTriggers.r.a((EntityPlayer) entityhuman, this, entityvillager);
+                worldserver.a(ReputationEvent.a, entityhuman, entityvillager);
             }
         }
 
         entityvillager.addEffect(new MobEffect(MobEffects.CONFUSION, 200, 0), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONVERSION); // CraftBukkit
         if (!this.isSilent()) {
-            worldserver.a((EntityHuman) null, 1027, this.getChunkCoordinates(), 0);
+            worldserver.a(null, 1027, this.getChunkCoordinates(), 0);
         }
 
     }
@@ -368,7 +368,7 @@ public class EntityZombieVillager extends EntityZombie implements VillagerDataHo
 
     @Override
     public VillagerData getVillagerData() {
-        return (VillagerData) this.datawatcher.get(EntityZombieVillager.c);
+        return this.datawatcher.get(EntityZombieVillager.c);
     }
 
     public void a(int i) {

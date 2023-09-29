@@ -38,9 +38,9 @@ public class CombatTracker {
         Optional<BlockPosition> optional = this.b.dr();
 
         if (optional.isPresent()) {
-            IBlockData iblockdata = this.b.world.getType((BlockPosition) optional.get());
+            IBlockData iblockdata = this.b.world.getType(optional.get());
 
-            if (!iblockdata.a(Blocks.LADDER) && !iblockdata.a((Tag) TagsBlock.TRAPDOORS)) {
+            if (!iblockdata.a(Blocks.LADDER) && !iblockdata.a(TagsBlock.TRAPDOORS)) {
                 if (iblockdata.a(Blocks.VINE)) {
                     this.h = "vines";
                 } else if (!iblockdata.a(Blocks.WEEPING_VINES) && !iblockdata.a(Blocks.WEEPING_VINES_PLANT)) {
@@ -87,7 +87,7 @@ public class CombatTracker {
             return new ChatMessage("death.attack.generic", new Object[]{this.b.getScoreboardDisplayName()});
         } else {
             CombatEntry combatentry = this.j();
-            CombatEntry combatentry1 = (CombatEntry) this.a.get(this.a.size() - 1);
+            CombatEntry combatentry1 = this.a.get(this.a.size() - 1);
             IChatBaseComponent ichatbasecomponent = combatentry1.h();
             Entity entity = combatentry1.a().getEntity();
             Object object;
@@ -164,8 +164,8 @@ public class CombatTracker {
         float f1 = 0.0F;
 
         for (int i = 0; i < this.a.size(); ++i) {
-            CombatEntry combatentry2 = (CombatEntry) this.a.get(i);
-            CombatEntry combatentry3 = i > 0 ? (CombatEntry) this.a.get(i - 1) : null;
+            CombatEntry combatentry2 = this.a.get(i);
+            CombatEntry combatentry3 = i > 0 ? this.a.get(i - 1) : null;
 
             if ((combatentry2.a() == DamageSource.FALL || combatentry2.a() == DamageSource.OUT_OF_WORLD) && combatentry2.j() > 0.0F && (combatentry == null || combatentry2.j() > f1)) {
                 if (i > 0) {

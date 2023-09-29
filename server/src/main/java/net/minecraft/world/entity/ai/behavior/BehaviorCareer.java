@@ -25,13 +25,13 @@ public class BehaviorCareer extends Behavior<EntityVillager> {
     }
 
     protected boolean a(WorldServer worldserver, EntityVillager entityvillager) {
-        BlockPosition blockposition = ((GlobalPos) entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get()).getBlockPosition();
+        BlockPosition blockposition = entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get().getBlockPosition();
 
-        return blockposition.a((IPosition) entityvillager.getPositionVector(), 2.0D) || entityvillager.eZ();
+        return blockposition.a(entityvillager.getPositionVector(), 2.0D) || entityvillager.eZ();
     }
 
     protected void a(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        GlobalPos globalpos = (GlobalPos) entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get();
+        GlobalPos globalpos = entityvillager.getBehaviorController().getMemory(MemoryModuleType.POTENTIAL_JOB_SITE).get();
 
         entityvillager.getBehaviorController().removeMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
         entityvillager.getBehaviorController().setMemory(MemoryModuleType.JOB_SITE, globalpos); // CraftBukkit - decompile error

@@ -131,7 +131,7 @@ public class TileEntityBarrel extends TileEntityLootable {
 
             ++this.b;
             IBlockData iblockdata = this.getBlock();
-            boolean flag = (Boolean) iblockdata.get(BlockBarrel.OPEN);
+            boolean flag = iblockdata.get(BlockBarrel.OPEN);
 
             if (!flag) {
                 this.playOpenSound(iblockdata, SoundEffects.BLOCK_BARREL_OPEN);
@@ -163,7 +163,7 @@ public class TileEntityBarrel extends TileEntityLootable {
                 return;
             }
 
-            boolean flag = (Boolean) iblockdata.get(BlockBarrel.OPEN) && !opened; // CraftBukkit - only set flag if Barrel isn't set open by API.
+            boolean flag = iblockdata.get(BlockBarrel.OPEN) && !opened; // CraftBukkit - only set flag if Barrel isn't set open by API.
 
             if (flag) {
                 this.playOpenSound(iblockdata, SoundEffects.BLOCK_BARREL_CLOSE);
@@ -182,15 +182,15 @@ public class TileEntityBarrel extends TileEntityLootable {
     }
 
     public void setOpenFlag(IBlockData iblockdata, boolean flag) {
-        this.world.setTypeAndData(this.getPosition(), (IBlockData) iblockdata.set(BlockBarrel.OPEN, flag), 3);
+        this.world.setTypeAndData(this.getPosition(), iblockdata.set(BlockBarrel.OPEN, flag), 3);
     }
 
     public void playOpenSound(IBlockData iblockdata, SoundEffect soundeffect) {
-        BaseBlockPosition baseblockposition = ((EnumDirection) iblockdata.get(BlockBarrel.a)).p();
+        BaseBlockPosition baseblockposition = iblockdata.get(BlockBarrel.a).p();
         double d0 = (double) this.position.getX() + 0.5D + (double) baseblockposition.getX() / 2.0D;
         double d1 = (double) this.position.getY() + 0.5D + (double) baseblockposition.getY() / 2.0D;
         double d2 = (double) this.position.getZ() + 0.5D + (double) baseblockposition.getZ() / 2.0D;
 
-        this.world.playSound((EntityHuman) null, d0, d1, d2, soundeffect, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+        this.world.playSound(null, d0, d1, d2, soundeffect, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
     }
 }

@@ -15,7 +15,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Lifecycle;
 import io.papermc.paper.datapack.PaperDatapackManager;
-import io.papermc.paper.util.TraceUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -93,7 +92,6 @@ import org.bukkit.craftbukkit.command.CraftCommandMap;
 import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.generator.CraftChunkData;
-import org.bukkit.craftbukkit.help.SimpleHelpMap;
 import org.bukkit.craftbukkit.inventory.*;
 import org.bukkit.craftbukkit.inventory.util.CraftInventoryCreator;
 import org.bukkit.craftbukkit.map.CraftMapView;
@@ -118,7 +116,6 @@ import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.*;
 import org.bukkit.loot.LootTable;
 import org.bukkit.map.MapView;
@@ -142,7 +139,6 @@ import org.yaml.snakeyaml.error.MarkedYAMLException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
@@ -158,7 +154,6 @@ public final class CraftServer implements Server {
     private final ServicesManager servicesManager = new SimpleServicesManager();
     private final CraftScheduler scheduler = new CraftScheduler();
     private final CraftCommandMap commandMap = new CraftCommandMap(this);
-    private final SimpleHelpMap helpMap = new SimpleHelpMap(this);
     private final StandardMessenger messenger = new StandardMessenger();
     private final SimplePluginManager pluginManager = new SimplePluginManager(this, commandMap);
     public final DedicatedServer console;
@@ -338,8 +333,6 @@ public final class CraftServer implements Server {
 
     public void enablePlugins(PluginLoadOrder type) {
         if (type == PluginLoadOrder.STARTUP) {
-            helpMap.clear();
-            helpMap.initializeGeneralTopics();
             if (com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions(); // Paper
         }
 
@@ -354,14 +347,12 @@ public final class CraftServer implements Server {
         if (type == PluginLoadOrder.POSTWORLD) {
             // Spigot start - Allow vanilla commands to be forced to be the main command
             setVanillaCommands(true);
-            commandMap.setFallbackCommands();
             setVanillaCommands(false);
             // Spigot end
             commandMap.registerServerAliases();
             DefaultPermissions.registerCorePermissions();
             CraftDefaultPermissions.registerCorePermissions();
             if (!com.destroystokyo.paper.PaperConfig.loadPermsBeforePlugins) loadCustomPermissions(); // Paper
-            helpMap.initializeCommands();
             syncCommands();
         }
     }
@@ -1028,12 +1019,12 @@ public final class CraftServer implements Server {
         long j = BiomeManager.a(creator.seed());
         List<MobSpawner> list = ImmutableList.of(new MobSpawnerPhantom(), new MobSpawnerPatrol(), new MobSpawnerCat(), new VillageSiege(), new MobSpawnerTrader(worlddata));
         RegistryMaterials<WorldDimension> registrymaterials = worlddata.getGeneratorSettings().d();
-        WorldDimension worlddimension = (WorldDimension) registrymaterials.a(actualDimension);
+        WorldDimension worlddimension = registrymaterials.a___key(actualDimension);
         DimensionManager dimensionmanager;
         net.minecraft.world.level.chunk.ChunkGenerator chunkgenerator;
 
         if (worlddimension == null) {
-            dimensionmanager = (DimensionManager) console.customRegistry.a().d(DimensionManager.OVERWORLD);
+            dimensionmanager = console.customRegistry.a().d(DimensionManager.OVERWORLD);
             chunkgenerator = GeneratorSettings.a(console.customRegistry.b(IRegistry.ay), console.customRegistry.b(IRegistry.ar), (new Random()).nextLong());
         } else {
             dimensionmanager = worlddimension.b();
@@ -1058,7 +1049,7 @@ public final class CraftServer implements Server {
             worldKey = ResourceKey.newResourceKey(IRegistry.getWorldRegistry(), new net.minecraft.resources.MinecraftKey(creator.key().getNamespace().toLowerCase(java.util.Locale.ENGLISH), creator.key().getKey().toLowerCase(java.util.Locale.ENGLISH))); // Paper
         }
 
-        WorldServer internal = (WorldServer) new WorldServer(console, console.executorService, worldSession, worlddata, worldKey, dimensionmanager, getServer().worldLoadListenerFactory.create(11),
+        WorldServer internal = new WorldServer(console, console.executorService, worldSession, worlddata, worldKey, dimensionmanager, getServer().worldLoadListenerFactory.create(11),
                 chunkgenerator, worlddata.getGeneratorSettings().isDebugWorld(), j, creator.environment() == Environment.NORMAL ? list : ImmutableList.of(), true, creator.environment(), generator);
 
         if (!(worlds.containsKey(name.toLowerCase(java.util.Locale.ENGLISH)))) {
@@ -1749,11 +1740,6 @@ public final class CraftServer implements Server {
         return new CraftMerchantCustom(title == null ? InventoryType.MERCHANT.getDefaultTitle() : title);
     }
 
-    @Override
-    public HelpMap getHelpMap() {
-        return helpMap;
-    }
-
     @Override // Paper - add override
     public SimpleCommandMap getCommandMap() {
         return commandMap;
@@ -1788,7 +1774,7 @@ public final class CraftServer implements Server {
     public boolean isPrimaryThread() {
         // Tuinity start
         final Thread currThread = Thread.currentThread();
-        return currThread == console.serverThread || currThread.equals(net.minecraft.server.MinecraftServer.getServer().shutdownThread); // Paper - Fix issues with detecting main thread properly, the only time Watchdog will be used is during a crash shutdown which is a "try our best" scenario
+        return currThread == console.serverThread || currThread.equals(net.minecraft.server.MinecraftServer.SERVER.shutdownThread); // Paper - Fix issues with detecting main thread properly, the only time Watchdog will be used is during a crash shutdown which is a "try our best" scenario
         // Tuinity End
     }
 
@@ -1893,18 +1879,6 @@ public final class CraftServer implements Server {
         }
         this.printSaveWarning = true;
         getLogger().log(Level.WARNING, "A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.", warningState == WarningState.ON ? new Throwable() : null);
-    }
-
-    @Override
-    @Deprecated(forRemoval = true)
-    public void setIdleTimeout(int threshold) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @Deprecated(forRemoval = true)
-    public int getIdleTimeout() {
-        return 0;
     }
 
     @Override
@@ -2144,10 +2118,10 @@ public final class CraftServer implements Server {
     @Override
     public double[] getTPS() {
         return new double[] {
-                net.minecraft.server.MinecraftServer.getServer().tps5s.getAverage(), // Purpur
-                net.minecraft.server.MinecraftServer.getServer().tps1.getAverage(),
-                net.minecraft.server.MinecraftServer.getServer().tps5.getAverage(),
-                net.minecraft.server.MinecraftServer.getServer().tps15.getAverage()
+                net.minecraft.server.MinecraftServer.SERVER.tps5s.getAverage(), // Purpur
+                net.minecraft.server.MinecraftServer.SERVER.tps1.getAverage(),
+                net.minecraft.server.MinecraftServer.SERVER.tps5.getAverage(),
+                net.minecraft.server.MinecraftServer.SERVER.tps15.getAverage()
         };
     }
 
@@ -2350,7 +2324,7 @@ public final class CraftServer implements Server {
 
     @Override
     public boolean isStopping() {
-        return net.minecraft.server.MinecraftServer.getServer().hasStopped();
+        return net.minecraft.server.MinecraftServer.SERVER.hasStopped();
     }
 
     private final com.destroystokyo.paper.entity.ai.MobGoals mobGoals = new com.destroystokyo.paper.entity.ai.PaperMobGoals();

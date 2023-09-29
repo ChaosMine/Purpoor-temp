@@ -69,7 +69,7 @@ public class TileEntityTypes<T extends TileEntity> {
 
         Type<?> type = SystemUtils.a(DataConverterTypes.BLOCK_ENTITY, s);
 
-        return (TileEntityTypes) IRegistry.a(IRegistry.BLOCK_ENTITY_TYPE, s, (Object) tileentitytypes_a.a(type));
+        return IRegistry.a(IRegistry.BLOCK_ENTITY_TYPE, s,tileentitytypes_a.a(type));
     }
 
     public TileEntityTypes(Supplier<? extends T> supplier, Set<Block> set, Type<?> type) {
@@ -80,7 +80,7 @@ public class TileEntityTypes<T extends TileEntity> {
 
     @Nullable
     public T a() {
-        return (TileEntity) this.I.get();
+        return this.I.get();
     }
 
     public boolean isValidBlock(Block block) {
@@ -91,7 +91,7 @@ public class TileEntityTypes<T extends TileEntity> {
     public T a(IBlockAccess iblockaccess, BlockPosition blockposition) {
         TileEntity tileentity = iblockaccess.getTileEntity(blockposition);
 
-        return tileentity != null && tileentity.getTileType() == this ? tileentity : null;
+        return tileentity != null && tileentity.getTileType() == this ? (T) tileentity : null;
     }
 
     public static final class a<T extends TileEntity> {

@@ -17,7 +17,7 @@ public class CriterionTriggerEnchantedItem extends CriterionTriggerAbstract<Crit
     }
 
     @Override
-    public CriterionTriggerEnchantedItem.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerEnchantedItem.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
         CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange = CriterionConditionValue.IntegerRange.a(jsonobject.get("levels"));
 
@@ -35,14 +35,14 @@ public class CriterionTriggerEnchantedItem extends CriterionTriggerAbstract<Crit
         private final CriterionConditionItem a;
         private final CriterionConditionValue.IntegerRange b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem, CriterionConditionValue.IntegerRange criterionconditionvalue_integerrange) {
             super(CriterionTriggerEnchantedItem.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
             this.b = criterionconditionvalue_integerrange;
         }
 
         public static CriterionTriggerEnchantedItem.a c() {
-            return new CriterionTriggerEnchantedItem.a(CriterionConditionEntity.b.a, CriterionConditionItem.a, CriterionConditionValue.IntegerRange.e);
+            return new CriterionTriggerEnchantedItem.a(CriterionConditionEntity.b_.a, CriterionConditionItem.a, CriterionConditionValue.IntegerRange.e);
         }
 
         public boolean a(ItemStack itemstack, int i) {

@@ -51,7 +51,7 @@ public class DefinedStructureManager {
 
     @Nullable
     public DefinedStructure b(MinecraftKey minecraftkey) {
-        return (DefinedStructure) this.b.computeIfAbsent(minecraftkey, (minecraftkey1) -> {
+        return this.b.computeIfAbsent(minecraftkey, (minecraftkey1) -> {
             DefinedStructure definedstructure = this.f(minecraftkey1);
 
             return definedstructure != null ? definedstructure : this.e(minecraftkey1);
@@ -116,7 +116,7 @@ public class DefinedStructureManager {
                 DefinedStructure definedstructure;
 
                 try {
-                    definedstructure = this.a((InputStream) fileinputstream);
+                    definedstructure = this.a(fileinputstream);
                 } catch (Throwable throwable1) {
                     throwable = throwable1;
                     throw throwable1;
@@ -163,7 +163,7 @@ public class DefinedStructureManager {
     }
 
     public boolean c(MinecraftKey minecraftkey) {
-        DefinedStructure definedstructure = (DefinedStructure) this.b.get(minecraftkey);
+        DefinedStructure definedstructure = this.b.get(minecraftkey);
 
         if (definedstructure == null) {
             return false;
@@ -188,7 +188,7 @@ public class DefinedStructureManager {
                     Throwable throwable = null;
 
                     try {
-                        NBTCompressedStreamTools.a(nbttagcompound, (OutputStream) fileoutputstream);
+                        NBTCompressedStreamTools.a(nbttagcompound, fileoutputstream);
                     } catch (Throwable throwable1) {
                         throwable = throwable1;
                         throw throwable1;

@@ -1,0 +1,14 @@
+!/yggdrasil_session_pubkey.der
+!/pack.mcmeta
+!/logo.png
+!/version.json
+
+!.mcassetsroot
+!/*.xml
+!/*.properties
+!/configurations/*.yml
+
+!/assets/**/*.json
+
+!/data/**/*.json
+!/data/**/*.nbt

@@ -17,7 +17,7 @@ public class CriterionTriggerUsedEnderEye extends CriterionTriggerAbstract<Crite
     }
 
     @Override
-    public CriterionTriggerUsedEnderEye.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerUsedEnderEye.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionValue.FloatRange criterionconditionvalue_floatrange = CriterionConditionValue.FloatRange.a(jsonobject.get("distance"));
 
         return new CriterionTriggerUsedEnderEye.a(criterionconditionentity_b, criterionconditionvalue_floatrange);
@@ -37,7 +37,7 @@ public class CriterionTriggerUsedEnderEye extends CriterionTriggerAbstract<Crite
 
         private final CriterionConditionValue.FloatRange a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionValue.FloatRange criterionconditionvalue_floatrange) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionValue.FloatRange criterionconditionvalue_floatrange) {
             super(CriterionTriggerUsedEnderEye.a, criterionconditionentity_b);
             this.a = criterionconditionvalue_floatrange;
         }

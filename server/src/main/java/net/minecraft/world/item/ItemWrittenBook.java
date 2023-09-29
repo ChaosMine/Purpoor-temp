@@ -106,7 +106,7 @@ public class ItemWrittenBook extends Item {
                         object = new ChatComponentText(s);
                     }
 
-                    nbttaglist.set(i, (NBTBase) NBTTagString.a(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) object)));
+                    nbttaglist.set(i, NBTTagString.a(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) object)));
                 }
 
                 nbttagcompound.set("pages", nbttaglist);

@@ -48,7 +48,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     }
 
     public boolean isImmuneToZombification() {
-        return (Boolean) this.getDataWatcher().get(EntityPiglinAbstract.b);
+        return this.getDataWatcher().get(EntityPiglinAbstract.b);
     }
 
     @Override
@@ -100,7 +100,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     }
 
     protected void c(WorldServer worldserver) {
-        EntityPigZombie entitypigzombie = (EntityPigZombie) this.a(EntityTypes.ZOMBIFIED_PIGLIN, true, org.bukkit.event.entity.EntityTransformEvent.TransformReason.PIGLIN_ZOMBIFIED, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.PIGLIN_ZOMBIFIED); // CraftBukkit - add spawn and transform reasons
+        EntityPigZombie entitypigzombie = this.a(EntityTypes.ZOMBIFIED_PIGLIN, true, org.bukkit.event.entity.EntityTransformEvent.TransformReason.PIGLIN_ZOMBIFIED, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.PIGLIN_ZOMBIFIED); // CraftBukkit - add spawn and transform reasons
 
         if (entitypigzombie != null) {
             entitypigzombie.addEffect(new MobEffect(MobEffects.CONFUSION, 200, 0));
@@ -115,7 +115,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     @Nullable
     @Override
     public EntityLiving getGoalTarget() {
-        return (EntityLiving) this.bg.getMemory(MemoryModuleType.ATTACK_TARGET).orElse(null); // CraftBukkit - decompile error
+        return this.bg.getMemory(MemoryModuleType.ATTACK_TARGET).orElse(null); // CraftBukkit - decompile error
     }
 
     protected boolean eO() {
@@ -133,7 +133,7 @@ public abstract class EntityPiglinAbstract extends EntityMonster {
     @Override
     protected void M() {
         super.M();
-        PacketDebug.a((EntityLiving) this);
+        PacketDebug.a(this);
     }
 
     protected abstract void eP();

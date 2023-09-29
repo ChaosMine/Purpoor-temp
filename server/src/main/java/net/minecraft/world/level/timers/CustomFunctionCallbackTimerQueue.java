@@ -26,11 +26,7 @@ public class CustomFunctionCallbackTimerQueue<T> {
     private final Table<String, Long, CustomFunctionCallbackTimerQueue.a<T>> e;
 
     private static <T> Comparator<CustomFunctionCallbackTimerQueue.a<T>> c() {
-        return Comparator.comparingLong((customfunctioncallbacktimerqueue_a) -> {
-            return customfunctioncallbacktimerqueue_a.a;
-        }).thenComparing((customfunctioncallbacktimerqueue_a) -> {
-            return customfunctioncallbacktimerqueue_a.b;
-        });
+        return Comparator.<CustomFunctionCallbackTimerQueue.a<T>>comparingLong(v -> v.a).thenComparing(v -> v.b);
     }
 
     public CustomFunctionCallbackTimerQueue(CustomFunctionCallbackTimers<T> customfunctioncallbacktimers, Stream<Dynamic<NBTBase>> stream) {
@@ -56,7 +52,7 @@ public class CustomFunctionCallbackTimerQueue<T> {
 
     public void a(T t0, long i) {
         while (true) {
-            CustomFunctionCallbackTimerQueue.a<T> customfunctioncallbacktimerqueue_a = (CustomFunctionCallbackTimerQueue.a) this.c.peek();
+            CustomFunctionCallbackTimerQueue.a<T> customfunctioncallbacktimerqueue_a = this.c.peek();
 
             if (customfunctioncallbacktimerqueue_a == null || customfunctioncallbacktimerqueue_a.a > i) {
                 return;

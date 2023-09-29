@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.item;
 
 import net.minecraft.SystemUtils;
@@ -65,7 +64,7 @@ public class ItemDebugStick extends Item {
             String s = IRegistry.BLOCK.getKey(block).toString();
 
             if (collection.isEmpty()) {
-                a(entityhuman, (IChatBaseComponent) (new ChatMessage(this.getName() + ".empty", new Object[]{s})));
+                a(entityhuman, new ChatMessage(this.getName() + ".empty", new Object[]{s}));
             } else {
                 NBTTagCompound nbttagcompound = itemstack.a("DebugProperty");
                 String s1 = nbttagcompound.getString(s);
@@ -73,19 +72,19 @@ public class ItemDebugStick extends Item {
 
                 if (flag) {
                     if (iblockstate == null) {
-                        iblockstate = (IBlockState) collection.iterator().next();
+                        iblockstate = collection.iterator().next();
                     }
 
                     IBlockData iblockdata1 = a(iblockdata, iblockstate, entityhuman.eq());
 
                     generatoraccess.setTypeAndData(blockposition, iblockdata1, 18);
-                    a(entityhuman, (IChatBaseComponent) (new ChatMessage(this.getName() + ".update", new Object[]{iblockstate.getName(), a(iblockdata1, iblockstate)})));
+                    a(entityhuman, new ChatMessage(this.getName() + ".update", new Object[]{iblockstate.getName(), a(iblockdata1, iblockstate)}));
                 } else {
                     iblockstate = (IBlockState) a((Iterable) collection, (Object) iblockstate, entityhuman.eq());
                     String s2 = iblockstate.getName();
 
                     nbttagcompound.setString(s, s2);
-                    a(entityhuman, (IChatBaseComponent) (new ChatMessage(this.getName() + ".select", new Object[]{s2, a(iblockdata, iblockstate)})));
+                    a(entityhuman, new ChatMessage(this.getName() + ".select", new Object[]{s2, a(iblockdata, iblockstate)}));
                 }
 
             }
@@ -93,7 +92,7 @@ public class ItemDebugStick extends Item {
     }
 
     private static <T extends Comparable<T>> IBlockData a(IBlockData iblockdata, IBlockState<T> iblockstate, boolean flag) {
-        return (IBlockData) iblockdata.set(iblockstate, a(iblockstate.getValues(), iblockdata.get(iblockstate), flag)); // CraftBukkit - decompile error
+        return iblockdata.set(iblockstate, a(iblockstate.getValues(), iblockdata.get(iblockstate), flag)); // CraftBukkit - decompile error
     }
 
     private static <T> T a(Iterable<T> iterable, @Nullable T t0, boolean flag) {

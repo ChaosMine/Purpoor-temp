@@ -23,12 +23,12 @@ public class MerchantRecipeList extends ArrayList<MerchantRecipe> {
     @Nullable
     public MerchantRecipe a(ItemStack itemstack, ItemStack itemstack1, int i) {
         if (i > 0 && i < this.size()) {
-            MerchantRecipe merchantrecipe = (MerchantRecipe) this.get(i);
+            MerchantRecipe merchantrecipe = this.get(i);
 
             return merchantrecipe.a(itemstack, itemstack1) ? merchantrecipe : null;
         } else {
             for (int j = 0; j < this.size(); ++j) {
-                MerchantRecipe merchantrecipe1 = (MerchantRecipe) this.get(j);
+                MerchantRecipe merchantrecipe1 = this.get(j);
 
                 if (merchantrecipe1.a(itemstack, itemstack1)) {
                     return merchantrecipe1;
@@ -43,7 +43,7 @@ public class MerchantRecipeList extends ArrayList<MerchantRecipe> {
         packetdataserializer.writeByte((byte) (this.size() & 255));
 
         for (int i = 0; i < this.size(); ++i) {
-            MerchantRecipe merchantrecipe = (MerchantRecipe) this.get(i);
+            MerchantRecipe merchantrecipe = this.get(i);
 
             packetdataserializer.a(merchantrecipe.a());
             packetdataserializer.a(merchantrecipe.getSellingItem());
@@ -103,7 +103,7 @@ public class MerchantRecipeList extends ArrayList<MerchantRecipe> {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.size(); ++i) {
-            MerchantRecipe merchantrecipe = (MerchantRecipe) this.get(i);
+            MerchantRecipe merchantrecipe = this.get(i);
 
             nbttaglist.add(merchantrecipe.t());
         }

@@ -4,14 +4,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICommandListener;
-import net.minecraft.core.BaseBlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.PacketPlayOutTileEntityData;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.util.FormattedString;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.EnumColor;
 import net.minecraft.world.level.block.state.IBlockData;
@@ -24,8 +21,6 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
 
     public final IChatBaseComponent[] lines;
     public boolean isEditable;
-    private EntityHuman c;
-    private final FormattedString[] g;
     private EnumColor color;
     public java.util.UUID signEditor; // Paper
     private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns"); // Paper
@@ -35,7 +30,6 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         super(TileEntityTypes.SIGN);
         this.lines = new IChatBaseComponent[]{ChatComponentText.d, ChatComponentText.d, ChatComponentText.d, ChatComponentText.d};
         this.isEditable = true;
-        this.g = new FormattedString[4];
         this.color = EnumColor.BLACK;
     }
 
@@ -89,7 +83,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
 
                 if (this.world instanceof WorldServer) {
                     try {
-                        this.lines[i] = ChatComponentUtils.filterForDisplay(this.a((EntityPlayer) null), ichatmutablecomponent, (Entity) null, 0);
+                        this.lines[i] = ChatComponentUtils.filterForDisplay(this.a((EntityPlayer) null), ichatmutablecomponent, null, 0);
                     } catch (CommandSyntaxException commandsyntaxexception) {
                         this.lines[i] = ichatmutablecomponent;
                     }
@@ -99,15 +93,12 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
             } catch (com.google.gson.JsonParseException jsonparseexception) {
                 this.lines[i] = new ChatComponentText(s);
             }
-
-            this.g[i] = null;
         }
 
     }
 
     public void a(int i, IChatBaseComponent ichatbasecomponent) {
         this.lines[i] = ichatbasecomponent;
-        this.g[i] = null;
     }
 
     // Purpur start
@@ -148,10 +139,6 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         //this.c = entityhuman;
         signEditor = entityhuman != null ? entityhuman.getUniqueID() : null;
         // Paper end
-    }
-
-    public EntityHuman f() {
-        return this.c;
     }
 
     public boolean b(EntityHuman entityhuman) {
@@ -225,7 +212,7 @@ public class TileEntitySign extends TileEntity implements ICommandListener { // 
         } : this;
         // Paper end
         // CraftBukkit - this
-        return new CommandListenerWrapper(commandSource, Vec3D.a((BaseBlockPosition) this.position), Vec2F.a, (WorldServer) this.world, 2, s, (IChatBaseComponent) object, this.world.getMinecraftServer(), entityplayer); // Paper
+        return new CommandListenerWrapper(commandSource, Vec3D.a(this.position), Vec2F.a, (WorldServer) this.world, 2, s, (IChatBaseComponent) object, this.world.getMinecraftServer(), entityplayer); // Paper
     }
 
     public EnumColor getColor() {

@@ -1019,7 +1019,7 @@ public class ChunkProviderServer extends IChunkProvider {
 							this.world.a(chunk, k);
 							//this.world.timings.chunkTicks.stopTiming(); // Spigot // Paper
 							if ((++ticked & 1) == 0)
-								MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
+								MinecraftServer.SERVER.executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
 						}
 					}
 				} // Tuinity start - optimise chunk tick iteration

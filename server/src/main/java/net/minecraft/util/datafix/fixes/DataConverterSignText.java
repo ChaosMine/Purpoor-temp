@@ -61,7 +61,7 @@ public class DataConverterSignText extends DataConverterNamedEntity {
                 object = new ChatComponentText(s1);
             } else {
                 try {
-                    object = (IChatBaseComponent) ChatDeserializer.a(DataConverterSignText.a, s1, IChatBaseComponent.class, true);
+                    object = ChatDeserializer.a(DataConverterSignText.a, s1, IChatBaseComponent.class, true);
                     if (object == null) {
                         object = ChatComponentText.d;
                     }

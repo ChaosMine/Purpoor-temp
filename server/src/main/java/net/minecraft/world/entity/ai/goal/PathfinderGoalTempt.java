@@ -53,7 +53,7 @@ public class PathfinderGoalTempt extends PathfinderGoal {
             --this.j;
             return false;
         } else {
-            this.target = this.a.world.a(PathfinderGoalTempt.c, (EntityLiving) this.a);
+            this.target = this.a.world.a(PathfinderGoalTempt.c, this.a);
             // CraftBukkit start
             boolean tempt = this.target == null ? false : this.a(this.target.getItemInMainHand()) || this.a(this.target.getItemInOffHand());
             if (tempt) {
@@ -75,7 +75,7 @@ public class PathfinderGoalTempt extends PathfinderGoal {
     @Override
     public boolean b() {
         if (this.g()) {
-            if (this.a.h((Entity) this.target) < 36.0D) {
+            if (this.a.h(this.target) < 36.0D) {
                 if (this.target.h(this.e, this.f, this.g) > 0.010000000000000002D) {
                     return false;
                 }
@@ -89,8 +89,8 @@ public class PathfinderGoalTempt extends PathfinderGoal {
                 this.g = this.target.locZ();
             }
 
-            this.h = (double) this.target.pitch;
-            this.i = (double) this.target.yaw;
+            this.h = this.target.pitch;
+            this.i = this.target.yaw;
         }
 
         return this.a();
@@ -119,10 +119,10 @@ public class PathfinderGoalTempt extends PathfinderGoal {
     @Override
     public void e() {
         this.a.getControllerLook().a(this.target, (float) (this.a.Q() + 20), (float) this.a.O());
-        if (this.a.h((Entity) this.target) < 6.25D) {
+        if (this.a.h(this.target) < 6.25D) {
             this.a.getNavigation().o();
         } else {
-            this.a.getNavigation().a((Entity) this.target, this.d);
+            this.a.getNavigation().a(this.target, this.d);
         }
 
     }

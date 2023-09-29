@@ -37,12 +37,12 @@ public class CustomFunctionData {
     }
 
     public void tick() {
-        this.a((Collection) this.g, CustomFunctionData.a);
+        this.a(this.g, CustomFunctionData.a);
         if (this.h) {
             this.h = false;
             Collection<CustomFunction> collection = this.i.b().b(CustomFunctionData.b).getTagged();
 
-            this.a((Collection) collection, CustomFunctionData.b);
+            this.a(collection, CustomFunctionData.b);
         }
 
     }
@@ -84,7 +84,7 @@ public class CustomFunctionData {
                         return j;
                     }
 
-                        CustomFunctionData.a customfunctiondata_a = (CustomFunctionData.a) this.e.removeFirst();
+                        CustomFunctionData.a customfunctiondata_a = this.e.removeFirst();
 
                         customfunctiondata_a.a(this.e, i);
                         if (!this.f.isEmpty()) {

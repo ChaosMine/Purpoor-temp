@@ -25,14 +25,14 @@ public class BlockSnow extends Block {
 
     protected BlockSnow(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSnow.LAYERS, 1));
+        this.j(this.blockStateList.getBlockData().set(BlockSnow.LAYERS, 1));
     }
 
     @Override
     public boolean a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, PathMode pathmode) {
         switch (pathmode) {
             case LAND:
-                return (Integer) iblockdata.get(BlockSnow.LAYERS) < 5;
+                return iblockdata.get(BlockSnow.LAYERS) < 5;
             case WATER:
                 return false;
             case AIR:
@@ -44,22 +44,22 @@ public class BlockSnow extends Block {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockSnow.b[(Integer) iblockdata.get(BlockSnow.LAYERS)];
+        return BlockSnow.b[iblockdata.get(BlockSnow.LAYERS)];
     }
 
     @Override
     public VoxelShape c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockSnow.b[(Integer) iblockdata.get(BlockSnow.LAYERS) - 1];
+        return BlockSnow.b[iblockdata.get(BlockSnow.LAYERS) - 1];
     }
 
     @Override
     public VoxelShape e(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
-        return BlockSnow.b[(Integer) iblockdata.get(BlockSnow.LAYERS)];
+        return BlockSnow.b[iblockdata.get(BlockSnow.LAYERS)];
     }
 
     @Override
     public VoxelShape a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockSnow.b[(Integer) iblockdata.get(BlockSnow.LAYERS)];
+        return BlockSnow.b[iblockdata.get(BlockSnow.LAYERS)];
     }
 
     @Override
@@ -98,7 +98,7 @@ public class BlockSnow extends Block {
                 return;
             }
             // CraftBukkit end
-            c(iblockdata, (World) worldserver, blockposition);
+            c(iblockdata, worldserver, blockposition);
             worldserver.a(blockposition, false);
         }
 
@@ -106,7 +106,7 @@ public class BlockSnow extends Block {
 
     @Override
     public boolean a(IBlockData iblockdata, BlockActionContext blockactioncontext) {
-        int i = (Integer) iblockdata.get(BlockSnow.LAYERS);
+        int i = iblockdata.get(BlockSnow.LAYERS);
 
         return blockactioncontext.getItemStack().getItem() == this.getItem() && i < 8 ? (blockactioncontext.c() ? blockactioncontext.getClickedFace() == EnumDirection.UP : true) : i == 1;
     }
@@ -116,10 +116,10 @@ public class BlockSnow extends Block {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition());
 
-        if (iblockdata.a((Block) this)) {
-            int i = (Integer) iblockdata.get(BlockSnow.LAYERS);
+        if (iblockdata.a(this)) {
+            int i = iblockdata.get(BlockSnow.LAYERS);
 
-            return (IBlockData) iblockdata.set(BlockSnow.LAYERS, Math.min(8, i + 1));
+            return iblockdata.set(BlockSnow.LAYERS, Math.min(8, i + 1));
         } else {
             return super.getPlacedState(blockactioncontext);
         }

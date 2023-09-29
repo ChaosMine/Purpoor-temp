@@ -32,8 +32,8 @@ public class EntitySlice<T> extends AbstractCollection<T> {
         while (iterator.hasNext()) {
             Entry<Class<?>, List<T>> entry = (Entry) iterator.next();
 
-            if (((Class) entry.getKey()).isInstance(t0)) {
-                flag |= ((List) entry.getValue()).add(t0);
+            if (entry.getKey().isInstance(t0)) {
+                flag |= entry.getValue().add(t0);
             }
         }
 
@@ -42,17 +42,14 @@ public class EntitySlice<T> extends AbstractCollection<T> {
 
     public boolean remove(Object object) {
         boolean flag = false;
-        Iterator iterator = this.a.entrySet().iterator();
 
-        while (iterator.hasNext()) {
-            Entry<Class<?>, List<T>> entry = (Entry) iterator.next();
+			for (Entry<Class<?>, List<T>> classListEntry : this.a.entrySet()) {
+				if (classListEntry.getKey().isInstance(object)) {
+					List<T> list = classListEntry.getValue();
 
-            if (((Class) entry.getKey()).isInstance(object)) {
-                List<T> list = (List) entry.getValue();
-
-                flag |= list.remove(object);
-            }
-        }
+					flag |= list.remove(object);
+				}
+			}
 
         return flag;
     }
@@ -65,19 +62,14 @@ public class EntitySlice<T> extends AbstractCollection<T> {
         if (!this.b.isAssignableFrom(oclass)) {
             throw new IllegalArgumentException("Don't know how to search for " + oclass);
         } else {
-            List<T> list = (List) this.a.computeIfAbsent(oclass, (oclass1) -> {
-                Stream stream = this.c.stream();
-
-                oclass1.getClass();
-                return (List) stream.filter(oclass1::isInstance).collect(Collectors.toList());
+					return (Collection<S>) this.a.computeIfAbsent(oclass, (oclass1) -> {
+                return this.c.stream().filter(oclass1::isInstance).toList();
             });
-
-            return Collections.unmodifiableCollection(list);
         }
     }
 
     public Iterator<T> iterator() {
-        return (Iterator) (this.c.isEmpty() ? Collections.emptyIterator() : Iterators.unmodifiableIterator(this.c.iterator()));
+        return this.c.isEmpty() ? Collections.emptyIterator() : Iterators.unmodifiableIterator(this.c.iterator());
     }
 
     public List<T> a() {

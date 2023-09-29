@@ -88,14 +88,14 @@ public class EntityTippedArrow extends EntityArrow {
         if (this.potionRegistry == Potions.EMPTY && this.effects.isEmpty()) {
             this.datawatcher.set(EntityTippedArrow.COLOR, -1);
         } else {
-            this.datawatcher.set(EntityTippedArrow.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects)));
+            this.datawatcher.set(EntityTippedArrow.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects)));
         }
 
     }
 
     public void addEffect(MobEffect mobeffect) {
         this.effects.add(mobeffect);
-        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects)));
+        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects)));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class EntityTippedArrow extends EntityArrow {
 
     // CraftBukkit start accessor methods
     public void refreshEffects() {
-        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects)));
+        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects)));
     }
 
     public String getType() {
@@ -150,7 +150,7 @@ public class EntityTippedArrow extends EntityArrow {
 
     public void setType(String string) {
         this.potionRegistry = IRegistry.POTION.get(new net.minecraft.resources.MinecraftKey(string));
-        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects)));
+        this.getDataWatcher().set(EntityTippedArrow.COLOR, PotionUtil.a(PotionUtil.a(this.potionRegistry, this.effects)));
     }
 
     public boolean isTipped() {
@@ -159,7 +159,7 @@ public class EntityTippedArrow extends EntityArrow {
     // CraftBukkit end
 
     public int getColor() {
-        return (Integer) this.datawatcher.get(EntityTippedArrow.COLOR);
+        return this.datawatcher.get(EntityTippedArrow.COLOR);
     }
 
     public void setColor(int i) {
@@ -247,7 +247,7 @@ public class EntityTippedArrow extends EntityArrow {
             ItemStack itemstack = new ItemStack(Items.TIPPED_ARROW);
 
             PotionUtil.a(itemstack, this.potionRegistry);
-            PotionUtil.a(itemstack, (Collection) this.effects);
+            PotionUtil.a(itemstack, this.effects);
             if (this.hasColor) {
                 itemstack.getOrCreateTag().setInt("CustomPotionColor", this.getColor());
             }

@@ -46,7 +46,7 @@ public abstract class WorldGenMushrooms extends WorldGenerator<WorldGenFeatureMu
         if (j >= 1 && j + i + 1 < 256) {
             Block block = generatoraccess.getType(blockposition.down()).getBlock();
 
-            if (!b(block) && !block.a((Tag) TagsBlock.aD)) {
+            if (!b(block) && !block.a(TagsBlock.aD)) {
                 return false;
             } else {
                 for (int k = 0; k <= i; ++k) {
@@ -56,7 +56,7 @@ public abstract class WorldGenMushrooms extends WorldGenerator<WorldGenFeatureMu
                         for (int j1 = -l; j1 <= l; ++j1) {
                             IBlockData iblockdata = generatoraccess.getType(blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, i1, k, j1));
 
-                            if (!iblockdata.isAir() && !iblockdata.a((Tag) TagsBlock.LEAVES)) {
+                            if (!iblockdata.isAir() && !iblockdata.a(TagsBlock.LEAVES)) {
                                 return false;
                             }
                         }
@@ -70,7 +70,12 @@ public abstract class WorldGenMushrooms extends WorldGenerator<WorldGenFeatureMu
         }
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureMushroomConfiguration worldgenfeaturemushroomconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureMushroomConfiguration worldgenfeaturemushroomconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturemushroomconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureMushroomConfiguration worldgenfeaturemushroomconfiguration) {
         int i = this.a(random);
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
 

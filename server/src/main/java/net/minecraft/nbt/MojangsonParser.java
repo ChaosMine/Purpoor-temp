@@ -133,7 +133,7 @@ public class MojangsonParser {
         } else {
             char c0 = this.n.peek();
 
-            return (NBTBase) (c0 == '{' ? this.f() : (c0 == '[' ? this.e() : this.c()));
+            return c0 == '{' ? this.f() : (c0 == '[' ? this.e() : this.c());
         }
     }
 

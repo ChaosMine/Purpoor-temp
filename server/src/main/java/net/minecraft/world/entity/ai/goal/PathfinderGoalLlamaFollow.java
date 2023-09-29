@@ -44,7 +44,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
                     entity = value;
                     entityllama1 = (EntityLlama) entity;
                     if (entityllama1.fC() && !entityllama1.fB()) {
-                        d1 = this.a.h((Entity) entityllama1);
+                        d1 = this.a.h(entityllama1);
                         if (d1 <= d0) {
                             d0 = d1;
                             entityllama = entityllama1;
@@ -86,7 +86,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
     public boolean b() {
         if (!getLlama().shouldJoinCaravan) return false; // Purpur
         if (this.a.fC() && this.a.fD().isAlive() && this.a(this.a, 0)) {
-            double d0 = this.a.h((Entity) this.a.fD());
+            double d0 = this.a.h(this.a.fD());
 
             if (d0 > 676.0D) {
                 if (this.b <= 3.0D) {
@@ -121,7 +121,7 @@ public class PathfinderGoalLlamaFollow extends PathfinderGoal {
         if (this.a.fC()) {
             if (!(this.a.getLeashHolder() instanceof EntityLeash)) {
                 EntityLlama entityllama = this.a.fD();
-                double d0 = (double) this.a.g((Entity) entityllama);
+                double d0 = this.a.g(entityllama);
                 float f = 2.0F;
                 Vec3D vec3d = (new Vec3D(entityllama.locX() - this.a.locX(), entityllama.locY() - this.a.locY(), entityllama.locZ() - this.a.locZ())).d().a(Math.max(d0 - 2.0D, 0.0D));
 

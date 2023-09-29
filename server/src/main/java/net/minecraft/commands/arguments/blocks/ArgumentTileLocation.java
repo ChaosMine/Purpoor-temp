@@ -59,7 +59,7 @@ public class ArgumentTileLocation implements Predicate<ShapeDetectorBlock> {
     }
 
     public boolean a(WorldServer worldserver, BlockPosition blockposition, int i) {
-        IBlockData iblockdata = Block.b(this.a, (GeneratorAccess) worldserver, blockposition);
+        IBlockData iblockdata = Block.b(this.a, worldserver, blockposition);
 
         if (iblockdata.isAir()) {
             iblockdata = this.a;

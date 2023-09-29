@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 
 public class VillagerProfession {
 
-    public static final VillagerProfession NONE = a("none", VillagePlaceType.c, (SoundEffect) null);
+    public static final VillagerProfession NONE = a("none", VillagePlaceType.c, null);
     public static final VillagerProfession ARMORER = a("armorer", VillagePlaceType.d, SoundEffects.ENTITY_VILLAGER_WORK_ARMORER);
     public static final VillagerProfession BUTCHER = a("butcher", VillagePlaceType.e, SoundEffects.ENTITY_VILLAGER_WORK_BUTCHER);
     public static final VillagerProfession CARTOGRAPHER = a("cartographer", VillagePlaceType.f, SoundEffects.ENTITY_VILLAGER_WORK_CARTOGRAPHER);
@@ -26,7 +26,7 @@ public class VillagerProfession {
     public static final VillagerProfession LEATHERWORKER = a("leatherworker", VillagePlaceType.k, SoundEffects.ENTITY_VILLAGER_WORK_LEATHERWORKER);
     public static final VillagerProfession LIBRARIAN = a("librarian", VillagePlaceType.l, SoundEffects.ENTITY_VILLAGER_WORK_LIBRARIAN);
     public static final VillagerProfession MASON = a("mason", VillagePlaceType.m, SoundEffects.ENTITY_VILLAGER_WORK_MASON);
-    public static final VillagerProfession NITWIT = a("nitwit", VillagePlaceType.n, (SoundEffect) null);
+    public static final VillagerProfession NITWIT = a("nitwit", VillagePlaceType.n, null);
     public static final VillagerProfession SHEPHERD = a("shepherd", VillagePlaceType.o, SoundEffects.ENTITY_VILLAGER_WORK_SHEPHERD);
     public static final VillagerProfession TOOLSMITH = a("toolsmith", VillagePlaceType.p, SoundEffects.ENTITY_VILLAGER_WORK_TOOLSMITH);
     public static final VillagerProfession WEAPONSMITH = a("weaponsmith", VillagePlaceType.q, SoundEffects.ENTITY_VILLAGER_WORK_WEAPONSMITH);

@@ -40,7 +40,7 @@ public class ItemEnderEye extends Item {
             if (world.isClientSide) {
                 return EnumInteractionResult.SUCCESS;
             } else {
-                IBlockData iblockdata1 = (IBlockData) iblockdata.set(BlockEnderPortalFrame.EYE, true);
+                IBlockData iblockdata1 = iblockdata.set(BlockEnderPortalFrame.EYE, true);
 
                 Block.a(iblockdata, iblockdata1, world, blockposition);
                 world.setTypeAndData(blockposition, iblockdata1, 2);
@@ -72,7 +72,7 @@ public class ItemEnderEye extends Item {
                             double deltaLength = Math.sqrt(distanceSquared);
                             double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
                             double relativeZ = player.locZ() + (deltaZ / deltaLength) * viewDistance;
-                            player.playerConnection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutWorldEvent(1038, new BlockPosition((int) relativeX, (int) soundPos.getY(), (int) relativeZ), 0, true));
+                            player.playerConnection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutWorldEvent(1038, new BlockPosition((int) relativeX, soundPos.getY(), (int) relativeZ), 0, true));
                         } else {
                             player.playerConnection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutWorldEvent(1038, soundPos, 0, true));
                         }
@@ -92,7 +92,7 @@ public class ItemEnderEye extends Item {
         ItemStack itemstack = entityhuman.b(enumhand);
         MovingObjectPositionBlock movingobjectpositionblock = a(world, entityhuman, RayTrace.FluidCollisionOption.NONE);
 
-        if (movingobjectpositionblock.getType() == MovingObjectPosition.EnumMovingObjectType.BLOCK && world.getType(((MovingObjectPositionBlock) movingobjectpositionblock).getBlockPosition()).a(Blocks.END_PORTAL_FRAME)) {
+        if (movingobjectpositionblock.getType() == MovingObjectPosition.EnumMovingObjectType.BLOCK && world.getType(movingobjectpositionblock.getBlockPosition()).a(Blocks.END_PORTAL_FRAME)) {
             return InteractionResultWrapper.pass(itemstack);
         } else {
             entityhuman.c(enumhand);
@@ -113,8 +113,8 @@ public class ItemEnderEye extends Item {
                         CriterionTriggers.m.a((EntityPlayer) entityhuman, blockposition);
                     }
 
-                    world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_ENDER_EYE_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemEnderEye.RANDOM.nextFloat() * 0.4F + 0.8F));
-                    world.a((EntityHuman) null, 1003, entityhuman.getChunkCoordinates(), 0);
+                    world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_ENDER_EYE_LAUNCH, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemEnderEye.RANDOM.nextFloat() * 0.4F + 0.8F));
+                    world.a(null, 1003, entityhuman.getChunkCoordinates(), 0);
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         itemstack.subtract(1);
                     }

@@ -81,7 +81,7 @@ public class CraftVillagerZombie extends CraftZombie implements ZombieVillager {
             getHandle().conversionPlayer = null;
             getHandle().removeEffect(MobEffects.INCREASE_DAMAGE, org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONVERSION);
         } else {
-            getHandle().startConversion((UUID) null, time);
+            getHandle().startConversion(null, time);
         }
     }
 

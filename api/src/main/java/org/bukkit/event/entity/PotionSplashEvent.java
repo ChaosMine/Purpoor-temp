@@ -39,7 +39,7 @@ public class PotionSplashEvent extends ProjectileHitEvent implements Cancellable
      */
     @NotNull
     public ThrownPotion getPotion() {
-        return (ThrownPotion) getEntity();
+        return getEntity();
     }
 
     /**

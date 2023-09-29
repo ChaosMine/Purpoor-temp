@@ -29,7 +29,7 @@ public class EntityPainting extends EntityHanging {
         super(entitytypes, world);
         // CraftBukkit start - generate a non-null painting
         List<Paintings> list = Lists.newArrayList(Paintings.a);
-        this.art = (Paintings) list.get(this.random.nextInt(list.size()));
+        this.art = list.get(this.random.nextInt(list.size()));
         // CraftBukkit end
     }
 
@@ -65,7 +65,7 @@ public class EntityPainting extends EntityHanging {
                 }
             }
 
-            this.art = (Paintings) list.get(this.random.nextInt(list.size()));
+            this.art = list.get(this.random.nextInt(list.size()));
         }
 
         this.setDirection(enumdirection);
@@ -80,7 +80,7 @@ public class EntityPainting extends EntityHanging {
 
     @Override
     public void loadData(NBTTagCompound nbttagcompound) {
-        this.art = (Paintings) IRegistry.MOTIVE.get(MinecraftKey.a(nbttagcompound.getString("Motive")));
+        this.art = IRegistry.MOTIVE.get(MinecraftKey.a(nbttagcompound.getString("Motive")));
         this.direction = EnumDirection.fromType2(nbttagcompound.getByte("Facing"));
         super.loadData(nbttagcompound);
         this.setDirection(this.direction);

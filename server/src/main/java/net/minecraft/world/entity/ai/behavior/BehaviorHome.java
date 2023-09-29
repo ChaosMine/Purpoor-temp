@@ -36,7 +36,7 @@ public class BehaviorHome extends Behavior<EntityLiving> {
             return true;
         }, entityliving.getChunkCoordinates(), this.d + 1, VillagePlace.Occupancy.ANY);
 
-        if (optional.isPresent() && ((BlockPosition) optional.get()).a((IPosition) entityliving.getPositionVector(), (double) this.d)) {
+        if (optional.isPresent() && optional.get().a(entityliving.getPositionVector(), this.d)) {
             this.e = optional;
         } else {
             this.e = Optional.empty();
@@ -60,7 +60,7 @@ public class BehaviorHome extends Behavior<EntityLiving> {
                 Optional<GlobalPos> optional1 = behaviorcontroller.getMemory(MemoryModuleType.HOME);
 
                 if (optional1.isPresent()) {
-                    optional = Optional.of(((GlobalPos) optional1.get()).getBlockPosition());
+                    optional = Optional.of(optional1.get().getBlockPosition());
                 }
             }
         }
@@ -70,9 +70,9 @@ public class BehaviorHome extends Behavior<EntityLiving> {
             behaviorcontroller.removeMemory(MemoryModuleType.LOOK_TARGET);
             behaviorcontroller.removeMemory(MemoryModuleType.BREED_TARGET);
             behaviorcontroller.removeMemory(MemoryModuleType.INTERACTION_TARGET);
-            behaviorcontroller.setMemory(MemoryModuleType.HIDING_PLACE, (Object) GlobalPos.create(worldserver.getDimensionKey(), (BlockPosition) optional.get()));
-            if (!((BlockPosition) optional.get()).a((IPosition) entityliving.getPositionVector(), (double) this.d)) {
-                behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget((BlockPosition) optional.get(), this.b, this.d)));
+            behaviorcontroller.setMemory(MemoryModuleType.HIDING_PLACE, GlobalPos.create(worldserver.getDimensionKey(), optional.get()));
+            if (!optional.get().a(entityliving.getPositionVector(), this.d)) {
+                behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(optional.get(), this.b, this.d)));
             }
         }
 

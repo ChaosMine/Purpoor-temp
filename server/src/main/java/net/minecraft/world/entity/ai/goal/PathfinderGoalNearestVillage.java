@@ -43,7 +43,7 @@ public class PathfinderGoalNearestVillage extends PathfinderGoal {
                 return false;
             } else {
                 Vec3D vec3d = RandomPositionGenerator.a(this.a, 15, 7, (blockposition1) -> {
-                    return (double) (-worldserver.b(SectionPosition.a(blockposition1)));
+                    return -worldserver.b(SectionPosition.a(blockposition1));
                 });
 
                 this.c = vec3d == null ? null : new BlockPosition(vec3d);
@@ -62,8 +62,8 @@ public class PathfinderGoalNearestVillage extends PathfinderGoal {
         if (this.c != null) {
             NavigationAbstract navigationabstract = this.a.getNavigation();
 
-            if (navigationabstract.m() && !this.c.a((IPosition) this.a.getPositionVector(), 10.0D)) {
-                Vec3D vec3d = Vec3D.c((BaseBlockPosition) this.c);
+            if (navigationabstract.m() && !this.c.a(this.a.getPositionVector(), 10.0D)) {
+                Vec3D vec3d = Vec3D.c(this.c);
                 Vec3D vec3d1 = this.a.getPositionVector();
                 Vec3D vec3d2 = vec3d1.d(vec3d);
 
@@ -72,7 +72,7 @@ public class PathfinderGoalNearestVillage extends PathfinderGoal {
                 BlockPosition blockposition = new BlockPosition(vec3d3);
 
                 blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, blockposition);
-                if (!navigationabstract.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0D)) {
+                if (!navigationabstract.a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), 1.0D)) {
                     this.g();
                 }
             }
@@ -84,6 +84,6 @@ public class PathfinderGoalNearestVillage extends PathfinderGoal {
         Random random = this.a.getRandom();
         BlockPosition blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, this.a.getChunkCoordinates().b(-8 + random.nextInt(16), 0, -8 + random.nextInt(16)));
 
-        this.a.getNavigation().a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0D);
+        this.a.getNavigation().a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), 1.0D);
     }
 }

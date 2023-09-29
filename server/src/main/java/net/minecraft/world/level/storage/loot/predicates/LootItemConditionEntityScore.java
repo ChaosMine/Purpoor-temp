@@ -41,7 +41,7 @@ public class LootItemConditionEntityScore implements LootItemCondition {
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        Entity entity = (Entity) loottableinfo.getContextParameter(this.b.a());
+        Entity entity = loottableinfo.getContextParameter(this.b.a());
 
         if (entity == null) {
             return false;
@@ -86,7 +86,7 @@ public class LootItemConditionEntityScore implements LootItemCondition {
             while (iterator.hasNext()) {
                 Entry<String, LootValueBounds> entry = (Entry) iterator.next();
 
-                jsonobject1.add((String) entry.getKey(), jsonserializationcontext.serialize(entry.getValue()));
+                jsonobject1.add(entry.getKey(), jsonserializationcontext.serialize(entry.getValue()));
             }
 
             jsonobject.add("scores", jsonobject1);
@@ -102,10 +102,10 @@ public class LootItemConditionEntityScore implements LootItemCondition {
             while (iterator.hasNext()) {
                 Entry<String, JsonElement> entry = (Entry) iterator.next();
 
-                map.put(entry.getKey(), ChatDeserializer.a((JsonElement) entry.getValue(), "score", jsondeserializationcontext, LootValueBounds.class));
+                map.put(entry.getKey(), ChatDeserializer.a(entry.getValue(), "score", jsondeserializationcontext, LootValueBounds.class));
             }
 
-            return new LootItemConditionEntityScore(map, (LootTableInfo.EntityTarget) ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class));
+            return new LootItemConditionEntityScore(map, ChatDeserializer.a(jsonobject, "entity", jsondeserializationcontext, LootTableInfo.EntityTarget.class));
         }
     }
 }

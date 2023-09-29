@@ -31,7 +31,7 @@ public class WorldGenFeatureEndSpikeConfiguration implements WorldGenFeatureConf
     private WorldGenFeatureEndSpikeConfiguration(boolean flag, List<WorldGenEnder.Spike> list, Optional<BlockPosition> optional) {
         this.b = flag;
         this.c = list;
-        this.d = (BlockPosition) optional.orElse((Object) null);
+        this.d = optional.orElse(null);
     }
 
     public boolean b() {

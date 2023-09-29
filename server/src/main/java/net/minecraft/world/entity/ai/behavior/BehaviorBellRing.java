@@ -29,15 +29,15 @@ public class BehaviorBellRing extends Behavior<EntityLiving> {
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
-        BlockPosition blockposition = ((GlobalPos) behaviorcontroller.getMemory(MemoryModuleType.MEETING_POINT).get()).getBlockPosition();
+        BlockPosition blockposition = behaviorcontroller.getMemory(MemoryModuleType.MEETING_POINT).get().getBlockPosition();
 
-        if (blockposition.a((BaseBlockPosition) entityliving.getChunkCoordinates(), 3.0D)) {
+        if (blockposition.a(entityliving.getChunkCoordinates(), 3.0D)) {
             IBlockData iblockdata = worldserver.getType(blockposition);
 
             if (iblockdata.a(Blocks.BELL)) {
                 BlockBell blockbell = (BlockBell) iblockdata.getBlock();
 
-                blockbell.a((World) worldserver, blockposition, (EnumDirection) null);
+                blockbell.a(worldserver, blockposition, (EnumDirection) null);
             }
         }
 

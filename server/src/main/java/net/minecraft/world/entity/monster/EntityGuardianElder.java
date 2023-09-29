@@ -85,7 +85,7 @@ public class EntityGuardianElder extends EntityGuardian {
         if ((this.ticksLived + this.getId()) % 1200 == 0) {
             MobEffectList mobeffectlist = MobEffects.SLOWER_DIG;
             List<EntityPlayer> list = ((WorldServer) this.world).a((entityplayer) -> {
-                return this.h((Entity) entityplayer) < 2500.0D && entityplayer.playerInteractManager.d();
+                return this.h(entityplayer) < 2500.0D && entityplayer.playerInteractManager.d();
             });
             boolean flag1 = true;
             boolean flag2 = true;

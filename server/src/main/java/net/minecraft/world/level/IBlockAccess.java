@@ -84,7 +84,7 @@ public interface IBlockAccess {
     // CraftBukkit end
 
     default MovingObjectPositionBlock rayTrace(RayTrace raytrace) {
-        return (MovingObjectPositionBlock) a(raytrace, (raytrace1, blockposition) -> {
+        return a(raytrace, (raytrace1, blockposition) -> {
             return this.rayTraceBlock(raytrace1, blockposition); // CraftBukkit - moved into separate method
         }, (raytrace1) -> {
             Vec3D vec3d = raytrace1.b().d(raytrace1.a());
@@ -112,7 +112,7 @@ public interface IBlockAccess {
         if (!voxelshape.isEmpty()) {
             return voxelshape.c(EnumDirection.EnumAxis.Y);
         } else {
-            double d0 = ((VoxelShape) supplier.get()).c(EnumDirection.EnumAxis.Y);
+            double d0 = supplier.get().c(EnumDirection.EnumAxis.Y);
 
             return d0 >= 1.0D ? d0 - 1.0D : Double.NEGATIVE_INFINITY;
         }

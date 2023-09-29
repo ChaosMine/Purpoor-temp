@@ -59,7 +59,7 @@ public abstract class StructureStart<C extends WorldGenFeatureConfiguration> {
 
         synchronized (this.b) {
             if (!this.b.isEmpty()) {
-                StructureBoundingBox structureboundingbox1 = ((StructurePiece) this.b.get(0)).n;
+                StructureBoundingBox structureboundingbox1 = this.b.get(0).n;
                 BaseBlockPosition baseblockposition = structureboundingbox1.g();
                 BlockPosition blockposition = new BlockPosition(baseblockposition.getX(), structureboundingbox1.b, baseblockposition.getZ());
                 Iterator iterator = this.b.iterator();

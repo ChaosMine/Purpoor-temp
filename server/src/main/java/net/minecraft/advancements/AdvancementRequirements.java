@@ -18,7 +18,7 @@ public interface AdvancementRequirements {
         return astring;
     };
     AdvancementRequirements OR = (collection) -> {
-        return new String[][]{(String[]) collection.toArray(new String[0])};
+        return new String[][]{collection.toArray(new String[0])};
     };
 
     String[][] createRequirements(Collection<String> collection);

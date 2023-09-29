@@ -89,7 +89,7 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
                         Raid raid1 = ((WorldServer) this.world).b_(this.getChunkCoordinates());
 
                         if (raid1 != null && PersistentRaid.a(this, raid1)) {
-                            raid1.a(raid1.getGroupsSpawned(), this, (BlockPosition) null, true);
+                            raid1.a(raid1.getGroupsSpawned(), this, null, true);
                         }
                     }
                 } else {
@@ -237,7 +237,7 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
         if (this.fb() && !flag && ItemStack.matches(itemstack, Raid.s())) {
             EnumItemSlot enumitemslot = EnumItemSlot.HEAD;
             ItemStack itemstack1 = this.getEquipment(enumitemslot);
-            double d0 = (double) this.e(enumitemslot);
+            double d0 = this.e(enumitemslot);
 
             if (!itemstack1.isEmpty() && (double) Math.max(this.random.nextFloat() - 0.1F, 0.0F) < d0) {
                 this.a(itemstack1);
@@ -327,19 +327,19 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
             if (!optional.isPresent()) {
                 return false;
             } else {
-                this.c = ((BlockPosition) optional.get()).immutableCopy();
+                this.c = optional.get().immutableCopy();
                 return true;
             }
         }
 
         @Override
         public boolean b() {
-            return this.a.getNavigation().m() ? false : this.a.getGoalTarget() == null && !this.c.a((IPosition) this.a.getPositionVector(), (double) (this.a.getWidth() + (float) this.e)) && !this.f;
+            return this.a.getNavigation().m() ? false : this.a.getGoalTarget() == null && !this.c.a(this.a.getPositionVector(), this.a.getWidth() + (float) this.e) && !this.f;
         }
 
         @Override
         public void d() {
-            if (this.c.a((IPosition) this.a.getPositionVector(), (double) this.e)) {
+            if (this.c.a(this.a.getPositionVector(), this.e)) {
                 this.d.add(this.c);
             }
 
@@ -349,14 +349,14 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
         public void c() {
             super.c();
             this.a.n(0);
-            this.a.getNavigation().a((double) this.c.getX(), (double) this.c.getY(), (double) this.c.getZ(), this.b);
+            this.a.getNavigation().a(this.c.getX(), this.c.getY(), this.c.getZ(), this.b);
             this.f = false;
         }
 
         @Override
         public void e() {
             if (this.a.getNavigation().m()) {
-                Vec3D vec3d = Vec3D.c((BaseBlockPosition) this.c);
+                Vec3D vec3d = Vec3D.c(this.c);
                 Vec3D vec3d1 = RandomPositionGenerator.a(this.a, 16, 7, vec3d, 0.3141592741012573D);
 
                 if (vec3d1 == null) {
@@ -457,7 +457,7 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
             EntityLiving entityliving = this.c.getGoalTarget();
 
             if (entityliving != null) {
-                if (this.c.h((Entity) entityliving) > (double) this.d) {
+                if (this.c.h(entityliving) > (double) this.d) {
                     this.c.getControllerLook().a(entityliving, 30.0F, 30.0F);
                     if (this.c.random.nextInt(50) == 0) {
                         this.c.F();
@@ -534,7 +534,7 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
                     List<EntityItem> list = this.b.world.a(EntityItem.class, this.b.getBoundingBox().grow(16.0D, 8.0D, 16.0D), EntityRaider.b);
 
                     if (!list.isEmpty()) {
-                        return this.b.getNavigation().a((Entity) list.get(0), 1.149999976158142D);
+                        return this.b.getNavigation().a(list.get(0), 1.149999976158142D);
                     }
                 }
 
@@ -546,11 +546,11 @@ public abstract class EntityRaider extends EntityMonsterPatrolling {
 
         @Override
         public void e() {
-            if (this.b.getNavigation().h().a((IPosition) this.b.getPositionVector(), 1.414D)) {
+            if (this.b.getNavigation().h().a(this.b.getPositionVector(), 1.414D)) {
                 List<EntityItem> list = this.b.world.a(EntityItem.class, this.b.getBoundingBox().grow(4.0D, 4.0D, 4.0D), EntityRaider.b);
 
                 if (!list.isEmpty()) {
-                    this.b.b((EntityItem) list.get(0));
+                    this.b.b(list.get(0));
                 }
             }
 

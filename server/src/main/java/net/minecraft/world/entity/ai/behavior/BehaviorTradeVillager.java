@@ -44,7 +44,7 @@ public class BehaviorTradeVillager extends Behavior<EntityVillager> {
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
         EntityVillager entityvillager1 = (EntityVillager) entityvillager.getBehaviorController().getMemory(MemoryModuleType.INTERACTION_TARGET).get();
 
-        if (entityvillager.h((Entity) entityvillager1) <= 5.0D) {
+        if (entityvillager.h(entityvillager1) <= 5.0D) {
             BehaviorUtil.a(entityvillager, entityvillager1, 0.5F);
             entityvillager.a(worldserver, entityvillager1, i);
             if (entityvillager.fg() && (entityvillager.getVillagerData().getProfession() == VillagerProfession.FARMER || entityvillager1.fh())) {
@@ -75,7 +75,7 @@ public class BehaviorTradeVillager extends Behavior<EntityVillager> {
         ImmutableSet<Item> immutableset = entityvillager1.getVillagerData().getProfession().c();
         ImmutableSet<Item> immutableset1 = entityvillager.getVillagerData().getProfession().c();
 
-        return (Set) immutableset.stream().filter((item) -> {
+        return immutableset.stream().filter((item) -> {
             return !immutableset1.contains(item);
         }).collect(Collectors.toSet());
     }
@@ -112,7 +112,7 @@ public class BehaviorTradeVillager extends Behavior<EntityVillager> {
         }
 
         if (!itemstack.isEmpty()) {
-            BehaviorUtil.a((EntityLiving) entityvillager, itemstack, entityliving.getPositionVector());
+            BehaviorUtil.a(entityvillager, itemstack, entityliving.getPositionVector());
         }
 
     }

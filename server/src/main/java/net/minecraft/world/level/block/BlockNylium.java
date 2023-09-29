@@ -23,7 +23,7 @@ public class BlockNylium extends Block implements IBlockFragilePlantElement {
     private static boolean b(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
         BlockPosition blockposition1 = blockposition.up();
         IBlockData iblockdata1 = iworldreader.getType(blockposition1);
-        int i = LightEngineLayer.a(iworldreader, iblockdata, blockposition, iblockdata1, blockposition1, EnumDirection.UP, iblockdata1.b((IBlockAccess) iworldreader, blockposition1));
+        int i = LightEngineLayer.a(iworldreader, iblockdata, blockposition, iblockdata1, blockposition1, EnumDirection.UP, iblockdata1.b(iworldreader, blockposition1));
 
         return i < iworldreader.K();
     }

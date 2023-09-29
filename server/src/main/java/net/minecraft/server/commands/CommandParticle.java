@@ -51,7 +51,7 @@ public class CommandParticle {
         while (iterator.hasNext()) {
             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-            if (commandlistenerwrapper.getWorld().a(entityplayer, particleparam, flag, vec3d.x, vec3d.y, vec3d.z, i, vec3d1.x, vec3d1.y, vec3d1.z, (double) f)) {
+            if (commandlistenerwrapper.getWorld().a(entityplayer, particleparam, flag, vec3d.x, vec3d.y, vec3d.z, i, vec3d1.x, vec3d1.y, vec3d1.z, f)) {
                 ++j;
             }
         }

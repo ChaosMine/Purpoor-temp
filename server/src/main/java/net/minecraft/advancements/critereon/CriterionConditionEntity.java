@@ -26,7 +26,7 @@ import net.minecraft.world.scores.ScoreboardTeamBase;
 
 public class CriterionConditionEntity {
 
-    public static final CriterionConditionEntity a = new CriterionConditionEntity(CriterionConditionEntityType.a, CriterionConditionDistance.a, CriterionConditionLocation.a, CriterionConditionMobEffect.a, CriterionConditionNBT.a, CriterionConditionEntityFlags.a, CriterionConditionEntityEquipment.a, CriterionConditionPlayer.a, CriterionConditionInOpenWater.a, (String) null, (MinecraftKey) null);
+    public static final CriterionConditionEntity a = new CriterionConditionEntity(CriterionConditionEntityType.a, CriterionConditionDistance.a, CriterionConditionLocation.a, CriterionConditionMobEffect.a, CriterionConditionNBT.a, CriterionConditionEntityFlags.a, CriterionConditionEntityEquipment.a, CriterionConditionPlayer.a, CriterionConditionInOpenWater.a, null, null);
     private final CriterionConditionEntityType b;
     private final CriterionConditionDistance c;
     private final CriterionConditionLocation d;
@@ -144,7 +144,7 @@ public class CriterionConditionEntity {
             String s = ChatDeserializer.a(jsonobject, "team", (String) null);
             MinecraftKey minecraftkey = jsonobject.has("catType") ? new MinecraftKey(ChatDeserializer.h(jsonobject, "catType")) : null;
 
-            return (new CriterionConditionEntity.a()).a(criterionconditionentitytype).a(criterionconditiondistance).a(criterionconditionlocation).a(criterionconditionmobeffect).a(criterionconditionnbt).a(criterionconditionentityflags).a(criterionconditionentityequipment).a(criterionconditionplayer).a(criterionconditioninopenwater).a(s).a(criterionconditionentity).b(criterionconditionentity1).b(minecraftkey).b();
+            return (new a_()).a(criterionconditionentitytype).a(criterionconditiondistance).a(criterionconditionlocation).a(criterionconditionmobeffect).a(criterionconditionnbt).a(criterionconditionentityflags).a(criterionconditionentityequipment).a(criterionconditionplayer).a(criterionconditioninopenwater).a(s).a(criterionconditionentity).b(criterionconditionentity1).b(minecraftkey).b();
         } else {
             return CriterionConditionEntity.a;
         }
@@ -180,33 +180,33 @@ public class CriterionConditionEntity {
         return (new LootTableInfo.Builder(entityplayer.getWorldServer())).set(LootContextParameters.THIS_ENTITY, entity).set(LootContextParameters.ORIGIN, entityplayer.getPositionVector()).a(entityplayer.getRandom()).build(LootContextParameterSets.j);
     }
 
-    public static class b {
+    public static class b_ {
 
-        public static final CriterionConditionEntity.b a = new CriterionConditionEntity.b(new LootItemCondition[0]);
+        public static final b_ a = new b_(new LootItemCondition[0]);
         private final LootItemCondition[] b;
         private final Predicate<LootTableInfo> c;
 
-        private b(LootItemCondition[] alootitemcondition) {
+        private b_(LootItemCondition[] alootitemcondition) {
             this.b = alootitemcondition;
             this.c = LootItemConditions.a((Predicate[]) alootitemcondition);
         }
 
-        public static CriterionConditionEntity.b a(LootItemCondition... alootitemcondition) {
-            return new CriterionConditionEntity.b(alootitemcondition);
+        public static b_ a(LootItemCondition... alootitemcondition) {
+            return new b_(alootitemcondition);
         }
 
-        public static CriterionConditionEntity.b a(JsonObject jsonobject, String s, LootDeserializationContext lootdeserializationcontext) {
+        public static b_ a(JsonObject jsonobject, String s, LootDeserializationContext lootdeserializationcontext) {
             JsonElement jsonelement = jsonobject.get(s);
 
             return a(s, lootdeserializationcontext, jsonelement);
         }
 
-        public static CriterionConditionEntity.b[] b(JsonObject jsonobject, String s, LootDeserializationContext lootdeserializationcontext) {
+        public static b_[] b(JsonObject jsonobject, String s, LootDeserializationContext lootdeserializationcontext) {
             JsonElement jsonelement = jsonobject.get(s);
 
             if (jsonelement != null && !jsonelement.isJsonNull()) {
                 JsonArray jsonarray = ChatDeserializer.n(jsonelement, s);
-                CriterionConditionEntity.b[] acriterionconditionentity_b = new CriterionConditionEntity.b[jsonarray.size()];
+                b_[] acriterionconditionentity_b = new b_[jsonarray.size()];
 
                 for (int i = 0; i < jsonarray.size(); ++i) {
                     acriterionconditionentity_b[i] = a(s + "[" + i + "]", lootdeserializationcontext, jsonarray.get(i));
@@ -214,15 +214,15 @@ public class CriterionConditionEntity {
 
                 return acriterionconditionentity_b;
             } else {
-                return new CriterionConditionEntity.b[0];
+                return new b_[0];
             }
         }
 
-        private static CriterionConditionEntity.b a(String s, LootDeserializationContext lootdeserializationcontext, @Nullable JsonElement jsonelement) {
+        private static b_ a(String s, LootDeserializationContext lootdeserializationcontext, @Nullable JsonElement jsonelement) {
             if (jsonelement != null && jsonelement.isJsonArray()) {
                 LootItemCondition[] alootitemcondition = lootdeserializationcontext.a(jsonelement.getAsJsonArray(), lootdeserializationcontext.a().toString() + "/" + s, LootContextParameterSets.j);
 
-                return new CriterionConditionEntity.b(alootitemcondition);
+                return new b_(alootitemcondition);
             } else {
                 CriterionConditionEntity criterionconditionentity = CriterionConditionEntity.a(jsonelement);
 
@@ -230,13 +230,13 @@ public class CriterionConditionEntity {
             }
         }
 
-        public static CriterionConditionEntity.b a(CriterionConditionEntity criterionconditionentity) {
+        public static b_ a(CriterionConditionEntity criterionconditionentity) {
             if (criterionconditionentity == CriterionConditionEntity.a) {
-                return CriterionConditionEntity.b.a;
+                return CriterionConditionEntity.b_.a;
             } else {
                 LootItemCondition lootitemcondition = LootItemConditionEntityProperty.a(LootTableInfo.EntityTarget.THIS, criterionconditionentity).build();
 
-                return new CriterionConditionEntity.b(new LootItemCondition[]{lootitemcondition});
+                return new b_(new LootItemCondition[]{lootitemcondition});
             }
         }
 
@@ -245,19 +245,19 @@ public class CriterionConditionEntity {
         }
 
         public JsonElement a(LootSerializationContext lootserializationcontext) {
-            return (JsonElement) (this.b.length == 0 ? JsonNull.INSTANCE : lootserializationcontext.a(this.b));
+            return this.b.length == 0 ? JsonNull.INSTANCE : lootserializationcontext.a(this.b);
         }
 
-        public static JsonElement a(CriterionConditionEntity.b[] acriterionconditionentity_b, LootSerializationContext lootserializationcontext) {
+        public static JsonElement a(b_[] acriterionconditionentity_b, LootSerializationContext lootserializationcontext) {
             if (acriterionconditionentity_b.length == 0) {
                 return JsonNull.INSTANCE;
             } else {
                 JsonArray jsonarray = new JsonArray();
-                CriterionConditionEntity.b[] acriterionconditionentity_b1 = acriterionconditionentity_b;
+                b_[] acriterionconditionentity_b1 = acriterionconditionentity_b;
                 int i = acriterionconditionentity_b.length;
 
                 for (int j = 0; j < i; ++j) {
-                    CriterionConditionEntity.b criterionconditionentity_b = acriterionconditionentity_b1[j];
+                    b_ criterionconditionentity_b = acriterionconditionentity_b1[j];
 
                     jsonarray.add(criterionconditionentity_b.a(lootserializationcontext));
                 }
@@ -267,7 +267,7 @@ public class CriterionConditionEntity {
         }
     }
 
-    public static class a {
+    public static class a_ {
 
         private CriterionConditionEntityType a;
         private CriterionConditionDistance b;
@@ -283,7 +283,7 @@ public class CriterionConditionEntity {
         private String l;
         private MinecraftKey m;
 
-        public a() {
+        public a_() {
             this.a = CriterionConditionEntityType.a;
             this.b = CriterionConditionDistance.a;
             this.c = CriterionConditionLocation.a;
@@ -297,86 +297,86 @@ public class CriterionConditionEntity {
             this.k = CriterionConditionEntity.a;
         }
 
-        public static CriterionConditionEntity.a a() {
-            return new CriterionConditionEntity.a();
+        public static a_ a() {
+            return new a_();
         }
 
-        public CriterionConditionEntity.a a(EntityTypes<?> entitytypes) {
+        public a_ a(EntityTypes<?> entitytypes) {
             this.a = CriterionConditionEntityType.b(entitytypes);
             return this;
         }
 
-        public CriterionConditionEntity.a a(Tag<EntityTypes<?>> tag) {
+        public a_ a(Tag<EntityTypes<?>> tag) {
             this.a = CriterionConditionEntityType.a(tag);
             return this;
         }
 
-        public CriterionConditionEntity.a a(MinecraftKey minecraftkey) {
+        public a_ a(MinecraftKey minecraftkey) {
             this.m = minecraftkey;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionEntityType criterionconditionentitytype) {
+        public a_ a(CriterionConditionEntityType criterionconditionentitytype) {
             this.a = criterionconditionentitytype;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionDistance criterionconditiondistance) {
+        public a_ a(CriterionConditionDistance criterionconditiondistance) {
             this.b = criterionconditiondistance;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionLocation criterionconditionlocation) {
+        public a_ a(CriterionConditionLocation criterionconditionlocation) {
             this.c = criterionconditionlocation;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionMobEffect criterionconditionmobeffect) {
+        public a_ a(CriterionConditionMobEffect criterionconditionmobeffect) {
             this.d = criterionconditionmobeffect;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionNBT criterionconditionnbt) {
+        public a_ a(CriterionConditionNBT criterionconditionnbt) {
             this.e = criterionconditionnbt;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionEntityFlags criterionconditionentityflags) {
+        public a_ a(CriterionConditionEntityFlags criterionconditionentityflags) {
             this.f = criterionconditionentityflags;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionEntityEquipment criterionconditionentityequipment) {
+        public a_ a(CriterionConditionEntityEquipment criterionconditionentityequipment) {
             this.g = criterionconditionentityequipment;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionPlayer criterionconditionplayer) {
+        public a_ a(CriterionConditionPlayer criterionconditionplayer) {
             this.h = criterionconditionplayer;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionInOpenWater criterionconditioninopenwater) {
+        public a_ a(CriterionConditionInOpenWater criterionconditioninopenwater) {
             this.i = criterionconditioninopenwater;
             return this;
         }
 
-        public CriterionConditionEntity.a a(CriterionConditionEntity criterionconditionentity) {
+        public a_ a(CriterionConditionEntity criterionconditionentity) {
             this.j = criterionconditionentity;
             return this;
         }
 
-        public CriterionConditionEntity.a b(CriterionConditionEntity criterionconditionentity) {
+        public a_ b(CriterionConditionEntity criterionconditionentity) {
             this.k = criterionconditionentity;
             return this;
         }
 
-        public CriterionConditionEntity.a a(@Nullable String s) {
+        public a_ a(@Nullable String s) {
             this.l = s;
             return this;
         }
 
-        public CriterionConditionEntity.a b(@Nullable MinecraftKey minecraftkey) {
+        public a_ b(@Nullable MinecraftKey minecraftkey) {
             this.m = minecraftkey;
             return this;
         }

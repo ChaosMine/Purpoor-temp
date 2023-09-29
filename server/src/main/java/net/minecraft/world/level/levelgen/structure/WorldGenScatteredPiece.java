@@ -57,7 +57,7 @@ public abstract class WorldGenScatteredPiece extends StructurePiece {
             for (int l = this.n.c; l <= this.n.f; ++l) {
                 for (int i1 = this.n.a; i1 <= this.n.d; ++i1) {
                     blockposition_mutableblockposition.d(i1, 64, l);
-                    if (structureboundingbox.b((BaseBlockPosition) blockposition_mutableblockposition)) {
+                    if (structureboundingbox.b(blockposition_mutableblockposition)) {
                         j += generatoraccess.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, blockposition_mutableblockposition).getY();
                         ++k;
                     }

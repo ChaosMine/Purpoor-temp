@@ -194,7 +194,7 @@ public class EntityVindicator extends EntityIllagerAbstract {
             Map<Enchantment, Integer> map = Maps.newHashMap();
 
             map.put(Enchantments.DAMAGE_ALL, Integer.valueOf(b0));
-            EnchantmentManager.a((Map) map, itemstack);
+            EnchantmentManager.a(map, itemstack);
         }
 
         this.setSlot(EnumItemSlot.MAINHAND, itemstack);
@@ -257,7 +257,7 @@ public class EntityVindicator extends EntityIllagerAbstract {
             if (this.a.getVehicle() instanceof EntityRavager) {
                 float f = this.a.getVehicle().getWidth() - 0.1F;
 
-                return (double) (f * 2.0F * f * 2.0F + entityliving.getWidth());
+                return f * 2.0F * f * 2.0F + entityliving.getWidth();
             } else {
                 return super.a(entityliving);
             }

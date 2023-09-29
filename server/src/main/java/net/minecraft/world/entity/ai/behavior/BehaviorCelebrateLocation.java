@@ -22,7 +22,7 @@ public class BehaviorCelebrateLocation<E extends EntityInsentient> extends Behav
 
     protected void a(WorldServer worldserver, EntityInsentient entityinsentient, long i) {
         BlockPosition blockposition = a(entityinsentient);
-        boolean flag = blockposition.a((BaseBlockPosition) entityinsentient.getChunkCoordinates(), (double) this.b);
+        boolean flag = blockposition.a(entityinsentient.getChunkCoordinates(), this.b);
 
         if (!flag) {
             BehaviorUtil.a(entityinsentient, a(entityinsentient, blockposition), this.c, this.b);
@@ -41,6 +41,6 @@ public class BehaviorCelebrateLocation<E extends EntityInsentient> extends Behav
     }
 
     private static BlockPosition a(EntityInsentient entityinsentient) {
-        return (BlockPosition) entityinsentient.getBehaviorController().getMemory(MemoryModuleType.CELEBRATE_LOCATION).get();
+        return entityinsentient.getBehaviorController().getMemory(MemoryModuleType.CELEBRATE_LOCATION).get();
     }
 }

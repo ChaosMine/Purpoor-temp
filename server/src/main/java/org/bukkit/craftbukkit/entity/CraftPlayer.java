@@ -1358,7 +1358,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         connection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutRespawn(worldserver.getDimensionManager(), worldserver.getDimensionKey(), BiomeManager.a(worldserver.getSeed()), handle.playerInteractManager.getGameMode(), handle.playerInteractManager.c(), worldserver.isDebugWorld(), worldserver.isFlatWorld(), true));
         handle.updateAbilities();
         connection.sendPacket(new net.minecraft.network.protocol.game.PacketPlayOutPosition(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), new HashSet<>(), 0));
-        net.minecraft.server.MinecraftServer.getServer().getPlayerList().updateClient(handle);
+        net.minecraft.server.MinecraftServer.SERVER.getPlayerList().updateClient(handle);
 
         if (this.isOp()) {
             this.setOp(false);
@@ -1711,7 +1711,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public float getFlySpeed() {
-        return (float) getHandle().abilities.flySpeed * 2f;
+        return getHandle().abilities.flySpeed * 2f;
     }
 
     @Override
@@ -1820,7 +1820,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                 sendHealthUpdate();
             }
         }
-        handle.getDataWatcher().set(EntityLiving.HEALTH, (float) getScaledHealth());
+        handle.getDataWatcher().set(EntityLiving.HEALTH, getScaledHealth());
 
         handle.maxHealthCache = getMaxHealth();
     }

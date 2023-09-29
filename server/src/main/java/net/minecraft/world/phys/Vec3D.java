@@ -26,11 +26,11 @@ public class Vec3D implements IPosition {
     }
 
     public static Vec3D b(BaseBlockPosition baseblockposition) {
-        return new Vec3D((double) baseblockposition.getX(), (double) baseblockposition.getY(), (double) baseblockposition.getZ());
+        return new Vec3D(baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ());
     }
 
     public static Vec3D c(BaseBlockPosition baseblockposition) {
-        return new Vec3D((double) baseblockposition.getX() + 0.5D, (double) baseblockposition.getY(), (double) baseblockposition.getZ() + 0.5D);
+        return new Vec3D((double) baseblockposition.getX() + 0.5D, baseblockposition.getY(), (double) baseblockposition.getZ() + 0.5D);
     }
 
     public static Vec3D a(BaseBlockPosition baseblockposition, double d0) {
@@ -44,7 +44,7 @@ public class Vec3D implements IPosition {
     }
 
     public Vec3D(Vector3fa vector3fa) {
-        this((double) vector3fa.a(), (double) vector3fa.b(), (double) vector3fa.c());
+        this(vector3fa.a(), vector3fa.b(), vector3fa.c());
     }
 
     public Vec3D a(Vec3D vec3d) {
@@ -53,7 +53,7 @@ public class Vec3D implements IPosition {
 
     public Vec3D normalize() { return d(); } // Purpur - OBFHELPER
     public Vec3D d() {
-        double d0 = (double) MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        double d0 = MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 
         return d0 < 1.0E-4D ? Vec3D.ORIGIN : new Vec3D(this.x / d0, this.y / d0, this.z / d0);
     }
@@ -92,7 +92,7 @@ public class Vec3D implements IPosition {
         double d1 = vec3d.y - this.y;
         double d2 = vec3d.z - this.z;
 
-        return (double) MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+        return MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 
     public double distanceSquared(Vec3D vec3d) {
@@ -127,7 +127,7 @@ public class Vec3D implements IPosition {
 
     public final double magnitude() { return this.f(); } // Tuinity - OBFHELPER
     public double f() {
-        return (double) MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        return MathHelper.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     public final double magnitudeSquared() { return this.g(); } // Tuinity - OBFHELPER

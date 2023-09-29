@@ -46,7 +46,7 @@ public class LootItemFunctionSetName extends LootItemFunctionConditional {
 
     public static UnaryOperator<IChatBaseComponent> a(LootTableInfo loottableinfo, @Nullable LootTableInfo.EntityTarget loottableinfo_entitytarget) {
         if (loottableinfo_entitytarget != null) {
-            Entity entity = (Entity) loottableinfo.getContextParameter(loottableinfo_entitytarget.a());
+            Entity entity = loottableinfo.getContextParameter(loottableinfo_entitytarget.a());
 
             if (entity != null) {
                 CommandListenerWrapper commandlistenerwrapper = entity.getCommandListener().a(2);
@@ -70,7 +70,7 @@ public class LootItemFunctionSetName extends LootItemFunctionConditional {
     @Override
     public ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
         if (this.b != null) {
-            itemstack.a((IChatBaseComponent) a(loottableinfo, this.d).apply(this.b));
+            itemstack.a(a(loottableinfo, this.d).apply(this.b));
         }
 
         return itemstack;
@@ -81,7 +81,7 @@ public class LootItemFunctionSetName extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetName lootitemfunctionsetname, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetname, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetname, jsonserializationcontext);
             if (lootitemfunctionsetname.b != null) {
                 jsonobject.add("name", IChatBaseComponent.ChatSerializer.b(lootitemfunctionsetname.b));
             }

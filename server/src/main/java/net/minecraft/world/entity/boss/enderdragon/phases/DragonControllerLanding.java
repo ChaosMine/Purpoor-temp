@@ -44,11 +44,11 @@ public class DragonControllerLanding extends AbstractDragonController {
     @Override
     public void c() {
         if (this.b == null) {
-            this.b = Vec3D.c((BaseBlockPosition) this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, WorldGenEndTrophy.a));
+            this.b = Vec3D.c(this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, WorldGenEndTrophy.a));
         }
 
         if (this.b.c(this.a.locX(), this.a.locY(), this.a.locZ()) < 1.0D) {
-            ((DragonControllerLandedFlame) this.a.getDragonControllerManager().b(DragonControllerPhase.SITTING_FLAMING)).j();
+            this.a.getDragonControllerManager().b(DragonControllerPhase.SITTING_FLAMING).j();
             this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.SITTING_SCANNING);
         }
 

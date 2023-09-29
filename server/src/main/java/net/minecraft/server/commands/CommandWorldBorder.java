@@ -59,7 +59,7 @@ public class CommandWorldBorder {
         if (worldborder.getDamageBuffer() == (double) f) {
             throw CommandWorldBorder.g.create();
         } else {
-            worldborder.setDamageBuffer((double) f);
+            worldborder.setDamageBuffer(f);
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.worldborder.damage.buffer.success", new Object[]{String.format(Locale.ROOT, "%.2f", f)}), true);
             return (int) f;
         }
@@ -71,7 +71,7 @@ public class CommandWorldBorder {
         if (worldborder.getDamageAmount() == (double) f) {
             throw CommandWorldBorder.h.create();
         } else {
-            worldborder.setDamageAmount((double) f);
+            worldborder.setDamageAmount(f);
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.worldborder.damage.amount.success", new Object[]{String.format(Locale.ROOT, "%.2f", f)}), true);
             return (int) f;
         }
@@ -114,7 +114,7 @@ public class CommandWorldBorder {
         if (worldborder.getCenterX() == (double) vec2f.i && worldborder.getCenterZ() == (double) vec2f.j) {
             throw CommandWorldBorder.a.create();
         } else {
-            worldborder.setCenter((double) vec2f.i, (double) vec2f.j);
+            worldborder.setCenter(vec2f.i, vec2f.j);
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.worldborder.center.success", new Object[]{String.format(Locale.ROOT, "%.2f", vec2f.i), String.format("%.2f", vec2f.j)}), true);
             return 0;
         }

@@ -87,7 +87,7 @@ public class ArraySetSorted<T> extends AbstractSet<T> {
     private void c(int i) {
         if (i > this.b.length) {
             if (this.b != ObjectArrays.DEFAULT_EMPTY_ARRAY) {
-                i = (int) Math.max(Math.min((long) this.b.length + (long) (this.b.length >> 1), 2147483639L), (long) i);
+                i = (int) Math.max(Math.min((long) this.b.length + (long) (this.b.length >> 1), 2147483639L), i);
             } else if (i < 10) {
                 i = 10;
             }
@@ -163,7 +163,7 @@ public class ArraySetSorted<T> extends AbstractSet<T> {
     }
 
     public Object[] toArray() {
-        return (Object[]) this.b.clone();
+        return this.b.clone();
     }
 
     public <U> U[] toArray(U[] au) {
@@ -180,7 +180,7 @@ public class ArraySetSorted<T> extends AbstractSet<T> {
     }
 
     public void clear() {
-        Arrays.fill(this.b, 0, this.c, (Object) null);
+        Arrays.fill(this.b, 0, this.c, null);
         this.c = 0;
     }
 

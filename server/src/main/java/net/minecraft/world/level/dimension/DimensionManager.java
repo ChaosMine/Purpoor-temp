@@ -117,7 +117,7 @@ public class DimensionManager {
         Optional<Number> optional = dynamic.asNumber().result();
 
         if (optional.isPresent()) {
-            int i = ((Number) optional.get()).intValue();
+            int i = optional.get().intValue();
 
             if (i == -1) {
                 return DataResult.success(World.THE_NETHER);
@@ -147,13 +147,13 @@ public class DimensionManager {
 
     private static ChunkGenerator a(IRegistry<BiomeBase> iregistry, IRegistry<GeneratorSettingBase> iregistry1, long i) {
         return new ChunkGeneratorAbstract(new WorldChunkManagerTheEnd(iregistry, i), i, () -> {
-            return (GeneratorSettingBase) iregistry1.d(GeneratorSettingBase.f);
+            return iregistry1.d(GeneratorSettingBase.f);
         });
     }
 
     private static ChunkGenerator b(IRegistry<BiomeBase> iregistry, IRegistry<GeneratorSettingBase> iregistry1, long i) {
         return new ChunkGeneratorAbstract(WorldChunkManagerMultiNoise._b.a.a(iregistry, i), i, () -> {
-            return (GeneratorSettingBase) iregistry1.d(GeneratorSettingBase.e);
+            return iregistry1.d(GeneratorSettingBase.e);
         });
     }
 
@@ -161,10 +161,10 @@ public class DimensionManager {
         RegistryMaterials<WorldDimension> registrymaterials = new RegistryMaterials<>(IRegistry.M, Lifecycle.experimental());
 
         registrymaterials.a(WorldDimension.THE_NETHER, (new WorldDimension(() -> { // Paper - decompile fix
-            return (DimensionManager) iregistry.d(DimensionManager.THE_NETHER);
+            return iregistry.d(DimensionManager.THE_NETHER);
         }, b(iregistry1, iregistry2, i))), Lifecycle.stable());
         registrymaterials.a(WorldDimension.THE_END, (new WorldDimension(() -> { // Paper - decompile fix
-            return (DimensionManager) iregistry.d(DimensionManager.THE_END);
+            return iregistry.d(DimensionManager.THE_END);
         }, a(iregistry1, iregistry2, i))), Lifecycle.stable());
         return registrymaterials;
     }
@@ -256,7 +256,7 @@ public class DimensionManager {
     public Tag<Block> o() {
         Tag<Block> tag = TagsBlock.a().a(this.infiniburn);
 
-        return (Tag) (tag != null ? tag : TagsBlock.aE);
+        return tag != null ? tag : TagsBlock.aE;
     }
 
     public boolean a(DimensionManager dimensionmanager) {

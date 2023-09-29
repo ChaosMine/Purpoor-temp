@@ -37,7 +37,7 @@ public class ChunkStatus {
 
         return CompletableFuture.completedFuture(Either.left(ichunkaccess));
     };
-    public static final ChunkStatus EMPTY = a("empty", (ChunkStatus) null, -1, ChunkStatus.n, ChunkStatus.Type.PROTOCHUNK, (worldserver, chunkgenerator, list, ichunkaccess) -> {
+    public static final ChunkStatus EMPTY = a("empty", null, -1, ChunkStatus.n, ChunkStatus.Type.PROTOCHUNK, (worldserver, chunkgenerator, list, ichunkaccess) -> {
     });
     public static final ChunkStatus STRUCTURE_STARTS = a("structure_starts", ChunkStatus.EMPTY, 0, ChunkStatus.n, ChunkStatus.Type.PROTOCHUNK, (chunkstatus, worldserver, chunkgenerator, definedstructuremanager, lightenginethreaded, function, list, ichunkaccess) -> {
         if (!ichunkaccess.getChunkStatus().b(chunkstatus)) {
@@ -77,7 +77,7 @@ public class ChunkStatus {
     public static final ChunkStatus FEATURES = a("features", ChunkStatus.LIQUID_CARVERS, 8, ChunkStatus.o, ChunkStatus.Type.PROTOCHUNK, (chunkstatus, worldserver, chunkgenerator, definedstructuremanager, lightenginethreaded, function, list, ichunkaccess) -> {
         ProtoChunk protochunk = (ProtoChunk) ichunkaccess;
 
-        protochunk.a((LightEngine) lightenginethreaded);
+        protochunk.a(lightenginethreaded);
         if (!ichunkaccess.getChunkStatus().b(chunkstatus)) {
             HeightMap.a(ichunkaccess, EnumSet.of(HeightMap.Type.MOTION_BLOCKING, HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, HeightMap.Type.OCEAN_FLOOR, HeightMap.Type.WORLD_SURFACE));
             RegionLimitedWorldAccess regionlimitedworldaccess = new RegionLimitedWorldAccess(worldserver, list);
@@ -99,16 +99,16 @@ public class ChunkStatus {
     public static final ChunkStatus HEIGHTMAPS = a("heightmaps", ChunkStatus.SPAWN, 0, ChunkStatus.o, ChunkStatus.Type.PROTOCHUNK, (worldserver, chunkgenerator, list, ichunkaccess) -> {
     });
     public static final ChunkStatus FULL = a("full", ChunkStatus.HEIGHTMAPS, 0, ChunkStatus.o, ChunkStatus.Type.LEVELCHUNK, (chunkstatus, worldserver, chunkgenerator, definedstructuremanager, lightenginethreaded, function, list, ichunkaccess) -> {
-        return (CompletableFuture) function.apply(ichunkaccess);
+        return function.apply(ichunkaccess);
     }, (chunkstatus, worldserver, definedstructuremanager, lightenginethreaded, function, ichunkaccess) -> {
-        return (CompletableFuture) function.apply(ichunkaccess);
+        return function.apply(ichunkaccess);
     });
     private static final List<ChunkStatus> q = ImmutableList.of(ChunkStatus.FULL, ChunkStatus.FEATURES, ChunkStatus.LIQUID_CARVERS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS, ChunkStatus.STRUCTURE_STARTS);
-    private static final IntList r = (IntList) SystemUtils.a((new IntArrayList(a().size())), (java.util.function.Consumer<IntArrayList>) (intarraylist) -> { // CraftBukkit - decompile error
+    private static final IntList r = SystemUtils.a((new IntArrayList(a().size())), (java.util.function.Consumer<IntArrayList>) (intarraylist) -> { // CraftBukkit - decompile error
         int i = 0;
 
         for (int j = a().size() - 1; j >= 0; --j) {
-            while (i + 1 < ChunkStatus.q.size() && j <= ((ChunkStatus) ChunkStatus.q.get(i + 1)).c()) {
+            while (i + 1 < ChunkStatus.q.size() && j <= ChunkStatus.q.get(i + 1).c()) {
                 ++i;
             }
 
@@ -166,7 +166,7 @@ public class ChunkStatus {
     }
 
     public static ChunkStatus a(int i) {
-        return i >= ChunkStatus.q.size() ? ChunkStatus.EMPTY : (i < 0 ? ChunkStatus.FULL : (ChunkStatus) ChunkStatus.q.get(i));
+        return i >= ChunkStatus.q.size() ? ChunkStatus.EMPTY : (i < 0 ? ChunkStatus.FULL : ChunkStatus.q.get(i));
     }
 
     public static int b() {
@@ -205,7 +205,7 @@ public class ChunkStatus {
 
     public CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> a(WorldServer worldserver, ChunkGenerator chunkgenerator, DefinedStructureManager definedstructuremanager, LightEngineThreaded lightenginethreaded, Function<IChunkAccess, CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>>> function, List<IChunkAccess> list) {
         Globals.setupGlobals(worldserver);
-        return this.v.doWork(this, worldserver, chunkgenerator, definedstructuremanager, lightenginethreaded, function, list, (IChunkAccess) list.get(list.size() / 2));
+        return this.v.doWork(this, worldserver, chunkgenerator, definedstructuremanager, lightenginethreaded, function, list, list.get(list.size() / 2));
     }
 
     public CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> a(WorldServer worldserver, DefinedStructureManager definedstructuremanager, LightEngineThreaded lightenginethreaded, Function<IChunkAccess, CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>>> function, IChunkAccess ichunkaccess) {
@@ -233,7 +233,7 @@ public class ChunkStatus {
     }
     // Paper end
     public static ChunkStatus a(String s) {
-        return (ChunkStatus) IRegistry.CHUNK_STATUS.get(MinecraftKey.a(s));
+        return IRegistry.CHUNK_STATUS.get(MinecraftKey.a(s));
     }
 
     public EnumSet<HeightMap.Type> h() {

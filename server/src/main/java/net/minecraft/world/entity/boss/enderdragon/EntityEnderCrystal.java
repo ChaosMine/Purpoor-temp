@@ -69,7 +69,7 @@ public class EntityEnderCrystal extends Entity {
             if (((WorldServer) this.world).getDragonBattle() != null && this.world.getType(blockposition).isAir()) {
                 // CraftBukkit start
                 if (!CraftEventFactory.callBlockIgniteEvent(this.world, blockposition, this).isCancelled()) {
-                    this.world.setTypeUpdate(blockposition, BlockFireAbstract.a((IBlockAccess) this.world, blockposition));
+                    this.world.setTypeUpdate(blockposition, BlockFireAbstract.a(this.world, blockposition));
                 }
                 // CraftBukkit end
             }
@@ -233,7 +233,7 @@ public class EntityEnderCrystal extends Entity {
 
     @Nullable
     public BlockPosition getBeamTarget() {
-        return (BlockPosition) ((Optional) this.getDataWatcher().get(EntityEnderCrystal.c)).orElse((Object) null);
+        return (BlockPosition) ((Optional) this.getDataWatcher().get(EntityEnderCrystal.c)).orElse(null);
     }
 
     public void setShowingBottom(boolean flag) {
@@ -241,7 +241,7 @@ public class EntityEnderCrystal extends Entity {
     }
 
     public boolean isShowingBottom() {
-        return (Boolean) this.getDataWatcher().get(EntityEnderCrystal.d);
+        return this.getDataWatcher().get(EntityEnderCrystal.d);
     }
 
     @Override

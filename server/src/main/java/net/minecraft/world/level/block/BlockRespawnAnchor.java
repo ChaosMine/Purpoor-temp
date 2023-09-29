@@ -41,7 +41,7 @@ public class BlockRespawnAnchor extends Block {
 
     public BlockRespawnAnchor(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockRespawnAnchor.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockRespawnAnchor.a, 0));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class BlockRespawnAnchor extends Block {
             }
 
             return EnumInteractionResult.a(world.isClientSide);
-        } else if ((Integer) iblockdata.get(BlockRespawnAnchor.a) == 0) {
+        } else if (iblockdata.get(BlockRespawnAnchor.a) == 0) {
             return EnumInteractionResult.PASS;
         } else if (!a(world)) {
             if (!world.isClientSide) {
@@ -71,7 +71,7 @@ public class BlockRespawnAnchor extends Block {
 
                 if (entityplayer.getSpawnDimension() != world.getDimensionKey() || !entityplayer.getSpawn().equals(blockposition)) {
                     entityplayer.setRespawnPosition(world.getDimensionKey(), blockposition, 0.0F, false, true);
-                    world.playSound((EntityHuman) null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, SoundEffects.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, SoundEffects.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return EnumInteractionResult.SUCCESS;
                 }
             }
@@ -85,13 +85,13 @@ public class BlockRespawnAnchor extends Block {
     }
 
     private static boolean h(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockRespawnAnchor.a) < 4;
+        return iblockdata.get(BlockRespawnAnchor.a) < 4;
     }
 
     private static boolean a(BlockPosition blockposition, World world) {
         Fluid fluid = world.getFluid(blockposition);
 
-        if (!fluid.a((Tag) TagsFluid.WATER)) {
+        if (!fluid.a(TagsFluid.WATER)) {
             return false;
         } else if (fluid.isSource()) {
             return true;
@@ -103,7 +103,7 @@ public class BlockRespawnAnchor extends Block {
             } else {
                 Fluid fluid1 = world.getFluid(blockposition.down());
 
-                return !fluid1.a((Tag) TagsFluid.WATER);
+                return !fluid1.a(TagsFluid.WATER);
             }
         }
     }
@@ -113,7 +113,7 @@ public class BlockRespawnAnchor extends Block {
         boolean flag = EnumDirection.EnumDirectionLimit.HORIZONTAL.a().map(blockposition::shift).anyMatch((blockposition1) -> { // Purpur - decompile error
             return a(blockposition1, world);
         });
-        final boolean flag1 = flag || world.getFluid(blockposition.up()).a((Tag) TagsFluid.WATER);
+        final boolean flag1 = flag || world.getFluid(blockposition.up()).a(TagsFluid.WATER);
         ExplosionDamageCalculator explosiondamagecalculator = new ExplosionDamageCalculator() {
             @Override
             public Optional<Float> a(Explosion explosion, IBlockAccess iblockaccess, BlockPosition blockposition1, IBlockData iblockdata1, Fluid fluid) {
@@ -129,8 +129,8 @@ public class BlockRespawnAnchor extends Block {
     }
 
     public static void a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-        world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockRespawnAnchor.a, (Integer) iblockdata.get(BlockRespawnAnchor.a) + 1), 3);
-        world.playSound((EntityHuman) null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, SoundEffects.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.setTypeAndData(blockposition, iblockdata.set(BlockRespawnAnchor.a, iblockdata.get(BlockRespawnAnchor.a) + 1), 3);
+        world.playSound(null, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, SoundEffects.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class BlockRespawnAnchor extends Block {
     }
 
     public static int a(IBlockData iblockdata, int i) {
-        return MathHelper.d((float) ((Integer) iblockdata.get(BlockRespawnAnchor.a) - 0) / 4.0F * (float) i);
+        return MathHelper.d((float) (iblockdata.get(BlockRespawnAnchor.a) - 0) / 4.0F * (float) i);
     }
 
     @Override

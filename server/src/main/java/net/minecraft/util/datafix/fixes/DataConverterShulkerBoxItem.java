@@ -34,11 +34,11 @@ public class DataConverterShulkerBoxItem extends DataFix {
                 Optional<? extends Typed<?>> optional1 = typed.getOptionalTyped(opticfinder1);
 
                 if (optional1.isPresent()) {
-                    Typed<?> typed1 = (Typed) optional1.get();
+                    Typed<?> typed1 = optional1.get();
                     Optional<? extends Typed<?>> optional2 = typed1.getOptionalTyped(opticfinder2);
 
                     if (optional2.isPresent()) {
-                        Typed<?> typed2 = (Typed) optional2.get();
+                        Typed<?> typed2 = optional2.get();
                         Dynamic<?> dynamic = (Dynamic) typed2.get(DSL.remainderFinder());
                         int i = dynamic.get("Color").asInt(0);
 

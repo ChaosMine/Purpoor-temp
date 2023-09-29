@@ -19,9 +19,9 @@ public class CriterionTriggerCuredZombieVillager extends CriterionTriggerAbstrac
     }
 
     @Override
-    public CriterionTriggerCuredZombieVillager.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b criterionconditionentity_b1 = CriterionConditionEntity.b.a(jsonobject, "zombie", lootdeserializationcontext);
-        CriterionConditionEntity.b criterionconditionentity_b2 = CriterionConditionEntity.b.a(jsonobject, "villager", lootdeserializationcontext);
+    public CriterionTriggerCuredZombieVillager.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_ criterionconditionentity_b1 = CriterionConditionEntity.b_.a(jsonobject, "zombie", lootdeserializationcontext);
+        CriterionConditionEntity.b_ criterionconditionentity_b2 = CriterionConditionEntity.b_.a(jsonobject, "villager", lootdeserializationcontext);
 
         return new CriterionTriggerCuredZombieVillager.a(criterionconditionentity_b, criterionconditionentity_b1, criterionconditionentity_b2);
     }
@@ -37,17 +37,17 @@ public class CriterionTriggerCuredZombieVillager extends CriterionTriggerAbstrac
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b a;
-        private final CriterionConditionEntity.b b;
+        private final CriterionConditionEntity.b_ a;
+        private final CriterionConditionEntity.b_ b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b criterionconditionentity_b1, CriterionConditionEntity.b criterionconditionentity_b2) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_ criterionconditionentity_b1, CriterionConditionEntity.b_ criterionconditionentity_b2) {
             super(CriterionTriggerCuredZombieVillager.a, criterionconditionentity_b);
             this.a = criterionconditionentity_b1;
             this.b = criterionconditionentity_b2;
         }
 
         public static CriterionTriggerCuredZombieVillager.a c() {
-            return new CriterionTriggerCuredZombieVillager.a(CriterionConditionEntity.b.a, CriterionConditionEntity.b.a, CriterionConditionEntity.b.a);
+            return new CriterionTriggerCuredZombieVillager.a(CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a, CriterionConditionEntity.b_.a);
         }
 
         public boolean a(LootTableInfo loottableinfo, LootTableInfo loottableinfo1) {

@@ -35,7 +35,7 @@ public class BlockBarrel extends BlockTileEntity {
 
     public BlockBarrel(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBarrel.a, EnumDirection.NORTH)).set(BlockBarrel.OPEN, false));
+        this.j(this.blockStateList.getBlockData().set(BlockBarrel.a, EnumDirection.NORTH).set(BlockBarrel.OPEN, false));
     }
 
     @Override
@@ -114,12 +114,12 @@ public class BlockBarrel extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockBarrel.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockBarrel.a)));
+        return iblockdata.set(BlockBarrel.a, enumblockrotation.a(iblockdata.get(BlockBarrel.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockBarrel.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockBarrel.a)));
     }
 
     @Override
@@ -129,6 +129,6 @@ public class BlockBarrel extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockBarrel.a, blockactioncontext.d().opposite());
+        return this.getBlockData().set(BlockBarrel.a, blockactioncontext.d().opposite());
     }
 }

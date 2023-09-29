@@ -196,12 +196,12 @@ public class CommandBossBar {
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, BossBattleCustom bossbattlecustom, IChatBaseComponent ichatbasecomponent) throws CommandSyntaxException {
-        IChatMutableComponent ichatmutablecomponent = ChatComponentUtils.filterForDisplay(commandlistenerwrapper, ichatbasecomponent, (Entity) null, 0);
+        IChatMutableComponent ichatmutablecomponent = ChatComponentUtils.filterForDisplay(commandlistenerwrapper, ichatbasecomponent, null, 0);
 
         if (bossbattlecustom.j().equals(ichatmutablecomponent)) {
             throw CommandBossBar.e.create();
         } else {
-            bossbattlecustom.a((IChatBaseComponent) ichatmutablecomponent);
+            bossbattlecustom.a(ichatmutablecomponent);
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.bossbar.set.name.success", new Object[]{bossbattlecustom.e()}), true);
             return 0;
         }
@@ -241,7 +241,7 @@ public class CommandBossBar {
         if (bossbattlecustomdata.a(minecraftkey) != null) {
             throw CommandBossBar.b.create(minecraftkey.toString());
         } else {
-            BossBattleCustom bossbattlecustom = bossbattlecustomdata.register(minecraftkey, ChatComponentUtils.filterForDisplay(commandlistenerwrapper, ichatbasecomponent, (Entity) null, 0));
+            BossBattleCustom bossbattlecustom = bossbattlecustomdata.register(minecraftkey, ChatComponentUtils.filterForDisplay(commandlistenerwrapper, ichatbasecomponent, null, 0));
 
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.bossbar.create.success", new Object[]{bossbattlecustom.e()}), true);
             return bossbattlecustomdata.getBattles().size();

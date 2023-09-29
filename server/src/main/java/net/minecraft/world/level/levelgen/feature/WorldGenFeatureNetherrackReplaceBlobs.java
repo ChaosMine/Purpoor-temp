@@ -20,9 +20,14 @@ public class WorldGenFeatureNetherrackReplaceBlobs extends WorldGenerator<WorldG
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRadiusConfiguration worldgenfeatureradiusconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRadiusConfiguration worldgenfeatureradiusconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureradiusconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRadiusConfiguration worldgenfeatureradiusconfiguration) {
         Block block = worldgenfeatureradiusconfiguration.b.getBlock();
-        BlockPosition blockposition1 = a((GeneratorAccess) generatoraccessseed, blockposition.i().a(EnumDirection.EnumAxis.Y, 1, generatoraccessseed.getBuildHeight() - 1), block);
+        BlockPosition blockposition1 = a(generatoraccessseed, blockposition.i().a(EnumDirection.EnumAxis.Y, 1, generatoraccessseed.getBuildHeight() - 1), block);
 
         if (blockposition1 == null) {
             return false;
@@ -41,7 +46,7 @@ public class WorldGenFeatureNetherrackReplaceBlobs extends WorldGenerator<WorldG
                 IBlockData iblockdata = generatoraccessseed.getType(blockposition2);
 
                 if (iblockdata.a(block)) {
-                    this.a((IWorldWriter) generatoraccessseed, blockposition2, worldgenfeatureradiusconfiguration.c);
+                    this.a(generatoraccessseed, blockposition2, worldgenfeatureradiusconfiguration.c);
                     flag = true;
                 }
             }

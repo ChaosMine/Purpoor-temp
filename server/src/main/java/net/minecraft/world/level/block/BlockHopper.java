@@ -51,12 +51,12 @@ public class BlockHopper extends BlockTileEntity {
 
     public BlockHopper(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockHopper.FACING, EnumDirection.DOWN)).set(BlockHopper.ENABLED, true));
+        this.j(this.blockStateList.getBlockData().set(BlockHopper.FACING, EnumDirection.DOWN).set(BlockHopper.ENABLED, true));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch ((EnumDirection) iblockdata.get(BlockHopper.FACING)) {
+        switch (iblockdata.get(BlockHopper.FACING)) {
             case DOWN:
                 return BlockHopper.g;
             case NORTH:
@@ -74,7 +74,7 @@ public class BlockHopper extends BlockTileEntity {
 
     @Override
     public VoxelShape a_(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
-        switch ((EnumDirection) iblockdata.get(BlockHopper.FACING)) {
+        switch (iblockdata.get(BlockHopper.FACING)) {
             case DOWN:
                 return BlockHopper.o;
             case NORTH:
@@ -94,7 +94,7 @@ public class BlockHopper extends BlockTileEntity {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         EnumDirection enumdirection = blockactioncontext.getClickedFace().opposite();
 
-        return (IBlockData) ((IBlockData) this.getBlockData().set(BlockHopper.FACING, enumdirection.n() == EnumDirection.EnumAxis.Y ? EnumDirection.DOWN : enumdirection)).set(BlockHopper.ENABLED, true);
+        return this.getBlockData().set(BlockHopper.FACING, enumdirection.n() == EnumDirection.EnumAxis.Y ? EnumDirection.DOWN : enumdirection).set(BlockHopper.ENABLED, true);
     }
 
     @Override
@@ -145,8 +145,8 @@ public class BlockHopper extends BlockTileEntity {
     private void a(World world, BlockPosition blockposition, IBlockData iblockdata) {
         boolean flag = !world.isBlockIndirectlyPowered(blockposition);
 
-        if (flag != (Boolean) iblockdata.get(BlockHopper.ENABLED)) {
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockHopper.ENABLED, flag), 4);
+        if (flag != iblockdata.get(BlockHopper.ENABLED)) {
+            world.setTypeAndData(blockposition, iblockdata.set(BlockHopper.ENABLED, flag), 4);
         }
 
     }
@@ -182,12 +182,12 @@ public class BlockHopper extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockHopper.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockHopper.FACING)));
+        return iblockdata.set(BlockHopper.FACING, enumblockrotation.a(iblockdata.get(BlockHopper.FACING)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockHopper.FACING)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockHopper.FACING)));
     }
 
     @Override

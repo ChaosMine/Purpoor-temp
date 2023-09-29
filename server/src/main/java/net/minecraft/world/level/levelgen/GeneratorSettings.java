@@ -39,7 +39,7 @@ public class GeneratorSettings {
         })).and(Codec.LONG.listOf()
           .xmap(list -> list.stream().mapToLong(Long::longValue).toArray(), array -> {
               if (array == null) array = Globals.createRandomWorldSeed();
-              return Arrays.stream(array).boxed().collect(Collectors.toList());
+              return Arrays.stream(array).boxed().toList();
           })
           .orElseGet(Globals::createRandomWorldSeed)
           .xmap(seed -> {
@@ -67,7 +67,7 @@ public class GeneratorSettings {
     private long[] secureSeed;
 
     private DataResult<GeneratorSettings> m() {
-        WorldDimension worlddimension = (WorldDimension) this.f.a(WorldDimension.OVERWORLD);
+        WorldDimension worlddimension = this.f.a___key(WorldDimension.OVERWORLD);
 
         return worlddimension == null ? DataResult.error("Overworld settings missing") : (this.n() ? DataResult.success(this, Lifecycle.stable()) : DataResult.success(this));
     }
@@ -78,7 +78,7 @@ public class GeneratorSettings {
 
     public GeneratorSettings(long i, boolean flag, boolean flag1, RegistryMaterials<WorldDimension> registrymaterials) {
         this(i, flag, flag1, registrymaterials, Optional.empty());
-        WorldDimension worlddimension = (WorldDimension) registrymaterials.a(WorldDimension.OVERWORLD);
+        WorldDimension worlddimension = registrymaterials.a___key(WorldDimension.OVERWORLD);
 
         if (worlddimension == null) {
             throw new IllegalStateException("Overworld settings missing");
@@ -99,18 +99,18 @@ public class GeneratorSettings {
         IRegistry<DimensionManager> iregistry1 = iregistrycustom.b(IRegistry.K);
         IRegistry<GeneratorSettingBase> iregistry2 = iregistrycustom.b(IRegistry.ar);
 
-        return new GeneratorSettings((long) i, true, true, a((IRegistry) iregistry1, DimensionManager.a(iregistry1, iregistry, iregistry2, (long) i), (ChunkGenerator) a(iregistry, iregistry2, (long) i)));
+        return new GeneratorSettings(i, true, true, a(iregistry1, DimensionManager.a(iregistry1, iregistry, iregistry2, i), a(iregistry, iregistry2, i)));
     }
 
     public static GeneratorSettings a(IRegistry<DimensionManager> iregistry, IRegistry<BiomeBase> iregistry1, IRegistry<GeneratorSettingBase> iregistry2) {
         long i = (new Random()).nextLong();
 
-        return new GeneratorSettings(i, true, false, a(iregistry, DimensionManager.a(iregistry, iregistry1, iregistry2, i), (ChunkGenerator) a(iregistry1, iregistry2, i)));
+        return new GeneratorSettings(i, true, false, a(iregistry, DimensionManager.a(iregistry, iregistry1, iregistry2, i), a(iregistry1, iregistry2, i)));
     }
 
     public static ChunkGeneratorAbstract a(IRegistry<BiomeBase> iregistry, IRegistry<GeneratorSettingBase> iregistry1, long i) {
         return new ChunkGeneratorAbstract(new WorldChunkManagerOverworld(i, false, false, iregistry), i, () -> {
-            return (GeneratorSettingBase) iregistry1.d(GeneratorSettingBase.c);
+            return iregistry1.d(GeneratorSettingBase.c);
         });
     }
 
@@ -127,7 +127,7 @@ public class GeneratorSettings {
     }
 
     public static RegistryMaterials<WorldDimension> a(IRegistry<DimensionManager> iregistry, RegistryMaterials<WorldDimension> registrymaterials, ChunkGenerator chunkgenerator) {
-        WorldDimension worlddimension = (WorldDimension) registrymaterials.a(WorldDimension.OVERWORLD);
+        WorldDimension worlddimension = registrymaterials.a___key(WorldDimension.OVERWORLD);
         Supplier<DimensionManager> supplier = () -> {
             return worlddimension == null ? (DimensionManager) iregistry.d(DimensionManager.OVERWORLD) : worlddimension.b();
         };
@@ -143,7 +143,7 @@ public class GeneratorSettings {
 
         while (iterator.hasNext()) {
             Entry<ResourceKey<WorldDimension>, WorldDimension> entry = (Entry) iterator.next();
-            ResourceKey<WorldDimension> resourcekey = (ResourceKey) entry.getKey();
+            ResourceKey<WorldDimension> resourcekey = entry.getKey();
 
             if (resourcekey != WorldDimension.OVERWORLD) {
                 registrymaterials1.a(resourcekey, entry.getValue(), registrymaterials.d(entry.getValue()));
@@ -159,7 +159,7 @@ public class GeneratorSettings {
     }
 
     public ChunkGenerator getChunkGenerator() {
-        WorldDimension worlddimension = (WorldDimension) this.f.a(WorldDimension.OVERWORLD);
+        WorldDimension worlddimension = this.f.a___key(WorldDimension.OVERWORLD);
 
         if (worlddimension == null) {
             throw new IllegalStateException("Overworld settings missing");
@@ -169,8 +169,8 @@ public class GeneratorSettings {
     }
 
     public ImmutableSet<ResourceKey<World>> f() {
-        return (ImmutableSet) this.d().d().stream().map((entry) -> {
-            return ResourceKey.a(IRegistry.L, ((ResourceKey) entry.getKey()).a());
+        return this.d().d().stream().map((entry) -> {
+            return ResourceKey.a(IRegistry.L, entry.getKey().a());
         }).collect(ImmutableSet.toImmutableSet());
     }
 
@@ -189,10 +189,10 @@ public class GeneratorSettings {
     }
 
     public static GeneratorSettings a(IRegistryCustom iregistrycustom, Properties properties) {
-        String s = (String) MoreObjects.firstNonNull((String) properties.get("generator-settings"), "");
+        String s = MoreObjects.firstNonNull((String) properties.get("generator-settings"), "");
 
         properties.put("generator-settings", s);
-        String s1 = (String) MoreObjects.firstNonNull((String) properties.get("level-seed"), "");
+        String s1 = MoreObjects.firstNonNull((String) properties.get("level-seed"), "");
 
         properties.put("level-seed", s1);
         String s2 = (String) properties.get("generate-structures");
@@ -200,7 +200,7 @@ public class GeneratorSettings {
 
         properties.put("generate-structures", Objects.toString(flag));
         String s3 = (String) properties.get("level-type");
-        String s4 = (String) Optional.ofNullable(s3).map((s5) -> {
+        String s4 = Optional.ofNullable(s3).map((s5) -> {
             return s5.toLowerCase(Locale.ROOT);
         }).orElse("default");
 
@@ -215,7 +215,7 @@ public class GeneratorSettings {
                     i = j;
                 }
             } catch (NumberFormatException numberformatexception) {
-                i = (long) s1.hashCode();
+                i = s1.hashCode();
             }
         }
 
@@ -254,41 +254,41 @@ public class GeneratorSettings {
                 DataResult dataresult = GeneratorSettingsFlat.a.parse(dynamic);
                 Logger logger = GeneratorSettings.LOGGER;
                 logger.getClass();
-                var settings = new GeneratorSettings(i, flag, false, a((IRegistry) iregistry, registrymaterials, (ChunkGenerator) (new ChunkProviderFlat((GeneratorSettingsFlat) dataresult.resultOrPartial(logger::error).orElseGet(() -> {
+                var settings = new GeneratorSettings(i, flag, false, a(iregistry, registrymaterials, new ChunkProviderFlat((GeneratorSettingsFlat) dataresult.resultOrPartial(logger::error).orElseGet(() -> {
                     return GeneratorSettingsFlat.a(iregistry1);
-                })))));
+                }))));
                 var seedStr = properties.getProperty("level-seed");
                 var seed = seedStr.isEmpty() ? Globals.createRandomWorldSeed() : Globals.parseSeed(seedStr);
                 settings.secureseed_setSeed(seed);
                 return settings;
             }
             case 1 -> {
-                var settings = new GeneratorSettings(i, flag, false, a((IRegistry) iregistry, registrymaterials, (ChunkGenerator) (new ChunkProviderDebug(iregistry1))));
+                var settings = new GeneratorSettings(i, flag, false, a(iregistry, registrymaterials, new ChunkProviderDebug(iregistry1)));
                 var seedStr = properties.getProperty("level-seed");
                 var seed = seedStr.isEmpty() ? Globals.createRandomWorldSeed() : Globals.parseSeed(seedStr);
                 settings.secureseed_setSeed(seed);
                 return settings;
             }
             case 2 -> {
-                var settings = new GeneratorSettings(i, flag, false, a((IRegistry) iregistry, registrymaterials, (ChunkGenerator) (new ChunkGeneratorAbstract(new WorldChunkManagerOverworld(i, false, false, iregistry1), i, () -> {
-                    return (GeneratorSettingBase) iregistry2.d(GeneratorSettingBase.d);
-                }))));
+                var settings = new GeneratorSettings(i, flag, false, a(iregistry, registrymaterials, new ChunkGeneratorAbstract(new WorldChunkManagerOverworld(i, false, false, iregistry1), i, () -> {
+                    return iregistry2.d(GeneratorSettingBase.d);
+                })));
                 var seedStr = properties.getProperty("level-seed");
                 var seed = seedStr.isEmpty() ? Globals.createRandomWorldSeed() : Globals.parseSeed(seedStr);
                 settings.secureseed_setSeed(seed);
                 return settings;
             }
             case 3 -> {
-                var settings = new GeneratorSettings(i, flag, false, a((IRegistry) iregistry, registrymaterials, (ChunkGenerator) (new ChunkGeneratorAbstract(new WorldChunkManagerOverworld(i, false, true, iregistry1), i, () -> {
-                    return (GeneratorSettingBase) iregistry2.d(GeneratorSettingBase.c);
-                }))));
+                var settings = new GeneratorSettings(i, flag, false, a(iregistry, registrymaterials, new ChunkGeneratorAbstract(new WorldChunkManagerOverworld(i, false, true, iregistry1), i, () -> {
+                    return iregistry2.d(GeneratorSettingBase.c);
+                })));
                 var seedStr = properties.getProperty("level-seed");
                 var seed = seedStr.isEmpty() ? Globals.createRandomWorldSeed() : Globals.parseSeed(seedStr);
                 settings.secureseed_setSeed(seed);
                 return settings;
             }
             default -> {
-                var settings = new GeneratorSettings(i, flag, false, a((IRegistry) iregistry, registrymaterials, (ChunkGenerator) a(iregistry1, iregistry2, i)));
+                var settings = new GeneratorSettings(i, flag, false, a(iregistry, registrymaterials, a(iregistry1, iregistry2, i)));
                 var seedStr = properties.getProperty("level-seed");
                 var seed = seedStr.isEmpty() ? Globals.createRandomWorldSeed() : Globals.parseSeed(seedStr);
                 settings.secureseed_setSeed(seed);

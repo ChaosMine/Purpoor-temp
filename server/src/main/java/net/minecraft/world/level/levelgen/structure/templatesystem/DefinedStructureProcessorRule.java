@@ -26,7 +26,7 @@ public class DefinedStructureProcessorRule extends DefinedStructureProcessor {
     @Nullable
     @Override
     public DefinedStructure.BlockInfo a(IWorldReader iworldreader, BlockPosition blockposition, BlockPosition blockposition1, DefinedStructure.BlockInfo definedstructure_blockinfo, DefinedStructure.BlockInfo definedstructure_blockinfo1, DefinedStructureInfo definedstructureinfo) {
-        Random random = new Random(MathHelper.a((BaseBlockPosition) definedstructure_blockinfo1.a));
+        Random random = new Random(MathHelper.a(definedstructure_blockinfo1.a));
         IBlockData iblockdata = iworldreader.getType(definedstructure_blockinfo1.a);
         UnmodifiableIterator unmodifiableiterator = this.b.iterator();
 

@@ -84,7 +84,7 @@ public class Chunk implements IChunkAccess {
     private boolean isSlimeChunk;
 
     public Chunk(World world, ChunkCoordIntPair chunkcoordintpair, BiomeStorage biomestorage) {
-        this(world, chunkcoordintpair, biomestorage, ChunkConverter.a, TickListEmpty.b(), TickListEmpty.b(), 0L, (ChunkSection[]) null, (Consumer) null);
+        this(world, chunkcoordintpair, biomestorage, ChunkConverter.a, TickListEmpty.b(), TickListEmpty.b(), 0L, null, null);
     }
 
     // Paper start
@@ -178,7 +178,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public final void getEntitiesClass(Class<?> clazz, Entity entity, AxisAlignedBB boundingBox, Predicate<Entity> predicate, List<Entity> into) {
-        this.entitySlicesManager.getEntities((Class)clazz, entity, boundingBox, (List)into, (Predicate)predicate); // Tuinity
+        this.entitySlicesManager.getEntities((Class)clazz, entity, boundingBox, into, predicate); // Tuinity
     }
     // Tuinity end - optimised entity slices
 
@@ -194,7 +194,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public void updateGeneralAreaCache() {
-        this.updateGeneralAreaCache(((WorldServer)this.world).getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(this.coordinateKey));
+        this.updateGeneralAreaCache(this.world.getChunkProvider().playerChunkMap.playerGeneralAreaMap.getObjectsInRange(this.coordinateKey));
     }
 
     public void updateGeneralAreaCache(com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> value) {
@@ -381,7 +381,7 @@ public class Chunk implements IChunkAccess {
 
     protected void onNeighbourChange(long bitsetBefore, long bitsetAfter) {
         // Paper start - no-tick view distance
-        var chunkProviderServer = ((WorldServer)this.world).getChunkProvider();
+        var chunkProviderServer = this.world.getChunkProvider();
         var chunkMap = chunkProviderServer.playerChunkMap;
         // this code handles the addition of ticking tickets - the distance map handles the removal
         if (!areNeighboursLoaded(bitsetBefore, 2) && areNeighboursLoaded(bitsetAfter, 2)) {
@@ -462,7 +462,7 @@ public class Chunk implements IChunkAccess {
     // Paper end
 
     public Chunk(World world, ProtoChunk protochunk) {
-        this(world, protochunk.getPos(), protochunk.getBiomeIndex(), protochunk.p(), protochunk.n(), protochunk.o(), protochunk.getInhabitedTime(), protochunk.getSections(), (Consumer) null);
+        this(world, protochunk.getPos(), protochunk.getBiomeIndex(), protochunk.p(), protochunk.n(), protochunk.o(), protochunk.getInhabitedTime(), protochunk.getSections(), null);
         // Tuinity start - copy over protochunk light
         this.setBlockNibbles(protochunk.getBlockNibbles());
         this.setSkyNibbles(protochunk.getSkyNibbles());
@@ -502,7 +502,7 @@ public class Chunk implements IChunkAccess {
             Entry<HeightMap.Type, HeightMap> entry = (Entry) iterator.next();
 
             if (ChunkStatus.FULL.h().contains(entry.getKey())) {
-                this.a((HeightMap.Type) entry.getKey()).a(((HeightMap) entry.getValue()).a());
+                this.a(entry.getKey()).a(entry.getValue().a());
             }
         }
 
@@ -513,7 +513,7 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public HeightMap a(HeightMap.Type heightmap_type) {
-        return (HeightMap) this.heightMap.computeIfAbsent(heightmap_type, (heightmap_type1) -> {
+        return this.heightMap.computeIfAbsent(heightmap_type, (heightmap_type1) -> {
             return new HeightMap(this, heightmap_type1);
         });
     }
@@ -663,10 +663,10 @@ public class Chunk implements IChunkAccess {
             var block = iblockdata.getBlock();
             var block1 = iblockdata1.getBlock();
 
-            ((HeightMap) this.heightMap.get(HeightMap.Type.MOTION_BLOCKING)).a(i, j, k, iblockdata);
-            ((HeightMap) this.heightMap.get(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES)).a(i, j, k, iblockdata);
-            ((HeightMap) this.heightMap.get(HeightMap.Type.OCEAN_FLOOR)).a(i, j, k, iblockdata);
-            ((HeightMap) this.heightMap.get(HeightMap.Type.WORLD_SURFACE)).a(i, j, k, iblockdata);
+            this.heightMap.get(HeightMap.Type.MOTION_BLOCKING).a(i, j, k, iblockdata);
+            this.heightMap.get(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES).a(i, j, k, iblockdata);
+            this.heightMap.get(HeightMap.Type.OCEAN_FLOOR).a(i, j, k, iblockdata);
+            this.heightMap.get(HeightMap.Type.WORLD_SURFACE).a(i, j, k, iblockdata);
             var flag2 = chunksection.c();
 
             if (flag1 != flag2) {
@@ -779,7 +779,7 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public void a(HeightMap.Type heightmap_type, long[] along) {
-        ((HeightMap) this.heightMap.get(heightmap_type)).a(along);
+        this.heightMap.get(heightmap_type).a(along);
     }
 
     public final void removeEntity(Entity entity) { this.b(entity); } // Paper - OBFHELPER
@@ -818,7 +818,7 @@ public class Chunk implements IChunkAccess {
 
     public final int getHighestBlockY(HeightMap.Type heightmap_type, int i, int j) { return this.getHighestBlock(heightmap_type, i, j) + 1; } // Paper - sort of an obfhelper, but without -1
     @Override public int getHighestBlock(HeightMap.Type heightmap_type, int i, int j) { // Paper
-        return ((HeightMap) this.heightMap.get(heightmap_type)).a(i & 15, j & 15) - 1;
+        return this.heightMap.get(heightmap_type).a(i & 15, j & 15) - 1;
     }
 
     @Nullable
@@ -841,7 +841,7 @@ public class Chunk implements IChunkAccess {
         // CraftBukkit start
         var tileentity = world.capturedTileEntities.get(blockposition);
         if (tileentity == null) {
-            tileentity = (TileEntity) this.tileEntities.get(blockposition);
+            tileentity = this.tileEntities.get(blockposition);
         }
         // CraftBukkit end
 
@@ -930,7 +930,7 @@ public class Chunk implements IChunkAccess {
             nbttagcompound.setBoolean("keepPacked", false);
             return nbttagcompound;
         } else {
-            nbttagcompound = (NBTTagCompound) this.e.get(blockposition);
+            nbttagcompound = this.e.get(blockposition);
             if (nbttagcompound != null) {
                 nbttagcompound = nbttagcompound.clone();
                 nbttagcompound.setBoolean("keepPacked", true);
@@ -973,7 +973,7 @@ public class Chunk implements IChunkAccess {
         // Paper start - neighbour cache
         var chunkX = this.loc.x;
         var chunkZ = this.loc.z;
-        var chunkProvider = ((WorldServer)this.world).getChunkProvider();
+        var chunkProvider = this.world.getChunkProvider();
         for (var dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
             for (var dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
                 var neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
@@ -988,8 +988,8 @@ public class Chunk implements IChunkAccess {
         this.loadedTicketLevel = true;
         // Paper end - neighbour cache
         org.bukkit.Server server = this.world.getServer();
-        ((WorldServer)this.world).getChunkProvider().addLoadedChunk(this); // Paper
-        ((WorldServer)this.world).getChunkProvider().playerChunkMap.playerChunkManager.onChunkLoad(this.loc.x, this.loc.z); // Tuinity - rewrite player chunk management
+        this.world.getChunkProvider().addLoadedChunk(this); // Paper
+        this.world.getChunkProvider().playerChunkMap.playerChunkManager.onChunkLoad(this.loc.x, this.loc.z); // Tuinity - rewrite player chunk management
         if (server != null) {
             /*
              * If it's a new world, the first few chunks are generated inside
@@ -1028,11 +1028,11 @@ public class Chunk implements IChunkAccess {
         server.getPluginManager().callEvent(unloadEvent);
         // note: saving can be prevented, but not forced if no saving is actually required
         this.mustNotSave = !unloadEvent.isSaveChunk();
-        ((WorldServer)this.world).getChunkProvider().removeLoadedChunk(this); // Paper
+        this.world.getChunkProvider().removeLoadedChunk(this); // Paper
         // Paper start - neighbour cache
         var chunkX = this.loc.x;
         var chunkZ = this.loc.z;
-        var chunkProvider = ((WorldServer)this.world).getChunkProvider();
+        var chunkProvider = this.world.getChunkProvider();
         for (var dx = -NEIGHBOUR_CACHE_RADIUS; dx <= NEIGHBOUR_CACHE_RADIUS; ++dx) {
             for (var dz = -NEIGHBOUR_CACHE_RADIUS; dz <= NEIGHBOUR_CACHE_RADIUS; ++dz) {
                 var neighbour = chunkProvider.getChunkAtIfLoadedMainThreadNoCache(chunkX + dx, chunkZ + dz);
@@ -1104,7 +1104,7 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public NBTTagCompound i(BlockPosition blockposition) {
-        return (NBTTagCompound) this.e.get(blockposition);
+        return this.e.get(blockposition);
     }
 
     @Override
@@ -1146,7 +1146,7 @@ public class Chunk implements IChunkAccess {
     @Nullable
     @Override
     public StructureStart<?> a(StructureGenerator<?> structuregenerator) {
-        return (StructureStart) this.l.get(structuregenerator);
+        return this.l.get(structuregenerator);
     }
 
     @Override
@@ -1167,16 +1167,16 @@ public class Chunk implements IChunkAccess {
 
     @Override
     public LongSet b(StructureGenerator<?> structuregenerator) {
-        return (LongSet) this.m.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
+        return this.m.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
             return new LongOpenHashSet();
         });
     }
 
     @Override
     public void a(StructureGenerator<?> structuregenerator, long i) {
-        ((LongSet) this.m.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
+        this.m.computeIfAbsent(structuregenerator, (structuregenerator1) -> {
             return new LongOpenHashSet();
-        })).add(i);
+        }).add(i);
     }
 
     @Override
@@ -1211,7 +1211,7 @@ public class Chunk implements IChunkAccess {
                     var oshort = (Short) shortlistiterator.next();
                     var blockposition = ProtoChunk.a(oshort, i, chunkcoordintpair);
                     var iblockdata = this.getType(blockposition);
-                    var iblockdata1 = Block.b(iblockdata, (GeneratorAccess) this.world, blockposition);
+                    var iblockdata1 = Block.b(iblockdata, this.world, blockposition);
 
                     this.world.setTypeAndData(blockposition, iblockdata1, 20 | 2); // Paper - We send chunks before they're ticking ready, so we need to notify here
                 }
@@ -1313,7 +1313,7 @@ public class Chunk implements IChunkAccess {
     }
 
     public PlayerChunk.State getState() {
-        return this.u == null ? PlayerChunk.State.BORDER : (PlayerChunk.State) this.u.get();
+        return this.u == null ? PlayerChunk.State.BORDER : this.u.get();
     }
 
     public void a(Supplier<PlayerChunk.State> supplier) {

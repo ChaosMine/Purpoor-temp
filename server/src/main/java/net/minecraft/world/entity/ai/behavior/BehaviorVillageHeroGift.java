@@ -30,7 +30,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 
 public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
 
-    private static final Map<VillagerProfession, MinecraftKey> b = (Map) SystemUtils.a((Object) Maps.newHashMap(), (hashmap) -> {
+    private static final Map<VillagerProfession, MinecraftKey> b = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> {
         hashmap.put(VillagerProfession.ARMORER, LootTables.al);
         hashmap.put(VillagerProfession.BUTCHER, LootTables.am);
         hashmap.put(VillagerProfession.CARTOGRAPHER, LootTables.an);
@@ -67,10 +67,10 @@ public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
     protected void a(WorldServer worldserver, EntityVillager entityvillager, long i) {
         this.d = false;
         this.e = i;
-        EntityHuman entityhuman = (EntityHuman) this.c(entityvillager).get();
+        EntityHuman entityhuman = this.c(entityvillager).get();
 
-        entityvillager.getBehaviorController().setMemory(MemoryModuleType.INTERACTION_TARGET, (Object) entityhuman);
-        BehaviorUtil.a((EntityLiving) entityvillager, (EntityLiving) entityhuman);
+        entityvillager.getBehaviorController().setMemory(MemoryModuleType.INTERACTION_TARGET, entityhuman);
+        BehaviorUtil.a(entityvillager, entityhuman);
     }
 
     protected boolean b(WorldServer worldserver, EntityVillager entityvillager, long i) {
@@ -78,16 +78,16 @@ public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
     }
 
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        EntityHuman entityhuman = (EntityHuman) this.c(entityvillager).get();
+        EntityHuman entityhuman = this.c(entityvillager).get();
 
-        BehaviorUtil.a((EntityLiving) entityvillager, (EntityLiving) entityhuman);
+        BehaviorUtil.a(entityvillager, entityhuman);
         if (this.a(entityvillager, entityhuman)) {
             if (i - this.e > 20L) {
                 this.a(entityvillager, (EntityLiving) entityhuman);
                 this.d = true;
             }
         } else {
-            BehaviorUtil.a(entityvillager, (Entity) entityhuman, 0.5F, 5);
+            BehaviorUtil.a(entityvillager, entityhuman, 0.5F, 5);
         }
 
     }
@@ -106,7 +106,7 @@ public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
         while (iterator.hasNext()) {
             ItemStack itemstack = (ItemStack) iterator.next();
 
-            BehaviorUtil.a((EntityLiving) entityvillager, itemstack, entityliving.getPositionVector());
+            BehaviorUtil.a(entityvillager, itemstack, entityliving.getPositionVector());
         }
 
     }
@@ -118,7 +118,7 @@ public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
             VillagerProfession villagerprofession = entityvillager.getVillagerData().getProfession();
 
             if (BehaviorVillageHeroGift.b.containsKey(villagerprofession)) {
-                LootTable loottable = entityvillager.world.getMinecraftServer().getLootTableRegistry().getLootTable((MinecraftKey) BehaviorVillageHeroGift.b.get(villagerprofession));
+                LootTable loottable = entityvillager.world.getMinecraftServer().getLootTableRegistry().getLootTable(BehaviorVillageHeroGift.b.get(villagerprofession));
                 LootTableInfo.Builder loottableinfo_builder = (new LootTableInfo.Builder((WorldServer) entityvillager.world)).set(LootContextParameters.ORIGIN, entityvillager.getPositionVector()).set(LootContextParameters.THIS_ENTITY, entityvillager).a(entityvillager.getRandom());
 
                 return loottable.populateLoot(loottableinfo_builder.build(LootContextParameterSets.GIFT));
@@ -144,7 +144,7 @@ public class BehaviorVillageHeroGift extends Behavior<EntityVillager> {
         BlockPosition blockposition = entityhuman.getChunkCoordinates();
         BlockPosition blockposition1 = entityvillager.getChunkCoordinates();
 
-        return blockposition1.a((BaseBlockPosition) blockposition, 5.0D);
+        return blockposition1.a(blockposition, 5.0D);
     }
 
     private static int a(WorldServer worldserver) {

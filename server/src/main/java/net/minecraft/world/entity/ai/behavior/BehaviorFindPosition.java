@@ -71,10 +71,10 @@ public class BehaviorFindPosition extends Behavior<EntityCreature> {
         VillagePlace villageplace = worldserver.y();
 
         this.g.long2ObjectEntrySet().removeIf((entry) -> {
-            return !((BehaviorFindPosition.a) entry.getValue()).b(i);
+            return !entry.getValue().b(i);
         });
         Predicate<BlockPosition> predicate = (blockposition) -> {
-            BehaviorFindPosition.a behaviorfindposition_a = (BehaviorFindPosition.a) this.g.get(blockposition.asLong());
+            BehaviorFindPosition.a behaviorfindposition_a = this.g.get(blockposition.asLong());
 
             if (behaviorfindposition_a == null) {
                 return true;

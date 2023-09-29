@@ -78,7 +78,7 @@ public class PathfinderGoalArrowAttack extends PathfinderGoal {
         if (d0 <= (double) this.j && this.f >= 5) {
             this.a.getNavigation().o();
         } else {
-            this.a.getNavigation().a((Entity) this.c, this.e);
+            this.a.getNavigation().a(this.c, this.e);
         }
 
         this.a.getControllerLook().a(this.c, 30.0F, 30.0F);

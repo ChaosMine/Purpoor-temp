@@ -41,7 +41,7 @@ public class DataConverterPOI extends DataFix {
             Optional<Dynamic<T>> optional = dynamic.get(s).result();
 
             if (optional.isPresent()) {
-                Dynamic<T> dynamic1 = (Dynamic) optional.get();
+                Dynamic<T> dynamic1 = optional.get();
                 Dynamic<T> dynamic2 = dynamic.createMap(ImmutableMap.of(dynamic.createString("Records"), dynamic1));
 
                 map.put(dynamic.createInt(i), dynamic2);

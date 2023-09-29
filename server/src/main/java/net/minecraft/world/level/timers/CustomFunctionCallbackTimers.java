@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 public class CustomFunctionCallbackTimers<C> {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final CustomFunctionCallbackTimers<MinecraftServer> a = (new CustomFunctionCallbackTimers<>()).a((CustomFunctionCallbackTimer.a) (new CustomFunctionCallback.a())).a((CustomFunctionCallbackTimer.a) (new CustomFunctionCallbackTag.a()));
+    public static final CustomFunctionCallbackTimers<MinecraftServer> a = (new CustomFunctionCallbackTimers<>()).a((CustomFunctionCallbackTimer.a) (new CustomFunctionCallback.a())).a(new CustomFunctionCallbackTag.a());
     private final Map<MinecraftKey, CustomFunctionCallbackTimer.a<C, ?>> c = Maps.newHashMap();
     private final Map<Class<?>, CustomFunctionCallbackTimer.a<C, ?>> d = Maps.newHashMap();
 
@@ -42,7 +42,7 @@ public class CustomFunctionCallbackTimers<C> {
     @Nullable
     public CustomFunctionCallbackTimer<C> a(NBTTagCompound nbttagcompound) {
         MinecraftKey minecraftkey = MinecraftKey.a(nbttagcompound.getString("Type"));
-        CustomFunctionCallbackTimer.a<C, ?> customfunctioncallbacktimer_a = (CustomFunctionCallbackTimer.a) this.c.get(minecraftkey);
+        CustomFunctionCallbackTimer.a<C, ?> customfunctioncallbacktimer_a = this.c.get(minecraftkey);
 
         if (customfunctioncallbacktimer_a == null) {
             CustomFunctionCallbackTimers.LOGGER.error("Failed to deserialize timer callback: " + nbttagcompound);

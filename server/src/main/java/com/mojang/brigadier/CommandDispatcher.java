@@ -515,7 +515,7 @@ public class CommandDispatcher<S> {
                 final String redirect = node.getRedirect() == root ? "..." : "-> " + node.getRedirect().getUsageText();
                 return self + ARGUMENT_SEPARATOR + redirect;
             } else {
-                final Collection<CommandNode<S>> children = node.getChildren().stream().filter(c -> c.canUse(source)).collect(Collectors.toList());
+                final Collection<CommandNode<S>> children = node.getChildren().stream().filter(c -> c.canUse(source)).toList();
                 if (children.size() == 1) {
                     final String usage = getSmartUsage(children.iterator().next(), source, childOptional, childOptional);
                     if (usage != null) {

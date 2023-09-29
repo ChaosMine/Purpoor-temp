@@ -33,21 +33,21 @@ public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePl
 
     public BlockCocoa(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCocoa.FACING, EnumDirection.NORTH)).set(BlockCocoa.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockCocoa.FACING, EnumDirection.NORTH).set(BlockCocoa.AGE, 0));
     }
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockCocoa.AGE) < 2;
+        return iblockdata.get(BlockCocoa.AGE) < 2;
     }
 
     @Override
     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
         if (worldserver.random.nextInt(Math.max(1, (int) (100.0F / worldserver.spigotConfig.cocoaModifier) * 5)) == 0) { // Spigot
-            int i = (Integer) iblockdata.get(BlockCocoa.AGE);
+            int i = iblockdata.get(BlockCocoa.AGE);
 
             if (i < 2) {
-                CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, (IBlockData) iblockdata.set(BlockCocoa.AGE, i + 1), 2); // CraftBukkkit
+                CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata.set(BlockCocoa.AGE, i + 1), 2); // CraftBukkkit
             }
         }
 
@@ -55,16 +55,16 @@ public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePl
 
     @Override
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
-        Block block = iworldreader.getType(blockposition.shift((EnumDirection) iblockdata.get(BlockCocoa.FACING))).getBlock();
+        Block block = iworldreader.getType(blockposition.shift(iblockdata.get(BlockCocoa.FACING))).getBlock();
 
-        return block.a((Tag) TagsBlock.JUNGLE_LOGS);
+        return block.a(TagsBlock.JUNGLE_LOGS);
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        int i = (Integer) iblockdata.get(BlockCocoa.AGE);
+        int i = iblockdata.get(BlockCocoa.AGE);
 
-        switch ((EnumDirection) iblockdata.get(BlockCocoa.FACING)) {
+        switch (iblockdata.get(BlockCocoa.FACING)) {
             case SOUTH:
                 return BlockCocoa.e[i];
             case NORTH:
@@ -90,7 +90,7 @@ public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePl
             EnumDirection enumdirection = aenumdirection[j];
 
             if (enumdirection.n().d()) {
-                iblockdata = (IBlockData) iblockdata.set(BlockCocoa.FACING, enumdirection);
+                iblockdata = iblockdata.set(BlockCocoa.FACING, enumdirection);
                 if (iblockdata.canPlace(world, blockposition)) {
                     return iblockdata;
                 }
@@ -107,7 +107,7 @@ public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePl
 
     @Override
     public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        return (Integer) iblockdata.get(BlockCocoa.AGE) < 2;
+        return iblockdata.get(BlockCocoa.AGE) < 2;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePl
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, (IBlockData) iblockdata.set(BlockCocoa.AGE, (Integer) iblockdata.get(BlockCocoa.AGE) + 1), 2); // CraftBukkit
+        CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, iblockdata.set(BlockCocoa.AGE, iblockdata.get(BlockCocoa.AGE) + 1), 2); // CraftBukkit
     }
 
     @Override

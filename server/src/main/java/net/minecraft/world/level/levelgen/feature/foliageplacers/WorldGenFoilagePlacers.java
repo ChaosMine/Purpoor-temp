@@ -17,7 +17,7 @@ public class WorldGenFoilagePlacers<P extends WorldGenFoilagePlacer> {
     private final Codec<P> j;
 
     private static <P extends WorldGenFoilagePlacer> WorldGenFoilagePlacers<P> a(String s, Codec<P> codec) {
-        return (WorldGenFoilagePlacers) IRegistry.a(IRegistry.FOLIAGE_PLACER_TYPE, s, (Object) (new WorldGenFoilagePlacers<>(codec)));
+        return IRegistry.a(IRegistry.FOLIAGE_PLACER_TYPE, s, new WorldGenFoilagePlacers<>(codec));
     }
 
     private WorldGenFoilagePlacers(Codec<P> codec) {

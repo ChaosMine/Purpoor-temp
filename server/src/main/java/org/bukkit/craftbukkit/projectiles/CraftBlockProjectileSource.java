@@ -47,7 +47,7 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
         SourceBlock isourceblock = new SourceBlock((WorldServer) dispenserBlock.getWorld(), dispenserBlock.getPosition());
         // Copied from DispenseBehaviorProjectile
         IPosition iposition = BlockDispenser.a(isourceblock);
-        EnumDirection enumdirection = (EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING);
+        EnumDirection enumdirection = isourceblock.getBlockData().get(BlockDispenser.FACING);
         net.minecraft.world.level.World world = dispenserBlock.getWorld();
         net.minecraft.world.entity.Entity launch = null;
 
@@ -78,7 +78,7 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
                 launch = new EntityTippedArrow(world, iposition.getX(), iposition.getY(), iposition.getZ());
             }
             ((EntityArrow) launch).fromPlayer = EntityArrow.PickupStatus.ALLOWED;
-            ((EntityArrow) launch).projectileSource = this;
+            launch.projectileSource = this;
         } else if (Fireball.class.isAssignableFrom(projectile)) {
             double d0 = iposition.getX() + (double) ((float) enumdirection.getAdjacentX() * 0.3F);
             double d1 = iposition.getY() + (double) ((float) enumdirection.getAdjacentY() * 0.3F);
@@ -93,7 +93,7 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
             } else if (WitherSkull.class.isAssignableFrom(projectile)) {
                 launch = EntityTypes.WITHER_SKULL.a(world);
                 launch.setPosition(d0, d1, d2);
-                double d6 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+                double d6 = MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
 
                 ((EntityFireball) launch).dirX = d3 / d6 * 0.1D;
                 ((EntityFireball) launch).dirY = d4 / d6 * 0.1D;
@@ -101,21 +101,21 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
             } else {
                 launch = EntityTypes.FIREBALL.a(world);
                 launch.setPosition(d0, d1, d2);
-                double d6 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+                double d6 = MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
 
                 ((EntityFireball) launch).dirX = d3 / d6 * 0.1D;
                 ((EntityFireball) launch).dirY = d4 / d6 * 0.1D;
                 ((EntityFireball) launch).dirZ = d5 / d6 * 0.1D;
             }
 
-            ((EntityFireball) launch).projectileSource = this;
+            launch.projectileSource = this;
         }
 
         Validate.notNull(launch, "Projectile not supported");
 
         if (launch instanceof IProjectile) {
             if (launch instanceof EntityProjectile) {
-                ((EntityProjectile) launch).projectileSource = this;
+                launch.projectileSource = this;
             }
             // Values from DispenseBehaviorProjectile
             float a = 6.0F;
@@ -126,7 +126,7 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
                 b *= 1.25F;
             }
             // Copied from DispenseBehaviorProjectile
-            ((IProjectile) launch).shoot((double) enumdirection.getAdjacentX(), (double) ((float) enumdirection.getAdjacentY() + 0.1F), (double) enumdirection.getAdjacentZ(), b, a);
+            ((IProjectile) launch).shoot(enumdirection.getAdjacentX(), (float) enumdirection.getAdjacentY() + 0.1F, enumdirection.getAdjacentZ(), b, a);
         }
 
         if (velocity != null) {

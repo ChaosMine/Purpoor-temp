@@ -26,7 +26,7 @@ public class CommandSpectate {
         commanddispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) ((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("spectate").requires((commandlistenerwrapper) -> {
             return commandlistenerwrapper.hasPermission(2);
         })).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), (Entity) null, ((CommandListenerWrapper) commandcontext.getSource()).h());
+            return a((CommandListenerWrapper) commandcontext.getSource(), null, ((CommandListenerWrapper) commandcontext.getSource()).h());
         })).then(((RequiredArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("target", (ArgumentType) ArgumentEntity.a()).executes((commandcontext) -> {
             return a((CommandListenerWrapper) commandcontext.getSource(), ArgumentEntity.a(commandcontext, "target"), ((CommandListenerWrapper) commandcontext.getSource()).h());
         })).then(net.minecraft.commands.CommandDispatcher.a("player", (ArgumentType) ArgumentEntity.c()).executes((commandcontext) -> {

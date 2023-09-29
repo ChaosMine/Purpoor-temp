@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.nbt;
 
 import net.minecraft.network.chat.ChatComponentText;
@@ -55,7 +54,7 @@ public class NBTTagIntArray extends NBTList<NBTTagInt> {
         int[] aint = new int[list.size()];
 
         for (int i = 0; i < list.size(); ++i) {
-            Integer integer = (Integer) list.get(i);
+            Integer integer = list.get(i);
 
             aint[i] = integer == null ? 0 : integer;
         }

@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class BiomeSettingsMobs {
 
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final BiomeSettingsMobs b = new BiomeSettingsMobs(0.1F, (Map) Stream.of(EnumCreatureType.values()).collect(ImmutableMap.toImmutableMap((enumcreaturetype) -> {
+    public static final BiomeSettingsMobs b = new BiomeSettingsMobs(0.1F, Stream.of(EnumCreatureType.values()).collect(ImmutableMap.toImmutableMap((enumcreaturetype) -> {
         return enumcreaturetype;
     }, (enumcreaturetype) -> {
         return ImmutableList.of();
@@ -67,12 +67,12 @@ public class BiomeSettingsMobs {
     }
 
     public List<BiomeSettingsMobs.c> a(EnumCreatureType enumcreaturetype) {
-        return (List) this.e.getOrDefault(enumcreaturetype, ImmutableList.of());
+        return this.e.getOrDefault(enumcreaturetype, ImmutableList.of());
     }
 
     @Nullable
     public BiomeSettingsMobs.b a(EntityTypes<?> entitytypes) {
-        return (BiomeSettingsMobs.b) this.f.get(entitytypes);
+        return this.f.get(entitytypes);
     }
 
     public float a() {
@@ -116,7 +116,7 @@ public class BiomeSettingsMobs {
             }
         }
         // use toImmutableEnumMap collector
-        private final Map<EnumCreatureType, List<BiomeSettingsMobs.c>> a = (Map) Stream.of(EnumCreatureType.values()).collect(Maps.toImmutableEnumMap((enumcreaturetype) -> {
+        private final Map<EnumCreatureType, List<BiomeSettingsMobs.c>> a = Stream.of(EnumCreatureType.values()).collect(Maps.toImmutableEnumMap((enumcreaturetype) -> {
             return enumcreaturetype;
         }, (enumcreaturetype) -> {
             return new MobList(); // Use MobList instead of ArrayList
@@ -129,7 +129,7 @@ public class BiomeSettingsMobs {
         public a() {}
 
         public BiomeSettingsMobs.a a(EnumCreatureType enumcreaturetype, BiomeSettingsMobs.c biomesettingsmobs_c) {
-            ((List) this.a.get(enumcreaturetype)).add(biomesettingsmobs_c);
+            this.a.get(enumcreaturetype).add(biomesettingsmobs_c);
             return this;
         }
 
@@ -149,7 +149,7 @@ public class BiomeSettingsMobs {
         }
 
         public BiomeSettingsMobs b() {
-            return new BiomeSettingsMobs(this.c, (Map) this.a.entrySet().stream().collect(ImmutableMap.toImmutableMap(Entry::getKey, (entry) -> {
+            return new BiomeSettingsMobs(this.c, this.a.entrySet().stream().collect(ImmutableMap.toImmutableMap(Entry::getKey, (entry) -> {
                 return ImmutableList.copyOf((Collection) entry.getValue());
             })), ImmutableMap.copyOf(this.b), this.d);
         }

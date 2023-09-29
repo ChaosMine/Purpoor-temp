@@ -46,7 +46,7 @@ public class AutoRecipeStackManager {
     }
 
     public static int c(ItemStack itemstack) {
-        return IRegistry.ITEM.a((Object) itemstack.getItem());
+        return IRegistry.ITEM.a(itemstack.getItem());
     }
 
     private boolean b(int i) {
@@ -112,7 +112,7 @@ public class AutoRecipeStackManager {
             this.g = new BitSet(this.d + this.f + this.d + this.d * this.f);
 
             for (int i = 0; i < this.c.size(); ++i) {
-                IntList intlist = ((RecipeItemStack) this.c.get(i)).b();
+                IntList intlist = this.c.get(i).b();
 
                 for (int j = 0; j < this.f; ++j) {
                     if (intlist.contains(this.e[j])) {
@@ -155,7 +155,7 @@ public class AutoRecipeStackManager {
                 List<RecipeItemStack> list = this.b.a();
 
                 for (int j1 = 0; j1 < list.size(); ++j1) {
-                    if (flag1 && ((RecipeItemStack) list.get(j1)).d()) {
+                    if (flag1 && list.get(j1).d()) {
                         intlist.add(0);
                     } else {
                         for (int k1 = 0; k1 < this.f; ++k1) {
@@ -290,7 +290,7 @@ public class AutoRecipeStackManager {
                 while (true) {
                     int l = (j + k) / 2;
 
-                    if (this.a(l, (IntList) null)) {
+                    if (this.a(l, null)) {
                         if (k - j <= 1) {
                             if (l > 0) {
                                 this.a(l, intlist);
@@ -318,7 +318,7 @@ public class AutoRecipeStackManager {
                 int k;
 
                 for (IntListIterator intlistiterator = recipeitemstack.b().iterator(); intlistiterator.hasNext(); j = Math.max(j, AutoRecipeStackManager.this.a.get(k))) {
-                    k = (Integer) intlistiterator.next();
+                    k = intlistiterator.next();
                 }
 
                 if (i > 0) {

@@ -58,7 +58,7 @@ public class LootItemFunctionCopyName extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionCopyName lootitemfunctioncopyname, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctioncopyname, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctioncopyname, jsonserializationcontext);
             jsonobject.addProperty("source", lootitemfunctioncopyname.a.e);
         }
 

@@ -83,17 +83,17 @@ public class TileEntityPiston extends TileEntity implements ITickable {
     }
 
     private IBlockData x() {
-        return !this.d() && this.h() && this.a.getBlock() instanceof BlockPiston ? (IBlockData) ((IBlockData) ((IBlockData) Blocks.PISTON_HEAD.getBlockData().set(BlockPistonExtension.SHORT, this.i > 0.25F)).set(BlockPistonExtension.TYPE, this.a.a(Blocks.STICKY_PISTON) ? BlockPropertyPistonType.STICKY : BlockPropertyPistonType.DEFAULT)).set(BlockPistonExtension.FACING, this.a.get(BlockPiston.FACING)) : this.a;
+        return !this.d() && this.h() && this.a.getBlock() instanceof BlockPiston ? Blocks.PISTON_HEAD.getBlockData().set(BlockPistonExtension.SHORT, this.i > 0.25F).set(BlockPistonExtension.TYPE, this.a.a(Blocks.STICKY_PISTON) ? BlockPropertyPistonType.STICKY : BlockPropertyPistonType.DEFAULT).set(BlockPistonExtension.FACING, this.a.get(BlockPiston.FACING)) : this.a;
     }
 
     private void f(float f) {
         EnumDirection enumdirection = this.j();
-        double d0 = (double) (f - this.i);
+        double d0 = f - this.i;
         VoxelShape voxelshape = this.x().getCollisionShape(this.world, this.getPosition());
 
         if (!voxelshape.isEmpty()) {
             AxisAlignedBB axisalignedbb = this.a(voxelshape.getBoundingBox());
-            try (var list = this.world.getEntities((Entity) null, PistonUtil.a(axisalignedbb, enumdirection, d0).b(axisalignedbb))) {
+            try (var list = this.world.getEntities(null, PistonUtil.a(axisalignedbb, enumdirection, d0).b(axisalignedbb))) {
                 if (!list.isEmpty()) {
                     List<AxisAlignedBB> list1 = voxelshape.d();
                     boolean flag = this.a.a(Blocks.SLIME_BLOCK);
@@ -161,7 +161,7 @@ public class TileEntityPiston extends TileEntity implements ITickable {
             if (enumdirection.n().d()) {
                 double d0 = this.a.getCollisionShape(this.world, this.position).c(EnumDirection.EnumAxis.Y);
                 AxisAlignedBB axisalignedbb = this.a(new AxisAlignedBB(0.0D, d0, 0.0D, 1.0D, 1.5000000999999998D, 1.0D));
-                double d1 = (double) (f - this.i);
+                double d1 = f - this.i;
                 try (var list = this.world.getEntities((Entity) null, axisalignedbb, (entity) -> {
                     return a(axisalignedbb, entity);
                 })) {
@@ -204,7 +204,7 @@ public class TileEntityPiston extends TileEntity implements ITickable {
     }
 
     private AxisAlignedBB a(AxisAlignedBB axisalignedbb) {
-        double d0 = (double) this.e(this.i);
+        double d0 = this.e(this.i);
 
         return axisalignedbb.d((double) this.position.getX() + d0 * (double) this.b.getAdjacentX(), (double) this.position.getY() + d0 * (double) this.b.getAdjacentY(), (double) this.position.getZ() + d0 * (double) this.b.getAdjacentZ());
     }
@@ -242,7 +242,7 @@ public class TileEntityPiston extends TileEntity implements ITickable {
                 if (this.g) {
                     iblockdata = Blocks.AIR.getBlockData();
                 } else {
-                    iblockdata = Block.b(this.a, (GeneratorAccess) this.world, this.position);
+                    iblockdata = Block.b(this.a, this.world, this.position);
                 }
 
                 this.world.setTypeAndData(this.position, iblockdata, 3);
@@ -263,14 +263,14 @@ public class TileEntityPiston extends TileEntity implements ITickable {
                 this.world.removeTileEntity(this.position);
                 this.al_();
                 if (this.a != null && this.world.getType(this.position).a(Blocks.MOVING_PISTON)) {
-                    IBlockData iblockdata = Block.b(this.a, (GeneratorAccess) this.world, this.position);
+                    IBlockData iblockdata = Block.b(this.a, this.world, this.position);
 
                     if (iblockdata.isAir()) {
                     this.world.setTypeAndData(this.position, this.a, com.destroystokyo.paper.PaperConfig.allowPistonDuplication ? 84 : (84 | 2)); // Paper - force notify (flag 2), it's possible the set type by the piston block (which doesn't notify) set this block to air
                         Block.a(this.a, iblockdata, this.world, this.position, 3);
                     } else {
-                        if (iblockdata.b(BlockProperties.C) && (Boolean) iblockdata.get(BlockProperties.C)) {
-                            iblockdata = (IBlockData) iblockdata.set(BlockProperties.C, false);
+                        if (iblockdata.b(BlockProperties.C) && iblockdata.get(BlockProperties.C)) {
+                            iblockdata = iblockdata.set(BlockProperties.C, false);
                         }
 
                         this.world.setTypeAndData(this.position, iblockdata, 67);
@@ -318,7 +318,7 @@ public class TileEntityPiston extends TileEntity implements ITickable {
         VoxelShape voxelshape;
 
         if (!this.c && this.g) {
-            voxelshape = ((IBlockData) this.a.set(BlockPiston.EXTENDED, true)).getCollisionShape(iblockaccess, blockposition);
+            voxelshape = this.a.set(BlockPiston.EXTENDED, true).getCollisionShape(iblockaccess, blockposition);
         } else {
             voxelshape = VoxelShapes.a();
         }
@@ -331,15 +331,15 @@ public class TileEntityPiston extends TileEntity implements ITickable {
             IBlockData iblockdata;
 
             if (this.h()) {
-                iblockdata = (IBlockData) ((IBlockData) Blocks.PISTON_HEAD.getBlockData().set(BlockPistonExtension.FACING, this.b)).set(BlockPistonExtension.SHORT, this.c != 1.0F - this.i < 0.25F);
+                iblockdata = Blocks.PISTON_HEAD.getBlockData().set(BlockPistonExtension.FACING, this.b).set(BlockPistonExtension.SHORT, this.c != 1.0F - this.i < 0.25F);
             } else {
                 iblockdata = this.a;
             }
 
             float f = this.e(this.i);
-            double d0 = (double) ((float) this.b.getAdjacentX() * f);
-            double d1 = (double) ((float) this.b.getAdjacentY() * f);
-            double d2 = (double) ((float) this.b.getAdjacentZ() * f);
+            double d0 = (float) this.b.getAdjacentX() * f;
+            double d1 = (float) this.b.getAdjacentY() * f;
+            double d2 = (float) this.b.getAdjacentZ() * f;
 
             return VoxelShapes.a(voxelshape, iblockdata.getCollisionShape(iblockaccess, blockposition).a(d0, d1, d2));
         }

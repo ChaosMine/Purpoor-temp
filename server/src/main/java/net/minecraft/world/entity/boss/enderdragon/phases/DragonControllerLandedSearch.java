@@ -29,9 +29,9 @@ public class DragonControllerLandedSearch extends AbstractDragonControllerLanded
                 this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.SITTING_ATTACKING);
             } else {
                 Vec3D vec3d = (new Vec3D(entityhuman.locX() - this.a.locX(), 0.0D, entityhuman.locZ() - this.a.locZ())).d();
-                Vec3D vec3d1 = (new Vec3D((double) MathHelper.sin(this.a.yaw * 0.017453292F), 0.0D, (double) (-MathHelper.cos(this.a.yaw * 0.017453292F)))).d();
+                Vec3D vec3d1 = (new Vec3D(MathHelper.sin(this.a.yaw * 0.017453292F), 0.0D, -MathHelper.cos(this.a.yaw * 0.017453292F))).d();
                 float f = (float) vec3d1.b(vec3d);
-                float f1 = (float) (Math.acos((double) f) * 57.2957763671875D) + 0.5F;
+                float f1 = (float) (Math.acos(f) * 57.2957763671875D) + 0.5F;
 
                 if (f1 < 0.0F || f1 > 10.0F) {
                     double d0 = entityhuman.locX() - this.a.bo.locX();
@@ -55,7 +55,7 @@ public class DragonControllerLandedSearch extends AbstractDragonControllerLanded
             this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.TAKEOFF);
             if (entityhuman != null) {
                 this.a.getDragonControllerManager().setControllerPhase(DragonControllerPhase.CHARGING_PLAYER);
-                ((DragonControllerCharge) this.a.getDragonControllerManager().b(DragonControllerPhase.CHARGING_PLAYER)).a(new Vec3D(entityhuman.locX(), entityhuman.locY(), entityhuman.locZ()));
+                this.a.getDragonControllerManager().b(DragonControllerPhase.CHARGING_PLAYER).a(new Vec3D(entityhuman.locX(), entityhuman.locY(), entityhuman.locZ()));
             }
         }
 

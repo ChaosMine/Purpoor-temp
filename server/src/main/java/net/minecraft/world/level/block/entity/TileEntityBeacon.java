@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 public class TileEntityBeacon extends TileEntity implements ITileInventory, ITickable {
 
     public static final MobEffectList[][] a = new MobEffectList[][]{{MobEffects.FASTER_MOVEMENT, MobEffects.FASTER_DIG}, {MobEffects.RESISTANCE, MobEffects.JUMP}, {MobEffects.INCREASE_DAMAGE}, {MobEffects.REGENERATION}};
-    private static final Set<MobEffectList> b = (Set) Arrays.stream(TileEntityBeacon.a).flatMap(Arrays::stream).collect(Collectors.toSet());
+    private static final Set<MobEffectList> b = Arrays.stream(TileEntityBeacon.a).flatMap(Arrays::stream).collect(Collectors.toSet());
     private List<TileEntityBeacon.BeaconColorTracker> c = Lists.newArrayList();
     private List<TileEntityBeacon.BeaconColorTracker> g = Lists.newArrayList();
     public int levels;
@@ -160,7 +160,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
             blockposition = new BlockPosition(i, this.i + 1, k);
         }
 
-        TileEntityBeacon.BeaconColorTracker tileentitybeacon_beaconcolortracker = this.g.isEmpty() ? null : (TileEntityBeacon.BeaconColorTracker) this.g.get(this.g.size() - 1);
+        TileEntityBeacon.BeaconColorTracker tileentitybeacon_beaconcolortracker = this.g.isEmpty() ? null : this.g.get(this.g.size() - 1);
         int l = this.world.a(HeightMap.Type.WORLD_SURFACE, i, k);
 
         int i1;
@@ -228,7 +228,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
                 if (!flag && flag1) {
                     this.a(SoundEffects.BLOCK_BEACON_ACTIVATE);
-                    Iterator iterator = this.world.a(EntityPlayer.class, (new AxisAlignedBB((double) i, (double) j, (double) k, (double) i, (double) (j - 4), (double) k)).grow(10.0D, 5.0D, 10.0D)).iterator();
+                    Iterator iterator = this.world.a(EntityPlayer.class, (new AxisAlignedBB(i, j, k, i, j - 4, k)).grow(10.0D, 5.0D, 10.0D)).iterator();
 
                     while (iterator.hasNext()) {
                         EntityPlayer entityplayer = (EntityPlayer) iterator.next();
@@ -257,7 +257,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
             for (int j1 = i - l; j1 <= i + l && flag; ++j1) {
                 for (int k1 = k - l; k1 <= k + l; ++k1) {
-                    if (!this.world.getType(new BlockPosition(j1, i1, k1)).a((Tag) TagsBlock.BEACON_BASE_BLOCKS)) {
+                    if (!this.world.getType(new BlockPosition(j1, i1, k1)).a(TagsBlock.BEACON_BASE_BLOCKS)) {
                         flag = false;
                         break;
                     }
@@ -306,7 +306,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
             // Paper - custom beacon ranges
             double d0 = this.getEffectRange();
 
-            AxisAlignedBB axisalignedbb = (new AxisAlignedBB(this.position)).g(d0).b(0.0D, (double) this.world.getBuildHeight(), 0.0D);
+            AxisAlignedBB axisalignedbb = (new AxisAlignedBB(this.position)).g(d0).b(0.0D, this.world.getBuildHeight(), 0.0D);
             List<EntityHuman> list = this.world.a(EntityHuman.class, axisalignedbb);
 
             return list;
@@ -354,7 +354,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
     private void applyEffects() {
         if (!this.world.isClientSide && this.primaryEffect != null) {
-            double d0 = (double) (this.levels * 10 + 10);
+            double d0 = this.levels * 10 + 10;
             byte b0 = getAmplification();
 
             int i = getLevel();
@@ -371,7 +371,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
     // CraftBukkit end
 
     public void a(SoundEffect soundeffect) {
-        this.world.playSound((EntityHuman) null, this.position, soundeffect, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        this.world.playSound(null, this.position, soundeffect, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 
     public int h() {
@@ -442,7 +442,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
 
     @Override
     public IChatBaseComponent getScoreboardDisplayName() {
-        return (IChatBaseComponent) (this.customName != null ? this.customName : new ChatMessage("container.beacon"));
+        return this.customName != null ? this.customName : new ChatMessage("container.beacon");
     }
 
     public static class BeaconColorTracker {

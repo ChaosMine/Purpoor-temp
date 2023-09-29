@@ -49,7 +49,7 @@ public class BehaviorStrollRandom extends Behavior<EntityCreature> {
     }
 
     private void a(EntityCreature entitycreature, SectionPosition sectionposition) {
-        Optional<Vec3D> optional = Optional.ofNullable(RandomPositionGenerator.b(entitycreature, this.c, this.d, Vec3D.c((BaseBlockPosition) sectionposition.q())));
+        Optional<Vec3D> optional = Optional.ofNullable(RandomPositionGenerator.b(entitycreature, this.c, this.d, Vec3D.c(sectionposition.q())));
 
         entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, optional.map((vec3d) -> {
             return new MemoryTarget(vec3d, this.b, 0);

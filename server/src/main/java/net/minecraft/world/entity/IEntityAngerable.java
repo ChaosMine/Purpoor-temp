@@ -34,7 +34,7 @@ public interface IEntityAngerable {
     default void a(WorldServer worldserver, NBTTagCompound nbttagcompound) {
         this.setAnger(nbttagcompound.getInt("AngerTime"));
         if (!nbttagcompound.b("AngryAt")) {
-            this.setAngerTarget((UUID) null);
+            this.setAngerTarget(null);
         } else {
             UUID uuid = nbttagcompound.a("AngryAt");
 
@@ -102,9 +102,9 @@ public interface IEntityAngerable {
     }
 
     default void pacify() {
-        this.setLastDamager((EntityLiving) null);
-        this.setAngerTarget((UUID) null);
-        this.setGoalTarget((EntityLiving) null, org.bukkit.event.entity.EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
+        this.setLastDamager(null);
+        this.setAngerTarget(null);
+        this.setGoalTarget(null, org.bukkit.event.entity.EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
         this.setAnger(0);
     }
 

@@ -71,7 +71,7 @@ public class iy {
     public static final ix ak = a("template_glass_pane_side_alt", "_side_alt", ja.v, ja.w);
     public static final ix al = a("template_command_block", ja.g, ja.h, ja.i);
     public static final ix am = a("template_anvil", ja.f);
-    public static final ix[] an = (ix[]) IntStream.range(0, 8).mapToObj((i) -> {
+    public static final ix[] an = IntStream.range(0, 8).mapToObj((i) -> {
         return a("stem_growth" + i, "_stage" + i, ja.y);
     }).toArray((i) -> {
         return new ix[i];

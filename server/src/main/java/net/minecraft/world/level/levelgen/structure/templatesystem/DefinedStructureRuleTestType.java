@@ -15,8 +15,6 @@ public interface DefinedStructureRuleTestType<P extends DefinedStructureRuleTest
     Codec<P> codec();
 
     static <P extends DefinedStructureRuleTest> DefinedStructureRuleTestType<P> a(String s, Codec<P> codec) {
-        return (DefinedStructureRuleTestType) IRegistry.a(IRegistry.RULE_TEST, s, (Object) (() -> {
-            return codec;
-        }));
+        return IRegistry.a(IRegistry.RULE_TEST, s,  () -> codec);
     }
 }

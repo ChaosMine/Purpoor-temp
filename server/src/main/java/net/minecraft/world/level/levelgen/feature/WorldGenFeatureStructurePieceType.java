@@ -84,6 +84,6 @@ public interface WorldGenFeatureStructurePieceType {
     StructurePiece load(DefinedStructureManager definedstructuremanager, NBTTagCompound nbttagcompound);
 
     static WorldGenFeatureStructurePieceType a(WorldGenFeatureStructurePieceType worldgenfeaturestructurepiecetype, String s) {
-        return (WorldGenFeatureStructurePieceType) IRegistry.a(IRegistry.STRUCTURE_PIECE, s.toLowerCase(Locale.ROOT), (Object) worldgenfeaturestructurepiecetype);
+        return IRegistry.a(IRegistry.STRUCTURE_PIECE, s.toLowerCase(Locale.ROOT), worldgenfeaturestructurepiecetype);
     }
 }

@@ -40,7 +40,7 @@ public class LootItemFunctionSetCount extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetCount lootitemfunctionsetcount, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetcount, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetcount, jsonserializationcontext);
             jsonobject.add("count", LootValueGenerators.a(lootitemfunctionsetcount.a, jsonserializationcontext));
         }
 

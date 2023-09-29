@@ -27,18 +27,18 @@ public class LootItemConditionLocationCheck implements LootItemCondition {
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        Vec3D vec3d = (Vec3D) loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
+        Vec3D vec3d = loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
 
         return vec3d != null && this.a.a(loottableinfo.getWorld(), vec3d.getX() + (double) this.b.getX(), vec3d.getY() + (double) this.b.getY(), vec3d.getZ() + (double) this.b.getZ());
     }
 
-    public static LootItemCondition.a a(CriterionConditionLocation.a criterionconditionlocation_a) {
+    public static LootItemCondition.a a(CriterionConditionLocation.a_ criterionconditionlocation_a) {
         return () -> {
             return new LootItemConditionLocationCheck(criterionconditionlocation_a.b(), BlockPosition.ZERO);
         };
     }
 
-    public static LootItemCondition.a a(CriterionConditionLocation.a criterionconditionlocation_a, BlockPosition blockposition) {
+    public static LootItemCondition.a a(CriterionConditionLocation.a_ criterionconditionlocation_a, BlockPosition blockposition) {
         return () -> {
             return new LootItemConditionLocationCheck(criterionconditionlocation_a.b(), blockposition);
         };
@@ -67,9 +67,9 @@ public class LootItemConditionLocationCheck implements LootItemCondition {
         @Override
         public LootItemConditionLocationCheck a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
             CriterionConditionLocation criterionconditionlocation = CriterionConditionLocation.a(jsonobject.get("predicate"));
-            int i = ChatDeserializer.a(jsonobject, "offsetX", (int) 0);
-            int j = ChatDeserializer.a(jsonobject, "offsetY", (int) 0);
-            int k = ChatDeserializer.a(jsonobject, "offsetZ", (int) 0);
+            int i = ChatDeserializer.a(jsonobject, "offsetX", 0);
+            int j = ChatDeserializer.a(jsonobject, "offsetY", 0);
+            int k = ChatDeserializer.a(jsonobject, "offsetZ", 0);
 
             return new LootItemConditionLocationCheck(criterionconditionlocation, new BlockPosition(i, j, k));
         }

@@ -65,7 +65,7 @@ public class MinecraftVersion implements GameVersion {
                         Object object;
 
                         try {
-                            object = new MinecraftVersion(ChatDeserializer.a((Reader) inputstreamreader));
+                            object = new MinecraftVersion(ChatDeserializer.a(inputstreamreader));
                             return (GameVersion) object;
                         } catch (Throwable throwable2) {
                             object = throwable2;

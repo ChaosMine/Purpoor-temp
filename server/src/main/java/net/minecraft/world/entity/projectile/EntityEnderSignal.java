@@ -48,7 +48,7 @@ public class EntityEnderSignal extends Entity {
     }
 
     private ItemStack h() {
-        return (ItemStack) this.getDataWatcher().get(EntityEnderSignal.b);
+        return this.getDataWatcher().get(EntityEnderSignal.b);
     }
 
     public ItemStack getItem() {
@@ -63,9 +63,9 @@ public class EntityEnderSignal extends Entity {
     }
 
     public void a(BlockPosition blockposition) {
-        double d0 = (double) blockposition.getX();
+        double d0 = blockposition.getX();
         int i = blockposition.getY();
-        double d1 = (double) blockposition.getZ();
+        double d1 = blockposition.getZ();
         double d2 = d0 - this.locX();
         double d3 = d1 - this.locZ();
         float f = MathHelper.sqrt(d2 * d2 + d3 * d3);
@@ -76,7 +76,7 @@ public class EntityEnderSignal extends Entity {
             this.targetY = this.locY() + 8.0D;
         } else {
             this.targetX = d0;
-            this.targetY = (double) i;
+            this.targetY = i;
             this.targetZ = d1;
         }
 
@@ -93,14 +93,14 @@ public class EntityEnderSignal extends Entity {
         double d2 = this.locZ() + vec3d.z;
         float f = MathHelper.sqrt(c(vec3d));
 
-        this.pitch = IProjectile.e(this.lastPitch, (float) (MathHelper.d(vec3d.y, (double) f) * 57.2957763671875D));
+        this.pitch = IProjectile.e(this.lastPitch, (float) (MathHelper.d(vec3d.y, f) * 57.2957763671875D));
         this.yaw = IProjectile.e(this.lastYaw, (float) (MathHelper.d(vec3d.x, vec3d.z) * 57.2957763671875D));
         if (!this.world.isClientSide) {
             double d3 = this.targetX - d0;
             double d4 = this.targetZ - d2;
             float f1 = (float) Math.sqrt(d3 * d3 + d4 * d4);
             float f2 = (float) MathHelper.d(d4, d3);
-            double d5 = MathHelper.d(0.0025D, (double) f, (double) f1);
+            double d5 = MathHelper.d(0.0025D, f, f1);
             double d6 = vec3d.y;
 
             if (f1 < 1.0F) {
@@ -110,7 +110,7 @@ public class EntityEnderSignal extends Entity {
 
             int i = this.locY() < this.targetY ? 1 : -1;
 
-            vec3d = new Vec3D(Math.cos((double) f2) * d5, d6 + ((double) i - d6) * 0.014999999664723873D, Math.sin((double) f2) * d5);
+            vec3d = new Vec3D(Math.cos(f2) * d5, d6 + ((double) i - d6) * 0.014999999664723873D, Math.sin(f2) * d5);
             this.setMot(vec3d);
         }
 

@@ -42,13 +42,13 @@ public class LootItemFunctionLimitCount extends LootItemFunctionConditional {
         public a() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionLimitCount lootitemfunctionlimitcount, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionlimitcount, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionlimitcount, jsonserializationcontext);
             jsonobject.add("limit", jsonserializationcontext.serialize(lootitemfunctionlimitcount.a));
         }
 
         @Override
         public LootItemFunctionLimitCount b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            LootIntegerLimit lootintegerlimit = (LootIntegerLimit) ChatDeserializer.a(jsonobject, "limit", jsondeserializationcontext, LootIntegerLimit.class);
+            LootIntegerLimit lootintegerlimit = ChatDeserializer.a(jsonobject, "limit", jsondeserializationcontext, LootIntegerLimit.class);
 
             return new LootItemFunctionLimitCount(alootitemcondition, lootintegerlimit);
         }

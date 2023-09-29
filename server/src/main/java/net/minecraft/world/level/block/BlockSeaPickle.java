@@ -35,7 +35,7 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
 
     protected BlockSeaPickle(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSeaPickle.a, 1)).set(BlockSeaPickle.b, true));
+        this.j(this.blockStateList.getBlockData().set(BlockSeaPickle.a, 1).set(BlockSeaPickle.b, true));
     }
 
     @Nullable
@@ -43,13 +43,13 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition());
 
-        if (iblockdata.a((Block) this)) {
-            return (IBlockData) iblockdata.set(BlockSeaPickle.a, Math.min(4, (Integer) iblockdata.get(BlockSeaPickle.a) + 1));
+        if (iblockdata.a(this)) {
+            return iblockdata.set(BlockSeaPickle.a, Math.min(4, iblockdata.get(BlockSeaPickle.a) + 1));
         } else {
             Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
             boolean flag = fluid.getType() == FluidTypes.WATER;
 
-            return (IBlockData) super.getPlacedState(blockactioncontext).set(BlockSeaPickle.b, flag);
+            return super.getPlacedState(blockactioncontext).set(BlockSeaPickle.b, flag);
         }
     }
 
@@ -66,7 +66,7 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
         BlockPosition blockposition1 = blockposition.down();
 
-        return this.c(iworldreader.getType(blockposition1), (IBlockAccess) iworldreader, blockposition1);
+        return this.c(iworldreader.getType(blockposition1), iworldreader, blockposition1);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
         if (!iblockdata.canPlace(generatoraccess, blockposition)) {
             return Blocks.AIR.getBlockData();
         } else {
-            if ((Boolean) iblockdata.get(BlockSeaPickle.b)) {
-                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+            if (iblockdata.get(BlockSeaPickle.b)) {
+                generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
             }
 
             return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -84,12 +84,12 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
 
     @Override
     public boolean a(IBlockData iblockdata, BlockActionContext blockactioncontext) {
-        return blockactioncontext.getItemStack().getItem() == this.getItem() && (Integer) iblockdata.get(BlockSeaPickle.a) < 4 ? true : super.a(iblockdata, blockactioncontext);
+        return blockactioncontext.getItemStack().getItem() == this.getItem() && iblockdata.get(BlockSeaPickle.a) < 4 ? true : super.a(iblockdata, blockactioncontext);
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch ((Integer) iblockdata.get(BlockSeaPickle.a)) {
+        switch (iblockdata.get(BlockSeaPickle.a)) {
             case 1:
             default:
                 return BlockSeaPickle.c;
@@ -104,7 +104,7 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockSeaPickle.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockSeaPickle.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
 
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
-        if (!h(iblockdata) && worldserver.getType(blockposition.down()).a((Tag) TagsBlock.CORAL_BLOCKS)) {
+        if (!h(iblockdata) && worldserver.getType(blockposition.down()).a(TagsBlock.CORAL_BLOCKS)) {
             boolean flag = true;
             int i = 1;
             boolean flag1 = true;
@@ -142,8 +142,8 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
                         if (blockposition1 != blockposition && random.nextInt(6) == 0 && worldserver.getType(blockposition1).a(Blocks.WATER)) {
                             IBlockData iblockdata1 = worldserver.getType(blockposition1.down());
 
-                            if (iblockdata1.a((Tag) TagsBlock.CORAL_BLOCKS)) {
-                                worldserver.setTypeAndData(blockposition1, (IBlockData) Blocks.SEA_PICKLE.getBlockData().set(BlockSeaPickle.a, random.nextInt(4) + 1), 3);
+                            if (iblockdata1.a(TagsBlock.CORAL_BLOCKS)) {
+                                worldserver.setTypeAndData(blockposition1, Blocks.SEA_PICKLE.getBlockData().set(BlockSeaPickle.a, random.nextInt(4) + 1), 3);
                             }
                         }
                     }
@@ -160,7 +160,7 @@ public class BlockSeaPickle extends BlockPlant implements IBlockFragilePlantElem
                 ++j;
             }
 
-            worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockSeaPickle.a, 4), 2);
+            worldserver.setTypeAndData(blockposition, iblockdata.set(BlockSeaPickle.a, 4), 2);
         }
 
     }

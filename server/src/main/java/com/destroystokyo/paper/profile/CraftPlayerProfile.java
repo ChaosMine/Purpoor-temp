@@ -130,7 +130,7 @@ public class CraftPlayerProfile implements PlayerProfile {
 
     @Override
     public boolean completeFromCache() {
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = MinecraftServer.SERVER;
         return completeFromCache(false, PaperConfig.isProxyOnlineMode());
     }
 
@@ -139,7 +139,7 @@ public class CraftPlayerProfile implements PlayerProfile {
     }
 
     public boolean completeFromCache(boolean lookupUUID, boolean onlineMode) {
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = MinecraftServer.SERVER;
         String name = profile.getName();
         UserCache userCache = server.getUserCache();
         if (profile.getId() == null) {
@@ -173,11 +173,11 @@ public class CraftPlayerProfile implements PlayerProfile {
     }
 
     public boolean complete(boolean textures) {
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = MinecraftServer.SERVER;
         return complete(textures, PaperConfig.isProxyOnlineMode());
     }
     public boolean complete(boolean textures, boolean onlineMode) {
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = MinecraftServer.SERVER;
 
         boolean isCompleteFromCache = this.completeFromCache(true, onlineMode);
         if (onlineMode && (!isCompleteFromCache || textures && !hasTextures())) {

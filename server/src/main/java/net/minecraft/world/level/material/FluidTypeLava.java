@@ -59,7 +59,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
                                 }
                             }
                             // CraftBukkit end
-                            world.setTypeUpdate(blockposition1, BlockFireAbstract.a((IBlockAccess) world, blockposition1));
+                            world.setTypeUpdate(blockposition1, BlockFireAbstract.a(world, blockposition1));
                             return;
                         }
                     } else if (iblockdata.getMaterial().isSolid()) {
@@ -83,7 +83,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
                             }
                         }
                         // CraftBukkit end
-                        world.setTypeUpdate(blockposition2.up(), BlockFireAbstract.a((IBlockAccess) world, blockposition2));
+                        world.setTypeUpdate(blockposition2.up(), BlockFireAbstract.a(world, blockposition2));
                     }
                 }
             }
@@ -122,7 +122,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
 
     @Override
     public IBlockData b(Fluid fluid) {
-        return (IBlockData) Blocks.LAVA.getBlockData().set(BlockFluids.LEVEL, e(fluid));
+        return Blocks.LAVA.getBlockData().set(BlockFluids.LEVEL, e(fluid));
     }
 
     @Override
@@ -137,7 +137,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
 
     @Override
     public boolean a(Fluid fluid, IBlockAccess iblockaccess, BlockPosition blockposition, FluidType fluidtype, EnumDirection enumdirection) {
-        return fluid.getHeight(iblockaccess, blockposition) >= 0.44444445F && fluidtype.a((Tag) TagsFluid.WATER);
+        return fluid.getHeight(iblockaccess, blockposition) >= 0.44444445F && fluidtype.a(TagsFluid.WATER);
     }
 
     @Override
@@ -147,7 +147,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
 
     @Override
     public int a(World world, BlockPosition blockposition, Fluid fluid, Fluid fluid1) {
-        int i = this.a((IWorldReader) world);
+        int i = this.a(world);
 
         if (!fluid.isEmpty() && !fluid1.isEmpty() && !(Boolean) fluid.get(FluidTypeLava.FALLING) && !(Boolean) fluid1.get(FluidTypeLava.FALLING) && fluid1.getHeight(world, blockposition) > fluid.getHeight(world, blockposition) && world.getRandom().nextInt(4) != 0) {
             i *= 4;
@@ -182,7 +182,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
         if (enumdirection == EnumDirection.DOWN) {
             Fluid fluid1 = generatoraccess.getFluid(blockposition);
 
-            if (this.a((Tag) TagsFluid.LAVA) && fluid1.a((Tag) TagsFluid.WATER)) {
+            if (this.a(TagsFluid.LAVA) && fluid1.a(TagsFluid.WATER)) {
                 if (iblockdata.getBlock() instanceof BlockFluids) {
                     // CraftBukkit start
                     if (!org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(generatoraccess.getMinecraftWorld(), blockposition, Blocks.STONE.getBlockData(), 3)) {
@@ -221,7 +221,7 @@ public abstract class FluidTypeLava extends FluidTypeFlowing {
 
         @Override
         public int d(Fluid fluid) {
-            return (Integer) fluid.get(FluidTypeLava.a.LEVEL);
+            return fluid.get(FluidTypeLava.a.LEVEL);
         }
 
         @Override

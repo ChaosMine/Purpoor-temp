@@ -49,7 +49,7 @@ public class BehaviorOutside extends Behavior<EntityLiving> {
             BlockPosition blockposition1 = blockposition.b(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 
             if (a(worldserver, entityliving, blockposition1)) {
-                return Vec3D.c((BaseBlockPosition) blockposition1);
+                return Vec3D.c(blockposition1);
             }
         }
 

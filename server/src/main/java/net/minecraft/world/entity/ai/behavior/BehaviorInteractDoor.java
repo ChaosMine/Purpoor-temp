@@ -34,7 +34,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
 
     @Override
     protected boolean a(WorldServer worldserver, EntityLiving entityliving) {
-        PathEntity pathentity = (PathEntity) entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
+        PathEntity pathentity = entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
 
         if (!pathentity.b() && !pathentity.c()) {
             if (!Objects.equals(this.b, pathentity.h())) {
@@ -54,7 +54,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
-        PathEntity pathentity = (PathEntity) entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
+        PathEntity pathentity = entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
 
         this.b = pathentity.h();
         PathPoint pathpoint = pathentity.i();
@@ -62,7 +62,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         BlockPosition blockposition = pathpoint.a();
         IBlockData iblockdata = worldserver.getType(blockposition);
 
-        if (iblockdata.a((Tag) TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
+        if (iblockdata.a(TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
             BlockDoor blockdoor = (BlockDoor) iblockdata.getBlock();
 
             if (!blockdoor.h(iblockdata)) {
@@ -82,7 +82,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         BlockPosition blockposition1 = pathpoint1.a();
         IBlockData iblockdata1 = worldserver.getType(blockposition1);
 
-        if (iblockdata1.a((Tag) TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition1)) { // Purpur
+        if (iblockdata1.a(TagsBlock.WOODEN_DOORS) && !BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition1)) { // Purpur
             BlockDoor blockdoor1 = (BlockDoor) iblockdata1.getBlock();
 
             if (!blockdoor1.h(iblockdata1)) {
@@ -117,7 +117,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
                     } else {
                         IBlockData iblockdata = worldserver.getType(blockposition);
 
-                        if (!iblockdata.a((Tag) TagsBlock.WOODEN_DOORS) || BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
+                        if (!iblockdata.a(TagsBlock.WOODEN_DOORS) || BlockDoor.requiresRedstone(entityliving.world, iblockdata, blockposition)) { // Purpur
                             iterator.remove();
                         } else {
                             BlockDoor blockdoor = (BlockDoor) iblockdata.getBlock();
@@ -144,7 +144,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         return !behaviorcontroller.hasMemory(MemoryModuleType.MOBS) ? false : (behaviorcontroller.getMemory(MemoryModuleType.MOBS).get()).stream().filter((entityliving1) -> { // CraftBukkit - decompile error
             return entityliving1.getEntityType() == entityliving.getEntityType();
         }).filter((entityliving1) -> {
-            return blockposition.a((IPosition) entityliving1.getPositionVector(), 2.0D);
+            return blockposition.a(entityliving1.getPositionVector(), 2.0D);
         }).anyMatch((entityliving1) -> {
             return b(worldserver, entityliving1, blockposition);
         });
@@ -154,7 +154,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         if (!entityliving.getBehaviorController().hasMemory(MemoryModuleType.PATH)) {
             return false;
         } else {
-            PathEntity pathentity = (PathEntity) entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
+            PathEntity pathentity = entityliving.getBehaviorController().getMemory(MemoryModuleType.PATH).get();
 
             if (pathentity.c()) {
                 return false;
@@ -173,7 +173,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
     }
 
     private static boolean a(WorldServer worldserver, EntityLiving entityliving, GlobalPos globalpos) {
-        return globalpos.getDimensionManager() != worldserver.getDimensionKey() || !globalpos.getBlockPosition().a((IPosition) entityliving.getPositionVector(), 2.0D);
+        return globalpos.getDimensionManager() != worldserver.getDimensionKey() || !globalpos.getBlockPosition().a(entityliving.getPositionVector(), 2.0D);
     }
 
     private void c(WorldServer worldserver, EntityLiving entityliving, BlockPosition blockposition) {
@@ -181,7 +181,7 @@ public class BehaviorInteractDoor extends Behavior<EntityLiving> {
         GlobalPos globalpos = GlobalPos.create(worldserver.getDimensionKey(), blockposition);
 
         if (behaviorcontroller.getMemory(MemoryModuleType.DOORS_TO_CLOSE).isPresent()) {
-            ((Set) behaviorcontroller.getMemory(MemoryModuleType.DOORS_TO_CLOSE).get()).add(globalpos);
+            behaviorcontroller.getMemory(MemoryModuleType.DOORS_TO_CLOSE).get().add(globalpos);
         } else {
             behaviorcontroller.setMemory(MemoryModuleType.DOORS_TO_CLOSE, Sets.newHashSet(new GlobalPos[]{globalpos})); // CraftBukkit - decompile error
         }

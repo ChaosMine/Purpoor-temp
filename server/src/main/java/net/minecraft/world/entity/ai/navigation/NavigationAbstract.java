@@ -111,7 +111,7 @@ public abstract class NavigationAbstract {
 
     @Nullable
     public PathEntity a(Stream<BlockPosition> stream, int i) {
-        return this.a((Set) stream.collect(Collectors.toSet()), 8, false, i);
+        return this.a(stream.collect(Collectors.toSet()), 8, false, i);
     }
 
     @Nullable
@@ -260,7 +260,7 @@ public abstract class NavigationAbstract {
                 this.l();
             } else if (this.c != null && !this.c.c()) {
                 vec3d = this.b();
-                Vec3D vec3d1 = this.c.a((Entity) this.a);
+                Vec3D vec3d1 = this.c.a(this.a);
 
                 if (vec3d.y > vec3d1.y && !this.a.isOnGround() && MathHelper.floor(vec3d.x) == MathHelper.floor(vec3d1.x) && MathHelper.floor(vec3d.z) == MathHelper.floor(vec3d1.z)) {
                     this.c.a();
@@ -269,10 +269,10 @@ public abstract class NavigationAbstract {
 
             PacketDebug.a(this.b, this.a, this.c, this.l);
             if (!this.m()) {
-                vec3d = this.c.a((Entity) this.a);
+                vec3d = this.c.a(this.a);
                 BlockPosition blockposition = new BlockPosition(vec3d);
 
-                this.a.getControllerMove().a(vec3d.x, this.b.getType(blockposition.down()).isAir() ? vec3d.y : PathfinderNormal.a((IBlockAccess) this.b, blockposition), vec3d.z, this.d);
+                this.a.getControllerMove().a(vec3d.x, this.b.getType(blockposition.down()).isAir() ? vec3d.y : PathfinderNormal.a(this.b, blockposition), vec3d.z, this.d);
             }
         }
     }
@@ -298,12 +298,12 @@ public abstract class NavigationAbstract {
         if (this.c.f() + 1 >= this.c.e()) {
             return false;
         } else {
-            Vec3D vec3d1 = Vec3D.c((BaseBlockPosition) this.c.g());
+            Vec3D vec3d1 = Vec3D.c(this.c.g());
 
-            if (!vec3d.a((IPosition) vec3d1, 2.0D)) {
+            if (!vec3d.a(vec3d1, 2.0D)) {
                 return false;
             } else {
-                Vec3D vec3d2 = Vec3D.c((BaseBlockPosition) this.c.d(this.c.f() + 1));
+                Vec3D vec3d2 = Vec3D.c(this.c.d(this.c.f() + 1));
                 Vec3D vec3d3 = vec3d2.d(vec3d1);
                 Vec3D vec3d4 = vec3d.d(vec3d1);
 
@@ -422,7 +422,7 @@ public abstract class NavigationAbstract {
             PathPoint pathpoint = this.c.d();
             Vec3D vec3d = new Vec3D(((double) pathpoint.a + this.a.locX()) / 2.0D, ((double) pathpoint.b + this.a.locY()) / 2.0D, ((double) pathpoint.c + this.a.locZ()) / 2.0D);
 
-            if (blockposition.a((IPosition) vec3d, (double) (this.c.e() - this.c.f()))) {
+            if (blockposition.a(vec3d, this.c.e() - this.c.f())) {
                 this.j();
             }
 

@@ -98,8 +98,8 @@ public abstract class Behavior<E extends EntityLiving> {
 
             Entry<MemoryModuleType<?>, MemoryStatus> entry = (Entry) iterator.next();
 
-            memorymoduletype = (MemoryModuleType) entry.getKey();
-            memorystatus = (MemoryStatus) entry.getValue();
+            memorymoduletype = entry.getKey();
+            memorystatus = entry.getValue();
         } while (e0.getBehaviorController().a(memorymoduletype, memorystatus));
 
         return false;

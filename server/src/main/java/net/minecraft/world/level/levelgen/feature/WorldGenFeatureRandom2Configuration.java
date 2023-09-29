@@ -14,7 +14,12 @@ public class WorldGenFeatureRandom2Configuration extends WorldGenerator<WorldGen
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRandom2 worldgenfeaturerandom2) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRandom2 worldgenfeaturerandom2) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeaturerandom2);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureRandom2 worldgenfeaturerandom2) {
         int i = random.nextInt(worldgenfeaturerandom2.b.size());
         WorldGenFeatureConfigured<?, ?> worldgenfeatureconfigured = (WorldGenFeatureConfigured) ((Supplier) worldgenfeaturerandom2.b.get(i)).get();
 

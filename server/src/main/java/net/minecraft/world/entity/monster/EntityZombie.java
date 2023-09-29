@@ -163,7 +163,7 @@ public class EntityZombie extends EntityMonster {
     }
 
     public boolean isDrownConverting() {
-        return (Boolean) this.getDataWatcher().get(EntityZombie.DROWN_CONVERTING);
+        return this.getDataWatcher().get(EntityZombie.DROWN_CONVERTING);
     }
 
     public boolean canBreakDoors() { return this.eU(); } // Paper - OBFHELPER
@@ -180,11 +180,11 @@ public class EntityZombie extends EntityMonster {
                 if (flag) {
                     this.goalSelector.a(1, this.br);
                 } else {
-                    this.goalSelector.a((PathfinderGoal) this.br);
+                    this.goalSelector.a(this.br);
                 }
             }
         } else if (this.bs) {
-            this.goalSelector.a((PathfinderGoal) this.br);
+            this.goalSelector.a(this.br);
             this.bs = false;
         }
 
@@ -196,7 +196,7 @@ public class EntityZombie extends EntityMonster {
 
     @Override
     public boolean isBaby() {
-        return (Boolean) this.getDataWatcher().get(EntityZombie.d);
+        return this.getDataWatcher().get(EntityZombie.d);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class EntityZombie extends EntityMonster {
                     this.eP();
                 }
             } else if (this.eN()) {
-                if (this.a((Tag) TagsFluid.WATER)) {
+                if (this.a(TagsFluid.WATER)) {
                     ++this.bt;
                     if (this.bt >= 600) {
                         this.startDrownedConversion(300);
@@ -309,13 +309,13 @@ public class EntityZombie extends EntityMonster {
     protected void eP() {
         this.b(EntityTypes.DROWNED);
         if (!this.isSilent()) {
-            this.world.a((EntityHuman) null, 1040, this.getChunkCoordinates(), 0);
+            this.world.a(null, 1040, this.getChunkCoordinates(), 0);
         }
 
     }
 
     protected void b(EntityTypes<? extends EntityZombie> entitytypes) {
-        EntityZombie entityzombie = (EntityZombie) this.a(entitytypes, true, EntityTransformEvent.TransformReason.DROWNED, CreatureSpawnEvent.SpawnReason.DROWNED);
+        EntityZombie entityzombie = this.a(entitytypes, true, EntityTransformEvent.TransformReason.DROWNED, CreatureSpawnEvent.SpawnReason.DROWNED);
 
         if (entityzombie != null) {
             entityzombie.y(entityzombie.world.getDamageScaler(entityzombie.getChunkCoordinates()).d());
@@ -367,11 +367,11 @@ public class EntityZombie extends EntityMonster {
                     EntityTypes<?> entitytypes = entityzombie.getEntityType();
                     EntityPositionTypes.Surface entitypositiontypes_surface = EntityPositionTypes.a(entitytypes);
 
-                    if (SpawnerCreature.a(entitypositiontypes_surface, (IWorldReader) this.world, blockposition, entitytypes) && EntityPositionTypes.a(entitytypes, worldserver, EnumMobSpawn.REINFORCEMENT, blockposition, this.world.random)) {
-                        entityzombie.setPosition((double) i1, (double) j1, (double) k1);
-                        if (!this.world.isPlayerNearby((double) i1, (double) j1, (double) k1, 7.0D) && this.world.j((Entity) entityzombie) && this.world.getCubes(entityzombie) && !this.world.containsLiquid(entityzombie.getBoundingBox())) {
+                    if (SpawnerCreature.a(entitypositiontypes_surface, this.world, blockposition, entitytypes) && EntityPositionTypes.a(entitytypes, worldserver, EnumMobSpawn.REINFORCEMENT, blockposition, this.world.random)) {
+                        entityzombie.setPosition(i1, j1, k1);
+                        if (!this.world.isPlayerNearby(i1, j1, k1, 7.0D) && this.world.j(entityzombie) && this.world.getCubes(entityzombie) && !this.world.containsLiquid(entityzombie.getBoundingBox())) {
                             entityzombie.setGoalTarget(entityliving, EntityTargetEvent.TargetReason.REINFORCEMENT_TARGET, true); // CraftBukkit
-                            entityzombie.prepare(worldserver, this.world.getDamageScaler(entityzombie.getChunkCoordinates()), EnumMobSpawn.REINFORCEMENT, (GroupDataEntity) null, (NBTTagCompound) null);
+                            entityzombie.prepare(worldserver, this.world.getDamageScaler(entityzombie.getChunkCoordinates()), EnumMobSpawn.REINFORCEMENT, null, null);
                             worldserver.addAllEntities(entityzombie, CreatureSpawnEvent.SpawnReason.REINFORCEMENTS); // CraftBukkit
                             this.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).addModifier(new AttributeModifier("Zombie reinforcement caller charge", -0.05000000074505806D, AttributeModifier.Operation.ADDITION));
                             entityzombie.getAttributeInstance(GenericAttributes.SPAWN_REINFORCEMENTS).addModifier(new AttributeModifier("Zombie reinforcement callee charge", -0.05000000074505806D, AttributeModifier.Operation.ADDITION));
@@ -493,19 +493,19 @@ public class EntityZombie extends EntityMonster {
 
             EntityVillager entityvillager = (EntityVillager) entityliving;
             // CraftBukkit start
-            EntityZombieVillager entityzombievillager = (EntityZombieVillager) entityvillager.a(EntityTypes.ZOMBIE_VILLAGER, false, EntityTransformEvent.TransformReason.INFECTION, CreatureSpawnEvent.SpawnReason.INFECTION);
+            EntityZombieVillager entityzombievillager = entityvillager.a(EntityTypes.ZOMBIE_VILLAGER, false, EntityTransformEvent.TransformReason.INFECTION, CreatureSpawnEvent.SpawnReason.INFECTION);
             if (entityzombievillager == null) {
                 return;
             }
             // CraftBukkit end
 
-            entityzombievillager.prepare(worldserver, worldserver.getDamageScaler(entityzombievillager.getChunkCoordinates()), EnumMobSpawn.CONVERSION, new EntityZombie.GroupDataZombie(false, true), (NBTTagCompound) null);
+            entityzombievillager.prepare(worldserver, worldserver.getDamageScaler(entityzombievillager.getChunkCoordinates()), EnumMobSpawn.CONVERSION, new EntityZombie.GroupDataZombie(false, true), null);
             entityzombievillager.setVillagerData(entityvillager.getVillagerData());
             entityzombievillager.a((NBTBase) entityvillager.fj().a((DynamicOps) DynamicOpsNBT.a).getValue());
             entityzombievillager.setOffers(entityvillager.getOffers().a());
             entityzombievillager.a(entityvillager.getExperience());
             if (!this.isSilent()) {
-                worldserver.a((EntityHuman) null, 1026, this.getChunkCoordinates(), 0);
+                worldserver.a(null, 1026, this.getChunkCoordinates(), 0);
             }
         }
 
@@ -543,15 +543,15 @@ public class EntityZombie extends EntityMonster {
                         List<EntityChicken> list = jockeyTryExistingChickens() ? worldaccess.a(EntityChicken.class, this.getBoundingBox().grow(5.0D, 3.0D, 5.0D), IEntitySelector.c) : Collections.emptyList();
 
                         if (!list.isEmpty()) {
-                            EntityChicken entitychicken = (EntityChicken) list.get(0);
+                            EntityChicken entitychicken = list.get(0);
 
                             entitychicken.setChickenJockey(true);
                             this.startRiding(entitychicken);
                         } else { // Purpur
-                        EntityChicken entitychicken1 = (EntityChicken) EntityTypes.CHICKEN.a(this.world);
+                        EntityChicken entitychicken1 = EntityTypes.CHICKEN.a(this.world);
 
                         entitychicken1.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, 0.0F);
-                        entitychicken1.prepare(worldaccess, difficultydamagescaler, EnumMobSpawn.JOCKEY, (GroupDataEntity) null, (NBTTagCompound) null);
+                        entitychicken1.prepare(worldaccess, difficultydamagescaler, EnumMobSpawn.JOCKEY, null, null);
                         entitychicken1.setChickenJockey(true);
                         this.startRiding(entitychicken1);
                         worldaccess.addEntity(entitychicken1, CreatureSpawnEvent.SpawnReason.MOUNT); // CraftBukkit
@@ -642,12 +642,12 @@ public class EntityZombie extends EntityMonster {
 
         @Override
         public void a(GeneratorAccess generatoraccess, BlockPosition blockposition) {
-            generatoraccess.playSound((EntityHuman) null, blockposition, SoundEffects.ENTITY_ZOMBIE_DESTROY_EGG, SoundCategory.HOSTILE, 0.5F, 0.9F + EntityZombie.this.random.nextFloat() * 0.2F);
+            generatoraccess.playSound(null, blockposition, SoundEffects.ENTITY_ZOMBIE_DESTROY_EGG, SoundCategory.HOSTILE, 0.5F, 0.9F + EntityZombie.this.random.nextFloat() * 0.2F);
         }
 
         @Override
         public void a(World world, BlockPosition blockposition) {
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_BREAK, SoundCategory.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
+            world.playSound(null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_BREAK, SoundCategory.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
         }
 
         @Override

@@ -36,7 +36,7 @@ public abstract class DataConverterBlockRename extends DataFix {
                 return typed.update(DSL.remainderFinder(), (dynamic) -> {
                     Optional<String> optional = dynamic.get("Name").asString().result();
 
-                    return optional.isPresent() ? dynamic.set("Name", dynamic.createString(this.a((String) optional.get()))) : dynamic;
+                    return optional.isPresent() ? dynamic.set("Name", dynamic.createString(this.a(optional.get()))) : dynamic;
                 });
             });
 
@@ -50,7 +50,7 @@ public abstract class DataConverterBlockRename extends DataFix {
         return new DataConverterBlockRename(schema, s) {
             @Override
             protected String a(String s1) {
-                return (String) function.apply(s1);
+                return function.apply(s1);
             }
         };
     }

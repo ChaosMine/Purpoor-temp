@@ -36,6 +36,6 @@ public interface RecipeSerializer<T extends IRecipe<?>> {
     void a(PacketDataSerializer packetdataserializer, T t0);
 
     static <S extends RecipeSerializer<T>, T extends IRecipe<?>> S a(String s, S s0) {
-        return (RecipeSerializer) IRegistry.a(IRegistry.RECIPE_SERIALIZER, s, (Object) s0);
+        return IRegistry.a(IRegistry.RECIPE_SERIALIZER, s, s0);
     }
 }

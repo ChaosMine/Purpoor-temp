@@ -66,7 +66,7 @@ public class ContainerStonecutter extends Container {
             @Override
             public void update() {
                 super.update();
-                ContainerStonecutter.this.a((IInventory) this);
+                ContainerStonecutter.this.a(this);
                 ContainerStonecutter.this.l.run();
             }
 
@@ -101,7 +101,7 @@ public class ContainerStonecutter extends Container {
                     long j = world.getTime();
 
                     if (ContainerStonecutter.this.k != j) {
-                        world.playSound((EntityHuman) null, blockposition, SoundEffects.UI_STONECUTTER_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, blockposition, SoundEffects.UI_STONECUTTER_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         ContainerStonecutter.this.k = j;
                     }
 
@@ -193,9 +193,9 @@ public class ContainerStonecutter extends Container {
 
     private void i() {
         if (!this.i.isEmpty() && this.d(this.containerProperty.get())) {
-            RecipeStonecutting recipestonecutting = (RecipeStonecutting) this.i.get(this.containerProperty.get());
+            RecipeStonecutting recipestonecutting = this.i.get(this.containerProperty.get());
 
-            this.resultInventory.a((IRecipe) recipestonecutting);
+            this.resultInventory.a(recipestonecutting);
             this.d.set(recipestonecutting.a(this.inventory));
         } else {
             this.d.set(ItemStack.b);
@@ -217,7 +217,7 @@ public class ContainerStonecutter extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

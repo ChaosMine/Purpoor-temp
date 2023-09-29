@@ -202,7 +202,7 @@ public class EnderDragonBattle {
         if (list.isEmpty()) {
             this.dragonKilled = true;
         } else {
-            EntityEnderDragon entityenderdragon = (EntityEnderDragon) list.get(0);
+            EntityEnderDragon entityenderdragon = list.get(0);
 
             this.dragonUUID = entityenderdragon.getUniqueID();
             EnderDragonBattle.LOGGER.info("Found that there's a dragon still alive ({})", entityenderdragon);
@@ -228,7 +228,7 @@ public class EnderDragonBattle {
             this.o();
         } else {
             EnderDragonBattle.LOGGER.debug("Haven't seen our dragon, but found another one to use.");
-            this.dragonUUID = ((EntityEnderDragon) list.get(0)).getUniqueID();
+            this.dragonUUID = list.get(0).getUniqueID();
         }
 
     }
@@ -247,7 +247,7 @@ public class EnderDragonBattle {
                 while (iterator.hasNext()) {
                     EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                    CriterionTriggers.n.a(entityplayer, (Entity) entityenderdragon);
+                    CriterionTriggers.n.a(entityplayer, entityenderdragon);
                 }
             } else {
                 this.respawnPhase = enumdragonrespawn;
@@ -380,7 +380,7 @@ public class EnderDragonBattle {
 
         WorldGenEnder.Spike worldgenender_spike;
 
-        for (Iterator iterator = WorldGenEnder.a((GeneratorAccessSeed) this.world).iterator(); iterator.hasNext(); this.h += this.world.a(EntityEnderCrystal.class, worldgenender_spike.f()).size()) {
+        for (Iterator iterator = WorldGenEnder.a(this.world).iterator(); iterator.hasNext(); this.h += this.world.a(EntityEnderCrystal.class, worldgenender_spike.f()).size()) {
             worldgenender_spike = (WorldGenEnder.Spike) iterator.next();
         }
 
@@ -420,7 +420,7 @@ public class EnderDragonBattle {
 
     private void n() {
         if (!this.gateways.isEmpty()) {
-            int i = (Integer) this.gateways.remove(this.gateways.size() - 1);
+            int i = this.gateways.remove(this.gateways.size() - 1);
             int j = MathHelper.floor(96.0D * Math.cos(2.0D * (-3.141592653589793D + 0.15707963267948966D * (double) i)));
             int k = MathHelper.floor(96.0D * Math.sin(2.0D * (-3.141592653589793D + 0.15707963267948966D * (double) i)));
 
@@ -447,7 +447,7 @@ public class EnderDragonBattle {
 
     private EntityEnderDragon o() {
         this.world.getChunkAtWorldCoords(new BlockPosition(0, 128, 0));
-        EntityEnderDragon entityenderdragon = (EntityEnderDragon) EntityTypes.ENDER_DRAGON.a((World) this.world);
+        EntityEnderDragon entityenderdragon = EntityTypes.ENDER_DRAGON.a(this.world);
 
         entityenderdragon.getDragonControllerManager().setControllerPhase(DragonControllerPhase.HOLDING_PATTERN);
         entityenderdragon.setPositionRotation(0.0D, 128.0D, 0.0D, this.world.random.nextFloat() * 360.0F, 0.0F);
@@ -528,7 +528,7 @@ public class EnderDragonBattle {
             }
 
             EnderDragonBattle.LOGGER.debug("Found all crystals, respawning dragon.");
-            this.a((List) list);
+            this.a(list);
         }
 
     }
@@ -558,7 +558,7 @@ public class EnderDragonBattle {
     }
 
     public void resetCrystals() {
-        Iterator iterator = WorldGenEnder.a((GeneratorAccessSeed) this.world).iterator();
+        Iterator iterator = WorldGenEnder.a(this.world).iterator();
 
         while (iterator.hasNext()) {
             WorldGenEnder.Spike worldgenender_spike = (WorldGenEnder.Spike) iterator.next();
@@ -569,7 +569,7 @@ public class EnderDragonBattle {
                 EntityEnderCrystal entityendercrystal = (EntityEnderCrystal) iterator1.next();
 
                 entityendercrystal.setInvulnerable(false);
-                entityendercrystal.setBeamTarget((BlockPosition) null);
+                entityendercrystal.setBeamTarget(null);
             }
         }
 

@@ -18,7 +18,7 @@ public class ItemCooldown {
     }
 
     public float a(Item item, float f) {
-        ItemCooldown.Info itemcooldown_info = (ItemCooldown.Info) this.cooldowns.get(item);
+        ItemCooldown.Info itemcooldown_info = this.cooldowns.get(item);
 
         if (itemcooldown_info != null) {
             float f1 = (float) (itemcooldown_info.endTick - itemcooldown_info.b);
@@ -38,9 +38,9 @@ public class ItemCooldown {
             while (iterator.hasNext()) {
                 Entry<Item, ItemCooldown.Info> entry = (Entry) iterator.next();
 
-                if (((ItemCooldown.Info) entry.getValue()).endTick <= this.currentTick) {
+                if (entry.getValue().endTick <= this.currentTick) {
                     iterator.remove();
-                    this.c((Item) entry.getKey());
+                    this.c(entry.getKey());
                 }
             }
         }

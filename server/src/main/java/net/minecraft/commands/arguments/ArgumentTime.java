@@ -58,7 +58,7 @@ public class ArgumentTime implements ArgumentType<Integer> {
             return suggestionsbuilder.buildFuture();
         }
 
-        return ICompletionProvider.b((Iterable) ArgumentTime.d.keySet(), suggestionsbuilder.createOffset(suggestionsbuilder.getStart() + stringreader.getCursor()));
+        return ICompletionProvider.b(ArgumentTime.d.keySet(), suggestionsbuilder.createOffset(suggestionsbuilder.getStart() + stringreader.getCursor()));
     }
 
     public Collection<String> getExamples() {

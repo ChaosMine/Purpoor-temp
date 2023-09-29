@@ -61,7 +61,7 @@ public class LootItemFunctionExplorationMap extends LootItemFunctionConditional 
         if (itemstack.getItem() != Items.MAP) {
             return itemstack;
         } else {
-            Vec3D vec3d = (Vec3D) loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
+            Vec3D vec3d = loottableinfo.getContextParameter(LootContextParameters.ORIGIN);
 
             if (vec3d != null) {
                 WorldServer worldserver = loottableinfo.getWorld();
@@ -81,7 +81,7 @@ public class LootItemFunctionExplorationMap extends LootItemFunctionConditional 
 
                     ItemWorldMap.applySepiaFilter(worldserver, itemstack1);
                     WorldMap.decorateMap(itemstack1, blockposition, "+", this.f);
-                    itemstack1.a((IChatBaseComponent) (new ChatMessage("filled_map." + this.e.i().toLowerCase(Locale.ROOT))));
+                    itemstack1.a(new ChatMessage("filled_map." + this.e.i().toLowerCase(Locale.ROOT)));
                     return itemstack1;
                 }
             }
@@ -135,7 +135,7 @@ public class LootItemFunctionExplorationMap extends LootItemFunctionConditional 
             }
 
             byte b0 = ChatDeserializer.a(jsonobject, "zoom", (byte) 2);
-            int i = ChatDeserializer.a(jsonobject, "search_radius", (int) 50);
+            int i = ChatDeserializer.a(jsonobject, "search_radius", 50);
             boolean flag = ChatDeserializer.a(jsonobject, "skip_existing_chunks", true);
 
             return new LootItemFunctionExplorationMap(alootitemcondition, structuregenerator, mapicon_type, b0, i, flag);
@@ -144,7 +144,7 @@ public class LootItemFunctionExplorationMap extends LootItemFunctionConditional 
         private static StructureGenerator<?> a(JsonObject jsonobject) {
             if (jsonobject.has("destination")) {
                 String s = ChatDeserializer.h(jsonobject, "destination");
-                StructureGenerator<?> structuregenerator = (StructureGenerator) StructureGenerator.a.get(s.toLowerCase(Locale.ROOT));
+                StructureGenerator<?> structuregenerator = StructureGenerator.a.get(s.toLowerCase(Locale.ROOT));
 
                 if (structuregenerator != null) {
                     return structuregenerator;

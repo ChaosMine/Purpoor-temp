@@ -36,7 +36,7 @@ public class PotionUtil {
         List<MobEffect> list = Lists.newArrayList();
 
         list.addAll(c(nbttagcompound).a());
-        a(nbttagcompound, (List) list);
+        a(nbttagcompound, list);
         return list;
     }
 
@@ -47,7 +47,7 @@ public class PotionUtil {
     public static List<MobEffect> b(@Nullable NBTTagCompound nbttagcompound) {
         List<MobEffect> list = Lists.newArrayList();
 
-        a(nbttagcompound, (List) list);
+        a(nbttagcompound, list);
         return list;
     }
 
@@ -70,11 +70,11 @@ public class PotionUtil {
     public static int c(ItemStack itemstack) {
         NBTTagCompound nbttagcompound = itemstack.getTag();
 
-        return nbttagcompound != null && nbttagcompound.hasKeyOfType("CustomPotionColor", 99) ? nbttagcompound.getInt("CustomPotionColor") : (d(itemstack) == Potions.EMPTY ? 16253176 : a((Collection) getEffects(itemstack)));
+        return nbttagcompound != null && nbttagcompound.hasKeyOfType("CustomPotionColor", 99) ? nbttagcompound.getInt("CustomPotionColor") : (d(itemstack) == Potions.EMPTY ? 16253176 : a(getEffects(itemstack)));
     }
 
     public static int a(PotionRegistry potionregistry) {
-        return potionregistry == Potions.EMPTY ? 16253176 : a((Collection) potionregistry.a());
+        return potionregistry == Potions.EMPTY ? 16253176 : a(potionregistry.a());
     }
 
     public static int a(Collection<MobEffect> collection) {

@@ -57,7 +57,7 @@ public class ChatComponentScore extends ChatBaseComponent implements ChatCompone
                     throw ArgumentEntity.a.create();
                 }
 
-                return ((Entity) list.get(0)).getName();
+                return list.get(0).getName();
             }
         }
 

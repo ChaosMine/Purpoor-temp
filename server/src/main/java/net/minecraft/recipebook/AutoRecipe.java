@@ -40,7 +40,7 @@ public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Inte
                 this.b.a();
                 entityplayer.inventory.a(this.b);
                 this.d.a(this.b);
-                if (this.b.a(irecipe, (IntList) null)) {
+                if (this.b.a(irecipe, null)) {
                     this.a(irecipe, flag);
                 } else {
                     this.a();
@@ -91,7 +91,7 @@ public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Inte
 
     protected void a(IRecipe<C> irecipe, boolean flag) {
         boolean flag1 = this.d.a(irecipe);
-        int i = this.b.b(irecipe, (IntList) null);
+        int i = this.b.b(irecipe, null);
         int j;
 
         if (flag1) {
@@ -114,7 +114,7 @@ public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Inte
             IntListIterator intlistiterator = intarraylist.iterator();
 
             while (intlistiterator.hasNext()) {
-                int l = (Integer) intlistiterator.next();
+                int l = intlistiterator.next();
                 int i1 = AutoRecipeStackManager.a(l).getMaxStackSize();
 
                 if (i1 < k) {
@@ -133,7 +133,7 @@ public class AutoRecipe<C extends IInventory> implements AutoRecipeAbstract<Inte
     @Override
     public void a(Iterator<Integer> iterator, int i, int j, int k, int l) {
         Slot slot = this.d.getSlot(i);
-        ItemStack itemstack = AutoRecipeStackManager.a((Integer) iterator.next());
+        ItemStack itemstack = AutoRecipeStackManager.a(iterator.next());
 
         if (!itemstack.isEmpty()) {
             for (int i1 = 0; i1 < j; ++i1) {

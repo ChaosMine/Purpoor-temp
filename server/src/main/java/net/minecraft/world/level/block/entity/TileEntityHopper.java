@@ -110,13 +110,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
 
     @Override
     public ItemStack splitStack(int i, int j) {
-        this.d((EntityHuman) null);
+        this.d(null);
         return ContainerUtil.a(this.f(), i, j);
     }
 
     @Override
     public void setItem(int i, ItemStack itemstack) {
-        this.d((EntityHuman) null);
+        this.d(null);
         this.f().set(i, itemstack);
         if (itemstack.getCount() > this.getMaxStackSize()) {
             itemstack.setCount(this.getMaxStackSize());
@@ -138,7 +138,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
                 this.setCooldown(0);
                 // Spigot start
                 boolean result = this.a(() -> {
-                    return a((IHopper) this);
+                    return a(this);
                 });
                 if (!result && this.world.spigotConfig.hopperCheck > 1) {
                     this.setCooldown(this.world.spigotConfig.hopperCheck);
@@ -151,7 +151,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
 
     private boolean a(Supplier<Boolean> supplier) {
         if (this.world != null && !this.world.isClientSide) {
-            if (!this.m() && (Boolean) this.getBlock().get(BlockHopper.ENABLED)) {
+            if (!this.m() && this.getBlock().get(BlockHopper.ENABLED)) {
                 boolean flag = false;
 
                 if (!this.isEmpty()) {
@@ -159,7 +159,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
                 }
 
                 if (!this.j()) {
-                    flag |= (Boolean) supplier.get();
+                    flag |= supplier.get();
                 }
 
                 if (flag) {
@@ -351,7 +351,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
         if (iinventory == null) {
             return false;
         } else {
-            EnumDirection enumdirection = ((EnumDirection) this.getBlock().get(BlockHopper.FACING)).opposite();
+            EnumDirection enumdirection = this.getBlock().get(BlockHopper.FACING).opposite();
 
             if (this.b(iinventory, enumdirection)) {
                 return false;
@@ -481,7 +481,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
                 }
 
                 entityitem = (EntityItem) iterator.next();
-            } while (!a((IInventory) ihopper, entityitem));
+            } while (!a(ihopper, entityitem));
 
             return true;
         }
@@ -544,7 +544,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
         }
         // CraftBukkit end
         ItemStack itemstack = entityitem.getItemStack().cloneItemStack();
-        ItemStack itemstack1 = addItem((IInventory) null, iinventory, itemstack, (EnumDirection) null);
+        ItemStack itemstack1 = addItem(null, iinventory, itemstack, null);
 
         if (itemstack1.isEmpty()) {
             flag = true;
@@ -634,7 +634,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
 
     @Nullable
     private IInventory l() {
-        EnumDirection enumdirection = (EnumDirection) this.getBlock().get(BlockHopper.FACING);
+        EnumDirection enumdirection = this.getBlock().get(BlockHopper.FACING);
 
         return b(this.getWorld(), this.position.shift(enumdirection));
     }
@@ -675,7 +675,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
             TileEntity tileentity = world.getTileEntity(blockposition);
 
             if (tileentity instanceof IInventory) {
-                object = (IInventory) tileentity;
+                object = tileentity;
                 if (object instanceof TileEntityChest && block instanceof BlockChest) {
                     object = BlockChest.getInventory((BlockChest) block, iblockdata, world, blockposition, true);
                 }
@@ -738,9 +738,9 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
         if (entity instanceof EntityItem) {
             BlockPosition blockposition = this.getPosition();
 
-            if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.aa_(), OperatorBoolean.AND)) {
+            if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d(-blockposition.getX(), -blockposition.getY(), -blockposition.getZ())), this.aa_(), OperatorBoolean.AND)) {
                 this.a(() -> {
-                    return a((IInventory) this, (EntityItem) entity);
+                    return a(this, (EntityItem) entity);
                 });
             }
         }

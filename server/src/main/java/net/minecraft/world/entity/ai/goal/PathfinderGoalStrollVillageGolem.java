@@ -61,7 +61,7 @@ public class PathfinderGoalStrollVillageGolem extends PathfinderGoalRandomStroll
         if (list.isEmpty()) {
             return null;
         } else {
-            EntityVillager entityvillager = (EntityVillager) list.get(this.a.world.random.nextInt(list.size()));
+            EntityVillager entityvillager = list.get(this.a.world.random.nextInt(list.size()));
             Vec3D vec3d = entityvillager.getPositionVector();
 
             return RandomPositionGenerator.a(this.a, 10, 7, vec3d);
@@ -77,29 +77,29 @@ public class PathfinderGoalStrollVillageGolem extends PathfinderGoalRandomStroll
         } else {
             BlockPosition blockposition = this.a(sectionposition);
 
-            return blockposition == null ? null : RandomPositionGenerator.a(this.a, 10, 7, Vec3D.c((BaseBlockPosition) blockposition));
+            return blockposition == null ? null : RandomPositionGenerator.a(this.a, 10, 7, Vec3D.c(blockposition));
         }
     }
 
     @Nullable
     private SectionPosition m() {
         WorldServer worldserver = (WorldServer) this.a.world;
-        List<SectionPosition> list = (List) SectionPosition.a(SectionPosition.a((Entity) this.a), 2).filter((sectionposition) -> {
+        List<SectionPosition> list = SectionPosition.a(SectionPosition.a(this.a), 2).filter((sectionposition) -> {
             return worldserver.b(sectionposition) == 0;
-        }).collect(Collectors.toList());
+        }).toList();
 
-        return list.isEmpty() ? null : (SectionPosition) list.get(worldserver.random.nextInt(list.size()));
+        return list.isEmpty() ? null : list.get(worldserver.random.nextInt(list.size()));
     }
 
     @Nullable
     private BlockPosition a(SectionPosition sectionposition) {
         WorldServer worldserver = (WorldServer) this.a.world;
         VillagePlace villageplace = worldserver.y();
-        List<BlockPosition> list = (List) villageplace.c((villageplacetype) -> {
+        List<BlockPosition> list = villageplace.c((villageplacetype) -> {
             return true;
-        }, sectionposition.q(), 8, VillagePlace.Occupancy.IS_OCCUPIED).map(VillagePlaceRecord::f).collect(Collectors.toList());
+        }, sectionposition.q(), 8, VillagePlace.Occupancy.IS_OCCUPIED).map(VillagePlaceRecord::f).toList();
 
-        return list.isEmpty() ? null : (BlockPosition) list.get(worldserver.random.nextInt(list.size()));
+        return list.isEmpty() ? null : list.get(worldserver.random.nextInt(list.size()));
     }
 
     private boolean a(EntityVillager entityvillager) {

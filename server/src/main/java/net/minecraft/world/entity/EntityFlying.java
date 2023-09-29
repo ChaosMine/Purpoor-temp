@@ -48,7 +48,7 @@ public abstract class EntityFlying extends EntityInsentient {
             this.setMot(this.getMot().a((double) f));
         }
 
-        this.a((EntityLiving) this, false);
+        this.a(this, false);
     }
 
     @Override

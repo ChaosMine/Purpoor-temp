@@ -17,14 +17,14 @@ public interface Recipes<T extends IRecipe<?>> {
     Recipes<RecipeSmithing> SMITHING = a("smithing");
 
     static <T extends IRecipe<?>> Recipes<T> a(final String s) {
-        return (Recipes) IRegistry.a(IRegistry.RECIPE_TYPE, new MinecraftKey(s), (Object) (new Recipes<T>() {
+        return IRegistry.a(IRegistry.RECIPE_TYPE, new MinecraftKey(s), new Recipes<T>() {
             public String toString() {
                 return s;
             }
-        }));
+        });
     }
 
     default <C extends IInventory> Optional<T> a(IRecipe<C> irecipe, World world, C c0) {
-        return irecipe.a(c0, world) ? Optional.of(irecipe) : Optional.empty();
+        return irecipe.a(c0, world) ? Optional.of((T) irecipe) : Optional.empty();
     }
 }

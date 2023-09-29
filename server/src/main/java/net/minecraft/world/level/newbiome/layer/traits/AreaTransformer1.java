@@ -10,8 +10,8 @@ public interface AreaTransformer1 {
     default <R extends Area> AreaFactory<R> a(AreaContextTransformed<R> areacontexttransformed) {
         return () -> {
             return areacontexttransformed.a((i, j) -> {
-                areacontexttransformed.a((long) i, (long) j);
-                return this.a((WorldGenContext) areacontexttransformed, i, j);
+                areacontexttransformed.a(i, (long) j);
+                return this.a(areacontexttransformed, i, j);
             });
         };
     }

@@ -18,14 +18,19 @@ public class WorldGenFeatureNetherForestVegetation extends WorldGenerator<WorldG
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBlockPileConfiguration worldgenfeatureblockpileconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBlockPileConfiguration worldgenfeatureblockpileconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureblockpileconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureBlockPileConfiguration worldgenfeatureblockpileconfiguration) {
         return a(generatoraccessseed, random, blockposition, worldgenfeatureblockpileconfiguration, 8, 4);
     }
 
     public static boolean a(GeneratorAccess generatoraccess, Random random, BlockPosition blockposition, WorldGenFeatureBlockPileConfiguration worldgenfeatureblockpileconfiguration, int i, int j) {
         Block block = generatoraccess.getType(blockposition.down()).getBlock();
 
-        if (!block.a((Tag) TagsBlock.NYLIUM)) {
+        if (!block.a(TagsBlock.NYLIUM)) {
             return false;
         } else {
             int k = blockposition.getY();

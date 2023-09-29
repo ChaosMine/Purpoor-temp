@@ -17,7 +17,7 @@ public class PathfinderGoalWater extends PathfinderGoal {
 
     @Override
     public boolean a() {
-        return this.a.isOnGround() && !this.a.world.getFluid(this.a.getChunkCoordinates()).a((Tag) TagsFluid.WATER);
+        return this.a.isOnGround() && !this.a.world.getFluid(this.a.getChunkCoordinates()).a(TagsFluid.WATER);
     }
 
     @Override
@@ -29,14 +29,14 @@ public class PathfinderGoalWater extends PathfinderGoal {
         while (iterator.hasNext()) {
             BlockPosition blockposition1 = (BlockPosition) iterator.next();
 
-            if (this.a.world.getFluid(blockposition1).a((Tag) TagsFluid.WATER)) {
+            if (this.a.world.getFluid(blockposition1).a(TagsFluid.WATER)) {
                 blockposition = blockposition1;
                 break;
             }
         }
 
         if (blockposition != null) {
-            this.a.getControllerMove().a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), 1.0D);
+            this.a.getControllerMove().a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), 1.0D);
         }
 
     }

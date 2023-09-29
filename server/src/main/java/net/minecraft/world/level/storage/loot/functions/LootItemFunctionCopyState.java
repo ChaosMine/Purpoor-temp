@@ -6,8 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import java.util.Set;
-import java.util.stream.Stream;
 import net.minecraft.core.IRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.resources.MinecraftKey;
@@ -22,125 +20,122 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParameter;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameters;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
+import java.util.Set;
+
 public class LootItemFunctionCopyState extends LootItemFunctionConditional {
+	private final Block a;
+	private final Set<IBlockState<?>> b;
 
-    private final Block a;
-    private final Set<IBlockState<?>> b;
+	private LootItemFunctionCopyState(LootItemCondition[] alootitemcondition, Block block, Set<IBlockState<?>> set) {
+		super(alootitemcondition);
+		this.a = block;
+		this.b = set;
+	}
 
-    private LootItemFunctionCopyState(LootItemCondition[] alootitemcondition, Block block, Set<IBlockState<?>> set) {
-        super(alootitemcondition);
-        this.a = block;
-        this.b = set;
-    }
+	public static LootItemFunctionCopyState.a a(Block block) {
+		return new LootItemFunctionCopyState.a(block);
+	}
 
-    @Override
-    public LootItemFunctionType b() {
-        return LootItemFunctions.v;
-    }
+	private static <T extends Comparable<T>> String a(IBlockData iblockdata, IBlockState<T> iblockstate) {
+		T t0 = iblockdata.get(iblockstate);
 
-    @Override
-    public Set<LootContextParameter<?>> a() {
-        return ImmutableSet.of(LootContextParameters.BLOCK_STATE);
-    }
+		return iblockstate.a(t0);
+	}
 
-    @Override
-    protected ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
-        IBlockData iblockdata = (IBlockData) loottableinfo.getContextParameter(LootContextParameters.BLOCK_STATE);
+	@Override
+	public LootItemFunctionType b() {
+		return LootItemFunctions.v;
+	}
 
-        if (iblockdata != null) {
-            NBTTagCompound nbttagcompound = itemstack.getOrCreateTag();
-            NBTTagCompound nbttagcompound1;
+	@Override
+	public Set<LootContextParameter<?>> a() {
+		return ImmutableSet.of(LootContextParameters.BLOCK_STATE);
+	}
 
-            if (nbttagcompound.hasKeyOfType("BlockStateTag", 10)) {
-                nbttagcompound1 = nbttagcompound.getCompound("BlockStateTag");
-            } else {
-                nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound.set("BlockStateTag", nbttagcompound1);
-            }
+	@Override
+	protected ItemStack a(ItemStack itemstack, LootTableInfo loottableinfo) {
+		IBlockData iblockdata = loottableinfo.getContextParameter(LootContextParameters.BLOCK_STATE);
 
-            Stream stream = this.b.stream();
+		if (iblockdata != null) {
+			NBTTagCompound nbttagcompound = itemstack.getOrCreateTag();
+			NBTTagCompound nbttagcompound1;
 
-            iblockdata.getClass();
-            stream.filter(iblockdata::b).forEach((iblockstate) -> {
-                nbttagcompound1.setString(iblockstate.getName(), a(iblockdata, iblockstate));
-            });
-        }
+			if (nbttagcompound.hasKeyOfType("BlockStateTag", 10)) {
+				nbttagcompound1 = nbttagcompound.getCompound("BlockStateTag");
+			} else {
+				nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound.set("BlockStateTag", nbttagcompound1);
+			}
 
-        return itemstack;
-    }
+			this.b.stream().filter(iblockdata::b).forEach((iblockstate) -> {
+				nbttagcompound1.setString(iblockstate.getName(), a(iblockdata, iblockstate));
+			});
+		}
 
-    public static LootItemFunctionCopyState.a a(Block block) {
-        return new LootItemFunctionCopyState.a(block);
-    }
+		return itemstack;
+	}
 
-    private static <T extends Comparable<T>> String a(IBlockData iblockdata, IBlockState<T> iblockstate) {
-        T t0 = iblockdata.get(iblockstate);
+	public static class b extends LootItemFunctionConditional.c<LootItemFunctionCopyState> {
+		public b() {
+		}
 
-        return iblockstate.a(t0);
-    }
+		public void a(JsonObject jsonobject, LootItemFunctionCopyState lootitemfunctioncopystate, JsonSerializationContext jsonserializationcontext) {
+			super.a(jsonobject, lootitemfunctioncopystate, jsonserializationcontext);
+			jsonobject.addProperty("block", IRegistry.BLOCK.getKey(lootitemfunctioncopystate.a).toString());
+			JsonArray jsonarray = new JsonArray();
 
-    public static class b extends LootItemFunctionConditional.c<LootItemFunctionCopyState> {
+			lootitemfunctioncopystate.b.forEach((iblockstate) -> {
+				jsonarray.add(iblockstate.getName());
+			});
+			jsonobject.add("properties", jsonarray);
+		}
 
-        public b() {}
+		@Override
+		public LootItemFunctionCopyState b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
+			MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
+			Block block = IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
+				return new IllegalArgumentException("Can't find block " + minecraftkey);
+			});
+			BlockStateList<Block, IBlockData> blockstatelist = block.getStates();
+			Set<IBlockState<?>> set = Sets.newHashSet();
+			JsonArray jsonarray = ChatDeserializer.a(jsonobject, "properties", (JsonArray) null);
 
-        public void a(JsonObject jsonobject, LootItemFunctionCopyState lootitemfunctioncopystate, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctioncopystate, jsonserializationcontext);
-            jsonobject.addProperty("block", IRegistry.BLOCK.getKey(lootitemfunctioncopystate.a).toString());
-            JsonArray jsonarray = new JsonArray();
+			if (jsonarray != null) {
+				jsonarray.forEach((jsonelement) -> {
+					set.add(blockstatelist.a(ChatDeserializer.a(jsonelement, "property")));
+				});
+			}
 
-            lootitemfunctioncopystate.b.forEach((iblockstate) -> {
-                jsonarray.add(iblockstate.getName());
-            });
-            jsonobject.add("properties", jsonarray);
-        }
+			return new LootItemFunctionCopyState(alootitemcondition, block, set);
+		}
+	}
 
-        @Override
-        public LootItemFunctionCopyState b(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext, LootItemCondition[] alootitemcondition) {
-            MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
-            Block block = (Block) IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
-                return new IllegalArgumentException("Can't find block " + minecraftkey);
-            });
-            BlockStateList<Block, IBlockData> blockstatelist = block.getStates();
-            Set<IBlockState<?>> set = Sets.newHashSet();
-            JsonArray jsonarray = ChatDeserializer.a(jsonobject, "properties", (JsonArray) null);
+	public static class a extends LootItemFunctionConditional.a<LootItemFunctionCopyState.a> {
+		private final Block a;
+		private final Set<IBlockState<?>> b;
 
-            if (jsonarray != null) {
-                jsonarray.forEach((jsonelement) -> {
-                    set.add(blockstatelist.a(ChatDeserializer.a(jsonelement, "property")));
-                });
-            }
+		private a(Block block) {
+			this.b = Sets.newHashSet();
+			this.a = block;
+		}
 
-            return new LootItemFunctionCopyState(alootitemcondition, block, set);
-        }
-    }
+		public LootItemFunctionCopyState.a a(IBlockState<?> iblockstate) {
+			if (!this.a.getStates().d().contains(iblockstate)) {
+				throw new IllegalStateException("Property " + iblockstate + " is not present on block " + this.a);
+			} else {
+				this.b.add(iblockstate);
+				return this;
+			}
+		}
 
-    public static class a extends LootItemFunctionConditional.a<LootItemFunctionCopyState.a> {
+		@Override
+		protected LootItemFunctionCopyState.a d() {
+			return this;
+		}
 
-        private final Block a;
-        private final Set<IBlockState<?>> b;
-
-        private a(Block block) {
-            this.b = Sets.newHashSet();
-            this.a = block;
-        }
-
-        public LootItemFunctionCopyState.a a(IBlockState<?> iblockstate) {
-            if (!this.a.getStates().d().contains(iblockstate)) {
-                throw new IllegalStateException("Property " + iblockstate + " is not present on block " + this.a);
-            } else {
-                this.b.add(iblockstate);
-                return this;
-            }
-        }
-
-        @Override
-        protected LootItemFunctionCopyState.a d() {
-            return this;
-        }
-
-        @Override
-        public LootItemFunction b() {
-            return new LootItemFunctionCopyState(this.g(), this.a, this.b);
-        }
-    }
+		@Override
+		public LootItemFunction b() {
+			return new LootItemFunctionCopyState(this.g(), this.a, this.b);
+		}
+	}
 }

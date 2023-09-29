@@ -39,8 +39,8 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
                     boolean flag1 = flag && ((itemstack1.getItem() == Items.ARROW && world.purpurConfig.infinityWorksWithNormalArrows) || (itemstack1.getItem() == Items.TIPPED_ARROW && world.purpurConfig.infinityWorksWithTippedArrows) || (itemstack1.getItem() == Items.SPECTRAL_ARROW && world.purpurConfig.infinityWorksWithSpectralArrows)); // Purpur
 
                     if (!world.isClientSide) {
-                        ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW));
-                        EntityArrow entityarrow = itemarrow.a(world, itemstack1, (EntityLiving) entityhuman);
+                        ItemArrow itemarrow = (ItemArrow) (itemstack1.getItem() instanceof ItemArrow ? itemstack1.getItem() : Items.ARROW);
+                        EntityArrow entityarrow = itemarrow.a(world, itemstack1, entityhuman);
 
                         entityarrow.a(entityhuman, entityhuman.pitch, entityhuman.yaw, 0.0F, f * 3.0F, (float) world.purpurConfig.bowProjectileOffset); // Purpur - Projectile offset config
                         if (f == 1.0F) {
@@ -90,7 +90,7 @@ public class ItemBow extends ItemProjectileWeapon implements ItemVanishable {
                         // CraftBukkit end
                     }
 
-                    world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (ItemBow.RANDOM.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+                    world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (ItemBow.RANDOM.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                     if (!flag1 && !entityhuman.abilities.canInstantlyBuild) {
                         itemstack1.subtract(1);
                         if (itemstack1.isEmpty()) {

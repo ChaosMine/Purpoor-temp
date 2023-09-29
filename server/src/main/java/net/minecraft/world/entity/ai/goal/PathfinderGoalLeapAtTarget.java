@@ -27,7 +27,7 @@ public class PathfinderGoalLeapAtTarget extends PathfinderGoal {
             if (this.b == null) {
                 return false;
             } else {
-                double d0 = this.a.h((Entity) this.b);
+                double d0 = this.a.h(this.b);
 
                 return d0 >= 4.0D && d0 <= 16.0D ? (!this.a.isOnGround() ? false : this.a.getRandom().nextInt(5) == 0) : false;
             }
@@ -48,6 +48,6 @@ public class PathfinderGoalLeapAtTarget extends PathfinderGoal {
             vec3d1 = vec3d1.d().a(0.4D).e(vec3d.a(0.2D));
         }
 
-        this.a.setMot(vec3d1.x, (double) this.c, vec3d1.z);
+        this.a.setMot(vec3d1.x, this.c, vec3d1.z);
     }
 }

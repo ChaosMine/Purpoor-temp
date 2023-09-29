@@ -46,6 +46,6 @@ public class SensorVillagerBabies extends Sensor<EntityLiving> {
     }
 
     private List<EntityLiving> c(EntityLiving entityliving) {
-        return (List) entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(Lists.newArrayList());
+        return entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(Lists.newArrayList());
     }
 }

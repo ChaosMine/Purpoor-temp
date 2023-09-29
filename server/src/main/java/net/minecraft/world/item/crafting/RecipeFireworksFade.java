@@ -62,7 +62,7 @@ public class RecipeFireworksFade extends IRecipeComplex {
         }
 
         if (itemstack != null && !list.isEmpty()) {
-            itemstack.a("Explosion").b("FadeColors", (List) list);
+            itemstack.a("Explosion").b("FadeColors", list);
             return itemstack;
         } else {
             return ItemStack.b;

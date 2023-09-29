@@ -20,7 +20,7 @@ public interface RecipeHolder {
 
         if (irecipe != null && !irecipe.isComplex()) {
             entityhuman.discoverRecipes(Collections.singleton(irecipe));
-            this.a((IRecipe) null);
+            this.a(null);
         }
 
     }

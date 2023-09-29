@@ -66,7 +66,7 @@ public class SpigotWorldConfig
     public <T> List getList(String path, T def) // Paper - private -> public
     {
         config.addDefault( "world-settings.default." + path, def );
-        return (List<T>) config.getList( "world-settings." + worldName + "." + path, config.getList( "world-settings.default." + path ) );
+        return config.getList( "world-settings." + worldName + "." + path, config.getList( "world-settings.default." + path ) );
     }
 
     public String getString(String path, String def) // Paper - private -> public

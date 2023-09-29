@@ -32,7 +32,7 @@ public class BlockNetherrack extends Block implements IBlockFragilePlantElement 
                 }
 
                 blockposition1 = (BlockPosition) iterator.next();
-            } while (!iblockaccess.getType(blockposition1).a((Tag) TagsBlock.NYLIUM));
+            } while (!iblockaccess.getType(blockposition1).a(TagsBlock.NYLIUM));
 
             return true;
         }

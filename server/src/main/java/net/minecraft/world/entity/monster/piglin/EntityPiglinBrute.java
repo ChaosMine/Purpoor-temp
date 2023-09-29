@@ -72,7 +72,7 @@ public class EntityPiglinBrute extends EntityPiglinAbstract {
 
     @Override
     protected BehaviorController.b<EntityPiglinBrute> cK() {
-        return BehaviorController.a((Collection) EntityPiglinBrute.bo, (Collection) EntityPiglinBrute.d);
+        return BehaviorController.a(EntityPiglinBrute.bo, (Collection) EntityPiglinBrute.d);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class LootTableInfo {
     }
 
     public void a(MinecraftKey minecraftkey, Consumer<ItemStack> consumer) {
-        LootTableInfo.b loottableinfo_b = (LootTableInfo.b) this.i.get(minecraftkey);
+        LootTableInfo.b loottableinfo_b = this.i.get(minecraftkey);
 
         if (loottableinfo_b != null) {
             loottableinfo_b.add(this, consumer);
@@ -62,7 +62,7 @@ public class LootTableInfo {
 
     @Nullable
     public <T> T getContextParameter(LootContextParameter<T> lootcontextparameter) {
-        return this.h.get(lootcontextparameter);
+        return (T) this.h.get(lootcontextparameter);
     }
 
     public boolean a(LootTable loottable) {
@@ -82,11 +82,11 @@ public class LootTableInfo {
     }
 
     public LootTable a(MinecraftKey minecraftkey) {
-        return (LootTable) this.d.apply(minecraftkey);
+        return this.d.apply(minecraftkey);
     }
 
     public LootItemCondition b(MinecraftKey minecraftkey) {
-        return (LootItemCondition) this.f.apply(minecraftkey);
+        return this.f.apply(minecraftkey);
     }
 
     public Random a() {
@@ -202,7 +202,7 @@ public class LootTableInfo {
         }
 
         public LootTableInfo.Builder a(MinecraftKey minecraftkey, LootTableInfo.b loottableinfo_b) {
-            LootTableInfo.b loottableinfo_b1 = (LootTableInfo.b) this.c.put(minecraftkey, loottableinfo_b);
+            LootTableInfo.b loottableinfo_b1 = this.c.put(minecraftkey, loottableinfo_b);
 
             if (loottableinfo_b1 != null) {
                 throw new IllegalStateException("Duplicated dynamic drop '" + this.c + "'");
@@ -216,7 +216,7 @@ public class LootTableInfo {
         }
 
         public <T> T a(LootContextParameter<T> lootcontextparameter) {
-            T t0 = this.b.get(lootcontextparameter);
+            T t0 = (T) this.b.get(lootcontextparameter);
 
             if (t0 == null) {
                 throw new IllegalArgumentException("No parameter " + lootcontextparameter);
@@ -227,7 +227,7 @@ public class LootTableInfo {
 
         @Nullable
         public <T> T b(LootContextParameter<T> lootcontextparameter) {
-            return this.b.get(lootcontextparameter);
+            return (T) this.b.get(lootcontextparameter);
         }
 
         public LootTableInfo build(LootContextParameterSet lootcontextparameterset) {

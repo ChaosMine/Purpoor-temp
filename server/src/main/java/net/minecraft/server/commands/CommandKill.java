@@ -33,7 +33,7 @@ public class CommandKill {
         }
 
         if (collection.size() == 1) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.kill.success.single", new Object[]{((Entity) collection.iterator().next()).getScoreboardDisplayName()}), true);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.kill.success.single", new Object[]{collection.iterator().next().getScoreboardDisplayName()}), true);
         } else {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.kill.success.multiple", new Object[]{collection.size()}), true);
         }

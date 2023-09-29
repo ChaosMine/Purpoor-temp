@@ -21,7 +21,7 @@ public interface NBTBase {
 
     NBTTagType<?> b();
 
-    public NBTBase clone(); // Paper - decompile fix
+    NBTBase clone(); // Paper - decompile fix
 
     default String asString() {
         return this.toString();

@@ -171,11 +171,11 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
     private void eJ() {
         this.updateSize();
-        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (6 + this.getSize()));
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(6 + this.getSize());
     }
 
     public int getSize() {
-        return (Integer) this.datawatcher.get(EntityPhantom.b);
+        return this.datawatcher.get(EntityPhantom.b);
     }
 
     @Override
@@ -477,7 +477,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
                 return false;
             } else {
                 this.c = 60;
-                List<EntityHuman> list = EntityPhantom.this.world.a(this.b, (EntityLiving) EntityPhantom.this, EntityPhantom.this.getBoundingBox().grow(16.0D, 64.0D, 16.0D));
+                List<EntityHuman> list = EntityPhantom.this.world.a(this.b, EntityPhantom.this, EntityPhantom.this.getBoundingBox().grow(16.0D, 64.0D, 16.0D));
                 if (world.purpurConfig.phantomIgnorePlayersWithTorch) list.removeIf(human -> TORCH.test(human.getItemInHand(EnumHand.MAIN_HAND)) || TORCH.test(human.getItemInHand(EnumHand.OFF_HAND)));// Purpur
                 if (!list.isEmpty()) {
                     list.sort(Comparator.comparing(Entity::locY).reversed());
@@ -486,7 +486,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
                     while (iterator.hasNext()) {
                         EntityHuman entityhuman = (EntityHuman) iterator.next();
 
-                        if (EntityPhantom.this.a((EntityLiving) entityhuman, PathfinderTargetCondition.a)) {
+                        if (EntityPhantom.this.a(entityhuman, PathfinderTargetCondition.a)) {
                             if (!world.paperConfig.phantomOnlyAttackInsomniacs || IEntitySelector.isInsomniac.test(entityhuman)) // Paper
                             EntityPhantom.this.setGoalTarget(entityhuman, org.bukkit.event.entity.EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true); // CraftBukkit - reason
                             return true;
@@ -575,7 +575,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
                 return false;
             } else if (!entityliving.isAlive()) {
                 return false;
-            } else if (entityliving instanceof EntityHuman && (((EntityHuman) entityliving).isSpectator() || ((EntityHuman) entityliving).isCreative())) {
+            } else if (entityliving instanceof EntityHuman && (entityliving.isSpectator() || ((EntityHuman) entityliving).isCreative())) {
                 return false;
             // Purpur start
             } else if (world.purpurConfig.phantomBurnInLight > 0 && world.getLightLevel(new BlockPosition(EntityPhantom.this)) >= world.purpurConfig.phantomBurnInLight) {
@@ -611,7 +611,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
 
         @Override
         public void d() {
-            EntityPhantom.this.setGoalTarget((EntityLiving) null);
+            EntityPhantom.this.setGoalTarget(null);
             EntityPhantom.this.bo = EntityPhantom.AttackPhase.CIRCLE;
         }
 
@@ -698,7 +698,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
             }
 
             this.c += this.f * 15.0F * 0.017453292F;
-            EntityPhantom.this.c = Vec3D.b((BaseBlockPosition) EntityPhantom.this.d).add((double) (this.d * MathHelper.cos(this.c)), (double) (-4.0F + this.e), (double) (this.d * MathHelper.sin(this.c)));
+            EntityPhantom.this.c = Vec3D.b(EntityPhantom.this.d).add(this.d * MathHelper.cos(this.c), -4.0F + this.e, this.d * MathHelper.sin(this.c));
         }
     }
 
@@ -775,15 +775,15 @@ public class EntityPhantom extends EntityFlying implements IMonster {
             float f = (float) (EntityPhantom.this.c.x - EntityPhantom.this.locX());
             float f1 = (float) (EntityPhantom.this.c.y - EntityPhantom.this.locY());
             float f2 = (float) (EntityPhantom.this.c.z - EntityPhantom.this.locZ());
-            double d0 = (double) MathHelper.c(f * f + f2 * f2);
+            double d0 = MathHelper.c(f * f + f2 * f2);
             double d1 = 1.0D - (double) MathHelper.e(f1 * 0.7F) / d0;
 
             f = (float) ((double) f * d1);
             f2 = (float) ((double) f2 * d1);
-            d0 = (double) MathHelper.c(f * f + f2 * f2);
-            double d2 = (double) MathHelper.c(f * f + f2 * f2 + f1 * f1);
+            d0 = MathHelper.c(f * f + f2 * f2);
+            double d2 = MathHelper.c(f * f + f2 * f2 + f1 * f1);
             float f3 = EntityPhantom.this.yaw;
-            float f4 = (float) MathHelper.d((double) f2, (double) f);
+            float f4 = (float) MathHelper.d(f2, (double) f);
             float f5 = MathHelper.g(EntityPhantom.this.yaw + 90.0F);
             float f6 = MathHelper.g(f4 * 57.295776F);
 
@@ -795,7 +795,7 @@ public class EntityPhantom extends EntityFlying implements IMonster {
                 this.j = MathHelper.c(this.j, 0.2F, 0.025F);
             }
 
-            float f7 = (float) (-(MathHelper.d((double) (-f1), d0) * 57.2957763671875D));
+            float f7 = (float) (-(MathHelper.d(-f1, d0) * 57.2957763671875D));
 
             EntityPhantom.this.pitch = f7;
             float f8 = EntityPhantom.this.yaw + 90.0F;

@@ -30,8 +30,8 @@ import net.minecraft.world.level.storage.loot.LootTables;
 
 public class WorldGenEndCityPieces {
 
-    private static final DefinedStructureInfo a = (new DefinedStructureInfo()).a(true).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.b);
-    private static final DefinedStructureInfo b = (new DefinedStructureInfo()).a(true).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+    private static final DefinedStructureInfo a = (new DefinedStructureInfo()).a(true).a(DefinedStructureProcessorBlockIgnore.b);
+    private static final DefinedStructureInfo b = (new DefinedStructureInfo()).a(true).a(DefinedStructureProcessorBlockIgnore.d);
     private static final WorldGenEndCityPieces.PieceGenerator c = new WorldGenEndCityPieces.PieceGenerator() {
         @Override
         public void a() {}
@@ -50,12 +50,12 @@ public class WorldGenEndCityPieces {
                 } else if (j == 1) {
                     worldgenendcitypieces_piece1 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 0, -1), "second_floor_2", enumblockrotation, false));
                     worldgenendcitypieces_piece1 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 8, -1), "second_roof", enumblockrotation, false));
-                    WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.e, i + 1, worldgenendcitypieces_piece1, (BlockPosition) null, list, random);
+                    WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.e, i + 1, worldgenendcitypieces_piece1, null, list, random);
                 } else if (j == 2) {
                     worldgenendcitypieces_piece1 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 0, -1), "second_floor_2", enumblockrotation, false));
                     worldgenendcitypieces_piece1 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 4, -1), "third_floor_2", enumblockrotation, false));
                     worldgenendcitypieces_piece1 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 8, -1), "third_roof", enumblockrotation, true));
-                    WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.e, i + 1, worldgenendcitypieces_piece1, (BlockPosition) null, list, random);
+                    WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.e, i + 1, worldgenendcitypieces_piece1, null, list, random);
                 }
 
                 return true;
@@ -90,16 +90,16 @@ public class WorldGenEndCityPieces {
                     Tuple<EnumBlockRotation, BlockPosition> tuple = (Tuple) iterator.next();
 
                     if (random.nextBoolean()) {
-                        WorldGenEndCityPieces.Piece worldgenendcitypieces_piece3 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece2, (BlockPosition) tuple.b(), "bridge_end", enumblockrotation.a((EnumBlockRotation) tuple.a()), true));
+                        WorldGenEndCityPieces.Piece worldgenendcitypieces_piece3 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece2, tuple.b(), "bridge_end", enumblockrotation.a(tuple.a()), true));
 
-                        WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.f, i + 1, worldgenendcitypieces_piece3, (BlockPosition) null, list, random);
+                        WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.f, i + 1, worldgenendcitypieces_piece3, null, list, random);
                     }
                 }
 
                 WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 4, -1), "tower_top", enumblockrotation, true));
             } else {
                 if (i != 7) {
-                    return WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.h, i + 1, worldgenendcitypieces_piece1, (BlockPosition) null, list, random);
+                    return WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.h, i + 1, worldgenendcitypieces_piece1, null, list, random);
                 }
 
                 WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, new BlockPosition(-1, 4, -1), "tower_top", enumblockrotation, true));
@@ -172,9 +172,9 @@ public class WorldGenEndCityPieces {
                     Tuple<EnumBlockRotation, BlockPosition> tuple = (Tuple) iterator.next();
 
                     if (random.nextBoolean()) {
-                        WorldGenEndCityPieces.Piece worldgenendcitypieces_piece2 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, (BlockPosition) tuple.b(), "bridge_end", enumblockrotation.a((EnumBlockRotation) tuple.a()), true));
+                        WorldGenEndCityPieces.Piece worldgenendcitypieces_piece2 = WorldGenEndCityPieces.b(list, WorldGenEndCityPieces.b(definedstructuremanager, worldgenendcitypieces_piece1, tuple.b(), "bridge_end", enumblockrotation.a(tuple.a()), true));
 
-                        WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.f, i + 1, worldgenendcitypieces_piece2, (BlockPosition) null, list, random);
+                        WorldGenEndCityPieces.b(definedstructuremanager, WorldGenEndCityPieces.f, i + 1, worldgenendcitypieces_piece2, null, list, random);
                     }
                 }
             }
@@ -202,7 +202,7 @@ public class WorldGenEndCityPieces {
         worldgenendcitypieces_piece = b(list, b(definedstructuremanager, worldgenendcitypieces_piece, new BlockPosition(-1, 0, -1), "second_floor_1", enumblockrotation, false));
         worldgenendcitypieces_piece = b(list, b(definedstructuremanager, worldgenendcitypieces_piece, new BlockPosition(-1, 4, -1), "third_floor_1", enumblockrotation, false));
         worldgenendcitypieces_piece = b(list, b(definedstructuremanager, worldgenendcitypieces_piece, new BlockPosition(-1, 8, -1), "third_roof", enumblockrotation, true));
-        b(definedstructuremanager, WorldGenEndCityPieces.e, 1, worldgenendcitypieces_piece, (BlockPosition) null, list, random);
+        b(definedstructuremanager, WorldGenEndCityPieces.e, 1, worldgenendcitypieces_piece, null, list, random);
     }
 
     private static WorldGenEndCityPieces.Piece b(List<StructurePiece> list, WorldGenEndCityPieces.Piece worldgenendcitypieces_piece) {
@@ -293,11 +293,11 @@ public class WorldGenEndCityPieces {
             if (s.startsWith("Chest")) {
                 BlockPosition blockposition1 = blockposition.down();
 
-                if (structureboundingbox.b((BaseBlockPosition) blockposition1)) {
-                    TileEntityLootable.a((IBlockAccess) worldaccess, random, blockposition1, LootTables.c);
+                if (structureboundingbox.b(blockposition1)) {
+                    TileEntityLootable.a(worldaccess, random, blockposition1, LootTables.c);
                 }
             } else if (s.startsWith("Sentry")) {
-                EntityShulker entityshulker = (EntityShulker) EntityTypes.SHULKER.a((World) worldaccess.getMinecraftWorld());
+                EntityShulker entityshulker = EntityTypes.SHULKER.a(worldaccess.getMinecraftWorld());
 
                 entityshulker.setPosition((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D);
                 entityshulker.h(blockposition);

@@ -28,29 +28,29 @@ public class ItemMinecart extends Item {
 
         @Override
         public ItemStack a(ISourceBlock isourceblock, ItemStack itemstack) {
-            EnumDirection enumdirection = (EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING);
+            EnumDirection enumdirection = isourceblock.getBlockData().get(BlockDispenser.FACING);
             WorldServer worldserver = isourceblock.getWorld();
             double d0 = isourceblock.getX() + (double) enumdirection.getAdjacentX() * 1.125D;
             double d1 = Math.floor(isourceblock.getY()) + (double) enumdirection.getAdjacentY();
             double d2 = isourceblock.getZ() + (double) enumdirection.getAdjacentZ() * 1.125D;
             BlockPosition blockposition = isourceblock.getBlockPosition().shift(enumdirection);
             IBlockData iblockdata = worldserver.getType(blockposition);
-            BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.getBlock() instanceof BlockMinecartTrackAbstract ? (BlockPropertyTrackPosition) iblockdata.get(((BlockMinecartTrackAbstract) iblockdata.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
+            BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.getBlock() instanceof BlockMinecartTrackAbstract ? iblockdata.get(((BlockMinecartTrackAbstract) iblockdata.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
             double d3;
 
-            if (iblockdata.a((Tag) TagsBlock.RAILS)) {
+            if (iblockdata.a(TagsBlock.RAILS)) {
                 if (blockpropertytrackposition.c()) {
                     d3 = 0.6D;
                 } else {
                     d3 = 0.1D;
                 }
             } else {
-                if (!iblockdata.isAir() || !worldserver.getType(blockposition.down()).a((Tag) TagsBlock.RAILS)) {
+                if (!iblockdata.isAir() || !worldserver.getType(blockposition.down()).a(TagsBlock.RAILS)) {
                     return this.b.dispense(isourceblock, itemstack);
                 }
 
                 IBlockData iblockdata1 = worldserver.getType(blockposition.down());
-                BlockPropertyTrackPosition blockpropertytrackposition1 = iblockdata1.getBlock() instanceof BlockMinecartTrackAbstract ? (BlockPropertyTrackPosition) iblockdata1.get(((BlockMinecartTrackAbstract) iblockdata1.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
+                BlockPropertyTrackPosition blockpropertytrackposition1 = iblockdata1.getBlock() instanceof BlockMinecartTrackAbstract ? iblockdata1.get(((BlockMinecartTrackAbstract) iblockdata1.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
 
                 if (enumdirection != EnumDirection.DOWN && blockpropertytrackposition1.c()) {
                     d3 = -0.4D;
@@ -79,7 +79,7 @@ public class ItemMinecart extends Item {
                 itemstack.add(1);
                 // Chain to handler for new item
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
-                IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.REGISTRY.get(eventStack.getItem());
+                IDispenseBehavior idispensebehavior = BlockDispenser.REGISTRY.get(eventStack.getItem());
                 if (idispensebehavior != IDispenseBehavior.NONE && idispensebehavior != this) {
                     idispensebehavior.dispense(isourceblock, eventStack);
                     return itemstack;
@@ -109,7 +109,7 @@ public class ItemMinecart extends Item {
     public ItemMinecart(EntityMinecartAbstract.EnumMinecartType entityminecartabstract_enumminecarttype, Item.Info item_info) {
         super(item_info);
         this.b = entityminecartabstract_enumminecarttype;
-        BlockDispenser.a((IMaterial) this, ItemMinecart.a);
+        BlockDispenser.a(this, ItemMinecart.a);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ItemMinecart extends Item {
         BlockPosition blockposition = itemactioncontext.getClickPosition();
         IBlockData iblockdata = world.getType(blockposition);
 
-        if (!iblockdata.a((Tag) TagsBlock.RAILS)) {
+        if (!iblockdata.a(TagsBlock.RAILS)) {
             // Purpur start - place minecarts anywhere
             if (!world.purpurConfig.minecartPlaceAnywhere) return EnumInteractionResult.FAIL;
             if (iblockdata.getMaterial().isSolid()) blockposition = blockposition.shift(itemactioncontext.getClickedFace());
@@ -126,7 +126,7 @@ public class ItemMinecart extends Item {
             ItemStack itemstack = itemactioncontext.getItemStack();
 
             if (!world.isClientSide) {
-                BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.getBlock() instanceof BlockMinecartTrackAbstract ? (BlockPropertyTrackPosition) iblockdata.get(((BlockMinecartTrackAbstract) iblockdata.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
+                BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.getBlock() instanceof BlockMinecartTrackAbstract ? iblockdata.get(((BlockMinecartTrackAbstract) iblockdata.getBlock()).d()) : BlockPropertyTrackPosition.NORTH_SOUTH;
                 double d0 = 0.0D;
 
                 if (blockpropertytrackposition.c()) {

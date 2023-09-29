@@ -13,7 +13,7 @@ public class WorldGenFeaturePieces {
     private static final WorldGenFeatureDefinedStructurePoolTemplate b = a(new WorldGenFeatureDefinedStructurePoolTemplate(WorldGenFeaturePieces.a.a(), WorldGenFeaturePieces.a.a(), ImmutableList.of(), WorldGenFeatureDefinedStructurePoolTemplate.Matching.RIGID));
 
     public static WorldGenFeatureDefinedStructurePoolTemplate a(WorldGenFeatureDefinedStructurePoolTemplate worldgenfeaturedefinedstructurepooltemplate) {
-        return (WorldGenFeatureDefinedStructurePoolTemplate) RegistryGeneration.a(RegistryGeneration.h, worldgenfeaturedefinedstructurepooltemplate.b(), (Object) worldgenfeaturedefinedstructurepooltemplate);
+        return RegistryGeneration.a(RegistryGeneration.h, worldgenfeaturedefinedstructurepooltemplate.b(), worldgenfeaturedefinedstructurepooltemplate);
     }
 
     public static WorldGenFeatureDefinedStructurePoolTemplate a() {

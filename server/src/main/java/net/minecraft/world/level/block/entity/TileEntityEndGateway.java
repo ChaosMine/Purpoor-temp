@@ -235,21 +235,21 @@ public class TileEntityEndGateway extends TileEntityEnderPortal implements ITick
     }
 
     private void a(WorldServer worldserver) {
-        Vec3D vec3d = (new Vec3D((double) this.getPosition().getX(), 0.0D, (double) this.getPosition().getZ())).d();
+        Vec3D vec3d = (new Vec3D(this.getPosition().getX(), 0.0D, this.getPosition().getZ())).d();
         Vec3D vec3d1 = vec3d.a(1024.0D);
 
         int i;
 
-        for (i = 16; a((World) worldserver, vec3d1).b() > 0 && i-- > 0; vec3d1 = vec3d1.e(vec3d.a(-16.0D))) {
+        for (i = 16; a(worldserver, vec3d1).b() > 0 && i-- > 0; vec3d1 = vec3d1.e(vec3d.a(-16.0D))) {
             TileEntityEndGateway.LOGGER.debug("Skipping backwards past nonempty chunk at {}", vec3d1);
         }
 
-        for (i = 16; a((World) worldserver, vec3d1).b() == 0 && i-- > 0; vec3d1 = vec3d1.e(vec3d.a(16.0D))) {
+        for (i = 16; a(worldserver, vec3d1).b() == 0 && i-- > 0; vec3d1 = vec3d1.e(vec3d.a(16.0D))) {
             TileEntityEndGateway.LOGGER.debug("Skipping forward past empty chunk at {}", vec3d1);
         }
 
         TileEntityEndGateway.LOGGER.debug("Found chunk at {}", vec3d1);
-        Chunk chunk = a((World) worldserver, vec3d1);
+        Chunk chunk = a(worldserver, vec3d1);
 
         this.exitPortal = a(chunk);
         if (this.exitPortal == null) {

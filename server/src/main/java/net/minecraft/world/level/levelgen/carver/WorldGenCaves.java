@@ -28,9 +28,9 @@ public class WorldGenCaves extends WorldGenCarverAbstract<WorldGenFeatureConfigu
         int k1 = random.nextInt(random.nextInt(random.nextInt(this.a()) + 1) + 1);
 
         for (int l1 = 0; l1 < k1; ++l1) {
-            double d0 = (double) (j * 16 + random.nextInt(16));
-            double d1 = (double) this.b(random);
-            double d2 = (double) (k * 16 + random.nextInt(16));
+            double d0 = j * 16 + random.nextInt(16);
+            double d1 = this.b(random);
+            double d2 = k * 16 + random.nextInt(16);
             int i2 = 1;
             float f;
 
@@ -99,9 +99,9 @@ public class WorldGenCaves extends WorldGenCarverAbstract<WorldGenFeatureConfigu
             double d5 = d4 * d3;
             float f5 = MathHelper.cos(f2);
 
-            d0 += (double) (MathHelper.cos(f1) * f5);
-            d1 += (double) MathHelper.sin(f2);
-            d2 += (double) (MathHelper.sin(f1) * f5);
+            d0 += MathHelper.cos(f1) * f5;
+            d1 += MathHelper.sin(f2);
+            d2 += MathHelper.sin(f1) * f5;
             f2 *= flag ? 0.92F : 0.7F;
             f2 += f4 * 0.1F;
             f1 += f3 * 0.1F;

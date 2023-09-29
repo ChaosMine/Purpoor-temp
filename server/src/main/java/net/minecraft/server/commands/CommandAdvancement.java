@@ -67,31 +67,31 @@ public class CommandAdvancement {
 
         EntityPlayer entityplayer;
 
-        for (Iterator iterator = collection.iterator(); iterator.hasNext(); i += commandadvancement_action.a(entityplayer, (Iterable) collection1)) {
+        for (Iterator iterator = collection.iterator(); iterator.hasNext(); i += commandadvancement_action.a(entityplayer, collection1)) {
             entityplayer = (EntityPlayer) iterator.next();
         }
 
         if (i == 0) {
             if (collection1.size() == 1) {
                 if (collection.size() == 1) {
-                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".one.to.one.failure", new Object[]{((Advancement) collection1.iterator().next()).j(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}));
+                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".one.to.one.failure", new Object[]{collection1.iterator().next().j(), collection.iterator().next().getScoreboardDisplayName()}));
                 } else {
-                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".one.to.many.failure", new Object[]{((Advancement) collection1.iterator().next()).j(), collection.size()}));
+                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".one.to.many.failure", new Object[]{collection1.iterator().next().j(), collection.size()}));
                 }
             } else if (collection.size() == 1) {
-                throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".many.to.one.failure", new Object[]{collection1.size(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}));
+                throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".many.to.one.failure", new Object[]{collection1.size(), collection.iterator().next().getScoreboardDisplayName()}));
             } else {
                 throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".many.to.many.failure", new Object[]{collection1.size(), collection.size()}));
             }
         } else {
             if (collection1.size() == 1) {
                 if (collection.size() == 1) {
-                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".one.to.one.success", new Object[]{((Advancement) collection1.iterator().next()).j(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".one.to.one.success", new Object[]{collection1.iterator().next().j(), collection.iterator().next().getScoreboardDisplayName()}), true);
                 } else {
-                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".one.to.many.success", new Object[]{((Advancement) collection1.iterator().next()).j(), collection.size()}), true);
+                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".one.to.many.success", new Object[]{collection1.iterator().next().j(), collection.size()}), true);
                 }
             } else if (collection.size() == 1) {
-                commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".many.to.one.success", new Object[]{collection1.size(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".many.to.one.success", new Object[]{collection1.size(), collection.iterator().next().getScoreboardDisplayName()}), true);
             } else {
                 commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".many.to.many.success", new Object[]{collection1.size(), collection.size()}), true);
             }
@@ -118,13 +118,13 @@ public class CommandAdvancement {
 
             if (i == 0) {
                 if (collection.size() == 1) {
-                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".criterion.to.one.failure", new Object[]{s, advancement.j(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}));
+                    throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".criterion.to.one.failure", new Object[]{s, advancement.j(), collection.iterator().next().getScoreboardDisplayName()}));
                 } else {
                     throw new CommandException(new ChatMessage(commandadvancement_action.a() + ".criterion.to.many.failure", new Object[]{s, advancement.j(), collection.size()}));
                 }
             } else {
                 if (collection.size() == 1) {
-                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".criterion.to.one.success", new Object[]{s, advancement.j(), ((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+                    commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".criterion.to.one.success", new Object[]{s, advancement.j(), collection.iterator().next().getScoreboardDisplayName()}), true);
                 } else {
                     commandlistenerwrapper.sendMessage(new ChatMessage(commandadvancement_action.a() + ".criterion.to.many.success", new Object[]{s, advancement.j(), collection.size()}), true);
                 }
@@ -145,7 +145,7 @@ public class CommandAdvancement {
 
         list.add(advancement);
         if (commandadvancement_filter.g) {
-            a(advancement, (List) list);
+            a(advancement, list);
         }
 
         return list;

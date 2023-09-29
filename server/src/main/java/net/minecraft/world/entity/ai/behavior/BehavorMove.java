@@ -40,7 +40,7 @@ public class BehavorMove extends Behavior<EntityInsentient> {
             return false;
         } else {
             BehaviorController<?> behaviorcontroller = entityinsentient.getBehaviorController();
-            MemoryTarget memorytarget = (MemoryTarget) behaviorcontroller.getMemory(MemoryModuleType.WALK_TARGET).get();
+            MemoryTarget memorytarget = behaviorcontroller.getMemory(MemoryModuleType.WALK_TARGET).get();
             boolean flag = this.a(entityinsentient, memorytarget);
 
             if (!flag && this.a(entityinsentient, memorytarget, worldserver.getTime())) {
@@ -62,14 +62,14 @@ public class BehavorMove extends Behavior<EntityInsentient> {
             Optional<MemoryTarget> optional = entityinsentient.getBehaviorController().getMemory(MemoryModuleType.WALK_TARGET);
             NavigationAbstract navigationabstract = entityinsentient.getNavigation();
 
-            return !navigationabstract.m() && optional.isPresent() && !this.a(entityinsentient, (MemoryTarget) optional.get());
+            return !navigationabstract.m() && optional.isPresent() && !this.a(entityinsentient, optional.get());
         } else {
             return false;
         }
     }
 
     protected void c(WorldServer worldserver, EntityInsentient entityinsentient, long i) {
-        if (entityinsentient.getBehaviorController().hasMemory(MemoryModuleType.WALK_TARGET) && !this.a(entityinsentient, (MemoryTarget) entityinsentient.getBehaviorController().getMemory(MemoryModuleType.WALK_TARGET).get()) && entityinsentient.getNavigation().t()) {
+        if (entityinsentient.getBehaviorController().hasMemory(MemoryModuleType.WALK_TARGET) && !this.a(entityinsentient, entityinsentient.getBehaviorController().getMemory(MemoryModuleType.WALK_TARGET).get()) && entityinsentient.getNavigation().t()) {
             this.b = worldserver.getRandom().nextInt(40);
         }
 
@@ -80,8 +80,8 @@ public class BehavorMove extends Behavior<EntityInsentient> {
     }
 
     protected void a(WorldServer worldserver, EntityInsentient entityinsentient, long i) {
-        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.PATH, (Object) this.c);
-        entityinsentient.getNavigation().a(this.c, (double) this.e);
+        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.PATH, this.c);
+        entityinsentient.getNavigation().a(this.c, this.e);
     }
 
     protected void d(WorldServer worldserver, EntityInsentient entityinsentient, long i) {
@@ -90,11 +90,11 @@ public class BehavorMove extends Behavior<EntityInsentient> {
 
         if (this.c != pathentity) {
             this.c = pathentity;
-            behaviorcontroller.setMemory(MemoryModuleType.PATH, (Object) pathentity);
+            behaviorcontroller.setMemory(MemoryModuleType.PATH, pathentity);
         }
 
         if (pathentity != null && this.d != null) {
-            MemoryTarget memorytarget = (MemoryTarget) behaviorcontroller.getMemory(MemoryModuleType.WALK_TARGET).get();
+            MemoryTarget memorytarget = behaviorcontroller.getMemory(MemoryModuleType.WALK_TARGET).get();
 
             if (memorytarget.a().b().j(this.d) > 4.0D && this.a(entityinsentient, memorytarget, worldserver.getTime())) {
                 this.d = memorytarget.a().b();
@@ -119,14 +119,14 @@ public class BehavorMove extends Behavior<EntityInsentient> {
             if (flag) {
                 behaviorcontroller.removeMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             } else if (!behaviorcontroller.hasMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
-                behaviorcontroller.setMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, (Object) i);
+                behaviorcontroller.setMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, i);
             }
 
             if (this.c != null) {
                 return true;
             }
 
-            Vec3D vec3d = RandomPositionGenerator.b((EntityCreature) entityinsentient, 10, 7, Vec3D.c((BaseBlockPosition) blockposition));
+            Vec3D vec3d = RandomPositionGenerator.b((EntityCreature) entityinsentient, 10, 7, Vec3D.c(blockposition));
 
             if (vec3d != null) {
                 this.c = entityinsentient.getNavigation().a(vec3d.x, vec3d.y, vec3d.z, 0);

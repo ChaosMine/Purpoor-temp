@@ -20,7 +20,12 @@ public class WorldGenVines extends WorldGenerator<WorldGenFeatureEmptyConfigurat
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+    @Override
+public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
+  return a(generatoraccessseed, chunkgenerator, random, blockposition, worldgenfeatureemptyconfiguration);
+}
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureEmptyConfiguration worldgenfeatureemptyconfiguration) {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = blockposition.i();
 
         for (int i = 64; i < 256; ++i) {
@@ -34,8 +39,8 @@ public class WorldGenVines extends WorldGenerator<WorldGenFeatureEmptyConfigurat
                 for (int k = 0; k < j; ++k) {
                     EnumDirection enumdirection = aenumdirection[k];
 
-                    if (enumdirection != EnumDirection.DOWN && BlockVine.a((IBlockAccess) generatoraccessseed, (BlockPosition) blockposition_mutableblockposition, enumdirection)) {
-                        generatoraccessseed.setTypeAndData(blockposition_mutableblockposition, (IBlockData) Blocks.VINE.getBlockData().set(BlockVine.getDirection(enumdirection), true), 2);
+                    if (enumdirection != EnumDirection.DOWN && BlockVine.a((IBlockAccess) generatoraccessseed, blockposition_mutableblockposition, enumdirection)) {
+                        generatoraccessseed.setTypeAndData(blockposition_mutableblockposition, Blocks.VINE.getBlockData().set(BlockVine.getDirection(enumdirection), true), 2);
                         break;
                     }
                 }

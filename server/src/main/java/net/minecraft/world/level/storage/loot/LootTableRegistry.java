@@ -30,12 +30,12 @@ public class LootTableRegistry extends ResourceDataJson {
     }
 
     public LootTable getLootTable(MinecraftKey minecraftkey) {
-        return (LootTable) this.keyToLootTable.getOrDefault(minecraftkey, LootTable.EMPTY);
+        return this.keyToLootTable.getOrDefault(minecraftkey, LootTable.EMPTY);
     }
 
     protected void a(Map<MinecraftKey, JsonElement> map, IResourceManager iresourcemanager) {
         Builder<MinecraftKey, LootTable> builder = ImmutableMap.builder();
-        JsonElement jsonelement = (JsonElement) map.remove(LootTables.a);
+        JsonElement jsonelement = map.remove(LootTables.a);
 
         if (jsonelement != null) {
             LootTableRegistry.LOGGER.warn("Datapack tried to redefine {} loot table, ignoring", LootTables.a);
@@ -43,7 +43,7 @@ public class LootTableRegistry extends ResourceDataJson {
 
         map.forEach((minecraftkey, jsonelement1) -> {
             try {
-                LootTable loottable = (LootTable) LootTableRegistry.b.fromJson(jsonelement1, LootTable.class);
+                LootTable loottable = LootTableRegistry.b.fromJson(jsonelement1, LootTable.class);
 
                 builder.put(minecraftkey, loottable);
             } catch (Exception exception) {

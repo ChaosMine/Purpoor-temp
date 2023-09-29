@@ -191,7 +191,7 @@ public class SecondaryWorldData implements IWorldDataServer {
 
     @Override
     public void a(CrashReportSystemDetails crashreportsystemdetails) {
-        crashreportsystemdetails.a("Derived", (Object) true);
+        crashreportsystemdetails.a("Derived", true);
         this.b.a(crashreportsystemdetails);
     }
 }

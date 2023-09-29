@@ -69,12 +69,12 @@ public class TileEntityDispenser extends TileEntityLootable {
     }
 
     public int h() {
-        this.d((EntityHuman) null);
+        this.d(null);
         int i = -1;
         int j = 1;
 
         for (int k = 0; k < this.items.size(); ++k) {
-            if (!((ItemStack) this.items.get(k)).isEmpty() && TileEntityDispenser.a.nextInt(j++) == 0) {
+            if (!this.items.get(k).isEmpty() && TileEntityDispenser.a.nextInt(j++) == 0) {
                 i = k;
             }
         }
@@ -84,7 +84,7 @@ public class TileEntityDispenser extends TileEntityLootable {
 
     public int addItem(ItemStack itemstack) {
         for (int i = 0; i < this.items.size(); ++i) {
-            if (((ItemStack) this.items.get(i)).isEmpty()) {
+            if (this.items.get(i).isEmpty()) {
                 this.setItem(i, itemstack);
                 return i;
             }

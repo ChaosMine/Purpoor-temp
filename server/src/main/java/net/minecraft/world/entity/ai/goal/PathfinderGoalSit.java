@@ -31,7 +31,7 @@ public class PathfinderGoalSit extends PathfinderGoal {
         } else {
             EntityLiving entityliving = this.entity.getOwner();
 
-            return entityliving == null ? true : (this.entity.h((Entity) entityliving) < 144.0D && entityliving.getLastDamager() != null ? false : this.entity.isWillSit());
+            return entityliving == null ? true : (this.entity.h(entityliving) < 144.0D && entityliving.getLastDamager() != null ? false : this.entity.isWillSit());
         }
     }
 

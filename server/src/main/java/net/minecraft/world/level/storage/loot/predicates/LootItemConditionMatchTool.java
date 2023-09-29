@@ -31,12 +31,12 @@ public class LootItemConditionMatchTool implements LootItemCondition {
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        ItemStack itemstack = (ItemStack) loottableinfo.getContextParameter(LootContextParameters.TOOL);
+        ItemStack itemstack = loottableinfo.getContextParameter(LootContextParameters.TOOL);
 
         return itemstack != null && this.a.a(itemstack);
     }
 
-    public static LootItemCondition.a a(CriterionConditionItem.a criterionconditionitem_a) {
+    public static LootItemCondition.a a(CriterionConditionItem.a_ criterionconditionitem_a) {
         return () -> {
             return new LootItemConditionMatchTool(criterionconditionitem_a.b());
         };

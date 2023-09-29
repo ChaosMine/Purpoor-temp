@@ -34,7 +34,7 @@ public class SensorNearestPlayers extends Sensor<EntityLiving> {
         EntityHuman firstNonSpectator = null;
         for (int index = 0, len = nearby.size(); index < len; ++index) {
             EntityHuman entity = nearby.get(index);
-            if (!Sensor.a(entityliving, (EntityLiving)entity)) { // copied from removed code, make sure to update
+            if (!Sensor.a(entityliving, entity)) { // copied from removed code, make sure to update
                 continue;
             }
             if (first == null) {

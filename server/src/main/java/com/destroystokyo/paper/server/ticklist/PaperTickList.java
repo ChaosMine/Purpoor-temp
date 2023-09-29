@@ -290,7 +290,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
                     if (toTick.tickState == STATE_TICKING) {
                         toTick.tickState = STATE_TICKED;
                     } // else it's STATE_CANCELLED_TICK
-                    MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
+                    MinecraftServer.SERVER.executeMidTickTasks(); // Tuinity - exec chunk tasks during world tick
                 } else {
                     // re-schedule eventually
                     toTick.tickState = STATE_SCHEDULED;
@@ -301,7 +301,7 @@ public final class PaperTickList<T> extends TickListServer<T> { // extend to avo
                 CrashReport crashreport = CrashReport.a(thr, "Exception while ticking");
                 CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Block being ticked");
 
-                CrashReportSystemDetails.a(crashreportsystemdetails, toTick.getPosition(), (IBlockData) null);
+                CrashReportSystemDetails.a(crashreportsystemdetails, toTick.getPosition(), null);
                 throw new ReportedException(crashreport);
                 // end copy from TickListServer
             }

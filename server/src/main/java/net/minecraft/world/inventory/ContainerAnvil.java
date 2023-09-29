@@ -55,7 +55,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
 
     @Override
     protected boolean a(IBlockData iblockdata) {
-        return iblockdata.a((Tag) TagsBlock.ANVIL);
+        return iblockdata.a(TagsBlock.ANVIL);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
         this.containerAccess.a((world, blockposition) -> {
             IBlockData iblockdata = world.getType(blockposition);
 
-            if (!entityhuman.abilities.canInstantlyBuild && iblockdata.a((Tag) TagsBlock.ANVIL) && entityhuman.getRandom().nextFloat() < 0.12F) {
+            if (!entityhuman.abilities.canInstantlyBuild && iblockdata.a(TagsBlock.ANVIL) && entityhuman.getRandom().nextFloat() < 0.12F) {
                 IBlockData iblockdata1 = BlockAnvil.c(iblockdata);
                 // Paper start
                 com.destroystokyo.paper.event.block.AnvilDamagedEvent event = new com.destroystokyo.paper.event.block.AnvilDamagedEvent(getBukkitView(), iblockdata1 != null ? org.bukkit.craftbukkit.block.data.CraftBlockData.fromData(iblockdata1) : null);
@@ -196,8 +196,8 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
                         Enchantment enchantment = (Enchantment) iterator.next();
 
                         if (enchantment != null) {
-                            int l1 = (Integer) map.getOrDefault(enchantment, 0);
-                            int i2 = (Integer) map1.get(enchantment);
+                            int l1 = map.getOrDefault(enchantment, 0);
+                            int i2 = map1.get(enchantment);
 
                             i2 = l1 == i2 ? i2 + 1 : Math.max(i2, l1);
                             boolean flag3 = canDoUnsafeEnchants || enchantment.canEnchant(itemstack); // Purpur
@@ -282,7 +282,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
                     itemstack1.a(PaperAdventure.asVanilla(renameTextComponent));
                 } else
                 // Purpur end
-                itemstack1.a((IChatBaseComponent) (new ChatComponentText(this.renameText)));
+                itemstack1.a(new ChatComponentText(this.renameText));
             }
 
             this.levelCost.set(j + i);
@@ -343,7 +343,7 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
             if (StringUtils.isBlank(s)) {
                 itemstack.s();
             } else {
-                itemstack.a((IChatBaseComponent) (new ChatComponentText(this.renameText)));
+                itemstack.a(new ChatComponentText(this.renameText));
             }
         }
 

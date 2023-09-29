@@ -62,13 +62,13 @@ public class TrunkPlacerFancy extends TrunkPlacer {
                     double d3 = (double) (random.nextFloat() * 2.0F) * 3.141592653589793D;
                     double d4 = d2 * Math.sin(d3) + 0.5D;
                     double d5 = d2 * Math.cos(d3) + 0.5D;
-                    BlockPosition blockposition1 = blockposition.a(d4, (double) (j1 - 1), d5);
+                    BlockPosition blockposition1 = blockposition.a(d4, j1 - 1, d5);
                     BlockPosition blockposition2 = blockposition1.up(5);
 
                     if (this.a(virtuallevelwritable, random, blockposition1, blockposition2, false, set, structureboundingbox, worldgenfeaturetreeconfiguration)) {
                         int l1 = blockposition.getX() - blockposition1.getX();
                         int i2 = blockposition.getZ() - blockposition1.getZ();
-                        double d6 = (double) blockposition1.getY() - Math.sqrt((double) (l1 * l1 + i2 * i2)) * 0.381D;
+                        double d6 = (double) blockposition1.getY() - Math.sqrt(l1 * l1 + i2 * i2) * 0.381D;
                         int j2 = d6 > (double) i1 ? i1 : (int) d6;
                         BlockPosition blockposition3 = new BlockPosition(blockposition.getX(), j2, blockposition.getZ());
 
@@ -107,10 +107,10 @@ public class TrunkPlacerFancy extends TrunkPlacer {
             float f2 = (float) blockposition2.getZ() / (float) i;
 
             for (int j = 0; j <= i; ++j) {
-                BlockPosition blockposition3 = blockposition.a((double) (0.5F + (float) j * f), (double) (0.5F + (float) j * f1), (double) (0.5F + (float) j * f2));
+                BlockPosition blockposition3 = blockposition.a(0.5F + (float) j * f, 0.5F + (float) j * f1, 0.5F + (float) j * f2);
 
                 if (flag) {
-                    a(virtuallevelwritable, blockposition3, (IBlockData) worldgenfeaturetreeconfiguration.b.a(random, blockposition3).set(BlockRotatable.AXIS, this.a(blockposition, blockposition3)), structureboundingbox);
+                    a(virtuallevelwritable, blockposition3, worldgenfeaturetreeconfiguration.b.a(random, blockposition3).set(BlockRotatable.AXIS, this.a(blockposition, blockposition3)), structureboundingbox);
                     set.add(blockposition3.immutableCopy());
                 } else if (!WorldGenTrees.c(virtuallevelwritable, blockposition3)) {
                     return false;

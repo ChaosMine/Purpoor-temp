@@ -33,7 +33,7 @@ public class PacketPlayOutGameStateChange implements Packet<PacketListenerPlayOu
 
     @Override
     public void a(PacketDataSerializer packetdataserializer) throws IOException {
-        this.m = (PacketPlayOutGameStateChange.a) PacketPlayOutGameStateChange.a.a.get(packetdataserializer.readUnsignedByte());
+        this.m = PacketPlayOutGameStateChange.a.a.get(packetdataserializer.readUnsignedByte());
         this.n = packetdataserializer.readFloat();
     }
 

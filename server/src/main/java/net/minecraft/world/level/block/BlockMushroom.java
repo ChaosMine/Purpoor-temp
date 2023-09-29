@@ -42,7 +42,7 @@ public class BlockMushroom extends BlockPlant implements IBlockFragilePlantEleme
             while (iterator.hasNext()) {
                 BlockPosition blockposition1 = (BlockPosition) iterator.next();
 
-                if (worldserver.getType(blockposition1).a((Block) this)) {
+                if (worldserver.getType(blockposition1).a(this)) {
                     --i;
                     if (i <= 0) {
                         return;
@@ -77,7 +77,7 @@ public class BlockMushroom extends BlockPlant implements IBlockFragilePlantEleme
         BlockPosition blockposition1 = blockposition.down();
         IBlockData iblockdata1 = iworldreader.getType(blockposition1);
 
-        return iblockdata1.a((Tag) TagsBlock.aD) ? true : iworldreader.getLightLevel(blockposition, 0) < 13 && this.c(iblockdata1, (IBlockAccess) iworldreader, blockposition1);
+        return iblockdata1.a(TagsBlock.aD) ? true : iworldreader.getLightLevel(blockposition, 0) < 13 && this.c(iblockdata1, iworldreader, blockposition1);
     }
 
     public boolean a(WorldServer worldserver, BlockPosition blockposition, IBlockData iblockdata, Random random) {

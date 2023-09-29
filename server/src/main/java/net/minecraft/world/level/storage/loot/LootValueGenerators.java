@@ -16,16 +16,16 @@ public class LootValueGenerators {
 
     public static LootValue a(JsonElement jsonelement, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
         if (jsonelement.isJsonPrimitive()) {
-            return (LootValue) jsondeserializationcontext.deserialize(jsonelement, LootValueConstant.class);
+            return jsondeserializationcontext.deserialize(jsonelement, LootValueConstant.class);
         } else {
             JsonObject jsonobject = jsonelement.getAsJsonObject();
             String s = ChatDeserializer.a(jsonobject, "type", LootValue.b.toString());
-            Class<? extends LootValue> oclass = (Class) LootValueGenerators.a.get(new MinecraftKey(s));
+            Class<? extends LootValue> oclass = LootValueGenerators.a.get(new MinecraftKey(s));
 
             if (oclass == null) {
                 throw new JsonParseException("Unknown generator: " + s);
             } else {
-                return (LootValue) jsondeserializationcontext.deserialize(jsonobject, oclass);
+                return jsondeserializationcontext.deserialize(jsonobject, oclass);
             }
         }
     }

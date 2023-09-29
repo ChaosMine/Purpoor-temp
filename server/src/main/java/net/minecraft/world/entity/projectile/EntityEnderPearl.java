@@ -69,7 +69,7 @@ public class EntityEnderPearl extends EntityProjectileThrowable {
 
                     if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
                         if (this.random.nextFloat() < this.world.purpurConfig.enderPearlEndermiteChance && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) { // Purpur
-                            EntityEndermite entityendermite = (EntityEndermite) EntityTypes.ENDERMITE.a(this.world);
+                            EntityEndermite entityendermite = EntityTypes.ENDERMITE.a(this.world);
 
                             entityendermite.setPlayerSpawned(true);
                         entityendermite.setPositionRotation(entity.locX(), entity.locY(), entity.locZ(), entity.yaw, entity.pitch);
@@ -116,7 +116,7 @@ public class EntityEnderPearl extends EntityProjectileThrowable {
         Entity entity = this.getShooter();
 
         if (entity != null && worldserver != null && entity.world.getDimensionKey() != worldserver.getDimensionKey()) { // CraftBukkit - SPIGOT-6113
-            this.setShooter((Entity) null);
+            this.setShooter(null);
         }
 
         return super.b(worldserver);

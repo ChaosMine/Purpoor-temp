@@ -92,6 +92,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 public class CraftWorld implements World {
     public static final int CUSTOM_DIMENSION_OFFSET = 10;
 
@@ -1857,7 +1859,7 @@ public class CraftWorld implements World {
         Preconditions.checkArgument(entity != null, "Cannot spawn null entity");
 
         if (entity instanceof EntityInsentient) {
-            ((EntityInsentient) entity).prepare(getHandle(), getHandle().getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.COMMAND, (GroupDataEntity) null, null);
+            ((EntityInsentient) entity).prepare(getHandle(), getHandle().getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.COMMAND, null, null);
         }
 
         if (function != null) {
@@ -2372,7 +2374,7 @@ public class CraftWorld implements World {
             throw new IllegalArgumentException("data should be " + particle.getDataType() + " got " + data.getClass());
         }
         getHandle().sendParticles(
-                receivers == null ? getHandle().players : receivers.stream().map(player -> ((CraftPlayer) player).getHandle()).collect(java.util.stream.Collectors.toList()), // Paper -  Particle API Expansion
+                receivers == null ? getHandle().players : receivers.stream().map(player -> ((CraftPlayer) player).getHandle()).collect(toList()), // Paper -  Particle API Expansion
                 sender != null ? ((CraftPlayer) sender).getHandle() : null, // Sender // Paper - Particle API Expansion
                 CraftParticle.toNMS(particle, data), // Particle
                 x, y, z, // Position
@@ -2473,7 +2475,7 @@ public class CraftWorld implements World {
     @Override
     public List<Raid> getRaids() {
         PersistentRaid persistentRaid = world.getPersistentRaid();
-        return persistentRaid.raids.values().stream().map(CraftRaid::new).collect(Collectors.toList());
+        return persistentRaid.raids.values().stream().map(CraftRaid::new).collect(toList());
     }
 
     @Override
@@ -2510,7 +2512,7 @@ public class CraftWorld implements World {
             net.minecraft.world.level.chunk.Chunk chunk = (net.minecraft.world.level.chunk.Chunk) either.left().orElse(null);
             if (false && chunk != null) addTicket(x, z); // Paper // Tuinity - revert
             return CompletableFuture.completedFuture(chunk == null ? null : chunk.getBukkitChunk());
-        }, net.minecraft.server.MinecraftServer.getServer());
+        }, net.minecraft.server.MinecraftServer.SERVER);
     }
 
     @Override

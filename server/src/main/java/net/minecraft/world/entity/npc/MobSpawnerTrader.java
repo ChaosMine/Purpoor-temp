@@ -104,8 +104,8 @@ public class MobSpawnerTrader implements MobSpawner {
             Optional<BlockPosition> optional = villageplace.c(VillagePlaceType.s.c(), (blockposition1) -> {
                 return true;
             }, blockposition, 48, VillagePlace.Occupancy.ANY);
-            BlockPosition blockposition1 = (BlockPosition) optional.orElse(blockposition);
-            BlockPosition blockposition2 = this.a((IWorldReader) worldserver, blockposition1, 48);
+            BlockPosition blockposition1 = optional.orElse(blockposition);
+            BlockPosition blockposition2 = this.a(worldserver, blockposition1, 48);
 
             if (blockposition2 != null && this.a(worldserver, blockposition2)) {
                 if (worldserver.i(blockposition2).equals(Optional.of(Biomes.THE_VOID))) {
@@ -132,10 +132,10 @@ public class MobSpawnerTrader implements MobSpawner {
     }
 
     private void a(WorldServer worldserver, EntityVillagerTrader entityvillagertrader, int i) {
-        BlockPosition blockposition = this.a((IWorldReader) worldserver, entityvillagertrader.getChunkCoordinates(), i);
+        BlockPosition blockposition = this.a(worldserver, entityvillagertrader.getChunkCoordinates(), i);
 
         if (blockposition != null) {
-            EntityLlamaTrader entityllamatrader = (EntityLlamaTrader) EntityTypes.TRADER_LLAMA.spawnCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
+            EntityLlamaTrader entityllamatrader = EntityTypes.TRADER_LLAMA.spawnCreature(worldserver, null, null, null, blockposition, EnumMobSpawn.EVENT, false, false, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
 
             if (entityllamatrader != null) {
                 entityllamatrader.setLeashHolder(entityvillagertrader, true);

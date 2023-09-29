@@ -10,7 +10,7 @@ import net.minecraft.world.damagesource.DamageSource;
 
 public class CriterionConditionDamage {
 
-    public static final CriterionConditionDamage a = CriterionConditionDamage.a.a().b();
+    public static final CriterionConditionDamage a = CriterionConditionDamage.a_.a().b();
     private final CriterionConditionValue.FloatRange b;
     private final CriterionConditionValue.FloatRange c;
     private final CriterionConditionEntity d;
@@ -70,7 +70,7 @@ public class CriterionConditionDamage {
         }
     }
 
-    public static class a {
+    public static class a_ {
 
         private CriterionConditionValue.FloatRange a;
         private CriterionConditionValue.FloatRange b;
@@ -78,23 +78,23 @@ public class CriterionConditionDamage {
         private Boolean d;
         private CriterionConditionDamageSource e;
 
-        public a() {
+        public a_() {
             this.a = CriterionConditionValue.FloatRange.e;
             this.b = CriterionConditionValue.FloatRange.e;
             this.c = CriterionConditionEntity.a;
             this.e = CriterionConditionDamageSource.a;
         }
 
-        public static CriterionConditionDamage.a a() {
-            return new CriterionConditionDamage.a();
+        public static a_ a() {
+            return new a_();
         }
 
-        public CriterionConditionDamage.a a(Boolean obool) {
+        public a_ a(Boolean obool) {
             this.d = obool;
             return this;
         }
 
-        public CriterionConditionDamage.a a(CriterionConditionDamageSource.a criterionconditiondamagesource_a) {
+        public a_ a(CriterionConditionDamageSource.a_ criterionconditiondamagesource_a) {
             this.e = criterionconditiondamagesource_a.b();
             return this;
         }

@@ -40,7 +40,7 @@ public class PosRuleTestLinear extends PosRuleTest {
         int i = blockposition1.k(blockposition2);
         float f = random.nextFloat();
 
-        return (double) f <= MathHelper.b((double) this.b, (double) this.d, MathHelper.c((double) i, (double) this.e, (double) this.f));
+        return (double) f <= MathHelper.b(this.b, this.d, MathHelper.c(i, this.e, (double) this.f));
     }
 
     @Override

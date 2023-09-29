@@ -53,7 +53,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
         @Override
         public IInventory getTileEntity() {
             TileEntityFurnace furnace = new TileEntityFurnaceFurnace();
-            furnace.setLocation(MinecraftServer.getServer().getWorldServer(World.OVERWORLD), BlockPosition.ZERO); // TODO: customize this if required
+            furnace.setLocation(MinecraftServer.SERVER.getWorldServer(World.OVERWORLD), BlockPosition.ZERO); // TODO: customize this if required
             return furnace;
         }
 

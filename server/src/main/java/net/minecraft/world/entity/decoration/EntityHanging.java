@@ -90,9 +90,9 @@ public abstract class EntityHanging extends Entity {
             if (entity != null) {
                 entity.setPositionRaw(d0, d1, d2);
             }
-            double d6 = (double) width;
-            double d7 = (double) height;
-            double d8 = (double) width;
+            double d6 = width;
+            double d7 = height;
+            double d8 = width;
 
             if (direction.n() == EnumDirection.EnumAxis.Z) {
                 d8 = 1.0D;

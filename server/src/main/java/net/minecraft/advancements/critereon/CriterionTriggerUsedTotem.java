@@ -18,7 +18,7 @@ public class CriterionTriggerUsedTotem extends CriterionTriggerAbstract<Criterio
     }
 
     @Override
-    public CriterionTriggerUsedTotem.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerUsedTotem.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionItem criterionconditionitem = CriterionConditionItem.a(jsonobject.get("item"));
 
         return new CriterionTriggerUsedTotem.a(criterionconditionentity_b, criterionconditionitem);
@@ -34,13 +34,13 @@ public class CriterionTriggerUsedTotem extends CriterionTriggerAbstract<Criterio
 
         private final CriterionConditionItem a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerUsedTotem.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
         }
 
         public static CriterionTriggerUsedTotem.a a(IMaterial imaterial) {
-            return new CriterionTriggerUsedTotem.a(CriterionConditionEntity.b.a, CriterionConditionItem.a.a().a(imaterial).b());
+            return new CriterionTriggerUsedTotem.a(CriterionConditionEntity.b_.a, CriterionConditionItem.a_.a().a(imaterial).b());
         }
 
         public boolean a(ItemStack itemstack) {

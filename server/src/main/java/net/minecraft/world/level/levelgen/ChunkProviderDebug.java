@@ -25,9 +25,9 @@ import net.minecraft.world.level.chunk.IChunkAccess;
 public class ChunkProviderDebug extends ChunkGenerator {
 
     public static final Codec<ChunkProviderDebug> d = RegistryLookupCodec.a(IRegistry.ay).xmap(ChunkProviderDebug::new, ChunkProviderDebug::g).stable().codec();
-    private static final List<IBlockData> g = (List) StreamSupport.stream(IRegistry.BLOCK.spliterator(), false).flatMap((block) -> {
+    private static final List<IBlockData> g = StreamSupport.stream(IRegistry.BLOCK.spliterator(), false).flatMap((block) -> {
         return block.getStates().a().stream();
-    }).collect(Collectors.toList());
+    }).toList();
     private static final int h = MathHelper.f(MathHelper.c((float) ChunkProviderDebug.g.size()));
     private static final int i = MathHelper.f((float) ChunkProviderDebug.g.size() / (float) ChunkProviderDebug.h);
     protected static final IBlockData e = Blocks.AIR.getBlockData();
@@ -35,7 +35,7 @@ public class ChunkProviderDebug extends ChunkGenerator {
     private final IRegistry<BiomeBase> j;
 
     public ChunkProviderDebug(IRegistry<BiomeBase> iregistry) {
-        super(new WorldChunkManagerHell((BiomeBase) iregistry.d(Biomes.PLAINS)), new StructureSettings(false));
+        super(new WorldChunkManagerHell(iregistry.d(Biomes.PLAINS)), new StructureSettings(false));
         this.j = iregistry;
     }
 
@@ -99,7 +99,7 @@ public class ChunkProviderDebug extends ChunkGenerator {
                 int k = MathHelper.a(i * ChunkProviderDebug.h + j);
 
                 if (k < ChunkProviderDebug.g.size()) {
-                    iblockdata = (IBlockData) ChunkProviderDebug.g.get(k);
+                    iblockdata = ChunkProviderDebug.g.get(k);
                 }
             }
         }

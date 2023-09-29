@@ -16,7 +16,7 @@ public class CriterionTriggerTick extends CriterionTriggerAbstract<CriterionTrig
     }
 
     @Override
-    public CriterionTriggerTick.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerTick.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         return new CriterionTriggerTick.a(criterionconditionentity_b);
     }
 
@@ -28,7 +28,7 @@ public class CriterionTriggerTick extends CriterionTriggerAbstract<CriterionTrig
 
     public static class a extends CriterionInstanceAbstract {
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b) {
             super(CriterionTriggerTick.a, criterionconditionentity_b);
         }
     }

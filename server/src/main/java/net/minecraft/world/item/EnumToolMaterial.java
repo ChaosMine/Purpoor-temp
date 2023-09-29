@@ -9,9 +9,9 @@ import net.minecraft.world.item.crafting.RecipeItemStack;
 public enum EnumToolMaterial implements ToolMaterial {
 
     WOOD(0, 59, 2.0F, 0.0F, 15, () -> {
-        return RecipeItemStack.a((Tag) TagsItem.PLANKS);
+        return RecipeItemStack.a(TagsItem.PLANKS);
     }), STONE(1, 131, 4.0F, 1.0F, 5, () -> {
-        return RecipeItemStack.a((Tag) TagsItem.STONE_TOOL_MATERIALS);
+        return RecipeItemStack.a(TagsItem.STONE_TOOL_MATERIALS);
     }), IRON(2, 250, 6.0F, 2.0F, 14, () -> {
         return RecipeItemStack.a(Items.IRON_INGOT);
     }), DIAMOND(3, 1561, 8.0F, 3.0F, 10, () -> {
@@ -65,6 +65,6 @@ public enum EnumToolMaterial implements ToolMaterial {
 
     @Override
     public RecipeItemStack f() {
-        return (RecipeItemStack) this.l.a();
+        return this.l.a();
     }
 }

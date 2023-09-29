@@ -46,7 +46,7 @@ public class ProtoChunkTickList<T> implements TickList<T> {
                 ShortListIterator shortlistiterator = this.c[i].iterator();
 
                 while (shortlistiterator.hasNext()) {
-                    Short oshort = (Short) shortlistiterator.next();
+                    Short oshort = shortlistiterator.next();
                     BlockPosition blockposition = ProtoChunk.a(oshort, i, this.b);
 
                     ticklist.a(blockposition, function.apply(blockposition), 0);

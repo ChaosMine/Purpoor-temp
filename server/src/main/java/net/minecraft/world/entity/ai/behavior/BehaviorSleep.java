@@ -32,7 +32,7 @@ public class BehaviorSleep extends Behavior<EntityLiving> {
             return false;
         } else {
             BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
-            GlobalPos globalpos = (GlobalPos) behaviorcontroller.getMemory(MemoryModuleType.HOME).get();
+            GlobalPos globalpos = behaviorcontroller.getMemory(MemoryModuleType.HOME).get();
 
             if (worldserver.getDimensionKey() != globalpos.getDimensionManager()) {
                 return false;
@@ -40,7 +40,7 @@ public class BehaviorSleep extends Behavior<EntityLiving> {
                 Optional<Long> optional = behaviorcontroller.getMemory(MemoryModuleType.LAST_WOKEN);
 
                 if (optional.isPresent()) {
-                    long i = worldserver.getTime() - (Long) optional.get();
+                    long i = worldserver.getTime() - optional.get();
 
                     if (i > 0L && i < 100L) {
                         return false;
@@ -50,7 +50,7 @@ public class BehaviorSleep extends Behavior<EntityLiving> {
                 IBlockData iblockdata = worldserver.getTypeIfLoaded(globalpos.getBlockPosition()); // Paper
                 if (iblockdata == null) { return false; } // Paper
 
-                return globalpos.getBlockPosition().a((IPosition) entityliving.getPositionVector(), 2.0D) && iblockdata.getBlock().a((Tag) TagsBlock.BEDS) && !(Boolean) iblockdata.get(BlockBed.OCCUPIED);
+                return globalpos.getBlockPosition().a(entityliving.getPositionVector(), 2.0D) && iblockdata.getBlock().a(TagsBlock.BEDS) && !(Boolean) iblockdata.get(BlockBed.OCCUPIED);
             }
         }
     }
@@ -62,17 +62,17 @@ public class BehaviorSleep extends Behavior<EntityLiving> {
         if (!optional.isPresent()) {
             return false;
         } else {
-            BlockPosition blockposition = ((GlobalPos) optional.get()).getBlockPosition();
+            BlockPosition blockposition = optional.get().getBlockPosition();
 
-            return entityliving.getBehaviorController().c(Activity.REST) && entityliving.locY() > (double) blockposition.getY() + 0.4D && blockposition.a((IPosition) entityliving.getPositionVector(), 1.14D);
+            return entityliving.getBehaviorController().c(Activity.REST) && entityliving.locY() > (double) blockposition.getY() + 0.4D && blockposition.a(entityliving.getPositionVector(), 1.14D);
         }
     }
 
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
         if (i > this.b) {
-            BehaviorInteractDoor.a(worldserver, entityliving, (PathPoint) null, (PathPoint) null);
-            entityliving.entitySleep(((GlobalPos) entityliving.getBehaviorController().getMemory(MemoryModuleType.HOME).get()).getBlockPosition());
+            BehaviorInteractDoor.a(worldserver, entityliving, null, null);
+            entityliving.entitySleep(entityliving.getBehaviorController().getMemory(MemoryModuleType.HOME).get().getBlockPosition());
         }
 
     }

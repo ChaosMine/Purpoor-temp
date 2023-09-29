@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.stats;
 
 import com.google.common.collect.Maps;
@@ -189,15 +188,15 @@ public class ServerStatisticManager extends StatisticManager {
 
         while (iterator.hasNext()) {
             Entry<String, JsonElement> entry = (Entry) iterator.next();
-            JsonElement jsonelement = (JsonElement) entry.getValue();
+            JsonElement jsonelement = entry.getValue();
 
             if (jsonelement.isJsonObject()) {
-                nbttagcompound.set((String) entry.getKey(), a(jsonelement.getAsJsonObject()));
+                nbttagcompound.set(entry.getKey(), a(jsonelement.getAsJsonObject()));
             } else if (jsonelement.isJsonPrimitive()) {
                 JsonPrimitive jsonprimitive = jsonelement.getAsJsonPrimitive();
 
                 if (jsonprimitive.isNumber()) {
-                    nbttagcompound.setInt((String) entry.getKey(), jsonprimitive.getAsInt());
+                    nbttagcompound.setInt(entry.getKey(), jsonprimitive.getAsInt());
                 }
             }
         }
@@ -211,11 +210,11 @@ public class ServerStatisticManager extends StatisticManager {
 
         while (objectiterator.hasNext()) {
             Object2IntMap.Entry<Statistic<?>> it_unimi_dsi_fastutil_objects_object2intmap_entry = (Object2IntMap.Entry) objectiterator.next(); // Paper - decompile fix
-            Statistic<?> statistic = (Statistic) it_unimi_dsi_fastutil_objects_object2intmap_entry.getKey();
+            Statistic<?> statistic = it_unimi_dsi_fastutil_objects_object2intmap_entry.getKey();
 
-            ((JsonObject) map.computeIfAbsent(statistic.getWrapper(), (statisticwrapper) -> {
+            map.computeIfAbsent(statistic.getWrapper(), (statisticwrapper) -> {
                 return new JsonObject();
-            })).addProperty(b(statistic).toString(), it_unimi_dsi_fastutil_objects_object2intmap_entry.getIntValue());
+            }).addProperty(b(statistic).toString(), it_unimi_dsi_fastutil_objects_object2intmap_entry.getIntValue());
         }
 
         JsonObject jsonobject = new JsonObject();
@@ -224,7 +223,7 @@ public class ServerStatisticManager extends StatisticManager {
         while (iterator.hasNext()) {
             Entry<StatisticWrapper<?>, JsonObject> entry = (Entry) iterator.next();
 
-            jsonobject.add(IRegistry.STATS.getKey(entry.getKey()).toString(), (JsonElement) entry.getValue());
+            jsonobject.add(IRegistry.STATS.getKey(entry.getKey()).toString(), entry.getValue());
         }
 
         JsonObject jsonobject1 = new JsonObject();

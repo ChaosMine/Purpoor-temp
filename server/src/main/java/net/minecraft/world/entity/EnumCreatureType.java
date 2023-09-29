@@ -11,7 +11,7 @@ public enum EnumCreatureType implements INamable {
     MONSTER("monster", 70, false, false, 128), CREATURE("creature", 10, true, true, 128), AMBIENT("ambient", 15, true, false, 128), WATER_CREATURE("water_creature", 5, true, false, 128), WATER_AMBIENT("water_ambient", 20, true, false, 64), MISC("misc", -1, true, true, 128);
 
     public static final Codec<EnumCreatureType> g = INamable.a(EnumCreatureType::values, EnumCreatureType::a);
-    private static final Map<String, EnumCreatureType> h = (Map) Arrays.stream(values()).collect(Collectors.toMap(EnumCreatureType::b, (enumcreaturetype) -> {
+    private static final Map<String, EnumCreatureType> h = Arrays.stream(values()).collect(Collectors.toMap(EnumCreatureType::b, (enumcreaturetype) -> {
         return enumcreaturetype;
     }));
     private final int i;
@@ -39,7 +39,7 @@ public enum EnumCreatureType implements INamable {
     }
 
     public static EnumCreatureType a(String s) {
-        return (EnumCreatureType) EnumCreatureType.h.get(s);
+        return EnumCreatureType.h.get(s);
     }
 
     public int c() {

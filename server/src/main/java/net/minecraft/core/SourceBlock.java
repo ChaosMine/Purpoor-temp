@@ -46,6 +46,6 @@ public class SourceBlock implements ISourceBlock {
 
     @Override
     public <T extends TileEntity> T getTileEntity() {
-        return this.a.getTileEntity(this.b);
+        return (T) this.a.getTileEntity(this.b);
     }
 }

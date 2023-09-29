@@ -3,9 +3,7 @@ package net.minecraft.advancements.critereon;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionRegistry;
 import net.minecraft.world.level.IMaterial;
 
 public class CriterionTriggerConsumeItem extends CriterionTriggerAbstract<CriterionTriggerConsumeItem.a> {
@@ -20,7 +18,7 @@ public class CriterionTriggerConsumeItem extends CriterionTriggerAbstract<Criter
     }
 
     @Override
-    public CriterionTriggerConsumeItem.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerConsumeItem.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         return new CriterionTriggerConsumeItem.a(criterionconditionentity_b, CriterionConditionItem.a(jsonobject.get("item")));
     }
 
@@ -34,17 +32,17 @@ public class CriterionTriggerConsumeItem extends CriterionTriggerAbstract<Criter
 
         private final CriterionConditionItem a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionItem criterionconditionitem) {
             super(CriterionTriggerConsumeItem.a, criterionconditionentity_b);
             this.a = criterionconditionitem;
         }
 
         public static CriterionTriggerConsumeItem.a c() {
-            return new CriterionTriggerConsumeItem.a(CriterionConditionEntity.b.a, CriterionConditionItem.a);
+            return new CriterionTriggerConsumeItem.a(CriterionConditionEntity.b_.a, CriterionConditionItem.a);
         }
 
         public static CriterionTriggerConsumeItem.a a(IMaterial imaterial) {
-            return new CriterionTriggerConsumeItem.a(CriterionConditionEntity.b.a, new CriterionConditionItem((Tag) null, imaterial.getItem(), CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionEnchantments.b, CriterionConditionEnchantments.b, (PotionRegistry) null, CriterionConditionNBT.a));
+            return new CriterionTriggerConsumeItem.a(CriterionConditionEntity.b_.a, new CriterionConditionItem(null, imaterial.getItem(), CriterionConditionValue.IntegerRange.e, CriterionConditionValue.IntegerRange.e, CriterionConditionEnchantments.b, CriterionConditionEnchantments.b, null, CriterionConditionNBT.a));
         }
 
         public boolean a(ItemStack itemstack) {

@@ -31,7 +31,7 @@ public enum BlockPropertyJigsawOrientation implements INamable {
     public static BlockPropertyJigsawOrientation a(EnumDirection enumdirection, EnumDirection enumdirection1) {
         int i = b(enumdirection1, enumdirection);
 
-        return (BlockPropertyJigsawOrientation) BlockPropertyJigsawOrientation.m.get(i);
+        return BlockPropertyJigsawOrientation.m.get(i);
     }
 
     public EnumDirection b() {

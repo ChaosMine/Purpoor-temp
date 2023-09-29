@@ -47,7 +47,7 @@ public class NBTTagCompound implements NBTBase {
                 while ((b0 = NBTTagCompound.c(datainput, nbtreadlimiter)) != 0) {
                     String s = NBTTagCompound.d(datainput, nbtreadlimiter);
 
-                    nbtreadlimiter.a((long) (224 + 16 * s.length()));
+                    nbtreadlimiter.a(224 + 16 * s.length());
                     NBTBase nbtbase = NBTTagCompound.b(NBTTagTypes.a(b0), s, datainput, i + 1, nbtreadlimiter);
 
                     if (hashmap.put(s, nbtbase) != null) {
@@ -121,7 +121,7 @@ public class NBTTagCompound implements NBTBase {
 
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
-            NBTBase nbtbase = (NBTBase) this.map.get(s);
+            NBTBase nbtbase = this.map.get(s);
 
             a(s, nbtbase, dataoutput);
         }
@@ -149,7 +149,7 @@ public class NBTTagCompound implements NBTBase {
 
     @Nullable
     public NBTBase set(String s, NBTBase nbtbase) {
-        return (NBTBase) this.map.put(s, nbtbase);
+        return this.map.put(s, nbtbase);
     }
 
     public void setByte(String s, byte b0) {
@@ -243,11 +243,11 @@ public class NBTTagCompound implements NBTBase {
 
     @Nullable
     public NBTBase get(String s) {
-        return (NBTBase) this.map.get(s);
+        return this.map.get(s);
     }
 
     public byte d(String s) {
-        NBTBase nbtbase = (NBTBase) this.map.get(s);
+        NBTBase nbtbase = this.map.get(s);
 
         return nbtbase == null ? 0 : nbtbase.getTypeId();
     }
@@ -337,7 +337,7 @@ public class NBTTagCompound implements NBTBase {
     public String getString(String s) {
         try {
             if (this.hasKeyOfType(s, 8)) {
-                return ((NBTBase) this.map.get(s)).asString();
+                return this.map.get(s).asString();
             }
         } catch (ClassCastException classcastexception) {
             ;
@@ -454,10 +454,10 @@ public class NBTTagCompound implements NBTBase {
         CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Corrupt NBT tag", 1);
 
         crashreportsystemdetails.a("Tag type found", () -> {
-            return ((NBTBase) this.map.get(s)).b().a();
+            return this.map.get(s).b().a();
         });
         crashreportsystemdetails.a("Tag type expected", nbttagtype::a);
-        crashreportsystemdetails.a("Tag name", (Object) s);
+        crashreportsystemdetails.a("Tag name", s);
         return crashreport;
     }
 
@@ -514,8 +514,8 @@ public class NBTTagCompound implements NBTBase {
             CrashReport crashreport = CrashReport.a(ioexception, "Loading NBT data");
             CrashReportSystemDetails crashreportsystemdetails = crashreport.a("NBT Tag");
 
-            crashreportsystemdetails.a("Tag name", (Object) s);
-            crashreportsystemdetails.a("Tag type", (Object) nbttagtype.a());
+            crashreportsystemdetails.a("Tag name", s);
+            crashreportsystemdetails.a("Tag type", nbttagtype.a());
             throw new ReportedException(crashreport);
         }
     }
@@ -525,7 +525,7 @@ public class NBTTagCompound implements NBTBase {
 
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
-            NBTBase nbtbase = (NBTBase) nbttagcompound.map.get(s);
+            NBTBase nbtbase = nbttagcompound.map.get(s);
 
             if (nbtbase.getTypeId() == 10) {
                 if (this.hasKeyOfType(s, 10)) {
@@ -583,7 +583,7 @@ public class NBTTagCompound implements NBTBase {
             for (Iterator iterator = ((Collection) collection).iterator(); iterator.hasNext(); chatcomponenttext.addSibling(ichatmutablecomponent)) {
                 String s1 = (String) iterator.next();
 
-                ichatmutablecomponent = (new ChatComponentText(Strings.repeat(s, i + 1))).addSibling(t(s1)).c(String.valueOf(':')).c(" ").addSibling(((NBTBase) this.map.get(s1)).a(s, i + 1));
+                ichatmutablecomponent = (new ChatComponentText(Strings.repeat(s, i + 1))).addSibling(t(s1)).c(String.valueOf(':')).c(" ").addSibling(this.map.get(s1).a(s, i + 1));
                 if (iterator.hasNext()) {
                     ichatmutablecomponent.c(String.valueOf(',')).c(s.isEmpty() ? " " : "\n");
                 }

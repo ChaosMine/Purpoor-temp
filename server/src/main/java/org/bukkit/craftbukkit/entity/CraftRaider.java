@@ -32,7 +32,7 @@ public abstract class CraftRaider extends CraftMonster implements Raider {
     @Override
     public void setPatrolTarget(Block block) {
         if (block == null) {
-            getHandle().setPatrolTarget((BlockPosition) null);
+            getHandle().setPatrolTarget(null);
         } else {
             Preconditions.checkArgument(block.getWorld().equals(this.getWorld()), "Block must be in same world");
 

@@ -65,7 +65,7 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
 
     @Override
     protected BehaviorController.b<EntityZoglin> cK() {
-        return BehaviorController.a((Collection) EntityZoglin.c, (Collection) EntityZoglin.b);
+        return BehaviorController.a(EntityZoglin.c, (Collection) EntityZoglin.b);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
         a(behaviorcontroller);
         b(behaviorcontroller);
         c(behaviorcontroller);
-        behaviorcontroller.a((Set) ImmutableSet.of(Activity.CORE));
+        behaviorcontroller.a(ImmutableSet.of(Activity.CORE));
         behaviorcontroller.b(Activity.IDLE);
         behaviorcontroller.e();
         return behaviorcontroller;
@@ -186,10 +186,10 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
     }
 
     protected void eL() {
-        Activity activity = (Activity) this.bg.f().orElse(null); // Purpur - decompile error
+        Activity activity = this.bg.f().orElse(null); // Purpur - decompile error
 
-        this.bg.a((List) ImmutableList.of(Activity.FLIGHT, Activity.IDLE));
-        Activity activity1 = (Activity) this.bg.f().orElse(null); // Purpur - decompile error
+        this.bg.a(ImmutableList.of(Activity.FLIGHT, Activity.IDLE));
+        Activity activity1 = this.bg.f().orElse(null); // Purpur - decompile error
 
         if (activity1 == Activity.FLIGHT && activity != Activity.FLIGHT) {
             this.eN();
@@ -216,7 +216,7 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
 
     @Override
     public boolean isBaby() {
-        return (Boolean) this.getDataWatcher().get(EntityZoglin.d);
+        return this.getDataWatcher().get(EntityZoglin.d);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class EntityZoglin extends EntityMonster implements IMonster, IOglin {
     @Override
     protected void M() {
         super.M();
-        PacketDebug.a((EntityLiving) this);
+        PacketDebug.a(this);
     }
 
     @Override

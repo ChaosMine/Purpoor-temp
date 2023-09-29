@@ -39,7 +39,7 @@ public class RegionFileCompression {
 
     @Nullable public static RegionFileCompression getByType(int type) { return RegionFileCompression.a(type); } // Tuinity - OBFHELPER
     @Nullable public static RegionFileCompression a(int i) { // Tuinity - OBFHELPER
-        return (RegionFileCompression) RegionFileCompression.d.get(i);
+        return RegionFileCompression.d.get(i);
     }
 
     public static boolean b(int i) {
@@ -52,12 +52,12 @@ public class RegionFileCompression {
     }
 
     public OutputStream a(OutputStream outputstream) throws IOException {
-        return (OutputStream) this.g.wrap(outputstream);
+        return this.g.wrap(outputstream);
     }
 
     public final InputStream wrap(InputStream inputstream) throws IOException { return this.a(inputstream); } // Tuinity - OBFHELPER
     public InputStream a(InputStream inputstream) throws IOException {
-        return (InputStream) this.f.wrap(inputstream);
+        return this.f.wrap(inputstream);
     }
 
     @FunctionalInterface

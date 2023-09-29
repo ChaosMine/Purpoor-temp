@@ -14,7 +14,7 @@ public class TagStatic {
 
     public static <T> TagUtil<T> a(MinecraftKey minecraftkey, Function<ITagRegistry, Tags<T>> function) {
         TagUtil<T> tagutil = new TagUtil<>(function);
-        TagUtil<?> tagutil1 = (TagUtil) TagStatic.a.putIfAbsent(minecraftkey, tagutil);
+        TagUtil<?> tagutil1 = TagStatic.a.putIfAbsent(minecraftkey, tagutil);
 
         if (tagutil1 != null) {
             throw new IllegalStateException("Duplicate entry for static tag collection: " + minecraftkey);

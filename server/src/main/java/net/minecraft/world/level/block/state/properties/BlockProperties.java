@@ -48,7 +48,7 @@ public class BlockProperties {
     public static final BlockStateDirection N = BlockStateDirection.a("facing", (enumdirection) -> {
         return enumdirection != EnumDirection.UP;
     });
-    public static final BlockStateDirection O = BlockStateDirection.a("facing", (Predicate) EnumDirection.EnumDirectionLimit.HORIZONTAL);
+    public static final BlockStateDirection O = BlockStateDirection.a("facing", EnumDirection.EnumDirectionLimit.HORIZONTAL);
     public static final BlockStateEnum<BlockPropertyJigsawOrientation> P = BlockStateEnum.of("orientation", BlockPropertyJigsawOrientation.class);
     public static final BlockStateEnum<BlockPropertyAttachPosition> Q = BlockStateEnum.of("face", BlockPropertyAttachPosition.class);
     public static final BlockStateEnum<BlockPropertyBellAttach> R = BlockStateEnum.of("attachment", BlockPropertyBellAttach.class);

@@ -283,7 +283,7 @@ public class PlayerChunk {
 
     public Chunk getFullChunkUnchecked() {
         CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> statusFuture = this.getStatusFutureUnchecked(ChunkStatus.FULL);
-        Either<IChunkAccess, PlayerChunk.Failure> either = (Either<IChunkAccess, PlayerChunk.Failure>) statusFuture.getNow(null);
+        Either<IChunkAccess, PlayerChunk.Failure> either = statusFuture.getNow(null);
         return (either == null) ? null : (Chunk) either.left().orElse(null);
     }
     // CraftBukkit end
@@ -291,7 +291,7 @@ public class PlayerChunk {
     public final Chunk getFullChunkIfCached() {
         // Note: Copied from above without ticket level check
         CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> statusFuture = this.getStatusFutureUnchecked(ChunkStatus.FULL);
-        Either<IChunkAccess, PlayerChunk.Failure> either = (Either<IChunkAccess, PlayerChunk.Failure>) statusFuture.getNow(null);
+        Either<IChunkAccess, PlayerChunk.Failure> either = statusFuture.getNow(null);
         return either == null ? null : (Chunk) either.left().orElse(null);
     }
 
@@ -334,7 +334,7 @@ public class PlayerChunk {
     // Paper end
 
     public CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> getStatusFutureUnchecked(ChunkStatus chunkstatus) {
-        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = (CompletableFuture) this.statusFutures.get(chunkstatus.c());
+        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = this.statusFutures.get(chunkstatus.c());
 
         return completablefuture == null ? PlayerChunk.UNLOADED_CHUNK_ACCESS_FUTURE : completablefuture;
     }
@@ -361,22 +361,22 @@ public class PlayerChunk {
     @Nullable
     public final Chunk getChunk() { // Paper - final for inline
         CompletableFuture<Either<Chunk, PlayerChunk.Failure>> completablefuture = this.a();
-        Either<Chunk, PlayerChunk.Failure> either = (Either) completablefuture.getNow(null); // CraftBukkit - decompile error
+        Either<Chunk, PlayerChunk.Failure> either = completablefuture.getNow(null); // CraftBukkit - decompile error
 
-        return either == null ? null : (Chunk) either.left().orElse(null); // CraftBukkit - decompile error
+        return either == null ? null : either.left().orElse(null); // CraftBukkit - decompile error
     }
 
     @Nullable
     public IChunkAccess f() {
         for (int i = PlayerChunk.CHUNK_STATUSES.size() - 1; i >= 0; --i) {
-            ChunkStatus chunkstatus = (ChunkStatus) PlayerChunk.CHUNK_STATUSES.get(i);
+            ChunkStatus chunkstatus = PlayerChunk.CHUNK_STATUSES.get(i);
             CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = this.getStatusFutureUnchecked(chunkstatus);
 
             if (!completablefuture.isCompletedExceptionally()) {
                 Optional<IChunkAccess> optional = ((Either) completablefuture.getNow(PlayerChunk.UNLOADED_CHUNK_ACCESS)).left();
 
                 if (optional.isPresent()) {
-                    return (IChunkAccess) optional.get();
+                    return optional.get();
                 }
             }
         }
@@ -540,10 +540,10 @@ public class PlayerChunk {
     public final CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> getOrCreateFuture(ChunkStatus chunkstatus, PlayerChunkMap playerchunkmap) { return this.a(chunkstatus, playerchunkmap); } // Tuinity - OBFHELPER
     public CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> a(ChunkStatus chunkstatus, PlayerChunkMap playerchunkmap) {
         int i = chunkstatus.c();
-        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = (CompletableFuture) this.statusFutures.get(i);
+        CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = this.statusFutures.get(i);
 
         if (completablefuture != null) {
-            Either<IChunkAccess, PlayerChunk.Failure> either = (Either) completablefuture.getNow(null); // CraftBukkit - decompile error
+            Either<IChunkAccess, PlayerChunk.Failure> either = completablefuture.getNow(null); // CraftBukkit - decompile error
 
             if (either == null || either.left().isPresent()) {
                 return completablefuture;
@@ -859,7 +859,7 @@ public class PlayerChunk {
 
     public void a(ProtoChunkExtension protochunkextension) {
         for (int i = 0; i < this.statusFutures.length(); ++i) {
-            CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = (CompletableFuture) this.statusFutures.get(i);
+            CompletableFuture<Either<IChunkAccess, PlayerChunk.Failure>> completablefuture = this.statusFutures.get(i);
 
             if (completablefuture != null) {
                 Optional<IChunkAccess> optional = ((Either) completablefuture.getNow(PlayerChunk.UNLOADED_CHUNK_ACCESS)).left();

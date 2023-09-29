@@ -283,7 +283,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     private static File getBukkitDataPackFolder() {
-        return new File(MinecraftServer.getServer().a(SavedFile.DATAPACKS).toFile(), "bukkit");
+        return new File(MinecraftServer.SERVER.a(SavedFile.DATAPACKS).toFile(), "bukkit");
     }
 
     @Override
@@ -295,9 +295,9 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
         JsonElement jsonelement = AdvancementDataWorld.DESERIALIZER.fromJson(advancement, JsonElement.class);
         JsonObject jsonobject = ChatDeserializer.m(jsonelement, "advancement");
-        net.minecraft.advancements.Advancement.SerializedAdvancement nms = net.minecraft.advancements.Advancement.SerializedAdvancement.a(jsonobject, new LootDeserializationContext(minecraftkey, MinecraftServer.getServer().getLootPredicateManager()));
+        net.minecraft.advancements.Advancement.SerializedAdvancement nms = net.minecraft.advancements.Advancement.SerializedAdvancement.a(jsonobject, new LootDeserializationContext(minecraftkey, MinecraftServer.SERVER.getLootPredicateManager()));
         if (nms != null) {
-            MinecraftServer.getServer().getAdvancementData().REGISTRY.a(Maps.newHashMap(Collections.singletonMap(minecraftkey, nms)));
+            MinecraftServer.SERVER.getAdvancementData().REGISTRY.a(Maps.newHashMap(Collections.singletonMap(minecraftkey, nms)));
             Advancement bukkit = Bukkit.getAdvancement(key);
 
             if (bukkit != null) {
@@ -311,9 +311,9 @@ public final class CraftMagicNumbers implements UnsafeValues {
                 }
 
                 // Paper start
-                //MinecraftServer.getServer().getPlayerList().reload();
-                MinecraftServer.getServer().getPlayerList().getPlayers().forEach(player -> {
-                    player.getAdvancementData().reload(MinecraftServer.getServer().getAdvancementData());
+                //MinecraftServer.SERVER.getPlayerList().reload();
+                MinecraftServer.SERVER.getPlayerList().getPlayers().forEach(player -> {
+                    player.getAdvancementData().reload(MinecraftServer.SERVER.getAdvancementData());
                     player.getAdvancementData().sendUpdateIfNeeded(player);
                 });
                 // Paper end
@@ -335,7 +335,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public void checkSupported(PluginDescriptionFile pdf) throws InvalidPluginException {
-        String minimumVersion = MinecraftServer.getServer().server.minimumAPI;
+        String minimumVersion = MinecraftServer.SERVER.server.minimumAPI;
         int minimumIndex = SUPPORTED_API.indexOf(minimumVersion);
 
         if (pdf.getAPIVersion() != null) {

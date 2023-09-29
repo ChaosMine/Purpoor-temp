@@ -17,7 +17,7 @@ import net.minecraft.world.level.material.FluidType;
 
 public class CriterionConditionFluid {
 
-    public static final CriterionConditionFluid a = new CriterionConditionFluid((Tag) null, (FluidType) null, CriterionTriggerProperties.a);
+    public static final CriterionConditionFluid a = new CriterionConditionFluid(null, null, CriterionTriggerProperties.a);
     @Nullable
     private final Tag<FluidType> b;
     @Nullable
@@ -51,7 +51,7 @@ public class CriterionConditionFluid {
             if (jsonobject.has("fluid")) {
                 MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "fluid"));
 
-                fluidtype = (FluidType) IRegistry.FLUID.get(minecraftkey);
+                fluidtype = IRegistry.FLUID.get(minecraftkey);
             }
 
             Tag<FluidType> tag = null;

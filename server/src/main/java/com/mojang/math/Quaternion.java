@@ -105,10 +105,10 @@ public final class Quaternion {
     }
 
     private static float b(float f) {
-        return (float) Math.cos((double) f);
+        return (float) Math.cos(f);
     }
 
     private static float c(float f) {
-        return (float) Math.sin((double) f);
+        return (float) Math.sin(f);
     }
 }

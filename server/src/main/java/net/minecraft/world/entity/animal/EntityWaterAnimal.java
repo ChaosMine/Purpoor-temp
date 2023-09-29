@@ -29,7 +29,7 @@ public abstract class EntityWaterAnimal extends EntityCreature {
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this);
+        return iworldreader.j(this);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class BlockLectern extends BlockTileEntity {
 
     protected BlockLectern(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockLectern.a, EnumDirection.NORTH)).set(BlockLectern.b, false)).set(BlockLectern.c, false));
+        this.j(this.blockStateList.getBlockData().set(BlockLectern.a, EnumDirection.NORTH).set(BlockLectern.b, false).set(BlockLectern.c, false));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class BlockLectern extends BlockTileEntity {
             }
         }
 
-        return (IBlockData) ((IBlockData) this.getBlockData().set(BlockLectern.a, blockactioncontext.f().opposite())).set(BlockLectern.c, flag);
+        return this.getBlockData().set(BlockLectern.a, blockactioncontext.f().opposite()).set(BlockLectern.c, flag);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class BlockLectern extends BlockTileEntity {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        switch ((EnumDirection) iblockdata.get(BlockLectern.a)) {
+        switch (iblockdata.get(BlockLectern.a)) {
             case NORTH:
                 return BlockLectern.j;
             case SOUTH:
@@ -112,12 +112,12 @@ public class BlockLectern extends BlockTileEntity {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockLectern.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockLectern.a)));
+        return iblockdata.set(BlockLectern.a, enumblockrotation.a(iblockdata.get(BlockLectern.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockLectern.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockLectern.a)));
     }
 
     @Override
@@ -151,13 +151,13 @@ public class BlockLectern extends BlockTileEntity {
 
             tileentitylectern.setBook(itemstack.cloneAndSubtract(1));
             setHasBook(world, blockposition, iblockdata, true);
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, blockposition, SoundEffects.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
     }
 
     public static void setHasBook(World world, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        world.setTypeAndData(blockposition, (IBlockData) ((IBlockData) iblockdata.set(BlockLectern.b, false)).set(BlockLectern.c, flag), 3);
+        world.setTypeAndData(blockposition, iblockdata.set(BlockLectern.b, false).set(BlockLectern.c, flag), 3);
         b(world, blockposition, iblockdata);
     }
 
@@ -168,7 +168,7 @@ public class BlockLectern extends BlockTileEntity {
     }
 
     private static void b(World world, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockLectern.b, flag), 3);
+        world.setTypeAndData(blockposition, iblockdata.set(BlockLectern.b, flag), 3);
         b(world, blockposition, iblockdata);
     }
 
@@ -184,11 +184,11 @@ public class BlockLectern extends BlockTileEntity {
     @Override
     public void remove(IBlockData iblockdata, World world, BlockPosition blockposition, IBlockData iblockdata1, boolean flag) {
         if (!iblockdata.a(iblockdata1.getBlock())) {
-            if ((Boolean) iblockdata.get(BlockLectern.c)) {
+            if (iblockdata.get(BlockLectern.c)) {
                 this.d(iblockdata, world, blockposition);
             }
 
-            if ((Boolean) iblockdata.get(BlockLectern.b)) {
+            if (iblockdata.get(BlockLectern.b)) {
                 world.applyPhysics(blockposition.down(), this);
             }
 
@@ -201,12 +201,12 @@ public class BlockLectern extends BlockTileEntity {
 
         if (tileentity instanceof TileEntityLectern) {
             TileEntityLectern tileentitylectern = (TileEntityLectern) tileentity;
-            EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockLectern.a);
+            EnumDirection enumdirection = iblockdata.get(BlockLectern.a);
             ItemStack itemstack = tileentitylectern.getBook().cloneItemStack();
             if (itemstack.isEmpty()) return; // CraftBukkit - SPIGOT-5500
             float f = 0.25F * (float) enumdirection.getAdjacentX();
             float f1 = 0.25F * (float) enumdirection.getAdjacentZ();
-            EntityItem entityitem = new EntityItem(world, (double) blockposition.getX() + 0.5D + (double) f, (double) (blockposition.getY() + 1), (double) blockposition.getZ() + 0.5D + (double) f1, itemstack);
+            EntityItem entityitem = new EntityItem(world, (double) blockposition.getX() + 0.5D + (double) f, blockposition.getY() + 1, (double) blockposition.getZ() + 0.5D + (double) f1, itemstack);
 
             entityitem.defaultPickupDelay();
             world.addEntity(entityitem);
@@ -222,12 +222,12 @@ public class BlockLectern extends BlockTileEntity {
 
     @Override
     public int a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return (Boolean) iblockdata.get(BlockLectern.b) ? 15 : 0;
+        return iblockdata.get(BlockLectern.b) ? 15 : 0;
     }
 
     @Override
     public int b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
-        return enumdirection == EnumDirection.UP && (Boolean) iblockdata.get(BlockLectern.b) ? 15 : 0;
+        return enumdirection == EnumDirection.UP && iblockdata.get(BlockLectern.b) ? 15 : 0;
     }
 
     @Override
@@ -237,7 +237,7 @@ public class BlockLectern extends BlockTileEntity {
 
     @Override
     public int a(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        if ((Boolean) iblockdata.get(BlockLectern.c)) {
+        if (iblockdata.get(BlockLectern.c)) {
             TileEntity tileentity = world.getTileEntity(blockposition);
 
             if (tileentity instanceof TileEntityLectern) {
@@ -250,7 +250,7 @@ public class BlockLectern extends BlockTileEntity {
 
     @Override
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
-        if ((Boolean) iblockdata.get(BlockLectern.c)) {
+        if (iblockdata.get(BlockLectern.c)) {
             if (!world.isClientSide) {
                 this.a(world, blockposition, entityhuman);
             }
@@ -259,7 +259,7 @@ public class BlockLectern extends BlockTileEntity {
         } else {
             ItemStack itemstack = entityhuman.b(enumhand);
 
-            return !itemstack.isEmpty() && !itemstack.getItem().a((Tag) TagsItem.LECTERN_BOOKS) ? EnumInteractionResult.CONSUME : EnumInteractionResult.PASS;
+            return !itemstack.isEmpty() && !itemstack.getItem().a(TagsItem.LECTERN_BOOKS) ? EnumInteractionResult.CONSUME : EnumInteractionResult.PASS;
         }
     }
 

@@ -32,7 +32,7 @@ public class MSPTCommand extends Command {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermission(sender)) return true;
 
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = MinecraftServer.SERVER;
 
         List<String> times = new ObjectArrayList<>();
         times.addAll(eval(server.tickTimes5s.getTimes()));

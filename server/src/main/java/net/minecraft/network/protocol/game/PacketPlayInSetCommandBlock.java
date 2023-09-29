@@ -33,7 +33,7 @@ public class PacketPlayInSetCommandBlock implements Packet<PacketListenerPlayIn>
     public void b(PacketDataSerializer packetdataserializer) throws IOException {
         packetdataserializer.a(this.a);
         packetdataserializer.a(this.b);
-        packetdataserializer.writeEnum((Enum) this.f);
+        packetdataserializer.writeEnum(this.f);
         int i = 0;
 
         if (this.c) {

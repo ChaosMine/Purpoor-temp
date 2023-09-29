@@ -52,7 +52,7 @@ public class RecipeTippedArrow extends IRecipeComplex {
             ItemStack itemstack1 = new ItemStack(Items.TIPPED_ARROW, 8);
 
             PotionUtil.a(itemstack1, PotionUtil.d(itemstack));
-            PotionUtil.a(itemstack1, (Collection) PotionUtil.b(itemstack));
+            PotionUtil.a(itemstack1, PotionUtil.b(itemstack));
             return itemstack1;
         }
     }

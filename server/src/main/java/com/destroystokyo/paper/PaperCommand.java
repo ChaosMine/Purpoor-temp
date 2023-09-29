@@ -98,7 +98,7 @@ public class PaperCommand extends Command {
 
     // Code from Mojang - copyright them
     public static List<String> getListMatchingLast(CommandSender sender, String[] args, String... matches) {
-        return getListMatchingLast(sender, args, (Collection) Arrays.asList(matches));
+        return getListMatchingLast(sender, args, Arrays.asList(matches));
     }
 
     public static boolean matches(String s, String s1) {
@@ -310,7 +310,7 @@ public class PaperCommand extends Command {
             PlayerChunk visibleChunk = world.getChunkProvider().playerChunkMap.getVisibleChunk(chunk.coordinateKey);
             if (visibleChunk != null) {
                 world.getChunkProvider().playerChunkMap.addLightTask(visibleChunk, () -> {
-                    MinecraftServer.getServer().processQueue.add(() -> {
+                    MinecraftServer.SERVER.processQueue.add(() -> {
                         visibleChunk.sendPacketToTrackedPlayers(new PacketPlayOutLightUpdate(chunk.getPos(), lightengine, true), false);
                         updateLight(sender, world, lightengine, queue);
                     });
@@ -319,7 +319,7 @@ public class PaperCommand extends Command {
                 updateLight(sender, world, lightengine, queue);
             }
             lightengine.a(world.paperConfig.lightQueueSize);
-        }, MinecraftServer.getServer());
+        }, MinecraftServer.SERVER);
     }
 
     private void doSyncLoadInfo(CommandSender sender, String[] args) {
@@ -556,7 +556,7 @@ public class PaperCommand extends Command {
                             .filter(e -> names.contains(e.getKey()))
                             .map(e -> Pair.of(e.getKey(), e.getValue().left))
                             .sorted((a, b) -> !a.getRight().equals(b.getRight()) ? b.getRight() - a.getRight() : a.getKey().toString().compareTo(b.getKey().toString()))
-                            .collect(Collectors.toList());
+                            .toList();
 
                     if (info == null || info.size() == 0) {
                         sender.sendMessage(ChatColor.RED + "No entities found.");
@@ -594,7 +594,7 @@ public class PaperCommand extends Command {
         Command.broadcastCommandMessage(sender, ChatColor.RED + "Please note that this command is not supported and may cause issues.");
         Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
 
-        MinecraftServer console = MinecraftServer.getServer();
+        MinecraftServer console = MinecraftServer.SERVER;
         com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings"));
         for (WorldServer world : console.getWorlds()) {
             world.paperConfig.init();

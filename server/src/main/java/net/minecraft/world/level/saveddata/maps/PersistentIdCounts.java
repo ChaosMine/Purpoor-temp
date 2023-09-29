@@ -39,7 +39,7 @@ public class PersistentIdCounts extends PersistentBase {
         while (objectiterator.hasNext()) {
             Entry<String> entry = (Entry) objectiterator.next();
 
-            nbttagcompound.setInt((String) entry.getKey(), entry.getIntValue());
+            nbttagcompound.setInt(entry.getKey(), entry.getIntValue());
         }
 
         return nbttagcompound;

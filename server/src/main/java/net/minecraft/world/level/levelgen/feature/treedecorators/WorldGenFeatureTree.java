@@ -24,7 +24,7 @@ public abstract class WorldGenFeatureTree {
     public abstract void a(GeneratorAccessSeed generatoraccessseed, Random random, List<BlockPosition> list, List<BlockPosition> list1, Set<BlockPosition> set, StructureBoundingBox structureboundingbox);
 
     protected void a(IWorldWriter iworldwriter, BlockPosition blockposition, BlockStateBoolean blockstateboolean, Set<BlockPosition> set, StructureBoundingBox structureboundingbox) {
-        this.a(iworldwriter, blockposition, (IBlockData) Blocks.VINE.getBlockData().set(blockstateboolean, true), set, structureboundingbox);
+        this.a(iworldwriter, blockposition, Blocks.VINE.getBlockData().set(blockstateboolean, true), set, structureboundingbox);
     }
 
     protected void a(IWorldWriter iworldwriter, BlockPosition blockposition, IBlockData iblockdata, Set<BlockPosition> set, StructureBoundingBox structureboundingbox) {

@@ -58,7 +58,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                 for (int j = -1; j <= 1; ++j) {
                     for (int k = -1; k <= 1; ++k) {
                         blockposition_mutableblockposition.c(entityvillager.locX() + (double) i, entityvillager.locY() + (double) j, entityvillager.locZ() + (double) k);
-                        if (this.a((BlockPosition) blockposition_mutableblockposition, worldserver)) {
+                        if (this.a(blockposition_mutableblockposition, worldserver)) {
                             this.e.add(new BlockPosition(blockposition_mutableblockposition));
                         }
                     }
@@ -72,7 +72,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
 
     @Nullable
     private BlockPosition a(WorldServer worldserver) {
-        return this.e.isEmpty() ? null : (BlockPosition) this.e.get(worldserver.getRandom().nextInt(this.e.size()));
+        return this.e.isEmpty() ? null : this.e.get(worldserver.getRandom().nextInt(this.e.size()));
     }
 
     private boolean a(BlockPosition blockposition, WorldServer worldserver) {
@@ -104,7 +104,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
     }
 
     protected void d(WorldServer worldserver, EntityVillager entityvillager, long i) {
-        if (this.farmBlock == null || this.farmBlock.a((IPosition) entityvillager.getPositionVector(), 1.0D)) {
+        if (this.farmBlock == null || this.farmBlock.a(entityvillager.getPositionVector(), 1.0D)) {
             if (this.farmBlock != null && i > this.c) {
                 IBlockData iblockdata = worldserver.getType(this.farmBlock);
                 Block block = iblockdata.getBlock();
@@ -159,7 +159,7 @@ public class BehaviorFarm extends Behavior<EntityVillager> {
                         }
 
                         if (flag) {
-                            worldserver.playSound((EntityHuman) null, (double) this.farmBlock.getX(), (double) this.farmBlock.getY(), (double) this.farmBlock.getZ(), this.clericWartFarmer ? SoundEffects.ITEM_NETHER_WART_PLANT : SoundEffects.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F); // Purpur
+                            worldserver.playSound(null, this.farmBlock.getX(), this.farmBlock.getY(), this.farmBlock.getZ(), this.clericWartFarmer ? SoundEffects.ITEM_NETHER_WART_PLANT : SoundEffects.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F); // Purpur
                             itemstack.subtract(1);
                             if (itemstack.isEmpty()) {
                                 inventorysubcontainer.setItem(j, ItemStack.b);

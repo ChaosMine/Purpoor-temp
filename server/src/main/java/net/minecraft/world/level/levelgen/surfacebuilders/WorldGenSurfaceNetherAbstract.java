@@ -38,10 +38,10 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
         double d1 = 0.03125D;
         boolean flag = this.d.a((double) i * 0.03125D, 109.0D, (double) j * 0.03125D) * 75.0D + random.nextDouble() > 0.0D;
         IBlockData iblockdata2 = (IBlockData) ((Entry) this.c.entrySet().stream().max(Comparator.comparing((entry) -> {
-            return ((NoiseGeneratorOctaves) entry.getValue()).a((double) i, (double) l, (double) j);
+            return entry.getValue().a(i, l, j);
         })).get()).getKey();
         IBlockData iblockdata3 = (IBlockData) ((Entry) this.b.entrySet().stream().max(Comparator.comparing((entry) -> {
-            return ((NoiseGeneratorOctaves) entry.getValue()).a((double) i, (double) l, (double) j);
+            return entry.getValue().a(i, l, j);
         })).get()).getKey();
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
         IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, k, l1)); // Purpur - use configured height

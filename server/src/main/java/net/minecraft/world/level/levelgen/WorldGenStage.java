@@ -13,7 +13,7 @@ public class WorldGenStage {
         AIR("air"), LIQUID("liquid");
 
         public static final Codec<WorldGenStage.Features> c = INamable.a(WorldGenStage.Features::values, WorldGenStage.Features::a);
-        private static final Map<String, WorldGenStage.Features> d = (Map) Arrays.stream(values()).collect(Collectors.toMap(WorldGenStage.Features::b, (worldgenstage_features) -> {
+        private static final Map<String, WorldGenStage.Features> d = Arrays.stream(values()).collect(Collectors.toMap(Features::b, (worldgenstage_features) -> {
             return worldgenstage_features;
         }));
         private final String e;
@@ -28,7 +28,7 @@ public class WorldGenStage {
 
         @Nullable
         public static WorldGenStage.Features a(String s) {
-            return (WorldGenStage.Features) WorldGenStage.Features.d.get(s);
+            return Features.d.get(s);
         }
 
         @Override

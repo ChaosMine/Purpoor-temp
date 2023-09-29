@@ -152,7 +152,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
 
         // From BlockBed
-        iblockdata = (IBlockData) iblockdata.set(BlockBed.OCCUPIED, true);
+        iblockdata = iblockdata.set(BlockBed.OCCUPIED, true);
         getHandle().world.setTypeAndData(blockposition, iblockdata, 4);
 
         return true;

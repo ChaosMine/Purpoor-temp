@@ -23,7 +23,7 @@ public class RandomPositionGenerator {
 
     @Nullable
     public static Vec3D a(EntityCreature entitycreature, int i, int j) {
-        return a(entitycreature, i, j, 0, (Vec3D) null, true, 1.5707963705062866D, entitycreature::f, false, 0, 0, true);
+        return a(entitycreature, i, j, 0, null, true, 1.5707963705062866D, entitycreature::f, false, 0, 0, true);
     }
 
     @Nullable
@@ -39,12 +39,12 @@ public class RandomPositionGenerator {
 
     @Nullable
     public static Vec3D a(EntityCreature entitycreature, int i, int j, ToDoubleFunction<BlockPosition> todoublefunction) {
-        return a(entitycreature, i, j, 0, (Vec3D) null, false, 0.0D, todoublefunction, true, 0, 0, true);
+        return a(entitycreature, i, j, 0, null, false, 0.0D, todoublefunction, true, 0, 0, true);
     }
 
     @Nullable
     public static Vec3D a(EntityCreature entitycreature, int i, int j, Vec3D vec3d, float f, int k, int l) {
-        return a(entitycreature, i, j, 0, vec3d, false, (double) f, entitycreature::f, true, k, l, true);
+        return a(entitycreature, i, j, 0, vec3d, false, f, entitycreature::f, true, k, l, true);
     }
 
     @Nullable
@@ -96,7 +96,7 @@ public class RandomPositionGenerator {
         boolean flag3;
 
         if (entitycreature.ez()) {
-            flag3 = entitycreature.ew().a((IPosition) entitycreature.getPositionVector(), (double) (entitycreature.ex() + (float) i) + 1.0D);
+            flag3 = entitycreature.ew().a(entitycreature.getPositionVector(), (double) (entitycreature.ex() + (float) i) + 1.0D);
         } else {
             flag3 = false;
         }
@@ -139,8 +139,8 @@ public class RandomPositionGenerator {
                     }
 
                     Fluid fluid = entitycreature.world.getFluidIfLoaded(blockposition2); // Paper
-                    if (flag || (fluid != null && !fluid.a((Tag) TagsFluid.WATER))) { // Paper
-                        PathType pathtype = PathfinderNormal.a((IBlockAccess) entitycreature.world, blockposition2.i());
+                    if (flag || (fluid != null && !fluid.a(TagsFluid.WATER))) { // Paper
+                        PathType pathtype = PathfinderNormal.a(entitycreature.world, blockposition2.i());
 
                         if (entitycreature.a(pathtype) == 0.0F) {
                             double d2 = todoublefunction.applyAsDouble(blockposition2);
@@ -157,7 +157,7 @@ public class RandomPositionGenerator {
         }
 
         if (flag4) {
-            return Vec3D.c((BaseBlockPosition) blockposition);
+            return Vec3D.c(blockposition);
         } else {
             return null;
         }
@@ -175,7 +175,7 @@ public class RandomPositionGenerator {
             if (Math.abs(d4) <= (double) i && Math.abs(d5) <= (double) i) {
                 int l = random.nextInt(2 * j + 1) - j + k;
 
-                return new BlockPosition(d4, (double) l, d5);
+                return new BlockPosition(d4, l, d5);
             } else {
                 return null;
             }

@@ -29,7 +29,7 @@ public class BlockBubbleColumn extends Block implements IFluidSource {
 
     public BlockBubbleColumn(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBubbleColumn.a, true));
+        this.j(this.blockStateList.getBlockData().set(BlockBubbleColumn.a, true));
     }
 
     @Override
@@ -38,17 +38,17 @@ public class BlockBubbleColumn extends Block implements IFluidSource {
         IBlockData iblockdata1 = world.getType(blockposition.up());
 
         if (iblockdata1.isAir()) {
-            entity.k((Boolean) iblockdata.get(BlockBubbleColumn.a));
+            entity.k(iblockdata.get(BlockBubbleColumn.a));
             if (!world.isClientSide) {
                 WorldServer worldserver = (WorldServer) world;
 
                 for (int i = 0; i < 2; ++i) {
-                    worldserver.a(Particles.SPLASH, (double) blockposition.getX() + world.random.nextDouble(), (double) (blockposition.getY() + 1), (double) blockposition.getZ() + world.random.nextDouble(), 1, 0.0D, 0.0D, 0.0D, 1.0D);
-                    worldserver.a(Particles.BUBBLE, (double) blockposition.getX() + world.random.nextDouble(), (double) (blockposition.getY() + 1), (double) blockposition.getZ() + world.random.nextDouble(), 1, 0.0D, 0.01D, 0.0D, 0.2D);
+                    worldserver.a(Particles.SPLASH, (double) blockposition.getX() + world.random.nextDouble(), blockposition.getY() + 1, (double) blockposition.getZ() + world.random.nextDouble(), 1, 0.0D, 0.0D, 0.0D, 1.0D);
+                    worldserver.a(Particles.BUBBLE, (double) blockposition.getX() + world.random.nextDouble(), blockposition.getY() + 1, (double) blockposition.getZ() + world.random.nextDouble(), 1, 0.0D, 0.01D, 0.0D, 0.2D);
                 }
             }
         } else {
-            entity.l((Boolean) iblockdata.get(BlockBubbleColumn.a));
+            entity.l(iblockdata.get(BlockBubbleColumn.a));
         }
 
     }
@@ -70,7 +70,7 @@ public class BlockBubbleColumn extends Block implements IFluidSource {
 
     public static void a(GeneratorAccess generatoraccess, BlockPosition blockposition, boolean flag) {
         if (a(generatoraccess, blockposition)) {
-            generatoraccess.setTypeAndData(blockposition, (IBlockData) Blocks.BUBBLE_COLUMN.getBlockData().set(BlockBubbleColumn.a, flag), 2);
+            generatoraccess.setTypeAndData(blockposition, Blocks.BUBBLE_COLUMN.getBlockData().set(BlockBubbleColumn.a, flag), 2);
         }
 
     }
@@ -84,7 +84,7 @@ public class BlockBubbleColumn extends Block implements IFluidSource {
     private static boolean a(IBlockAccess iblockaccess, BlockPosition blockposition) {
         IBlockData iblockdata = iblockaccess.getType(blockposition);
 
-        return iblockdata.a(Blocks.BUBBLE_COLUMN) ? (Boolean) iblockdata.get(BlockBubbleColumn.a) : !iblockdata.a(Blocks.SOUL_SAND);
+        return iblockdata.a(Blocks.BUBBLE_COLUMN) ? iblockdata.get(BlockBubbleColumn.a) : !iblockdata.a(Blocks.SOUL_SAND);
     }
 
     @Override
@@ -93,12 +93,12 @@ public class BlockBubbleColumn extends Block implements IFluidSource {
             return Blocks.WATER.getBlockData();
         } else {
             if (enumdirection == EnumDirection.DOWN) {
-                generatoraccess.setTypeAndData(blockposition, (IBlockData) Blocks.BUBBLE_COLUMN.getBlockData().set(BlockBubbleColumn.a, a((IBlockAccess) generatoraccess, blockposition1)), 2);
+                generatoraccess.setTypeAndData(blockposition, Blocks.BUBBLE_COLUMN.getBlockData().set(BlockBubbleColumn.a, a((IBlockAccess) generatoraccess, blockposition1)), 2);
             } else if (enumdirection == EnumDirection.UP && !iblockdata1.a(Blocks.BUBBLE_COLUMN) && a(generatoraccess, blockposition1)) {
                 generatoraccess.getBlockTickList().a(blockposition, this, 5);
             }
 
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
             return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
         }
     }

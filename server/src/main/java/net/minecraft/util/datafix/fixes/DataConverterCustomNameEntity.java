@@ -33,6 +33,6 @@ public class DataConverterCustomNameEntity extends DataFix {
     public static Dynamic<?> a(Dynamic<?> dynamic) {
         String s = dynamic.get("CustomName").asString("");
 
-        return s.isEmpty() ? dynamic.remove("CustomName") : dynamic.set("CustomName", dynamic.createString(IChatBaseComponent.ChatSerializer.a((IChatBaseComponent) (new ChatComponentText(s)))));
+        return s.isEmpty() ? dynamic.remove("CustomName") : dynamic.set("CustomName", dynamic.createString(IChatBaseComponent.ChatSerializer.a(new ChatComponentText(s))));
     }
 }

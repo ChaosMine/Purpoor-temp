@@ -45,7 +45,7 @@ public class MobSpawnerCat implements MobSpawner {
                     if (!worldserver.isAreaLoaded(blockposition.getX() - 10, blockposition.getY() - 10, blockposition.getZ() - 10, blockposition.getX() + 10, blockposition.getY() + 10, blockposition.getZ() + 10)) {
                         return 0;
                     } else {
-                        if (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, (IWorldReader) worldserver, blockposition, EntityTypes.CAT)) {
+                        if (SpawnerCreature.a(EntityPositionTypes.Surface.ON_GROUND, worldserver, blockposition, EntityTypes.CAT)) {
                             if (worldserver.a(blockposition, 2)) {
                                 return this.a(worldserver, blockposition);
                             }
@@ -90,13 +90,13 @@ public class MobSpawnerCat implements MobSpawner {
     }
 
     private int a(BlockPosition blockposition, WorldServer worldserver) {
-        EntityCat entitycat = (EntityCat) EntityTypes.CAT.a((World) worldserver);
+        EntityCat entitycat = EntityTypes.CAT.a(worldserver);
 
         if (entitycat == null) {
             return 0;
         } else {
             entitycat.setPositionRotation(blockposition, 0.0F, 0.0F); // Purpur
-            entitycat.prepare(worldserver, worldserver.getDamageScaler(blockposition), EnumMobSpawn.NATURAL, (GroupDataEntity) null, (NBTTagCompound) null);
+            entitycat.prepare(worldserver, worldserver.getDamageScaler(blockposition), EnumMobSpawn.NATURAL, null, null);
             //entitycat.setPositionRotation(blockposition, 0.0F, 0.0F); // Purpur - move up - fixes non black cat types spawning inside swamp huts
             worldserver.addAllEntities(entitycat);
             return 1;

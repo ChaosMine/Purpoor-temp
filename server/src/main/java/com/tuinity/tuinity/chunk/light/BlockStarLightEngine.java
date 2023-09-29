@@ -230,7 +230,7 @@ public final class BlockStarLightEngine extends StarLightEngine {
             // the missing sources from checkBlock.
             for (;;) {
                 try {
-                    return chunk.getLightSources().collect(Collectors.toList()).iterator();
+                    return chunk.getLightSources().toList().iterator();
                 } catch (final Exception cme) {
                     continue;
                 }

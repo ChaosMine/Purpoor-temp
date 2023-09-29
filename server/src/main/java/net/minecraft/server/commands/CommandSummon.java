@@ -57,7 +57,7 @@ public class CommandSummon {
                 throw CommandSummon.a.create();
             } else {
                 if (flag && entity instanceof EntityInsentient) {
-                    ((EntityInsentient) entity).prepare(commandlistenerwrapper.getWorld(), commandlistenerwrapper.getWorld().getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.COMMAND, (GroupDataEntity) null, (NBTTagCompound) null);
+                    ((EntityInsentient) entity).prepare(commandlistenerwrapper.getWorld(), commandlistenerwrapper.getWorld().getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.COMMAND, null, null);
                 }
 
                 if (!worldserver.addAllEntitiesSafely(entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.COMMAND)) { // CraftBukkit - pass a spawn reason of "COMMAND"

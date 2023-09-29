@@ -8,31 +8,33 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class StatisticWrapper<T> implements Iterable<Statistic<T>> {
+	private final IRegistry<T> a;
+	private final Map<T, Statistic<T>> b = new IdentityHashMap<>();
 
-    private final IRegistry<T> a;
-    private final Map<T, Statistic<T>> b = new IdentityHashMap();
+	public StatisticWrapper(IRegistry<T> iregistry) {
+		this.a = iregistry;
+	}
 
-    public StatisticWrapper(IRegistry<T> iregistry) {
-        this.a = iregistry;
-    }
+	public Statistic<T> a(T t0, Counter counter) {
+		return this.b.computeIfAbsent(t0, object -> new Statistic<>(this, object, counter));
+	}
 
-    public Statistic<T> a(T t0, Counter counter) {
-        return (Statistic) this.b.computeIfAbsent(t0, (object) -> {
-            return new Statistic<>(this, object, counter);
-        });
-    }
+	public IRegistry<T> getRegistry() {
+		return this.a;
+	}
 
-    public IRegistry<T> getRegistry() {
-        return this.a;
-    }
+	public Iterator<Statistic<T>> iterator() {
+		return this.b.values().iterator();
+	}
 
-    public Iterator<Statistic<T>> iterator() {
-        return this.b.values().iterator();
-    }
+	public final Statistic<T> get(T t) {
+		return this.b(t);
+	}
 
-    public final Statistic<T> get(T t) { return this.b(t); }; // Paper - OBFHELPER
-    public Statistic<T> b(T t0) {
-        if (PurpurConfig.disableStatistics) return null;
-        return this.a(t0, Counter.DEFAULT);
-    }
+	// Paper - OBFHELPER
+
+	public Statistic<T> b(T t0) {
+		if (PurpurConfig.disableStatistics) return null;
+		return this.a(t0, Counter.DEFAULT);
+	}
 }

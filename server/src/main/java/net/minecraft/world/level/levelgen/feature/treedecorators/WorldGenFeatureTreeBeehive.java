@@ -38,17 +38,17 @@ public class WorldGenFeatureTreeBeehive extends WorldGenFeatureTree {
     public void a(GeneratorAccessSeed generatoraccessseed, Random random, List<BlockPosition> list, List<BlockPosition> list1, Set<BlockPosition> set, StructureBoundingBox structureboundingbox) {
         if (random.nextFloat() < this.b) {
             EnumDirection enumdirection = BlockBeehive.a(random);
-            int i = !list1.isEmpty() ? Math.max(((BlockPosition) list1.get(0)).getY() - 1, ((BlockPosition) list.get(0)).getY()) : Math.min(((BlockPosition) list.get(0)).getY() + 1 + random.nextInt(3), ((BlockPosition) list.get(list.size() - 1)).getY());
-            List<BlockPosition> list2 = (List) list.stream().filter((blockposition) -> {
+            int i = !list1.isEmpty() ? Math.max(list1.get(0).getY() - 1, list.get(0).getY()) : Math.min(list.get(0).getY() + 1 + random.nextInt(3), list.get(list.size() - 1).getY());
+            List<BlockPosition> list2 = list.stream().filter((blockposition) -> {
                 return blockposition.getY() == i;
-            }).collect(Collectors.toList());
+            }).toList();
 
             if (!list2.isEmpty()) {
-                BlockPosition blockposition = (BlockPosition) list2.get(random.nextInt(list2.size()));
+                BlockPosition blockposition = list2.get(random.nextInt(list2.size()));
                 BlockPosition blockposition1 = blockposition.shift(enumdirection);
 
                 if (WorldGenerator.b(generatoraccessseed, blockposition1) && WorldGenerator.b(generatoraccessseed, blockposition1.shift(EnumDirection.SOUTH))) {
-                    IBlockData iblockdata = (IBlockData) Blocks.BEE_NEST.getBlockData().set(BlockBeehive.a, EnumDirection.SOUTH);
+                    IBlockData iblockdata = Blocks.BEE_NEST.getBlockData().set(BlockBeehive.a, EnumDirection.SOUTH);
 
                     this.a(generatoraccessseed, blockposition1, iblockdata, set, structureboundingbox);
                     TileEntity tileentity = generatoraccessseed.getTileEntity(blockposition1);

@@ -24,7 +24,7 @@ public class BehaviorStopAdmiringItem<E extends EntityPiglin> extends Behavior<E
         } else {
             Optional<EntityItem> optional = e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
 
-            return !optional.isPresent() ? true : !((EntityItem) optional.get()).a((Entity) e0, (double) this.b);
+            return !optional.isPresent() ? true : !optional.get().a(e0, this.b);
         }
     }
 

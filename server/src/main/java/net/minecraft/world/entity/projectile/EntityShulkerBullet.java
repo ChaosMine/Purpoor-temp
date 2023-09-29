@@ -136,7 +136,7 @@ public class EntityShulkerBullet extends IProjectile {
         double d3 = (double) blockposition.getZ() + 0.5D;
         EnumDirection enumdirection = null;
 
-        if (!blockposition.a((IPosition) this.getPositionVector(), 2.0D)) {
+        if (!blockposition.a(this.getPositionVector(), 2.0D)) {
             BlockPosition blockposition1 = this.getChunkCoordinates();
             List<EnumDirection> list = Lists.newArrayList();
 
@@ -170,7 +170,7 @@ public class EntityShulkerBullet extends IProjectile {
                     enumdirection = EnumDirection.a(this.random);
                 }
             } else {
-                enumdirection = (EnumDirection) list.get(this.random.nextInt(list.size()));
+                enumdirection = list.get(this.random.nextInt(list.size()));
             }
 
             d1 = this.locX() + (double) enumdirection.getAdjacentX();
@@ -182,7 +182,7 @@ public class EntityShulkerBullet extends IProjectile {
         double d4 = d1 - this.locX();
         double d5 = d2 - this.locY();
         double d6 = d3 - this.locZ();
-        double d7 = (double) MathHelper.sqrt(d4 * d4 + d5 * d5 + d6 * d6);
+        double d7 = MathHelper.sqrt(d4 * d4 + d5 * d5 + d6 * d6);
 
         if (d7 == 0.0D) {
             this.e = 0.0D;
@@ -219,7 +219,7 @@ public class EntityShulkerBullet extends IProjectile {
                 }
             }
 
-            if (this.target != null && this.target.isAlive() && (!(this.target instanceof EntityHuman) || !((EntityHuman) this.target).isSpectator())) {
+            if (this.target != null && this.target.isAlive() && (!(this.target instanceof EntityHuman) || !this.target.isSpectator())) {
                 this.e = MathHelper.a(this.e * 1.025D, -1.0D, 1.0D);
                 this.f = MathHelper.a(this.f * 1.025D, -1.0D, 1.0D);
                 this.g = MathHelper.a(this.g * 1.025D, -1.0D, 1.0D);
@@ -229,7 +229,7 @@ public class EntityShulkerBullet extends IProjectile {
                 this.setMot(this.getMot().add(0.0D, -0.04D, 0.0D));
             }
 
-            MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
+            MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, this::a);
 
             if (movingobjectposition.getType() != MovingObjectPosition.EnumMovingObjectType.MISS) {
                 this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
@@ -254,7 +254,7 @@ public class EntityShulkerBullet extends IProjectile {
                 BlockPosition blockposition = this.getChunkCoordinates();
                 EnumDirection.EnumAxis enumdirection_enumaxis = this.dir.n();
 
-                if (this.world.a(blockposition.shift(this.dir), (Entity) this)) {
+                if (this.world.a(blockposition.shift(this.dir), this)) {
                     this.a(enumdirection_enumaxis);
                 } else {
                     BlockPosition blockposition1 = this.target.getChunkCoordinates();
@@ -289,7 +289,7 @@ public class EntityShulkerBullet extends IProjectile {
         Entity entity = movingobjectpositionentity.getEntity();
         Entity entity1 = this.getShooter();
         EntityLiving entityliving = entity1 instanceof EntityLiving ? (EntityLiving) entity1 : null;
-        boolean flag = entity.damageEntity(DamageSource.a((Entity) this, entityliving).c(), 4.0F);
+        boolean flag = entity.damageEntity(DamageSource.a(this, entityliving).c(), 4.0F);
 
         if (flag) {
             this.a(entityliving, entity);

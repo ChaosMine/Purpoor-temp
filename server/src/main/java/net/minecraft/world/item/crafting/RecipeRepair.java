@@ -28,7 +28,7 @@ public class RecipeRepair extends IRecipeComplex {
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (list.size() > 1) {
-                    ItemStack itemstack1 = (ItemStack) list.get(0);
+                    ItemStack itemstack1 = list.get(0);
 
                     if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !itemstack1.getItem().usesDurability()) {
                         return false;
@@ -50,7 +50,7 @@ public class RecipeRepair extends IRecipeComplex {
             if (!itemstack.isEmpty()) {
                 list.add(itemstack);
                 if (list.size() > 1) {
-                    ItemStack itemstack1 = (ItemStack) list.get(0);
+                    ItemStack itemstack1 = list.get(0);
 
                     if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !itemstack1.getItem().usesDurability()) {
                         return ItemStack.b;
@@ -60,9 +60,9 @@ public class RecipeRepair extends IRecipeComplex {
         }
 
         if (list.size() == 2) {
-            ItemStack itemstack2 = (ItemStack) list.get(0);
+            ItemStack itemstack2 = list.get(0);
 
-            itemstack = (ItemStack) list.get(1);
+            itemstack = list.get(1);
             if (itemstack2.getItem() == itemstack.getItem() && itemstack2.getCount() == 1 && itemstack.getCount() == 1 && itemstack2.getItem().usesDurability()) {
                 Item item = itemstack2.getItem();
                 int j = item.getMaxDurability() - itemstack2.getDamage();
@@ -82,7 +82,7 @@ public class RecipeRepair extends IRecipeComplex {
                 Map<Enchantment, Integer> map2 = EnchantmentManager.a(itemstack);
 
                 IRegistry.ENCHANTMENT.g().filter(Enchantment::c).forEach((enchantment) -> {
-                    int j1 = Math.max((Integer) map1.getOrDefault(enchantment, 0), (Integer) map2.getOrDefault(enchantment, 0));
+                    int j1 = Math.max(map1.getOrDefault(enchantment, 0), map2.getOrDefault(enchantment, 0));
 
                     if (j1 > 0) {
                         map.put(enchantment, j1);
@@ -90,7 +90,7 @@ public class RecipeRepair extends IRecipeComplex {
 
                 });
                 if (!map.isEmpty()) {
-                    EnchantmentManager.a((Map) map, itemstack3);
+                    EnchantmentManager.a(map, itemstack3);
                 }
 
                 return itemstack3;

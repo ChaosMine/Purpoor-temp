@@ -58,7 +58,7 @@ public class ContainerLoom extends Container {
             @Override
             public void update() {
                 super.update();
-                ContainerLoom.this.a((IInventory) this);
+                ContainerLoom.this.a(this);
                 ContainerLoom.this.e.run();
             }
 
@@ -120,7 +120,7 @@ public class ContainerLoom extends Container {
                     long j = world.getTime();
 
                     if (ContainerLoom.this.j != j) {
-                        world.playSound((EntityHuman) null, blockposition, SoundEffects.UI_LOOM_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, blockposition, SoundEffects.UI_LOOM_TAKE_RESULT, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         ContainerLoom.this.j = j;
                     }
 
@@ -206,7 +206,7 @@ public class ContainerLoom extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

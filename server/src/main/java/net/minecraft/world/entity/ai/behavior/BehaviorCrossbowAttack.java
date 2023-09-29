@@ -46,7 +46,7 @@ public class BehaviorCrossbowAttack<E extends EntityInsentient & ICrossbow, T ex
         }
 
         if (e0.a(Items.CROSSBOW)) {
-            ((ICrossbow) e0).b(false);
+            e0.b(false);
             ItemCrossbow.a(e0.getActiveItem(), false);
         }
 
@@ -54,9 +54,9 @@ public class BehaviorCrossbowAttack<E extends EntityInsentient & ICrossbow, T ex
 
     private void a(E e0, EntityLiving entityliving) {
         if (this.c == BehaviorCrossbowAttack.BowState.UNCHARGED) {
-            e0.c(ProjectileHelper.a((EntityLiving) e0, Items.CROSSBOW));
+            e0.c(ProjectileHelper.a(e0, Items.CROSSBOW));
             this.c = BehaviorCrossbowAttack.BowState.CHARGING;
-            ((ICrossbow) e0).b(true);
+            e0.b(true);
         } else if (this.c == BehaviorCrossbowAttack.BowState.CHARGING) {
             if (!e0.isHandRaised()) {
                 this.c = BehaviorCrossbowAttack.BowState.UNCHARGED;
@@ -69,7 +69,7 @@ public class BehaviorCrossbowAttack<E extends EntityInsentient & ICrossbow, T ex
                 e0.releaseActiveItem();
                 this.c = BehaviorCrossbowAttack.BowState.CHARGED;
                 this.b = 20 + e0.getRandom().nextInt(20);
-                ((ICrossbow) e0).b(false);
+                e0.b(false);
             }
         } else if (this.c == BehaviorCrossbowAttack.BowState.CHARGED) {
             --this.b;
@@ -77,8 +77,8 @@ public class BehaviorCrossbowAttack<E extends EntityInsentient & ICrossbow, T ex
                 this.c = BehaviorCrossbowAttack.BowState.READY_TO_ATTACK;
             }
         } else if (this.c == BehaviorCrossbowAttack.BowState.READY_TO_ATTACK) {
-            ((IRangedEntity) e0).a(entityliving, 1.0F);
-            ItemStack itemstack1 = e0.b(ProjectileHelper.a((EntityLiving) e0, Items.CROSSBOW));
+            e0.a(entityliving, 1.0F);
+            ItemStack itemstack1 = e0.b(ProjectileHelper.a(e0, Items.CROSSBOW));
 
             ItemCrossbow.a(itemstack1, false);
             this.c = BehaviorCrossbowAttack.BowState.UNCHARGED;
@@ -87,11 +87,11 @@ public class BehaviorCrossbowAttack<E extends EntityInsentient & ICrossbow, T ex
     }
 
     private void b(EntityInsentient entityinsentient, EntityLiving entityliving) {
-        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityliving, true)));
+        entityinsentient.getBehaviorController().setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorPositionEntity(entityliving, true)));
     }
 
     private static EntityLiving a(EntityLiving entityliving) {
-        return (EntityLiving) entityliving.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+        return entityliving.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET).get();
     }
 
     static enum BowState {

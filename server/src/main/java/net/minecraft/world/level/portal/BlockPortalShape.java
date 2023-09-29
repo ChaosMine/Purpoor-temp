@@ -174,7 +174,7 @@ public class BlockPortalShape {
     }
 
     private static boolean a(IBlockData iblockdata) {
-        return iblockdata.isAir() || iblockdata.a((Tag) TagsBlock.FIRE) || iblockdata.a(Blocks.NETHER_PORTAL);
+        return iblockdata.isAir() || iblockdata.a(TagsBlock.FIRE) || iblockdata.a(Blocks.NETHER_PORTAL);
     }
 
     public boolean a() {
@@ -189,7 +189,7 @@ public class BlockPortalShape {
         org.bukkit.World bworld = this.b.getMinecraftWorld().getWorld();
 
         // Copy below for loop
-        IBlockData iblockdata = (IBlockData) Blocks.NETHER_PORTAL.getBlockData().set(BlockPortal.AXIS, this.c);
+        IBlockData iblockdata = Blocks.NETHER_PORTAL.getBlockData().set(BlockPortal.AXIS, this.c);
 
         BlockPosition.a(this.position, this.position.shift(EnumDirection.UP, this.height - 1).shift(this.d, this.width - 1)).forEach((blockposition) -> {
             blocks.setTypeAndData(blockposition, iblockdata, 18);
@@ -244,9 +244,9 @@ public class BlockPortalShape {
     public static ShapeDetectorShape a(WorldServer worldserver, BlockUtil.Rectangle blockutil_rectangle, EnumDirection.EnumAxis enumdirection_enumaxis, Vec3D vec3d, EntitySize entitysize, Vec3D vec3d1, float f, float f1, CraftPortalEvent portalEventInfo) { // CraftBukkit // PAIL rename toDetectorShape
         BlockPosition blockposition = blockutil_rectangle.origin;
         IBlockData iblockdata = worldserver.getType(blockposition);
-        EnumDirection.EnumAxis enumdirection_enumaxis1 = (EnumDirection.EnumAxis) iblockdata.get(BlockProperties.E);
-        double d0 = (double) blockutil_rectangle.side1;
-        double d1 = (double) blockutil_rectangle.side2;
+        EnumDirection.EnumAxis enumdirection_enumaxis1 = iblockdata.get(BlockProperties.E);
+        double d0 = blockutil_rectangle.side1;
+        double d1 = blockutil_rectangle.side2;
         int i = enumdirection_enumaxis == enumdirection_enumaxis1 ? 0 : 90;
         Vec3D vec3d2 = enumdirection_enumaxis == enumdirection_enumaxis1 ? vec3d1 : new Vec3D(vec3d1.z, vec3d1.y, -vec3d1.x);
         double d2 = (double) entitysize.width / 2.0D + (d0 - (double) entitysize.width) * vec3d.getX();

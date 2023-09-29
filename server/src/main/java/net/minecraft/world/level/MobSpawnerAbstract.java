@@ -66,7 +66,7 @@ public abstract class MobSpawnerAbstract {
         BlockPosition blockposition = this.b();
 
         if (getWorld().purpurConfig.spawnerDeactivateByRedstone && getWorld().isBlockIndirectlyPowered(blockposition)) { return false; } // Purpur
-        return this.a().isAffectsSpawningPlayerNearby((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, (double) this.requiredPlayerRange); // Paper
+        return this.a().isAffectsSpawningPlayerNearby((double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, this.requiredPlayerRange); // Paper
     }
 
     public void c() {
@@ -120,7 +120,7 @@ public abstract class MobSpawnerAbstract {
                     double d4 = j >= 2 ? nbttaglist.h(1) : (double) (blockposition.getY() + world.random.nextInt(3) - 1);
                     double d5 = j >= 3 ? nbttaglist.h(2) : (double) blockposition.getZ() + (world.random.nextDouble() - world.random.nextDouble()) * (double) this.spawnRange + 0.5D;
 
-                    if (world.b(((EntityTypes) optional.get()).a(d3, d4, d5))) {
+                    if (world.b(optional.get().a(d3, d4, d5))) {
                         WorldServer worldserver = (WorldServer) world;
 
                         if (EntityPositionTypes.a((EntityTypes) optional.get(), worldserver, EnumMobSpawn.SPAWNER, new BlockPosition(d3, d4, d5), world.getRandom())) {
@@ -155,7 +155,7 @@ public abstract class MobSpawnerAbstract {
                                 return;
                             }
 
-                            int k = world.a(entity.getClass(), (new AxisAlignedBB((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), (double) (blockposition.getX() + 1), (double) (blockposition.getY() + 1), (double) (blockposition.getZ() + 1))).g((double) this.spawnRange)).size();
+                            int k = world.a(entity.getClass(), (new AxisAlignedBB(blockposition.getX(), blockposition.getY(), blockposition.getZ(), blockposition.getX() + 1, blockposition.getY() + 1, blockposition.getZ() + 1)).g(this.spawnRange)).size();
 
                             if (k >= this.maxNearbyEntities) {
                                 this.i();
@@ -167,12 +167,12 @@ public abstract class MobSpawnerAbstract {
                             if (entity instanceof EntityInsentient) {
                                 EntityInsentient entityinsentient = (EntityInsentient) entity;
 
-                                if (!entityinsentient.a((GeneratorAccess) world, EnumMobSpawn.SPAWNER) || !entityinsentient.a((IWorldReader) world)) {
+                                if (!entityinsentient.a(world, EnumMobSpawn.SPAWNER) || !entityinsentient.a(world)) {
                                     continue;
                                 }
 
                                 if (this.spawnData.getEntity().e() == 1 && this.spawnData.getEntity().hasKeyOfType("id", 8)) {
-                                    ((EntityInsentient) entity).prepare(worldserver, world.getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.SPAWNER, (GroupDataEntity) null, (NBTTagCompound) null);
+                                    ((EntityInsentient) entity).prepare(worldserver, world.getDamageScaler(entity.getChunkCoordinates()), EnumMobSpawn.SPAWNER, null, null);
                                 }
                                 // Spigot Start
                                 if ( entityinsentient.world.spigotConfig.nerfSpawnerMobs )
@@ -231,7 +231,7 @@ public abstract class MobSpawnerAbstract {
         }
 
         if (!this.mobs.isEmpty()) {
-            this.setSpawnData((MobSpawnerData) WeightedRandom.a(this.a().random, this.mobs));
+            this.setSpawnData(WeightedRandom.a(this.a().random, this.mobs));
         }
 
         this.a(1);
@@ -257,7 +257,7 @@ public abstract class MobSpawnerAbstract {
         if (nbttagcompound.hasKeyOfType("SpawnData", 10)) {
             this.setSpawnData(new MobSpawnerData(1, nbttagcompound.getCompound("SpawnData")));
         } else if (!this.mobs.isEmpty()) {
-            this.setSpawnData((MobSpawnerData) WeightedRandom.a(this.a().random, this.mobs));
+            this.setSpawnData(WeightedRandom.a(this.a().random, this.mobs));
         }
         // Paper start - use ints if set
         if (nbttagcompound.hasKeyOfType("Paper.MinSpawnDelay", 99)) {

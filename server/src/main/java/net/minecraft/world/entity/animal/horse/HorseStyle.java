@@ -7,7 +7,7 @@ public enum HorseStyle {
 
     NONE(0), WHITE(1), WHITE_FIELD(2), WHITE_DOTS(3), BLACK_DOTS(4);
 
-    private static final HorseStyle[] f = (HorseStyle[]) Arrays.stream(values()).sorted(Comparator.comparingInt(HorseStyle::a)).toArray((i) -> {
+    private static final HorseStyle[] f = Arrays.stream(values()).sorted(Comparator.comparingInt(HorseStyle::a)).toArray((i) -> {
         return new HorseStyle[i];
     });
     private final int g;

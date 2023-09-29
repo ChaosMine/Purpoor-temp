@@ -47,7 +47,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
 
     protected BlockPumpkinCarved(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockPumpkinCarved.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockPumpkinCarved.a, EnumDirection.NORTH));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
                 // world.triggerEffect(2001, shapedetectorblock.getPosition(), Block.getCombinedId(shapedetectorblock.a())); // CraftBukkit
             }
 
-            EntitySnowman entitysnowman = (EntitySnowman) EntityTypes.SNOW_GOLEM.a(world);
+            EntitySnowman entitysnowman = EntityTypes.SNOW_GOLEM.a(world);
             BlockPosition blockposition1 = shapedetector_shapedetectorcollection.a(0, 2, 0).getPosition();
 
             entitysnowman.setPositionRotation((double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 0.05D, (double) blockposition1.getZ() + 0.5D, 0.0F, 0.0F);
@@ -94,7 +94,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
 
             while (iterator.hasNext()) {
                 entityplayer = (EntityPlayer) iterator.next();
-                CriterionTriggers.n.a(entityplayer, (Entity) entitysnowman);
+                CriterionTriggers.n.a(entityplayer, entitysnowman);
             }
 
             for (j = 0; j < this.getSnowmanShape().b(); ++j) {
@@ -115,7 +115,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
                 }
 
                 BlockPosition blockposition2 = shapedetector_shapedetectorcollection.a(1, 2, 0).getPosition();
-                EntityIronGolem entityirongolem = (EntityIronGolem) EntityTypes.IRON_GOLEM.a(world);
+                EntityIronGolem entityirongolem = EntityTypes.IRON_GOLEM.a(world);
 
                 entityirongolem.setPlayerCreated(true);
                 entityirongolem.setPositionRotation((double) blockposition2.getX() + 0.5D, (double) blockposition2.getY() + 0.05D, (double) blockposition2.getZ() + 0.5D, 0.0F, 0.0F);
@@ -132,7 +132,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
 
                 while (iterator.hasNext()) {
                     entityplayer = (EntityPlayer) iterator.next();
-                    CriterionTriggers.n.a(entityplayer, (Entity) entityirongolem);
+                    CriterionTriggers.n.a(entityplayer, entityirongolem);
                 }
 
                 for (j = 0; j < this.getIronGolemShape().c(); ++j) {
@@ -149,7 +149,7 @@ public class BlockPumpkinCarved extends BlockFacingHorizontal implements ItemWea
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockPumpkinCarved.a, blockactioncontext.f().opposite());
+        return this.getBlockData().set(BlockPumpkinCarved.a, blockactioncontext.f().opposite());
     }
 
     @Override

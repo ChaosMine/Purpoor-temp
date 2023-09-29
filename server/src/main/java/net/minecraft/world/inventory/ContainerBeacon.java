@@ -33,7 +33,7 @@ public class ContainerBeacon extends Container {
         this.beacon = new InventorySubcontainer(1) {
             @Override
             public boolean b(int j, ItemStack itemstack) {
-                return itemstack.getItem().a((Tag) TagsItem.BEACON_PAYMENT_ITEMS);
+                return itemstack.getItem().a(TagsItem.BEACON_PAYMENT_ITEMS);
             }
 
             @Override
@@ -45,7 +45,7 @@ public class ContainerBeacon extends Container {
         this.containerProperties = icontainerproperties;
         this.containerAccess = containeraccess;
         this.d = new ContainerBeacon.SlotBeacon(this.beacon, 0, 136, 110);
-        this.a((Slot) this.d);
+        this.a(this.d);
         this.a(icontainerproperties);
         boolean flag = true;
         boolean flag1 = true;
@@ -92,7 +92,7 @@ public class ContainerBeacon extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
@@ -159,7 +159,7 @@ public class ContainerBeacon extends Container {
 
         @Override
         public boolean isAllowed(ItemStack itemstack) {
-            return itemstack.getItem().a((Tag) TagsItem.BEACON_PAYMENT_ITEMS);
+            return itemstack.getItem().a(TagsItem.BEACON_PAYMENT_ITEMS);
         }
 
         @Override

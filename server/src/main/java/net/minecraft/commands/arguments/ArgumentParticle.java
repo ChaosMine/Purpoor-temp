@@ -57,6 +57,6 @@ public class ArgumentParticle implements ArgumentType<ParticleParam> {
     }
 
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandcontext, SuggestionsBuilder suggestionsbuilder) {
-        return ICompletionProvider.a((Iterable) IRegistry.PARTICLE_TYPE.keySet(), suggestionsbuilder);
+        return ICompletionProvider.a(IRegistry.PARTICLE_TYPE.keySet(), suggestionsbuilder);
     }
 }

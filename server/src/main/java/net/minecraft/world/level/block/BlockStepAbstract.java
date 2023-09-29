@@ -35,7 +35,7 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
 
     public BlockStepAbstract(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.BOTTOM)).set(BlockStepAbstract.b, false));
+        this.j(this.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.BOTTOM).set(BlockStepAbstract.b, false));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        BlockPropertySlabType blockpropertyslabtype = (BlockPropertySlabType) iblockdata.get(BlockStepAbstract.a);
+        BlockPropertySlabType blockpropertyslabtype = iblockdata.get(BlockStepAbstract.a);
 
         switch (blockpropertyslabtype) {
             case DOUBLE:
@@ -68,21 +68,21 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
         BlockPosition blockposition = blockactioncontext.getClickPosition();
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockposition);
 
-        if (iblockdata.a((Block) this)) {
-            return (IBlockData) ((IBlockData) iblockdata.set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE)).set(BlockStepAbstract.b, false);
+        if (iblockdata.a(this)) {
+            return iblockdata.set(BlockStepAbstract.a, BlockPropertySlabType.DOUBLE).set(BlockStepAbstract.b, false);
         } else {
             Fluid fluid = blockactioncontext.getWorld().getFluid(blockposition);
-            IBlockData iblockdata1 = (IBlockData) ((IBlockData) this.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.BOTTOM)).set(BlockStepAbstract.b, fluid.getType() == FluidTypes.WATER);
+            IBlockData iblockdata1 = this.getBlockData().set(BlockStepAbstract.a, BlockPropertySlabType.BOTTOM).set(BlockStepAbstract.b, fluid.getType() == FluidTypes.WATER);
             EnumDirection enumdirection = blockactioncontext.getClickedFace();
 
-            return enumdirection != EnumDirection.DOWN && (enumdirection == EnumDirection.UP || blockactioncontext.getPos().y - (double) blockposition.getY() <= 0.5D) ? iblockdata1 : (IBlockData) iblockdata1.set(BlockStepAbstract.a, BlockPropertySlabType.TOP);
+            return enumdirection != EnumDirection.DOWN && (enumdirection == EnumDirection.UP || blockactioncontext.getPos().y - (double) blockposition.getY() <= 0.5D) ? iblockdata1 : iblockdata1.set(BlockStepAbstract.a, BlockPropertySlabType.TOP);
         }
     }
 
     @Override
     public boolean a(IBlockData iblockdata, BlockActionContext blockactioncontext) {
         ItemStack itemstack = blockactioncontext.getItemStack();
-        BlockPropertySlabType blockpropertyslabtype = (BlockPropertySlabType) iblockdata.get(BlockStepAbstract.a);
+        BlockPropertySlabType blockpropertyslabtype = iblockdata.get(BlockStepAbstract.a);
 
         if (blockpropertyslabtype != BlockPropertySlabType.DOUBLE && itemstack.getItem() == this.getItem()) {
             if (blockactioncontext.c()) {
@@ -100,7 +100,7 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockStepAbstract.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockStepAbstract.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override
@@ -115,8 +115,8 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockStepAbstract.b)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockStepAbstract.b)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -128,7 +128,7 @@ public class BlockStepAbstract extends Block implements IBlockWaterlogged {
             case LAND:
                 return false;
             case WATER:
-                return iblockaccess.getFluid(blockposition).a((Tag) TagsFluid.WATER);
+                return iblockaccess.getFluid(blockposition).a(TagsFluid.WATER);
             case AIR:
                 return false;
             default:

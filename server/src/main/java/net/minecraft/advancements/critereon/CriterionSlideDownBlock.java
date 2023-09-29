@@ -10,6 +10,8 @@ import net.minecraft.util.ChatDeserializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.IBlockData;
 
+import java.util.function.Consumer;
+
 public class CriterionSlideDownBlock extends CriterionTriggerAbstract<CriterionSlideDownBlock.a> {
 
     private static final MinecraftKey a = new MinecraftKey("slide_down_block");
@@ -22,12 +24,12 @@ public class CriterionSlideDownBlock extends CriterionTriggerAbstract<CriterionS
     }
 
     @Override
-    public CriterionSlideDownBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionSlideDownBlock.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         Block block = a(jsonobject);
         CriterionTriggerProperties criteriontriggerproperties = CriterionTriggerProperties.a(jsonobject.get("state"));
 
         if (block != null) {
-            criteriontriggerproperties.a(block.getStates(), (s) -> {
+            criteriontriggerproperties.a(block.getStates(), (Consumer<String>) (s) -> {
                 throw new JsonSyntaxException("Block " + block + " has no property " + s);
             });
         }
@@ -40,7 +42,7 @@ public class CriterionSlideDownBlock extends CriterionTriggerAbstract<CriterionS
         if (jsonobject.has("block")) {
             MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "block"));
 
-            return (Block) IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
+            return IRegistry.BLOCK.getOptional(minecraftkey).orElseThrow(() -> {
                 return new JsonSyntaxException("Unknown block type '" + minecraftkey + "'");
             });
         } else {
@@ -59,14 +61,14 @@ public class CriterionSlideDownBlock extends CriterionTriggerAbstract<CriterionS
         private final Block a;
         private final CriterionTriggerProperties b;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, @Nullable Block block, CriterionTriggerProperties criteriontriggerproperties) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, @Nullable Block block, CriterionTriggerProperties criteriontriggerproperties) {
             super(CriterionSlideDownBlock.a, criterionconditionentity_b);
             this.a = block;
             this.b = criteriontriggerproperties;
         }
 
         public static CriterionSlideDownBlock.a a(Block block) {
-            return new CriterionSlideDownBlock.a(CriterionConditionEntity.b.a, block, CriterionTriggerProperties.a);
+            return new CriterionSlideDownBlock.a(CriterionConditionEntity.b_.a, block, CriterionTriggerProperties.a);
         }
 
         @Override

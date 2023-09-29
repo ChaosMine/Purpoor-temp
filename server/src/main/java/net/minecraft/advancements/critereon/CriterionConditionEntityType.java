@@ -44,7 +44,7 @@ public abstract class CriterionConditionEntityType {
                 return new CriterionConditionEntityType.a(TagsInstance.a().getEntityTags().b(minecraftkey));
             } else {
                 minecraftkey = new MinecraftKey(s);
-                EntityTypes<?> entitytypes = (EntityTypes) IRegistry.ENTITY_TYPE.getOptional(minecraftkey).orElseThrow(() -> {
+                EntityTypes<?> entitytypes = IRegistry.ENTITY_TYPE.getOptional(minecraftkey).orElseThrow(() -> {
                     return new JsonSyntaxException("Unknown entity type '" + minecraftkey + "', valid types are: " + CriterionConditionEntityType.b.join(IRegistry.ENTITY_TYPE.keySet()));
                 });
 

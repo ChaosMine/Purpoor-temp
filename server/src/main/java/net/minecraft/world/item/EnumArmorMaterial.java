@@ -68,7 +68,7 @@ public enum EnumArmorMaterial implements ArmorMaterial {
 
     @Override
     public RecipeItemStack c() {
-        return (RecipeItemStack) this.p.a();
+        return this.p.a();
     }
 
     @Override

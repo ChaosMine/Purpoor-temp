@@ -77,7 +77,7 @@ public class AdvancementTree {
             }
 
             this.b();
-            float f = (((AdvancementTree) this.e.get(0)).i + ((AdvancementTree) this.e.get(this.e.size() - 1)).i) / 2.0F;
+            float f = (this.e.get(0).i + this.e.get(this.e.size() - 1).i) / 2.0F;
 
             if (this.c != null) {
                 this.i = this.c.i + 1.0F;
@@ -122,7 +122,7 @@ public class AdvancementTree {
         float f1 = 0.0F;
 
         for (int i = this.e.size() - 1; i >= 0; --i) {
-            AdvancementTree advancementtree = (AdvancementTree) this.e.get(i);
+            AdvancementTree advancementtree = this.e.get(i);
 
             advancementtree.i += f;
             advancementtree.j += f;
@@ -134,12 +134,12 @@ public class AdvancementTree {
 
     @Nullable
     private AdvancementTree c() {
-        return this.g != null ? this.g : (!this.e.isEmpty() ? (AdvancementTree) this.e.get(0) : null);
+        return this.g != null ? this.g : (!this.e.isEmpty() ? this.e.get(0) : null);
     }
 
     @Nullable
     private AdvancementTree d() {
-        return this.g != null ? this.g : (!this.e.isEmpty() ? (AdvancementTree) this.e.get(this.e.size() - 1) : null);
+        return this.g != null ? this.g : (!this.e.isEmpty() ? this.e.get(this.e.size() - 1) : null);
     }
 
     private AdvancementTree a(AdvancementTree advancementtree) {
@@ -149,7 +149,7 @@ public class AdvancementTree {
             AdvancementTree advancementtree1 = this;
             AdvancementTree advancementtree2 = this;
             AdvancementTree advancementtree3 = this.c;
-            AdvancementTree advancementtree4 = (AdvancementTree) this.b.e.get(0);
+            AdvancementTree advancementtree4 = this.b.e.get(0);
             float f = this.j;
             float f1 = this.j;
             float f2 = advancementtree3.j;
@@ -229,7 +229,7 @@ public class AdvancementTree {
         if (advancement.c() == null) {
             throw new IllegalArgumentException("Can't position children of an invisible root!");
         } else {
-            AdvancementTree advancementtree = new AdvancementTree(advancement, (AdvancementTree) null, (AdvancementTree) null, 1, 0);
+            AdvancementTree advancementtree = new AdvancementTree(advancement, null, null, 1, 0);
 
             advancementtree.a();
             float f = advancementtree.a(0.0F, 0, advancementtree.i);

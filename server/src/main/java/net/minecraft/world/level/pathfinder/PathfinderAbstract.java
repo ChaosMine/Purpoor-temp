@@ -41,7 +41,7 @@ public abstract class PathfinderAbstract {
     }
 
     protected PathPoint a(int i, int j, int k) {
-        return (PathPoint) this.c.computeIfAbsent(PathPoint.b(i, j, k), (l) -> {
+        return this.c.computeIfAbsent(PathPoint.b(i, j, k), (l) -> {
             return new PathPoint(i, j, k);
         });
     }

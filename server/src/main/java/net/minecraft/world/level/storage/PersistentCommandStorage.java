@@ -27,7 +27,7 @@ public class PersistentCommandStorage {
     public NBTTagCompound a(MinecraftKey minecraftkey) {
         String s = minecraftkey.getNamespace();
         String s1 = a(s);
-        PersistentCommandStorage.a persistentcommandstorage_a = (PersistentCommandStorage.a) this.b.b(() -> {
+        PersistentCommandStorage.a persistentcommandstorage_a = this.b.b(() -> {
             return this.a(s, s1);
         }, s1);
 
@@ -38,14 +38,14 @@ public class PersistentCommandStorage {
         String s = minecraftkey.getNamespace();
         String s1 = a(s);
 
-        ((PersistentCommandStorage.a) this.b.a(() -> {
+        this.b.a(() -> {
             return this.a(s, s1);
-        }, s1)).a(minecraftkey.getKey(), nbttagcompound);
+        }, s1).a(minecraftkey.getKey(), nbttagcompound);
     }
 
     public Stream<MinecraftKey> a() {
         return this.a.entrySet().stream().flatMap((entry) -> {
-            return ((PersistentCommandStorage.a) entry.getValue()).b((String) entry.getKey());
+            return entry.getValue().b(entry.getKey());
         });
     }
 
@@ -86,7 +86,7 @@ public class PersistentCommandStorage {
         }
 
         public NBTTagCompound a(String s) {
-            NBTTagCompound nbttagcompound = (NBTTagCompound) this.a.get(s);
+            NBTTagCompound nbttagcompound = this.a.get(s);
 
             return nbttagcompound != null ? nbttagcompound : new NBTTagCompound();
         }

@@ -21,7 +21,7 @@ public class PathEntity {
     public PathEntity(List<PathPoint> list, BlockPosition blockposition, boolean flag) {
         this.a = list;
         this.f = blockposition;
-        this.g = list.isEmpty() ? Float.MAX_VALUE : ((PathPoint) this.a.get(this.a.size() - 1)).c(this.f);
+        this.g = list.isEmpty() ? Float.MAX_VALUE : this.a.get(this.a.size() - 1).c(this.f);
         this.h = flag;
     }
 
@@ -39,11 +39,11 @@ public class PathEntity {
 
     @Nullable
     public PathPoint getFinalPoint() { return d(); } @Nullable public PathPoint d() { // Paper - OBFHELPER
-        return !this.a.isEmpty() ? (PathPoint) this.a.get(this.a.size() - 1) : null;
+        return !this.a.isEmpty() ? this.a.get(this.a.size() - 1) : null;
     }
 
     public PathPoint a(int i) {
-        return (PathPoint) this.a.get(i);
+        return this.a.get(i);
     }
 
     public void b(int i) {
@@ -70,16 +70,16 @@ public class PathEntity {
     }
 
     public Vec3D a(Entity entity, int i) {
-        PathPoint pathpoint = (PathPoint) this.a.get(i);
+        PathPoint pathpoint = this.a.get(i);
         double d0 = (double) pathpoint.a + (double) ((int) (entity.getWidth() + 1.0F)) * 0.5D;
-        double d1 = (double) pathpoint.b;
+        double d1 = pathpoint.b;
         double d2 = (double) pathpoint.c + (double) ((int) (entity.getWidth() + 1.0F)) * 0.5D;
 
         return new Vec3D(d0, d1, d2);
     }
 
     public BlockPosition d(int i) {
-        return ((PathPoint) this.a.get(i)).a();
+        return this.a.get(i).a();
     }
 
     public Vec3D a(Entity entity) {
@@ -87,16 +87,16 @@ public class PathEntity {
     }
 
     public BlockPosition getNext() { return g(); } public BlockPosition g() { // Paper - OBFHELPER
-        return ((PathPoint) this.a.get(this.e)).a();
+        return this.a.get(this.e).a();
     }
 
     public PathPoint h() {
-        return (PathPoint) this.a.get(this.e);
+        return this.a.get(this.e);
     }
 
     @Nullable
     public PathPoint i() {
-        return this.e > 0 ? (PathPoint) this.a.get(this.e - 1) : null;
+        return this.e > 0 ? this.a.get(this.e - 1) : null;
     }
 
     public boolean a(@Nullable PathEntity pathentity) {
@@ -106,8 +106,8 @@ public class PathEntity {
             return false;
         } else {
             for (int i = 0; i < this.a.size(); ++i) {
-                PathPoint pathpoint = (PathPoint) this.a.get(i);
-                PathPoint pathpoint1 = (PathPoint) pathentity.a.get(i);
+                PathPoint pathpoint = this.a.get(i);
+                PathPoint pathpoint1 = pathentity.a.get(i);
 
                 if (pathpoint.a != pathpoint1.a || pathpoint.b != pathpoint1.b || pathpoint.c != pathpoint1.c) {
                     return false;

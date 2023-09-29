@@ -64,9 +64,9 @@ public abstract class RecipeSingleItem implements IRecipe<IInventory> {
 
     public static class a<T extends RecipeSingleItem> implements RecipeSerializer<T> {
 
-        final RecipeSingleItem.a.a<T> v;
+        final RecipeSingleItem.a.a_<T> v;
 
-        protected a(RecipeSingleItem.a.a<T> recipesingleitem_a_a) {
+        protected a(RecipeSingleItem.a.a_<T> recipesingleitem_a_a) {
             this.v = recipesingleitem_a_a;
         }
 
@@ -76,14 +76,14 @@ public abstract class RecipeSingleItem implements IRecipe<IInventory> {
             RecipeItemStack recipeitemstack;
 
             if (ChatDeserializer.d(jsonobject, "ingredient")) {
-                recipeitemstack = RecipeItemStack.a((JsonElement) ChatDeserializer.u(jsonobject, "ingredient"));
+                recipeitemstack = RecipeItemStack.a(ChatDeserializer.u(jsonobject, "ingredient"));
             } else {
-                recipeitemstack = RecipeItemStack.a((JsonElement) ChatDeserializer.t(jsonobject, "ingredient"));
+                recipeitemstack = RecipeItemStack.a(ChatDeserializer.t(jsonobject, "ingredient"));
             }
 
             String s1 = ChatDeserializer.h(jsonobject, "result");
             int i = ChatDeserializer.n(jsonobject, "count");
-            ItemStack itemstack = new ItemStack((IMaterial) IRegistry.ITEM.get(new MinecraftKey(s1)), i);
+            ItemStack itemstack = new ItemStack(IRegistry.ITEM.get(new MinecraftKey(s1)), i);
 
             return this.v.create(minecraftkey, s, recipeitemstack, itemstack);
         }
@@ -103,7 +103,7 @@ public abstract class RecipeSingleItem implements IRecipe<IInventory> {
             packetdataserializer.a(t0.result);
         }
 
-        interface a<T extends RecipeSingleItem> {
+        protected interface a_<T extends RecipeSingleItem> {
 
             T create(MinecraftKey minecraftkey, String s, RecipeItemStack recipeitemstack, ItemStack itemstack);
         }

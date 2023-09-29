@@ -43,12 +43,12 @@ public class BlockAnvil extends BlockFalling {
 
     public BlockAnvil(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockAnvil.FACING, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockAnvil.FACING, EnumDirection.NORTH));
     }
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockAnvil.FACING, blockactioncontext.f().g());
+        return this.getBlockData().set(BlockAnvil.FACING, blockactioncontext.f().g());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class BlockAnvil extends BlockFalling {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockAnvil.FACING);
+        EnumDirection enumdirection = iblockdata.get(BlockAnvil.FACING);
 
         return enumdirection.n() == EnumDirection.EnumAxis.X ? BlockAnvil.i : BlockAnvil.j;
     }
@@ -100,12 +100,12 @@ public class BlockAnvil extends BlockFalling {
 
     @Nullable
     public static IBlockData c(IBlockData iblockdata) {
-        return iblockdata.a(Blocks.ANVIL) ? (IBlockData) Blocks.CHIPPED_ANVIL.getBlockData().set(BlockAnvil.FACING, iblockdata.get(BlockAnvil.FACING)) : (iblockdata.a(Blocks.CHIPPED_ANVIL) ? (IBlockData) Blocks.DAMAGED_ANVIL.getBlockData().set(BlockAnvil.FACING, iblockdata.get(BlockAnvil.FACING)) : null);
+        return iblockdata.a(Blocks.ANVIL) ? Blocks.CHIPPED_ANVIL.getBlockData().set(BlockAnvil.FACING, iblockdata.get(BlockAnvil.FACING)) : (iblockdata.a(Blocks.CHIPPED_ANVIL) ? Blocks.DAMAGED_ANVIL.getBlockData().set(BlockAnvil.FACING, iblockdata.get(BlockAnvil.FACING)) : null);
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockAnvil.FACING, enumblockrotation.a((EnumDirection) iblockdata.get(BlockAnvil.FACING)));
+        return iblockdata.set(BlockAnvil.FACING, enumblockrotation.a(iblockdata.get(BlockAnvil.FACING)));
     }
 
     @Override

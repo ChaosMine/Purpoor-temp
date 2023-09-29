@@ -39,7 +39,7 @@ public class CommandTitle {
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, Collection<EntityPlayer> collection) {
-        PacketPlayOutTitle packetplayouttitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, (IChatBaseComponent) null);
+        PacketPlayOutTitle packetplayouttitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, null);
         Iterator iterator = collection.iterator();
 
         while (iterator.hasNext()) {
@@ -49,7 +49,7 @@ public class CommandTitle {
         }
 
         if (collection.size() == 1) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.cleared.single", new Object[]{((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.cleared.single", new Object[]{collection.iterator().next().getScoreboardDisplayName()}), true);
         } else {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.cleared.multiple", new Object[]{collection.size()}), true);
         }
@@ -58,7 +58,7 @@ public class CommandTitle {
     }
 
     private static int b(CommandListenerWrapper commandlistenerwrapper, Collection<EntityPlayer> collection) {
-        PacketPlayOutTitle packetplayouttitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.RESET, (IChatBaseComponent) null);
+        PacketPlayOutTitle packetplayouttitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.RESET, null);
         Iterator iterator = collection.iterator();
 
         while (iterator.hasNext()) {
@@ -68,7 +68,7 @@ public class CommandTitle {
         }
 
         if (collection.size() == 1) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.reset.single", new Object[]{((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.reset.single", new Object[]{collection.iterator().next().getScoreboardDisplayName()}), true);
         } else {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.reset.multiple", new Object[]{collection.size()}), true);
         }
@@ -86,7 +86,7 @@ public class CommandTitle {
         }
 
         if (collection.size() == 1) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.show." + packetplayouttitle_enumtitleaction.name().toLowerCase(Locale.ROOT) + ".single", new Object[]{((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.show." + packetplayouttitle_enumtitleaction.name().toLowerCase(Locale.ROOT) + ".single", new Object[]{collection.iterator().next().getScoreboardDisplayName()}), true);
         } else {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.show." + packetplayouttitle_enumtitleaction.name().toLowerCase(Locale.ROOT) + ".multiple", new Object[]{collection.size()}), true);
         }
@@ -105,7 +105,7 @@ public class CommandTitle {
         }
 
         if (collection.size() == 1) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.times.single", new Object[]{((EntityPlayer) collection.iterator().next()).getScoreboardDisplayName()}), true);
+            commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.times.single", new Object[]{collection.iterator().next().getScoreboardDisplayName()}), true);
         } else {
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.title.times.multiple", new Object[]{collection.size()}), true);
         }

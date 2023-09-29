@@ -52,18 +52,18 @@ public class LootItemFunctionEnchant extends LootItemFunctionConditional {
 
         if (this.b.isEmpty()) {
             boolean flag = itemstack.getItem() == Items.BOOK;
-            List<Enchantment> list = (List) IRegistry.ENCHANTMENT.g().filter(Enchantment::i).filter((enchantment1) -> {
+            List<Enchantment> list = IRegistry.ENCHANTMENT.g().filter(Enchantment::i).filter((enchantment1) -> {
                 return flag || enchantment1.canEnchant(itemstack);
-            }).collect(Collectors.toList());
+            }).toList();
 
             if (list.isEmpty()) {
                 LootItemFunctionEnchant.LOGGER.warn("Couldn't find a compatible enchantment for {}", itemstack);
                 return itemstack;
             }
 
-            enchantment = (Enchantment) list.get(random.nextInt(list.size()));
+            enchantment = list.get(random.nextInt(list.size()));
         } else {
-            enchantment = (Enchantment) this.b.get(random.nextInt(this.b.size()));
+            enchantment = this.b.get(random.nextInt(this.b.size()));
         }
 
         return a(itemstack, enchantment, random);
@@ -93,7 +93,7 @@ public class LootItemFunctionEnchant extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionEnchant lootitemfunctionenchant, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionenchant, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionenchant, jsonserializationcontext);
             if (!lootitemfunctionenchant.b.isEmpty()) {
                 JsonArray jsonarray = new JsonArray();
                 Iterator iterator = lootitemfunctionenchant.b.iterator();
@@ -125,7 +125,7 @@ public class LootItemFunctionEnchant extends LootItemFunctionConditional {
                 while (iterator.hasNext()) {
                     JsonElement jsonelement = (JsonElement) iterator.next();
                     String s = ChatDeserializer.a(jsonelement, "enchantment");
-                    Enchantment enchantment = (Enchantment) IRegistry.ENCHANTMENT.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
+                    Enchantment enchantment = IRegistry.ENCHANTMENT.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
                         return new JsonSyntaxException("Unknown enchantment '" + s + "'");
                     });
 

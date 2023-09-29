@@ -22,7 +22,7 @@ public class BlockSkullWall extends BlockSkullAbstract {
 
     protected BlockSkullWall(BlockSkull.a blockskull_a, BlockBase.Info blockbase_info) {
         super(blockskull_a, blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSkullWall.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockSkullWall.a, EnumDirection.NORTH));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BlockSkullWall extends BlockSkullAbstract {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) BlockSkullWall.b.get(iblockdata.get(BlockSkullWall.a));
+        return BlockSkullWall.b.get(iblockdata.get(BlockSkullWall.a));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class BlockSkullWall extends BlockSkullAbstract {
             if (enumdirection.n().d()) {
                 EnumDirection enumdirection1 = enumdirection.opposite();
 
-                iblockdata = (IBlockData) iblockdata.set(BlockSkullWall.a, enumdirection1);
+                iblockdata = iblockdata.set(BlockSkullWall.a, enumdirection1);
                 if (!world.getType(blockposition.shift(enumdirection)).a(blockactioncontext)) {
                     return iblockdata;
                 }
@@ -62,12 +62,12 @@ public class BlockSkullWall extends BlockSkullAbstract {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockSkullWall.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockSkullWall.a)));
+        return iblockdata.set(BlockSkullWall.a, enumblockrotation.a(iblockdata.get(BlockSkullWall.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockSkullWall.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockSkullWall.a)));
     }
 
     @Override

@@ -28,8 +28,8 @@ public class ItemTool extends ItemToolMaterial implements ItemVanishable {
         this.c = f + toolmaterial.c();
         Builder<AttributeBase, AttributeModifier> builder = ImmutableMultimap.builder();
 
-        builder.put(GenericAttributes.ATTACK_DAMAGE, new AttributeModifier(ItemTool.f, "Tool modifier", (double) this.c, AttributeModifier.Operation.ADDITION));
-        builder.put(GenericAttributes.ATTACK_SPEED, new AttributeModifier(ItemTool.g, "Tool modifier", (double) f1, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ATTACK_DAMAGE, new AttributeModifier(ItemTool.f, "Tool modifier", this.c, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ATTACK_SPEED, new AttributeModifier(ItemTool.g, "Tool modifier", f1, AttributeModifier.Operation.ADDITION));
         this.d = builder.build();
     }
 

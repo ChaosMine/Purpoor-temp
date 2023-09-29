@@ -126,7 +126,7 @@ public class DispenserRegistry {
         LocaleLanguage localelanguage = LocaleLanguage.a();
 
         iterable.forEach((object) -> {
-            String s = (String) function.apply(object);
+            String s = function.apply(object);
 
             if (!localelanguage.b(s)) {
                 set.add(s);
@@ -161,7 +161,7 @@ public class DispenserRegistry {
         a(IRegistry.CUSTOM_STAT, (minecraftkey) -> {
             return "stat." + minecraftkey.toString().replace(':', '.');
         }, set);
-        a((Set) set);
+        a(set);
         return set;
     }
 

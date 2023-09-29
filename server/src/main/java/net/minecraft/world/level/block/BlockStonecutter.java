@@ -34,12 +34,12 @@ public class BlockStonecutter extends Block {
 
     public BlockStonecutter(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockStonecutter.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockStonecutter.a, EnumDirection.NORTH));
     }
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockStonecutter.a, blockactioncontext.f().opposite());
+        return this.getBlockData().set(BlockStonecutter.a, blockactioncontext.f().opposite());
     }
 
     @Override
@@ -78,12 +78,12 @@ public class BlockStonecutter extends Block {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockStonecutter.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockStonecutter.a)));
+        return iblockdata.set(BlockStonecutter.a, enumblockrotation.a(iblockdata.get(BlockStonecutter.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockStonecutter.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockStonecutter.a)));
     }
 
     @Override

@@ -36,9 +36,9 @@ public class BehaviorTradePlayer extends Behavior<EntityVillager> {
         if (!behaviorcontroller.getMemory(MemoryModuleType.INTERACTION_TARGET).isPresent()) {
             return false;
         } else {
-            EntityLiving entityliving = (EntityLiving) behaviorcontroller.getMemory(MemoryModuleType.INTERACTION_TARGET).get();
+            EntityLiving entityliving = behaviorcontroller.getMemory(MemoryModuleType.INTERACTION_TARGET).get();
 
-            return entityliving.getEntityType() == EntityTypes.PLAYER && entityvillager.isAlive() && entityliving.isAlive() && !entityvillager.isBaby() && entityvillager.h((Entity) entityliving) <= 17.0D;
+            return entityliving.getEntityType() == EntityTypes.PLAYER && entityvillager.isAlive() && entityliving.isAlive() && !entityvillager.isBaby() && entityvillager.h(entityliving) <= 17.0D;
         }
     }
 
@@ -96,7 +96,7 @@ public class BehaviorTradePlayer extends Behavior<EntityVillager> {
     }
 
     private void a(EntityVillager entityvillager) {
-        entityvillager.setSlot(EnumItemSlot.MAINHAND, (ItemStack) this.c.get(0));
+        entityvillager.setSlot(EnumItemSlot.MAINHAND, this.c.get(0));
     }
 
     private void b(EntityVillager entityvillager) {
@@ -118,9 +118,9 @@ public class BehaviorTradePlayer extends Behavior<EntityVillager> {
 
     private EntityLiving c(EntityVillager entityvillager) {
         BehaviorController<?> behaviorcontroller = entityvillager.getBehaviorController();
-        EntityLiving entityliving = (EntityLiving) behaviorcontroller.getMemory(MemoryModuleType.INTERACTION_TARGET).get();
+        EntityLiving entityliving = behaviorcontroller.getMemory(MemoryModuleType.INTERACTION_TARGET).get();
 
-        behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityliving, true)));
+        behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorPositionEntity(entityliving, true)));
         return entityliving;
     }
 
@@ -132,7 +132,7 @@ public class BehaviorTradePlayer extends Behavior<EntityVillager> {
                 this.e = 0;
             }
 
-            entityvillager.setSlot(EnumItemSlot.MAINHAND, (ItemStack) this.c.get(this.e));
+            entityvillager.setSlot(EnumItemSlot.MAINHAND, this.c.get(this.e));
         }
 
     }

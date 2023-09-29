@@ -92,7 +92,7 @@ public class IChunkLoader implements AutoCloseable {
             if (nbttagcompound.getCompound("Level").getBoolean("hasLegacyStructureData")) {
                 synchronized (this.persistentDataLock) { // Paper - Async chunk loading
                 if (this.c == null) {
-                    this.c = PersistentStructureLegacy.a(resourcekey, (WorldPersistentData) supplier.get());
+                    this.c = PersistentStructureLegacy.a(resourcekey, supplier.get());
                 }
 
                 nbttagcompound = this.c.a(nbttagcompound);

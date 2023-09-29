@@ -49,7 +49,7 @@ public class PosRuleTestAxisAlignedLinear extends PosRuleTest {
         int i = (int) (f + f1 + f2);
         float f3 = random.nextFloat();
 
-        return (double) f3 <= MathHelper.b((double) this.b, (double) this.d, MathHelper.c((double) i, (double) this.e, (double) this.f));
+        return (double) f3 <= MathHelper.b(this.b, this.d, MathHelper.c(i, this.e, (double) this.f));
     }
 
     @Override

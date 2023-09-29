@@ -45,15 +45,15 @@ public class TagRegistry implements IReloadListener {
 
         ireloadlistener_a.getClass();
         return completablefuture4.thenCompose(ireloadlistener_a::a).thenAcceptAsync((ovoid) -> {
-            Tags<Block> tags = this.blockTags.a((Map) completablefuture.join());
-            Tags<Item> tags1 = this.itemTags.a((Map) completablefuture1.join());
-            Tags<FluidType> tags2 = this.fluidTags.a((Map) completablefuture2.join());
-            Tags<EntityTypes<?>> tags3 = this.entityTags.a((Map) completablefuture3.join());
+            Tags<Block> tags = this.blockTags.a(completablefuture.join());
+            Tags<Item> tags1 = this.itemTags.a(completablefuture1.join());
+            Tags<FluidType> tags2 = this.fluidTags.a(completablefuture2.join());
+            Tags<EntityTypes<?>> tags3 = this.entityTags.a(completablefuture3.join());
             ITagRegistry itagregistry = ITagRegistry.a(tags, tags1, tags2, tags3);
             Multimap<MinecraftKey, MinecraftKey> multimap = TagStatic.b(itagregistry);
 
             if (!multimap.isEmpty()) {
-                throw new IllegalStateException("Missing required tags: " + (String) multimap.entries().stream().map((entry) -> {
+                throw new IllegalStateException("Missing required tags: " + multimap.entries().stream().map((entry) -> {
                     return entry.getKey() + ":" + entry.getValue();
                 }).sorted().collect(Collectors.joining(",")));
             } else {

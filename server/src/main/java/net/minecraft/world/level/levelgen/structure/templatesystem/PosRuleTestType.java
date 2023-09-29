@@ -12,8 +12,6 @@ public interface PosRuleTestType<P extends PosRuleTest> {
     Codec<P> codec();
 
     static <P extends PosRuleTest> PosRuleTestType<P> a(String s, Codec<P> codec) {
-        return (PosRuleTestType) IRegistry.a(IRegistry.POS_RULE_TEST, s, (Object) (() -> {
-            return codec;
-        }));
+        return IRegistry.a(IRegistry.POS_RULE_TEST, s, () -> codec);
     }
 }

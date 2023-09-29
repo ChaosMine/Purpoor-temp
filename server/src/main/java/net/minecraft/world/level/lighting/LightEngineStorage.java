@@ -66,7 +66,7 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
 
     @Nullable
     public NibbleArray h(long i) {
-        NibbleArray nibblearray = (NibbleArray) this.i.get(i);
+        NibbleArray nibblearray = this.i.get(i);
 
         return nibblearray != null ? nibblearray : this.a(i, false);
     }
@@ -187,7 +187,7 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
     }
 
     protected NibbleArray j(long i) {
-        NibbleArray nibblearray = (NibbleArray) this.i.get(i);
+        NibbleArray nibblearray = this.i.get(i);
 
         return nibblearray != null ? nibblearray : new NibbleArray().markPoolSafe(); // Paper
     }
@@ -229,7 +229,7 @@ public abstract class LightEngineStorage<M extends LightEngineStorageArray<M>> e
             while (longiterator.hasNext()) {
                 i = longiterator.nextLong(); // Paper
                 this.a(lightenginelayer, i);
-                NibbleArray nibblearray1 = (NibbleArray) this.i.remove(i);
+                NibbleArray nibblearray1 = this.i.remove(i);
 
                 nibblearray = this.f.d(i);
                 if (this.o.contains(SectionPosition.f(i))) {

@@ -141,7 +141,7 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
             }
 
             return EnumInteractionResult.a(this.world.isClientSide);
-        } else if (this.getVariant() == EntityMushroomCow.Type.BROWN && itemstack.getItem().a((Tag) TagsItem.SMALL_FLOWERS)) {
+        } else if (this.getVariant() == EntityMushroomCow.Type.BROWN && itemstack.getItem().a(TagsItem.SMALL_FLOWERS)) {
             if (this.bp != null) {
                 for (int i = 0; i < 2; ++i) {
                     this.world.addParticle(Particles.SMOKE, this.locX() + this.random.nextDouble() / 2.0D, this.e(0.5D), this.locZ() + this.random.nextDouble() / 2.0D, 0.0D, this.random.nextDouble() / 5.0D, 0.0D);
@@ -153,7 +153,7 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
                     return tryRide(entityhuman, enumhand); // Purpur
                 }
 
-                Pair<MobEffectList, Integer> pair = (Pair) optional.get();
+                Pair<MobEffectList, Integer> pair = optional.get();
 
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemstack.subtract(1);
@@ -163,8 +163,8 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
                     this.world.addParticle(Particles.EFFECT, this.locX() + this.random.nextDouble() / 2.0D, this.e(0.5D), this.locZ() + this.random.nextDouble() / 2.0D, 0.0D, this.random.nextDouble() / 5.0D, 0.0D);
                 }
 
-                this.bp = (MobEffectList) pair.getLeft();
-                this.bq = (Integer) pair.getRight();
+                this.bp = pair.getLeft();
+                this.bq = pair.getRight();
                 this.playSound(SoundEffects.ENTITY_MOOSHROOM_EAT, 2.0F, 1.0F);
             }
 
@@ -176,11 +176,11 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
 
     @Override
     public void shear(SoundCategory soundcategory) {
-        this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_MOOSHROOM_SHEAR, soundcategory, 1.0F, 1.0F);
+        this.world.playSound(null, this, SoundEffects.ENTITY_MOOSHROOM_SHEAR, soundcategory, 1.0F, 1.0F);
         if (!this.world.s_()) {
             ((WorldServer) this.world).a(Particles.EXPLOSION, this.locX(), this.e(0.5D), this.locZ(), 1, 0.0D, 0.0D, 0.0D, 0.0D);
             // this.die(); // CraftBukkit - moved down
-            EntityCow entitycow = (EntityCow) EntityTypes.COW.a(this.world);
+            EntityCow entitycow = EntityTypes.COW.a(this.world);
 
             entitycow.setPositionRotation(this.locX(), this.locY(), this.locZ(), this.yaw, this.pitch);
             entitycow.setHealth(this.getHealth());
@@ -268,12 +268,12 @@ public class EntityMushroomCow extends EntityCow implements IShearable {
     }
 
     public EntityMushroomCow.Type getVariant() {
-        return EntityMushroomCow.Type.b((String) this.datawatcher.get(EntityMushroomCow.bo));
+        return EntityMushroomCow.Type.b(this.datawatcher.get(EntityMushroomCow.bo));
     }
 
     @Override
     public EntityMushroomCow createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityMushroomCow entitymushroomcow = (EntityMushroomCow) EntityTypes.MOOSHROOM.a((World) worldserver);
+        EntityMushroomCow entitymushroomcow = EntityTypes.MOOSHROOM.a(worldserver);
 
         entitymushroomcow.setVariant(this.a((EntityMushroomCow) entityageable));
         return entitymushroomcow;

@@ -14,7 +14,6 @@ import io.netty.util.concurrent.FastThreadLocalThread;
 import io.papermc.paper.adventure.PaperAdventure;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
-import it.unimi.dsi.fastutil.longs.LongIterator;
 import joptsimple.OptionSet;
 import net.earthcomputer.secureseed.Globals;
 import net.minecraft.CrashReport;
@@ -27,7 +26,6 @@ import net.minecraft.commands.ICommandListener;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.IRegistry;
 import net.minecraft.core.IRegistryCustom;
-import net.minecraft.core.RegistryMaterials;
 import net.minecraft.data.worldgen.BiomeDecoratorGroups;
 import net.minecraft.nbt.DynamicOpsNBT;
 import net.minecraft.nbt.NBTBase;
@@ -36,19 +34,15 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
 import net.minecraft.network.protocol.game.PacketPlayOutUpdateTime;
 import net.minecraft.network.protocol.status.ServerPing;
-import net.minecraft.resources.MinecraftKey;
 import net.minecraft.resources.RegistryReadOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.bossevents.BossBattleCustomData;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.dedicated.DedicatedServerProperties;
-import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldProviderNormal;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.server.level.progress.WorldLoadListener;
 import net.minecraft.server.level.progress.WorldLoadListenerFactory;
-import net.minecraft.server.network.ITextFilter;
 import net.minecraft.server.network.ServerConnection;
 import net.minecraft.server.packs.repository.ResourcePackLoader;
 import net.minecraft.server.packs.repository.ResourcePackRepository;
@@ -67,10 +61,8 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.crafting.CraftingManager;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.WorldChunkManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TileEntityHopper;
-import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionManager;
 import net.minecraft.world.level.dimension.WorldDimension;
@@ -78,7 +70,6 @@ import net.minecraft.world.level.levelgen.GeneratorSettings;
 import net.minecraft.world.level.levelgen.MobSpawnerPatrol;
 import net.minecraft.world.level.levelgen.MobSpawnerPhantom;
 import net.minecraft.world.level.levelgen.SeededRandom;
-import net.minecraft.world.level.levelgen.feature.WorldGenFeatureConfigured;
 import net.minecraft.world.level.levelgen.structure.templatesystem.DefinedStructureManager;
 import net.minecraft.world.level.saveddata.RunnableSaveScoreboard;
 import net.minecraft.world.level.storage.*;
@@ -95,12 +86,10 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.spigotmc.SlackActivityAccountant;
 
 import javax.annotation.Nullable;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.net.Proxy;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -115,30 +104,91 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTask> implements ICommandListener, AutoCloseable {
-	public static MinecraftServer SERVER; // Paper
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final WorldSettings c = new WorldSettings("Demo World", EnumGamemode.SURVIVAL, false, EnumDifficulty.NORMAL, false, new GameRules(), DataPackConfiguration.a);
-	public Convertable.ConversionSession convertable;
+	// CraftBukkit end
+	// Spigot start
+	public static final int TPS = 20;
+	public static final int TICK_TIME = 1000000000 / TPS;
+	private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
+	// Paper end
+	// Tuinity start - execute chunk tasks mid tick
+	static final long CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME = 25L * 1000L; // 25us
+	static final long MAX_CHUNK_EXEC_TIME = 1000L; // 1us
+	static final long TASK_EXECUTION_FAILURE_BACKOFF = 5L * 1000L; // 5us
+	private static final int SAMPLE_INTERVAL = 20; // Paper
+	// Paper start - Further improve server tick loop
+	private static final long SEC_IN_NANO = 1000000000;
+	private static final java.math.BigDecimal TPS_BASE = new java.math.BigDecimal("1E9").multiply(new java.math.BigDecimal(SAMPLE_INTERVAL));
+	public static MinecraftServer SERVER; // Paper
+	//public ConsoleReader reader; // Paper
+	public static int currentTick = 0; // Paper - Further improve tick loop
+	public static long currentTickLong = 0L; // Tuinity
+	private static long lastMidTickExecute;
+	private static long lastMidTickExecuteFailure;
 	public final WorldNBTStorage worldNBTStorage;
-	private final List<Runnable> tickables = Lists.newArrayList();
-	private ServerConnection serverConnection;
 	public final WorldLoadListenerFactory worldLoadListenerFactory;
-	private final ServerPing serverPing;
-	private final Random r;
 	public final DataFixer dataConverterManager;
-	private String serverIp;
-	private int serverPort;
 	public final IRegistryCustom.Dimension customRegistry;
 	public final Map<ResourceKey<World>, WorldServer> worldServer;
+	public final long[] h;
+	// Paper start
+	public final TickTimes tickTimes5s = new TickTimes(100);
+	public final TickTimes tickTimes10s = new TickTimes(200);
+	public final TickTimes tickTimes60s = new TickTimes(1200);
+	public final Thread serverThread;
+	public final Executor executorService;
+	public final double[] recentTps = new double[4]; // Purpur
+	public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
+	public final RollingAverage tps5s = new RollingAverage(5); // Purpur
+	public final RollingAverage tps1 = new RollingAverage(60);
+	public final RollingAverage tps5 = new RollingAverage(60 * 5);
+	public final RollingAverage tps15 = new RollingAverage(60 * 15);
+	protected final Proxy proxy;
+	private final List<Runnable> tickables = Lists.newArrayList();
+	private final ServerPing serverPing;
+	private final Random r;
+	private final MinecraftSessionService minecraftSessionService;
+	private final GameProfileRepository gameProfileRepository;
+	private final UserCache userCache;
+	private final ResourcePackRepository resourcePackRepository;
+	private final ScoreboardServer scoreboardServer;
+	private final BossBattleCustomData bossBattleCustomData;
+	private final CustomFunctionData customFunctionData;
+	private final CircularTimer circularTimer;
+	private final DefinedStructureManager ak;
+	private final Object stopLock = new Object();
+	private final long catchupTime = 0;
+	public Convertable.ConversionSession convertable;
+	public DataPackResources dataPackResources;
+	// CraftBukkit start
+	public DataPackConfiguration datapackconfiguration;
+	public org.bukkit.craftbukkit.CraftServer server;
+	public OptionSet options;
+	public org.bukkit.command.ConsoleCommandSender console;
+	public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
+	public int autosavePeriod;
+	public boolean serverAutoSave = false; // Paper
+	public CommandDispatcher vanillaCommandDispatcher;
+	public boolean forceTicks; // Paper
+	public boolean lagging = false; // Purpur
+	// Spigot end
+	public volatile Thread shutdownThread; // Paper
+	public volatile boolean abnormalExit = false; // Paper
+	public volatile boolean hasFullyShutdown = false; // Paper
+	protected SaveData saveData;
+	// Paper start
+	boolean isOversleep = false;
+	private ServerConnection serverConnection;
+	private String serverIp;
+	private int serverPort;
 	private PlayerList playerList;
 	private volatile boolean isRunning;
 	private volatile boolean isRestarting = false; // Paper - flag to signify we're attempting to restart
 	private boolean isStopped;
 	private int ticks;
-	protected final Proxy proxy;
 	private boolean onlineMode;
 	private boolean B;
 	private boolean pvpMode;
@@ -146,16 +196,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	@Nullable
 	private String motd;
 	private int F;
-	public final long[] h;
-
-	public long[] getTickTimes() {
-		return h;
-	} // Paper - OBFHELPER
-
-	// Paper start
-	public final TickTimes tickTimes5s = new TickTimes(100);
-	public final TickTimes tickTimes10s = new TickTimes(200);
-	public final TickTimes tickTimes60s = new TickTimes(1200);
 	// Paper end
 	@Nullable
 	private KeyPair H;
@@ -164,84 +204,22 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	private boolean demoMode;
 	private String K;
 	private String L;
-	private volatile boolean hasTicked;
 	private long lastOverloadTime;
 	private boolean P;
-	private final MinecraftSessionService minecraftSessionService;
-	private final GameProfileRepository gameProfileRepository;
-	private final UserCache userCache;
 	private long T;
-	public final Thread serverThread;
 	private long nextTick;
+	// CraftBukkit end
 	private long W;
-
-	final long getTickOversleepMaxTime() {
-		return this.W;
-	} // Paper - OBFHELPER
-
 	private boolean X;
-
-	final boolean hasExecutedTask() {
-		return this.X;
-	} // Paper - OBFHELPER
-
-	private final ResourcePackRepository resourcePackRepository;
-	private final ScoreboardServer scoreboardServer;
 	@Nullable
 	private PersistentCommandStorage persistentCommandStorage;
-	private final BossBattleCustomData bossBattleCustomData;
-	private final CustomFunctionData customFunctionData;
-	private final CircularTimer circularTimer;
 	private float ag;
-	public final Executor executorService;
 	@Nullable
 	private String ai;
-	public DataPackResources dataPackResources;
-	private final DefinedStructureManager ak;
-	protected SaveData saveData;
-
 	// CraftBukkit start
-	public DataPackConfiguration datapackconfiguration;
-	public org.bukkit.craftbukkit.CraftServer server;
-	public OptionSet options;
-	public org.bukkit.command.ConsoleCommandSender console;
-	//public ConsoleReader reader; // Paper
-	public static int currentTick = 0; // Paper - Further improve tick loop
-	public static long currentTickLong = 0L; // Tuinity
-	public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
-	public int autosavePeriod;
-	public boolean serverAutoSave = false; // Paper
-	public CommandDispatcher vanillaCommandDispatcher;
-	public boolean forceTicks; // Paper
-	// CraftBukkit end
-	// Spigot start
-	public static final int TPS = 20;
-	public static final int TICK_TIME = 1000000000 / TPS;
-	private static final int SAMPLE_INTERVAL = 20; // Paper
-	public final double[] recentTps = new double[4]; // Purpur
-	public boolean lagging = false; // Purpur
-	public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
-	// Spigot end
-
-	public volatile Thread shutdownThread; // Paper
-	public volatile boolean abnormalExit = false; // Paper
-
-	public static <S extends MinecraftServer> S a(Function<Thread, S> function) {
-		AtomicReference<S> atomicreference = new AtomicReference();
-		var thread = new FastThreadLocalThread(() -> {
-			atomicreference.get().w();
-		}, "Server thread");
-
-		thread.setPriority(Thread.MAX_PRIORITY - 2);
-		thread.setUncaughtExceptionHandler((thread1, throwable) -> {
-			MinecraftServer.LOGGER.error(throwable);
-		});
-		var s0 = function.apply(thread); // CraftBukkit - decompile error
-
-		atomicreference.set(s0);
-		thread.start();
-		return s0;
-	}
+	private boolean hasStopped = false;
+	private boolean hasLoggedStop = false; // Paper
+	private long lastTick = 0;
 
 	public MinecraftServer(OptionSet options, DataPackConfiguration datapackconfiguration, Thread thread, IRegistryCustom.Dimension iregistrycustom_dimension, Convertable.ConversionSession convertable_conversionsession, SaveData savedata, ResourcePackRepository resourcepackrepository, Proxy proxy, DataFixer datafixer, DataPackResources datapackresources, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache, WorldLoadListenerFactory worldloadlistenerfactory) {
 		super("Server");
@@ -280,14 +258,20 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
 	}
 
-	private void initializeScoreboards(WorldPersistentData worldpersistentdata) {
-		var persistentscoreboard = worldpersistentdata.a(PersistentScoreboard::new, "scoreboard");
+	public static <S extends MinecraftServer> S a(Function<Thread, S> function) {
+		AtomicReference<S> atomicreference = new AtomicReference<>();
+		var thread = new FastThreadLocalThread(() -> atomicreference.get().w(), "Server thread");
 
-		persistentscoreboard.a(this.getScoreboard());
-		this.getScoreboard().a(new RunnableSaveScoreboard(persistentscoreboard));
+		thread.setPriority(Thread.MAX_PRIORITY - 2);
+		thread.setUncaughtExceptionHandler((thread1, throwable) -> {
+			MinecraftServer.LOGGER.error(throwable);
+		});
+		var s0 = function.apply(thread); // CraftBukkit - decompile error
+
+		atomicreference.set(s0);
+		thread.start();
+		return s0;
 	}
-
-	protected abstract boolean init() throws IOException;
 
 	public static void convertWorld(Convertable.ConversionSession convertable_conversionsession) {
 		if (convertable_conversionsession.isConvertable()) {
@@ -305,7 +289,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 						this.a = SystemUtils.getMonotonicMillis();
 						MinecraftServer.LOGGER.info("Converting... {}%", i);
 					}
-
 				}
 
 				@Override
@@ -313,8 +296,177 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 				}
 			});
 		}
-
 	}
+
+	private static void a(WorldServer worldserver, IWorldDataServer iworlddataserver, boolean flag, boolean flag1, boolean flag2) {
+		var chunkgenerator = worldserver.getChunkProvider().getChunkGenerator();
+
+		if (!flag2) {
+			iworlddataserver.setSpawn(BlockPosition.ZERO.up(chunkgenerator.getSpawnHeight()), 0.0F);
+		} else if (flag1) {
+			iworlddataserver.setSpawn(BlockPosition.ZERO.up(), 0.0F);
+		} else {
+			// Paper start - moved down
+			// CraftBukkit start
+			if (worldserver.generator != null) {
+				Globals.setupGlobals(worldserver);
+				var rand = new SeededRandom(0);
+				rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
+				var spawn = worldserver.generator.getFixedSpawnLocation(worldserver.getWorld(), rand);
+
+				if (spawn != null) {
+					if (spawn.getWorld() != worldserver.getWorld()) {
+						throw new IllegalStateException("Cannot set spawn point for " + iworlddataserver.getName() + " to be in another world (" + spawn.getWorld().getName() + ")");
+					} else {
+						iworlddataserver.setSpawn(new BlockPosition(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ()), spawn.getYaw());
+						return;
+					}
+				}
+			}
+			// CraftBukkit end
+			// Paper start - if the generator created a spawn for us, then there is no need for us to also create a spawn -
+			// only do it if the generator did not
+			var worldchunkmanager = chunkgenerator.getWorldChunkManager();
+			Globals.setupGlobals(worldserver);
+			var random = new SeededRandom(0);
+			random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
+			var blockposition = worldchunkmanager.a(0, worldserver.getSeaLevel(), 0, 256, (biomebase) -> {
+				return biomebase.b().b();
+			}, random);
+			var chunkcoordintpair = blockposition == null ? new ChunkCoordIntPair(0, 0) : new ChunkCoordIntPair(blockposition);
+			// Paper end
+
+			if (blockposition == null) {
+				MinecraftServer.LOGGER.warn("Unable to find spawn biome");
+			}
+
+			var flag3 = false;
+
+			for (Block block : TagsBlock.VALID_SPAWN.getTagged()) {
+				if (worldchunkmanager.c().contains(block.getBlockData())) {
+					flag3 = true;
+					break;
+				}
+			}
+
+			iworlddataserver.setSpawn(chunkcoordintpair.l().b(8, chunkgenerator.getSpawnHeight(), 8), 0.0F);
+			var i = 0;
+			var j = 0;
+			var k = 0;
+			var l = -1;
+
+			for (var i1 = 0; i1 < 1024; ++i1) {
+				if (i > -16 && i <= 16 && j > -16 && j <= 16) {
+					var blockposition1 = WorldProviderNormal.a(worldserver, new ChunkCoordIntPair(chunkcoordintpair.x + i, chunkcoordintpair.z + j), flag3);
+
+					if (blockposition1 != null) {
+						iworlddataserver.setSpawn(blockposition1, 0.0F);
+						break;
+					}
+				}
+
+				if (i == j || i < 0 && i == -j || i > 0 && i == 1 - j) {
+					var j1 = k;
+
+					k = -l;
+					l = j1;
+				}
+
+				i += k;
+				j += l;
+			}
+
+			if (flag) {
+				var worldgenfeatureconfigured = BiomeDecoratorGroups.BONUS_CHEST;
+
+				worldgenfeatureconfigured.a(worldserver, chunkgenerator, worldserver.random, new BlockPosition(iworlddataserver.a(), iworlddataserver.b(), iworlddataserver.c()));
+			}
+		}
+	}
+
+	// Spigot Start
+	private static double calcTps(double avg, double exp, double tps) {
+		return (avg * exp) + (tps * (1 - exp));
+	}
+
+	public static DataPackConfiguration a(ResourcePackRepository resourcepackrepository, DataPackConfiguration datapackconfiguration, boolean flag) {
+		resourcepackrepository.a();
+		if (flag) {
+			resourcepackrepository.a(Collections.singleton("vanilla"));
+			return new DataPackConfiguration(ImmutableList.of("vanilla"), ImmutableList.of());
+		} else {
+			Set<String> set = Sets.newLinkedHashSet();
+			Iterator iterator = datapackconfiguration.a().iterator();
+
+			while (iterator.hasNext()) {
+				var s = (String) iterator.next();
+
+				if (resourcepackrepository.b(s)) {
+					set.add(s);
+				} else {
+					MinecraftServer.LOGGER.warn("Missing data pack {}", s);
+				}
+			}
+
+			iterator = resourcepackrepository.c().iterator();
+
+			while (iterator.hasNext()) {
+				var resourcepackloader = (ResourcePackLoader) iterator.next();
+				var s1 = resourcepackloader.e();
+
+				if (!datapackconfiguration.b().contains(s1) && !set.contains(s1)) {
+					MinecraftServer.LOGGER.info("Found new data pack {}, loading it automatically", s1);
+					set.add(s1);
+				}
+			}
+
+			if (set.isEmpty()) {
+				MinecraftServer.LOGGER.info("No datapacks selected, forcing vanilla");
+				set.add("vanilla");
+			}
+
+			resourcepackrepository.a(set);
+			return a(resourcepackrepository);
+		}
+	}
+
+	private static DataPackConfiguration a(ResourcePackRepository resourcepackrepository) {
+		var collection = resourcepackrepository.d();
+		List<String> list = ImmutableList.copyOf(collection);
+		List<String> list1 = resourcepackrepository.b().stream().filter((s) -> {
+			return !collection.contains(s);
+		}).collect(ImmutableList.toImmutableList());
+
+		return new DataPackConfiguration(list, list1);
+	}
+	// CraftBukkit end
+
+	@Deprecated
+	public static MinecraftServer getServer() {
+		return SERVER; // Paper
+	}
+
+	public long[] getTickTimes() {
+		return h;
+	} // Paper - OBFHELPER
+
+	final long getTickOversleepMaxTime() {
+		return this.W;
+	} // Paper - OBFHELPER
+
+	final boolean hasExecutedTask() {
+		return this.X;
+	} // Paper - OBFHELPER
+
+	private void initializeScoreboards(WorldPersistentData worldpersistentdata) {
+		var persistentscoreboard = worldpersistentdata.a(PersistentScoreboard::new, "scoreboard");
+
+		persistentscoreboard.a(this.getScoreboard());
+		this.getScoreboard().a(new RunnableSaveScoreboard(persistentscoreboard));
+	}
+
+	protected abstract boolean init() throws IOException;
+	// Paper end
 
 	protected void loadWorld(String s) {
 		// CraftBukkit start
@@ -542,104 +694,12 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 				try {
 					worldserver.a(crashreport);
 				} catch (Throwable throwable1) {
-        }
+				}
 
 				throw new ReportedException(crashreport);
 			}
 
 			iworlddataserver.c(true);
-		}
-	}
-	// CraftBukkit end
-
-	private static void a(WorldServer worldserver, IWorldDataServer iworlddataserver, boolean flag, boolean flag1, boolean flag2) {
-		var chunkgenerator = worldserver.getChunkProvider().getChunkGenerator();
-
-		if (!flag2) {
-			iworlddataserver.setSpawn(BlockPosition.ZERO.up(chunkgenerator.getSpawnHeight()), 0.0F);
-		} else if (flag1) {
-			iworlddataserver.setSpawn(BlockPosition.ZERO.up(), 0.0F);
-		} else {
-			// Paper start - moved down
-			// CraftBukkit start
-			if (worldserver.generator != null) {
-				Globals.setupGlobals(worldserver);
-				var rand = new SeededRandom(0);
-				rand.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
-				var spawn = worldserver.generator.getFixedSpawnLocation(worldserver.getWorld(), rand);
-
-				if (spawn != null) {
-					if (spawn.getWorld() != worldserver.getWorld()) {
-						throw new IllegalStateException("Cannot set spawn point for " + iworlddataserver.getName() + " to be in another world (" + spawn.getWorld().getName() + ")");
-					} else {
-						iworlddataserver.setSpawn(new BlockPosition(spawn.getBlockX(), spawn.getBlockY(), spawn.getBlockZ()), spawn.getYaw());
-						return;
-					}
-				}
-			}
-			// CraftBukkit end
-			// Paper start - if the generator created a spawn for us, then there is no need for us to also create a spawn -
-			// only do it if the generator did not
-			var worldchunkmanager = chunkgenerator.getWorldChunkManager();
-			Globals.setupGlobals(worldserver);
-			var random = new SeededRandom(0);
-			random.secureseed_setSeed(Globals.worldSeed, 0, 0, Globals.dimension.get(), Globals.SPAWN_POINT_SALT, 0);
-			var blockposition = worldchunkmanager.a(0, worldserver.getSeaLevel(), 0, 256, (biomebase) -> {
-				return biomebase.b().b();
-			}, random);
-			var chunkcoordintpair = blockposition == null ? new ChunkCoordIntPair(0, 0) : new ChunkCoordIntPair(blockposition);
-			// Paper end
-
-			if (blockposition == null) {
-				MinecraftServer.LOGGER.warn("Unable to find spawn biome");
-			}
-
-			var flag3 = false;
-			Iterator iterator = TagsBlock.VALID_SPAWN.getTagged().iterator();
-
-			while (iterator.hasNext()) {
-				var block = (Block) iterator.next();
-
-				if (worldchunkmanager.c().contains(block.getBlockData())) {
-					flag3 = true;
-					break;
-				}
-			}
-
-			iworlddataserver.setSpawn(chunkcoordintpair.l().b(8, chunkgenerator.getSpawnHeight(), 8), 0.0F);
-			var i = 0;
-			var j = 0;
-			var k = 0;
-			var l = -1;
-			var flag4 = true;
-
-			for (var i1 = 0; i1 < 1024; ++i1) {
-				if (i > -16 && i <= 16 && j > -16 && j <= 16) {
-					var blockposition1 = WorldProviderNormal.a(worldserver, new ChunkCoordIntPair(chunkcoordintpair.x + i, chunkcoordintpair.z + j), flag3);
-
-					if (blockposition1 != null) {
-						iworlddataserver.setSpawn(blockposition1, 0.0F);
-						break;
-					}
-				}
-
-				if (i == j || i < 0 && i == -j || i > 0 && i == 1 - j) {
-					var j1 = k;
-
-					k = -l;
-					l = j1;
-				}
-
-				i += k;
-				j += l;
-			}
-
-			if (flag) {
-				var worldgenfeatureconfigured = BiomeDecoratorGroups.BONUS_CHEST;
-
-				worldgenfeatureconfigured.a(worldserver, chunkgenerator, worldserver.random, new BlockPosition(iworlddataserver.a(), iworlddataserver.b(), iworlddataserver.c()));
-			}
-
 		}
 	}
 
@@ -689,7 +749,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		}
 
 		if (true) {
-			var worldserver1 = worldserver;
 			var forcedchunk = worldserver.getWorldPersistentData().b(ForcedChunk::new, "chunks");
 			// CraftBukkit end
 
@@ -700,7 +759,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 					var i = longiterator.nextLong();
 					var chunkcoordintpair = new ChunkCoordIntPair(i);
 
-					worldserver1.getChunkProvider().a(chunkcoordintpair, true);
+					worldserver.getChunkProvider().a(chunkcoordintpair, true);
 				}
 			}
 		}
@@ -725,9 +784,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		if (file.isFile()) {
 			var s = this.convertable.getLevelName();
 
-        this.setResourcePack("level://" + URLEncoder.encode(s, StandardCharsets.UTF_8) + "/" + "resources.zip", "");
-    }
-
+			this.setResourcePack("level://" + URLEncoder.encode(s, StandardCharsets.UTF_8) + "/" + "resources.zip", "");
+		}
 	}
 
 	public EnumGamemode getGamemode() {
@@ -745,7 +803,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	public boolean saveChunks(boolean flag, boolean flag1, boolean flag2) {
 		var flag3 = false;
 
-		for (Iterator iterator = this.getWorlds().iterator(); iterator.hasNext(); flag3 = true) {
+		for (var iterator = this.getWorlds().iterator(); iterator.hasNext(); flag3 = true) {
 			var worldserver = (WorldServer) iterator.next();
 
 			if (!flag) {
@@ -767,24 +825,19 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		// CraftBukkit end
 		return flag3;
 	}
+	// Paper End
+	// Spigot End
 
 	@Override
 	public void close() {
 		this.stop();
 	}
 
-	// CraftBukkit start
-	private boolean hasStopped = false;
-	public volatile boolean hasFullyShutdown = false; // Paper
-	private boolean hasLoggedStop = false; // Paper
-	private final Object stopLock = new Object();
-
 	public final boolean hasStopped() {
 		synchronized (stopLock) {
 			return hasStopped;
 		}
 	}
-	// CraftBukkit end
 
 	protected void stop() {
 		// CraftBukkit start - prevent double stopping on multiple threads
@@ -807,7 +860,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 				}
 			}
 			// We've just obliterated the main thread, this will prevent stop from dying when removing players
-			MinecraftServer.getServer().getWorlds().forEach(world -> {
+			MinecraftServer.SERVER.getWorlds().forEach(world -> {
 				world.tickingEntities = false;
 			});
 		}
@@ -831,11 +884,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		}
 
 		MinecraftServer.LOGGER.info("Saving worlds");
-		Iterator iterator = this.getWorlds().iterator();
+		var iterator = this.getWorlds().iterator();
 
 		WorldServer worldserver;
 		while (iterator.hasNext()) {
-			worldserver = (WorldServer) iterator.next();
+			worldserver = iterator.next();
 			if (worldserver != null) {
 				worldserver.savingDisabled = false;
 			}
@@ -845,7 +898,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		iterator = this.getWorlds().iterator();
 
 		while (iterator.hasNext()) {
-			worldserver = (WorldServer) iterator.next();
+			worldserver = iterator.next();
 			if (worldserver != null) {
 				try {
 					worldserver.close();
@@ -912,69 +965,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 				MinecraftServer.LOGGER.error("Error while shutting down", interruptedexception);
 			}
 		}
-
 	}
-	// Paper end
-
-	// Spigot Start
-	private static double calcTps(double avg, double exp, double tps) {
-		return (avg * exp) + (tps * (1 - exp));
-	}
-
-	// Paper start - Further improve server tick loop
-	private static final long SEC_IN_NANO = 1000000000;
-	private static final long MAX_CATCHUP_BUFFER = TICK_TIME * TPS * 60L;
-	private long lastTick = 0;
-	private final long catchupTime = 0;
-	public final RollingAverage tps5s = new RollingAverage(5); // Purpur
-	public final RollingAverage tps1 = new RollingAverage(60);
-	public final RollingAverage tps5 = new RollingAverage(60 * 5);
-	public final RollingAverage tps15 = new RollingAverage(60 * 15);
-
-	public static class RollingAverage {
-		private final int size;
-		private long time;
-		private java.math.BigDecimal total;
-		private int index = 0;
-		private final java.math.BigDecimal[] samples;
-		private final long[] times;
-
-		RollingAverage(int size) {
-			this.size = size;
-			this.time = size * SEC_IN_NANO;
-			this.total = dec(TPS).multiply(dec(SEC_IN_NANO)).multiply(dec(size));
-			this.samples = new java.math.BigDecimal[size];
-			this.times = new long[size];
-			for (var i = 0; i < size; i++) {
-				this.samples[i] = dec(TPS);
-				this.times[i] = SEC_IN_NANO;
-			}
-		}
-
-		private static java.math.BigDecimal dec(long t) {
-			return new java.math.BigDecimal(t);
-		}
-
-		public void add(java.math.BigDecimal x, long t) {
-			time -= times[index];
-			total = total.subtract(samples[index].multiply(dec(times[index])));
-			samples[index] = x;
-			times[index] = t;
-			time += t;
-			total = total.add(x.multiply(dec(t)));
-			if (++index == size) {
-				index = 0;
-			}
-		}
-
-		public double getAverage() {
-			return total.divide(dec(time), 30, java.math.RoundingMode.HALF_UP).doubleValue();
-		}
-	}
-
-	private static final java.math.BigDecimal TPS_BASE = new java.math.BigDecimal("1E9").multiply(new java.math.BigDecimal(SAMPLE_INTERVAL));
-	// Paper End
-	// Spigot End
 
 	protected void w() {
 		try {
@@ -1049,7 +1040,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 					}
 					// Purpur end - tps catchup
 					this.sleepForTick();
-					this.hasTicked = true;
 				}
 			} else {
 				this.a((CrashReport) null);
@@ -1100,9 +1090,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 				// CraftBukkit end
 				//this.exit(); // Paper - moved into stop
 			}
-
 		}
-
 	}
 
 	public boolean canSleepForTick() { // Paper
@@ -1111,9 +1099,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		return this.forceTicks || this.isEntered() || SystemUtils.getMonotonicMillis() < (this.X ? this.W : this.nextTick);
 	}
 
-	// Paper start
-	boolean isOversleep = false;
-
 	private boolean canOversleep() {
 		return this.hasExecutedTask() && SystemUtils.getMonotonicMillis() < this.getTickOversleepMaxTime();
 	}
@@ -1121,16 +1106,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	private boolean canSleepForTickNoOversleep() {
 		return this.forceTicks || this.isEntered() || SystemUtils.getMonotonicMillis() < this.nextTick;
 	}
-	// Paper end
-
-	// Tuinity start - execute chunk tasks mid tick
-	static final long CHUNK_TASK_QUEUE_BACKOFF_MIN_TIME = 25L * 1000L; // 25us
-	static final long MAX_CHUNK_EXEC_TIME = 1000L; // 1us
-
-	static final long TASK_EXECUTION_FAILURE_BACKOFF = 5L * 1000L; // 5us
-
-	private static long lastMidTickExecute;
-	private static long lastMidTickExecuteFailure;
+	// Tuinity end - execute chunk tasks mid tick
 
 	private boolean tickMidTickTasks() {
 		// give all worlds a fair chance at by targetting them all.
@@ -1151,6 +1127,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
 		return executed;
 	}
+	// CraftBukkit end
 
 	public final void executeMidTickTasks() {
 		var startTime = System.nanoTime();
@@ -1185,13 +1162,13 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 			}
 		}
 	}
-	// Tuinity end - execute chunk tasks mid tick
+
+	// Tuinity - replace logic
 
 	private void executeModerately() {
 		this.executeAll();
 		java.util.concurrent.locks.LockSupport.parkNanos("executing tasks", 1000L);
 	}
-	// CraftBukkit end
 
 	protected void sleepForTick() {
 		//this.executeAll(); // Paper - move this into the tick method for timings
@@ -1199,8 +1176,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 			return !this.canSleepForTickNoOversleep(); // Paper - move oversleep into full server tick
 		});
 	}
-
-	// Tuinity - replace logic
 
 	@Override
 	public TickTask postToMainThread(Runnable runnable) {
@@ -1232,11 +1207,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 			return true;
 		} else {
 			if (this.canSleepForTick()) {
-				Iterator iterator = this.getWorlds().iterator();
 
-				while (iterator.hasNext()) {
-					var worldserver = (WorldServer) iterator.next();
-
+				for (WorldServer worldserver : this.getWorlds()) {
 					if (worldserver.getChunkProvider().runTasks()) {
 						return true;
 					}
@@ -1337,7 +1309,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		// Tuinity - replace logic
 		this.getFunctionData().tick();
 		// Tuinity - replace logic
-		Iterator iterator = this.getWorlds().iterator();
+		var iterator = this.getWorlds().iterator();
 
 		// CraftBukkit start
 		// Run tasks that are waiting on processing
@@ -1370,14 +1342,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 			worldserver.hasEntityMoveEvent = EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Paper
 			worldserver.hasRidableMoveEvent = net.pl3x.purpur.event.entity.RidableMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // Purpur
 			TileEntityHopper.skipHopperEvents = worldserver.paperConfig.disableHopperMoveEvents || org.bukkit.event.inventory.InventoryMoveItemEvent.getHandlerList().getRegisteredListeners().length == 0; // Paper
-
-            /* Drop global time updates
-            if (this.ticks % 20 == 0) {
-                this.methodProfiler.enter("timeSync");
-                this.playerList.a((Packet) (new PacketPlayOutUpdateTime(worldserver.getTime(), worldserver.getDayTime(), worldserver.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE))), worldserver.getDimensionKey());
-                this.methodProfiler.exit();
-            }
-            // CraftBukkit end */
 
 			try {
 				// Tuinity - replace logic
@@ -1479,11 +1443,8 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
 		crashreport.g().a("Data Packs", () -> {
 			var stringbuilder = dev.kamillaova.paper.pool.StringBuilderPool.take();
-			Iterator iterator = this.resourcePackRepository.e().iterator();
 
-			while (iterator.hasNext()) {
-				var resourcepackloader = (ResourcePackLoader) iterator.next();
-
+			for (ResourcePackLoader resourcepackloader : this.resourcePackRepository.e()) {
 				if (stringbuilder.length() > 0) {
 					stringbuilder.append(", ");
 				}
@@ -1570,14 +1531,10 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	}
 
 	private void updateSpawnFlags() {
-		Iterator iterator = this.getWorlds().iterator();
 
-		while (iterator.hasNext()) {
-			var worldserver = (WorldServer) iterator.next();
-
+		for (WorldServer worldserver : this.getWorlds()) {
 			worldserver.setSpawnFlags(this.getSpawnMonsters(), this.getSpawnAnimals());
 		}
-
 	}
 
 	public void b(boolean flag) {
@@ -1719,10 +1676,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		return false;
 	}
 
-	public void setForceGamemode(boolean flag) {
-		this.P = flag;
-	}
-
 	public boolean getForceGamemode() {
 		return this.P;
 	}
@@ -1799,10 +1752,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		// Paper end
 		var completablefuture = CompletableFuture.supplyAsync(() -> {
 			var stream = collection.stream(); // CraftBukkit - decompile error
-			var resourcepackrepository = this.resourcePackRepository;
-
-			this.resourcePackRepository.getClass();
-			return stream.map(resourcepackrepository::a).filter(Objects::nonNull).map(ResourcePackLoader::d).collect(ImmutableList.toImmutableList()); // CraftBukkit - decompile error // Paper - decompile error
+			return stream.map(this.resourcePackRepository::a).filter(Objects::nonNull).map(ResourcePackLoader::d).collect(ImmutableList.toImmutableList()); // CraftBukkit - decompile error // Paper - decompile error
 		}, this).thenCompose((immutablelist) -> {
 			return DataPackResources.a(immutablelist, this.j() ? CommandDispatcher.ServerType.DEDICATED : CommandDispatcher.ServerType.INTEGRATED, this.h(), this.executorService, this); // Paper - decompile error
 		}).thenAcceptAsync((datapackresources) -> {
@@ -1826,57 +1776,6 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		}
 
 		return completablefuture;
-	}
-
-	public static DataPackConfiguration a(ResourcePackRepository resourcepackrepository, DataPackConfiguration datapackconfiguration, boolean flag) {
-		resourcepackrepository.a();
-		if (flag) {
-			resourcepackrepository.a(Collections.singleton("vanilla"));
-			return new DataPackConfiguration(ImmutableList.of("vanilla"), ImmutableList.of());
-		} else {
-			Set<String> set = Sets.newLinkedHashSet();
-			Iterator iterator = datapackconfiguration.a().iterator();
-
-			while (iterator.hasNext()) {
-				var s = (String) iterator.next();
-
-				if (resourcepackrepository.b(s)) {
-					set.add(s);
-				} else {
-					MinecraftServer.LOGGER.warn("Missing data pack {}", s);
-				}
-			}
-
-			iterator = resourcepackrepository.c().iterator();
-
-			while (iterator.hasNext()) {
-				var resourcepackloader = (ResourcePackLoader) iterator.next();
-				var s1 = resourcepackloader.e();
-
-				if (!datapackconfiguration.b().contains(s1) && !set.contains(s1)) {
-					MinecraftServer.LOGGER.info("Found new data pack {}, loading it automatically", s1);
-					set.add(s1);
-				}
-			}
-
-			if (set.isEmpty()) {
-				MinecraftServer.LOGGER.info("No datapacks selected, forcing vanilla");
-				set.add("vanilla");
-			}
-
-			resourcepackrepository.a(set);
-			return a(resourcepackrepository);
-		}
-	}
-
-	private static DataPackConfiguration a(ResourcePackRepository resourcepackrepository) {
-		var collection = resourcepackrepository.d();
-		List<String> list = ImmutableList.copyOf(collection);
-		List<String> list1 = resourcepackrepository.b().stream().filter((s) -> {
-			return !collection.contains(s);
-		}).collect(ImmutableList.toImmutableList());
-
-		return new DataPackConfiguration(list, list1);
 	}
 
 	public ResourcePackRepository getResourcePackRepository() {
@@ -1951,15 +1850,13 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 
 	public void a(Path path) throws IOException {
 		var path1 = path.resolve("levels");
-		Iterator iterator = this.worldServer.entrySet().iterator();
 
-		while (iterator.hasNext()) {
-			Entry<ResourceKey<World>, WorldServer> entry = (Entry) iterator.next();
-			var minecraftkey = entry.getKey().a();
+		for (Entry<ResourceKey<World>, WorldServer> resourceKeyWorldServerEntry : this.worldServer.entrySet()) {
+			var minecraftkey = resourceKeyWorldServerEntry.getKey().a();
 			var path2 = path1.resolve(minecraftkey.getNamespace()).resolve(minecraftkey.getKey());
 
 			Files.createDirectories(path2);
-			entry.getValue().a(path2);
+			resourceKeyWorldServerEntry.getValue().a(path2);
 		}
 
 		this.d(path.resolve("gamerules.txt"));
@@ -1970,68 +1867,27 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 	}
 
 	private void b(Path path) throws IOException {
-		var bufferedwriter = Files.newBufferedWriter(path);
-		Throwable throwable = null;
-
-		try {
+		try (var bufferedwriter = Files.newBufferedWriter(path)) {
 			bufferedwriter.write(String.format("pending_tasks: %d\n", this.bi()));
 			bufferedwriter.write(String.format("average_tick_time: %f\n", this.aO()));
 			bufferedwriter.write(String.format("tick_times: %s\n", Arrays.toString(this.h)));
 			bufferedwriter.write(String.format("queue: %s\n", SystemUtils.f()));
-		} catch (Throwable throwable1) {
-			throwable = throwable1;
-			throw throwable1;
-		} finally {
-			if (bufferedwriter != null) {
-				if (throwable != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable2) {
-						throwable.addSuppressed(throwable2);
-					}
-				} else {
-					bufferedwriter.close();
-				}
-			}
-
 		}
-
 	}
 
 	private void c(Path path) throws IOException {
 		var crashreport = new CrashReport("Server dump", new Exception("dummy"));
 
 		this.b(crashreport);
-		var bufferedwriter = Files.newBufferedWriter(path);
-		Throwable throwable = null;
 
-		try {
+		try(var bufferedwriter = Files.newBufferedWriter(path);) {
 			bufferedwriter.write(crashreport.e());
-		} catch (Throwable throwable1) {
-			throwable = throwable1;
-			throw throwable1;
-		} finally {
-			if (bufferedwriter != null) {
-				if (throwable != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable2) {
-						throwable.addSuppressed(throwable2);
-					}
-				} else {
-					bufferedwriter.close();
-				}
-			}
-
 		}
-
 	}
 
 	private void d(Path path) throws IOException {
-		var bufferedwriter = Files.newBufferedWriter(path);
-		Throwable throwable = null;
 
-		try {
+		try(var bufferedwriter = Files.newBufferedWriter(path)) {
 			List<String> list = Lists.newArrayList();
 			var gamerules = this.getGameRules();
 
@@ -2041,66 +1897,23 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 					list.add(String.format("%s=%s\n", gamerules_gamerulekey.a(), gamerules.get(gamerules_gamerulekey).toString()));
 				}
 			});
-			Iterator iterator = list.iterator();
 
-			while (iterator.hasNext()) {
-				var s = (String) iterator.next();
-
+			for (String s : list) {
 				bufferedwriter.write(s);
 			}
-		} catch (Throwable throwable1) {
-			throwable = throwable1;
-			throw throwable1;
-		} finally {
-			if (bufferedwriter != null) {
-				if (throwable != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable2) {
-						throwable.addSuppressed(throwable2);
-					}
-				} else {
-					bufferedwriter.close();
-				}
-			}
-
 		}
-
 	}
 
 	private void e(Path path) throws IOException {
-		var bufferedwriter = Files.newBufferedWriter(path);
-		Throwable throwable = null;
-
-		try {
+		try(var bufferedwriter = Files.newBufferedWriter(path)) {
 			var s = System.getProperty("java.class.path");
 			var s1 = System.getProperty("path.separator");
-			Iterator iterator = Splitter.on(s1).split(s).iterator();
 
-			while (iterator.hasNext()) {
-				var s2 = (String) iterator.next();
-
+			for (String s2 : Splitter.on(s1).split(s)) {
 				bufferedwriter.write(s2);
 				bufferedwriter.write("\n");
 			}
-		} catch (Throwable throwable1) {
-			throwable = throwable1;
-			throw throwable1;
-		} finally {
-			if (bufferedwriter != null) {
-				if (throwable != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable2) {
-						throwable.addSuppressed(throwable2);
-					}
-				} else {
-					bufferedwriter.close();
-				}
-			}
-
 		}
-
 	}
 
 	private void f(Path path) throws IOException {
@@ -2108,37 +1921,17 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		var athreadinfo = threadmxbean.dumpAllThreads(true, true);
 
 		Arrays.sort(athreadinfo, Comparator.comparing(ThreadInfo::getThreadName));
-		var bufferedwriter = Files.newBufferedWriter(path);
-		Throwable throwable = null;
 
-		try {
-			var athreadinfo1 = athreadinfo;
+		try (var bufferedwriter = Files.newBufferedWriter(path)) {
 			var i = athreadinfo.length;
 
 			for (var j = 0; j < i; ++j) {
-				var threadinfo = athreadinfo1[j];
+				var threadinfo = athreadinfo[j];
 
 				bufferedwriter.write(threadinfo.toString());
 				bufferedwriter.write(10);
 			}
-		} catch (Throwable throwable1) {
-			throwable = throwable1;
-			throw throwable1;
-		} finally {
-			if (bufferedwriter != null) {
-				if (throwable != null) {
-					try {
-						bufferedwriter.close();
-					} catch (Throwable throwable2) {
-						throwable.addSuppressed(throwable2);
-					}
-				} else {
-					bufferedwriter.close();
-				}
-			}
-
 		}
-
 	}
 
 	// CraftBukkit start
@@ -2151,15 +1944,10 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		return false;
 	}
 
-	@Deprecated
-	public static MinecraftServer getServer() {
-		return SERVER; // Paper
-	}
-	// CraftBukkit end
-
 	public Path a(SavedFile savedfile) {
 		return this.convertable.getWorldFolder(savedfile);
 	}
+	// CraftBukkit end
 
 	public boolean isSyncChunkWrites() {
 		return true;
@@ -2177,9 +1965,45 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
 		return this.customRegistry;
 	}
 
-	@Nullable
-	public ITextFilter a(EntityPlayer entityplayer) {
-		return null;
+	public static class RollingAverage {
+		private final int size;
+		private final java.math.BigDecimal[] samples;
+		private final long[] times;
+		private long time;
+		private java.math.BigDecimal total;
+		private int index = 0;
+
+		RollingAverage(int size) {
+			this.size = size;
+			this.time = size * SEC_IN_NANO;
+			this.total = dec(TPS).multiply(dec(SEC_IN_NANO)).multiply(dec(size));
+			this.samples = new java.math.BigDecimal[size];
+			this.times = new long[size];
+			for (var i = 0; i < size; i++) {
+				this.samples[i] = dec(TPS);
+				this.times[i] = SEC_IN_NANO;
+			}
+		}
+
+		private static java.math.BigDecimal dec(long t) {
+			return new java.math.BigDecimal(t);
+		}
+
+		public void add(java.math.BigDecimal x, long t) {
+			time -= times[index];
+			total = total.subtract(samples[index].multiply(dec(times[index])));
+			samples[index] = x;
+			times[index] = t;
+			time += t;
+			total = total.add(x.multiply(dec(t)));
+			if (++index == size) {
+				index = 0;
+			}
+		}
+
+		public double getAverage() {
+			return total.divide(dec(time), 30, java.math.RoundingMode.HALF_UP).doubleValue();
+		}
 	}
 
 	// Paper start

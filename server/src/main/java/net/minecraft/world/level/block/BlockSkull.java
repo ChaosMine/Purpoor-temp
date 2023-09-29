@@ -20,7 +20,7 @@ public class BlockSkull extends BlockSkullAbstract {
 
     protected BlockSkull(BlockSkull.a blockskull_a, BlockBase.Info blockbase_info) {
         super(blockskull_a, blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockSkull.a, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockSkull.a, 0));
     }
 
     @Override
@@ -35,17 +35,17 @@ public class BlockSkull extends BlockSkullAbstract {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockSkull.a, MathHelper.floor((double) (blockactioncontext.h() * 16.0F / 360.0F) + 0.5D) & 15);
+        return this.getBlockData().set(BlockSkull.a, MathHelper.floor((double) (blockactioncontext.h() * 16.0F / 360.0F) + 0.5D) & 15);
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockSkull.a, enumblockrotation.a((Integer) iblockdata.get(BlockSkull.a), 16));
+        return iblockdata.set(BlockSkull.a, enumblockrotation.a(iblockdata.get(BlockSkull.a), 16));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return (IBlockData) iblockdata.set(BlockSkull.a, enumblockmirror.a((Integer) iblockdata.get(BlockSkull.a), 16));
+        return iblockdata.set(BlockSkull.a, enumblockmirror.a(iblockdata.get(BlockSkull.a), 16));
     }
 
     @Override

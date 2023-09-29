@@ -15,7 +15,7 @@ public class DataBitsPacked {
     }
 
     public DataBitsPacked(int i, int j, long[] along) {
-        Validate.inclusiveBetween(1L, 32L, (long) i);
+        Validate.inclusiveBetween(1L, 32L, i);
         this.d = j;
         this.b = i;
         this.a = along;
@@ -28,8 +28,8 @@ public class DataBitsPacked {
     }
 
     public void a(int i, int j) {
-        Validate.inclusiveBetween(0L, (long) (this.d - 1), (long) i);
-        Validate.inclusiveBetween(0L, this.c, (long) j);
+        Validate.inclusiveBetween(0L, this.d - 1, i);
+        Validate.inclusiveBetween(0L, this.c, j);
         int k = i * this.b;
         int l = k >> 6;
         int i1 = (i + 1) * this.b - 1 >> 6;
@@ -46,7 +46,7 @@ public class DataBitsPacked {
     }
 
     public int a(int i) {
-        Validate.inclusiveBetween(0L, (long) (this.d - 1), (long) i);
+        Validate.inclusiveBetween(0L, this.d - 1, i);
         int j = i * this.b;
         int k = j >> 6;
         int l = (i + 1) * this.b - 1 >> 6;

@@ -170,12 +170,12 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     // Tuinity end - actually unload POI data
 
     public void a(BlockPosition blockposition, VillagePlaceType villageplacetype) {
-        ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition, villageplacetype);
+        this.e(SectionPosition.a(blockposition).s()).a(blockposition, villageplacetype);
     }
 
     public void remove(BlockPosition blockposition) { this.a(blockposition); } // Paper - OBFHELPER
     public void a(BlockPosition blockposition) {
-        ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).a(blockposition);
+        this.e(SectionPosition.a(blockposition).s()).a(blockposition);
     }
 
     public long count(Predicate<VillagePlaceType> predicate, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) { return a(predicate, blockposition, i, villageplace_occupancy); } // Purpur - OBFHELPER
@@ -184,9 +184,9 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public boolean a(VillagePlaceType villageplacetype, BlockPosition blockposition) {
-        Optional<VillagePlaceType> optional = ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).d(blockposition);
+        Optional<VillagePlaceType> optional = this.e(SectionPosition.a(blockposition).s()).d(blockposition);
 
-        return optional.isPresent() && ((VillagePlaceType) optional.get()).equals(villageplacetype);
+        return optional.isPresent() && optional.get().equals(villageplacetype);
     }
 
     public Stream<VillagePlaceRecord> b(Predicate<VillagePlaceType> predicate, BlockPosition blockposition, int i, VillagePlace.Occupancy villageplace_occupancy) {
@@ -213,7 +213,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
         return IntStream.range(0, 16).boxed().map((integer) -> {
             return this.d(SectionPosition.a(chunkcoordintpair, integer).s());
         }).filter(Optional::isPresent).flatMap((optional) -> {
-            return ((VillagePlaceSection) optional.get()).a(predicate, villageplace_occupancy);
+            return optional.get().a(predicate, villageplace_occupancy);
         });
     }
 
@@ -272,18 +272,18 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     }
 
     public boolean b(BlockPosition blockposition) {
-        return ((VillagePlaceSection) this.e(SectionPosition.a(blockposition).s())).c(blockposition);
+        return this.e(SectionPosition.a(blockposition).s()).c(blockposition);
     }
 
     public final boolean test(BlockPosition blockposition, Predicate<VillagePlaceType> predicate) { return this.a(blockposition, predicate); } // Paper - OBFHELPER
     public boolean a(BlockPosition blockposition, Predicate<VillagePlaceType> predicate) {
-        return (Boolean) this.d(SectionPosition.a(blockposition).s()).map((villageplacesection) -> {
+        return this.d(SectionPosition.a(blockposition).s()).map((villageplacesection) -> {
             return villageplacesection.a(blockposition, predicate);
         }).orElse(false);
     }
 
     public Optional<VillagePlaceType> c(BlockPosition blockposition) {
-        VillagePlaceSection villageplacesection = (VillagePlaceSection) this.e(SectionPosition.a(blockposition).s());
+        VillagePlaceSection villageplacesection = this.e(SectionPosition.a(blockposition).s());
 
         return villageplacesection.d(blockposition);
     }
@@ -297,8 +297,8 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
     private boolean f(long i) {
         Optional<VillagePlaceSection> optional = this.c(i);
 
-        return optional == null ? false : (Boolean) optional.map((villageplacesection) -> {
-            return villageplacesection.a(VillagePlaceType.b, VillagePlace.Occupancy.IS_OCCUPIED).count() > 0L;
+        return optional == null ? false : optional.map((villageplacesection) -> {
+            return villageplacesection.a(VillagePlaceType.b, Occupancy.IS_OCCUPIED).count() > 0L;
         }).orElse(false);
     }
 
@@ -309,8 +309,8 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
             super.a(booleansupplier);
         } else {
             //super.a(booleansupplier); // re-implement below
-            while (!((RegionFileSection)this).d.isEmpty() && booleansupplier.getAsBoolean() && !this.world.isSavingDisabled()) { // Tuinity - unload POI data - don't write to disk if saving is disabled
-                ChunkCoordIntPair chunkcoordintpair = SectionPosition.a(((RegionFileSection)this).d.firstLong()).r();
+            while (!this.d.isEmpty() && booleansupplier.getAsBoolean() && !this.world.isSavingDisabled()) { // Tuinity - unload POI data - don't write to disk if saving is disabled
+                ChunkCoordIntPair chunkcoordintpair = SectionPosition.a(this.d.firstLong()).r();
 
                 NBTTagCompound data;
                     data = this.getData(chunkcoordintpair);
@@ -350,7 +350,7 @@ public class VillagePlace extends RegionFileSection<VillagePlaceSection> {
             });
         }, () -> {
             if (a(chunksection)) {
-                VillagePlaceSection villageplacesection = (VillagePlaceSection) this.e(sectionposition.s());
+                VillagePlaceSection villageplacesection = this.e(sectionposition.s());
 
                 this.a(chunksection, sectionposition, villageplacesection::a);
             }

@@ -22,18 +22,18 @@ public class BlockStemAttached extends BlockPlant {
 
     protected BlockStemAttached(BlockStemmed blockstemmed, BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockStemAttached.a, EnumDirection.NORTH));
+        this.j(this.blockStateList.getBlockData().set(BlockStemAttached.a, EnumDirection.NORTH));
         this.b = blockstemmed;
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (VoxelShape) BlockStemAttached.c.get(iblockdata.get(BlockStemAttached.a));
+        return BlockStemAttached.c.get(iblockdata.get(BlockStemAttached.a));
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        return !iblockdata1.a((Block) this.b) && enumdirection == iblockdata.get(BlockStemAttached.a) ? (IBlockData) this.b.c().getBlockData().set(BlockStem.AGE, 7) : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
+        return !iblockdata1.a(this.b) && enumdirection == iblockdata.get(BlockStemAttached.a) ? this.b.c().getBlockData().set(BlockStem.AGE, 7) : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
     }
 
     @Override
@@ -43,12 +43,12 @@ public class BlockStemAttached extends BlockPlant {
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {
-        return (IBlockData) iblockdata.set(BlockStemAttached.a, enumblockrotation.a((EnumDirection) iblockdata.get(BlockStemAttached.a)));
+        return iblockdata.set(BlockStemAttached.a, enumblockrotation.a(iblockdata.get(BlockStemAttached.a)));
     }
 
     @Override
     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
-        return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockStemAttached.a)));
+        return iblockdata.a(enumblockmirror.a(iblockdata.get(BlockStemAttached.a)));
     }
 
     @Override

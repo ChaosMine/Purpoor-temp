@@ -112,7 +112,7 @@ public class EntityZombieHusk extends EntityZombie {
     protected void eP() {
         this.b(EntityTypes.ZOMBIE);
         if (!this.isSilent()) {
-            this.world.a((EntityHuman) null, 1041, this.getChunkCoordinates(), 0);
+            this.world.a(null, 1041, this.getChunkCoordinates(), 0);
         }
 
     }

@@ -43,7 +43,7 @@ public class ScoreboardServer extends Scoreboard {
     @Override
     public void handlePlayerRemoved(String s) {
         super.handlePlayerRemoved(s);
-        this.sendAll(new PacketPlayOutScoreboardScore(ScoreboardServer.Action.REMOVE, (String) null, s, 0));
+        this.sendAll(new PacketPlayOutScoreboardScore(ScoreboardServer.Action.REMOVE, null, s, 0));
         this.b();
     }
 
@@ -147,7 +147,7 @@ public class ScoreboardServer extends Scoreboard {
     }
 
     public void a(Runnable runnable) {
-        this.c = (Runnable[]) Arrays.copyOf(this.c, this.c.length + 1);
+        this.c = Arrays.copyOf(this.c, this.c.length + 1);
         this.c[this.c.length - 1] = runnable;
     }
 
@@ -251,7 +251,7 @@ public class ScoreboardServer extends Scoreboard {
 
     // CraftBukkit start - Send to players
     private void sendAll(Packet packet) {
-        for (EntityPlayer entityplayer : (List<EntityPlayer>) this.a.getPlayerList().players) {
+        for (EntityPlayer entityplayer : this.a.getPlayerList().players) {
             if (entityplayer.getBukkitEntity().getScoreboard().getHandle() == this) {
                 entityplayer.playerConnection.sendPacket(packet);
             }

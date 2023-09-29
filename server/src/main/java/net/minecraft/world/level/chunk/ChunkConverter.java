@@ -119,7 +119,7 @@ public class ChunkConverter {
                 for (int j1 = 0; j1 < i1; ++j1) {
                     EnumDirection enumdirection = aenumdirection1[j1];
 
-                    blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+                    blockposition_mutableblockposition.a(blockposition, enumdirection);
                     iblockdata1 = a(iblockdata1, enumdirection, world, blockposition, blockposition_mutableblockposition);
                 }
 
@@ -130,7 +130,7 @@ public class ChunkConverter {
     }
 
     private static IBlockData a(IBlockData iblockdata, EnumDirection enumdirection, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        return ((ChunkConverter.a) ChunkConverter.f.getOrDefault(iblockdata.getBlock(), ChunkConverter.Type.DEFAULT)).a(iblockdata, enumdirection, generatoraccess.getType(blockposition1), generatoraccess, blockposition, blockposition1);
+        return ChunkConverter.f.getOrDefault(iblockdata.getBlock(), Type.DEFAULT).a(iblockdata, enumdirection, generatoraccess.getType(blockposition1), generatoraccess, blockposition, blockposition1);
     }
 
     private void b(Chunk chunk) {
@@ -159,7 +159,7 @@ public class ChunkConverter {
                     int k1 = l >> 4 & 15;
 
                     blockposition_mutableblockposition.d(chunkcoordintpair.d() + i1, (i << 4) + j1, chunkcoordintpair.e() + k1);
-                    IBlockData iblockdata = (IBlockData) datapaletteblock.a(l);
+                    IBlockData iblockdata = datapaletteblock.a(l);
                     IBlockData iblockdata1 = iblockdata;
                     EnumDirection[] aenumdirection1 = aenumdirection;
                     int l1 = aenumdirection.length;
@@ -167,7 +167,7 @@ public class ChunkConverter {
                     for (int i2 = 0; i2 < l1; ++i2) {
                         EnumDirection enumdirection = aenumdirection1[i2];
 
-                        blockposition_mutableblockposition1.a((BaseBlockPosition) blockposition_mutableblockposition, enumdirection);
+                        blockposition_mutableblockposition1.a(blockposition_mutableblockposition, enumdirection);
                         if (blockposition_mutableblockposition.getX() >> 4 == chunkcoordintpair.x && blockposition_mutableblockposition.getZ() >> 4 == chunkcoordintpair.z) {
                             iblockdata1 = a(iblockdata1, enumdirection, world, blockposition_mutableblockposition, blockposition_mutableblockposition1);
                         }
@@ -251,12 +251,12 @@ public class ChunkConverter {
             @Override
             public IBlockData a(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
                 if (iblockdata1.a(iblockdata.getBlock()) && enumdirection.n().d() && iblockdata.get(BlockChest.c) == BlockPropertyChestType.SINGLE && iblockdata1.get(BlockChest.c) == BlockPropertyChestType.SINGLE) {
-                    EnumDirection enumdirection1 = (EnumDirection) iblockdata.get(BlockChest.FACING);
+                    EnumDirection enumdirection1 = iblockdata.get(BlockChest.FACING);
 
                     if (enumdirection.n() != enumdirection1.n() && enumdirection1 == iblockdata1.get(BlockChest.FACING)) {
                         BlockPropertyChestType blockpropertychesttype = enumdirection == enumdirection1.g() ? BlockPropertyChestType.LEFT : BlockPropertyChestType.RIGHT;
 
-                        generatoraccess.setTypeAndData(blockposition1, (IBlockData) iblockdata1.set(BlockChest.c, blockpropertychesttype.b()), 18);
+                        generatoraccess.setTypeAndData(blockposition1, iblockdata1.set(BlockChest.c, blockpropertychesttype.b()), 18);
                         if (enumdirection1 == EnumDirection.NORTH || enumdirection1 == EnumDirection.EAST) {
                             TileEntity tileentity = generatoraccess.getTileEntity(blockposition);
                             TileEntity tileentity1 = generatoraccess.getTileEntity(blockposition1);
@@ -266,7 +266,7 @@ public class ChunkConverter {
                             }
                         }
 
-                        return (IBlockData) iblockdata.set(BlockChest.c, blockpropertychesttype);
+                        return iblockdata.set(BlockChest.c, blockpropertychesttype);
                     }
                 }
 
@@ -283,7 +283,7 @@ public class ChunkConverter {
                 IBlockData iblockdata2 = iblockdata.updateState(enumdirection, generatoraccess.getType(blockposition1), generatoraccess, blockposition, blockposition1);
 
                 if (iblockdata != iblockdata2) {
-                    int i = (Integer) iblockdata2.get(BlockProperties.an);
+                    int i = iblockdata2.get(BlockProperties.an);
                     List<ObjectSet<BlockPosition>> list = (List) this.g.get();
 
                     if (list.isEmpty()) {
@@ -292,7 +292,7 @@ public class ChunkConverter {
                         }
                     }
 
-                    ((ObjectSet) list.get(i)).add(blockposition.immutableCopy());
+                    list.get(i).add(blockposition.immutableCopy());
                 }
 
                 return iblockdata;
@@ -305,16 +305,16 @@ public class ChunkConverter {
 
                 for (int i = 2; i < list.size(); ++i) {
                     int j = i - 1;
-                    ObjectSet<BlockPosition> objectset = (ObjectSet) list.get(j);
-                    ObjectSet<BlockPosition> objectset1 = (ObjectSet) list.get(i);
+                    ObjectSet<BlockPosition> objectset = list.get(j);
+                    ObjectSet<BlockPosition> objectset1 = list.get(i);
                     ObjectIterator objectiterator = objectset.iterator();
 
                     while (objectiterator.hasNext()) {
                         BlockPosition blockposition = (BlockPosition) objectiterator.next();
                         IBlockData iblockdata = generatoraccess.getType(blockposition);
 
-                        if ((Integer) iblockdata.get(BlockProperties.an) >= j) {
-                            generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockProperties.an, j), 18);
+                        if (iblockdata.get(BlockProperties.an) >= j) {
+                            generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockProperties.an, j), 18);
                             if (i != 7) {
                                 EnumDirection[] aenumdirection = f; // Paper - decomp fix
                                 int k = aenumdirection.length;
@@ -322,10 +322,10 @@ public class ChunkConverter {
                                 for (int l = 0; l < k; ++l) {
                                     EnumDirection enumdirection = aenumdirection[l];
 
-                                    blockposition_mutableblockposition.a((BaseBlockPosition) blockposition, enumdirection);
+                                    blockposition_mutableblockposition.a(blockposition, enumdirection);
                                     IBlockData iblockdata1 = generatoraccess.getType(blockposition_mutableblockposition);
 
-                                    if (iblockdata1.b(BlockProperties.an) && (Integer) iblockdata.get(BlockProperties.an) > i) {
+                                    if (iblockdata1.b(BlockProperties.an) && iblockdata.get(BlockProperties.an) > i) {
                                         objectset1.add(blockposition_mutableblockposition.immutableCopy());
                                     }
                                 }
@@ -340,11 +340,11 @@ public class ChunkConverter {
         STEM_BLOCK(new Block[]{Blocks.MELON_STEM, Blocks.PUMPKIN_STEM}) {
             @Override
             public IBlockData a(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-                if ((Integer) iblockdata.get(BlockStem.AGE) == 7) {
+                if (iblockdata.get(BlockStem.AGE) == 7) {
                     BlockStemmed blockstemmed = ((BlockStem) iblockdata.getBlock()).d();
 
-                    if (iblockdata1.a((Block) blockstemmed)) {
-                        return (IBlockData) blockstemmed.d().getBlockData().set(BlockFacingHorizontal.FACING, enumdirection);
+                    if (iblockdata1.a(blockstemmed)) {
+                        return blockstemmed.d().getBlockData().set(BlockFacingHorizontal.FACING, enumdirection);
                     }
                 }
 

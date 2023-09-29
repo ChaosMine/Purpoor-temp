@@ -75,7 +75,7 @@ public class BlockWitherSkull extends BlockSkull {
                         }
                     }
 
-                    EntityWither entitywither = (EntityWither) EntityTypes.WITHER.a(world);
+                    EntityWither entitywither = EntityTypes.WITHER.a(world);
                     BlockPosition blockposition1 = shapedetector_shapedetectorcollection.a(1, 2, 0).getPosition();
 
                     entitywither.setPositionRotation((double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 0.55D, (double) blockposition1.getZ() + 0.5D, shapedetector_shapedetectorcollection.getFacing().n() == EnumDirection.EnumAxis.X ? 0.0F : 90.0F, 0.0F);
@@ -95,7 +95,7 @@ public class BlockWitherSkull extends BlockSkull {
                     while (iterator.hasNext()) {
                         EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                        CriterionTriggers.n.a(entityplayer, (Entity) entitywither);
+                        CriterionTriggers.n.a(entityplayer, entitywither);
                     }
 
                     // world.addEntity(entitywither); // CraftBukkit - moved up
@@ -118,7 +118,7 @@ public class BlockWitherSkull extends BlockSkull {
     private static ShapeDetector c() {
         if (BlockWitherSkull.c == null) {
             BlockWitherSkull.c = ShapeDetectorBuilder.a().a("^^^", "###", "~#~").a('#', (shapedetectorblock) -> {
-                return shapedetectorblock.a().a((Tag) TagsBlock.WITHER_SUMMON_BASE_BLOCKS);
+                return shapedetectorblock.a().a(TagsBlock.WITHER_SUMMON_BASE_BLOCKS);
             }).a('^', ShapeDetectorBlock.a(BlockStatePredicate.a(Blocks.WITHER_SKELETON_SKULL).or(BlockStatePredicate.a(Blocks.WITHER_SKELETON_WALL_SKULL)))).a('~', ShapeDetectorBlock.a(MaterialPredicate.a(Material.AIR))).b();
         }
 
@@ -128,7 +128,7 @@ public class BlockWitherSkull extends BlockSkull {
     private static ShapeDetector d() {
         if (BlockWitherSkull.d == null) {
             BlockWitherSkull.d = ShapeDetectorBuilder.a().a("   ", "###", "~#~").a('#', (shapedetectorblock) -> {
-                return shapedetectorblock.a().a((Tag) TagsBlock.WITHER_SUMMON_BASE_BLOCKS);
+                return shapedetectorblock.a().a(TagsBlock.WITHER_SUMMON_BASE_BLOCKS);
             }).a('~', ShapeDetectorBlock.a(MaterialPredicate.a(Material.AIR))).b();
         }
 

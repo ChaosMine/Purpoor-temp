@@ -28,19 +28,19 @@ public class BehaviorStrollInside extends Behavior<EntityCreature> {
 
     protected void a(WorldServer worldserver, EntityCreature entitycreature, long i) {
         BlockPosition blockposition = entitycreature.getChunkCoordinates();
-        List<BlockPosition> list = (List) BlockPosition.b(blockposition.b(-1, -1, -1), blockposition.b(1, 1, 1)).map(BlockPosition::immutableCopy).collect(Collectors.toList());
+        List<BlockPosition> list = BlockPosition.b(blockposition.b(-1, -1, -1), blockposition.b(1, 1, 1)).map(BlockPosition::immutableCopy).toList();
 
         Collections.shuffle(list);
         Optional<BlockPosition> optional = list.stream().filter((blockposition1) -> {
             return !worldserver.e(blockposition1);
         }).filter((blockposition1) -> {
-            return worldserver.a(blockposition1, (Entity) entitycreature);
+            return worldserver.a(blockposition1, entitycreature);
         }).filter((blockposition1) -> {
             return worldserver.getCubes(entitycreature);
         }).findFirst();
 
         optional.ifPresent((blockposition1) -> {
-            entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(blockposition1, this.b, 0)));
+            entitycreature.getBehaviorController().setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(blockposition1, this.b, 0)));
         });
     }
 }

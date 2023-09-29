@@ -57,7 +57,7 @@ public class ItemBucket extends Item {
         } else if (movingobjectpositionblock.getType() != MovingObjectPosition.EnumMovingObjectType.BLOCK) {
             return InteractionResultWrapper.pass(itemstack);
         } else {
-            MovingObjectPositionBlock movingobjectpositionblock1 = (MovingObjectPositionBlock) movingobjectpositionblock;
+            MovingObjectPositionBlock movingobjectpositionblock1 = movingobjectpositionblock;
             BlockPosition blockposition = movingobjectpositionblock1.getBlockPosition();
             EnumDirection enumdirection = movingobjectpositionblock1.getDirection();
             BlockPosition blockposition1 = blockposition.shift(enumdirection);
@@ -70,7 +70,7 @@ public class ItemBucket extends Item {
                     if (iblockdata.getBlock() instanceof IFluidSource) {
                         // CraftBukkit start
                         FluidType dummyFluid = ((IFluidSource) iblockdata.getBlock()).removeFluid(DummyGeneratorAccess.INSTANCE, blockposition, iblockdata);
-                        PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent((WorldServer) world, entityhuman, blockposition, blockposition, movingobjectpositionblock.getDirection(), itemstack, dummyFluid.a(), enumhand); // Paper - add enumhand
+                        PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(world, entityhuman, blockposition, blockposition, movingobjectpositionblock.getDirection(), itemstack, dummyFluid.a(), enumhand); // Paper - add enumhand
 
                         if (event.isCancelled()) {
                             ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutBlockChange(world, blockposition)); // SPIGOT-5163 (see PlayerInteractManager)
@@ -82,7 +82,7 @@ public class ItemBucket extends Item {
 
                         if (fluidtype != FluidTypes.EMPTY) {
                             entityhuman.b(StatisticList.ITEM_USED.b(this));
-                            entityhuman.playSound(fluidtype.a((Tag) TagsFluid.LAVA) ? SoundEffects.ITEM_BUCKET_FILL_LAVA : SoundEffects.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                            entityhuman.playSound(fluidtype.a(TagsFluid.LAVA) ? SoundEffects.ITEM_BUCKET_FILL_LAVA : SoundEffects.ITEM_BUCKET_FILL, 1.0F, 1.0F);
                             ItemStack itemstack1 = ItemLiquidUtil.a(itemstack, entityhuman, CraftItemStack.asNMSCopy(event.getItemStack())); // CraftBukkit
 
                             if (!world.isClientSide) {
@@ -149,7 +149,7 @@ public class ItemBucket extends Item {
 
             // CraftBukkit start
             if (flag1 && entityhuman != null) {
-                PlayerBucketEmptyEvent event = CraftEventFactory.callPlayerBucketEmptyEvent((WorldServer) world, entityhuman, blockposition, clicked, enumdirection, itemstack, enumhand); // Paper - add enumhand
+                PlayerBucketEmptyEvent event = CraftEventFactory.callPlayerBucketEmptyEvent(world, entityhuman, blockposition, clicked, enumdirection, itemstack, enumhand); // Paper - add enumhand
                 if (event.isCancelled()) {
                     ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutBlockChange(world, blockposition)); // SPIGOT-4238: needed when looking through entity
                     ((EntityPlayer) entityhuman).getBukkitEntity().updateInventory(); // SPIGOT-4541
@@ -161,8 +161,8 @@ public class ItemBucket extends Item {
             }
             // CraftBukkit end
             if (!flag1) {
-                return movingobjectpositionblock != null && this.a(entityhuman, world, movingobjectpositionblock.getBlockPosition().shift(movingobjectpositionblock.getDirection()), (MovingObjectPositionBlock) null, enumdirection, clicked, itemstack, enumhand); // CraftBukkit // Paper - add enumhand
-            } else if ((world.isNether() || (world.isTheEnd() && !net.pl3x.purpur.PurpurConfig.allowWaterPlacementInTheEnd)) && this.fluidType.a((Tag) TagsFluid.WATER)) { // Purpur
+                return movingobjectpositionblock != null && this.a(entityhuman, world, movingobjectpositionblock.getBlockPosition().shift(movingobjectpositionblock.getDirection()), null, enumdirection, clicked, itemstack, enumhand); // CraftBukkit // Paper - add enumhand
+            } else if ((world.isNether() || (world.isTheEnd() && !net.pl3x.purpur.PurpurConfig.allowWaterPlacementInTheEnd)) && this.fluidType.a(TagsFluid.WATER)) { // Purpur
                 int i = blockposition.getX();
                 int j = blockposition.getY();
                 int k = blockposition.getZ();
@@ -176,7 +176,7 @@ public class ItemBucket extends Item {
                 return true;
             } else if (block instanceof IFluidContainer && this.fluidType == FluidTypes.WATER) {
                 ((IFluidContainer) block).place(world, blockposition, iblockdata, ((FluidTypeFlowing) this.fluidType).a(false));
-                this.a(entityhuman, (GeneratorAccess) world, blockposition);
+                this.a(entityhuman, world, blockposition);
                 return true;
             } else {
                 if (!world.isClientSide && flag && !material.isLiquid()) {
@@ -186,7 +186,7 @@ public class ItemBucket extends Item {
                 if (!world.setTypeAndData(blockposition, this.fluidType.h().getBlockData(), 11) && !iblockdata.getFluid().isSource()) {
                     return false;
                 } else {
-                    this.a(entityhuman, (GeneratorAccess) world, blockposition);
+                    this.a(entityhuman, world, blockposition);
                     return true;
                 }
             }
@@ -194,7 +194,7 @@ public class ItemBucket extends Item {
     }
 
     protected void a(@Nullable EntityHuman entityhuman, GeneratorAccess generatoraccess, BlockPosition blockposition) {
-        SoundEffect soundeffect = this.fluidType.a((Tag) TagsFluid.LAVA) ? SoundEffects.ITEM_BUCKET_EMPTY_LAVA : SoundEffects.ITEM_BUCKET_EMPTY;
+        SoundEffect soundeffect = this.fluidType.a(TagsFluid.LAVA) ? SoundEffects.ITEM_BUCKET_EMPTY_LAVA : SoundEffects.ITEM_BUCKET_EMPTY;
 
         generatoraccess.playSound(entityhuman, blockposition, soundeffect, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }

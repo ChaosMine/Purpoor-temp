@@ -89,7 +89,7 @@ public class PaperConfig {
 
     public static void registerCommands() {
         for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
+            MinecraftServer.SERVER.server.getCommandMap().register(entry.getKey(), "Paper", entry.getValue());
         }
     }
 
@@ -136,7 +136,7 @@ public class PaperConfig {
         switch (unit) {
             case 'd': num *= (double) 60*60*24; break;
             case 'h': num *= (double) 60*60; break;
-            case 'm': num *= (double) 60; break;
+            case 'm': num *= 60; break;
             default: case 's': break;
         }
         return (int) num;
@@ -177,7 +177,7 @@ public class PaperConfig {
 
     private static float getFloat(String path, float def) {
         // TODO: Figure out why getFloat() always returns the default value.
-        return (float) getDouble(path, (double) def);
+        return (float) getDouble(path, def);
     }
 
     private static int getInt(String path, int def) {
@@ -187,7 +187,7 @@ public class PaperConfig {
 
     private static <T> List getList(String path, T def) {
         config.addDefault(path, def);
-        return (List<T>) config.getList(path, config.getList(path));
+        return config.getList(path, config.getList(path));
     }
 
     private static String getString(String path, String def) {
@@ -365,7 +365,7 @@ public class PaperConfig {
         int threads = getInt("settings.async-chunks.threads", -1);
         int cpus = Runtime.getRuntime().availableProcessors();
         if (threads <= 0) {
-            threads = (int) Math.min(Integer.getInteger("paper.maxChunkThreads", 8), Math.max(1, cpus - 1));
+            threads = Math.min(Integer.getInteger("paper.maxChunkThreads", 8), Math.max(1, cpus - 1));
         }
         if (cpus == 1 && !Boolean.getBoolean("Paper.allowAsyncChunksSingleCore")) {
             asyncChunks = false;

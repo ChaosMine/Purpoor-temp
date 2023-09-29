@@ -1,7 +1,6 @@
 package net.minecraft.world.level.levelgen.feature;
 
 import com.mojang.serialization.Codec;
-import java.util.Random;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.SectionPosition;
 import net.minecraft.world.level.EnumSkyBlock;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.configurations.WorldGenFeatureLakeConfiguration;
 import net.minecraft.world.level.material.Material;
 
+import java.util.Random;
+
 public class WorldGenLakes extends WorldGenerator<WorldGenFeatureLakeConfiguration> {
 
     private static final IBlockData a = Blocks.CAVE_AIR.getBlockData();
@@ -21,7 +22,12 @@ public class WorldGenLakes extends WorldGenerator<WorldGenFeatureLakeConfigurati
         super(codec);
     }
 
-    public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldgenfeaturelakeconfiguration) {
+    @Override
+    public boolean generate(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldGenFeatureLakeConfiguration) {
+        return a(generatoraccessseed, chunkgenerator, random, blockposition, worldGenFeatureLakeConfiguration);
+    }
+
+public boolean a(GeneratorAccessSeed generatoraccessseed, ChunkGenerator chunkgenerator, Random random, BlockPosition blockposition, WorldGenFeatureLakeConfiguration worldgenfeaturelakeconfiguration) {
         while (blockposition.getY() > 5 && generatoraccessseed.isEmpty(blockposition)) {
             blockposition = blockposition.down();
         }

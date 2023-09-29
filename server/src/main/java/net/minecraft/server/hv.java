@@ -1,13 +1,9 @@
 package net.minecraft.server;
 
-import com.google.common.collect.UnmodifiableIterator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Iterator;
 import net.minecraft.SystemUtils;
 import net.minecraft.core.IRegistry;
 import net.minecraft.data.DebugReportGenerator;
@@ -19,85 +15,72 @@ import net.minecraft.world.level.block.state.BlockStateList;
 import net.minecraft.world.level.block.state.IBlockData;
 import net.minecraft.world.level.block.state.properties.IBlockState;
 
+import java.io.IOException;
+
 public class hv implements DebugReportProvider {
+	private static final Gson b = new GsonBuilder().setPrettyPrinting().create();
+	private final DebugReportGenerator c;
 
-    private static final Gson b = (new GsonBuilder()).setPrettyPrinting().create();
-    private final DebugReportGenerator c;
+	public hv(DebugReportGenerator var0) {
+		this.c = var0;
+	}
 
-    public hv(DebugReportGenerator debugreportgenerator) {
-        this.c = debugreportgenerator;
-    }
+	@Override
+	public void a(HashCache var0) throws IOException {
+		JsonObject var1 = new JsonObject();
 
-    @Override
-    public void a(HashCache hashcache) throws IOException {
-        JsonObject jsonobject = new JsonObject();
-        Iterator iterator = IRegistry.BLOCK.iterator();
+		for(Block var3 : IRegistry.BLOCK) {
+			MinecraftKey var4 = IRegistry.BLOCK.getKey(var3);
+			JsonObject var5 = new JsonObject();
+			BlockStateList<Block, IBlockData> var6 = var3.getStates();
+			if (!var6.d().isEmpty()) {
+				JsonObject var7 = new JsonObject();
 
-        while (iterator.hasNext()) {
-            Block block = (Block) iterator.next();
-            MinecraftKey minecraftkey = IRegistry.BLOCK.getKey(block);
-            JsonObject jsonobject1 = new JsonObject();
-            BlockStateList<Block, IBlockData> blockstatelist = block.getStates();
+				for(IBlockState<?> var9 : var6.d()) {
+					JsonArray var10 = new JsonArray();
 
-            if (!blockstatelist.d().isEmpty()) {
-                JsonObject jsonobject2 = new JsonObject();
-                Iterator iterator1 = blockstatelist.d().iterator();
+					for(Comparable<?> var12 : var9.getValues()) {
+						var10.add(SystemUtils.a((IBlockState) var9, (Comparable) var12));
+					}
 
-                while (iterator1.hasNext()) {
-                    IBlockState<?> iblockstate = (IBlockState) iterator1.next();
-                    JsonArray jsonarray = new JsonArray();
-                    Iterator iterator2 = iblockstate.getValues().iterator();
+					var7.add(var9.getName(), var10);
+				}
 
-                    while (iterator2.hasNext()) {
-                        Comparable<?> comparable = (Comparable) iterator2.next();
+				var5.add("properties", var7);
+			}
 
-                        jsonarray.add(SystemUtils.a(iblockstate, (Object) comparable));
-                    }
+			JsonArray var7 = new JsonArray();
 
-                    jsonobject2.add(iblockstate.getName(), jsonarray);
-                }
+			for(IBlockData var9 : var6.a()) {
+				JsonObject var10 = new JsonObject();
+				JsonObject var11 = new JsonObject();
 
-                jsonobject1.add("properties", jsonobject2);
-            }
+				for(IBlockState<?> var13 : var6.d()) {
+					var11.addProperty(var13.getName(), SystemUtils.a((IBlockState) var13, (Comparable) var9.get(var13)));
+				}
 
-            JsonArray jsonarray1 = new JsonArray();
+				if (var11.size() > 0) {
+					var10.add("properties", var11);
+				}
 
-            JsonObject jsonobject3;
+				var10.addProperty("id", Block.getCombinedId(var9));
+				if (var9 == var3.getBlockData()) {
+					var10.addProperty("default", true);
+				}
 
-            for (UnmodifiableIterator unmodifiableiterator = blockstatelist.a().iterator(); unmodifiableiterator.hasNext(); jsonarray1.add(jsonobject3)) {
-                IBlockData iblockdata = (IBlockData) unmodifiableiterator.next();
+				var7.add(var10);
+			}
 
-                jsonobject3 = new JsonObject();
-                JsonObject jsonobject4 = new JsonObject();
-                Iterator iterator3 = blockstatelist.d().iterator();
+			var5.add("states", var7);
+			var1.add(var4.toString(), var5);
+		}
 
-                while (iterator3.hasNext()) {
-                    IBlockState<?> iblockstate1 = (IBlockState) iterator3.next();
+		java.nio.file.Path var2 = this.c.b().resolve("reports/blocks.json");
+		DebugReportProvider.a(b, var0, var1, var2);
+	}
 
-                    jsonobject4.addProperty(iblockstate1.getName(), SystemUtils.a(iblockstate1, (Object) iblockdata.get(iblockstate1)));
-                }
-
-                if (jsonobject4.size() > 0) {
-                    jsonobject3.add("properties", jsonobject4);
-                }
-
-                jsonobject3.addProperty("id", Block.getCombinedId(iblockdata));
-                if (iblockdata == block.getBlockData()) {
-                    jsonobject3.addProperty("default", true);
-                }
-            }
-
-            jsonobject1.add("states", jsonarray1);
-            jsonobject.add(minecraftkey.toString(), jsonobject1);
-        }
-
-        Path path = this.c.b().resolve("reports/blocks.json");
-
-        DebugReportProvider.a(hv.b, hashcache, jsonobject, path);
-    }
-
-    @Override
-    public String a() {
-        return "Block List";
-    }
+	@Override
+	public String a() {
+		return "Block List";
+	}
 }

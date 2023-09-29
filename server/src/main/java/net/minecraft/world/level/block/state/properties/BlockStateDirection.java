@@ -14,11 +14,11 @@ public class BlockStateDirection extends BlockStateEnum<EnumDirection> {
     }
 
     public static BlockStateDirection a(String s, Predicate<EnumDirection> predicate) {
-        return a(s, (Collection) Arrays.stream(EnumDirection.values()).filter(predicate).collect(Collectors.toList()));
+        return a(s, Arrays.stream(EnumDirection.values()).filter(predicate).toList());
     }
 
     public static BlockStateDirection a(String s, EnumDirection... aenumdirection) {
-        return a(s, (Collection) Lists.newArrayList(aenumdirection));
+        return a(s, Lists.newArrayList(aenumdirection));
     }
 
     public static BlockStateDirection a(String s, Collection<EnumDirection> collection) {

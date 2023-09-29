@@ -21,7 +21,7 @@ public class AutoRecipeFurnace<C extends IInventory> extends AutoRecipe<C> {
     @Override
     protected void a(IRecipe<C> irecipe, boolean flag) {
         this.e = this.d.a(irecipe);
-        int i = this.b.b(irecipe, (IntList) null);
+        int i = this.b.b(irecipe, null);
 
         if (this.e) {
             ItemStack itemstack = this.d.getSlot(0).getItem();
@@ -53,7 +53,7 @@ public class AutoRecipeFurnace<C extends IInventory> extends AutoRecipe<C> {
     protected void a(int i, IntList intlist) {
         Iterator<Integer> iterator = intlist.iterator();
         Slot slot = this.d.getSlot(0);
-        ItemStack itemstack = AutoRecipeStackManager.a((Integer) iterator.next());
+        ItemStack itemstack = AutoRecipeStackManager.a(iterator.next());
 
         if (!itemstack.isEmpty()) {
             int j = Math.min(itemstack.getMaxStackSize(), i);

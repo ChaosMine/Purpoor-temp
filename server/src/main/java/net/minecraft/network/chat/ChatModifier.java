@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class ChatModifier {
 
-    public static final ChatModifier a = new ChatModifier((ChatHexColor) null, (Boolean) null, (Boolean) null, (Boolean) null, (Boolean) null, (Boolean) null, (ChatClickable) null, (ChatHoverable) null, (String) null, (MinecraftKey) null);
+    public static final ChatModifier a = new ChatModifier(null, null, null, null, null, null, null, null, null, null);
     public static final MinecraftKey b = new MinecraftKey("minecraft", "default");
     @Nullable
     private final ChatHexColor color;

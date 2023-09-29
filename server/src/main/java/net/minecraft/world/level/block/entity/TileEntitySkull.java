@@ -1,4 +1,3 @@
-// mc-dev import
 package net.minecraft.world.level.block.entity;
 
 import com.google.common.base.Predicate;
@@ -67,7 +66,7 @@ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Pa
                         }
                     };
 
-                    MinecraftServer.getServer().getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
+                    MinecraftServer.SERVER.getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
 
                     GameProfile profile = profiles[ 0 ];
                     if (profile == null) {
@@ -211,7 +210,7 @@ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Pa
         if (gameprofile != null && !UtilColor.b(gameprofile.getName())) {
             if (gameprofile.isComplete() && gameprofile.getProperties().containsKey("textures")) {
                 callback.apply(gameprofile);
-            } else if (MinecraftServer.getServer() == null) {
+            } else if (MinecraftServer.SERVER == null) {
                 callback.apply(gameprofile);
             } else {
                 GameProfile profile = skinCache.getIfPresent(gameprofile.getName().toLowerCase(java.util.Locale.ROOT));
@@ -224,7 +223,7 @@ public class TileEntitySkull extends TileEntity /*implements ITickable*/ { // Pa
                         @Override
                         public GameProfile call() {
                             final GameProfile profile = skinCache.getUnchecked(gameprofile.getName().toLowerCase(java.util.Locale.ROOT));
-                            MinecraftServer.getServer().processQueue.add(new Runnable() {
+                            MinecraftServer.SERVER.processQueue.add(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (profile == null) {

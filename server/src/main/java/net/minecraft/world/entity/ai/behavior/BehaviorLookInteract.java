@@ -84,6 +84,6 @@ public class BehaviorLookInteract extends Behavior<EntityLiving> {
     }
 
     private List<EntityLiving> b(EntityLiving entityliving) {
-        return (List) entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).get();
+        return entityliving.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_MOBS).get();
     }
 }

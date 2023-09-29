@@ -16,11 +16,11 @@ public class PaperDatapackManager implements DatapackManager {
     @Override
     public Collection<Datapack> getPacks() {
         Collection<ResourcePackLoader> enabledPacks = repository.getEnabledPacks();
-        return repository.getPacks().stream().map(loader -> new PaperDatapack(loader, enabledPacks.contains(loader))).collect(Collectors.toList());
+        return repository.getPacks().stream().map(loader -> (Datapack) new PaperDatapack(loader, enabledPacks.contains(loader))).toList();
     }
 
     @Override
     public Collection<Datapack> getEnabledPacks() {
-        return repository.getEnabledPacks().stream().map(loader -> new PaperDatapack(loader, true)).collect(Collectors.toList());
+        return repository.getEnabledPacks().stream().map(loader -> (Datapack) new PaperDatapack(loader, true)).toList();
     }
 }

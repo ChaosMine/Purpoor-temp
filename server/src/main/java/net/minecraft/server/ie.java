@@ -27,6 +27,7 @@ import net.minecraft.world.level.storage.loot.LootTableRegistry;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParameterSets;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,27 +49,21 @@ public class ie implements DebugReportProvider {
         Map<MinecraftKey, LootTable> map = Maps.newHashMap();
 
         this.e.forEach((pair) -> {
-            ((Consumer) ((Supplier) pair.getFirst()).get()).accept((minecraftkey, loottable_a) -> {
-                if (map.put(minecraftkey, loottable_a.a((LootContextParameterSet) pair.getSecond()).b()) != null) {
+            pair.getFirst().get().accept((minecraftkey, loottable_a) -> {
+                if (map.put(minecraftkey, loottable_a.a(pair.getSecond()).b()) != null) {
                     throw new IllegalStateException("Duplicate loot table " + minecraftkey);
                 }
             });
         });
         LootContextParameterSet lootcontextparameterset = LootContextParameterSets.GENERIC;
-        Function function = (minecraftkey) -> {
-            return null;
-        };
+        Function<MinecraftKey, LootItemCondition> function = (minecraftkey) -> null;
 
-        map.getClass();
         LootCollector lootcollector = new LootCollector(lootcontextparameterset, function, map::get);
         Set<MinecraftKey> set = Sets.difference(LootTables.a(), map.keySet());
-        Iterator iterator = set.iterator();
 
-        while (iterator.hasNext()) {
-            MinecraftKey minecraftkey = (MinecraftKey) iterator.next();
-
-            lootcollector.a("Missing built-in table: " + minecraftkey);
-        }
+			for (MinecraftKey minecraftkey : set) {
+				lootcollector.a("Missing built-in table: " + minecraftkey);
+			}
 
         map.forEach((minecraftkey1, loottable) -> {
             LootTableRegistry.a(lootcollector, minecraftkey1, loottable);

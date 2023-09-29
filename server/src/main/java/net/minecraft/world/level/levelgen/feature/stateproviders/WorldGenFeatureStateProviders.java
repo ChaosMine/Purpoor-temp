@@ -13,7 +13,7 @@ public class WorldGenFeatureStateProviders<P extends WorldGenFeatureStateProvide
     private final Codec<P> f;
 
     private static <P extends WorldGenFeatureStateProvider> WorldGenFeatureStateProviders<P> a(String s, Codec<P> codec) {
-        return (WorldGenFeatureStateProviders) IRegistry.a(IRegistry.BLOCK_STATE_PROVIDER_TYPE, s, (Object) (new WorldGenFeatureStateProviders<>(codec)));
+        return IRegistry.a(IRegistry.BLOCK_STATE_PROVIDER_TYPE, s, new WorldGenFeatureStateProviders<>(codec));
     }
 
     private WorldGenFeatureStateProviders(Codec<P> codec) {

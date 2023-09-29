@@ -49,7 +49,7 @@ public class BlockFlowerPot extends Block {
     public EnumInteractionResult interact(IBlockData iblockdata, World world, BlockPosition blockposition, EntityHuman entityhuman, EnumHand enumhand, MovingObjectPositionBlock movingobjectpositionblock) {
         ItemStack itemstack = entityhuman.b(enumhand);
         Item item = itemstack.getItem();
-        Block block = item instanceof ItemBlock ? (Block) BlockFlowerPot.b.getOrDefault(((ItemBlock) item).getBlock(), Blocks.AIR) : Blocks.AIR;
+        Block block = item instanceof ItemBlock ? BlockFlowerPot.b.getOrDefault(((ItemBlock) item).getBlock(), Blocks.AIR) : Blocks.AIR;
         boolean flag = block == Blocks.AIR;
         boolean flag1 = this.c == Blocks.AIR;
 

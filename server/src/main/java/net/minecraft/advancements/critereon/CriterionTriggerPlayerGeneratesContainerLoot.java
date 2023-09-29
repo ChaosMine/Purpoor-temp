@@ -17,7 +17,7 @@ public class CriterionTriggerPlayerGeneratesContainerLoot extends CriterionTrigg
     }
 
     @Override
-    protected CriterionTriggerPlayerGeneratesContainerLoot.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    protected CriterionTriggerPlayerGeneratesContainerLoot.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "loot_table"));
 
         return new CriterionTriggerPlayerGeneratesContainerLoot.a(criterionconditionentity_b, minecraftkey);
@@ -33,13 +33,13 @@ public class CriterionTriggerPlayerGeneratesContainerLoot extends CriterionTrigg
 
         private final MinecraftKey a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, MinecraftKey minecraftkey) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, MinecraftKey minecraftkey) {
             super(CriterionTriggerPlayerGeneratesContainerLoot.a, criterionconditionentity_b);
             this.a = minecraftkey;
         }
 
         public static CriterionTriggerPlayerGeneratesContainerLoot.a a(MinecraftKey minecraftkey) {
-            return new CriterionTriggerPlayerGeneratesContainerLoot.a(CriterionConditionEntity.b.a, minecraftkey);
+            return new CriterionTriggerPlayerGeneratesContainerLoot.a(CriterionConditionEntity.b_.a, minecraftkey);
         }
 
         public boolean b(MinecraftKey minecraftkey) {

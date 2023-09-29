@@ -31,7 +31,7 @@ public class EntityLlamaSpit extends IProjectile {
     public void tick() {
         super.tick();
         Vec3D vec3d = this.getMot();
-        MovingObjectPosition movingobjectposition = ProjectileHelper.a((Entity) this, this::a);
+        MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, this::a);
 
         if (movingobjectposition != null) {
             this.preOnHit(movingobjectposition); // CraftBukkit - projectile hit event
@@ -65,7 +65,7 @@ public class EntityLlamaSpit extends IProjectile {
         Entity entity = this.getShooter();
 
         if (entity instanceof EntityLiving) {
-            movingobjectpositionentity.getEntity().damageEntity(DamageSource.a((Entity) this, (EntityLiving) entity).c(), 1.0F);
+            movingobjectpositionentity.getEntity().damageEntity(DamageSource.a(this, (EntityLiving) entity).c(), 1.0F);
         }
 
     }

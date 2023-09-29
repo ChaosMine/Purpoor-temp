@@ -77,7 +77,7 @@ public class RecipiesShield extends IRecipeComplex {
             NBTTagCompound nbttagcompound1 = nbttagcompound == null ? new NBTTagCompound() : nbttagcompound.clone();
 
             nbttagcompound1.setInt("Base", ((ItemBanner) itemstack.getItem()).b().getColorIndex());
-            itemstack1.a("BlockEntityTag", (NBTBase) nbttagcompound1);
+            itemstack1.a("BlockEntityTag", nbttagcompound1);
             return itemstack1;
         }
     }

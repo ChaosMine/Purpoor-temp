@@ -55,7 +55,7 @@ public abstract class LootEntryAbstract implements LootEntryChildren {
 
         @Override
         public final T a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
-            LootItemCondition[] alootitemcondition = (LootItemCondition[]) ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
+            LootItemCondition[] alootitemcondition = ChatDeserializer.a(jsonobject, "conditions", new LootItemCondition[0], jsondeserializationcontext, LootItemCondition[].class);
 
             return this.deserializeType(jsonobject, jsondeserializationcontext, alootitemcondition);
         }
@@ -85,7 +85,7 @@ public abstract class LootEntryAbstract implements LootEntryChildren {
         }
 
         protected LootItemCondition[] f() {
-            return (LootItemCondition[]) this.a.toArray(new LootItemCondition[0]);
+            return this.a.toArray(new LootItemCondition[0]);
         }
 
         public LootEntryAlternatives.a a(LootEntryAbstract.a<?> lootentryabstract_a) {

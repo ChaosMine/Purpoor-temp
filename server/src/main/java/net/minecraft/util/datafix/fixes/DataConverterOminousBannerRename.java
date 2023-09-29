@@ -23,11 +23,11 @@ public class DataConverterOminousBannerRename extends DataFix {
         Optional<? extends Dynamic<?>> optional = dynamic.get("display").result();
 
         if (optional.isPresent()) {
-            Dynamic<?> dynamic1 = (Dynamic) optional.get();
+            Dynamic<?> dynamic1 = optional.get();
             Optional<String> optional1 = dynamic1.get("Name").asString().result();
 
             if (optional1.isPresent()) {
-                String s = (String) optional1.get();
+                String s = optional1.get();
 
                 s = s.replace("\"translate\":\"block.minecraft.illager_banner\"", "\"translate\":\"block.minecraft.ominous_banner\"");
                 dynamic1 = dynamic1.set("Name", dynamic1.createString(s));
@@ -51,7 +51,7 @@ public class DataConverterOminousBannerRename extends DataFix {
                 Optional<? extends Typed<?>> optional1 = typed.getOptionalTyped(opticfinder1);
 
                 if (optional1.isPresent()) {
-                    Typed<?> typed1 = (Typed) optional1.get();
+                    Typed<?> typed1 = optional1.get();
                     Dynamic<?> dynamic = (Dynamic) typed1.get(DSL.remainderFinder());
 
                     return typed.set(opticfinder1, typed1.set(DSL.remainderFinder(), this.a(dynamic)));

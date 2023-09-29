@@ -11,7 +11,7 @@ public interface AreaTransformer2 extends AreaTransformer {
             R r0 = areafactory.make();
 
             return areacontexttransformed.a((i, j) -> {
-                areacontexttransformed.a((long) i, (long) j);
+                areacontexttransformed.a(i, (long) j);
                 return this.a(areacontexttransformed, r0, i, j);
             }, r0);
         };

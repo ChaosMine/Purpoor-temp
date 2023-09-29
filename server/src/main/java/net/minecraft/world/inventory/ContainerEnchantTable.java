@@ -58,7 +58,7 @@ public class ContainerEnchantTable extends Container {
             @Override
             public void update() {
                 super.update();
-                ContainerEnchantTable.this.a((IInventory) this);
+                ContainerEnchantTable.this.a(this);
             }
 
             // CraftBukkit start
@@ -162,7 +162,7 @@ public class ContainerEnchantTable extends Container {
                         }
                     }
 
-                    this.h.setSeed((long) this.i.get());
+                    this.h.setSeed(this.i.get());
 
                     for (j = 0; j < 3; ++j) {
                         this.costs[j] = EnchantmentManager.a(this.h, j, i, itemstack);
@@ -178,7 +178,7 @@ public class ContainerEnchantTable extends Container {
                             List<WeightedRandomEnchant> list = this.a(itemstack, j, this.costs[j]);
 
                             if (list != null && !list.isEmpty()) {
-                                WeightedRandomEnchant weightedrandomenchant = (WeightedRandomEnchant) list.get(this.h.nextInt(list.size()));
+                                WeightedRandomEnchant weightedrandomenchant = list.get(this.h.nextInt(list.size()));
 
                                 this.enchantments[j] = IRegistry.ENCHANTMENT.a(weightedrandomenchant.enchantment); // CraftBukkit - decompile error
                                 this.levels[j] = weightedrandomenchant.level;
@@ -315,7 +315,7 @@ public class ContainerEnchantTable extends Container {
                     this.enchantSlots.update();
                     this.i.set(entityhuman.eG());
                     this.a(this.enchantSlots);
-                    world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
+                    world.playSound(null, blockposition, SoundEffects.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
                 }
 
             });
@@ -326,7 +326,7 @@ public class ContainerEnchantTable extends Container {
     }
 
     private List<WeightedRandomEnchant> a(ItemStack itemstack, int i, int j) {
-        this.h.setSeed((long) (this.i.get() + i));
+        this.h.setSeed(this.i.get() + i);
         List<WeightedRandomEnchant> list = EnchantmentManager.b(this.h, itemstack, j, false);
 
         if (itemstack.getItem() == Items.BOOK && list.size() > 1) {
@@ -353,7 +353,7 @@ public class ContainerEnchantTable extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
@@ -372,7 +372,7 @@ public class ContainerEnchantTable extends Container {
                     return ItemStack.b;
                 }
             } else {
-                if (((Slot) this.slots.get(0)).hasItem() || !((Slot) this.slots.get(0)).isAllowed(itemstack1)) {
+                if (this.slots.get(0).hasItem() || !this.slots.get(0).isAllowed(itemstack1)) {
                     return ItemStack.b;
                 }
 
@@ -380,7 +380,7 @@ public class ContainerEnchantTable extends Container {
 
                 itemstack2.setCount(1);
                 itemstack1.subtract(1);
-                ((Slot) this.slots.get(0)).set(itemstack2);
+                this.slots.get(0).set(itemstack2);
             }
 
             if (itemstack1.isEmpty()) {

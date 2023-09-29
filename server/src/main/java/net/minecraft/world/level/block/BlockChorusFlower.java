@@ -30,7 +30,7 @@ public class BlockChorusFlower extends Block {
     protected BlockChorusFlower(BlockChorusFruit blockchorusfruit, BlockBase.Info blockbase_info) {
         super(blockbase_info);
         this.b = blockchorusfruit;
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockChorusFlower.AGE, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockChorusFlower.AGE, 0));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BlockChorusFlower extends Block {
 
     @Override
     public boolean isTicking(IBlockData iblockdata) {
-        return (Integer) iblockdata.get(BlockChorusFlower.AGE) < 5;
+        return iblockdata.get(BlockChorusFlower.AGE) < 5;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BlockChorusFlower extends Block {
         BlockPosition blockposition1 = blockposition.up();
 
         if (worldserver.isEmpty(blockposition1) && blockposition1.getY() < 256) {
-            int i = (Integer) iblockdata.get(BlockChorusFlower.AGE);
+            int i = iblockdata.get(BlockChorusFlower.AGE);
 
             if (i < 5) {
                 boolean flag = false;
@@ -85,10 +85,10 @@ public class BlockChorusFlower extends Block {
                     flag = true;
                 }
 
-                if (flag && b((IWorldReader) worldserver, blockposition1, (EnumDirection) null) && worldserver.isEmpty(blockposition.up(2))) {
+                if (flag && b(worldserver, blockposition1, null) && worldserver.isEmpty(blockposition.up(2))) {
                     // CraftBukkit start - add event
                     if (CraftEventFactory.handleBlockSpreadEvent(worldserver, blockposition, blockposition1, this.getBlockData().set(BlockChorusFlower.AGE, Integer.valueOf(i)), 2)) {
-                        worldserver.setTypeAndData(blockposition, this.b.a((IBlockAccess) worldserver, blockposition), 2);
+                        worldserver.setTypeAndData(blockposition, this.b.a(worldserver, blockposition), 2);
                         this.a(worldserver, blockposition1, i);
                     }
                     // CraftBukkit end
@@ -104,7 +104,7 @@ public class BlockChorusFlower extends Block {
                         EnumDirection enumdirection = EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random);
                         BlockPosition blockposition2 = blockposition.shift(enumdirection);
 
-                        if (worldserver.isEmpty(blockposition2) && worldserver.isEmpty(blockposition2.down()) && b((IWorldReader) worldserver, blockposition2, enumdirection.opposite())) {
+                        if (worldserver.isEmpty(blockposition2) && worldserver.isEmpty(blockposition2.down()) && b(worldserver, blockposition2, enumdirection.opposite())) {
                             // CraftBukkit start - add event
                             if (CraftEventFactory.handleBlockSpreadEvent(worldserver, blockposition, blockposition2, this.getBlockData().set(BlockChorusFlower.AGE, Integer.valueOf(i + 1)), 2)) {
                                 this.a(worldserver, blockposition2, i + 1);
@@ -115,18 +115,18 @@ public class BlockChorusFlower extends Block {
                     }
 
                     if (flag2) {
-                        worldserver.setTypeAndData(blockposition, this.b.a((IBlockAccess) worldserver, blockposition), 2);
+                        worldserver.setTypeAndData(blockposition, this.b.a(worldserver, blockposition), 2);
                     } else {
                         // CraftBukkit - add event
                         if (CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, this.getBlockData().set(BlockChorusFlower.AGE, Integer.valueOf(5)), 2)) {
-                            this.a((World) worldserver, blockposition);
+                            this.a(worldserver, blockposition);
                         }
                         // CraftBukkit end
                     }
                 } else {
                     // CraftBukkit - add event
                     if (CraftEventFactory.handleBlockGrowEvent(worldserver, blockposition, this.getBlockData().set(BlockChorusFlower.AGE, Integer.valueOf(5)), 2)) {
-                        this.a((World) worldserver, blockposition);
+                        this.a(worldserver, blockposition);
                     }
                     // CraftBukkit end
                 }
@@ -136,12 +136,12 @@ public class BlockChorusFlower extends Block {
     }
 
     private void a(World world, BlockPosition blockposition, int i) {
-        world.setTypeAndData(blockposition, (IBlockData) this.getBlockData().set(BlockChorusFlower.AGE, i), 2);
+        world.setTypeAndData(blockposition, this.getBlockData().set(BlockChorusFlower.AGE, i), 2);
         world.triggerEffect(1033, blockposition, 0);
     }
 
     private void a(World world, BlockPosition blockposition) {
-        world.setTypeAndData(blockposition, (IBlockData) this.getBlockData().set(BlockChorusFlower.AGE, 5), 2);
+        world.setTypeAndData(blockposition, this.getBlockData().set(BlockChorusFlower.AGE, 5), 2);
         world.triggerEffect(1034, blockposition, 0);
     }
 
@@ -185,7 +185,7 @@ public class BlockChorusFlower extends Block {
                     EnumDirection enumdirection = (EnumDirection) iterator.next();
                     IBlockData iblockdata2 = iworldreader.getType(blockposition.shift(enumdirection));
 
-                    if (iblockdata2.a((Block) this.b)) {
+                    if (iblockdata2.a(this.b)) {
                         if (flag) {
                             return false;
                         }
@@ -209,7 +209,7 @@ public class BlockChorusFlower extends Block {
     }
 
     public static void a(GeneratorAccess generatoraccess, BlockPosition blockposition, Random random, int i) {
-        generatoraccess.setTypeAndData(blockposition, ((BlockChorusFruit) Blocks.CHORUS_PLANT).a((IBlockAccess) generatoraccess, blockposition), 2);
+        generatoraccess.setTypeAndData(blockposition, ((BlockChorusFruit) Blocks.CHORUS_PLANT).a(generatoraccess, blockposition), 2);
         a(generatoraccess, blockposition, random, blockposition, i, 0);
     }
 
@@ -224,12 +224,12 @@ public class BlockChorusFlower extends Block {
         for (int l = 0; l < k; ++l) {
             BlockPosition blockposition2 = blockposition.up(l + 1);
 
-            if (!b((IWorldReader) generatoraccess, blockposition2, (EnumDirection) null)) {
+            if (!b(generatoraccess, blockposition2, null)) {
                 return;
             }
 
-            generatoraccess.setTypeAndData(blockposition2, blockchorusfruit.a((IBlockAccess) generatoraccess, blockposition2), 2);
-            generatoraccess.setTypeAndData(blockposition2.down(), blockchorusfruit.a((IBlockAccess) generatoraccess, blockposition2.down()), 2);
+            generatoraccess.setTypeAndData(blockposition2, blockchorusfruit.a(generatoraccess, blockposition2), 2);
+            generatoraccess.setTypeAndData(blockposition2.down(), blockchorusfruit.a(generatoraccess, blockposition2.down()), 2);
         }
 
         boolean flag = false;
@@ -245,24 +245,24 @@ public class BlockChorusFlower extends Block {
                 EnumDirection enumdirection = EnumDirection.EnumDirectionLimit.HORIZONTAL.a(random);
                 BlockPosition blockposition3 = blockposition.up(k).shift(enumdirection);
 
-                if (Math.abs(blockposition3.getX() - blockposition1.getX()) < i && Math.abs(blockposition3.getZ() - blockposition1.getZ()) < i && generatoraccess.isEmpty(blockposition3) && generatoraccess.isEmpty(blockposition3.down()) && b((IWorldReader) generatoraccess, blockposition3, enumdirection.opposite())) {
+                if (Math.abs(blockposition3.getX() - blockposition1.getX()) < i && Math.abs(blockposition3.getZ() - blockposition1.getZ()) < i && generatoraccess.isEmpty(blockposition3) && generatoraccess.isEmpty(blockposition3.down()) && b(generatoraccess, blockposition3, enumdirection.opposite())) {
                     flag = true;
-                    generatoraccess.setTypeAndData(blockposition3, blockchorusfruit.a((IBlockAccess) generatoraccess, blockposition3), 2);
-                    generatoraccess.setTypeAndData(blockposition3.shift(enumdirection.opposite()), blockchorusfruit.a((IBlockAccess) generatoraccess, blockposition3.shift(enumdirection.opposite())), 2);
+                    generatoraccess.setTypeAndData(blockposition3, blockchorusfruit.a(generatoraccess, blockposition3), 2);
+                    generatoraccess.setTypeAndData(blockposition3.shift(enumdirection.opposite()), blockchorusfruit.a(generatoraccess, blockposition3.shift(enumdirection.opposite())), 2);
                     a(generatoraccess, blockposition3, random, blockposition1, i, j + 1);
                 }
             }
         }
 
         if (!flag) {
-            generatoraccess.setTypeAndData(blockposition.up(k), (IBlockData) Blocks.CHORUS_FLOWER.getBlockData().set(BlockChorusFlower.AGE, 5), 2);
+            generatoraccess.setTypeAndData(blockposition.up(k), Blocks.CHORUS_FLOWER.getBlockData().set(BlockChorusFlower.AGE, 5), 2);
         }
 
     }
 
     @Override
     public void a(World world, IBlockData iblockdata, MovingObjectPositionBlock movingobjectpositionblock, IProjectile iprojectile) {
-        if (iprojectile.getEntityType().a((Tag) TagsEntity.IMPACT_PROJECTILES)) {
+        if (iprojectile.getEntityType().a(TagsEntity.IMPACT_PROJECTILES)) {
             BlockPosition blockposition = movingobjectpositionblock.getBlockPosition();
 
             world.a(blockposition, true, iprojectile);

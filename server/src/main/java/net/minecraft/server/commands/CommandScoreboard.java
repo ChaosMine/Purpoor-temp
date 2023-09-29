@@ -136,7 +136,7 @@ public class CommandScoreboard {
             }
         }
 
-        return ICompletionProvider.b((Iterable) list, suggestionsbuilder);
+        return ICompletionProvider.b(list, suggestionsbuilder);
     }
 
     private static int a(CommandListenerWrapper commandlistenerwrapper, String s, ScoreboardObjective scoreboardobjective) throws CommandSyntaxException {
@@ -220,7 +220,7 @@ public class CommandScoreboard {
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
 
-            scoreboardserver.resetPlayerScores(s, (ScoreboardObjective) null);
+            scoreboardserver.resetPlayerScores(s, null);
         }
 
         if (collection.size() == 1) {
@@ -339,7 +339,7 @@ public class CommandScoreboard {
             while (iterator.hasNext()) {
                 Entry<ScoreboardObjective, ScoreboardScore> entry = (Entry) iterator.next();
 
-                commandlistenerwrapper.sendMessage(new ChatMessage("commands.scoreboard.players.list.entity.entry", new Object[]{((ScoreboardObjective) entry.getKey()).e(), ((ScoreboardScore) entry.getValue()).getScore()}), false);
+                commandlistenerwrapper.sendMessage(new ChatMessage("commands.scoreboard.players.list.entity.entry", new Object[]{entry.getKey().e(), entry.getValue().getScore()}), false);
             }
         }
 
@@ -352,7 +352,7 @@ public class CommandScoreboard {
         if (scoreboardserver.getObjectiveForSlot(i) == null) {
             throw CommandScoreboard.b.create();
         } else {
-            scoreboardserver.setDisplaySlot(i, (ScoreboardObjective) null);
+            scoreboardserver.setDisplaySlot(i, null);
             commandlistenerwrapper.sendMessage(new ChatMessage("commands.scoreboard.objectives.display.cleared", new Object[]{Scoreboard.h()[i]}), true);
             return 0;
         }

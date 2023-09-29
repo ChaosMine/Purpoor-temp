@@ -22,7 +22,7 @@ public class ScheduleActivity {
         Int2ObjectSortedMap<ActivityFrame> int2objectsortedmap = new Int2ObjectAVLTreeMap();
 
         this.a.forEach((activityframe) -> {
-            ActivityFrame activityframe1 = (ActivityFrame) int2objectsortedmap.put(activityframe.a(), activityframe);
+            ActivityFrame activityframe1 = int2objectsortedmap.put(activityframe.a(), activityframe);
         });
         this.a.clear();
         this.a.addAll(int2objectsortedmap.values());
@@ -33,14 +33,14 @@ public class ScheduleActivity {
         if (this.a.size() <= 0) {
             return 0.0F;
         } else {
-            ActivityFrame activityframe = (ActivityFrame) this.a.get(this.b);
-            ActivityFrame activityframe1 = (ActivityFrame) this.a.get(this.a.size() - 1);
+            ActivityFrame activityframe = this.a.get(this.b);
+            ActivityFrame activityframe1 = this.a.get(this.a.size() - 1);
             boolean flag = i < activityframe.a();
             int j = flag ? 0 : this.b;
             float f = flag ? activityframe1.b() : activityframe.b();
 
             for (int k = j; k < this.a.size(); ++k) {
-                ActivityFrame activityframe2 = (ActivityFrame) this.a.get(k);
+                ActivityFrame activityframe2 = this.a.get(k);
 
                 if (activityframe2.a() > i) {
                     break;

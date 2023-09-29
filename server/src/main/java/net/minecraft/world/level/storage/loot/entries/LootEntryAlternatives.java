@@ -89,7 +89,7 @@ public class LootEntryAlternatives extends LootEntryChildrenAbstract {
 
         @Override
         public LootEntryAbstract b() {
-            return new LootEntryAlternatives((LootEntryAbstract[]) this.a.toArray(new LootEntryAbstract[0]), this.f());
+            return new LootEntryAlternatives(this.a.toArray(new LootEntryAbstract[0]), this.f());
         }
     }
 }

@@ -33,12 +33,12 @@ public class BlockFungi extends BlockPlant implements IBlockFragilePlantElement 
 
     @Override
     protected boolean c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
-        return iblockdata.a((Tag) TagsBlock.NYLIUM) || iblockdata.a(Blocks.MYCELIUM) || iblockdata.a(Blocks.SOUL_SOIL) || super.c(iblockdata, iblockaccess, blockposition);
+        return iblockdata.a(TagsBlock.NYLIUM) || iblockdata.a(Blocks.MYCELIUM) || iblockdata.a(Blocks.SOUL_SOIL) || super.c(iblockdata, iblockaccess, blockposition);
     }
 
     @Override
     public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, IBlockData iblockdata, boolean flag) {
-        Block block = ((WorldGenFeatureHugeFungiConfiguration) ((WorldGenFeatureConfigured) this.b.get()).f).f.getBlock();
+        Block block = this.b.get().f.f.getBlock();
         Block block1 = iblockaccess.getType(blockposition.down()).getBlock();
 
         return block1 == block;
@@ -58,6 +58,6 @@ public class BlockFungi extends BlockPlant implements IBlockFragilePlantElement 
             BlockSapling.treeType = org.bukkit.TreeType.CRIMSON_FUNGUS;
         }
         // CraftBukkit end
-        ((WorldGenFeatureConfigured) this.b.get()).a(worldserver, worldserver.getChunkProvider().getChunkGenerator(), random, blockposition);
+        this.b.get().a(worldserver, worldserver.getChunkProvider().getChunkGenerator(), random, blockposition);
     }
 }

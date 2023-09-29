@@ -25,7 +25,7 @@ public class BehaviorCooldown extends Behavior<EntityVillager> {
 
     private static boolean a(EntityVillager entityvillager) {
         return entityvillager.getBehaviorController().getMemory(MemoryModuleType.HURT_BY_ENTITY).filter((entityliving) -> {
-            return entityliving.h((Entity) entityvillager) <= 36.0D;
+            return entityliving.h(entityvillager) <= 36.0D;
         }).isPresent();
     }
 }

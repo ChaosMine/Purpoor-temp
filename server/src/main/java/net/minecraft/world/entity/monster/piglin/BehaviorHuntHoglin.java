@@ -19,11 +19,11 @@ public class BehaviorHuntHoglin<E extends EntityPiglin> extends Behavior<E> {
     }
 
     protected void a(WorldServer worldserver, E e0, long i) {
-        EntityHoglin entityhoglin = (EntityHoglin) e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_HUNTABLE_HOGLIN).get();
+        EntityHoglin entityhoglin = e0.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_HUNTABLE_HOGLIN).get();
 
-        PiglinAI.c((EntityPiglinAbstract) e0, (EntityLiving) entityhoglin);
+        PiglinAI.c(e0, entityhoglin);
         PiglinAI.c((EntityPiglinAbstract) e0);
-        PiglinAI.b((EntityPiglinAbstract) e0, (EntityLiving) entityhoglin);
+        PiglinAI.b(e0, entityhoglin);
         PiglinAI.f(e0);
     }
 }

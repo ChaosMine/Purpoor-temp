@@ -8,33 +8,32 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 
 public class DataConverterMemoryExpiry extends DataConverterNamedEntity {
+	public DataConverterMemoryExpiry(Schema schema, String s) {
+		super(schema, false, "Memory expiry data fix (" + s + ")", DataConverterTypes.ENTITY, s);
+	}
 
-    public DataConverterMemoryExpiry(Schema schema, String s) {
-        super(schema, false, "Memory expiry data fix (" + s + ")", DataConverterTypes.ENTITY, s);
-    }
+	@Override
+	protected Typed<?> a(Typed<?> typed) {
+		return typed.update(DSL.remainderFinder(), this::a);
+	}
 
-    @Override
-    protected Typed<?> a(Typed<?> typed) {
-        return typed.update(DSL.remainderFinder(), this::a);
-    }
+	public Dynamic<?> a(Dynamic<?> dynamic) {
+		return dynamic.update("Brain", this::b);
+	}
 
-    public Dynamic<?> a(Dynamic<?> dynamic) {
-        return dynamic.update("Brain", this::b);
-    }
+	private Dynamic<?> b(Dynamic<?> dynamic) {
+		return dynamic.update("memories", this::c);
+	}
 
-    private Dynamic<?> b(Dynamic<?> dynamic) {
-        return dynamic.update("memories", this::c);
-    }
+	private Dynamic<?> c(Dynamic<?> dynamic) {
+		return dynamic.updateMapValues(this::a);
+	}
 
-    private Dynamic<?> c(Dynamic<?> dynamic) {
-        return dynamic.updateMapValues(this::a);
-    }
+	private Pair<Dynamic<?>, Dynamic<?>> a(Pair<Dynamic<?>, Dynamic<?>> pair) {
+		return pair.mapSecond(this::d);
+	}
 
-    private Pair<Dynamic<?>, Dynamic<?>> a(Pair<Dynamic<?>, Dynamic<?>> pair) {
-        return pair.mapSecond(this::d);
-    }
-
-    private Dynamic<?> d(Dynamic<?> dynamic) {
-        return dynamic.createMap(ImmutableMap.of(dynamic.createString("value"), dynamic));
-    }
+	private Dynamic<?> d(Dynamic<?> dynamic) {
+		return dynamic.createMap(ImmutableMap.of(dynamic.createString("value"), dynamic));
+	}
 }

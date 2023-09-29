@@ -92,7 +92,7 @@ public class ChunkProviderFlat extends ChunkGenerator {
 
     @Override
     public IBlockAccess a(int i, int j) {
-        return new BlockColumn((IBlockData[]) Arrays.stream(this.e.g()).map((iblockdata) -> {
+        return new BlockColumn(Arrays.stream(this.e.g()).map((iblockdata) -> {
             return iblockdata == null ? Blocks.AIR.getBlockData() : iblockdata;
         }).toArray((k) -> {
             return new IBlockData[k];

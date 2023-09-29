@@ -34,7 +34,7 @@ public class WorldGenFeatureIgloo extends StructureGenerator<WorldGenFeatureEmpt
             int k = i * 16;
             int l = j * 16;
             BlockPosition blockposition = new BlockPosition(k, 90, l);
-            EnumBlockRotation enumblockrotation = EnumBlockRotation.a((Random) this.d);
+            EnumBlockRotation enumblockrotation = EnumBlockRotation.a(this.d);
 
             WorldGenIglooPiece.a(definedstructuremanager, blockposition, enumblockrotation, this.b, this.d);
             this.b();

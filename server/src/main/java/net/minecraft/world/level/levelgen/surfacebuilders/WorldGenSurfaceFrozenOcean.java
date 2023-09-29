@@ -54,7 +54,7 @@ public class WorldGenSurfaceFrozenOcean extends WorldGenSurface<WorldGenSurfaceC
 
             if (d1 > 2.0D) {
                 d2 = (double) l - d1 - 7.0D;
-                d1 += (double) l;
+                d1 += l;
             } else {
                 d1 = 0.0D;
             }

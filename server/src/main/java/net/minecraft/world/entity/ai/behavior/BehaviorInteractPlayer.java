@@ -22,7 +22,7 @@ public class BehaviorInteractPlayer extends Behavior<EntityVillager> {
     protected boolean a(WorldServer worldserver, EntityVillager entityvillager) {
         EntityHuman entityhuman = entityvillager.getTrader();
 
-        return entityvillager.isAlive() && entityhuman != null && !entityvillager.isInWater() && !entityvillager.velocityChanged && entityvillager.h((Entity) entityhuman) <= 16.0D && entityhuman.activeContainer != null;
+        return entityvillager.isAlive() && entityhuman != null && !entityvillager.isInWater() && !entityvillager.velocityChanged && entityvillager.h(entityhuman) <= 16.0D && entityhuman.activeContainer != null;
     }
 
     protected boolean b(WorldServer worldserver, EntityVillager entityvillager, long i) {
@@ -52,7 +52,7 @@ public class BehaviorInteractPlayer extends Behavior<EntityVillager> {
     private void a(EntityVillager entityvillager) {
         BehaviorController<?> behaviorcontroller = entityvillager.getBehaviorController();
 
-        behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(new BehaviorPositionEntity(entityvillager.getTrader(), false), this.b, 2)));
-        behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorPositionEntity(entityvillager.getTrader(), true)));
+        behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(new BehaviorPositionEntity(entityvillager.getTrader(), false), this.b, 2)));
+        behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorPositionEntity(entityvillager.getTrader(), true)));
     }
 }

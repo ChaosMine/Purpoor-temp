@@ -28,12 +28,12 @@ public class BlockCake extends Block {
 
     protected BlockCake(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockCake.BITES, 0));
+        this.j(this.blockStateList.getBlockData().set(BlockCake.BITES, 0));
     }
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return BlockCake.b[(Integer) iblockdata.get(BlockCake.BITES)];
+        return BlockCake.b[iblockdata.get(BlockCake.BITES)];
     }
 
     @Override
@@ -70,10 +70,10 @@ public class BlockCake extends Block {
 
             ((net.minecraft.server.level.EntityPlayer) entityhuman).getBukkitEntity().sendHealthUpdate();
             // CraftBukkit end
-            int i = (Integer) iblockdata.get(BlockCake.BITES);
+            int i = iblockdata.get(BlockCake.BITES);
 
             if (i < 6) {
-                generatoraccess.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockCake.BITES, i + 1), 3);
+                generatoraccess.setTypeAndData(blockposition, iblockdata.set(BlockCake.BITES, i + 1), 3);
             } else {
                 generatoraccess.a(blockposition, false);
             }
@@ -99,7 +99,7 @@ public class BlockCake extends Block {
 
     @Override
     public int a(IBlockData iblockdata, World world, BlockPosition blockposition) {
-        return (7 - (Integer) iblockdata.get(BlockCake.BITES)) * 2;
+        return (7 - iblockdata.get(BlockCake.BITES)) * 2;
     }
 
     @Override

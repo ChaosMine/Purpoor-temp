@@ -30,7 +30,7 @@ public final class Fluid extends IBlockDataHolder<FluidType, Fluid> {
     }
 
     public FluidType getType() {
-        return (FluidType) this.c;
+        return this.c;
     }
 
     public boolean isSource() {

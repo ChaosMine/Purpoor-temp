@@ -203,12 +203,12 @@ public class EntityGhast extends EntityFlying implements IMonster {
             EntityLiving entityliving = this.ghast.getGoalTarget();
             double d0 = 64.0D;
 
-            if (entityliving.h((Entity) this.ghast) < 4096.0D && this.ghast.hasLineOfSight(entityliving)) {
+            if (entityliving.h(this.ghast) < 4096.0D && this.ghast.hasLineOfSight(entityliving)) {
                 World world = this.ghast.world;
 
                 ++this.a;
                 if (this.a == 10 && !this.ghast.isSilent()) {
-                    world.a((EntityHuman) null, 1015, this.ghast.getChunkCoordinates(), 0);
+                    world.a(null, 1015, this.ghast.getChunkCoordinates(), 0);
                 }
 
                 if (this.a == 20) {
@@ -219,7 +219,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
                     double d4 = entityliving.locZ() - (this.ghast.locZ() + vec3d.z * 4.0D);
 
                     if (!this.ghast.isSilent()) {
-                        world.a((EntityHuman) null, 1016, this.ghast.getChunkCoordinates(), 0);
+                        world.a(null, 1016, this.ghast.getChunkCoordinates(), 0);
                     }
 
                     EntityLargeFireball entitylargefireball = new EntityLargeFireball(world, this.ghast, d2, d3, d4);
@@ -264,7 +264,7 @@ public class EntityGhast extends EntityFlying implements IMonster {
                 EntityLiving entityliving = this.a.getGoalTarget();
                 double d0 = 64.0D;
 
-                if (entityliving.h((Entity) this.a) < 4096.0D) {
+                if (entityliving.h(this.a) < 4096.0D) {
                     double d1 = entityliving.locX() - this.a.locX();
                     double d2 = entityliving.locZ() - this.a.locZ();
 

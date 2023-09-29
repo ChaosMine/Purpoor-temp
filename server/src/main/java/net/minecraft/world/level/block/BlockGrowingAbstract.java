@@ -32,7 +32,7 @@ public abstract class BlockGrowingAbstract extends Block {
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         IBlockData iblockdata = blockactioncontext.getWorld().getType(blockactioncontext.getClickPosition().shift(this.a));
 
-        return !iblockdata.a((Block) this.c()) && !iblockdata.a(this.d()) ? this.a((GeneratorAccess) blockactioncontext.getWorld()) : this.d().getBlockData();
+        return !iblockdata.a(this.c()) && !iblockdata.a(this.d()) ? this.a(blockactioncontext.getWorld()) : this.d().getBlockData();
     }
 
     public IBlockData a(GeneratorAccess generatoraccess) {

@@ -27,8 +27,8 @@ public class ItemSword extends ItemToolMaterial implements ItemVanishable {
         this.a = (float) i + toolmaterial.c();
         Builder<AttributeBase, AttributeModifier> builder = ImmutableMultimap.builder();
 
-        builder.put(GenericAttributes.ATTACK_DAMAGE, new AttributeModifier(ItemSword.f, "Weapon modifier", (double) this.a, AttributeModifier.Operation.ADDITION));
-        builder.put(GenericAttributes.ATTACK_SPEED, new AttributeModifier(ItemSword.g, "Weapon modifier", (double) f, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ATTACK_DAMAGE, new AttributeModifier(ItemSword.f, "Weapon modifier", this.a, AttributeModifier.Operation.ADDITION));
+        builder.put(GenericAttributes.ATTACK_SPEED, new AttributeModifier(ItemSword.g, "Weapon modifier", f, AttributeModifier.Operation.ADDITION));
         this.b = builder.build();
     }
 
@@ -48,7 +48,7 @@ public class ItemSword extends ItemToolMaterial implements ItemVanishable {
         } else {
             Material material = iblockdata.getMaterial();
 
-            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.CORAL && !iblockdata.a((Tag) TagsBlock.LEAVES) && material != Material.PUMPKIN ? 1.0F : 1.5F;
+            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.CORAL && !iblockdata.a(TagsBlock.LEAVES) && material != Material.PUMPKIN ? 1.0F : 1.5F;
         }
     }
 

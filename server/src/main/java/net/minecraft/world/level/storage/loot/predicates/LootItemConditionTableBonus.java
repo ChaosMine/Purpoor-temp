@@ -38,7 +38,7 @@ public class LootItemConditionTableBonus implements LootItemCondition {
     }
 
     public boolean test(LootTableInfo loottableinfo) {
-        ItemStack itemstack = (ItemStack) loottableinfo.getContextParameter(LootContextParameters.TOOL);
+        ItemStack itemstack = loottableinfo.getContextParameter(LootContextParameters.TOOL);
         int i = itemstack != null ? EnchantmentManager.getEnchantmentLevel(this.a, itemstack) : 0;
         float f = this.b[Math.min(i, this.b.length - 1)];
 
@@ -63,10 +63,10 @@ public class LootItemConditionTableBonus implements LootItemCondition {
         @Override
         public LootItemConditionTableBonus a(JsonObject jsonobject, JsonDeserializationContext jsondeserializationcontext) {
             MinecraftKey minecraftkey = new MinecraftKey(ChatDeserializer.h(jsonobject, "enchantment"));
-            Enchantment enchantment = (Enchantment) IRegistry.ENCHANTMENT.getOptional(minecraftkey).orElseThrow(() -> {
+            Enchantment enchantment = IRegistry.ENCHANTMENT.getOptional(minecraftkey).orElseThrow(() -> {
                 return new JsonParseException("Invalid enchantment id: " + minecraftkey);
             });
-            float[] afloat = (float[]) ChatDeserializer.a(jsonobject, "chances", jsondeserializationcontext, float[].class);
+            float[] afloat = ChatDeserializer.a(jsonobject, "chances", jsondeserializationcontext, float[].class);
 
             return new LootItemConditionTableBonus(enchantment, afloat);
         }

@@ -51,14 +51,14 @@ public class WorldGenNether extends StructureGenerator<WorldGenFeatureEmptyConfi
             WorldGenNetherPieces.WorldGenNetherPiece15 worldgennetherpieces_worldgennetherpiece15 = new WorldGenNetherPieces.WorldGenNetherPiece15(this.d, (i << 4) + 2, (j << 4) + 2);
 
             this.b.add(worldgennetherpieces_worldgennetherpiece15);
-            worldgennetherpieces_worldgennetherpiece15.a((StructurePiece) worldgennetherpieces_worldgennetherpiece15, this.b, (Random) this.d);
+            worldgennetherpieces_worldgennetherpiece15.a(worldgennetherpieces_worldgennetherpiece15, this.b, this.d);
             List list = worldgennetherpieces_worldgennetherpiece15.d;
 
             while (!list.isEmpty()) {
                 int k = this.d.nextInt(list.size());
                 StructurePiece structurepiece = (StructurePiece) list.remove(k);
 
-                structurepiece.a((StructurePiece) worldgennetherpieces_worldgennetherpiece15, this.b, (Random) this.d);
+                structurepiece.a(worldgennetherpieces_worldgennetherpiece15, this.b, this.d);
             }
 
             this.b();

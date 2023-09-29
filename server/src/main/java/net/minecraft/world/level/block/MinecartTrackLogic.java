@@ -31,7 +31,7 @@ public class MinecartTrackLogic {
         this.b = blockposition;
         this.d = iblockdata;
         this.c = (BlockMinecartTrackAbstract) iblockdata.getBlock();
-        BlockPropertyTrackPosition blockpropertytrackposition = (BlockPropertyTrackPosition) iblockdata.get(this.c.d());
+        BlockPropertyTrackPosition blockpropertytrackposition = iblockdata.get(this.c.d());
 
         this.e = this.c.c();
         this.a(blockpropertytrackposition);
@@ -89,7 +89,7 @@ public class MinecartTrackLogic {
 
     private void d() {
         for (int i = 0; i < this.f.size(); ++i) {
-            MinecartTrackLogic minecarttracklogic = this.b((BlockPosition) this.f.get(i));
+            MinecartTrackLogic minecarttracklogic = this.b(this.f.get(i));
 
             if (minecarttracklogic != null && minecarttracklogic.a(this)) {
                 this.f.set(i, minecarttracklogic.b);
@@ -130,7 +130,7 @@ public class MinecartTrackLogic {
 
     private boolean c(BlockPosition blockposition) {
         for (int i = 0; i < this.f.size(); ++i) {
-            BlockPosition blockposition1 = (BlockPosition) this.f.get(i);
+            BlockPosition blockposition1 = this.f.get(i);
 
             if (blockposition1.getX() == blockposition.getX() && blockposition1.getZ() == blockposition.getZ()) {
                 return true;
@@ -226,7 +226,7 @@ public class MinecartTrackLogic {
             blockpropertytrackposition = BlockPropertyTrackPosition.NORTH_SOUTH;
         }
 
-        this.d = (IBlockData) this.d.set(this.c.d(), blockpropertytrackposition);
+        this.d = this.d.set(this.c.d(), blockpropertytrackposition);
         this.a.setTypeAndData(this.b, this.d, 3);
     }
 
@@ -356,7 +356,7 @@ public class MinecartTrackLogic {
         }
 
         this.a(blockpropertytrackposition1);
-        this.d = (IBlockData) this.d.set(this.c.d(), blockpropertytrackposition1);
+        this.d = this.d.set(this.c.d(), blockpropertytrackposition1);
         if (flag1 || this.a.getType(this.b) != this.d) {
             this.a.setTypeAndData(this.b, this.d, 3);
             // Paper start - prevent desync
@@ -366,7 +366,7 @@ public class MinecartTrackLogic {
             // Paper end - prevent desync
 
             for (int i = 0; i < this.f.size(); ++i) {
-                MinecartTrackLogic minecarttracklogic = this.b((BlockPosition) this.f.get(i));
+                MinecartTrackLogic minecarttracklogic = this.b(this.f.get(i));
 
                 if (minecarttracklogic != null && minecarttracklogic.isValid()) { // Paper - prevent desync
                     minecarttracklogic.d();

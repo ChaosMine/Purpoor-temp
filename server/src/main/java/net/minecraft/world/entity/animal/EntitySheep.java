@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 public class EntitySheep extends EntityAnimal implements IShearable {
 
     private static final DataWatcherObject<Byte> bo = DataWatcher.a(EntitySheep.class, DataWatcherRegistry.a);
-    private static final Map<EnumColor, IMaterial> bp = (Map) SystemUtils.a(Maps.newEnumMap(EnumColor.class), (enummap) -> { // CraftBukkit - decompile error
+    private static final Map<EnumColor, IMaterial> bp = SystemUtils.a(Maps.newEnumMap(EnumColor.class), (enummap) -> { // CraftBukkit - decompile error
         enummap.put(EnumColor.WHITE, Blocks.WHITE_WOOL);
         enummap.put(EnumColor.ORANGE, Blocks.ORANGE_WOOL);
         enummap.put(EnumColor.MAGENTA, Blocks.MAGENTA_WOOL);
@@ -221,17 +221,17 @@ public class EntitySheep extends EntityAnimal implements IShearable {
 
     @Override
     public void shear(SoundCategory soundcategory) {
-        this.world.playSound((EntityHuman) null, (Entity) this, SoundEffects.ENTITY_SHEEP_SHEAR, soundcategory, 1.0F, 1.0F);
+        this.world.playSound(null, this, SoundEffects.ENTITY_SHEEP_SHEAR, soundcategory, 1.0F, 1.0F);
         this.setSheared(true);
         int i = 1 + this.random.nextInt(3);
 
         for (int j = 0; j < i; ++j) {
             this.forceDrops = true; // CraftBukkit
-            EntityItem entityitem = this.a((IMaterial) EntitySheep.bp.get(this.getColor()), 1);
+            EntityItem entityitem = this.a(EntitySheep.bp.get(this.getColor()), 1);
             this.forceDrops = false; // CraftBukkit
 
             if (entityitem != null) {
-                entityitem.setMot(entityitem.getMot().add((double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F), (double) (this.random.nextFloat() * 0.05F), (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F)));
+                entityitem.setMot(entityitem.getMot().add((this.random.nextFloat() - this.random.nextFloat()) * 0.1F, this.random.nextFloat() * 0.05F, (this.random.nextFloat() - this.random.nextFloat()) * 0.1F));
             }
         }
 
@@ -277,21 +277,21 @@ public class EntitySheep extends EntityAnimal implements IShearable {
     }
 
     public EnumColor getColor() {
-        return EnumColor.fromColorIndex((Byte) this.datawatcher.get(EntitySheep.bo) & 15);
+        return EnumColor.fromColorIndex(this.datawatcher.get(EntitySheep.bo) & 15);
     }
 
     public void setColor(EnumColor enumcolor) {
-        byte b0 = (Byte) this.datawatcher.get(EntitySheep.bo);
+        byte b0 = this.datawatcher.get(EntitySheep.bo);
 
         this.datawatcher.set(EntitySheep.bo, (byte) (b0 & 240 | enumcolor.getColorIndex() & 15));
     }
 
     public boolean isSheared() {
-        return ((Byte) this.datawatcher.get(EntitySheep.bo) & 16) != 0;
+        return (this.datawatcher.get(EntitySheep.bo) & 16) != 0;
     }
 
     public void setSheared(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntitySheep.bo);
+        byte b0 = this.datawatcher.get(EntitySheep.bo);
 
         if (flag) {
             this.datawatcher.set(EntitySheep.bo, (byte) (b0 | 16));
@@ -310,9 +310,9 @@ public class EntitySheep extends EntityAnimal implements IShearable {
     @Override
     public EntitySheep createChild(WorldServer worldserver, EntityAgeable entityageable) {
         EntitySheep entitysheep = (EntitySheep) entityageable;
-        EntitySheep entitysheep1 = (EntitySheep) EntityTypes.SHEEP.a((World) worldserver);
+        EntitySheep entitysheep1 = EntityTypes.SHEEP.a(worldserver);
 
-        entitysheep1.setColor(this.a((EntityAnimal) this, (EntityAnimal) entitysheep));
+        entitysheep1.setColor(this.a(this, entitysheep));
         return entitysheep1;
     }
 
@@ -349,13 +349,13 @@ public class EntitySheep extends EntityAnimal implements IShearable {
         ItemDye.class.getClass();
         optional = optional.filter(ItemDye.class::isInstance);
         ItemDye.class.getClass();
-        return (EnumColor) optional.map(ItemDye.class::cast).map(ItemDye::d).orElseGet(() -> {
+        return optional.map(ItemDye.class::cast).map(ItemDye::d).orElseGet(() -> {
             return this.world.random.nextBoolean() ? enumcolor : enumcolor1;
         });
     }
 
     private static InventoryCrafting a(EnumColor enumcolor, EnumColor enumcolor1) {
-        InventoryCrafting inventorycrafting = new InventoryCrafting(new Container((Containers) null, -1) {
+        InventoryCrafting inventorycrafting = new InventoryCrafting(new Container(null, -1) {
             @Override
             public boolean canUse(EntityHuman entityhuman) {
                 return false;

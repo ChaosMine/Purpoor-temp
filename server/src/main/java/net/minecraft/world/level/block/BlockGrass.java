@@ -41,7 +41,7 @@ public class BlockGrass extends BlockDirtSnowSpreadable implements IBlockFragile
             while (true) {
                 if (j < i / 16) {
                     blockposition2 = blockposition2.b(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
-                    if (worldserver.getType(blockposition2.down()).a((Block) this) && !worldserver.getType(blockposition2).r(worldserver, blockposition2)) {
+                    if (worldserver.getType(blockposition2.down()).a(this) && !worldserver.getType(blockposition2).r(worldserver, blockposition2)) {
                         ++j;
                         continue;
                     }
@@ -64,7 +64,7 @@ public class BlockGrass extends BlockDirtSnowSpreadable implements IBlockFragile
                                     break label38;
                                 }
 
-                                WorldGenFeatureConfigured<?, ?> worldgenfeatureconfigured = (WorldGenFeatureConfigured) list.get(0);
+                                WorldGenFeatureConfigured<?, ?> worldgenfeatureconfigured = list.get(0);
                                 WorldGenFlowers worldgenflowers = (WorldGenFlowers) worldgenfeatureconfigured.e;
 
                                 iblockdata3 = worldgenflowers.b(random, blockposition2, worldgenfeatureconfigured.c());

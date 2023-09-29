@@ -210,7 +210,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     // Paper start
     @Override
     public boolean isChunkLoaded(int x, int z) {
-        return ((WorldServer)this).getChunkIfLoaded(x, z) != null;
+        return this.getChunkIfLoaded(x, z) != null;
     }
     // Paper end
 
@@ -298,7 +298,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         this.ticksPerWaterSpawns = this.getServer().getTicksPerWaterSpawns(); // CraftBukkit
         this.ticksPerWaterAmbientSpawns = this.getServer().getTicksPerWaterAmbientSpawns(); // CraftBukkit
         this.ticksPerAmbientSpawns = this.getServer().getTicksPerAmbientSpawns(); // CraftBukkit
-        this.typeKey = (ResourceKey) this.getServer().getHandle().getServer().customRegistry.a().c(dimensionmanager).orElseThrow(() -> {
+        this.typeKey = this.getServer().getHandle().getServer().customRegistry.a().c(dimensionmanager).orElseThrow(() -> {
             return new IllegalStateException("Unregistered dimension type: " + dimensionmanager);
         });
         // CraftBukkit end
@@ -369,7 +369,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return true;
         }
 
-        voxelshape = voxelshape.offset((double) position.getX(), (double) position.getY(), (double) position.getZ());
+        voxelshape = voxelshape.offset(position.getX(), position.getY(), position.getZ());
         if (voxelshape.isEmpty()) {
             return true;
         }
@@ -662,7 +662,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
                 // CraftBukkit start
                 iblockdata1.b(this, blockposition, k, j - 1); // Don't call an event for the old block to limit event spam
-                CraftWorld world = ((WorldServer) this).getWorld();
+                CraftWorld world = this.getWorld();
                 if (world != null && ((WorldServer)this).hasPhysicsEvent) { // Paper
                     BlockPhysicsEvent event = new BlockPhysicsEvent(world.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()), CraftBlockData.fromData(iblockdata));
                     this.getServer().getPluginManager().callEvent(event);
@@ -778,7 +778,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
             try {
                 // CraftBukkit start
-                CraftWorld world = ((WorldServer) this).getWorld();
+                CraftWorld world = this.getWorld();
                 if (world != null && ((WorldServer)this).hasPhysicsEvent) { // Paper
                     BlockPhysicsEvent event = new BlockPhysicsEvent(world.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()), CraftBlockData.fromData(iblockdata), world.getBlockAt(blockposition1.getX(), blockposition1.getY(), blockposition1.getZ()));
                     this.getServer().getPluginManager().callEvent(event);
@@ -949,7 +949,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         int tilesThisCycle = 0;
         for (tileTickPosition = 0; tileTickPosition < tileEntityListTick.size(); tileTickPosition++) { // Paper - Disable tick limiters
             tileTickPosition = (tileTickPosition < tileEntityListTick.size()) ? tileTickPosition : 0;
-            TileEntity tileentity = (TileEntity) this.tileEntityListTick.get(tileTickPosition);
+            TileEntity tileentity = this.tileEntityListTick.get(tileTickPosition);
             // Spigot start
             if (tileentity == null) {
                 getServer().getLogger().severe("Spigot has detected a null entity and has removed it, preventing a crash");
@@ -1004,7 +1004,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         this.tickingTileEntities = false;
         if (!this.tileEntityListPending.isEmpty()) {
             for (int i = 0; i < this.tileEntityListPending.size(); ++i) {
-                TileEntity tileentity1 = (TileEntity) this.tileEntityListPending.get(i);
+                TileEntity tileentity1 = this.tileEntityListPending.get(i);
 
                 if (!tileentity1.isRemoved()) {
                     /* CraftBukkit start - Order matters, moved down
@@ -1049,7 +1049,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
             return;
             // Paper end
         }
-        MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
+        MinecraftServer.SERVER.executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
     }
     // Paper start - Prevent armor stands from doing entity lookups
     @Override
@@ -1060,11 +1060,11 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     // Paper end
 
     public Explosion explode(@Nullable Entity entity, double d0, double d1, double d2, float f, Explosion.Effect explosion_effect) {
-        return this.createExplosion(entity, (DamageSource) null, (ExplosionDamageCalculator) null, d0, d1, d2, f, false, explosion_effect);
+        return this.createExplosion(entity, null, null, d0, d1, d2, f, false, explosion_effect);
     }
 
     public Explosion createExplosion(@Nullable Entity entity, double d0, double d1, double d2, float f, boolean flag, Explosion.Effect explosion_effect) {
-        return this.createExplosion(entity, (DamageSource) null, (ExplosionDamageCalculator) null, d0, d1, d2, f, flag, explosion_effect);
+        return this.createExplosion(entity, null, null, d0, d1, d2, f, flag, explosion_effect);
     }
 
     public Explosion createExplosion(@Nullable Entity entity, @Nullable DamageSource damagesource, @Nullable ExplosionDamageCalculator explosiondamagecalculator, double d0, double d1, double d2, float f, boolean flag, Explosion.Effect explosion_effect) {
@@ -1122,7 +1122,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     @Nullable
     private TileEntity E(BlockPosition blockposition) {
         for (int i = 0; i < this.tileEntityListPending.size(); ++i) {
-            TileEntity tileentity = (TileEntity) this.tileEntityListPending.get(i);
+            TileEntity tileentity = this.tileEntityListPending.get(i);
 
             if (!tileentity.isRemoved() && tileentity.getPosition().equals(blockposition)) {
                 return tileentity;
@@ -1193,7 +1193,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
         } else {
             IChunkAccess ichunkaccess = this.getChunkIfLoadedImmediately(blockposition.getX() >> 4, blockposition.getZ() >> 4); // Paper
 
-            return ichunkaccess == null ? false : ichunkaccess.getType(blockposition).a((IBlockAccess) this, blockposition, entity, enumdirection);
+            return ichunkaccess == null ? false : ichunkaccess.getType(blockposition).a(this, blockposition, entity, enumdirection);
         }
     }
 
@@ -1204,7 +1204,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
     public void Q() {
         double d0 = 1.0D - (double) (this.d(1.0F) * 5.0F) / 16.0D;
         double d1 = 1.0D - (double) (this.b(1.0F) * 5.0F) / 16.0D;
-        double d2 = 0.5D + 2.0D * MathHelper.a((double) MathHelper.cos(this.f(1.0F) * 6.2831855F), -0.25D, 0.25D);
+        double d2 = 0.5D + 2.0D * MathHelper.a(MathHelper.cos(this.f(1.0F) * 6.2831855F), -0.25D, 0.25D);
 
         this.d = (int) ((1.0D - d2 * d0 * d1) * 11.0D);
     }
@@ -1511,7 +1511,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
 
     public int getBlockFacePower(BlockPosition blockposition, EnumDirection enumdirection) {
         IBlockData iblockdata = this.getType(blockposition);
-        int i = iblockdata.b((IBlockAccess) this, blockposition, enumdirection);
+        int i = iblockdata.b(this, blockposition, enumdirection);
 
         return iblockdata.isOccluding(this, blockposition) ? Math.max(i, this.getBlockPower(blockposition)) : i;
     }

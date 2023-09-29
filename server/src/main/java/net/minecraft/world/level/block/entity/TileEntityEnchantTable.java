@@ -112,7 +112,7 @@ public class TileEntityEnchantTable extends TileEntity implements INamableTileEn
 
     @Override
     public IChatBaseComponent getDisplayName() {
-        return (IChatBaseComponent) (this.o != null ? this.o : new ChatMessage("container.enchant"));
+        return this.o != null ? this.o : new ChatMessage("container.enchant");
     }
 
     public void setCustomName(@Nullable IChatBaseComponent ichatbasecomponent) {

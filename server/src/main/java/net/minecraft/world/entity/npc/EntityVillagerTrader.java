@@ -142,8 +142,8 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
 
     @Override
     protected void eW() {
-        VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption = (VillagerTrades.IMerchantRecipeOption[]) VillagerTrades.b.get(1);
-        VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption1 = (VillagerTrades.IMerchantRecipeOption[]) VillagerTrades.b.get(2);
+        VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption = VillagerTrades.b.get(1);
+        VillagerTrades.IMerchantRecipeOption[] avillagertrades_imerchantrecipeoption1 = VillagerTrades.b.get(2);
 
         if (avillagertrades_imerchantrecipeoption != null && avillagertrades_imerchantrecipeoption1 != null) {
             MerchantRecipeList merchantrecipelist = this.getOffers();
@@ -310,14 +310,14 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
 
                     EntityVillagerTrader.this.navigation.a(vec3d1.x, vec3d1.y, vec3d1.z, this.c);
                 } else {
-                    EntityVillagerTrader.this.navigation.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), this.c);
+                    EntityVillagerTrader.this.navigation.a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), this.c);
                 }
             }
 
         }
 
         private boolean a(BlockPosition blockposition, double d0) {
-            return !blockposition.a((IPosition) this.a.getPositionVector(), d0);
+            return !blockposition.a(this.a.getPositionVector(), d0);
         }
     }
 }

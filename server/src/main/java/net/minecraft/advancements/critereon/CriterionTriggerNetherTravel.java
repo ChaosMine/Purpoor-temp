@@ -18,7 +18,7 @@ public class CriterionTriggerNetherTravel extends CriterionTriggerAbstract<Crite
     }
 
     @Override
-    public CriterionTriggerNetherTravel.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+    public CriterionTriggerNetherTravel.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
         CriterionConditionLocation criterionconditionlocation = CriterionConditionLocation.a(jsonobject.get("entered"));
         CriterionConditionLocation criterionconditionlocation1 = CriterionConditionLocation.a(jsonobject.get("exited"));
         CriterionConditionDistance criterionconditiondistance = CriterionConditionDistance.a(jsonobject.get("distance"));
@@ -38,7 +38,7 @@ public class CriterionTriggerNetherTravel extends CriterionTriggerAbstract<Crite
         private final CriterionConditionLocation b;
         private final CriterionConditionDistance c;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation, CriterionConditionLocation criterionconditionlocation1, CriterionConditionDistance criterionconditiondistance) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionLocation criterionconditionlocation, CriterionConditionLocation criterionconditionlocation1, CriterionConditionDistance criterionconditiondistance) {
             super(CriterionTriggerNetherTravel.a, criterionconditionentity_b);
             this.a = criterionconditionlocation;
             this.b = criterionconditionlocation1;
@@ -46,7 +46,7 @@ public class CriterionTriggerNetherTravel extends CriterionTriggerAbstract<Crite
         }
 
         public static CriterionTriggerNetherTravel.a a(CriterionConditionDistance criterionconditiondistance) {
-            return new CriterionTriggerNetherTravel.a(CriterionConditionEntity.b.a, CriterionConditionLocation.a, CriterionConditionLocation.a, criterionconditiondistance);
+            return new CriterionTriggerNetherTravel.a(CriterionConditionEntity.b_.a, CriterionConditionLocation.a, CriterionConditionLocation.a, criterionconditiondistance);
         }
 
         public boolean a(WorldServer worldserver, Vec3D vec3d, double d0, double d1, double d2) {

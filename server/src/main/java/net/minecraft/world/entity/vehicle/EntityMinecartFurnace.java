@@ -82,7 +82,7 @@ public class EntityMinecartFurnace extends EntityMinecartAbstract {
     public void a(DamageSource damagesource) {
         super.a(damagesource);
         if (!damagesource.isExplosion() && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-            this.a((IMaterial) Blocks.FURNACE);
+            this.a(Blocks.FURNACE);
         }
 
     }
@@ -98,8 +98,8 @@ public class EntityMinecartFurnace extends EntityMinecartAbstract {
         double d3 = this.b * this.b + this.c * this.c;
 
         if (d3 > 1.0E-4D && d2 > 0.001D) {
-            double d4 = (double) MathHelper.sqrt(d2);
-            double d5 = (double) MathHelper.sqrt(d3);
+            double d4 = MathHelper.sqrt(d2);
+            double d5 = MathHelper.sqrt(d3);
 
             this.b = vec3d.x / d4 * d5;
             this.c = vec3d.z / d4 * d5;
@@ -112,7 +112,7 @@ public class EntityMinecartFurnace extends EntityMinecartAbstract {
         double d0 = this.b * this.b + this.c * this.c;
 
         if (d0 > 1.0E-7D) {
-            d0 = (double) MathHelper.sqrt(d0);
+            d0 = MathHelper.sqrt(d0);
             this.b /= d0;
             this.c /= d0;
             this.setMot(this.getMot().d(0.8D, 0.0D, 0.8D).add(this.b, 0.0D, this.c));
@@ -160,7 +160,7 @@ public class EntityMinecartFurnace extends EntityMinecartAbstract {
     }
 
     protected boolean u() {
-        return (Boolean) this.datawatcher.get(EntityMinecartFurnace.d);
+        return this.datawatcher.get(EntityMinecartFurnace.d);
     }
 
     protected void o(boolean flag) {
@@ -169,6 +169,6 @@ public class EntityMinecartFurnace extends EntityMinecartAbstract {
 
     @Override
     public IBlockData q() {
-        return (IBlockData) ((IBlockData) Blocks.FURNACE.getBlockData().set(BlockFurnaceFurace.FACING, EnumDirection.NORTH)).set(BlockFurnaceFurace.LIT, this.u());
+        return Blocks.FURNACE.getBlockData().set(BlockFurnaceFurace.FACING, EnumDirection.NORTH).set(BlockFurnaceFurace.LIT, this.u());
     }
 }

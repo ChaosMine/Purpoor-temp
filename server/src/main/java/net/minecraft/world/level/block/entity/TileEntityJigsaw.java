@@ -85,8 +85,8 @@ public class TileEntityJigsaw extends TileEntity {
         this.b = new MinecraftKey(nbttagcompound.getString("target"));
         this.c = new MinecraftKey(nbttagcompound.getString("pool"));
         this.h = nbttagcompound.getString("final_state");
-        this.g = (TileEntityJigsaw.JointType) TileEntityJigsaw.JointType.a(nbttagcompound.getString("joint")).orElseGet(() -> {
-            return BlockJigsaw.h(iblockdata).n().d() ? TileEntityJigsaw.JointType.ALIGNED : TileEntityJigsaw.JointType.ROLLABLE;
+        this.g = JointType.a(nbttagcompound.getString("joint")).orElseGet(() -> {
+            return BlockJigsaw.h(iblockdata).n().d() ? JointType.ALIGNED : JointType.ROLLABLE;
         });
     }
 
@@ -110,7 +110,7 @@ public class TileEntityJigsaw extends TileEntity {
         List<WorldGenFeaturePillagerOutpostPoolPiece> list = Lists.newArrayList();
         DefinedStructure definedstructure = new DefinedStructure();
 
-        definedstructure.a(worldserver, blockposition, new BlockPosition(1, 1, 1), false, (Block) null);
+        definedstructure.a(worldserver, blockposition, new BlockPosition(1, 1, 1), false, null);
         WorldGenFeatureDefinedStructurePoolSingle worldgenfeaturedefinedstructurepoolsingle = new WorldGenFeatureDefinedStructurePoolSingle(definedstructure);
         WorldGenFeaturePillagerOutpostPoolPiece worldgenfeaturepillageroutpostpoolpiece = new WorldGenFeaturePillagerOutpostPoolPiece(definedstructuremanager, worldgenfeaturedefinedstructurepoolsingle, blockposition, 1, EnumBlockRotation.NONE, new StructureBoundingBox(blockposition, blockposition));
 

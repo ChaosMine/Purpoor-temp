@@ -34,7 +34,7 @@ public class ItemEgg extends Item {
                     ((net.minecraft.server.level.EntityPlayer) entityhuman).getBukkitEntity().updateInventory();
                 }
 
-                world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (net.minecraft.world.entity.Entity.SHARED_RANDOM.nextFloat() * 0.4F + 0.8F));
+                world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (net.minecraft.world.entity.Entity.SHARED_RANDOM.nextFloat() * 0.4F + 0.8F));
                 entityhuman.b(StatisticList.ITEM_USED.b(this));
             } else {
                 if (entityhuman instanceof net.minecraft.server.level.EntityPlayer) {
@@ -46,7 +46,7 @@ public class ItemEgg extends Item {
 
 
         }
-        world.playSound((EntityHuman) null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (ItemEgg.RANDOM.nextFloat() * 0.4F + 0.8F)); // CraftBukkit - from above
+        world.playSound(null, entityhuman.locX(), entityhuman.locY(), entityhuman.locZ(), SoundEffects.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (ItemEgg.RANDOM.nextFloat() * 0.4F + 0.8F)); // CraftBukkit - from above
 
         /* // Paper start - moved up
         entityhuman.b(StatisticList.ITEM_USED.b(this));

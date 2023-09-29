@@ -44,7 +44,7 @@ public class BlockSeaGrass extends BlockPlant implements IBlockFragilePlantEleme
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
         Fluid fluid = blockactioncontext.getWorld().getFluid(blockactioncontext.getClickPosition());
 
-        return fluid.a((Tag) TagsFluid.WATER) && fluid.e() == 8 ? super.getPlacedState(blockactioncontext) : null;
+        return fluid.a(TagsFluid.WATER) && fluid.e() == 8 ? super.getPlacedState(blockactioncontext) : null;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class BlockSeaGrass extends BlockPlant implements IBlockFragilePlantEleme
         IBlockData iblockdata2 = super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
 
         if (!iblockdata2.isAir()) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return iblockdata2;
@@ -76,7 +76,7 @@ public class BlockSeaGrass extends BlockPlant implements IBlockFragilePlantEleme
     @Override
     public void a(WorldServer worldserver, Random random, BlockPosition blockposition, IBlockData iblockdata) {
         IBlockData iblockdata1 = Blocks.TALL_SEAGRASS.getBlockData();
-        IBlockData iblockdata2 = (IBlockData) iblockdata1.set(BlockTallSeaGrass.b, BlockPropertyDoubleBlockHalf.UPPER);
+        IBlockData iblockdata2 = iblockdata1.set(BlockTallSeaGrass.b, BlockPropertyDoubleBlockHalf.UPPER);
         BlockPosition blockposition1 = blockposition.up();
 
         if (worldserver.getType(blockposition1).a(Blocks.WATER)) {

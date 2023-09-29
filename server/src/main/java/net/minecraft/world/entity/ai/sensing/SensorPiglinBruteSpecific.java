@@ -30,30 +30,24 @@ public class SensorPiglinBruteSpecific extends Sensor<EntityLiving> {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
         Optional<EntityInsentient> optional = Optional.empty();
         List<EntityPiglinAbstract> list = Lists.newArrayList();
-        List<EntityLiving> list1 = (List) behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(ImmutableList.of());
-        Iterator iterator = list1.iterator();
+        List<EntityLiving> list1 = behaviorcontroller.getMemory(MemoryModuleType.VISIBLE_MOBS).orElse(ImmutableList.of());
 
-        while (iterator.hasNext()) {
-            EntityLiving entityliving1 = (EntityLiving) iterator.next();
+			for (EntityLiving entityliving1 : list1) {
+				if (entityliving1 instanceof EntitySkeletonWither || entityliving1 instanceof EntityWither) {
+					optional = Optional.of((EntityInsentient) entityliving1);
+					break;
+				}
+			}
 
-            if (entityliving1 instanceof EntitySkeletonWither || entityliving1 instanceof EntityWither) {
-                optional = Optional.of((EntityInsentient) entityliving1);
-                break;
-            }
-        }
+        List<EntityLiving> list2 = behaviorcontroller.getMemory(MemoryModuleType.MOBS).orElse(ImmutableList.of());
 
-        List<EntityLiving> list2 = (List) behaviorcontroller.getMemory(MemoryModuleType.MOBS).orElse(ImmutableList.of());
-        Iterator iterator1 = list2.iterator();
-
-        while (iterator1.hasNext()) {
-            EntityLiving entityliving2 = (EntityLiving) iterator1.next();
-
-            if (entityliving2 instanceof EntityPiglinAbstract && ((EntityPiglinAbstract) entityliving2).eM()) {
-                list.add((EntityPiglinAbstract) entityliving2);
-            }
-        }
+			for (EntityLiving entityliving2 : list2) {
+				if (entityliving2 instanceof EntityPiglinAbstract && ((EntityPiglinAbstract) entityliving2).eM()) {
+					list.add((EntityPiglinAbstract) entityliving2);
+				}
+			}
 
         behaviorcontroller.setMemory(MemoryModuleType.NEAREST_VISIBLE_NEMSIS, optional);
-        behaviorcontroller.setMemory(MemoryModuleType.NEARBY_ADULT_PIGLINS, (Object) list);
+        behaviorcontroller.setMemory(MemoryModuleType.NEARBY_ADULT_PIGLINS, list);
     }
 }

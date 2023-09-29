@@ -76,7 +76,7 @@ public class ItemCompass extends Item implements ItemVanishable {
         if (!world.getType(blockposition).a(Blocks.LODESTONE)) {
             return super.a(itemactioncontext);
         } else {
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            world.playSound(null, blockposition, SoundEffects.ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.PLAYERS, 1.0F, 1.0F);
             EntityHuman entityhuman = itemactioncontext.getEntity();
             ItemStack itemstack = itemactioncontext.getItemStack();
             boolean flag = !entityhuman.abilities.canInstantlyBuild && itemstack.getCount() == 1;

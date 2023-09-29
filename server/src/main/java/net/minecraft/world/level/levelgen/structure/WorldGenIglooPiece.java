@@ -58,7 +58,7 @@ public class WorldGenIglooPiece {
         public a(DefinedStructureManager definedstructuremanager, MinecraftKey minecraftkey, BlockPosition blockposition, EnumBlockRotation enumblockrotation, int i) {
             super(WorldGenFeatureStructurePieceType.I, 0);
             this.d = minecraftkey;
-            BlockPosition blockposition1 = (BlockPosition) WorldGenIglooPiece.e.get(minecraftkey);
+            BlockPosition blockposition1 = WorldGenIglooPiece.e.get(minecraftkey);
 
             this.c = blockposition.b(blockposition1.getX(), blockposition1.getY() - i, blockposition1.getZ());
             this.e = enumblockrotation;
@@ -74,7 +74,7 @@ public class WorldGenIglooPiece {
 
         private void a(DefinedStructureManager definedstructuremanager) {
             DefinedStructure definedstructure = definedstructuremanager.a(this.d);
-            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a((BlockPosition) WorldGenIglooPiece.d.get(this.d)).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.b);
+            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a(WorldGenIglooPiece.d.get(this.d)).a(DefinedStructureProcessorBlockIgnore.b);
 
             this.a(definedstructure, this.c, definedstructureinfo);
         }
@@ -101,9 +101,9 @@ public class WorldGenIglooPiece {
 
         @Override
         public boolean a(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, ChunkGenerator chunkgenerator, Random random, StructureBoundingBox structureboundingbox, ChunkCoordIntPair chunkcoordintpair, BlockPosition blockposition) {
-            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a((BlockPosition) WorldGenIglooPiece.d.get(this.d)).a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.b);
-            BlockPosition blockposition1 = (BlockPosition) WorldGenIglooPiece.e.get(this.d);
-            BlockPosition blockposition2 = this.c.a((BaseBlockPosition) DefinedStructure.a(definedstructureinfo, new BlockPosition(3 - blockposition1.getX(), 0, 0 - blockposition1.getZ())));
+            DefinedStructureInfo definedstructureinfo = (new DefinedStructureInfo()).a(this.e).a(EnumBlockMirror.NONE).a(WorldGenIglooPiece.d.get(this.d)).a(DefinedStructureProcessorBlockIgnore.b);
+            BlockPosition blockposition1 = WorldGenIglooPiece.e.get(this.d);
+            BlockPosition blockposition2 = this.c.a(DefinedStructure.a(definedstructureinfo, new BlockPosition(3 - blockposition1.getX(), 0, 0 - blockposition1.getZ())));
             int i = generatoraccessseed.a(HeightMap.Type.WORLD_SURFACE_WG, blockposition2.getX(), blockposition2.getZ());
             BlockPosition blockposition3 = this.c;
 
@@ -111,7 +111,7 @@ public class WorldGenIglooPiece {
             boolean flag = super.a(generatoraccessseed, structuremanager, chunkgenerator, random, structureboundingbox, chunkcoordintpair, blockposition);
 
             if (this.d.equals(WorldGenIglooPiece.a)) {
-                BlockPosition blockposition4 = this.c.a((BaseBlockPosition) DefinedStructure.a(definedstructureinfo, new BlockPosition(3, 0, 5)));
+                BlockPosition blockposition4 = this.c.a(DefinedStructure.a(definedstructureinfo, new BlockPosition(3, 0, 5)));
                 IBlockData iblockdata = generatoraccessseed.getType(blockposition4.down());
 
                 if (!iblockdata.isAir() && !iblockdata.a(Blocks.LADDER)) {

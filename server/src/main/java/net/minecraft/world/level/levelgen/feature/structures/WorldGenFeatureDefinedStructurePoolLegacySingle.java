@@ -27,8 +27,8 @@ public class WorldGenFeatureDefinedStructurePoolLegacySingle extends WorldGenFea
     protected DefinedStructureInfo a(EnumBlockRotation enumblockrotation, StructureBoundingBox structureboundingbox, boolean flag) {
         DefinedStructureInfo definedstructureinfo = super.a(enumblockrotation, structureboundingbox, flag);
 
-        definedstructureinfo.b((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.b);
-        definedstructureinfo.a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.d);
+        definedstructureinfo.b(DefinedStructureProcessorBlockIgnore.b);
+        definedstructureinfo.a(DefinedStructureProcessorBlockIgnore.d);
         return definedstructureinfo;
     }
 

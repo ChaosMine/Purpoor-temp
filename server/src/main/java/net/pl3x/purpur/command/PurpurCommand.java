@@ -27,7 +27,7 @@ public class PurpurCommand extends Command {
         if (args.length == 1) {
             return Stream.of("reload", "version")
                     .filter(arg -> arg.startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }
@@ -45,7 +45,7 @@ public class PurpurCommand extends Command {
             Command.broadcastCommandMessage(sender, ChatColor.RED + "Please note that this command is not supported and may cause issues.");
             Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
 
-            MinecraftServer console = MinecraftServer.getServer();
+            MinecraftServer console = MinecraftServer.SERVER;
             PurpurConfig.init((File) console.options.valueOf("purpur-settings"));
             for (WorldServer world : console.getWorlds()) {
                 world.purpurConfig.init();

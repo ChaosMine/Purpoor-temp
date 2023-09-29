@@ -51,7 +51,7 @@ public abstract class BlockPressurePlateAbstract extends Block {
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
         BlockPosition blockposition1 = blockposition.down();
 
-        return c((IBlockAccess) iworldreader, blockposition1) || a(iworldreader, blockposition1, EnumDirection.UP);
+        return c(iworldreader, blockposition1) || a(iworldreader, blockposition1, EnumDirection.UP);
     }
 
     @Override

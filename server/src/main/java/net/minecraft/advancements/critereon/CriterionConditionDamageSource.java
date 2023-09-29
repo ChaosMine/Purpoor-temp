@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3D;
 
 public class CriterionConditionDamageSource {
 
-    public static final CriterionConditionDamageSource a = CriterionConditionDamageSource.a.a().b();
+    public static final CriterionConditionDamageSource a = CriterionConditionDamageSource.a_.a().b();
     private final Boolean b;
     private final Boolean c;
     private final Boolean d;
@@ -97,7 +97,7 @@ public class CriterionConditionDamageSource {
 
     }
 
-    public static class a {
+    public static class a_ {
 
         private Boolean a;
         private Boolean b;
@@ -110,26 +110,26 @@ public class CriterionConditionDamageSource {
         private CriterionConditionEntity i;
         private CriterionConditionEntity j;
 
-        public a() {
+        public a_() {
             this.i = CriterionConditionEntity.a;
             this.j = CriterionConditionEntity.a;
         }
 
-        public static CriterionConditionDamageSource.a a() {
-            return new CriterionConditionDamageSource.a();
+        public static a_ a() {
+            return new a_();
         }
 
-        public CriterionConditionDamageSource.a a(Boolean obool) {
+        public a_ a(Boolean obool) {
             this.a = obool;
             return this;
         }
 
-        public CriterionConditionDamageSource.a h(Boolean obool) {
+        public a_ h(Boolean obool) {
             this.h = obool;
             return this;
         }
 
-        public CriterionConditionDamageSource.a a(CriterionConditionEntity.a criterionconditionentity_a) {
+        public a_ a(CriterionConditionEntity.a_ criterionconditionentity_a) {
             this.i = criterionconditionentity_a.b();
             return this;
         }

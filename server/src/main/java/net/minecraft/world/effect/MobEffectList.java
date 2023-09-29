@@ -35,7 +35,7 @@ public class MobEffectList {
 
     @Nullable
     public static MobEffectList fromId(int i) {
-        return (MobEffectList) IRegistry.MOB_EFFECT.fromId(i);
+        return IRegistry.MOB_EFFECT.fromId(i);
     }
 
     public static int getId(MobEffectList mobeffectlist) {
@@ -159,10 +159,10 @@ public class MobEffectList {
 
         while (iterator.hasNext()) {
             Entry<AttributeBase, AttributeModifier> entry = (Entry) iterator.next();
-            AttributeModifiable attributemodifiable = attributemapbase.a((AttributeBase) entry.getKey());
+            AttributeModifiable attributemodifiable = attributemapbase.a(entry.getKey());
 
             if (attributemodifiable != null) {
-                attributemodifiable.removeModifier((AttributeModifier) entry.getValue());
+                attributemodifiable.removeModifier(entry.getValue());
             }
         }
 
@@ -173,10 +173,10 @@ public class MobEffectList {
 
         while (iterator.hasNext()) {
             Entry<AttributeBase, AttributeModifier> entry = (Entry) iterator.next();
-            AttributeModifiable attributemodifiable = attributemapbase.a((AttributeBase) entry.getKey());
+            AttributeModifiable attributemodifiable = attributemapbase.a(entry.getKey());
 
             if (attributemodifiable != null) {
-                AttributeModifier attributemodifier = (AttributeModifier) entry.getValue();
+                AttributeModifier attributemodifier = entry.getValue();
 
                 attributemodifiable.removeModifier(attributemodifier);
                 attributemodifiable.addModifier(new AttributeModifier(attributemodifier.getUniqueId(), this.c() + " " + i, this.a(i, attributemodifier), attributemodifier.getOperation()));

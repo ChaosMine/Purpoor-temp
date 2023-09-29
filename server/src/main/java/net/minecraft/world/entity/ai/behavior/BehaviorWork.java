@@ -25,18 +25,18 @@ public class BehaviorWork extends Behavior<EntityVillager> {
             return false;
         } else {
             this.b = worldserver.getTime();
-            GlobalPos globalpos = (GlobalPos) entityvillager.getBehaviorController().getMemory(MemoryModuleType.JOB_SITE).get();
+            GlobalPos globalpos = entityvillager.getBehaviorController().getMemory(MemoryModuleType.JOB_SITE).get();
 
-            return globalpos.getDimensionManager() == worldserver.getDimensionKey() && globalpos.getBlockPosition().a((IPosition) entityvillager.getPositionVector(), 1.73D);
+            return globalpos.getDimensionManager() == worldserver.getDimensionKey() && globalpos.getBlockPosition().a(entityvillager.getPositionVector(), 1.73D);
         }
     }
 
     protected void a(WorldServer worldserver, EntityVillager entityvillager, long i) {
         BehaviorController<EntityVillager> behaviorcontroller = entityvillager.getBehaviorController();
 
-        behaviorcontroller.setMemory(MemoryModuleType.LAST_WORKED_AT_POI, (Object) i);
+        behaviorcontroller.setMemory(MemoryModuleType.LAST_WORKED_AT_POI, i);
         behaviorcontroller.getMemory(MemoryModuleType.JOB_SITE).ifPresent((globalpos) -> {
-            behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (Object) (new BehaviorTarget(globalpos.getBlockPosition())));
+            behaviorcontroller.setMemory(MemoryModuleType.LOOK_TARGET, (new BehaviorTarget(globalpos.getBlockPosition())));
         });
         entityvillager.fd();
         this.doWork(worldserver, entityvillager);
@@ -54,9 +54,9 @@ public class BehaviorWork extends Behavior<EntityVillager> {
         if (!optional.isPresent()) {
             return false;
         } else {
-            GlobalPos globalpos = (GlobalPos) optional.get();
+            GlobalPos globalpos = optional.get();
 
-            return globalpos.getDimensionManager() == worldserver.getDimensionKey() && globalpos.getBlockPosition().a((IPosition) entityvillager.getPositionVector(), 1.73D);
+            return globalpos.getDimensionManager() == worldserver.getDimensionKey() && globalpos.getBlockPosition().a(entityvillager.getPositionVector(), 1.73D);
         }
     }
 }

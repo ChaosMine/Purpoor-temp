@@ -22,8 +22,8 @@ public class BehaviorLookWalk extends Behavior<EntityLiving> {
     @Override
     protected void a(WorldServer worldserver, EntityLiving entityliving, long i) {
         BehaviorController<?> behaviorcontroller = entityliving.getBehaviorController();
-        BehaviorPosition behaviorposition = (BehaviorPosition) behaviorcontroller.getMemory(MemoryModuleType.LOOK_TARGET).get();
+        BehaviorPosition behaviorposition = behaviorcontroller.getMemory(MemoryModuleType.LOOK_TARGET).get();
 
-        behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (Object) (new MemoryTarget(behaviorposition, this.b, this.c)));
+        behaviorcontroller.setMemory(MemoryModuleType.WALK_TARGET, (new MemoryTarget(behaviorposition, this.b, this.c)));
     }
 }

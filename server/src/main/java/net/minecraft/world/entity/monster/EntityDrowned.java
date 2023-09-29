@@ -133,9 +133,9 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
 
     public static boolean a(EntityTypes<EntityDrowned> entitytypes, WorldAccess worldaccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         Optional<ResourceKey<BiomeBase>> optional = worldaccess.i(blockposition);
-        boolean flag = worldaccess.getDifficulty() != EnumDifficulty.PEACEFUL && a(worldaccess, blockposition, random) && (enummobspawn == EnumMobSpawn.SPAWNER || worldaccess.getFluid(blockposition).a((Tag) TagsFluid.WATER));
+        boolean flag = worldaccess.getDifficulty() != EnumDifficulty.PEACEFUL && a(worldaccess, blockposition, random) && (enummobspawn == EnumMobSpawn.SPAWNER || worldaccess.getFluid(blockposition).a(TagsFluid.WATER));
 
-        return !Objects.equals(optional, Optional.of(Biomes.RIVER)) && !Objects.equals(optional, Optional.of(Biomes.FROZEN_RIVER)) ? random.nextInt(40) == 0 && a((GeneratorAccess) worldaccess, blockposition) && flag : random.nextInt(15) == 0 && flag;
+        return !Objects.equals(optional, Optional.of(Biomes.RIVER)) && !Objects.equals(optional, Optional.of(Biomes.FROZEN_RIVER)) ? random.nextInt(40) == 0 && a(worldaccess, blockposition) && flag : random.nextInt(15) == 0 && flag;
     }
 
     private static boolean a(GeneratorAccess generatoraccess, BlockPosition blockposition) {
@@ -203,7 +203,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
 
     @Override
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.j((Entity) this);
+        return iworldreader.j(this);
     }
 
     public boolean i(@Nullable EntityLiving entityliving) {
@@ -258,7 +258,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
             BlockPosition blockposition = pathentity.m();
 
             if (blockposition != null) {
-                double d0 = this.h((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ());
+                double d0 = this.h(blockposition.getX(), blockposition.getY(), blockposition.getZ());
 
                 if (d0 < 4.0D) {
                     return true;
@@ -275,7 +275,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         double d0 = entityliving.locX() - this.locX();
         double d1 = entityliving.e(0.3333333333333333D) - entitythrowntrident.locY();
         double d2 = entityliving.locZ() - this.locZ();
-        double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
 
         entitythrowntrident.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
         this.playSound(SoundEffects.ENTITY_DROWNED_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -312,7 +312,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
                 double d0 = this.b - this.i.locX();
                 double d1 = this.c - this.i.locY();
                 double d2 = this.d - this.i.locZ();
-                double d3 = (double) MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                double d3 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
 
                 d1 /= d3;
                 float f = (float) (MathHelper.d(d2, d0) * 57.2957763671875D) - 90.0F;
@@ -340,7 +340,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         private final EntityDrowned b;
 
         public a(EntityDrowned entitydrowned, double d0, boolean flag) {
-            super((EntityZombie) entitydrowned, d0, flag);
+            super(entitydrowned, d0, flag);
             this.b = entitydrowned;
         }
 
@@ -410,7 +410,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
                 BlockPosition blockposition1 = blockposition.b(random.nextInt(20) - 10, 2 - random.nextInt(8), random.nextInt(20) - 10);
 
                 if (this.f.getType(blockposition1).a(Blocks.WATER)) {
-                    return Vec3D.c((BaseBlockPosition) blockposition1);
+                    return Vec3D.c(blockposition1);
                 }
             }
 
@@ -441,7 +441,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         protected boolean a(IWorldReader iworldreader, BlockPosition blockposition) {
             BlockPosition blockposition1 = blockposition.up();
 
-            return iworldreader.isEmpty(blockposition1) && iworldreader.isEmpty(blockposition1.up()) ? iworldreader.getType(blockposition).a((IBlockAccess) iworldreader, blockposition, (Entity) this.g) : false;
+            return iworldreader.isEmpty(blockposition1) && iworldreader.isEmpty(blockposition1.up()) ? iworldreader.getType(blockposition).a(iworldreader, blockposition, this.g) : false;
         }
 
         @Override
@@ -484,7 +484,7 @@ public class EntityDrowned extends EntityZombie implements IRangedEntity {
         @Override
         public void e() {
             if (this.a.locY() < (double) (this.c - 1) && (this.a.getNavigation().m() || this.a.eO())) {
-                Vec3D vec3d = RandomPositionGenerator.b(this.a, 4, 8, new Vec3D(this.a.locX(), (double) (this.c - 1), this.a.locZ()));
+                Vec3D vec3d = RandomPositionGenerator.b(this.a, 4, 8, new Vec3D(this.a.locX(), this.c - 1, this.a.locZ()));
 
                 if (vec3d == null) {
                     this.d = true;

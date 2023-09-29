@@ -8,24 +8,23 @@ import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.Dynamic;
 
 public class DataConverterStructureReference extends DataFix {
+	public DataConverterStructureReference(Schema schema, boolean flag) {
+		super(schema, flag);
+	}
 
-    public DataConverterStructureReference(Schema schema, boolean flag) {
-        super(schema, flag);
-    }
+	private static <T> Dynamic<T> a(Dynamic<T> dynamic) {
+		return dynamic.update("references", (dynamic1) -> {
+			return dynamic1.createInt(dynamic1.asNumber().map(Number::intValue).result().filter((integer) -> {
+				return integer > 0;
+			}).orElse(1));
+		});
+	}
 
-    protected TypeRewriteRule makeRule() {
-        Type<?> type = this.getInputSchema().getType(DataConverterTypes.STRUCTURE_FEATURE);
+	protected TypeRewriteRule makeRule() {
+		Type<?> type = this.getInputSchema().getType(DataConverterTypes.STRUCTURE_FEATURE);
 
-        return this.fixTypeEverywhereTyped("Structure Reference Fix", type, (typed) -> {
-            return typed.update(DSL.remainderFinder(), DataConverterStructureReference::a);
-        });
-    }
-
-    private static <T> Dynamic<T> a(Dynamic<T> dynamic) {
-        return dynamic.update("references", (dynamic1) -> {
-            return dynamic1.createInt((Integer) dynamic1.asNumber().map(Number::intValue).result().filter((integer) -> {
-                return integer > 0;
-            }).orElse(1));
-        });
-    }
+		return this.fixTypeEverywhereTyped("Structure Reference Fix", type, (typed) -> {
+			return typed.update(DSL.remainderFinder(), DataConverterStructureReference::a);
+		});
+	}
 }

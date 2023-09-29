@@ -28,7 +28,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
             return 15;
         } else {
             if (i == Long.MAX_VALUE) {
-                if (!((LightEngineStorageSky) this.c).m(j)) {
+                if (!this.c.m(j)) {
                     return 15;
                 }
 
@@ -121,7 +121,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
         } else {
             int l1;
 
-            for (l1 = 0; !((LightEngineStorageSky) this.c).g(SectionPosition.a(k, 0, -l1 - 1, 0)) && ((LightEngineStorageSky) this.c).a(j1 - l1 - 1); ++l1) {
+            for (l1 = 0; !this.c.g(SectionPosition.a(k, 0, -l1 - 1, 0)) && this.c.a(j1 - l1 - 1); ++l1) {
                 ;
             }
 
@@ -132,14 +132,14 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
         long i2 = BlockPosition.asLong(baseX, newBaseY, baseZ); // Paper
         long j2 = SectionPosition.blockPosAsSectionLong(baseX, newBaseY, baseZ); // Paper
 
-        if (k == j2 || ((LightEngineStorageSky) this.c).g(j2)) {
+        if (k == j2 || this.c.g(j2)) {
             this.b(i, i2, j, flag);
         }
 
         long k2 = BlockPosition.asLong(baseX, baseY + 1, baseZ); // Paper
         long l2 = SectionPosition.blockPosAsSectionLong(baseX, baseY + 1, baseZ); // Paper
 
-        if (k == l2 || ((LightEngineStorageSky) this.c).g(l2)) {
+        if (k == l2 || this.c.g(l2)) {
             this.b(i, k2, j, flag);
         }
 
@@ -158,7 +158,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
                 if (k == i4) {
                     this.b(i, l3, j, flag);
                 } else {
-                    if (((LightEngineStorageSky) this.c).g(i4)) {
+                    if (this.c.g(i4)) {
                         this.b(i, l3, j, flag);
                     }
 
@@ -215,7 +215,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
             if (j1 == j2) {
                 nibblearray1 = nibblearray;
             } else {
-                nibblearray1 = ((LightEngineStorageSky) this.c).updating.getUpdatingOptimized(j2); // Paper
+                nibblearray1 = this.c.updating.getUpdatingOptimized(j2); // Paper
             }
 
             if (nibblearray1 != null) {
@@ -231,7 +231,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
                     }
                 }
             } else if (enumdirection != EnumDirection.DOWN) {
-                for (i2 = BlockPosition.f(i2); !((LightEngineStorageSky) this.c).g(j2) && !((LightEngineStorageSky) this.c).n(j2); i2 = BlockPosition.a(i2, 0, 16, 0)) {
+                for (i2 = BlockPosition.f(i2); !this.c.g(j2) && !this.c.n(j2); i2 = BlockPosition.a(i2, 0, 16, 0)) {
                     j2 = SectionPosition.a(j2, EnumDirection.UP);
                 }
 
@@ -243,7 +243,7 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
                     if (nibblearray2 != null) {
                         l2 = this.b(i2, i, this.a(nibblearray2, i2));
                     } else {
-                        l2 = ((LightEngineStorageSky) this.c).o(j2) ? 0 : 15;
+                        l2 = this.c.o(j2) ? 0 : 15;
                     }
 
                     if (l > l2) {
@@ -262,17 +262,17 @@ public final class LightEngineSky extends LightEngineLayer<LightEngineStorageSky
 
     @Override
     protected void f(long i) {
-        ((LightEngineStorageSky) this.c).d();
+        this.c.d();
         long j = SectionPosition.e(i);
 
-        if (((LightEngineStorageSky) this.c).g(j)) {
+        if (this.c.g(j)) {
             super.f(i);
         } else {
-            for (i = BlockPosition.f(i); !((LightEngineStorageSky) this.c).g(j) && !((LightEngineStorageSky) this.c).n(j); i = BlockPosition.a(i, 0, 16, 0)) {
+            for (i = BlockPosition.f(i); !this.c.g(j) && !this.c.n(j); i = BlockPosition.a(i, 0, 16, 0)) {
                 j = SectionPosition.a(j, EnumDirection.UP);
             }
 
-            if (((LightEngineStorageSky) this.c).g(j)) {
+            if (this.c.g(j)) {
                 super.f(i);
             }
         }

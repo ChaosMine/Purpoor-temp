@@ -206,7 +206,7 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
 
         if (flag) {
             entity.setMot(entity.getMot().add(0.0D, 0.4000000059604645D, 0.0D));
-            this.a((EntityLiving) this, entity);
+            this.a(this, entity);
         }
 
         this.playSound(SoundEffects.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
@@ -283,11 +283,11 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
     }
 
     public boolean isPlayerCreated() {
-        return ((Byte) this.datawatcher.get(EntityIronGolem.b) & 1) != 0;
+        return (this.datawatcher.get(EntityIronGolem.b) & 1) != 0;
     }
 
     public void setPlayerCreated(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityIronGolem.b);
+        byte b0 = this.datawatcher.get(EntityIronGolem.b);
 
         if (flag) {
             this.datawatcher.set(EntityIronGolem.b, (byte) (b0 | 1));
@@ -308,19 +308,19 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
         BlockPosition blockposition1 = blockposition.down();
         IBlockData iblockdata = iworldreader.getType(blockposition1);
 
-        if (!iblockdata.a((IBlockAccess) iworldreader, blockposition1, (Entity) this) && !world.paperConfig.ironGolemsCanSpawnInAir) { // Paper
+        if (!iblockdata.a(iworldreader, blockposition1, this) && !world.paperConfig.ironGolemsCanSpawnInAir) { // Paper
             return false;
         } else {
             for (int i = 1; i < 3; ++i) {
                 BlockPosition blockposition2 = blockposition.up(i);
                 IBlockData iblockdata1 = iworldreader.getType(blockposition2);
 
-                if (!SpawnerCreature.a((IBlockAccess) iworldreader, blockposition2, iblockdata1, iblockdata1.getFluid(), EntityTypes.IRON_GOLEM)) {
+                if (!SpawnerCreature.a(iworldreader, blockposition2, iblockdata1, iblockdata1.getFluid(), EntityTypes.IRON_GOLEM)) {
                     return false;
                 }
             }
 
-            return SpawnerCreature.a((IBlockAccess) iworldreader, blockposition, iworldreader.getType(blockposition), FluidTypes.EMPTY.h(), EntityTypes.IRON_GOLEM) && iworldreader.j((Entity) this);
+            return SpawnerCreature.a(iworldreader, blockposition, iworldreader.getType(blockposition), FluidTypes.EMPTY.h(), EntityTypes.IRON_GOLEM) && iworldreader.j(this);
         }
     }
 
@@ -328,8 +328,8 @@ public class EntityIronGolem extends EntityGolem implements IEntityAngerable {
 
         NONE(1.0F), LOW(0.75F), MEDIUM(0.5F), HIGH(0.25F);
 
-        private static final List<EntityIronGolem.CrackLevel> e = (List) Stream.of(values()).sorted(Comparator.comparingDouble((entityirongolem_cracklevel) -> {
-            return (double) entityirongolem_cracklevel.f;
+        private static final List<EntityIronGolem.CrackLevel> e = Stream.of(values()).sorted(Comparator.comparingDouble((entityirongolem_cracklevel) -> {
+            return entityirongolem_cracklevel.f;
         })).collect(ImmutableList.toImmutableList());
         private final float f;
 

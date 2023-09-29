@@ -103,7 +103,7 @@ public class EntityCow extends EntityAnimal {
 
         if (itemstack.getItem() == Items.BUCKET && !this.isBaby()) {
             // CraftBukkit start - Got milk?
-            org.bukkit.event.player.PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent((WorldServer) entityhuman.world, entityhuman, this.getChunkCoordinates(), this.getChunkCoordinates(), null, itemstack, Items.MILK_BUCKET, enumhand); // Paper - add enumHand
+            org.bukkit.event.player.PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(entityhuman.world, entityhuman, this.getChunkCoordinates(), this.getChunkCoordinates(), null, itemstack, Items.MILK_BUCKET, enumhand); // Paper - add enumHand
 
             if (event.isCancelled()) {
                 return tryRide(entityhuman, enumhand); // Purpur
@@ -191,7 +191,7 @@ public class EntityCow extends EntityAnimal {
 
     @Override
     public EntityCow createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        return (EntityCow) EntityTypes.COW.a((World) worldserver);
+        return EntityTypes.COW.a(worldserver);
     }
 
     @Override

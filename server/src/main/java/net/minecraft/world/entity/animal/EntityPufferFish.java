@@ -60,7 +60,7 @@ public class EntityPufferFish extends EntityFish {
     }
 
     public int getPuffState() {
-        return (Integer) this.datawatcher.get(EntityPufferFish.b);
+        return this.datawatcher.get(EntityPufferFish.b);
     }
 
     public void setPuffState(int i) {

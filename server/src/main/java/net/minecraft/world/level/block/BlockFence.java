@@ -32,7 +32,7 @@ public class BlockFence extends BlockTall {
 
     public BlockFence(BlockBase.Info blockbase_info) {
         super(2.0F, 2.0F, 16.0F, 16.0F, 24.0F, blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockFence.NORTH, false)).set(BlockFence.EAST, false)).set(BlockFence.SOUTH, false)).set(BlockFence.WEST, false)).set(BlockFence.e, false));
+        this.j(this.blockStateList.getBlockData().set(BlockFence.NORTH, false).set(BlockFence.EAST, false).set(BlockFence.SOUTH, false).set(BlockFence.WEST, false).set(BlockFence.e, false));
         this.i = this.a(2.0F, 1.0F, 16.0F, 6.0F, 15.0F);
     }
 
@@ -60,7 +60,7 @@ public class BlockFence extends BlockTall {
     }
 
     private boolean c(Block block) {
-        return block.a((Tag) TagsBlock.FENCES) && block.a((Tag) TagsBlock.WOODEN_FENCES) == this.getBlockData().a((Tag) TagsBlock.WOODEN_FENCES);
+        return block.a(TagsBlock.FENCES) && block.a(TagsBlock.WOODEN_FENCES) == this.getBlockData().a(TagsBlock.WOODEN_FENCES);
     }
 
     @Override
@@ -88,16 +88,16 @@ public class BlockFence extends BlockTall {
         IBlockData iblockdata2 = world.getType(blockposition3);
         IBlockData iblockdata3 = world.getType(blockposition4);
 
-        return (IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) super.getPlacedState(blockactioncontext).set(BlockFence.NORTH, this.a(iblockdata, iblockdata.d(world, blockposition1, EnumDirection.SOUTH), EnumDirection.SOUTH))).set(BlockFence.EAST, this.a(iblockdata1, iblockdata1.d(world, blockposition2, EnumDirection.WEST), EnumDirection.WEST))).set(BlockFence.SOUTH, this.a(iblockdata2, iblockdata2.d(world, blockposition3, EnumDirection.NORTH), EnumDirection.NORTH))).set(BlockFence.WEST, this.a(iblockdata3, iblockdata3.d(world, blockposition4, EnumDirection.EAST), EnumDirection.EAST))).set(BlockFence.e, fluid.getType() == FluidTypes.WATER);
+        return super.getPlacedState(blockactioncontext).set(BlockFence.NORTH, this.a(iblockdata, iblockdata.d(world, blockposition1, EnumDirection.SOUTH), EnumDirection.SOUTH)).set(BlockFence.EAST, this.a(iblockdata1, iblockdata1.d(world, blockposition2, EnumDirection.WEST), EnumDirection.WEST)).set(BlockFence.SOUTH, this.a(iblockdata2, iblockdata2.d(world, blockposition3, EnumDirection.NORTH), EnumDirection.NORTH)).set(BlockFence.WEST, this.a(iblockdata3, iblockdata3.d(world, blockposition4, EnumDirection.EAST), EnumDirection.EAST)).set(BlockFence.e, fluid.getType() == FluidTypes.WATER);
     }
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockFence.e)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockFence.e)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
-        return enumdirection.n().e() == EnumDirection.EnumDirectionLimit.HORIZONTAL ? (IBlockData) iblockdata.set((IBlockState) BlockFence.f.get(enumdirection), this.a(iblockdata1, iblockdata1.d(generatoraccess, blockposition1, enumdirection.opposite()), enumdirection.opposite())) : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
+        return enumdirection.n().e() == EnumDirection.EnumDirectionLimit.HORIZONTAL ? iblockdata.set(BlockFence.f.get(enumdirection), this.a(iblockdata1, iblockdata1.d(generatoraccess, blockposition1, enumdirection.opposite()), enumdirection.opposite())) : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
     }
 
     @Override

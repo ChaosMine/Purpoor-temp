@@ -228,7 +228,7 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     }
 
     private void c(WorldServer worldserver) {
-        EntityZoglin entityzoglin = (EntityZoglin) this.a(EntityTypes.ZOGLIN, true);
+        EntityZoglin entityzoglin = this.a(EntityTypes.ZOGLIN, true);
 
         if (entityzoglin != null) {
             entityzoglin.addEffect(new MobEffect(MobEffects.CONFUSION, 200, 0));
@@ -278,7 +278,7 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     }
 
     public boolean isImmuneToZombification() {
-        return (Boolean) this.getDataWatcher().get(EntityHoglin.bq);
+        return this.getDataWatcher().get(EntityHoglin.bq);
     }
 
     public boolean isConverting() {
@@ -296,7 +296,7 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     @Nullable
     @Override
     public EntityAgeable createChild(WorldServer worldserver, EntityAgeable entityageable) {
-        EntityHoglin entityhoglin = (EntityHoglin) EntityTypes.HOGLIN.a((World) worldserver);
+        EntityHoglin entityhoglin = EntityTypes.HOGLIN.a(worldserver);
 
         if (entityhoglin != null) {
             entityhoglin.setPersistent();
@@ -317,7 +317,7 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
 
     @Override
     protected SoundEffect getSoundAmbient() {
-        return this.world.isClientSide ? null : (SoundEffect) HoglinAI.b(this).orElse(null); // Purpur - decompile error
+        return this.world.isClientSide ? null : HoglinAI.b(this).orElse(null); // Purpur - decompile error
     }
 
     @Override
@@ -352,6 +352,6 @@ public class EntityHoglin extends EntityAnimal implements IMonster, IOglin {
     @Override
     protected void M() {
         super.M();
-        PacketDebug.a((EntityLiving) this);
+        PacketDebug.a(this);
     }
 }

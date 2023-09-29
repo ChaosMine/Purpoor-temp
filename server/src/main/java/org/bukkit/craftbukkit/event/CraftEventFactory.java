@@ -161,7 +161,7 @@ public class CraftEventFactory {
 	 * Player Harvest Block Event
 	 */
 	public static PlayerHarvestBlockEvent callPlayerHarvestBlockEvent(World world, BlockPosition blockposition, EntityHuman who, List<ItemStack> itemsToHarvest) {
-		List<org.bukkit.inventory.ItemStack> bukkitItemsToHarvest = new ObjectArrayList<>(itemsToHarvest.stream().map(CraftItemStack::asBukkitCopy).collect(Collectors.toList()));
+		List<org.bukkit.inventory.ItemStack> bukkitItemsToHarvest = new ObjectArrayList<>(itemsToHarvest.stream().map(CraftItemStack::asBukkitCopy).toList());
 		Player player = (Player) who.getBukkitEntity();
 		PlayerHarvestBlockEvent playerHarvestBlockEvent = new PlayerHarvestBlockEvent(player, CraftBlock.at(world, blockposition), bukkitItemsToHarvest);
 		Bukkit.getPluginManager().callEvent(playerHarvestBlockEvent);
@@ -1687,7 +1687,7 @@ public class CraftEventFactory {
 	}
 
 	public static PiglinBarterEvent callPiglinBarterEvent(EntityPiglin piglin, List<ItemStack> outcome, ItemStack input) {
-		PiglinBarterEvent event = new PiglinBarterEvent((Piglin) piglin.getBukkitEntity(), CraftItemStack.asBukkitCopy(input), outcome.stream().map(CraftItemStack::asBukkitCopy).collect(Collectors.toList()));
+		PiglinBarterEvent event = new PiglinBarterEvent((Piglin) piglin.getBukkitEntity(), CraftItemStack.asBukkitCopy(input), outcome.stream().map(CraftItemStack::asBukkitCopy).toList());
 		Bukkit.getPluginManager().callEvent(event);
 		return event;
 	}

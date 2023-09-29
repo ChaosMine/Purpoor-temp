@@ -23,11 +23,11 @@ public class NoiseGeneratorOctaves implements NoiseGenerator {
     private final double d;
 
     public NoiseGeneratorOctaves(SeededRandom seededrandom, IntStream intstream) {
-        this(seededrandom, (List) intstream.boxed().collect(ImmutableList.toImmutableList()));
+        this(seededrandom, intstream.boxed().collect(ImmutableList.toImmutableList()));
     }
 
     public NoiseGeneratorOctaves(SeededRandom seededrandom, List<Integer> list) {
-        this(seededrandom, (IntSortedSet) (new IntRBTreeSet(list)));
+        this(seededrandom, new IntRBTreeSet(list));
     }
 
     public static NoiseGeneratorOctaves a(SeededRandom seededrandom, int i, DoubleList doublelist) {
@@ -114,8 +114,8 @@ public class NoiseGeneratorOctaves implements NoiseGenerator {
             }
         }
 
-        this.d = Math.pow(2.0D, (double) (-k));
-        this.c = Math.pow(2.0D, (double) (j - 1)) / (Math.pow(2.0D, (double) j) - 1.0D);
+        this.d = Math.pow(2.0D, -k);
+        this.c = Math.pow(2.0D, j - 1) / (Math.pow(2.0D, j) - 1.0D);
     }
 
     public double a(double d0, double d1, double d2) {

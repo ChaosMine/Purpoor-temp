@@ -10,7 +10,7 @@ public class FeatureSizeType<P extends FeatureSize> {
     private final Codec<P> c;
 
     private static <P extends FeatureSize> FeatureSizeType<P> a(String s, Codec<P> codec) {
-        return (FeatureSizeType) IRegistry.a(IRegistry.FEATURE_SIZE_TYPE, s, (Object) (new FeatureSizeType<>(codec)));
+        return IRegistry.a(IRegistry.FEATURE_SIZE_TYPE, s, new FeatureSizeType<>(codec));
     }
 
     private FeatureSizeType(Codec<P> codec) {

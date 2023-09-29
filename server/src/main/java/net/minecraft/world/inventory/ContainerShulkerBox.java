@@ -45,7 +45,7 @@ public class ContainerShulkerBox extends Container {
 
         for (j = 0; j < 3; ++j) {
             for (k = 0; k < 9; ++k) {
-                this.a((Slot) (new SlotShulkerBox(iinventory, k + j * 9, 8 + k * 18, 18 + j * 18)));
+                this.a(new SlotShulkerBox(iinventory, k + j * 9, 8 + k * 18, 18 + j * 18));
             }
         }
 
@@ -70,7 +70,7 @@ public class ContainerShulkerBox extends Container {
     @Override
     public ItemStack shiftClick(EntityHuman entityhuman, int i) {
         ItemStack itemstack = ItemStack.b;
-        Slot slot = (Slot) this.slots.get(i);
+        Slot slot = this.slots.get(i);
 
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();

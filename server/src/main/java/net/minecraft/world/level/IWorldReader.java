@@ -83,7 +83,7 @@ public interface IWorldReader extends IBlockLightAccess, ICollisionAccess, Biome
                 for (blockposition1 = blockposition1.down(); blockposition1.getY() > blockposition.getY(); blockposition1 = blockposition1.down()) {
                     IBlockData iblockdata = this.getType(blockposition1);
 
-                    if (iblockdata.b((IBlockAccess) this, blockposition1) > 0 && !iblockdata.getMaterial().isLiquid()) {
+                    if (iblockdata.b(this, blockposition1) > 0 && !iblockdata.getMaterial().isLiquid()) {
                         return false;
                     }
                 }
@@ -121,7 +121,7 @@ public interface IWorldReader extends IBlockLightAccess, ICollisionAccess, Biome
     }
 
     default boolean A(BlockPosition blockposition) {
-        return this.getFluid(blockposition).a((Tag) TagsFluid.WATER);
+        return this.getFluid(blockposition).a(TagsFluid.WATER);
     }
 
     default boolean containsLiquid(AxisAlignedBB axisalignedbb) {

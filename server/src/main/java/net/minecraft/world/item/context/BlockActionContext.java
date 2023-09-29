@@ -49,11 +49,11 @@ public class BlockActionContext extends ItemActionContext {
     }
 
     public EnumDirection d() {
-        return EnumDirection.a((Entity) this.getEntity())[0];
+        return EnumDirection.a(this.getEntity())[0];
     }
 
     public EnumDirection[] e() {
-        EnumDirection[] aenumdirection = EnumDirection.a((Entity) this.getEntity());
+        EnumDirection[] aenumdirection = EnumDirection.a(this.getEntity());
 
         if (this.a) {
             return aenumdirection;

@@ -34,7 +34,7 @@ public class WorldGenFeatureTreeCocoa extends WorldGenFeatureTree {
     @Override
     public void a(GeneratorAccessSeed generatoraccessseed, Random random, List<BlockPosition> list, List<BlockPosition> list1, Set<BlockPosition> set, StructureBoundingBox structureboundingbox) {
         if (random.nextFloat() < this.b) {
-            int i = ((BlockPosition) list.get(0)).getY();
+            int i = list.get(0).getY();
 
             list.stream().filter((blockposition) -> {
                 return blockposition.getY() - i <= 2;
@@ -49,9 +49,9 @@ public class WorldGenFeatureTreeCocoa extends WorldGenFeatureTree {
                         BlockPosition blockposition1 = blockposition.b(enumdirection1.getAdjacentX(), 0, enumdirection1.getAdjacentZ());
 
                         if (WorldGenerator.b(generatoraccessseed, blockposition1)) {
-                            IBlockData iblockdata = (IBlockData) ((IBlockData) Blocks.COCOA.getBlockData().set(BlockCocoa.AGE, random.nextInt(3))).set(BlockCocoa.FACING, enumdirection);
+                            IBlockData iblockdata = Blocks.COCOA.getBlockData().set(BlockCocoa.AGE, random.nextInt(3)).set(BlockCocoa.FACING, enumdirection);
 
-                            this.a((IWorldWriter) generatoraccessseed, blockposition1, iblockdata, set, structureboundingbox);
+                            this.a(generatoraccessseed, blockposition1, iblockdata, set, structureboundingbox);
                         }
                     }
                 }

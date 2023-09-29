@@ -1,12 +1,13 @@
 package net.minecraft.world.entity.monster.piglin;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Optional;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.entity.ai.BehaviorController;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
+
+import java.util.Optional;
 
 public class BehaviorAdmireTimeout<E extends EntityPiglin> extends Behavior<E> {
 
@@ -27,18 +28,15 @@ public class BehaviorAdmireTimeout<E extends EntityPiglin> extends Behavior<E> {
         BehaviorController<EntityPiglin> behaviorcontroller = e0.getBehaviorController();
         Optional<Integer> optional = behaviorcontroller.getMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
 
-        if (!optional.isPresent()) {
-            behaviorcontroller.setMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM, (int) 0);
-        } else {
-            int j = (Integer) optional.get();
+        if (!optional.isPresent()) behaviorcontroller.setMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM, 0);
+				else {
+            int j = optional.get();
 
             if (j > this.b) {
                 behaviorcontroller.removeMemory(MemoryModuleType.ADMIRING_ITEM);
                 behaviorcontroller.removeMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
-                behaviorcontroller.a(MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM, true, (long) this.c);
-            } else {
-                behaviorcontroller.setMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM, (Object) (j + 1));
-            }
+                behaviorcontroller.a(MemoryModuleType.DISABLE_WALK_TO_ADMIRE_ITEM, true, this.c);
+            } else behaviorcontroller.setMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM, (j + 1));
         }
 
     }

@@ -66,7 +66,7 @@ public class PaperWorldConfig {
 
     private float getFloat(String path, float def) {
         // TODO: Figure out why getFloat() always returns the default value.
-        return (float) getDouble(path, (double) def);
+        return (float) getDouble(path, def);
     }
 
     private <T> List<T> getList(String path, List<T> def) {
@@ -80,8 +80,8 @@ public class PaperWorldConfig {
     }
 
     private <T extends Enum<T>> List<T> getEnumList(String path, List<T> def, Class<T> type) {
-        config.addDefault("world-settings.default." + path, def.stream().map(Enum::name).collect(Collectors.toList()));
-        return ((List<String>) (config.getList("world-settings." + worldName + "." + path, config.getList("world-settings.default." + path)))).stream().map(s -> Enum.valueOf(type, s)).collect(Collectors.toList());
+        config.addDefault("world-settings.default." + path, def.stream().map(Enum::name).toList());
+        return ((List<String>) (config.getList("world-settings." + worldName + "." + path, config.getList("world-settings.default." + path)))).stream().map(s -> Enum.valueOf(type, s)).toList();
     }
 
     public int cactusMaxHeight;
@@ -498,7 +498,7 @@ public class PaperWorldConfig {
         if (autoSavePeriod > 0) {
             log("Auto Save Interval: " +autoSavePeriod + " (" + (autoSavePeriod / 20) + "s)");
         } else if (autoSavePeriod < 0) {
-            autoSavePeriod = net.minecraft.server.MinecraftServer.getServer().autosavePeriod;
+            autoSavePeriod = net.minecraft.server.MinecraftServer.SERVER.autosavePeriod;
         }
     }
 
@@ -786,14 +786,14 @@ public class PaperWorldConfig {
             "door-breaking-difficulty.zombie",
             Arrays.stream(EnumDifficulty.values())
                 .filter(EntityZombie.getDoorBreakingPredicate())
-                .collect(Collectors.toList()),
+                .toList(),
             EnumDifficulty.class
         );
         vindicatorBreakDoors = getEnumList(
             "door-breaking-difficulty.vindicator",
             Arrays.stream(EnumDifficulty.values())
                 .filter(EntityVindicator.getDoorBreakingPredicate())
-                .collect(Collectors.toList()),
+                .toList(),
             EnumDifficulty.class
         );
     }

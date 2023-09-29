@@ -44,9 +44,9 @@ public class LootItemFunctionSetStewEffect extends LootItemFunctionConditional {
         if (itemstack.getItem() == Items.SUSPICIOUS_STEW && !this.a.isEmpty()) {
             Random random = loottableinfo.a();
             int i = random.nextInt(this.a.size());
-            Entry<MobEffectList, LootValueBounds> entry = (Entry) Iterables.get(this.a.entrySet(), i);
-            MobEffectList mobeffectlist = (MobEffectList) entry.getKey();
-            int j = ((LootValueBounds) entry.getValue()).a(random);
+            Entry<MobEffectList, LootValueBounds> entry = Iterables.get(this.a.entrySet(), i);
+            MobEffectList mobeffectlist = entry.getKey();
+            int j = entry.getValue().a(random);
 
             if (!mobeffectlist.isInstant()) {
                 j *= 20;
@@ -68,7 +68,7 @@ public class LootItemFunctionSetStewEffect extends LootItemFunctionConditional {
         public b() {}
 
         public void a(JsonObject jsonobject, LootItemFunctionSetStewEffect lootitemfunctionsetsteweffect, JsonSerializationContext jsonserializationcontext) {
-            super.a(jsonobject, (LootItemFunctionConditional) lootitemfunctionsetsteweffect, jsonserializationcontext);
+            super.a(jsonobject, lootitemfunctionsetsteweffect, jsonserializationcontext);
             if (!lootitemfunctionsetsteweffect.a.isEmpty()) {
                 JsonArray jsonarray = new JsonArray();
                 Iterator iterator = lootitemfunctionsetsteweffect.a.keySet().iterator();
@@ -103,10 +103,10 @@ public class LootItemFunctionSetStewEffect extends LootItemFunctionConditional {
                 while (iterator.hasNext()) {
                     JsonElement jsonelement = (JsonElement) iterator.next();
                     String s = ChatDeserializer.h(jsonelement.getAsJsonObject(), "type");
-                    MobEffectList mobeffectlist = (MobEffectList) IRegistry.MOB_EFFECT.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
+                    MobEffectList mobeffectlist = IRegistry.MOB_EFFECT.getOptional(new MinecraftKey(s)).orElseThrow(() -> {
                         return new JsonSyntaxException("Unknown mob effect '" + s + "'");
                     });
-                    LootValueBounds lootvaluebounds = (LootValueBounds) ChatDeserializer.a(jsonelement.getAsJsonObject(), "duration", jsondeserializationcontext, LootValueBounds.class);
+                    LootValueBounds lootvaluebounds = ChatDeserializer.a(jsonelement.getAsJsonObject(), "duration", jsondeserializationcontext, LootValueBounds.class);
 
                     map.put(mobeffectlist, lootvaluebounds);
                 }

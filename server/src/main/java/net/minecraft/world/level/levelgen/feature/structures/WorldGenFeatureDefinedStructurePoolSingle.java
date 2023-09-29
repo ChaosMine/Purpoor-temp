@@ -72,7 +72,7 @@ public class WorldGenFeatureDefinedStructurePoolSingle extends WorldGenFeatureDe
     }
 
     private DefinedStructure a(DefinedStructureManager definedstructuremanager) {
-        return (DefinedStructure) this.c.map(definedstructuremanager::a, Function.identity());
+        return this.c.map(definedstructuremanager::a, Function.identity());
     }
 
     public List<DefinedStructure.BlockInfo> a(DefinedStructureManager definedstructuremanager, BlockPosition blockposition, EnumBlockRotation enumblockrotation, boolean flag) {
@@ -140,13 +140,13 @@ public class WorldGenFeatureDefinedStructurePoolSingle extends WorldGenFeatureDe
         definedstructureinfo.a(enumblockrotation);
         definedstructureinfo.c(true);
         definedstructureinfo.a(false);
-        definedstructureinfo.a((DefinedStructureProcessor) DefinedStructureProcessorBlockIgnore.b);
+        definedstructureinfo.a(DefinedStructureProcessorBlockIgnore.b);
         definedstructureinfo.d(true);
         if (!flag) {
-            definedstructureinfo.a((DefinedStructureProcessor) DefinedStructureProcessorJigsawReplacement.b);
+            definedstructureinfo.a(DefinedStructureProcessorJigsawReplacement.b);
         }
 
-        ((ProcessorList) this.d.get()).a().forEach(definedstructureinfo::a);
+        this.d.get().a().forEach(definedstructureinfo::a);
         this.e().c().forEach(definedstructureinfo::a);
         return definedstructureinfo;
     }

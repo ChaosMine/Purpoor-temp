@@ -23,44 +23,44 @@ public class CriterionTriggerChanneledLightning extends CriterionTriggerAbstract
     }
 
     @Override
-    public CriterionTriggerChanneledLightning.a b(JsonObject jsonobject, CriterionConditionEntity.b criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
-        CriterionConditionEntity.b[] acriterionconditionentity_b = CriterionConditionEntity.b.b(jsonobject, "victims", lootdeserializationcontext);
+    public CriterionTriggerChanneledLightning.a b(JsonObject jsonobject, CriterionConditionEntity.b_ criterionconditionentity_b, LootDeserializationContext lootdeserializationcontext) {
+        CriterionConditionEntity.b_[] acriterionconditionentity_b = CriterionConditionEntity.b_.b(jsonobject, "victims", lootdeserializationcontext);
 
         return new CriterionTriggerChanneledLightning.a(criterionconditionentity_b, acriterionconditionentity_b);
     }
 
     public void a(EntityPlayer entityplayer, Collection<? extends Entity> collection) {
-        List<LootTableInfo> list = (List) collection.stream().map((entity) -> {
+        List<LootTableInfo> list = collection.stream().map((entity) -> {
             return CriterionConditionEntity.b(entityplayer, entity);
-        }).collect(Collectors.toList());
+        }).toList();
 
         this.a(entityplayer, (criteriontriggerchanneledlightning_a) -> {
-            return criteriontriggerchanneledlightning_a.a((Collection) list);
+            return criteriontriggerchanneledlightning_a.a(list);
         });
     }
 
     public static class a extends CriterionInstanceAbstract {
 
-        private final CriterionConditionEntity.b[] a;
+        private final CriterionConditionEntity.b_[] a;
 
-        public a(CriterionConditionEntity.b criterionconditionentity_b, CriterionConditionEntity.b[] acriterionconditionentity_b) {
+        public a(CriterionConditionEntity.b_ criterionconditionentity_b, CriterionConditionEntity.b_[] acriterionconditionentity_b) {
             super(CriterionTriggerChanneledLightning.a, criterionconditionentity_b);
             this.a = acriterionconditionentity_b;
         }
 
         public static CriterionTriggerChanneledLightning.a a(CriterionConditionEntity... acriterionconditionentity) {
-            return new CriterionTriggerChanneledLightning.a(CriterionConditionEntity.b.a, (CriterionConditionEntity.b[]) Stream.of(acriterionconditionentity).map(CriterionConditionEntity.b::a).toArray((i) -> {
-                return new CriterionConditionEntity.b[i];
+            return new CriterionTriggerChanneledLightning.a(CriterionConditionEntity.b_.a, Stream.of(acriterionconditionentity).map(CriterionConditionEntity.b_::a).toArray((i) -> {
+                return new CriterionConditionEntity.b_[i];
             }));
         }
 
         public boolean a(Collection<? extends LootTableInfo> collection) {
-            CriterionConditionEntity.b[] acriterionconditionentity_b = this.a;
+            CriterionConditionEntity.b_[] acriterionconditionentity_b = this.a;
             int i = acriterionconditionentity_b.length;
             int j = 0;
 
             while (j < i) {
-                CriterionConditionEntity.b criterionconditionentity_b = acriterionconditionentity_b[j];
+                CriterionConditionEntity.b_ criterionconditionentity_b = acriterionconditionentity_b[j];
                 boolean flag = false;
                 Iterator iterator = collection.iterator();
 
@@ -91,7 +91,7 @@ public class CriterionTriggerChanneledLightning extends CriterionTriggerAbstract
         public JsonObject a(LootSerializationContext lootserializationcontext) {
             JsonObject jsonobject = super.a(lootserializationcontext);
 
-            jsonobject.add("victims", CriterionConditionEntity.b.a(this.a, lootserializationcontext));
+            jsonobject.add("victims", CriterionConditionEntity.b_.a(this.a, lootserializationcontext));
             return jsonobject;
         }
     }

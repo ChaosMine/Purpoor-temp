@@ -1,186 +1,154 @@
 package net.minecraft.world.level.block.state;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.UnmodifiableIterator;
+import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.MapCodec;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import net.minecraft.world.level.block.state.properties.IBlockState;
+
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import net.minecraft.world.level.block.state.properties.IBlockState;
 
 public class BlockStateList<O, S extends IBlockDataHolder<O, S>> {
+	private static final Pattern a = Pattern.compile("^[a-z0-9_]+$");
+	private final O b;
+	private final ImmutableSortedMap<String, IBlockState<?>> c;
+	private final ImmutableList<S> d;
 
-    private static final Pattern a = Pattern.compile("^[a-z0-9_]+$");
-    private final O b;
-    private final ImmutableSortedMap<String, IBlockState<?>> c;
-    private final ImmutableList<S> d;
+	protected BlockStateList(Function<O, S> var0, O var1, BlockStateList.b<O, S> var2, Map<String, IBlockState<?>> var3) {
+		this.b = var1;
+		this.c = ImmutableSortedMap.copyOf(var3);
+		Supplier<S> var4 = () -> var0.apply(var1);
+		MapCodec<S> var5 = MapCodec.of(Encoder.empty(), Decoder.unit(var4));
 
-    protected BlockStateList(Function<O, S> function, O o0, BlockStateList.b<O, S> blockstatelist_b, Map<String, IBlockState<?>> map) {
-        this.b = o0;
-        this.c = ImmutableSortedMap.copyOf(map);
-        Supplier<S> supplier = () -> {
-            return (IBlockDataHolder) function.apply(o0);
-        };
-        MapCodec<S> mapcodec = MapCodec.of(Encoder.empty(), Decoder.unit(supplier));
+		for (Entry<String, IBlockState<?>> var7 : this.c.entrySet()) {
+			var5 = a(var5, var4, var7.getKey(), var7.getValue());
+		}
 
-        Entry entry;
+		MapCodec<S> var6 = var5;
+		Map<Map<IBlockState<?>, Comparable<?>>, S> var7 = Maps.newLinkedHashMap();
+		List<S> var8 = new ArrayList<>();
+		Stream<List<Pair<IBlockState<?>, Comparable<?>>>> var9 = Stream.of(Collections.emptyList());
 
-        for (UnmodifiableIterator unmodifiableiterator = this.c.entrySet().iterator(); unmodifiableiterator.hasNext(); mapcodec = a(mapcodec, supplier, (String) entry.getKey(), (IBlockState) entry.getValue())) {
-            entry = (Entry) unmodifiableiterator.next();
-        }
+		for (IBlockState<?> var11 : this.c.values()) {
+			var9 = var9.flatMap(var1x -> var11.getValues().stream().map(var2x -> {
+				List<Pair<IBlockState<?>, Comparable<?>>> var3x = Lists.newArrayList(var1x);
+				var3x.add(Pair.of(var11, var2x));
+				return var3x;
+			}));
+		}
 
-        Map<Map<IBlockState<?>, Comparable<?>>, S> map1 = Maps.newLinkedHashMap();
-        List<S> list = Lists.newArrayList();
-        Stream<List<Pair<IBlockState<?>, Comparable<?>>>> stream = Stream.of(Collections.emptyList());
+		var9.forEach(
+			var5x -> {
+				ImmutableMap<IBlockState<?>, Comparable<?>> var6x = var5x.stream()
+					.collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond));
+				S var7x = var2.create(var1, var6x, var6);
+				var7.put(var6x, var7x);
+				var8.add(var7x);
+			}
+		);
 
-        IBlockState iblockstate;
+		for (S var11 : var8) {
+			var11.a(var7);
+		}
 
-        for (UnmodifiableIterator unmodifiableiterator1 = this.c.values().iterator(); unmodifiableiterator1.hasNext();stream = stream.flatMap((list1) -> {
-            return iblockstate.getValues().stream().map((comparable) -> {
-                List<Pair<IBlockState<?>, Comparable<?>>> list2 = Lists.newArrayList(list1);
+		this.d = ImmutableList.copyOf(var8);
+	}
 
-                list2.add(Pair.of(iblockstate, comparable));
-                return list2;
-            });
-        })) {
-            iblockstate = (IBlockState) unmodifiableiterator1.next();
-        }
+	private static <S extends IBlockDataHolder<?, S>, T extends Comparable<T>> MapCodec<S> a(
+		MapCodec<S> var0, Supplier<S> var1,
+		String var2, IBlockState<T> var3
+	) {
+		return Codec.mapPair(var0, var3.e().fieldOf(var2).setPartial(() -> var3.a(var1.get())))
+			.xmap(
+				var1x -> (var1x.getFirst()).set(var3, (var1x.getSecond()).b()),
+				var1x -> Pair.of(var1x, var3.a(var1x))
+			);
+	}
 
-        stream.forEach((list1) -> {
-            ImmutableMap<IBlockState<?>, Comparable<?>> immutablemap = (ImmutableMap) list1.stream().collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond));
-            S s0 = (IBlockDataHolder) blockstatelist_b.create(o0, immutablemap, mapcodec);
+	public ImmutableList<S> a() {
+		return this.d;
+	}
 
-            map1.put(immutablemap, s0);
-            list.add(s0);
-        });
-        Iterator iterator = list.iterator();
+	public S getBlockData() {
+		return this.d.get(0);
+	}
 
-        while (iterator.hasNext()) {
-            S s0 = (IBlockDataHolder) iterator.next();
+	public O getBlock() {
+		return this.b;
+	}
 
-            s0.a((Map) map1);
-        }
+	public Collection<IBlockState<?>> d() {
+		return this.c.values();
+	}
 
-        this.d = ImmutableList.copyOf(list);
-    }
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+			.add("block", this.b)
+			.add("properties", this.c.values().stream().map(IBlockState::getName).toList())
+			.toString();
+	}
 
-    private static <S extends IBlockDataHolder<?, S>, T extends Comparable<T>> MapCodec<S> a(MapCodec<S> mapcodec, Supplier<S> supplier, String s, IBlockState<T> iblockstate) {
-        return Codec.mapPair(mapcodec, iblockstate.e().fieldOf(s).setPartial(() -> {
-            return iblockstate.a((IBlockDataHolder) supplier.get());
-        })).xmap((pair) -> {
-            return (IBlockDataHolder) ((IBlockDataHolder) pair.getFirst()).set(iblockstate, ((IBlockState.a) pair.getSecond()).b());
-        }, (iblockdataholder) -> {
-            return Pair.of(iblockdataholder, iblockstate.a(iblockdataholder));
-        });
-    }
+	@Nullable
+	public IBlockState<?> a(String var0) {
+		return this.c.get(var0);
+	}
 
-    public ImmutableList<S> a() {
-        return this.d;
-    }
+	public interface b<O, S> {
+		S create(O var1, ImmutableMap<IBlockState<?>, Comparable<?>> var2, MapCodec<S> var3);
+	}
 
-    public S getBlockData() {
-        return (IBlockDataHolder) this.d.get(0);
-    }
+	public static class a<O, S extends IBlockDataHolder<O, S>> {
+		private final O a;
+		private final Map<String, IBlockState<?>> b = Maps.newHashMap();
 
-    public O getBlock() {
-        return this.b;
-    }
+		public a(O var0) {
+			this.a = var0;
+		}
 
-    public Collection<IBlockState<?>> d() {
-        return this.c.values();
-    }
+		public BlockStateList.a<O, S> a(IBlockState<?>... var0) {
+			for (IBlockState<?> var4 : var0) {
+				this.a(var4);
+				this.b.put(var4.getName(), var4);
+			}
 
-    public String toString() {
-        return MoreObjects.toStringHelper(this).add("block", this.b).add("properties", this.c.values().stream().map(IBlockState::getName).collect(Collectors.toList())).toString();
-    }
+			return this;
+		}
 
-    @Nullable
-    public IBlockState<?> a(String s) {
-        return (IBlockState) this.c.get(s);
-    }
+		private <T extends Comparable<T>> void a(IBlockState<T> var0) {
+			String var1 = var0.getName();
+			if (!BlockStateList.a.matcher(var1).matches()) {
+				throw new IllegalArgumentException(this.a + " has invalidly named property: " + var1);
+			} else {
+				Collection<T> var2 = var0.getValues();
+				if (var2.size() <= 1) {
+					throw new IllegalArgumentException(this.a + " attempted use property " + var1 + " with <= 1 possible values");
+				} else {
+					for (T var4 : var2) {
+						String var5 = var0.a(var4);
+						if (!BlockStateList.a.matcher(var5).matches()) {
+							throw new IllegalArgumentException(this.a + " has property: " + var1 + " with invalidly named value: " + var5);
+						}
+					}
 
-    public static class a<O, S extends IBlockDataHolder<O, S>> {
+					if (this.b.containsKey(var1)) {
+						throw new IllegalArgumentException(this.a + " has duplicate property: " + var1);
+					}
+				}
+			}
+		}
 
-        private final O a;
-        private final Map<String, IBlockState<?>> b = Maps.newHashMap();
-
-        public a(O o0) {
-            this.a = o0;
-        }
-
-        public BlockStateList.a<O, S> a(IBlockState<?>... aiblockstate) {
-            IBlockState[] aiblockstate1 = aiblockstate;
-            int i = aiblockstate.length;
-
-            for (int j = 0; j < i; ++j) {
-                IBlockState<?> iblockstate = aiblockstate1[j];
-
-                this.a(iblockstate);
-                this.b.put(iblockstate.getName(), iblockstate);
-            }
-
-            return this;
-        }
-
-        private <T extends Comparable<T>> void a(IBlockState<T> iblockstate) {
-            String s = iblockstate.getName();
-
-            if (!BlockStateList.a.matcher(s).matches()) {
-                throw new IllegalArgumentException(this.a + " has invalidly named property: " + s);
-            } else {
-                Collection<T> collection = iblockstate.getValues();
-
-                if (collection.size() <= 1) {
-                    throw new IllegalArgumentException(this.a + " attempted use property " + s + " with <= 1 possible values");
-                } else {
-                    Iterator iterator = collection.iterator();
-
-                    String s1;
-
-                    do {
-                        if (!iterator.hasNext()) {
-                            if (this.b.containsKey(s)) {
-                                throw new IllegalArgumentException(this.a + " has duplicate property: " + s);
-                            }
-
-                            return;
-                        }
-
-                        T t0 = (Comparable) iterator.next();
-
-                        s1 = iblockstate.a(t0);
-                    } while (BlockStateList.a.matcher(s1).matches());
-
-                    throw new IllegalArgumentException(this.a + " has property: " + s + " with invalidly named value: " + s1);
-                }
-            }
-        }
-
-        public BlockStateList<O, S> a(Function<O, S> function, BlockStateList.b<O, S> blockstatelist_b) {
-            return new BlockStateList<>(function, this.a, blockstatelist_b, this.b);
-        }
-    }
-
-    public interface b<O, S> {
-
-        S create(O o0, ImmutableMap<IBlockState<?>, Comparable<?>> immutablemap, MapCodec<S> mapcodec);
-    }
+		public BlockStateList<O, S> a(Function<O, S> var0, BlockStateList.b<O, S> var1) {
+			return new BlockStateList<>(var0, this.a, var1, this.b);
+		}
+	}
 }

@@ -67,7 +67,7 @@ public class ChatDeserializer {
         if (jsonelement.isJsonPrimitive()) {
             String s1 = jsonelement.getAsString();
 
-            return (Item) IRegistry.ITEM.getOptional(new MinecraftKey(s1)).orElseThrow(() -> {
+            return IRegistry.ITEM.getOptional(new MinecraftKey(s1)).orElseThrow(() -> {
                 return new JsonSyntaxException("Expected " + s + " to be an item, was unknown string '" + s1 + "'");
             });
         } else {
@@ -278,7 +278,7 @@ public class ChatDeserializer {
 
     @Nullable
     public static <T> T a(Gson gson, String s, Class<T> oclass, boolean flag) {
-        return a(gson, (Reader) (new StringReader(s)), oclass, flag);
+        return a(gson, new StringReader(s), oclass, flag);
     }
 
     @Nullable
@@ -292,11 +292,11 @@ public class ChatDeserializer {
     }
 
     public static JsonObject a(String s, boolean flag) {
-        return a((Reader) (new StringReader(s)), flag);
+        return a(new StringReader(s), flag);
     }
 
     public static JsonObject a(Reader reader, boolean flag) {
-        return (JsonObject) a(ChatDeserializer.a, reader, JsonObject.class, flag);
+        return a(ChatDeserializer.a, reader, JsonObject.class, flag);
     }
 
     public static JsonObject a(String s) {

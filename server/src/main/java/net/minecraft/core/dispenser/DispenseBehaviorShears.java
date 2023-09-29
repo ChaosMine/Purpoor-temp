@@ -51,7 +51,7 @@ public class DispenseBehaviorShears extends DispenseBehaviorMaybe {
         if (!event.getItem().equals(craftItem)) {
             // Chain to handler for new item
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
-            IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.REGISTRY.get(eventStack.getItem());
+            IDispenseBehavior idispensebehavior = BlockDispenser.REGISTRY.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.NONE && idispensebehavior != this) {
                 idispensebehavior.dispense(isourceblock, eventStack);
                 return itemstack;
@@ -60,10 +60,10 @@ public class DispenseBehaviorShears extends DispenseBehaviorMaybe {
         // CraftBukkit end
 
         if (!worldserver.s_()) {
-            BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.getBlockData().get(BlockDispenser.FACING));
+            BlockPosition blockposition = isourceblock.getBlockPosition().shift(isourceblock.getBlockData().get(BlockDispenser.FACING));
 
-            this.a(a((WorldServer) worldserver, blockposition) || b((WorldServer) worldserver, blockposition, bukkitBlock, craftItem)); // CraftBukkit
-            if (this.a() && itemstack.isDamaged(1, worldserver.getRandom(), (EntityPlayer) null)) {
+            this.a(a(worldserver, blockposition) || b(worldserver, blockposition, bukkitBlock, craftItem)); // CraftBukkit
+            if (this.a() && itemstack.isDamaged(1, worldserver.getRandom(), null)) {
                 itemstack.setCount(0);
             }
         }
@@ -74,13 +74,13 @@ public class DispenseBehaviorShears extends DispenseBehaviorMaybe {
     private static boolean a(WorldServer worldserver, BlockPosition blockposition) {
         IBlockData iblockdata = worldserver.getType(blockposition);
 
-        if (iblockdata.a((Tag) TagsBlock.BEEHIVES)) {
-            int i = (Integer) iblockdata.get(BlockBeehive.b);
+        if (iblockdata.a(TagsBlock.BEEHIVES)) {
+            int i = iblockdata.get(BlockBeehive.b);
 
             if (i >= 5) {
-                worldserver.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_BEEHIVE_SHEAR, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                BlockBeehive.a((World) worldserver, blockposition);
-                ((BlockBeehive) iblockdata.getBlock()).a(worldserver, iblockdata, blockposition, (EntityHuman) null, TileEntityBeehive.ReleaseStatus.BEE_RELEASED);
+                worldserver.playSound(null, blockposition, SoundEffects.BLOCK_BEEHIVE_SHEAR, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                BlockBeehive.a(worldserver, blockposition);
+                ((BlockBeehive) iblockdata.getBlock()).a(worldserver, iblockdata, blockposition, null, TileEntityBeehive.ReleaseStatus.BEE_RELEASED);
                 return true;
             }
         }

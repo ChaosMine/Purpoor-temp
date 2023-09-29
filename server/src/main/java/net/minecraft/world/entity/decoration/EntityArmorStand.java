@@ -153,9 +153,9 @@ public class EntityArmorStand extends EntityLiving {
     public ItemStack getEquipment(EnumItemSlot enumitemslot) {
         switch (enumitemslot.a()) {
             case HAND:
-                return (ItemStack) this.handItems.get(enumitemslot.b());
+                return this.handItems.get(enumitemslot.b());
             case ARMOR:
-                return (ItemStack) this.armorItems.get(enumitemslot.b());
+                return this.armorItems.get(enumitemslot.b());
             default:
                 return ItemStack.b;
         }
@@ -597,7 +597,7 @@ public class EntityArmorStand extends EntityLiving {
 
     private void D() {
         if (this.world instanceof WorldServer) {
-            ((WorldServer) this.world).a(new ParticleParamBlock(Particles.BLOCK, Blocks.OAK_PLANKS.getBlockData()), this.locX(), this.e(0.6666666666666666D), this.locZ(), 10, (double) (this.getWidth() / 4.0F), (double) (this.getHeight() / 4.0F), (double) (this.getWidth() / 4.0F), 0.05D);
+            ((WorldServer) this.world).a(new ParticleParamBlock(Particles.BLOCK, Blocks.OAK_PLANKS.getBlockData()), this.locX(), this.e(0.6666666666666666D), this.locZ(), 10, this.getWidth() / 4.0F, this.getHeight() / 4.0F, this.getWidth() / 4.0F, 0.05D);
         }
 
     }
@@ -634,7 +634,7 @@ public class EntityArmorStand extends EntityLiving {
         int i;
 
         for (i = 0; i < this.handItems.size(); ++i) {
-            itemstack = (ItemStack) this.handItems.get(i);
+            itemstack = this.handItems.get(i);
             if (!itemstack.isEmpty()) {
                 drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)); // CraftBukkit - add to drops // Paper - mirror so we can destroy it later - though this call site was safe
                 this.handItems.set(i, ItemStack.b);
@@ -642,7 +642,7 @@ public class EntityArmorStand extends EntityLiving {
         }
 
         for (i = 0; i < this.armorItems.size(); ++i) {
-            itemstack = (ItemStack) this.armorItems.get(i);
+            itemstack = this.armorItems.get(i);
             if (!itemstack.isEmpty()) {
                 drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)); // CraftBukkit - add to drops // Paper - mirror so we can destroy it later - though this call site was safe
                 this.armorItems.set(i, ItemStack.b);
@@ -653,7 +653,7 @@ public class EntityArmorStand extends EntityLiving {
     }
 
     private void F() {
-        this.world.playSound((EntityHuman) null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
+        this.world.playSound(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
     }
 
     @Override
@@ -718,37 +718,37 @@ public class EntityArmorStand extends EntityLiving {
 
     public void updatePose() {
         // Paper end
-        Vector3f vector3f = (Vector3f) this.datawatcher.get(EntityArmorStand.c);
+        Vector3f vector3f = this.datawatcher.get(EntityArmorStand.c);
 
         if (!this.headPose.equals(vector3f)) {
             this.setHeadPose(vector3f);
         }
 
-        Vector3f vector3f1 = (Vector3f) this.datawatcher.get(EntityArmorStand.d);
+        Vector3f vector3f1 = this.datawatcher.get(EntityArmorStand.d);
 
         if (!this.bodyPose.equals(vector3f1)) {
             this.setBodyPose(vector3f1);
         }
 
-        Vector3f vector3f2 = (Vector3f) this.datawatcher.get(EntityArmorStand.e);
+        Vector3f vector3f2 = this.datawatcher.get(EntityArmorStand.e);
 
         if (!this.leftArmPose.equals(vector3f2)) {
             this.setLeftArmPose(vector3f2);
         }
 
-        Vector3f vector3f3 = (Vector3f) this.datawatcher.get(EntityArmorStand.f);
+        Vector3f vector3f3 = this.datawatcher.get(EntityArmorStand.f);
 
         if (!this.rightArmPose.equals(vector3f3)) {
             this.setRightArmPose(vector3f3);
         }
 
-        Vector3f vector3f4 = (Vector3f) this.datawatcher.get(EntityArmorStand.g);
+        Vector3f vector3f4 = this.datawatcher.get(EntityArmorStand.g);
 
         if (!this.leftLegPose.equals(vector3f4)) {
             this.setLeftLegPose(vector3f4);
         }
 
-        Vector3f vector3f5 = (Vector3f) this.datawatcher.get(EntityArmorStand.bh);
+        Vector3f vector3f5 = this.datawatcher.get(EntityArmorStand.bh);
 
         if (!this.rightLegPose.equals(vector3f5)) {
             this.setRightLegPose(vector3f5);
@@ -797,35 +797,35 @@ public class EntityArmorStand extends EntityLiving {
     }
 
     public void setSmall(boolean flag) {
-        this.datawatcher.set(EntityArmorStand.b, this.a((Byte) this.datawatcher.get(EntityArmorStand.b), 1, flag));
+        this.datawatcher.set(EntityArmorStand.b, this.a(this.datawatcher.get(EntityArmorStand.b), 1, flag));
     }
 
     public boolean isSmall() {
-        return ((Byte) this.datawatcher.get(EntityArmorStand.b) & 1) != 0;
+        return (this.datawatcher.get(EntityArmorStand.b) & 1) != 0;
     }
 
     public void setArms(boolean flag) {
-        this.datawatcher.set(EntityArmorStand.b, this.a((Byte) this.datawatcher.get(EntityArmorStand.b), 4, flag));
+        this.datawatcher.set(EntityArmorStand.b, this.a(this.datawatcher.get(EntityArmorStand.b), 4, flag));
     }
 
     public boolean hasArms() {
-        return ((Byte) this.datawatcher.get(EntityArmorStand.b) & 4) != 0;
+        return (this.datawatcher.get(EntityArmorStand.b) & 4) != 0;
     }
 
     public void setBasePlate(boolean flag) {
-        this.datawatcher.set(EntityArmorStand.b, this.a((Byte) this.datawatcher.get(EntityArmorStand.b), 8, flag));
+        this.datawatcher.set(EntityArmorStand.b, this.a(this.datawatcher.get(EntityArmorStand.b), 8, flag));
     }
 
     public boolean hasBasePlate() {
-        return ((Byte) this.datawatcher.get(EntityArmorStand.b) & 8) != 0;
+        return (this.datawatcher.get(EntityArmorStand.b) & 8) != 0;
     }
 
     public void setMarker(boolean flag) {
-        this.datawatcher.set(EntityArmorStand.b, this.a((Byte) this.datawatcher.get(EntityArmorStand.b), 16, flag));
+        this.datawatcher.set(EntityArmorStand.b, this.a(this.datawatcher.get(EntityArmorStand.b), 16, flag));
     }
 
     public boolean isMarker() {
-        return ((Byte) this.datawatcher.get(EntityArmorStand.b) & 16) != 0;
+        return (this.datawatcher.get(EntityArmorStand.b) & 16) != 0;
     }
 
     private byte a(byte b0, int i, boolean flag) {

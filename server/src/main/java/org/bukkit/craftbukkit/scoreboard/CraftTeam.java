@@ -68,7 +68,7 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         if (team.getColor().getHexValue() == null) throw new IllegalStateException("Team colors must have hex values");
         net.kyori.adventure.text.format.TextColor color = net.kyori.adventure.text.format.TextColor.color(team.getColor().getHexValue());
         if (!(color instanceof net.kyori.adventure.text.format.NamedTextColor)) throw new IllegalStateException("Team doesn't have a NamedTextColor");
-        return (net.kyori.adventure.text.format.NamedTextColor) color;
+        return color;
     }
     @Override
     public void color(net.kyori.adventure.text.format.NamedTextColor color) {

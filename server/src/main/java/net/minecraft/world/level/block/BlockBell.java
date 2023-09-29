@@ -52,19 +52,19 @@ public class BlockBell extends BlockTileEntity {
 
     public BlockBell(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockBell.a, EnumDirection.NORTH)).set(BlockBell.b, BlockPropertyBellAttach.FLOOR)).set(BlockBell.c, false));
+        this.j(this.blockStateList.getBlockData().set(BlockBell.a, EnumDirection.NORTH).set(BlockBell.b, BlockPropertyBellAttach.FLOOR).set(BlockBell.c, false));
     }
 
     @Override
     public void doPhysics(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1, boolean flag) {
         boolean flag1 = world.isBlockIndirectlyPowered(blockposition);
 
-        if (flag1 != (Boolean) iblockdata.get(BlockBell.c)) {
+        if (flag1 != iblockdata.get(BlockBell.c)) {
             if (flag1) {
                 this.a(world, blockposition, (EnumDirection) null);
             }
 
-            world.setTypeAndData(blockposition, (IBlockData) iblockdata.set(BlockBell.c, flag1), 3);
+            world.setTypeAndData(blockposition, iblockdata.set(BlockBell.c, flag1), 3);
         }
 
     }
@@ -102,8 +102,8 @@ public class BlockBell extends BlockTileEntity {
 
     private boolean a(IBlockData iblockdata, EnumDirection enumdirection, double d0) {
         if (enumdirection.n() != EnumDirection.EnumAxis.Y && d0 <= 0.8123999834060669D) {
-            EnumDirection enumdirection1 = (EnumDirection) iblockdata.get(BlockBell.a);
-            BlockPropertyBellAttach blockpropertybellattach = (BlockPropertyBellAttach) iblockdata.get(BlockBell.b);
+            EnumDirection enumdirection1 = iblockdata.get(BlockBell.a);
+            BlockPropertyBellAttach blockpropertybellattach = iblockdata.get(BlockBell.b);
 
             switch (blockpropertybellattach) {
                 case FLOOR:
@@ -131,12 +131,12 @@ public class BlockBell extends BlockTileEntity {
 
         if (!world.isClientSide && tileentity instanceof TileEntityBell) {
             if (enumdirection == null) {
-                enumdirection = (EnumDirection) world.getType(blockposition).get(BlockBell.a);
+                enumdirection = world.getType(blockposition).get(BlockBell.a);
             }
 
             if (!new BellRingEvent(world.getWorld().getBlockAt(MCUtil.toLocation(world, blockposition)), ringer == null ? null : ringer.getBukkitEntity()).callEvent()) return false; // Paper - BellRingEvent
             ((TileEntityBell) tileentity).a(enumdirection);
-            world.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0F, 1.0F);
+            world.playSound(null, blockposition, SoundEffects.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0F, 1.0F);
             return true;
         } else {
             return false;
@@ -144,8 +144,8 @@ public class BlockBell extends BlockTileEntity {
     }
 
     private VoxelShape h(IBlockData iblockdata) {
-        EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockBell.a);
-        BlockPropertyBellAttach blockpropertybellattach = (BlockPropertyBellAttach) iblockdata.get(BlockBell.b);
+        EnumDirection enumdirection = iblockdata.get(BlockBell.a);
+        BlockPropertyBellAttach blockpropertybellattach = iblockdata.get(BlockBell.b);
 
         return blockpropertybellattach == BlockPropertyBellAttach.FLOOR ? (enumdirection != EnumDirection.NORTH && enumdirection != EnumDirection.SOUTH ? BlockBell.e : BlockBell.d) : (blockpropertybellattach == BlockPropertyBellAttach.CEILING ? BlockBell.r : (blockpropertybellattach == BlockPropertyBellAttach.DOUBLE_WALL ? (enumdirection != EnumDirection.NORTH && enumdirection != EnumDirection.SOUTH ? BlockBell.j : BlockBell.i) : (enumdirection == EnumDirection.NORTH ? BlockBell.p : (enumdirection == EnumDirection.SOUTH ? BlockBell.q : (enumdirection == EnumDirection.EAST ? BlockBell.o : BlockBell.k)))));
     }
@@ -175,21 +175,21 @@ public class BlockBell extends BlockTileEntity {
         IBlockData iblockdata;
 
         if (enumdirection_enumaxis == EnumDirection.EnumAxis.Y) {
-            iblockdata = (IBlockData) ((IBlockData) this.getBlockData().set(BlockBell.b, enumdirection == EnumDirection.DOWN ? BlockPropertyBellAttach.CEILING : BlockPropertyBellAttach.FLOOR)).set(BlockBell.a, blockactioncontext.f());
+            iblockdata = this.getBlockData().set(BlockBell.b, enumdirection == EnumDirection.DOWN ? BlockPropertyBellAttach.CEILING : BlockPropertyBellAttach.FLOOR).set(BlockBell.a, blockactioncontext.f());
             if (iblockdata.canPlace(blockactioncontext.getWorld(), blockposition)) {
                 return iblockdata;
             }
         } else {
             boolean flag = enumdirection_enumaxis == EnumDirection.EnumAxis.X && world.getType(blockposition.west()).d(world, blockposition.west(), EnumDirection.EAST) && world.getType(blockposition.east()).d(world, blockposition.east(), EnumDirection.WEST) || enumdirection_enumaxis == EnumDirection.EnumAxis.Z && world.getType(blockposition.north()).d(world, blockposition.north(), EnumDirection.SOUTH) && world.getType(blockposition.south()).d(world, blockposition.south(), EnumDirection.NORTH);
 
-            iblockdata = (IBlockData) ((IBlockData) this.getBlockData().set(BlockBell.a, enumdirection.opposite())).set(BlockBell.b, flag ? BlockPropertyBellAttach.DOUBLE_WALL : BlockPropertyBellAttach.SINGLE_WALL);
+            iblockdata = this.getBlockData().set(BlockBell.a, enumdirection.opposite()).set(BlockBell.b, flag ? BlockPropertyBellAttach.DOUBLE_WALL : BlockPropertyBellAttach.SINGLE_WALL);
             if (iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
                 return iblockdata;
             }
 
             boolean flag1 = world.getType(blockposition.down()).d(world, blockposition.down(), EnumDirection.UP);
 
-            iblockdata = (IBlockData) iblockdata.set(BlockBell.b, flag1 ? BlockPropertyBellAttach.FLOOR : BlockPropertyBellAttach.CEILING);
+            iblockdata = iblockdata.set(BlockBell.b, flag1 ? BlockPropertyBellAttach.FLOOR : BlockPropertyBellAttach.CEILING);
             if (iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
                 return iblockdata;
             }
@@ -200,19 +200,19 @@ public class BlockBell extends BlockTileEntity {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        BlockPropertyBellAttach blockpropertybellattach = (BlockPropertyBellAttach) iblockdata.get(BlockBell.b);
+        BlockPropertyBellAttach blockpropertybellattach = iblockdata.get(BlockBell.b);
         EnumDirection enumdirection1 = l(iblockdata).opposite();
 
         if (enumdirection1 == enumdirection && !iblockdata.canPlace(generatoraccess, blockposition) && blockpropertybellattach != BlockPropertyBellAttach.DOUBLE_WALL) {
             return Blocks.AIR.getBlockData();
         } else {
-            if (enumdirection.n() == ((EnumDirection) iblockdata.get(BlockBell.a)).n()) {
+            if (enumdirection.n() == iblockdata.get(BlockBell.a).n()) {
                 if (blockpropertybellattach == BlockPropertyBellAttach.DOUBLE_WALL && !iblockdata1.d(generatoraccess, blockposition1, enumdirection)) {
-                    return (IBlockData) ((IBlockData) iblockdata.set(BlockBell.b, BlockPropertyBellAttach.SINGLE_WALL)).set(BlockBell.a, enumdirection.opposite());
+                    return iblockdata.set(BlockBell.b, BlockPropertyBellAttach.SINGLE_WALL).set(BlockBell.a, enumdirection.opposite());
                 }
 
-                if (blockpropertybellattach == BlockPropertyBellAttach.SINGLE_WALL && enumdirection1.opposite() == enumdirection && iblockdata1.d(generatoraccess, blockposition1, (EnumDirection) iblockdata.get(BlockBell.a))) {
-                    return (IBlockData) iblockdata.set(BlockBell.b, BlockPropertyBellAttach.DOUBLE_WALL);
+                if (blockpropertybellattach == BlockPropertyBellAttach.SINGLE_WALL && enumdirection1.opposite() == enumdirection && iblockdata1.d(generatoraccess, blockposition1, iblockdata.get(BlockBell.a))) {
+                    return iblockdata.set(BlockBell.b, BlockPropertyBellAttach.DOUBLE_WALL);
                 }
             }
 
@@ -228,13 +228,13 @@ public class BlockBell extends BlockTileEntity {
     }
 
     private static EnumDirection l(IBlockData iblockdata) {
-        switch ((BlockPropertyBellAttach) iblockdata.get(BlockBell.b)) {
+        switch (iblockdata.get(BlockBell.b)) {
             case FLOOR:
                 return EnumDirection.UP;
             case CEILING:
                 return EnumDirection.DOWN;
             default:
-                return ((EnumDirection) iblockdata.get(BlockBell.a)).opposite();
+                return iblockdata.get(BlockBell.a).opposite();
         }
     }
 

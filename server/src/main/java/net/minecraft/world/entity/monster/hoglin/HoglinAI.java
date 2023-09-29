@@ -49,7 +49,7 @@ public class HoglinAI {
         c(behaviorcontroller);
         d(behaviorcontroller);
         e(behaviorcontroller);
-        behaviorcontroller.a((Set) ImmutableSet.of(Activity.CORE));
+        behaviorcontroller.a(ImmutableSet.of(Activity.CORE));
         behaviorcontroller.b(Activity.IDLE);
         behaviorcontroller.e();
         return behaviorcontroller;
@@ -77,10 +77,10 @@ public class HoglinAI {
 
     protected static void a(EntityHoglin entityhoglin) {
         BehaviorController<EntityHoglin> behaviorcontroller = entityhoglin.getBehaviorController();
-        Activity activity = (Activity) behaviorcontroller.f().orElse((Object) null);
+        Activity activity = behaviorcontroller.f().orElse(null);
 
-        behaviorcontroller.a((List) ImmutableList.of(Activity.FLIGHT, Activity.AVOID, Activity.IDLE));
-        Activity activity1 = (Activity) behaviorcontroller.f().orElse((Object) null);
+        behaviorcontroller.a(ImmutableList.of(Activity.FLIGHT, Activity.AVOID, Activity.IDLE));
+        Activity activity1 = behaviorcontroller.f().orElse(null);
 
         if (activity != activity1) {
             b(entityhoglin).ifPresent(entityhoglin::a);
@@ -108,16 +108,16 @@ public class HoglinAI {
 
     private static void d(EntityHoglin entityhoglin, EntityLiving entityliving) {
         BehaviorController<EntityHoglin> behaviorcontroller = entityhoglin.getBehaviorController();
-        EntityLiving entityliving1 = BehaviorUtil.a((EntityLiving) entityhoglin, behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET), entityliving);
+        EntityLiving entityliving1 = BehaviorUtil.a(entityhoglin, behaviorcontroller.getMemory(MemoryModuleType.AVOID_TARGET), entityliving);
 
-        entityliving1 = BehaviorUtil.a((EntityLiving) entityhoglin, behaviorcontroller.getMemory(MemoryModuleType.ATTACK_TARGET), entityliving1);
+        entityliving1 = BehaviorUtil.a(entityhoglin, behaviorcontroller.getMemory(MemoryModuleType.ATTACK_TARGET), entityliving1);
         e(entityhoglin, entityliving1);
     }
 
     private static void e(EntityHoglin entityhoglin, EntityLiving entityliving) {
         entityhoglin.getBehaviorController().removeMemory(MemoryModuleType.ATTACK_TARGET);
         entityhoglin.getBehaviorController().removeMemory(MemoryModuleType.WALK_TARGET);
-        entityhoglin.getBehaviorController().a(MemoryModuleType.AVOID_TARGET, entityliving, (long) HoglinAI.a.a(entityhoglin.world.random));
+        entityhoglin.getBehaviorController().a(MemoryModuleType.AVOID_TARGET, entityliving, HoglinAI.a.a(entityhoglin.world.random));
     }
 
     private static Optional<? extends EntityLiving> d(EntityHoglin entityhoglin) {
@@ -127,7 +127,7 @@ public class HoglinAI {
     static boolean a(EntityHoglin entityhoglin, BlockPosition blockposition) {
         Optional<BlockPosition> optional = entityhoglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_REPELLENT);
 
-        return optional.isPresent() && ((BlockPosition) optional.get()).a((BaseBlockPosition) blockposition, 8.0D);
+        return optional.isPresent() && optional.get().a(blockposition, 8.0D);
     }
 
     private static boolean e(EntityHoglin entityhoglin) {
@@ -138,8 +138,8 @@ public class HoglinAI {
         if (entityhoglin.isBaby()) {
             return false;
         } else {
-            int i = (Integer) entityhoglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT).orElse(0);
-            int j = (Integer) entityhoglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT).orElse(0) + 1;
+            int i = entityhoglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_PIGLIN_COUNT).orElse(0);
+            int j = entityhoglin.getBehaviorController().getMemory(MemoryModuleType.VISIBLE_ADULT_HOGLIN_COUNT).orElse(0) + 1;
 
             return i > j;
         }
@@ -187,7 +187,7 @@ public class HoglinAI {
     private static void i(EntityHoglin entityhoglin, EntityLiving entityliving) {
         if (!c(entityhoglin)) {
             Optional<EntityLiving> optional = entityhoglin.getBehaviorController().getMemory(MemoryModuleType.ATTACK_TARGET);
-            EntityLiving entityliving1 = BehaviorUtil.a((EntityLiving) entityhoglin, optional, entityliving);
+            EntityLiving entityliving1 = BehaviorUtil.a(entityhoglin, optional, entityliving);
 
             g(entityhoglin, entityliving1);
         }
@@ -204,7 +204,7 @@ public class HoglinAI {
     }
 
     private static List<EntityHoglin> g(EntityHoglin entityhoglin) {
-        return (List) entityhoglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS).orElse(ImmutableList.of());
+        return entityhoglin.getBehaviorController().getMemory(MemoryModuleType.NEAREST_VISIBLE_ADULT_HOGLINS).orElse(ImmutableList.of());
     }
 
     private static boolean h(EntityHoglin entityhoglin) {

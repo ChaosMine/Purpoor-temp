@@ -52,27 +52,27 @@ public class PathfinderNormal extends PathfinderAbstract {
     public PathPoint b() {
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
         int i = MathHelper.floor(this.b.locY());
-        IBlockData iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), (double) i, this.b.locZ()));
+        IBlockData iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), i, this.b.locZ()));
         BlockPosition blockposition;
 
         if (this.b.a(iblockdata.getFluid().getType())) {
             while (this.b.a(iblockdata.getFluid().getType())) {
                 ++i;
-                iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), (double) i, this.b.locZ()));
+                iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), i, this.b.locZ()));
             }
 
             --i;
         } else if (this.e() && this.b.isInWater()) {
             while (iblockdata.getBlock() == Blocks.WATER || iblockdata.getFluid() == FluidTypes.WATER.a(false)) {
                 ++i;
-                iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), (double) i, this.b.locZ()));
+                iblockdata = this.a.getType(blockposition_mutableblockposition.c(this.b.locX(), i, this.b.locZ()));
             }
 
             --i;
         } else if (this.b.isOnGround()) {
             i = MathHelper.floor(this.b.locY() + 0.5D);
         } else {
-            for (blockposition = this.b.getChunkCoordinates(); (this.a.getType(blockposition).isAir() || this.a.getType(blockposition).a((IBlockAccess) this.a, blockposition, PathMode.LAND)) && blockposition.getY() > 0; blockposition = blockposition.down()) {
+            for (blockposition = this.b.getChunkCoordinates(); (this.a.getType(blockposition).isAir() || this.a.getType(blockposition).a(this.a, blockposition, PathMode.LAND)) && blockposition.getY() > 0; blockposition = blockposition.down()) {
                 ;
             }
 
@@ -85,8 +85,8 @@ public class PathfinderNormal extends PathfinderAbstract {
         if (this.b.a(pathtype) < 0.0F) {
             AxisAlignedBB axisalignedbb = this.b.getBoundingBox();
 
-            if (this.b(blockposition_mutableblockposition.c(axisalignedbb.minX, (double) i, axisalignedbb.minZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.minX, (double) i, axisalignedbb.maxZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.maxX, (double) i, axisalignedbb.minZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.maxX, (double) i, axisalignedbb.maxZ))) {
-                PathPoint pathpoint = this.a((BlockPosition) blockposition_mutableblockposition);
+            if (this.b(blockposition_mutableblockposition.c(axisalignedbb.minX, i, axisalignedbb.minZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.minX, i, axisalignedbb.maxZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.maxX, i, axisalignedbb.minZ)) || this.b(blockposition_mutableblockposition.c(axisalignedbb.maxX, i, axisalignedbb.maxZ))) {
+                PathPoint pathpoint = this.a(blockposition_mutableblockposition);
 
                 pathpoint.l = this.a(this.b, pathpoint.a());
                 pathpoint.k = this.b.a(pathpoint.l);
@@ -123,7 +123,7 @@ public class PathfinderNormal extends PathfinderAbstract {
             j = MathHelper.d(Math.max(1.0F, this.b.G));
         }
 
-        double d0 = a((IBlockAccess) this.a, new BlockPosition(pathpoint.a, pathpoint.b, pathpoint.c));
+        double d0 = a(this.a, new BlockPosition(pathpoint.a, pathpoint.b, pathpoint.c));
         PathPoint pathpoint1 = this.a(pathpoint.a, pathpoint.b, pathpoint.c + 1, j, d0, EnumDirection.SOUTH, pathtype1);
 
         if (this.a(pathpoint1, pathpoint)) {
@@ -227,7 +227,7 @@ public class PathfinderNormal extends PathfinderAbstract {
     private PathPoint a(int i, int j, int k, int l, double d0, EnumDirection enumdirection, PathType pathtype) {
         PathPoint pathpoint = null;
         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
-        double d1 = a((IBlockAccess) this.a, (BlockPosition) blockposition_mutableblockposition.d(i, j, k));
+        double d1 = a(this.a, (BlockPosition) blockposition_mutableblockposition.d(i, j, k));
 
         if (d1 - d0 > 1.125D) {
             return null;
@@ -254,7 +254,7 @@ public class PathfinderNormal extends PathfinderAbstract {
                     if (pathpoint != null && (pathpoint.l == PathType.OPEN || pathpoint.l == PathType.WALKABLE) && this.b.getWidth() < 1.0F) {
                         double d3 = (double) (i - enumdirection.getAdjacentX()) + 0.5D;
                         double d4 = (double) (k - enumdirection.getAdjacentZ()) + 0.5D;
-                        AxisAlignedBB axisalignedbb = new AxisAlignedBB(d3 - d2, a((IBlockAccess) this.a, (BlockPosition) blockposition_mutableblockposition.c(d3, (double) (j + 1), d4)) + 0.001D, d4 - d2, d3 + d2, (double) this.b.getHeight() + a((IBlockAccess) this.a, (BlockPosition) blockposition_mutableblockposition.c((double) pathpoint.a, (double) pathpoint.b, (double) pathpoint.c)) - 0.002D, d4 + d2);
+                        AxisAlignedBB axisalignedbb = new AxisAlignedBB(d3 - d2, a(this.a, (BlockPosition) blockposition_mutableblockposition.c(d3, j + 1, d4)) + 0.001D, d4 - d2, d3 + d2, (double) this.b.getHeight() + a(this.a, (BlockPosition) blockposition_mutableblockposition.c(pathpoint.a, pathpoint.b, pathpoint.c)) - 0.002D, d4 + d2);
 
                         if (this.a(axisalignedbb)) {
                             pathpoint = null;
@@ -333,7 +333,7 @@ public class PathfinderNormal extends PathfinderAbstract {
     }
 
     private boolean a(AxisAlignedBB axisalignedbb) {
-        return (Boolean) this.l.computeIfAbsent(axisalignedbb, (axisalignedbb1) -> {
+        return this.l.computeIfAbsent(axisalignedbb, (axisalignedbb1) -> {
             return !this.a.getCubes(this.b, axisalignedbb);
         });
     }
@@ -420,7 +420,7 @@ public class PathfinderNormal extends PathfinderAbstract {
     }
 
     private PathType a(EntityInsentient entityinsentient, int i, int j, int k) {
-        return (PathType) this.k.computeIfAbsent(BlockPosition.a(i, j, k), (l) -> {
+        return this.k.computeIfAbsent(BlockPosition.a(i, j, k), (l) -> {
             return this.a(this.a, i, j, k, entityinsentient, this.d, this.e, this.f, this.d(), this.c());
         });
     }
@@ -506,7 +506,7 @@ public class PathfinderNormal extends PathfinderAbstract {
                             return iblockdata.neighbourOverridePathType = PathType.DANGER_FIRE; // Tuinity - reduce pathfinder branching
                         }
 
-                        if (iblockdata.getFluid().a((Tag) TagsFluid.WATER)) { // Paper - remove another getType call
+                        if (iblockdata.getFluid().a(TagsFluid.WATER)) { // Paper - remove another getType call
                             return iblockdata.neighbourOverridePathType = PathType.WATER_BORDER; // Tuinity - reduce pathfinder branching
                         }
                         iblockdata.neighbourOverridePathType = PathType.OPEN; // Tuinity - reduce pathfinder branching
@@ -541,7 +541,7 @@ public class PathfinderNormal extends PathfinderAbstract {
 
         if (iblockdata.isAir()) {
             return PathType.OPEN;
-        } else if (!iblockdata.a((Tag) TagsBlock.TRAPDOORS) && !iblockdata.a(Blocks.LILY_PAD)) {
+        } else if (!iblockdata.a(TagsBlock.TRAPDOORS) && !iblockdata.a(Blocks.LILY_PAD)) {
             if (iblockdata.a(Blocks.CACTUS)) {
                 return PathType.DAMAGE_CACTUS;
             } else if (iblockdata.a(Blocks.SWEET_BERRY_BUSH)) {
@@ -553,7 +553,7 @@ public class PathfinderNormal extends PathfinderAbstract {
             } else {
                 Fluid fluid = iblockdata.getFluid(); // Paper - remove another get type call
 
-                return fluid.a((Tag) TagsFluid.WATER) ? PathType.WATER : (fluid.a((Tag) TagsFluid.LAVA) ? PathType.LAVA : (a(iblockdata) ? PathType.DAMAGE_FIRE : (BlockDoor.l(iblockdata) && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_WOOD_CLOSED : (block instanceof BlockDoor && material == Material.ORE && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_IRON_CLOSED : (block instanceof BlockDoor && (Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_OPEN : (block instanceof BlockMinecartTrackAbstract ? PathType.RAIL : (block instanceof BlockLeaves ? PathType.LEAVES : (!block.a((Tag) TagsBlock.FENCES) && !block.a((Tag) TagsBlock.WALLS) && (!(block instanceof BlockFenceGate) || (Boolean) iblockdata.get(BlockFenceGate.OPEN)) ? (!iblockdata.a(iblockaccess, blockposition, PathMode.LAND) ? PathType.BLOCKED : PathType.OPEN) : PathType.FENCE))))))));
+                return fluid.a(TagsFluid.WATER) ? PathType.WATER : (fluid.a(TagsFluid.LAVA) ? PathType.LAVA : (a(iblockdata) ? PathType.DAMAGE_FIRE : (BlockDoor.l(iblockdata) && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_WOOD_CLOSED : (block instanceof BlockDoor && material == Material.ORE && !(Boolean) iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_IRON_CLOSED : (block instanceof BlockDoor && iblockdata.get(BlockDoor.OPEN) ? PathType.DOOR_OPEN : (block instanceof BlockMinecartTrackAbstract ? PathType.RAIL : (block instanceof BlockLeaves ? PathType.LEAVES : (!block.a(TagsBlock.FENCES) && !block.a(TagsBlock.WALLS) && (!(block instanceof BlockFenceGate) || iblockdata.get(BlockFenceGate.OPEN)) ? (!iblockdata.a(iblockaccess, blockposition, PathMode.LAND) ? PathType.BLOCKED : PathType.OPEN) : PathType.FENCE))))))));
             }
         } else {
             return PathType.TRAPDOOR;
@@ -561,6 +561,6 @@ public class PathfinderNormal extends PathfinderAbstract {
     }
 
     private static boolean a(IBlockData iblockdata) {
-        return iblockdata.a((Tag) TagsBlock.FIRE) || iblockdata.a(Blocks.LAVA) || iblockdata.a(Blocks.MAGMA_BLOCK) || BlockCampfire.g(iblockdata);
+        return iblockdata.a(TagsBlock.FIRE) || iblockdata.a(Blocks.LAVA) || iblockdata.a(Blocks.MAGMA_BLOCK) || BlockCampfire.g(iblockdata);
     }
 }

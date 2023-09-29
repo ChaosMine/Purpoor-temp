@@ -28,26 +28,26 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 
     protected BlockPressurePlateBinary(BlockPressurePlateBinary.EnumMobType blockpressureplatebinary_enummobtype, BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockPressurePlateBinary.POWERED, false));
+        this.j(this.blockStateList.getBlockData().set(BlockPressurePlateBinary.POWERED, false));
         this.e = blockpressureplatebinary_enummobtype;
     }
 
     @Override
     protected int getPower(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockPressurePlateBinary.POWERED) ? 15 : 0;
+        return iblockdata.get(BlockPressurePlateBinary.POWERED) ? 15 : 0;
     }
 
     @Override
     protected IBlockData a(IBlockData iblockdata, int i) {
-        return (IBlockData) iblockdata.set(BlockPressurePlateBinary.POWERED, i > 0);
+        return iblockdata.set(BlockPressurePlateBinary.POWERED, i > 0);
     }
 
     @Override
     protected void a(GeneratorAccess generatoraccess, BlockPosition blockposition) {
         if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD) {
-            generatoraccess.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
+            generatoraccess.playSound(null, blockposition, SoundEffects.BLOCK_STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
         } else {
-            generatoraccess.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.8F);
+            generatoraccess.playSound(null, blockposition, SoundEffects.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.8F);
         }
 
     }
@@ -55,9 +55,9 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
     @Override
     protected void b(GeneratorAccess generatoraccess, BlockPosition blockposition) {
         if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD) {
-            generatoraccess.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.5F);
+            generatoraccess.playSound(null, blockposition, SoundEffects.BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.5F);
         } else {
-            generatoraccess.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.7F);
+            generatoraccess.playSound(null, blockposition, SoundEffects.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.7F);
         }
 
     }
@@ -69,7 +69,7 @@ public class BlockPressurePlateBinary extends BlockPressurePlateAbstract {
 
         switch (this.e) {
             case EVERYTHING:
-                list = world.getEntities((Entity) null, axisalignedbb); // CLEARED
+                list = world.getEntities(null, axisalignedbb); // CLEARED
                 break;
             case MOBS:
                 list = world.a(EntityLiving.class, axisalignedbb);

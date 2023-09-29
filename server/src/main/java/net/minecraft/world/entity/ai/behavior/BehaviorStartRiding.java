@@ -32,10 +32,10 @@ public class BehaviorStartRiding<E extends EntityLiving> extends Behavior<E> {
     }
 
     private boolean a(E e0) {
-        return this.b(e0).a((Entity) e0, 1.0D);
+        return this.b(e0).a(e0, 1.0D);
     }
 
     private Entity b(E e0) {
-        return (Entity) e0.getBehaviorController().getMemory(MemoryModuleType.RIDE_TARGET).get();
+        return e0.getBehaviorController().getMemory(MemoryModuleType.RIDE_TARGET).get();
     }
 }

@@ -36,7 +36,7 @@ public class BlockPlant extends Block {
     public boolean canPlace(IBlockData iblockdata, IWorldReader iworldreader, BlockPosition blockposition) {
         BlockPosition blockposition1 = blockposition.down();
 
-        return this.c(iworldreader.getType(blockposition1), (IBlockAccess) iworldreader, blockposition1);
+        return this.c(iworldreader.getType(blockposition1), iworldreader, blockposition1);
     }
 
     @Override

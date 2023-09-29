@@ -182,11 +182,11 @@ public class EntityBlaze extends EntityMonster {
     }
 
     private boolean eK() {
-        return ((Byte) this.datawatcher.get(EntityBlaze.d) & 1) != 0;
+        return (this.datawatcher.get(EntityBlaze.d) & 1) != 0;
     }
 
     private void t(boolean flag) {
-        byte b0 = (Byte) this.datawatcher.get(EntityBlaze.d);
+        byte b0 = this.datawatcher.get(EntityBlaze.d);
 
         if (flag) {
             b0 = (byte) (b0 | 1);
@@ -241,7 +241,7 @@ public class EntityBlaze extends EntityMonster {
                     ++this.d;
                 }
 
-                double d0 = this.a.h((Entity) entityliving);
+                double d0 = this.a.h(entityliving);
 
                 if (d0 < 4.0D) {
                     if (!flag) {
@@ -276,7 +276,7 @@ public class EntityBlaze extends EntityMonster {
                             float f = MathHelper.c(MathHelper.sqrt(d0)) * 0.5F;
 
                             if (!this.a.isSilent()) {
-                                this.a.world.a((EntityHuman) null, 1018, this.a.getChunkCoordinates(), 0);
+                                this.a.world.a(null, 1018, this.a.getChunkCoordinates(), 0);
                             }
 
                             for (int i = 0; i < 1; ++i) {

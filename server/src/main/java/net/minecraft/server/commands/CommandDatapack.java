@@ -1,166 +1,175 @@
 package net.minecraft.server.commands;
 
 import com.google.common.collect.Lists;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import net.minecraft.commands.CommandListenerWrapper;
 import net.minecraft.commands.ICompletionProvider;
 import net.minecraft.network.chat.ChatComponentUtils;
 import net.minecraft.network.chat.ChatMessage;
 import net.minecraft.server.packs.repository.ResourcePackLoader;
 import net.minecraft.server.packs.repository.ResourcePackRepository;
+import net.minecraft.commands.CommandDispatcher;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandDatapack {
+	private static final DynamicCommandExceptionType a = new DynamicCommandExceptionType(var0 -> new ChatMessage("commands.datapack.unknown", var0));
+	private static final DynamicCommandExceptionType b = new DynamicCommandExceptionType(var0 -> new ChatMessage("commands.datapack.enable.failed", var0));
+	private static final DynamicCommandExceptionType c = new DynamicCommandExceptionType(var0 -> new ChatMessage("commands.datapack.disable.failed", var0));
+	private static final SuggestionProvider<CommandListenerWrapper> d = (var0, var1) -> ICompletionProvider.b(
+		var0.getSource().getServer().getResourcePackRepository().d().stream().map(StringArgumentType::escapeIfRequired), var1
+	);
+	private static final SuggestionProvider<CommandListenerWrapper> e = (var0, var1) -> {
+		ResourcePackRepository var2 = var0.getSource().getServer().getResourcePackRepository();
+		Collection<String> var3 = var2.d();
+		return ICompletionProvider.b(var2.b().stream().filter(var1x -> !var3.contains(var1x)).map(StringArgumentType::escapeIfRequired), var1);
+	};
 
-    private static final DynamicCommandExceptionType a = new DynamicCommandExceptionType((object) -> {
-        return new ChatMessage("commands.datapack.unknown", new Object[]{object});
-    });
-    private static final DynamicCommandExceptionType b = new DynamicCommandExceptionType((object) -> {
-        return new ChatMessage("commands.datapack.enable.failed", new Object[]{object});
-    });
-    private static final DynamicCommandExceptionType c = new DynamicCommandExceptionType((object) -> {
-        return new ChatMessage("commands.datapack.disable.failed", new Object[]{object});
-    });
-    private static final SuggestionProvider<CommandListenerWrapper> d = (commandcontext, suggestionsbuilder) -> {
-        return ICompletionProvider.b(((CommandListenerWrapper) commandcontext.getSource()).getServer().getResourcePackRepository().d().stream().map(StringArgumentType::escapeIfRequired), suggestionsbuilder);
-    };
-    private static final SuggestionProvider<CommandListenerWrapper> e = (commandcontext, suggestionsbuilder) -> {
-        ResourcePackRepository resourcepackrepository = ((CommandListenerWrapper) commandcontext.getSource()).getServer().getResourcePackRepository();
-        Collection<String> collection = resourcepackrepository.d();
+	public static void a(com.mojang.brigadier.CommandDispatcher<CommandListenerWrapper> var0) {
+		var0.register(
+			CommandDispatcher.a("datapack")
+				.requires(var0x -> var0x.hasPermission(2))
+				.then(
+					CommandDispatcher.a("enable")
+						.then(
+							CommandDispatcher.a("name", StringArgumentType.string())
+								.suggests(e)
+								.executes(
+									var0x -> a(
+										var0x.getSource(),
+										a(var0x, "name", true),
+										(var0xx, var1) -> var1.h().a(var0xx, var1, var0xxx -> var0xxx, false)
+									)
+								)
+								.then(
+									CommandDispatcher.a("after")
+										.then(
+											CommandDispatcher.a("existing", StringArgumentType.string())
+												.suggests(d)
+												.executes(
+													var0x -> a(
+														var0x.getSource(),
+														a(var0x, "name", true),
+														(var1, var2) -> var1.add(var1.indexOf(a(var0x, "existing", false)) + 1, var2)
+													)
+												)
+										)
+								)
+								.then(
+									CommandDispatcher.a("before")
+										.then(
+											CommandDispatcher.a("existing", StringArgumentType.string())
+												.suggests(d)
+												.executes(
+													var0x -> a(
+														var0x.getSource(),
+														a(var0x, "name", true),
+														(var1, var2) -> var1.add(var1.indexOf(a(var0x, "existing", false)), var2)
+													)
+												)
+										)
+								)
+								.then(CommandDispatcher.a("last").executes(var0x -> a(var0x.getSource(), a(var0x, "name", true), List::add)))
+								.then(
+									CommandDispatcher.a("first")
+										.executes(var0x -> a(var0x.getSource(), a(var0x, "name", true), (var0xx, var1) -> var0xx.add(0, var1)))
+								)
+						)
+				)
+				.then(
+					CommandDispatcher.a("disable")
+						.then(
+							CommandDispatcher.a("name", StringArgumentType.string())
+								.suggests(d)
+								.executes(var0x -> a(var0x.getSource(), a(var0x, "name", false)))
+						)
+				)
+				.then(
+					CommandDispatcher.a("list")
+						.executes(var0x -> a(var0x.getSource()))
+						.then(CommandDispatcher.a("available").executes(var0x -> b(var0x.getSource())))
+						.then(CommandDispatcher.a("enabled").executes(var0x -> c(var0x.getSource())))
+				)
+		);
+	}
 
-        return ICompletionProvider.b(resourcepackrepository.b().stream().filter((s) -> {
-            return !collection.contains(s);
-        }).map(StringArgumentType::escapeIfRequired), suggestionsbuilder);
-    };
+	private static int a(CommandListenerWrapper var0, ResourcePackLoader var1, CommandDatapack.a var2) throws CommandSyntaxException {
+		ResourcePackRepository var3 = var0.getServer().getResourcePackRepository();
+		List<ResourcePackLoader> var4 = Lists.newArrayList(var3.e());
+		var2.apply(var4, var1);
+		var0.sendMessage(new ChatMessage("commands.datapack.modify.enable", var1.a(true)), true);
+		CommandReload.a(var4.stream().map(ResourcePackLoader::e).collect(Collectors.toList()), var0);
+		return var4.size();
+	}
 
-    public static void a(CommandDispatcher<CommandListenerWrapper> commanddispatcher) {
-        commanddispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder) ((LiteralArgumentBuilder) ((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("datapack").requires((commandlistenerwrapper) -> {
-            return commandlistenerwrapper.hasPermission(2);
-        })).then(net.minecraft.commands.CommandDispatcher.a("enable").then(((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) ((RequiredArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("name", (ArgumentType) StringArgumentType.string()).suggests(CommandDatapack.e).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", true), (list, resourcepackloader) -> {
-                resourcepackloader.h().a(list, resourcepackloader, (resourcepackloader1) -> {
-                    return resourcepackloader1;
-                }, false);
-            });
-        })).then(net.minecraft.commands.CommandDispatcher.a("after").then(net.minecraft.commands.CommandDispatcher.a("existing", (ArgumentType) StringArgumentType.string()).suggests(CommandDatapack.d).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", true), (list, resourcepackloader) -> {
-                list.add(list.indexOf(a(commandcontext, "existing", false)) + 1, resourcepackloader);
-            });
-        })))).then(net.minecraft.commands.CommandDispatcher.a("before").then(net.minecraft.commands.CommandDispatcher.a("existing", (ArgumentType) StringArgumentType.string()).suggests(CommandDatapack.d).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", true), (list, resourcepackloader) -> {
-                list.add(list.indexOf(a(commandcontext, "existing", false)), resourcepackloader);
-            });
-        })))).then(net.minecraft.commands.CommandDispatcher.a("last").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", true), List::add);
-        }))).then(net.minecraft.commands.CommandDispatcher.a("first").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", true), (list, resourcepackloader) -> {
-                list.add(0, resourcepackloader);
-            });
-        }))))).then(net.minecraft.commands.CommandDispatcher.a("disable").then(net.minecraft.commands.CommandDispatcher.a("name", (ArgumentType) StringArgumentType.string()).suggests(CommandDatapack.d).executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource(), a(commandcontext, "name", false));
-        })))).then(((LiteralArgumentBuilder) ((LiteralArgumentBuilder) net.minecraft.commands.CommandDispatcher.a("list").executes((commandcontext) -> {
-            return a((CommandListenerWrapper) commandcontext.getSource());
-        })).then(net.minecraft.commands.CommandDispatcher.a("available").executes((commandcontext) -> {
-            return b((CommandListenerWrapper) commandcontext.getSource());
-        }))).then(net.minecraft.commands.CommandDispatcher.a("enabled").executes((commandcontext) -> {
-            return c((CommandListenerWrapper) commandcontext.getSource());
-        }))));
-    }
+	private static int a(CommandListenerWrapper var0, ResourcePackLoader var1) {
+		ResourcePackRepository var2 = var0.getServer().getResourcePackRepository();
+		List<ResourcePackLoader> var3 = Lists.newArrayList(var2.e());
+		var3.remove(var1);
+		var0.sendMessage(new ChatMessage("commands.datapack.modify.disable", var1.a(true)), true);
+		CommandReload.a(var3.stream().map(ResourcePackLoader::e).collect(Collectors.toList()), var0);
+		return var3.size();
+	}
 
-    private static int a(CommandListenerWrapper commandlistenerwrapper, ResourcePackLoader resourcepackloader, CommandDatapack.a commanddatapack_a) throws CommandSyntaxException {
-        ResourcePackRepository resourcepackrepository = commandlistenerwrapper.getServer().getResourcePackRepository();
-        List<ResourcePackLoader> list = Lists.newArrayList(resourcepackrepository.e());
+	private static int a(CommandListenerWrapper var0) {
+		return c(var0) + b(var0);
+	}
 
-        commanddatapack_a.apply(list, resourcepackloader);
-        commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.modify.enable", new Object[]{resourcepackloader.a(true)}), true);
-        CommandReload.a((Collection) list.stream().map(ResourcePackLoader::e).collect(Collectors.toList()), commandlistenerwrapper);
-        return list.size();
-    }
+	private static int b(CommandListenerWrapper var0) {
+		ResourcePackRepository var1 = var0.getServer().getResourcePackRepository();
+		var1.a();
+		Collection<? extends ResourcePackLoader> var2 = var1.e();
+		Collection<? extends ResourcePackLoader> var3 = var1.c();
+		List<ResourcePackLoader> var4 = var3.stream().filter(var1x -> !var2.contains(var1x)).collect(Collectors.toList());
+		if (var4.isEmpty()) {
+			var0.sendMessage(new ChatMessage("commands.datapack.list.available.none"), false);
+		} else {
+			var0.sendMessage(
+				new ChatMessage("commands.datapack.list.available.success", var4.size(), ChatComponentUtils.b(var4, var0x -> var0x.a(false))), false
+			);
+		}
 
-    private static int a(CommandListenerWrapper commandlistenerwrapper, ResourcePackLoader resourcepackloader) {
-        ResourcePackRepository resourcepackrepository = commandlistenerwrapper.getServer().getResourcePackRepository();
-        List<ResourcePackLoader> list = Lists.newArrayList(resourcepackrepository.e());
+		return var4.size();
+	}
 
-        list.remove(resourcepackloader);
-        commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.modify.disable", new Object[]{resourcepackloader.a(true)}), true);
-        CommandReload.a((Collection) list.stream().map(ResourcePackLoader::e).collect(Collectors.toList()), commandlistenerwrapper);
-        return list.size();
-    }
+	private static int c(CommandListenerWrapper var0) {
+		ResourcePackRepository var1 = var0.getServer().getResourcePackRepository();
+		var1.a();
+		Collection<? extends ResourcePackLoader> var2 = var1.e();
+		if (var2.isEmpty()) {
+			var0.sendMessage(new ChatMessage("commands.datapack.list.enabled.none"), false);
+		} else {
+			var0.sendMessage(new ChatMessage("commands.datapack.list.enabled.success", var2.size(), ChatComponentUtils.b(var2, var0x -> var0x.a(true))), false);
+		}
 
-    private static int a(CommandListenerWrapper commandlistenerwrapper) {
-        return c(commandlistenerwrapper) + b(commandlistenerwrapper);
-    }
+		return var2.size();
+	}
 
-    private static int b(CommandListenerWrapper commandlistenerwrapper) {
-        ResourcePackRepository resourcepackrepository = commandlistenerwrapper.getServer().getResourcePackRepository();
+	private static ResourcePackLoader a(CommandContext<CommandListenerWrapper> var0, String var1, boolean var2) throws CommandSyntaxException {
+		String var3 = StringArgumentType.getString(var0, var1);
+		ResourcePackRepository var4 = var0.getSource().getServer().getResourcePackRepository();
+		ResourcePackLoader var5 = var4.a(var3);
+		if (var5 == null) {
+			throw a.create(var3);
+		} else {
+			boolean var6 = var4.e().contains(var5);
+			if (var2 && var6) {
+				throw b.create(var3);
+			} else if (!var2 && !var6) {
+				throw c.create(var3);
+			} else {
+				return var5;
+			}
+		}
+	}
 
-        resourcepackrepository.a();
-        Collection<? extends ResourcePackLoader> collection = resourcepackrepository.e();
-        Collection<? extends ResourcePackLoader> collection1 = resourcepackrepository.c();
-        List<ResourcePackLoader> list = (List) collection1.stream().filter((resourcepackloader) -> {
-            return !collection.contains(resourcepackloader);
-        }).collect(Collectors.toList());
-
-        if (list.isEmpty()) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.list.available.none"), false);
-        } else {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.list.available.success", new Object[]{list.size(), ChatComponentUtils.b(list, (resourcepackloader) -> {
-                        return resourcepackloader.a(false);
-                    })}), false);
-        }
-
-        return list.size();
-    }
-
-    private static int c(CommandListenerWrapper commandlistenerwrapper) {
-        ResourcePackRepository resourcepackrepository = commandlistenerwrapper.getServer().getResourcePackRepository();
-
-        resourcepackrepository.a();
-        Collection<? extends ResourcePackLoader> collection = resourcepackrepository.e();
-
-        if (collection.isEmpty()) {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.list.enabled.none"), false);
-        } else {
-            commandlistenerwrapper.sendMessage(new ChatMessage("commands.datapack.list.enabled.success", new Object[]{collection.size(), ChatComponentUtils.b(collection, (resourcepackloader) -> {
-                        return resourcepackloader.a(true);
-                    })}), false);
-        }
-
-        return collection.size();
-    }
-
-    private static ResourcePackLoader a(CommandContext<CommandListenerWrapper> commandcontext, String s, boolean flag) throws CommandSyntaxException {
-        String s1 = StringArgumentType.getString(commandcontext, s);
-        ResourcePackRepository resourcepackrepository = ((CommandListenerWrapper) commandcontext.getSource()).getServer().getResourcePackRepository();
-        ResourcePackLoader resourcepackloader = resourcepackrepository.a(s1);
-
-        if (resourcepackloader == null) {
-            throw CommandDatapack.a.create(s1);
-        } else {
-            boolean flag1 = resourcepackrepository.e().contains(resourcepackloader);
-
-            if (flag && flag1) {
-                throw CommandDatapack.b.create(s1);
-            } else if (!flag && !flag1) {
-                throw CommandDatapack.c.create(s1);
-            } else {
-                return resourcepackloader;
-            }
-        }
-    }
-
-    interface a {
-
-        void apply(List<ResourcePackLoader> list, ResourcePackLoader resourcepackloader) throws CommandSyntaxException;
-    }
+	interface a {
+		void apply(List<ResourcePackLoader> var1, ResourcePackLoader var2) throws CommandSyntaxException;
+	}
 }

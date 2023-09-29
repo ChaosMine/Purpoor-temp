@@ -132,7 +132,7 @@ public abstract class IProjectile extends Entity {
         float f2 = MathHelper.sqrt(c(vec3d));
 
         this.yaw = (float) (MathHelper.d(vec3d.x, vec3d.z) * 57.2957763671875D);
-        this.pitch = (float) (MathHelper.d(vec3d.y, (double) f2) * 57.2957763671875D);
+        this.pitch = (float) (MathHelper.d(vec3d.y, f2) * 57.2957763671875D);
         this.lastYaw = this.yaw;
         this.lastPitch = this.pitch;
     }
@@ -142,7 +142,7 @@ public abstract class IProjectile extends Entity {
         float f6 = -MathHelper.sin((f + f2) * 0.017453292F);
         float f7 = MathHelper.cos(f1 * 0.017453292F) * MathHelper.cos(f * 0.017453292F);
 
-        this.shoot((double) f5, (double) f6, (double) f7, f3, f4);
+        this.shoot(f5, f6, f7, f3, f4);
         Vec3D vec3d = entity.getMot();
 
         if (!entity.world.paperConfig.disableRelativeProjectileVelocity) this.setMot(this.getMot().add(vec3d.x, entity.isOnGround() ? 0.0D : vec3d.y, vec3d.z)); // Paper - allow disabling relative velocity
@@ -202,7 +202,7 @@ public abstract class IProjectile extends Entity {
         Vec3D vec3d = this.getMot();
         float f = MathHelper.sqrt(c(vec3d));
 
-        this.pitch = e(this.lastPitch, (float) (MathHelper.d(vec3d.y, (double) f) * 57.2957763671875D));
+        this.pitch = e(this.lastPitch, (float) (MathHelper.d(vec3d.y, f) * 57.2957763671875D));
         this.yaw = e(this.lastYaw, (float) (MathHelper.d(vec3d.x, vec3d.z) * 57.2957763671875D));
     }
 

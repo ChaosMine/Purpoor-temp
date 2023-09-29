@@ -72,7 +72,7 @@ public class StonecuttingRecipe implements Recipe, Keyed {
     @NotNull
     public StonecuttingRecipe setInputChoice(@NotNull RecipeChoice input) {
         this.ingredient = input;
-        return (StonecuttingRecipe) this;
+        return this;
     }
 
     /**

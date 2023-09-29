@@ -50,7 +50,7 @@ public class ArgumentPosition implements ArgumentType<IVectorPosition> {
     }
 
     public IVectorPosition parse(StringReader stringreader) throws CommandSyntaxException {
-        return (IVectorPosition) (stringreader.canRead() && stringreader.peek() == '^' ? ArgumentVectorPosition.a(stringreader) : VectorPosition.a(stringreader));
+        return stringreader.canRead() && stringreader.peek() == '^' ? ArgumentVectorPosition.a(stringreader) : VectorPosition.a(stringreader);
     }
 
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandcontext, SuggestionsBuilder suggestionsbuilder) {

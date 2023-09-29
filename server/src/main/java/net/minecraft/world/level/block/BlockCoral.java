@@ -26,7 +26,7 @@ public class BlockCoral extends Block {
 
     @Override
     public void tickAlways(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
-        if (!this.a((IBlockAccess) worldserver, blockposition)) {
+        if (!this.a(worldserver, blockposition)) {
             // CraftBukkit start
             if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockFadeEvent(worldserver, blockposition, this.a.getBlockData()).isCancelled()) {
                 return;
@@ -39,7 +39,7 @@ public class BlockCoral extends Block {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if (!this.a((IBlockAccess) generatoraccess, blockposition)) {
+        if (!this.a(generatoraccess, blockposition)) {
             generatoraccess.getBlockTickList().a(blockposition, this, 60 + generatoraccess.getRandom().nextInt(40));
         }
 
@@ -54,7 +54,7 @@ public class BlockCoral extends Block {
             EnumDirection enumdirection = aenumdirection[j];
             Fluid fluid = iblockaccess.getFluid(blockposition.shift(enumdirection));
 
-            if (fluid.a((Tag) TagsFluid.WATER)) {
+            if (fluid.a(TagsFluid.WATER)) {
                 return true;
             }
         }
@@ -65,7 +65,7 @@ public class BlockCoral extends Block {
     @Nullable
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        if (!this.a((IBlockAccess) blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
+        if (!this.a(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
             blockactioncontext.getWorld().getBlockTickList().a(blockactioncontext.getClickPosition(), this, 60 + blockactioncontext.getWorld().getRandom().nextInt(40));
         }
 

@@ -29,7 +29,7 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
 
     public BlockLantern(BlockBase.Info blockbase_info) {
         super(blockbase_info);
-        this.j((IBlockData) ((IBlockData) ((IBlockData) this.blockStateList.getBlockData()).set(BlockLantern.a, false)).set(BlockLantern.b, false));
+        this.j(this.blockStateList.getBlockData().set(BlockLantern.a, false).set(BlockLantern.b, false));
     }
 
     @Nullable
@@ -43,10 +43,10 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
             EnumDirection enumdirection = aenumdirection[j];
 
             if (enumdirection.n() == EnumDirection.EnumAxis.Y) {
-                IBlockData iblockdata = (IBlockData) this.getBlockData().set(BlockLantern.a, enumdirection == EnumDirection.UP);
+                IBlockData iblockdata = this.getBlockData().set(BlockLantern.a, enumdirection == EnumDirection.UP);
 
                 if (iblockdata.canPlace(blockactioncontext.getWorld(), blockactioncontext.getClickPosition())) {
-                    return (IBlockData) iblockdata.set(BlockLantern.b, fluid.getType() == FluidTypes.WATER);
+                    return iblockdata.set(BlockLantern.b, fluid.getType() == FluidTypes.WATER);
                 }
             }
         }
@@ -56,7 +56,7 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
 
     @Override
     public VoxelShape b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition, VoxelShapeCollision voxelshapecollision) {
-        return (Boolean) iblockdata.get(BlockLantern.a) ? BlockLantern.d : BlockLantern.c;
+        return iblockdata.get(BlockLantern.a) ? BlockLantern.d : BlockLantern.c;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
     }
 
     protected static EnumDirection h(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockLantern.a) ? EnumDirection.DOWN : EnumDirection.UP;
+        return iblockdata.get(BlockLantern.a) ? EnumDirection.DOWN : EnumDirection.UP;
     }
 
     @Override
@@ -82,8 +82,8 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
 
     @Override
     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
-        if ((Boolean) iblockdata.get(BlockLantern.b)) {
-            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a((IWorldReader) generatoraccess));
+        if (iblockdata.get(BlockLantern.b)) {
+            generatoraccess.getFluidTickList().a(blockposition, FluidTypes.WATER, FluidTypes.WATER.a(generatoraccess));
         }
 
         return h(iblockdata).opposite() == enumdirection && !iblockdata.canPlace(generatoraccess, blockposition) ? Blocks.AIR.getBlockData() : super.updateState(iblockdata, enumdirection, iblockdata1, generatoraccess, blockposition, blockposition1);
@@ -91,7 +91,7 @@ public class BlockLantern extends Block implements IBlockWaterlogged {
 
     @Override
     public Fluid d(IBlockData iblockdata) {
-        return (Boolean) iblockdata.get(BlockLantern.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
+        return iblockdata.get(BlockLantern.b) ? FluidTypes.WATER.a(false) : super.d(iblockdata);
     }
 
     @Override

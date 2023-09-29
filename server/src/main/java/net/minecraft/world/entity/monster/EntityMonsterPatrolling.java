@@ -91,7 +91,7 @@ public abstract class EntityMonsterPatrolling extends EntityMonster {
         return super.prepare(worldaccess, difficultydamagescaler, enummobspawn, groupdataentity, nbttagcompound);
     }
 
-    public static boolean b(EntityTypes<? extends EntityMonsterPatrolling> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
+    public static boolean b_xz(EntityTypes<? extends EntityMonsterPatrolling> entitytypes, GeneratorAccess generatoraccess, EnumMobSpawn enummobspawn, BlockPosition blockposition, Random random) {
         return generatoraccess.getBrightness(EnumSkyBlock.BLOCK, blockposition) > 8 ? false : c(entitytypes, generatoraccess, enummobspawn, blockposition, random);
     }
 
@@ -177,10 +177,10 @@ public abstract class EntityMonsterPatrolling extends EntityMonster {
 
                 if (this.a.isPatrolling() && list.isEmpty()) {
                     this.a.u(false);
-                } else if (flag && this.a.getPatrolTarget().a((IPosition) this.a.getPositionVector(), 10.0D)) {
+                } else if (flag && this.a.getPatrolTarget().a(this.a.getPositionVector(), 10.0D)) {
                     this.a.eU();
                 } else {
-                    Vec3D vec3d = Vec3D.c((BaseBlockPosition) this.a.getPatrolTarget());
+                    Vec3D vec3d = Vec3D.c(this.a.getPatrolTarget());
                     Vec3D vec3d1 = this.a.getPositionVector();
                     Vec3D vec3d2 = vec3d1.d(vec3d);
 
@@ -189,7 +189,7 @@ public abstract class EntityMonsterPatrolling extends EntityMonster {
                     BlockPosition blockposition = new BlockPosition(vec3d3);
 
                     blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, blockposition);
-                    if (!navigationabstract.a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), flag ? this.c : this.b)) {
+                    if (!navigationabstract.a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), flag ? this.c : this.b)) {
                         this.h();
                         this.d = this.a.world.getTime() + 200L;
                     } else if (flag) {
@@ -216,7 +216,7 @@ public abstract class EntityMonsterPatrolling extends EntityMonster {
             Random random = this.a.getRandom();
             BlockPosition blockposition = this.a.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, this.a.getChunkCoordinates().b(-8 + random.nextInt(16), 0, -8 + random.nextInt(16)));
 
-            return this.a.getNavigation().a((double) blockposition.getX(), (double) blockposition.getY(), (double) blockposition.getZ(), this.b);
+            return this.a.getNavigation().a(blockposition.getX(), blockposition.getY(), blockposition.getZ(), this.b);
         }
     }
 }

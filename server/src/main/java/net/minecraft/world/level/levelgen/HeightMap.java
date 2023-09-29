@@ -60,7 +60,7 @@ public class HeightMap {
 
                     if (!iblockdata.a(Blocks.AIR)) {
                         while (objectlistiterator.hasNext()) {
-                            HeightMap heightmap = (HeightMap) objectlistiterator.next();
+                            HeightMap heightmap = objectlistiterator.next();
 
                             if (heightmap.d.test(iblockdata)) {
                                 heightmap.a(k, l, i1 + 1);
@@ -147,12 +147,12 @@ public class HeightMap {
         private final String h;
         private final HeightMap.Use i;
         private final Predicate<IBlockData> j;
-        private static final Map<String, HeightMap.Type> k = (Map) SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // Tuinity - decompile fix
-            HeightMap.Type[] aheightmap_type = values();
+        private static final Map<String, HeightMap.Type> k = SystemUtils.a(Maps.newHashMap(), (hashmap) -> { // Tuinity - decompile fix
+            Type[] aheightmap_type = values();
             int i = aheightmap_type.length;
 
             for (int j = 0; j < i; ++j) {
-                HeightMap.Type heightmap_type = aheightmap_type[j];
+                Type heightmap_type = aheightmap_type[j];
 
                 hashmap.put(heightmap_type.h, heightmap_type);
             }
@@ -175,7 +175,7 @@ public class HeightMap {
 
         @Nullable
         public static HeightMap.Type a(String s) {
-            return (HeightMap.Type) HeightMap.Type.k.get(s);
+            return Type.k.get(s);
         }
 
         public Predicate<IBlockData> e() {

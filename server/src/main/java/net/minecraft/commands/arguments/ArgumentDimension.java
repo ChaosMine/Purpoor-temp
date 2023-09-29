@@ -22,9 +22,9 @@ import net.minecraft.world.level.World;
 
 public class ArgumentDimension implements ArgumentType<MinecraftKey> {
 
-    private static final Collection<String> a = (Collection) Stream.of(World.OVERWORLD, World.THE_NETHER).map((resourcekey) -> {
+    private static final Collection<String> a = Stream.of(World.OVERWORLD, World.THE_NETHER).map((resourcekey) -> {
         return resourcekey.a().toString();
-    }).collect(Collectors.toList());
+    }).toList();
     private static final DynamicCommandExceptionType b = new DynamicCommandExceptionType((object) -> {
         return new ChatMessage("argument.dimension.invalid", new Object[]{object});
     });

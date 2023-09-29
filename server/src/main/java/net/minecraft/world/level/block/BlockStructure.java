@@ -62,7 +62,7 @@ public class BlockStructure extends BlockTileEntity {
 
     @Override
     public IBlockData getPlacedState(BlockActionContext blockactioncontext) {
-        return (IBlockData) this.getBlockData().set(BlockStructure.a, BlockPropertyStructureMode.DATA);
+        return this.getBlockData().set(BlockStructure.a, BlockPropertyStructureMode.DATA);
     }
 
     @Override

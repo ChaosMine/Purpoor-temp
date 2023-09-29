@@ -181,7 +181,7 @@ public class PlayerInteractManager {
             IBlockData iblockdata;
 
             if (packetplayinblockdig_enumplayerdigtype == PacketPlayInBlockDig.EnumPlayerDigType.START_DESTROY_BLOCK) {
-                if (!this.world.a((EntityHuman) this.player, blockposition)) {
+                if (!this.world.a(this.player, blockposition)) {
                     // CraftBukkit start - fire PlayerInteractEvent
                     CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, blockposition, enumdirection, this.player.inventory.getItemInHand(), EnumHand.MAIN_HAND);
                     this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, false, "may not interact"));
@@ -218,7 +218,7 @@ public class PlayerInteractManager {
                     return;
                 }
 
-                if (this.player.a((World) this.world, blockposition, this.gamemode)) {
+                if (this.player.a(this.world, blockposition, this.gamemode)) {
                     this.player.playerConnection.sendPacket(new PacketPlayOutBlockBreak(blockposition, this.world.getType(blockposition), packetplayinblockdig_enumplayerdigtype, false, "block action restricted"));
                     return;
                 }
@@ -352,7 +352,7 @@ public class PlayerInteractManager {
 
         if (this.player instanceof EntityPlayer) {
             // Sword + Creative mode pre-cancel
-            boolean isSwordNoBreak = !this.player.getItemInMainHand().getItem().a(iblockdata, this.world, blockposition, (EntityHuman) this.player);
+            boolean isSwordNoBreak = !this.player.getItemInMainHand().getItem().a(iblockdata, this.world, blockposition, this.player);
 
             // Tell client the block is gone immediately then process events
             // Don't tell the client if its a creative sword break because its not broken!
@@ -403,7 +403,7 @@ public class PlayerInteractManager {
         }
         // CraftBukkit end
 
-        if (false && !this.player.getItemInMainHand().getItem().a(iblockdata, (World) this.world, blockposition, (EntityHuman) this.player)) { // CraftBukkit - false
+        if (false && !this.player.getItemInMainHand().getItem().a(iblockdata, this.world, blockposition, this.player)) { // CraftBukkit - false
             return false;
         } else {
             iblockdata = this.world.getType(blockposition); // CraftBukkit - update state from plugins
@@ -414,14 +414,14 @@ public class PlayerInteractManager {
             if ((block instanceof BlockCommand || block instanceof BlockStructure || block instanceof BlockJigsaw) && !this.player.isCreativeAndOp() && !(block instanceof BlockCommand && (this.player.isCreative() && this.player.getBukkitEntity().hasPermission("minecraft.commandblock")))) { // Paper - command block permission
                 this.world.notify(blockposition, iblockdata, iblockdata, 3);
                 return false;
-            } else if (this.player.a((World) this.world, blockposition, this.gamemode)) {
+            } else if (this.player.a(this.world, blockposition, this.gamemode)) {
                 return false;
             } else {
                 // CraftBukkit start
                 org.bukkit.block.BlockState state = bblock.getState();
                 world.captureDrops = new ObjectArrayList<>();
                 // CraftBukkit end
-                block.a((World) this.world, blockposition, iblockdata, (EntityHuman) this.player);
+                block.a(this.world, blockposition, iblockdata, this.player);
                 boolean flag = this.world.a(blockposition, false);
 
                 if (flag) {
@@ -469,8 +469,8 @@ public class PlayerInteractManager {
         } else {
             int i = itemstack.getCount();
             int j = itemstack.getDamage();
-            InteractionResultWrapper<ItemStack> interactionresultwrapper = itemstack.a(world, (EntityHuman) entityplayer, enumhand);
-            ItemStack itemstack1 = (ItemStack) interactionresultwrapper.b();
+            InteractionResultWrapper<ItemStack> interactionresultwrapper = itemstack.a(world, entityplayer, enumhand);
+            ItemStack itemstack1 = interactionresultwrapper.b();
 
             if (itemstack1 == itemstack && itemstack1.getCount() == i && itemstack1.k() <= 0 && itemstack1.getDamage() == j) {
                 return interactionresultwrapper.a();

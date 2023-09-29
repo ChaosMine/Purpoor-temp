@@ -28,9 +28,9 @@ public class WorldGenEndTrophy extends WorldGenerator<WorldGenFeatureEmptyConfig
 
         while (iterator.hasNext()) {
             BlockPosition blockposition1 = (BlockPosition) iterator.next();
-            boolean flag = blockposition1.a((BaseBlockPosition) blockposition, 2.5D);
+            boolean flag = blockposition1.a(blockposition, 2.5D);
 
-            if (flag || blockposition1.a((BaseBlockPosition) blockposition, 3.5D)) {
+            if (flag || blockposition1.a(blockposition, 3.5D)) {
                 if (blockposition1.getY() < blockposition.getY()) {
                     if (flag) {
                         this.a(generatoraccessseed, blockposition1, Blocks.BEDROCK.getBlockData());
@@ -59,7 +59,7 @@ public class WorldGenEndTrophy extends WorldGenerator<WorldGenFeatureEmptyConfig
         while (iterator1.hasNext()) {
             EnumDirection enumdirection = (EnumDirection) iterator1.next();
 
-            this.a(generatoraccessseed, blockposition2.shift(enumdirection), (IBlockData) Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, enumdirection));
+            this.a(generatoraccessseed, blockposition2.shift(enumdirection), Blocks.WALL_TORCH.getBlockData().set(BlockTorchWall.a, enumdirection));
         }
 
         return true;

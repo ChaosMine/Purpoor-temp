@@ -36,7 +36,7 @@ public class CustomFunction {
 
         for (int i = 0; i < list.size(); ++i) {
             int j = i + 1;
-            String s = ((String) list.get(i)).trim();
+            String s = list.get(i).trim();
             StringReader stringreader = new StringReader(s);
 
             if (stringreader.canRead() && stringreader.peek() != '#') {
@@ -65,7 +65,7 @@ public class CustomFunction {
             }
         }
 
-        return new CustomFunction(minecraftkey, (CustomFunction.c[]) list1.toArray(new CustomFunction.c[0]));
+        return new CustomFunction(minecraftkey, list1.toArray(new c[0]));
     }
 
     public static class a {
@@ -100,7 +100,7 @@ public class CustomFunction {
 
         @Nullable
         public MinecraftKey a() {
-            return (MinecraftKey) this.d.map((customfunction) -> {
+            return this.d.map((customfunction) -> {
                 return customfunction.b;
             }).orElse(this.b);
         }
