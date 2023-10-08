@@ -4,7 +4,12 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 fun includeFromModules(vararg projectPaths: String) {
 	include(*projectPaths)
 	projectPaths.forEach { path ->
-		project(path).projectDir = file("./modules/${path.replace(":", "/")}")
+		val dir = "./modules/${path.replace(":", "/")}"
+		generateSequence(path) {
+			it.substringBeforeLast(":", "").takeIf(String::isNotBlank)
+		}.forEachIndexed { idx, projectPath ->
+			project(projectPath).projectDir = file(dir + "/..".repeat(idx))
+		}
 	}
 }
 
